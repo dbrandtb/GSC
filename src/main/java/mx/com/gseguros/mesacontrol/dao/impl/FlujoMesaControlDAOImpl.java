@@ -21,6 +21,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.utils.Utils;
@@ -4492,6 +4493,57 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
             declareParameter(new SqlOutParameter("pv_result_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("pv_ntramite_i", ntramite);
+        params.put("pv_cdusuari_i", cdusuari);
+        params.put("pv_cdsisrol_i", cdsisrol);
+        Map<String, Object> procRes = ejecutaSP(new GenerarYRecuperarFlujoRSTN(getDataSource()), params);
+        FlujoVO flujo = new FlujoVO();
+        flujo.setNtramite(ntramite);
+        flujo.setStatus((String)    procRes.get("pv_status_o"));
+        flujo.setCdtipflu((String)  procRes.get("pv_cdtipflu_o"));
+        flujo.setCdflujomc((String) procRes.get("pv_cdflujomc_o"));
+        flujo.setWebid((String)     procRes.get("pv_webid_o"));
+        flujo.setTipoent((String)   procRes.get("pv_tipoent_o"));
+        flujo.setClaveent((String)  procRes.get("pv_claveent_o"));
+        flujo.setCdunieco((String)  procRes.get("pv_cdunieco_o"));
+        flujo.setCdramo((String)    procRes.get("pv_cdramo_o"));
+        flujo.setEstado((String)    procRes.get("pv_estado_o"));
+        flujo.setNmpoliza((String)  procRes.get("pv_nmpoliza_o"));
+        flujo.setNmsituac((String)  procRes.get("pv_nmsituac_o"));
+        flujo.setNmsuplem((String)  procRes.get("pv_nmsuplem_o"));
+        flujo.setAux((String)       procRes.get("pv_aux_o"));
+        return flujo;
+    }
+    
+    protected class GenerarYRecuperarFlujoRSTN extends StoredProcedure {
+        protected GenerarYRecuperarFlujoRSTN (DataSource dataSource) {
+            super(dataSource, "P_MC_MOV_FLUJO_RSTN");
+            declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
+            
+            declareParameter(new SqlOutParameter("pv_status_o"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdtipflu_o"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdflujomc_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_webid_o"     , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_tipoent_o"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_claveent_o"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdunieco_o"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_cdramo_o"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_estado_o"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nmpoliza_o"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nmsituac_o"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nmsuplem_o"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_aux_o"       , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
             compile();
         }
     }

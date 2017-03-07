@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.mesacontrol.dao.impl.FlujoMesaControlDAOImpl;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
 
 public interface FlujoMesaControlDAO {
 
@@ -980,4 +981,6 @@ public interface FlujoMesaControlDAO {
     public void cambiarTipoEndosoTramite (String ntramite, String cdtipsup) throws Exception;
     
     public String recuperarCorreoAgenteTramite (String ntramite) throws Exception;
+    
+    public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception;
 }

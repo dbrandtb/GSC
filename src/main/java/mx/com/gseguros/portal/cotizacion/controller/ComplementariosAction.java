@@ -255,6 +255,24 @@ public class ComplementariosAction extends PrincipalCoreAction
 		UserVO usuario  = null;
 		String cdsisrol = null;
 		
+		if (exito && map1 != null && "S".equals(map1.get("rstn")) && StringUtils.isNotBlank(map1.get("ntramite"))) { // para RSTN recuperar datos
+		    try {
+		        String paso = "Construyendo flujo RSTN";
+		        try {
+		            UserVO user = Utils.validateSession(session);
+		            String ntramite = map1.get("ntramite");
+		            Utils.validate(ntramite, "Falta ntramite");
+		            flujo = flujoMesaControlManager.generarYRecuperarFlujoRSTN(ntramite, user.getUser(), user.getRolActivo().getClave());
+		            map1 = null;
+		        } catch (Exception ex) {
+		            Utils.generaExcepcion(ex, paso);
+		        }
+		    } catch (Exception ex) {
+		        exito = false;
+		        respuesta = Utils.manejaExcepcion(ex);
+		    }
+		}
+		
 		if(exito)
 		{
 			if(flujo!=null)

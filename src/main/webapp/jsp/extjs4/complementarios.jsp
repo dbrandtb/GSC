@@ -2847,7 +2847,7 @@ function _p29_emitirClicComplementarios()
 			            {
 			                itemId       : '_datcom_panelFlujo'
 			                ,title       : 'ACCIONES'
-			                ,hidden      : Ext.isEmpty(panDatComFlujo)
+			                ,hidden      : Ext.isEmpty(panDatComFlujo) || 'RSTN' === panDatComFlujo.aux
 			                ,buttonAlign : 'left'
 			                ,buttons     : []
 			                ,listeners   :
@@ -3124,6 +3124,9 @@ function _p29_emitirClicComplementarios()
 		            }
 		        }).showAt(500,0);
                 venDocuTramite.collapse();
+                if ((!Ext.isEmpty(panDatComFlujo)) && 'RSTN' === panDatComFlujo.aux) {
+                    venDocuTramite.hide();
+                }
                 //para ver documentos en vivo
                 
                 //codigo dinamico recuperado de la base de datos
