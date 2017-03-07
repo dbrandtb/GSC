@@ -8,9 +8,6 @@ var _p27_urlConfirmar             = '<s:url namespace="/endosos" action="guardar
 var _p27_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p27_smap1:',_p27_smap1);
 
-var _p27_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_p27_flujo:',_p27_flujo);
 ////// variables //////
 
 Ext.onReady(function()
@@ -245,52 +242,28 @@ function _p27_confirmar(me)
     if(valido)
     {
         _setLoading(true,_fieldById('_p27_panelpri'));
-        
-        var jsonData =
-        {
-            smap1  : _p27_smap1
-            ,smap2 : _fieldById('_p27_nuevoForm').getValues()
-            ,smap3 : _fieldById('_p27_endosoForm').getValues()
-        };
-        
-        if(!Ext.isEmpty(_p27_flujo))
-        {
-            jsonData.flujo = _p27_flujo;
-        }
-        
-        debug('jsonData:',jsonData,'.');
-        
         Ext.Ajax.request(
         {
             url       : _p27_urlConfirmar
-            ,jsonData : jsonData
-            ,success  : function(response)
+            ,jsonData :
+            {
+                smap1  : _p27_smap1
+                ,smap2 : _fieldById('_p27_nuevoForm').getValues()
+                ,smap3 : _fieldById('_p27_endosoForm').getValues()
+            }
+            ,success : function(response)
             {
                 _setLoading(false,_fieldById('_p27_panelpri'));
                 var json = Ext.decode(response.responseText);
                 debug('### confirmar endoso atributos general:',json);
                 if(json.exito)
                 {
-                    var callbackRemesa = function()
-                    {
-                        //////////////////////////////////
-                        ////// USA CODIGO DEL PADRE //////
-                        marendNavegacion(2);
-                        ////// USA CODIGO DEL PADRE //////
-                        //////////////////////////////////
-                    };
-                    
-                    mensajeCorrecto('Endoso generado',json.respuesta,function()
-                    {
-                        _generarRemesaClic(
-                            true
-                            ,_p27_smap1.CDUNIECO
-                            ,_p27_smap1.CDRAMO
-                            ,_p27_smap1.ESTADO
-                            ,_p27_smap1.NMPOLIZA
-                            ,callbackRemesa
-                        );
-                    });
+                    //////////////////////////////////
+                    ////// USA CODIGO DEL PADRE //////
+                    marendNavegacion(2);
+                    ////// USA CODIGO DEL PADRE //////
+                    //////////////////////////////////
+                    mensajeCorrecto('Endoso generado',json.respuesta);
                 }
                 else
                 {
@@ -307,6 +280,5 @@ function _p27_confirmar(me)
     debug('<_p27_confirmar');
 }
 ////// funciones //////
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="_p27_divpri"></div>
