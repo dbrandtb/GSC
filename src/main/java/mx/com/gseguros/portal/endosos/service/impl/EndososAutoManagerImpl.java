@@ -163,6 +163,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Value("${incisos.flotillas.impresion.autos.url}")
 	private String urlImpresionIncisosFlotillas;
 	
+	@Value("${incisos.flotillas.excel.impresion.autos.url}")
+	private String incisosFlotillasExcelImpresionAutosUrl;
+	
 	@Value("${tarjeta.iden.impresion.autos.url}")
 	private String urlImpresionTarjetaIdentificacion;
 
@@ -3890,6 +3893,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					String urlAp = this.urlImpresionAp;
 					
 					String urlIncisosFlot = this.urlImpresionIncisosFlotillas;
+					String urlIncisosExcelFlot = this.incisosFlotillasExcelImpresionAutosUrl;
 					String urlTarjIdent = this.urlImpresionTarjetaIdentificacion;
 					
 					String parametros = null;
@@ -4085,6 +4089,33 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,new Date()
 								,urlIncisosFlot + parametros
 								,"Incisos Flotillas"+" ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_INCISOS_FLOTILLAS, null, null, false
+								);
+
+						/**
+						 * Para Incisos Flotillas EXCEL
+						 */
+						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
+						logger.debug("URL Generada para urlIncisosExcelFlot: "+ urlIncisosExcelFlot + parametros);
+						
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlIncisosExcelFlot).append(parametros).append("\">Relaci\u00f3n de Incisos EXCEL</a>");
+						
+						mesaControlDAO.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlIncisosExcelFlot + parametros
+								,"Incisos EXCEL"+" ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
 								,nmpoliza
 								,ntramite
 								,cdtipsup
