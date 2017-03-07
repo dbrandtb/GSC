@@ -79,6 +79,9 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	@Value("${incisos.flotillas.impresion.autos.url}")
 	private String incisosFlotillasImpresionAutosURL;
 	
+	@Value("${incisos.flotillas.excel.impresion.autos.url}")
+	private String incisosFlotillasExcelImpresionAutosUrl;		
+	
 	@Value("${tarjeta.iden.impresion.autos.url}")
 	private String tarjetaIdenImpresionAutosURL;
 
@@ -549,6 +552,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				String urlAp = apImpresionAutosURL;
 				
 				String urlIncisosFlot = incisosFlotillasImpresionAutosURL;
+				String urlIncisosExcelFlot = incisosFlotillasExcelImpresionAutosUrl;
 				String urlTarjIdent = tarjetaIdenImpresionAutosURL;
 				
 				String mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
@@ -764,6 +768,32 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,new Date()
 							,urlIncisosFlot + parametros
 							,"Incisos Flotillas"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,"1"
+							,"0"
+							,Documento.EXTERNO_INCISOS_FLOTILLAS, null, null, false
+							);
+
+					/**
+					 * Para Incisos Flotillas EXCEL
+					 */
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,0";
+					logger.debug("URL Generada para urlIncisosExcelFlot: "+ urlIncisosExcelFlot + parametros);
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
+					
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlIncisosExcelFlot + parametros
+							,"Incisos EXCEL"
 							,nmpoliza
 							,ntramite
 							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())

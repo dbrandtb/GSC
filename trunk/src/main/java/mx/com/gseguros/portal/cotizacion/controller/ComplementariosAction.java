@@ -206,6 +206,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	@Value("${incisos.flotillas.impresion.autos.url}")
     private String incisosFlotillasImpresionAutosUrl;			
+
+	@Value("${incisos.flotillas.excel.impresion.autos.url}")
+	private String incisosFlotillasExcelImpresionAutosUrl;			
 				
 	@Value("${tarjeta.iden.impresion.autos.url}")
     private String tarjetaIdenImpresionAutosUrl;				
@@ -2677,6 +2680,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					String urlAp = this.apImpresionAutosUrl;
 					
 					String urlIncisosFlot = this.incisosFlotillasImpresionAutosUrl;
+					String urlIncisosExcelFlot = this.incisosFlotillasExcelImpresionAutosUrl;
 					String urlTarjIdent = this.tarjetaIdenImpresionAutosUrl;
 					String numIncisosReporte = this.numeroIncisosReporte;
 					
@@ -2916,11 +2920,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci\u00f3n de Incisos Flotillas</a>";
 						
-						//paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
-						//paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
-						
-						//kernelManager.guardarArchivo(paramsR);
-						
 						documentosManager.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -2930,6 +2929,34 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,new Date()
 								,urlIncisosFlot + parametros
 								,"Incisos Flotillas"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_INCISOS_FLOTILLAS
+								,null
+								,null, false
+								);
+
+						/**
+						 * Para Incisos Flotillas EXCEL
+						 */
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
+						logger.debug("URL Generada para urlIncisosEXCELFlotillas: "+ urlIncisosExcelFlot + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,urlIncisosExcelFlot + parametros
+								,"Incisos EXCEL"
 								,nmpoliza
 								,ntramite
 								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
