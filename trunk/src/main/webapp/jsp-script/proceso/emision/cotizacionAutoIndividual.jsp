@@ -1403,6 +1403,60 @@ Ext.onReady(function()
         //camion
         
         //negocio
+        try{
+        	
+        	if(('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')!=-1)){
+ 					      		
+        		_fieldByLabel('NEGOCIO').on({
+        			change : function(me,val){
+        				
+        				if(me.findRecord('key',val)!=false)
+                        {
+        					var negoCmp = _fieldByLabel('NEGOCIO');
+                            var negoVal = negoCmp.getValue();
+                            negoCmp.setLoading(true);
+                            Ext.Ajax.request(
+                            {
+                                url     : _p28_urlCargarDetalleNegocioRamo5
+                                ,params :
+                                {
+                                    'smap1.negocio' : negoVal,
+                                    'smap1.cdramo'  : _p28_smap1.cdramo,
+                                    'smap1.cdtipsit': _p28_smap1.cdtipsit
+                                }
+                                ,success : function(response)
+                                {
+                                	 negoCmp.setLoading(false);
+                                     var json = Ext.decode(response.responseText);
+                                     debug('### detalle negocio:',json);
+                                  
+                                     _p28_negocio=json.smap1;
+                                     
+                                     if((_p28_negocio.DXN+'').trim()=='' || (_p28_negocio.DXN+'').trim()==0 || _p28_negocio.DXN==null )
+                                     {
+                                         _fieldById('fieldDXN').hide();
+                                         _fieldByLabel("ADMINISTRADORA").clearValue();
+                                         _fieldByLabel("RETENEDORA").clearValue();
+                                     }else{
+                             			 agregarAgenteDXN();
+                                         administradoraAgenteDXN();
+                                         _fieldById('fieldDXN').show();
+                                     }
+                                }
+                                ,failure : function()
+                                {
+                                    negoCmp.setLoading(false);
+                                    errorComunicacion();
+                                }
+                            });
+                        }
+        			}		
+        		});
+        	}
+        }catch(e){
+        	
+        	debugError(e);
+        }
          if(('|TV|TL|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')==-1))
         {
             _fieldByLabel('NEGOCIO').on(
