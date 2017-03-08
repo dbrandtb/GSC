@@ -209,6 +209,16 @@ debug('_p28_smap1:',_p28_smap1);
 var _p30_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 debug('_p30_flujo:',_p30_flujo);
 
+var _p30_flujoAux = {};
+try {
+    if (!Ext.isEmpty(_p30_flujo.aux)) {
+        _p30_flujoAux = Ext.decode(_p30_flujo.aux);
+    }
+} catch (e) {
+    debugError('WARNING al decodificar _p30_flujo.aux como JSON:', _p30_flujo, e);
+}
+debug('_p30_flujoAux:', _p30_flujoAux);
+
 var _p30_store                   = null;
 var _p30_selectedRecord          = null;
 var _p30_recordClienteRecuperado = null;
@@ -4928,6 +4938,13 @@ function _p30_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
                                         ,disabled : true
                                         ,handler  : _p30_comprar
+                                    }, {
+                                        itemId  : '_p30_botonOnCotizar',
+                                        xtype   : 'button',
+                                        text    : 'Enviar',
+                                        icon    : '${icons}user_go.png',
+                                        hidden  : true,
+                                        handler : _p30_botonOnCotizarClic
                                     }
                                 ]
                             })
@@ -4936,6 +4953,15 @@ function _p30_cotizar(sinTarificar)
                     
                     panelpri.add(gridTarifas);
                     panelpri.doLayout();
+                    
+                    // Cuando se turna al cotizar
+                    if (typeof _p30_flujoAux.onCotizar === 'number') {
+                        if (_p30_flujoAux.onCotizarHide === 'S') {
+                            gridTarifas.down('grid').hide();
+                        }
+                        _fieldById('_p30_botonComprar').hide();
+                        _fieldById('_p30_botonOnCotizar').show();
+                    }
                     
                     if(_p30_smap1.cdramo+'x'=='5x'&&arrDesc.length>0)
                     {
@@ -7611,7 +7637,33 @@ function _p30_actualizarSwexiperTramite(callback)
     }
 }
 
-
+function _p30_botonOnCotizarClic (me) {
+    debug('_p30_botonOnCotizarClic args:', arguments);
+    var ck = 'Enviando datos de cotizaci\u00f3n';
+    try {
+        Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTurnado');
+        new VentanaTurnado({
+            cdtipflu  : _p30_flujo.cdtipflu,
+            cdflujomc : _p30_flujo.cdflujomc,
+            tipoent   : _p30_flujo.tipoent,
+            claveent  : 0,//_p28_flujo.claveent,
+            webid     : 0,//_p28_flujo.webid,
+            aux       : _p30_flujoAux.onCotizar,
+            ntramite  : _p30_flujo.ntramite,
+            status    : _p30_flujo.status,
+            cdunieco  : _p30_flujo.cdunieco,
+            cdramo    : _p30_flujo.cdramo,
+            estado    : _p30_flujo.estado,
+            nmpoliza  : _p30_flujo.nmpoliza,
+            nmsituac  : _p30_flujo.nmsituac,
+            nmsuplem  : _p30_flujo.nmsuplem,
+            cdusuari  : _p30_smap1.cdusuari,
+            cdsisrol  : _GLOBAL_CDSISROL
+        }).mostrar();
+    } catch (e) {
+        manejaException(e, ck);
+    }
+}
 ////// funciones //////
 <%-- include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" --%>
 </script>

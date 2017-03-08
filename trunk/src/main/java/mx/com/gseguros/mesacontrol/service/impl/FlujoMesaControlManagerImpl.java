@@ -4129,4 +4129,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
                                "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
         return flujo;
 	}
+	
+	@Deprecated
+	@Override
+	public Map<String, String> recuperaTflujomc (String cdflujomc) throws Exception {
+	    return flujoMesaControlDAO.recuperaTflujomc(cdflujomc);
+	}
 }
