@@ -1813,8 +1813,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			        if(paqYplan.isEmpty())
 			        {  
 			            paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsit, null);
-			            columna = paqYplan.get(1);//forma Pago
-			            fila= paqYplan.get(0);//paquete
+			            if(paqYplan.get(0) != null && paqYplan.get(1) != null)
+			            {
+			                columna = paqYplan.get(1);//forma Pago
+			                fila= paqYplan.get(0);//paquete
+			            }
 			        }//pre sonbreado
 			      
 	                if(columna.equals("1P"))                              {columna="PRESTIGIO";}
