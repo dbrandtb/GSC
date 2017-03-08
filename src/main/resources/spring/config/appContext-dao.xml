@@ -87,4 +87,8 @@
     
     <bean id="templateDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.TemplateDAOImpl" parent="abstractManagerDAO"/>
     
+    <bean id="consultasPerfilMedicoDAOICEImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasPerfilMedicoDAOICEImpl" parent="abstractManagerDAO"/>
+    
+    <bean id="consultasPerfilMedicoDAOSISAImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasPerfilMedicoDAOSISAImpl" parent="abstractManagerDAOSISA"/>
+    
 </beans>
