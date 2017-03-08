@@ -9,6 +9,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.json.JSONUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
+import com.opensymphony.xwork2.ActionContext;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
@@ -28,16 +38,6 @@ import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.json.JSONUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
-import com.opensymphony.xwork2.ActionContext;
 
 public class CotizacionAutoAction extends PrincipalCoreAction
 {
@@ -880,7 +880,21 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 smap1.put("cdramo"   , flujo.getCdramo());
                 smap1.put("cdtipsit" , "AR");
                 smap1.put("ntramite" , flujo.getNtramite());
-                smap1.put("tipoflot" , flujo.getAux().split(",")[0].split(":")[1]); //primer split= tipoflot:P onComprar:16', segundo split tipoflot P
+                
+                Map<String, String> tflujomc = flujoMesaControlManager.recuperaTflujomc(flujo.getCdflujomc());
+                String tipoflot = null,
+                       dsflujomc = tflujomc.get("DSFLUJOMC").toUpperCase();
+                
+                if (dsflujomc.indexOf("PYME") != -1) {
+                    tipoflot = "P";
+                } else if (dsflujomc.indexOf("FLOT") != -1) {
+                    tipoflot = "F";
+                } else {
+                    throw new ApplicationException("El nombre del flujo (DSFLUJOMC) no contiene PyME o FLOT");
+                }
+                
+                //smap1.put("tipoflot" , flujo.getAux().split(",")[0].split(":")[1]); //primer split= tipoflot:P onComprar:16', segundo split tipoflot P
+                smap1.put("tipoflot", tipoflot);
                 
                 logger.debug(Utils.log("", "el mapa creado desde flujo es=", smap1));
                 

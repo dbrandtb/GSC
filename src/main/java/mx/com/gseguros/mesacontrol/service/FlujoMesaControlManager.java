@@ -435,4 +435,7 @@ public interface FlujoMesaControlManager
 	        String cdusuari, String cdsisrol) throws Exception;
 	
 	public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception;
+	
+	@Deprecated
+	public Map<String,String> recuperaTflujomc(String cdflujomc) throws Exception;
 }

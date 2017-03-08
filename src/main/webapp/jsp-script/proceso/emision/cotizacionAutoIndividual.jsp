@@ -110,6 +110,16 @@ var _0_smap1 =<s:property value="%{convertToJSON('smap1')}" escapeHtml="false" /
 var _p28_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 debug('_p28_flujo:',_p28_flujo);
 
+var _p28_flujoAux = {};
+try {
+    if (!Ext.isEmpty(_p28_flujo.aux)) {
+        _p28_flujoAux = Ext.decode(_p28_flujo.aux);
+    }
+} catch (e) {
+    debugError('WARNING al decodificar _p28_flujo.aux como JSON:', _p28_flujo, e);
+}
+debug('_p28_flujoAux:', _p28_flujoAux);
+
 var _p28_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 debug('_p28_reporteCotizacion:',_p28_reporteCotizacion);
 
@@ -1662,6 +1672,7 @@ Ext.onReady(function()
         }catch(e){
         	debugError(e);
         }
+        
         //FRILTRO DE PLANES
         try{
             
@@ -3111,6 +3122,14 @@ function _p28_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
                                         ,disabled : true
                                         ,handler  : _p28_comprar
+                                        ,hidden   : typeof _p28_flujoAux.onCotizar === 'number'
+                                    }, {
+                                        itemId  : '_p28_botonOnCotizar',
+                                        xtype   : 'button',
+                                        text    : 'Enviar',
+                                        icon    : '${icons}user_go.png',
+                                        hidden  : typeof _p28_flujoAux.onCotizar !== 'number',
+                                        handler : _p28_botonOnCotizarClic
                                     }
                                 ]
                             })
@@ -6903,6 +6922,34 @@ function obtienefechafinplazo()
                 errorComunicacion();
             }
         });
+}
+
+function _p28_botonOnCotizarClic (me) {
+    debug('_p28_botonOnCotizarClic args:', arguments);
+    var ck = 'Enviando datos de cotizaci\u00f3n';
+    try {
+        Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTurnado');
+        new VentanaTurnado({
+            cdtipflu  : _p28_flujo.cdtipflu,
+            cdflujomc : _p28_flujo.cdflujomc,
+            tipoent   : _p28_flujo.tipoent,
+            claveent  : 0,//_p28_flujo.claveent,
+            webid     : 0,//_p28_flujo.webid,
+            aux       : _p28_flujoAux.onCotizar,
+            ntramite  : _p28_flujo.ntramite,
+            status    : _p28_flujo.status,
+            cdunieco  : _p28_flujo.cdunieco,
+            cdramo    : _p28_flujo.cdramo,
+            estado    : _p28_flujo.estado,
+            nmpoliza  : _p28_flujo.nmpoliza,
+            nmsituac  : _p28_flujo.nmsituac,
+            nmsuplem  : _p28_flujo.nmsuplem,
+            cdusuari  : _p28_smap1.cdusuari,
+            cdsisrol  : _GLOBAL_CDSISROL
+        }).mostrar();
+    } catch (e) {
+        manejaException(e, ck);
+    }
 }
 
 ////// funciones //////
