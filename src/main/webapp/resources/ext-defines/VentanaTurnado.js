@@ -15,7 +15,6 @@ Ext.define('VentanaTurnado',
     }
     ,constructor : function(config)
     {
-        debug('#C22 config:',config,'.');
         var me = this;
         if(Ext.isEmpty(config))
         {
@@ -27,8 +26,7 @@ Ext.define('VentanaTurnado',
         }
         Ext.apply(me,
         {
-            config : config
-            ,items :
+            items :
             [
                 Ext.create('Ext.form.Panel',
                 {
@@ -92,7 +90,6 @@ Ext.define('VentanaTurnado',
                     ,columns    : 2
                     ,width      : 250
                     ,style      : 'margin:5px;'
-                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                     ,items      :
                     [
                         {
@@ -100,13 +97,12 @@ Ext.define('VentanaTurnado',
                             ,itemId     : 'SWAGENTE'
                             ,name       : 'SWAGENTE'
                             ,inputValue : 'S'
-                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                         }
                         ,{
                             boxLabel    : 'No'
                             ,name       : 'SWAGENTE'
                             ,inputValue : 'N'
-                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                            ,checked    : true
                         }
                     ]
                 }
@@ -152,71 +148,12 @@ Ext.define('VentanaTurnado',
                                             ,json.message
                                             ,function()
                                             {
-                                                var mask, ck = 'Recuperando acciones posteriores al turnado';
-                                                try
+                                                _mask('Redireccionando');
+                                                Ext.create('Ext.form.Panel').submit(
                                                 {
-                                                    _cargarAccionesEntidad(
-                                                        win.config.cdtipflu
-                                                        ,win.config.cdflujomc
-                                                        ,win.config.tipoent
-                                                        ,win.config.claveent
-                                                        ,win.config.webid
-                                                        ,function(acciones)
-                                                        {
-                                                            debug('callback despues de recuperar acciones posteriores a turnado args:',arguments,'.');
-                                                            if(acciones.length === 0)
-                                                            {
-                                                                _mask('Redireccionando');
-                                                                Ext.create('Ext.form.Panel').submit(
-                                                                {
-                                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
-                                                                    ,standardSubmit : true
-                                                                });
-                                                            }
-                                                            else if(acciones.length === 1)
-                                                            {
-                                                                _procesaAccion(
-                                                                    acciones[0].CDTIPFLU
-                                                                    ,acciones[0].CDFLUJOMC
-                                                                    ,acciones[0].TIPODEST
-                                                                    ,acciones[0].CLAVEDEST
-                                                                    ,acciones[0].WEBIDDEST
-                                                                    ,acciones[0].AUX
-                                                                    ,win.config.ntramite
-                                                                    ,win.config.aux
-                                                                    ,win.config.cdunieco
-                                                                    ,win.config.cdramo
-                                                                    ,win.config.estado
-                                                                    ,win.config.nmpoliza
-                                                                    ,win.config.nmsituac
-                                                                    ,win.config.nmsuplem
-                                                                    ,win.config.cdusuari
-                                                                    ,win.config.cdsisrol
-                                                                    ,null
-                                                                );
-                                                            }
-                                                            else
-                                                            {
-                                                                mensajeWarning(
-                                                                    'Hay m\u00e1s de una acci\u00f3n posterior al turnado, revisar el flujo'
-                                                                    ,function()
-                                                                    {
-                                                                        _mask('Redireccionando');
-                                                                        Ext.create('Ext.form.Panel').submit(
-                                                                        {
-                                                                            url             : _GLOBAL_COMP_URL_MCFLUJO
-                                                                            ,standardSubmit : true
-                                                                        });
-                                                                    }
-                                                                );
-                                                            }
-                                                        }
-                                                    );
-                                                }
-                                                catch(e)
-                                                {
-                                                    manejaException(e,ck,mask);
-                                                }
+                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
+                                                    ,standardSubmit : true
+                                                });
                                             }
                                         );
                                     }

@@ -23,11 +23,6 @@
     background-color: #FA8258; 
     color: #900; 
 }
-
-.blanco-row .x-grid-cell { 
-    background-color: #FFFFFF; 
-    color: #900; 
-}
 </style>
 <script>
 //////urls //////
@@ -40,7 +35,6 @@
     var _URL_DESCONSOLIDA_RECIBOS    = '<s:url namespace="/general" action= "desconsolidarRecibos"    />';
     var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleReciboSISA"/>';
     var _URL_OBTENCION_REPORTE       = '<s:url namespace="/general" action= "procesoObtencionReporte" />';
-    var _URL_REPORTE_RECIBOS         = '<s:url namespace="/general" action= "procesoReporteRecibos" />';
     //var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action="obtieneDetalleRecibo"     />';
     //var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleRecibo"    />';
     var p_cdunieco                   = '<s:property                 value = "params.cdunieco"         />';
@@ -50,32 +44,16 @@
     var p_nmsuplem                   = '<s:property                 value = "params.nmsuplem"         />';
     var pRcb_wndDetalleRecibo;
     var winSimbologia;
-    var arrRolesConso                = [RolSistema.SuscriptorTecnico, 
-                                        RolSistema.SuscriptorSalud,
-                                        RolSistema.SupervisorTecnico,
-                                        RolSistema.GerenteOperacionesEmision,
-                                        RolSistema.SubdirectorSalud];
 //////variables //////
 
 //////overrides //////
 //////overrides //////
 
 //////componentes dinamicos //////
-    var itemsReciboFields        = [<s:property value="imap.itemsReciboFields"   escapeHtml="false" />];
-    var itemsReciboColumns       = [<s:property value="imap.itemsReciboColumns"  escapeHtml="false" />];
+    var itemsReciboFields        = [<s:property value="imap.itemsReciboFields"  escapeHtml="false" />];
+    var itemsReciboColumns       = [<s:property value="imap.itemsReciboColumns" escapeHtml="false" />];
     var itemsDetalleFields       = [<s:property value="imap.itemsDetalleFields"  escapeHtml="false" />];
     var itemsDetalleColumns      = [<s:property value="imap.itemsDetalleColumns" escapeHtml="false" />];
-    
-    /*itemsReciboColumns.push({
-        xtype      : 'actioncolumn',
-        itemId     : 'btnReciboDoc',
-        icon       : '${ctx}/resources/fam3icons/icons/eye.png',
-        tooltip    : 'Ver recibo',
-        arrowAlign : 'bottom',
-        handler    : function(view, rowIndex, colIndex, item, e, record){
-            debug('Ver recibo');            
-        }
-    });*/
 //////componentes dinamicos //////
 
 Ext.onReady(function(){
@@ -121,17 +99,6 @@ Ext.onReady(function(){
             }
         }
     });
-    
-    _p25_storeHistCons = Ext.create('Ext.data.Store', {
-        storeId:'_p25_modeloHistCons',
-        fields:['recibos', 'accion', 'fecha', 'folio'],
-        data:[
-            { 'recibos': '2401,2409',  "accion": 'CONSOLIDAR',      "fecha": '01/03/2017',  "folio": '1243'},
-            { 'recibos': '2401,2409',  "accion": 'DESCONSOLIDAR',   "fecha": '01/03/2017',  "folio": ''},
-            { 'recibos': '2402,2410',  "accion": 'CONSOLIDAR',      "fecha": '01/03/2017',  "folio": '1244'},
-            { 'recibos': '2402,2410',  "accion": 'DESCONSOLIDAR',   "fecha": '01/03/2017',  "folio": ''}
-        ]
-    });
     ////// stores //////
     
     ////// componentes //////
@@ -152,7 +119,6 @@ Ext.onReady(function(){
                     Ext.create('Ext.grid.Panel',{
                         itemId     : 'gridRecibos',
                         height     : 300,
-                        width      : 800,
                         store      : _p25_storeRecibos,
                         columns    : itemsReciboColumns,
                         viewConfig : { 
@@ -162,14 +128,7 @@ Ext.onReady(function(){
                                 debug('EstadoRecibo.Pendiente',EstadoRecibo.Pendiente);
                                 debug(record.data['status']);
                                 if (EstadoRecibo.Pendiente === record.data['status']) {
-                                    var feactual = new Date();                                  
-                                    var feinicio = record.data['feinicio'];
-                                    if(feactual > feinicio){
-                                        style = 'generado-no-row';
-                                    }
-                                    else{
-                                        style = 'blanco-row';                                        
-                                    }
+                                    style = 'generado-no-row';
                                 } 
                                 else if (EstadoRecibo.Cancelado === record.data['status']) {
                                     style = 'cancelado-row';
@@ -222,7 +181,6 @@ Ext.onReady(function(){
                                 itemId   : 'btnConsolidar',
                                 text     : 'Consolidar',
                                 disabled : true,
-                                hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');                                    
                                     consolidarRecibos(obtenerDataSelected(gridRecibos));
@@ -234,29 +192,10 @@ Ext.onReady(function(){
                                 itemId   : 'btnDesconsolidar',
                                 text     : 'Desconsolidar',
                                 disabled : true,
-                                hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');
                                     desconsolidarRecibos(obtenerDataSelected(gridRecibos));
                                     _p25_storeRecibos.reload();
-                                }
-                            },
-                            {
-                                xtype    : 'button',
-                                itemId   : 'btnReporte',
-                                text     : 'Reporte',
-                                handler  : function(){
-                                    Ext.create('Ext.form.Panel').submit({
-                                        url             : _URL_REPORTE_RECIBOS
-                                        ,standardSubmit : true
-                                        ,target         : '_blank'
-                                        ,params         : {
-                                            'params.cdunieco' : p_cdunieco,
-                                            'params.cdramo'   : p_cdramo,
-                                            'params.estado'   : p_estado,
-                                            'params.nmpoliza' : p_nmpoliza
-                                        }
-                                    });
                                 }
                             },
                             {
@@ -284,6 +223,25 @@ Ext.onReady(function(){
                                             'arrRec'          : arrRec
                                         }
                                     });
+                                    /*Ext.Ajax.request({
+                                        url      : _URL_OBTENCION_REPORTE,
+                                        jsonData : {
+                                            params    : {
+                                                'cdunieco' : p_cdunieco,
+                                                'cdramo'   : p_cdramo,
+                                                'estado'   : p_estado,
+                                                'nmpoliza' : p_nmpoliza
+                                            },
+                                            loadList       : obtenerDataSelected(_fieldById('gridRecibos'))
+                                        },
+                                        success  : function(response){
+                                            debug('recibos consolidados con numero de folio');
+                                            debug('response',response);
+                                        },
+                                        failure  : function(){
+                                            errorComunicacion();
+                                        }
+                                    });*/
                                 }
                             },
                             {
@@ -294,16 +252,7 @@ Ext.onReady(function(){
                                 handler  : function(){
                                     winSimbologia.show();
                                 }
-                            }/*,
-                            {
-                                xtype    : 'button', 
-                                itemId   : 'btnHistCons',
-                                text     : 'Historial consolidado',
-                                disabled : false,
-                                handler  : function(){
-                                    winHistCons.show();
-                                }
-                            }*/
+                            }
                         ]
                     })
                 ]
@@ -319,14 +268,6 @@ Ext.onReady(function(){
             'params.cdramo'   : p_cdramo,
             'params.estado'   : p_estado,
             'params.nmpoliza' : p_nmpoliza
-        }
-    });
-    
-    _p25_storeRecibos.on({
-        load : function(me){
-            if(me.data.length === 0){
-                _habilitarBoton('btnReporte'   ,true);
-            }
         }
     });
     
@@ -355,27 +296,32 @@ Ext.onReady(function(){
 	                   else{
 	                       descon = 0;
 	                       break;
-	                   }
+	                   }	                  
 	               }
 	               folio = selected[i].data['folio'];
 	               serie = selected[i].data['codigo_serial'];
 	           }
 	           debug('termina de recorrer seleccionados',folio,serie);
 	           debug('Antes de entrar en condiciones',conso, descon);
-	           if(selected.length === 1){
-	               _habilitarBoton('btnDetalle'      ,true);  //detalle
+	           if(conso === 0 && descon === 1){
+	               _habilitarBoton('btnDetalle'      ,true); //detalle
 	           }
 	           if(conso === 0 && descon > 1){
-	               _habilitarBoton('btnConsolidar'   ,true);  //consolidar
-	               _habilitarBoton('btnDesglose'     ,true);  //desglose
+	               _habilitarBoton('btnConsolidar'   ,true); //consolidar
+	               _habilitarBoton('btnDetalle'      ,false); //detalle
+	               _habilitarBoton('btnDesglose'     ,true); //desglose
 	           }
 	           if(conso === 1 && descon === 0){
 	               seleccionarConsolidados(folio);
-	               _habilitarBoton('btnDesconsolidar',true);  //desconsolidar
-	               _habilitarBoton('btnDesglose'     ,true);  //desglose
+	               _habilitarBoton('btnDesconsolidar',true); //desconsolidar
+	               _habilitarBoton('btnDetalle'      ,false); //detalle
+	               _habilitarBoton('btnDesglose'     ,true); //desglose
 	           }
 	           if(conso > 0 || descon > 0){
-	               _habilitarBoton('btnDesglose'     ,true);  //desglose
+/*	               if(conso === selected.length){
+	                   _habilitarBoton('btnDesconsolidar',true); //desconsolidar
+	               }*/
+	               _habilitarBoton('btnDesglose'     ,true); //desglose
 	           }
            }
        } 
@@ -517,51 +463,42 @@ Ext.onReady(function(){
     
     winSimbologia= Ext.create('Ext.window.Window',{
         title       : 'Simbologia',
-        width       : 400,
+        width       : 290,
         modal       : true,
         closeAction : 'hide',
         items       : [
             Ext.create('Ext.form.Panel', {
                 bodyPadding : 15,
                 defaults    : {
-                    width      : 350,
-                    readOnly   : true
+                    width      : 200,
+                    readOnly   : true,
+                    labelStyle : 'width:120px;'
                 },
                 items       : [
                     {
                         xtype       : 'textfield',
                         name        : 'fieldPagadoId',
                         fieldLabel  : 'Pagado',
-                        labelWidth  : 160,
-                        fieldStyle  : 'background-color: #80FF00; background-image: none; width:150px;'
+                        fieldStyle  : 'background-color: #80FF00; background-image: none;'
                     },
                     {
                         xtype       : 'textfield',
                         name        : 'fieldGeneradoNoId',
                         fieldLabel  : 'Generado(No imp)',
-                        labelWidth  : 160,
-                        fieldStyle  : 'background-color: #81DAF5; background-image: none; width:150px;'
+                        fieldStyle  : 'background-color: #81DAF5; background-image: none;'
                     },
                     {
                         xtype       : 'textfield',
                         name        : 'fieldGeneradoId',
                         fieldLabel  : 'Generado',
-                        labelWidth  : 160,
-                        fieldStyle  : 'background-color: #F3F781; background-image: none; width:150px;'
+                        fieldStyle  : 'background-color: #F3F781; background-image: none;'
                     },
                     {
                         xtype       : 'textfield',
                         name        : 'fieldCanceladoId',
                         fieldLabel  : 'Cancelado',
-                        labelWidth  : 160,
-                        fieldStyle  : 'background-color: #FA8258; background-image: none; width:150px;',
-                    },
-                    {
-                        xtype       : 'textfield',
-                        name        : 'fieldGeneradoNoId',
-                        fieldLabel  : 'Generado(Fuera de vigencia)',
-                        labelWidth  : 160,
-                        fieldStyle  : 'background-color: #FFFFFF; background-image: none; width:150px;'
+                        fieldStyle  : 'background-color: #FA8258; background-image: none;',
+                        labelStyle  : 'width:120px;'
                     }
                 ],
                 buttons     : [{
@@ -571,43 +508,7 @@ Ext.onReady(function(){
                     }
                 }]
             })
-        ]
-    });
-    
-    winHistCons = Ext.create('Ext.window.Window',{
-        title       : 'Historial de consolidacion',
-        width       : 400,
-        modal       : true,
-        itemId      : 'winHistCons',
-        closeAction : 'hide',
-        items       : [
-            Ext.create('Ext.form.Panel', {
-                bodyPadding : 15,
-                defaults    : {
-                    width      : 350,
-                    readOnly   : true
-                },
-                items       : [{
-                    xtype       : 'grid',
-                    itemId      : 'idGridHistCons',
-                    store       : _p25_storeHistCons,
-                    height      : 285,
-                    autoScroll  : true,
-                    columns     : [
-                        { text: 'Recibos',  dataIndex: 'recibos' },
-                        { text: 'Accion',   dataIndex: 'accion'},
-                        { text: 'Fecha',    dataIndex: 'fecha' },
-                        { text: 'Folio',    dataIndex: 'folio' }
-                    ]                    
-                }],
-                buttons     : [{
-                    text    : 'Aceptar',
-                    handler : function(btn){
-                        winHistCons.close();
-                    }
-                }]
-            })
-        ]
+        ]         
     });
 });
 </script>

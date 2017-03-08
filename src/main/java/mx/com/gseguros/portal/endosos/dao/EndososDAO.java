@@ -162,8 +162,7 @@ public interface EndososDAO
             a.porparti,
             nombre,
             cdsucurs,
-            nmcuadro,
-            descripl
+			nmcuadro
      */
     public List<Map<String,String>> obtenerAgentesEndosoAgente(Map<String, String> params)     throws Exception;
 
@@ -369,6 +368,7 @@ public interface EndososDAO
     public List<Map<String,String>> obtieneDatosEndBeneficiario(Map<String, String> params)throws Exception;
     public List<Map<String,String>> obtieneDatosEndAseguradoAlterno(Map<String, String> params)throws Exception;
     public List<Map<String,String>> obtieneDatosEndAdaptacionesRC(Map<String, String> params)throws Exception;
+	public List<Map<String,String>> obtieneDatosEndVigencia(Map<String, String> params)throws Exception;
     public List<Map<String,String>> obtieneDatosEndTextoLibre(Map<String, String> params)throws Exception;
     public void actualizaNumeroEndosSigs(Map<String, String> params)throws Exception;
     
@@ -396,25 +396,25 @@ public interface EndososDAO
             ,Date   fechaEfecto
             )throws Exception;
 
-    public Map<String,Object> guardaEndosoDespago(
-            String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            ,String nmsuplem
-            ,String nmrecibo
-            ,String nmimpres
-            ,String cdusuari
-            ,String cdsisrol
-            ,String cdtipsup
-            )throws Exception;
-    
-    public List<Map<String,String>> obtenerRetroactividad(
-            String cdsisrol
-            ,String cdramo
-            ,String cdtipsup
-            ,String fechaProceso
-            )throws Exception;
+	public Map<String,Object> guardaEndosoDespago(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmrecibo
+			,String nmimpres
+			,String cdusuari
+			,String cdsisrol
+			,String cdtipsup
+			)throws Exception;
+	
+	public List<Map<String,String>> obtenerRetroactividad(
+			String cdsisrol
+			,String cdramo
+			,String cdtipsup
+			,String fechaProceso
+			)throws Exception;
 
     public List<Map<String,String>> obtieneRecibosPagados(
             String cdunieco
@@ -879,46 +879,5 @@ public interface EndososDAO
      * @throws Exception
      */
     public void conviertePuntoMuertoMpoliperBeneficiarioVida (String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
-    
-    public List<Map<String,String>> recuperarCoberturasEndosoPrimaNeta(
-            String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            ,String nmsituac
-            ,String tstamp
-            )throws Exception;
-    
-    public Map<String,Object> guardarEndosoAjusteSiniestralidad(
-            String cdusuari
-            ,String cdsisrol
-            ,String cdelemen
-            ,String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            ,String cdtipsup
-            ,String tstamp
-            ,Date   feefecto
-            )throws Exception;
-    
-    public Map<String,Object> guardarEndosoCambioTipoCarga(
-            String cdusuari
-            ,String cdsisrol
-            ,String cdelemen
-            ,String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            ,String cdtipsup
-            ,String tstamp
-            ,Date   feefecto
-            )throws Exception;
-    
-    public List<Map<String,String>> obtieneDatosEndCamModelo(Map<String, String> params)throws Exception;
-    
-    public List<Map<String,String>> obtieneDatosEndCamDescripcion(Map<String, String> params)throws Exception;
-    
-    public List<Map<String,String>> obtieneDatosEndTipoCarga(Map<String, String> params)throws Exception;
     
 }

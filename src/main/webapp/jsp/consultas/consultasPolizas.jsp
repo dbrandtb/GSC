@@ -22,8 +22,7 @@
             var _URL_CONSULTA_RECIBOS_AGENTE      = '<s:url namespace="/consultasPoliza" action="consultaRecibosAgente" />';
             var _URL_CONSULTA_COPAGOS_POLIZA      = '<s:url namespace="/consultasPoliza" action="consultaCopagosPoliza" />';
             var _URL_CONSULTA_DOCUMENTOS          = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
-            //var _URL_LOADER_RECIBOS               = '<s:url namespace="/general"         action="includes/loadRecibos" />';
-            var _URL_LOADER_RECIBOS               = '<s:url namespace="/general"         action="includes/loadRecibosSISA" />';
+            var _URL_LOADER_RECIBOS               = '<s:url namespace="/general"         action="includes/loadRecibos" />';
             var _URL_LOADER_VER_EXCLUSIONES       = '<s:url namespace="/consultasPoliza" action="includes/verClausulas" />';
             var _URL_LOADER_VER_TATRISIT          = '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit" />';
             var _URL_LOADER_HISTORIAL_RECLAMACIONES= '<s:url namespace="/siniestros"	 action="includes/historialReclamaciones" />';
@@ -48,9 +47,9 @@
             
             
             //Variables para la generacion de Reportes
-            var _urlViewReport      = '<s:property value="rutaServidorReports" />';
-            var _reportsServerUser  = '<s:property value="passServidorReports" />';
-            var _reporteEdoCtaSin   = '<s:text name="rdf.siniestro.estadocuenta.nombre" />';
+            var _urlViewReport      = '<s:text name="ruta.servidor.reports" />';
+            var _reportsServerUser  = '<s:text name="pass.servidor.reports" />';
+            var _reporteEdoCtaSin   = '<s:text name="rdf.siniestro.estadocuenta.nombreMod" />';
             var _urlViewDoc         = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
             
             var _botonesGrid = [
