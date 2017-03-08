@@ -262,7 +262,7 @@ public interface SiniestrosManager {
 	 */
 	public Map<String,String> obtenerTramiteCompleto(String ntramite) throws Exception;
 	
-	Map<String, String> obtenerTramiteCompletoXNmsolici(String nmpoliza, String cdunico, String cdramo) throws Exception;
+	Map<String, String> obtenerTramiteCompletoXNmpoliza(String nmpoliza, String cdunico, String cdramo) throws Exception;
 	
 	/**
 	 * PKG_SATELITES.P_OBT_TFACMESCTRL
@@ -546,7 +546,7 @@ public interface SiniestrosManager {
 			,String cdmotivo
 			,String cdclausu
 			,String swagente
-			,Long stamp, boolean enviarCorreos
+			,Long stamp
 			) throws Exception;
 	
 	public void turnarAutServicio(

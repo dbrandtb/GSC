@@ -3,8 +3,6 @@ package mx.com.gseguros.portal.consultas.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -54,21 +51,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private ExplotacionDocumentosManager explotacionDocumentosManager;
-	@Value("${user.server.layouts}")
-    private String userServerLayouts;	
-
-	@Value("${pass.server.layouts}")
-    private String passServerLayouts;	
-
-	@Value("${directorio.server.layouts}")
-    private String directorioServerLayouts;	
-
-	@Value("${dominio.server.layouts}")
-    private String dominioServerLayouts;	
-
-	@Value("${dominio.server.layouts2}")
-    private String dominioServerLayouts2;	
-
+	
 	public ExplotacionDocumentosAction()
 	{
 		this.session=ActionContext.getContext().getSession();
@@ -94,11 +77,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 			UserVO usuario = Utils.validateSession(session);
 			
 			items = explotacionDocumentosManager.pantallaExplotacionDocumentos(usuario.getUser(),usuario.getRolActivo().getClave());
-			if(params==null){
-			    params=new HashMap<String, String>();
-			}
-			params.put("cdusuari", usuario.getUser());
-			params.put("cdagente", explotacionDocumentosManager.obtenerCdagente(usuario.getUser()));
+			
 			result = SUCCESS;
 		}
 		catch(Exception ex)
@@ -451,7 +430,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 	
 	
 	
-	/*Action(value   = "generarRemesaEmisionEndoso",
+	@Action(value   = "generarRemesaEmisionEndoso",
 			results = { @Result(name="success", type="json") }
 	)
 	public String generarRemesaEmisionEndoso()
@@ -510,7 +489,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
-	*/
+	
 	
 	@Action(value   = "marcarImpresionOperacion",
 			results = { @Result(name="success", type="json") }
@@ -534,7 +513,6 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 			String estado     = params.get("estado");
 			String nmpoliza   = params.get("nmpoliza");
 			String marcar     = params.get("marcar");
-			String ntramiteIn = params.get("ntramiteIn");
 			
 			Utils.validate(
 					cdunieco  , "No se recibi\u00F3 la sucursal"
@@ -551,7 +529,6 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					,estado
 					,nmpoliza
 					,marcar
-					,ntramiteIn
 					);
 			
 			params.putAll(preguntarMarcado);
@@ -927,11 +904,11 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 					, tpdocum
 					, cdusuari
 					, cdsisrol
-					, this.userServerLayouts
-					, this.passServerLayouts
-					, this.directorioServerLayouts
-					, this.dominioServerLayouts
-					, this.dominioServerLayouts2
+					, this.getText("user.server.layouts")
+					, this.getText("pass.server.layouts")
+					, this.getText("directorio.server.layouts")
+					, this.getText("dominio.server.layouts")
+					, this.getText("dominio.server.layouts2")
 					);
 		    list=lay.getValidacion();
 		    session.put("layout.datos.para.documentos", lay.getDocumentos());
@@ -985,70 +962,6 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
-	
-	@Action(value   = "polizasImprimirPromotor",
-            results = { @Result(name="success", type="json") }
-    )
-    public String polizasImprimirPromotor()
-    {
-        logger.debug(Utils.log(
-                 "\n######################################"
-                ,"\n###### polizasImprimirPromotor ######"
-                ,"\n###### params=",params
-                ));
-        
-        try
-        {
-            
-
-            
-            String cdtipram     = params.get("cdtipram");
-            String cduniecos    = params.get("cduniecos");
-            String cdramo       = params.get("cdramo");
-            String ramo         = params.get("ramo");
-            String nmpoliza     = params.get("nmpoliza");
-            String fefecha      = params.get("fefecha");
-            String cdusuariLike = params.get("cdusuari");
-            String cdagente     = params.get("cdagente");
-            
-            Utils.validate(
-                    cdtipram   , "No se recibi\u00F3 el tipo de ramo"
-                    ,cduniecos , "No se recibieron sucursales"
-                    ,fefecha   , "No se recibi\u00F3 la fecha"
-                    );
-            UserVO usuario  = Utils.validateSession(session);
-            String cdusuari = usuario.getUser();
-            String cdsisrol = usuario.getRolActivo().getClave();
-            
-            list=explotacionDocumentosManager.polizasImprimirPromotor(
-                                                    cdusuari, 
-                                                    cdtipram, 
-                                                    cduniecos, 
-                                                    cdramo, 
-                                                    ramo, 
-                                                    nmpoliza, 
-                                                    fefecha, 
-                                                    cdusuariLike, 
-                                                    cdagente, 
-                                                    cdusuari, 
-                                                    cdsisrol, 
-                                                    usuario);
-            success = true;
-        }
-        catch(Exception ex)
-        {
-            message = Utils.manejaExcepcion(ex);
-        }
-        
-        logger.debug(Utils.log(
-                 "\n###### success=" , success
-                ,"\n###### message=" , message
-                ,"\n###### params="  , params
-                ,"\n###### polizasImprimirPromotor ######"
-                ,"\n######################################"
-                ));
-        return SUCCESS;
-    }
 	
 	////////////////// Getters y setters ///////////////////////////
 	                                                              //
@@ -1132,31 +1045,7 @@ public class ExplotacionDocumentosAction extends PrincipalCoreAction
 
 	public void setTramites(List<String> tramites) {
 		this.tramites = tramites;
-	}
-	
-	public String getUserServerLayouts() {
-		return userServerLayouts;
-	}
-
-	public String getPassServerLayouts() {
-		return passServerLayouts;
-	}
-
-	public String getDirectorioServerLayouts() {
-		return directorioServerLayouts;
-	}
-
-	public String getDominioServerLayouts() {
-		return dominioServerLayouts;
-	}
-
-	public String getDominioServerLayouts2() {
-		return dominioServerLayouts2;
-	}
-
-
-	
-	//
+	}//
                                                                   //
     ////////////////////////////////////////////////////////////////
 }

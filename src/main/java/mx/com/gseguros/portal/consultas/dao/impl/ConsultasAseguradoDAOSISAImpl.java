@@ -577,7 +577,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	public class CopagosPolizaMapper implements RowMapper<CopagoVO> {
 		public CopagoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
 			CopagoVO copago = new CopagoVO();
-			copago.setOrden(rs.getString("ORDEN"));
+			copago.setOrden(rs.getInt("ORDEN"));
 			copago.setDescripcion(rs.getString("descripcion"));
 			copago.setValor(rs.getString("valor"));
 			copago.setAgrupador("");
@@ -955,4 +955,5 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 			// TODO Auto-generated method stub
 			return null;
 		}
+		
 }

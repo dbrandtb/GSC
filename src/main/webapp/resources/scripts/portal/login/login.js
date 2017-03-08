@@ -1,6 +1,6 @@
 Ext.onReady(function(){
 
-    //_grabarEvento('SEGURIDAD','ACCLOGIN');
+    _grabarEvento('SEGURIDAD','ACCLOGIN');
 
 	Ext.apply(Ext.form.field.VTypes, {
         
@@ -160,7 +160,7 @@ Ext.onReady(function(){
                 }
 			},
 			success: function(form, action) {
-			    //_grabarEvento('SEGURIDAD','LOGIN');
+			    _grabarEvento('SEGURIDAD','LOGIN');
 				self.location.href = _CONTEXT+'/seleccionaRolCliente.action';
 			}
 		});

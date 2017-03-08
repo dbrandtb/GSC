@@ -6,8 +6,8 @@ function transformaSigsEnIce (sigs) {
             CDPERSON: sigs.smap1.cdperson,
             CDUNIECO: sigs.smap1.CDUNIECO,
             ESTADO: 'W',
-            FEINI: !Ext.isEmpty(sigs.slist1[0].feini) ? sigs.slist1[0].feini : sigs.smap1.feini,
-            FEFIN: !Ext.isEmpty(sigs.slist1[0].fefin) ? sigs.slist1[0].fefin : sigs.smap1.fefin,
+            FEFIN: sigs.smap1.fefin,
+            FEINI: sigs.smap1.feini,
             FESOLICI: sigs.smap1.fesolici,
             NMPOLIZA: '',
             TRAMITE: _p30_flujo.ntramite,
@@ -37,45 +37,29 @@ function transformaSigsEnIce (sigs) {
             'parametros.pv_nmsuplem': '0',
             //parametros.pv_otvalorXY
             'parametros.pv_status': 'V',
-            'parametros.pv_swreduci': null,
-            'cambio': sigs.smap1.tvalopol_4,
-            'moneda': sigs.smap1.tvalopol_5
+            'parametros.pv_swreduci': null
         },
         slist2: [],
         success: true,
         exito: true
     };
     
-    if(sigs.slist1[0].CDRAMO!=null && sigs.slist1[0].CDRAMO == Ramo.AutosFronterizos)
-	{
-    	 for (var att in sigs.smap1) {
-    	    	// a u x . ...
-    	    	//0 1 2 3 4
-    	    	if (att.slice(0, 11) === 'aux.otvalor') {
-    	    		ice.smap1['parametros.pv_otvalor'+att.slice(att.length-2,att.length)] = sigs.smap1[att];
-    	    		delete sigs.smap1[att];
-    	    	}
-    	    }
-	}
-    else
-    {
-        //ice.smap1.parametros.pv_otvalor...
-        for (var att in sigs.slist1[0]) {
-            // p a r a m e t r o s . p v _ o t v a l o r ...
-            //0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-            if (att.slice(0, 21) === 'parametros.pv_otvalor') {
-                ice.smap1[att] = sigs.slist1[0][att];
-            }
+    //ice.smap1.aux...
+    for (var att in sigs.smap1) {
+        // a u x . ...
+        //0 1 2 3 4
+        if (att.slice(0, 4) === 'aux.') {
+            ice.smap1[att] = sigs.smap1[att];
         }
     }
     
-    //ice.smap1.aux...
-    for (var att in sigs.smap1) {
-    	// a u x . ...
-    	//0 1 2 3 4
-    	if (att.slice(0, 4) === 'aux.') {
-    		ice.smap1[att] = sigs.smap1[att];
-    	}
+    //ice.smap1.parametros.pv_otvalor...
+    for (var att in sigs.slist1[0]) {
+        // p a r a m e t r o s . p v _ o t v a l o r ...
+        //0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+        if (att.slice(0, 21) === 'parametros.pv_otvalor') {
+            ice.smap1[att] = sigs.slist1[0][att];
+        }
     }
     
     for (var i = 0; i < sigs.slist1.length; i++) {
@@ -290,9 +274,7 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
         _p30_smap1.cdunieco=json.smap1.CDUNIECO;
         
         var maestra=json.smap1.ESTADO=='M';
-
-        _p30_limpiar();
-
+        
         var fesolici    = Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');
         var fechaHoy    = Ext.Date.clearTime(new Date());
         var fechaLimite = Ext.Date.add(fechaHoy,Ext.Date.DAY,-1*(json.smap1.diasValidos-0));
@@ -302,21 +284,19 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
         debug('fechaLimite=' , fechaLimite);
         debug('vencida='     , vencida , '.');
         
-        if(!Ext.isEmpty(json.smap1.FEINI) && !Ext.isEmpty(json.smap1.FEFIN))
-        {
-            var iniVig = Ext.Date.parse(json.smap1.FEINI,'d/m/Y');
-            var finVig = Ext.Date.parse(json.smap1.FEFIN,'d/m/Y');
-            _fieldByName('feini').setValue(iniVig);
-            _fieldByName('fefin').setValue(finVig);
-        }
-        else
-        {
-            _fieldByName('feini').setValue(new Date());
-        }
-
+        _p30_limpiar();
+        
+        var iniVig = Ext.Date.parse(json.smap1.FEINI,'d/m/Y').getTime();
+        var finVig = Ext.Date.parse(json.smap1.FEFIN,'d/m/Y').getTime();
         var milDif = finVig-iniVig;
         var diaDif = milDif/(1000*60*60*24);
         debug('diaDif:',diaDif);
+        
+        /*if(!maestra&&!vencida)
+        {
+            _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEINI,'d/m/Y'));
+        }*/
+        _fieldByName('feini').setValue(new Date());
         _fieldByName('fefin').setValue
         (
             Ext.Date.add
@@ -326,7 +306,7 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
                 ,diaDif
             )
         );
-                
+        
         if(maestra)
         {
             _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
@@ -348,25 +328,10 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
         
         ck='Recuperando incisos base';
         var recordsAux = [];
-    	if(_p30_smap1.cdramo=='5')
+        for(var i in json.slist2)
         {
-           var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
-           if(itemsTatripol[1].fieldLabel == "MONEDA")
-           {
-           	  if(json.smap1.moneda == '2')
-           	  {
-              itemsTatripol[1].setValue('DOLARES');
-              itemsTatripol[0].setValue(json.smap1.cambio)
-           	  }
-              else
-              {
-              itemsTatripol[1].setValue('PESOS');
-              itemsTatripol[0].setValue(json.smap1.cambio)
-              }
-           }
-           
-           for(var i in json.slist2)
-           {
+        	if(_p30_smap1.cdramo=='5')
+            {
                if('|AF|PU|'.lastIndexOf('|'+json.slist2[i].CDTIPSIT+'|')!=-1)
                 {
                     if(json.slist2[i]['parametros.pv_otvalor02'] == '1')
@@ -393,8 +358,8 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
                           }
                     }
                 }
-            recordsAux.push(new _p30_modelo(json.slist2[i]));
             }
+            recordsAux.push(new _p30_modelo(json.slist2[i]));
         }
         _p30_store.add(recordsAux);
         

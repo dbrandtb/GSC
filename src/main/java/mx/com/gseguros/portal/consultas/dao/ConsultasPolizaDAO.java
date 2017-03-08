@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.consultas.dao;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -324,29 +323,4 @@ public interface ConsultasPolizaDAO {
      * @throws Exception
      */
     public Map<String, String> obtieneDatosLigasRecibosPoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception;
-    
-    /**
-     * Consulta los incisos de una poliza
-     * @param cdunieco Sucursal de la poliza
-     * @param cdramo   Ramo de la poliza
-     * @param estado   Estado de la poliza
-     * @param nmpoliza Numero de poliza
-     * @return Incisos de la poliza
-     * @throws Exception
-     */
-    public List<Map<String, String>> consultaIncisosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza)
-			throws Exception;
-    
-    /**
-     * Inserta en una bitacora las polizas generadas para recupera remota  
-     * @param fecha    Fecha de proceso
-     * @param nombre   Nombre del archivo procesado
-     * @param polizas  Numero de polizas procesadas 
-     * @param rango    Rango de polizas procesadas
-     * @param usuario  
-     */
-    public String insertaBitacora(Date fecha,String nombre,int polizas,String rango,String usuario) 
-    		throws Exception;
-
-    
 }
