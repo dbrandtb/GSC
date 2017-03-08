@@ -73,8 +73,8 @@ var _URL_EXISTE_COBERTURA				= '<s:url namespace="/siniestros" 	action="consulta
 var _URL_VAL_CAUSASINI			        = '<s:url namespace="/siniestros" 	action="consultaInfCausaSiniestroProducto" />';
 var _URL_VALIDA_COBASEGURADOS			= '<s:url namespace="/siniestros" 	action="validaLimiteCoberturaAsegurados"/>';
 var _URL_VALIDA_IMPASEGURADOSINIESTRO	= '<s:url namespace="/siniestros" 	action="validaImporteTramiteAsegurados"/>';
-var _0_urlRutaReporte                   = '<s:property value="rutaServidorReports" />';
-var _0_reportsServerUser                = '<s:property value="passServidorReports" />';
+var _0_urlRutaReporte                   = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser                = '<s:text name="pass.servidor.reports" />';
 var _0_reporteContraRecibo              = '<s:text name="rdf.siniestro.contrarecibo.nombre" />';
 
 var _0_reporteRechazoReembolso          = '<s:text name="rdf.siniestro.cartarechazo.reembolso.nombre"/>';
