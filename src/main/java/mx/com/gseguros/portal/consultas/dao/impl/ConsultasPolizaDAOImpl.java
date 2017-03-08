@@ -3,7 +3,6 @@ package mx.com.gseguros.portal.consultas.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -66,7 +65,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 
 		protected ObtieneDatosPolizaSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_CONSULTA.P_Get_Datos_Poliza");
+			super(dataSource, "PKG_CONSULTA_PRE.P_Get_Datos_Poliza");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -157,7 +156,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 
 		protected ObtieneDatosPolizaTvalopolSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_CONSULTA.P_GET_INF_TVALOPOL");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_INF_TVALOPOL");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -191,7 +190,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     
     protected class ConsultaPolizasAsegPromotorSP extends StoredProcedure {
 		protected ConsultaPolizasAsegPromotorSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.P_Get_Polizas_Aseg_Promotor");
+			super(dataSource, "PKG_CONSULTA_PRE.P_Get_Polizas_Aseg_Promotor");
 			declareParameter(new SqlParameter("pv_user_i", OracleTypes.VARCHAR)); //Agrego parametro user: campo cdusurari de la tabla TUSUARIO
     		declareParameter(new SqlParameter("pv_cdrfc_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
@@ -242,7 +241,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 	
 	protected class ConsultaPolizasAseguradoSP extends StoredProcedure {
 		protected ConsultaPolizasAseguradoSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_PRUEBA.P_Get_Polizas_Asegurado");
+			super(dataSource, "PKG_CONSULTA_PRUEBA_PRE.P_Get_Polizas_Asegurado");
 			declareParameter(new SqlParameter("pv_user_i", OracleTypes.VARCHAR)); //Agrego parametro user: campo cdusurari de la tabla TUSUARIO
     		declareParameter(new SqlParameter("pv_cdrfc_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
@@ -295,7 +294,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 	
 	protected class ConsultaSuplementosSP extends StoredProcedure {
 		protected ConsultaSuplementosSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.p_get_datos_suplem");
+			super(dataSource, "PKG_CONSULTA_PRE.p_get_datos_suplem");
 			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
@@ -327,7 +326,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 	
 	protected class ConsultaSuplementosAseguradoSP extends StoredProcedure {
 		protected ConsultaSuplementosAseguradoSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.p_get_datos_suplem");
+			super(dataSource, "PKG_CONSULTA_PRE.p_get_datos_suplem");
 			declareParameter(new SqlParameter("pv_nmpoliex_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
@@ -362,7 +361,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
 	
 	protected class ObtieneHistoricoPolizaCorto extends StoredProcedure {
 		protected ObtieneHistoricoPolizaCorto(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.p_get_datos_suplem");
+			super(dataSource, "PKG_CONSULTA_PRE.p_get_datos_suplem");
 			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
@@ -417,7 +416,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     protected class ObtieneCopagosSP extends StoredProcedure {
     	
     	protected ObtieneCopagosSP(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_GET_COPAGOS");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_GET_COPAGOS");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -466,7 +465,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     	
     	protected ObtieneAseguradosSP(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_CONSULTA.P_Get_Datos_Aseg");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_Get_Datos_Aseg");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -529,7 +528,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     	
     	protected ObtieneAseguradosSP2(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_CONSULTA_PRUEBA.P_Get_Datos_Aseg_f");
+    		super(dataSource, "PKG_CONSULTA_PRUEBA_PRE.P_Get_Datos_Aseg_f");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -596,7 +595,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 	protected class ObtenerMPolicotSP extends StoredProcedure {
 
 		protected ObtenerMPolicotSP(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_OBTIENE_MPOLICOT");
+			super(dataSource, "PKG_SATELITES_PRE.P_OBTIENE_MPOLICOT");
 			declareParameter(new SqlParameter("pv_cdunieco", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado", OracleTypes.VARCHAR));
@@ -645,7 +644,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 	
 	protected class ObtieneMensajeAgenteSP extends StoredProcedure {
 		protected ObtieneMensajeAgenteSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.P_Get_Datos_prevex");
+			super(dataSource, "PKG_CONSULTA_PRE.P_Get_Datos_prevex");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -674,7 +673,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 	
     protected class ObtieneDatosTarifaSP extends StoredProcedure {
     	protected ObtieneDatosTarifaSP(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_Get_Datos_Tarifa_Pol");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_Get_Datos_Tarifa_Pol");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -730,7 +729,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 	
     protected class ObtieneAgentesPolizaSP extends StoredProcedure {
 		protected ObtieneAgentesPolizaSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.P_GET_AGENTE_POLIZA");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_AGENTE_POLIZA");
 			declareParameter(new SqlParameter("PV_CDUNIECO_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
@@ -774,7 +773,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 	
     protected class ObtieneRecibosAgenteSP extends StoredProcedure {
     	protected ObtieneRecibosAgenteSP(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_Get_recibos_Agente");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_Get_recibos_Agente");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -814,7 +813,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     
     protected class ObtieneRecibosPolizaAuto extends StoredProcedure {
     	protected ObtieneRecibosPolizaAuto(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_GET_RECIBOS_AUTOS");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_GET_RECIBOS_AUTOS");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -869,7 +868,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     		}
     	}
     	
-    	Log.debug("Resultado:::: PKG_CONSULTA.P_GET_TOTAL_INCISOS_X_POLIZA, Se obtuvieron "+incisos+" Incisos para la Poliza " + nmpoliza);
+    	Log.debug("Resultado:::: PKG_CONSULTA_PRE.P_GET_TOTAL_INCISOS_X_POLIZA, Se obtuvieron "+incisos+" Incisos para la Poliza " + nmpoliza);
     	
     	return incisos;
     	
@@ -877,7 +876,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     
     protected class ObtieneNumeroDeIncisosPoliza extends StoredProcedure {
     	protected ObtieneNumeroDeIncisosPoliza(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_GET_TOTAL_INCISOS_X_POLIZA");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_GET_TOTAL_INCISOS_X_POLIZA");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -916,7 +915,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     		}
     	}
     	
-    	Log.debug("Resultado:::: PKG_CONSULTA.P_GET_NMSITUAC_CONTRATANTE, Se obtuvo nmsituac:"+nmsituac+" para el contratante de la Poliza " + nmpoliza);
+    	Log.debug("Resultado:::: PKG_CONSULTA_PRE.P_GET_NMSITUAC_CONTRATANTE, Se obtuvo nmsituac:"+nmsituac+" para el contratante de la Poliza " + nmpoliza);
     	
     	return nmsituac;
     	
@@ -924,7 +923,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     
     protected class ObtieneNmsituacContratantePoliza extends StoredProcedure {
     	protected ObtieneNmsituacContratantePoliza(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_GET_NMSITUAC_CONTRATANTE");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_GET_NMSITUAC_CONTRATANTE");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -1119,7 +1118,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 	protected class GetIncisosPolizaSP extends StoredProcedure {
 
 		protected GetIncisosPolizaSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA2.P_GET_INCISOS_POLIZA");
+			super(dataSource, "PKG_CONSULTA2_PRE.P_GET_INCISOS_POLIZA");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -1131,32 +1130,4 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
 		}
 	}
 	
-	 public String insertaBitacora(Date fecha,String nombre,int polizas,String rango,String usuario)throws Exception{
-		 String resultado = null;
-		 
-		    Map<String, Object> params = new HashMap<String, Object>();
-			params.put("pv_feproceso_i", fecha);
-			params.put("pv_nomarchivo_i",   nombre);
-			params.put("pv_nmpolreg_i",   polizas);
-			params.put("pv_rangopolproc_i", rango);
-			params.put("pv_nomusuario_i", usuario);
-			Map<String, Object> mapResult = ejecutaSP(new InsertaBitacoraSP(getDataSource()), params);
-			
-		 return resultado;
-	 }
-	
-	 protected class InsertaBitacoraSP extends StoredProcedure {
-
-			protected InsertaBitacoraSP(DataSource dataSource) {
-				super(dataSource, "P_INS_BITA_EMI_REMOTA_RECUPERA");
-				declareParameter(new SqlParameter("pv_feproceso_i", OracleTypes.DATE));
-				declareParameter(new SqlParameter("pv_nomarchivo_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_nmpolreg_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_rangopolproc_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_nomusuario_i", OracleTypes.VARCHAR));
-		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
-		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-				compile();
-			}
-		}
 }

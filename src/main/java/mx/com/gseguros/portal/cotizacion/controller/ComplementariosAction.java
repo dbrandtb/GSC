@@ -183,53 +183,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public static final String SUCURSAL_SALUD_NOVA = "1403";
 
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-	
-	@Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-	
-	@Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-	
-	@Value("${recibo.impresion.autos.url}")
-    private String reciboImpresionAutosUrl;
-
-	@Value("${caic.impresion.autos.url}")
-    private String caicImpresionAutosUrl;	
-	
-	@Value("${aeua.impresion.autos.url}")
-    private String aeuaImpresionAutosUrl;	
-	
-	@Value("${ap.impresion.autos.url}")
-    private String apImpresionAutosUrl;
-
-	@Value("${incisos.flotillas.impresion.autos.url}")
-    private String incisosFlotillasImpresionAutosUrl;			
-
 	@Value("${incisos.flotillas.excel.impresion.autos.url}")
-	private String incisosFlotillasExcelImpresionAutosUrl;			
-				
-	@Value("${tarjeta.iden.impresion.autos.url}")
-    private String tarjetaIdenImpresionAutosUrl;				
-					
-	@Value("${numero.incisos.reporte}")
-    private String numeroIncisosReporte;	
-	
-	@Value("${caratula.impresion.autos.url}")
-    private String caratulaImpresionAutosUrl;
-	
-	@Value("${caratula.impresion.autos.serviciopublico.url}")
-    private String caratulaImpresionAutosServiciopublicoUrl;
-	
-	@Value("${manual.agente.txtinfocobredgs}")
-    private String manualAgenteTxtinfocobredgs;
-	
-	@Value("${manual.agente.condgralescobsegvida}")
-    private String manualAgenteCondgralescobsegvida;
-	
-	@Value("${manual.agente.txtinfocobgesgs}")
-    private String manualAgenteTxtinfocobgesgs;
+	private String incisosFlotillasExcelImpresionAutosUrl;
 	
 	public ComplementariosAction() {
 		this.session=ActionContext.getContext().getSession();
@@ -257,24 +212,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String result   = SUCCESS;
 		UserVO usuario  = null;
 		String cdsisrol = null;
-		
-		if (exito && map1 != null && "S".equals(map1.get("rstn")) && StringUtils.isNotBlank(map1.get("ntramite"))) { // para RSTN recuperar datos
-		    try {
-		        String paso = "Construyendo flujo RSTN";
-		        try {
-		            UserVO user = Utils.validateSession(session);
-		            String ntramite = map1.get("ntramite");
-		            Utils.validate(ntramite, "Falta ntramite");
-		            flujo = flujoMesaControlManager.generarYRecuperarFlujoRSTN(ntramite, user.getUser(), user.getRolActivo().getClave());
-		            map1 = null;
-		        } catch (Exception ex) {
-		            Utils.generaExcepcion(ex, paso);
-		        }
-		    } catch (Exception ex) {
-		        exito = false;
-		        respuesta = Utils.manejaExcepcion(ex);
-		    }
-		}
 		
 		if(exito)
 		{
@@ -2353,7 +2290,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
-		rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+		rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 		
 		////// ws cliente y recibos
 		if(success)
@@ -2589,7 +2526,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            	try
 	            	{
 	            		String origen  = Utils.join(rutaDocsBaseDatos,doc.get("CDDOCUME"));
-	            		String destino = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",doc.get("CDDOCUME"));
+	            		String destino = Utils.join(getText("ruta.documentos.poliza"),"/",ntramite,"/",doc.get("CDDOCUME"));
 	            		logger.debug(Utils.log("\nIntentando mover desde:",origen,",hacia:",destino));
 	            		FileUtils.moveFile(
 	            				new File(origen)
@@ -2619,10 +2556,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug("docu iterado: "+docu);
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
-					String url=this.rutaServidorReports
+					String url=this.getText("ruta.servidor.reports")
 							+ "?destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+this.passServidorReports
+							+ "&userid="+this.getText("pass.servidor.reports")
 							+ "&report="+descripl
 							+ "&paramform=no"
 							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -2665,24 +2602,24 @@ public class ComplementariosAction extends PrincipalCoreAction
 					if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
 				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
 				    	){
-						urlCaratula = this.caratulaImpresionAutosUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.url");
 					}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
-						urlCaratula = this.caratulaImpresionAutosServiciopublicoUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
 					}
 					
 					if("C".equalsIgnoreCase(tipoGrupoInciso)){
-						urlCaratula = this.caratulaImpresionAutosServiciopublicoUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.flotillas.url");
 					}
 					
-					String urlRecibo = this.reciboImpresionAutosUrl;
-					String urlCaic = this.caicImpresionAutosUrl;
-					String urlAeua = this.aeuaImpresionAutosUrl;
-					String urlAp = this.apImpresionAutosUrl;
+					String urlRecibo = this.getText("recibo.impresion.autos.url");
+					String urlCaic = this.getText("caic.impresion.autos.url");
+					String urlAeua = this.getText("aeua.impresion.autos.url");
+					String urlAp = this.getText("ap.impresion.autos.url");
 					
-					String urlIncisosFlot = this.incisosFlotillasImpresionAutosUrl;
+					String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
 					String urlIncisosExcelFlot = this.incisosFlotillasExcelImpresionAutosUrl;
-					String urlTarjIdent = this.tarjetaIdenImpresionAutosUrl;
-					String numIncisosReporte = this.numeroIncisosReporte;
+					String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
+					String numIncisosReporte = this.getText("numero.incisos.reporte");
 					
 					this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 										"<br>Estimado(a) cliente,<br/><br/>"+
@@ -3052,7 +2989,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de reduce GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteTxtinfocobredgs+"\">Reduce GS</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobredgs")+"\">Reduce GS</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3061,7 +2998,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteTxtinfocobredgs
+								,this.getText("manual.agente.txtinfocobredgs")
 								,"Reduce GS"
 								,nmpoliza
 								,ntramite
@@ -3080,7 +3017,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de gestoria GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteTxtinfocobgesgs+"\">Gestoria GS</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobgesgs")+"\">Gestoria GS</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3089,7 +3026,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteTxtinfocobgesgs
+								,this.getText("manual.agente.txtinfocobgesgs")
 								,"Gestoria GS"
 								,nmpoliza
 								,ntramite
@@ -3111,10 +3048,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 						String reporteEspVida = this.getText("rdf.emision.nombre.esp.cobvida");
 						String pdfEspVidaNom = "SOL_VIDA_AUTO.pdf";
 						
-						String url=this.rutaServidorReports
+						String url=this.getText("ruta.servidor.reports")
 								+ "?destype=cache"
 								+ "&desformat=PDF"
-								+ "&userid="+this.passServidorReports
+								+ "&userid="+this.getText("pass.servidor.reports")
 								+ "&report="+reporteEspVida
 								+ "&paramform=no"
 								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -3156,7 +3093,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,null, false
 								);
 
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteCondgralescobsegvida+"\">Condiciones Generales Seguro de Vida</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.condgralescobsegvida")+"\">Condiciones Generales Seguro de Vida</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3165,7 +3102,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteCondgralescobsegvida
+								,this.getText("manual.agente.condgralescobsegvida")
 								,"Condiciones Generales Seguro de Vida"
 								,nmpoliza
 								,ntramite
@@ -3490,7 +3427,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 
-	rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+	rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 	
 	////// ws cliente y recibos
 	if(success)
@@ -4459,15 +4396,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			logger.debug("nombreRdf = {}", nombreRdf);
 			
-			String rutaCarpeta = Utils.join(this.rutaDocumentosPoliza, "/", ntramite);
+			String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"), "/", ntramite);
 			
 			String url = Utils.join(
-					this.rutaServidorReports,
+					this.getText("ruta.servidor.reports"),
 					"?destype=cache",
 					"&desformat=PDF",
 					"&paramform=no",
 					"&ACCESSIBLE=YES", //parametro que habilita salida en PDF
-					"&userid=", this.passServidorReports,
+					"&userid=", this.getText("pass.servidor.reports"),
 					"&report=", nombreRdf,
 					"&p_ntramite=", ntramite,
 					"&p_ramo=", cdramo,
@@ -4786,14 +4723,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setParams(Map<String, String> params) {
 		this.params = params;
-	}
-
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
 	}
 
 }
