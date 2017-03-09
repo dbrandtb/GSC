@@ -203,6 +203,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Value("${ruta.documentos.temporal}")
 	private String rutaTempEndoso;
 	
+	@Value("${caratula.impresion.autos.docextra.url}")
+    private String caratulaImpresionAutosDocExtra;
 	
 	@Override
 	public Map<String,Object> construirMarcoEndosos(String cdusuari,String cdsisrol) throws Exception
@@ -3896,6 +3898,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					String urlIncisosExcelFlot = this.incisosFlotillasExcelImpresionAutosUrl;
 					String urlTarjIdent = this.urlImpresionTarjetaIdentificacion;
 					
+					String urlDocsExtra = this.caratulaImpresionAutosDocExtra;
+					
 					String parametros = null;
 					
 					/**
@@ -4379,6 +4383,63 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA, null, null, false
+								);
+					}
+					
+					/**
+					 * Para documento Sanas Practicas
+					 */
+					
+					parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",2";
+					logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
+					
+					mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlDocsExtra).append(parametros).append("\">Sanas Pr\u00e1cticas</a>");
+					
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,new Date()
+							,urlDocsExtra + parametros
+							,"Sanas Pr\u00e1cticas"
+							,nmpoliza
+							,ntramite
+							,cdtipsup
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
+							);
+					
+					/**
+					 * Para documento Constancia de Recepcion
+					 */
+					if(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
+						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",1";
+						logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
+						
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlDocsExtra).append(parametros).append("\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>");
+						
+						mesaControlDAO.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlDocsExtra + parametros
+								,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
 								);
 					}
 				}
