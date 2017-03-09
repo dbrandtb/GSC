@@ -28,9 +28,9 @@ public interface RecibosDAO {
 
 	public List<Map<String, String>> obtenerDatosRecibosSISA(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 	
-	public String consolidarRecibos(List<Map<String, String>> lista) throws Exception;
+	public String consolidarRecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String usuario, List<Map<String, String>> lista) throws Exception;
 	
-	public void desconsolidarRecibos(String folio) throws Exception;
+	public void desconsolidarRecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String usuario, String folio) throws Exception;
 	
 	public List<DetalleReciboVO> obtieneDetalleReciboSISA(String cdunieco, 
 	        String cdramo, 
@@ -44,4 +44,6 @@ public interface RecibosDAO {
 	public InputStream obtenerReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String[] lista) throws Exception;
 	
 	public InputStream obtenerReporteRecibos(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+	
+	public List<Map<String, String>> obtenerBitacoraConsolidacion(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 }
