@@ -1523,7 +1523,7 @@ Ext.onReady(function() {
                 tbar: [
                     {
                         text     : 'Agregar Documento'
-                        ,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+                        ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
                         ,handler : _p21_agregarFactura
                     }
                 ]
@@ -1671,7 +1671,7 @@ Ext.onReady(function() {
                 tbar: [
                     {
                         text     : 'Agregar Documento'
-                        ,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+                        ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
                         ,handler : _p21_agregarFactura
                     }
                 ]
