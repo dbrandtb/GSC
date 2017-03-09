@@ -167,16 +167,19 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
         }
     }
 
-    public String consolidarRecibos(List<Map<String, String>> lista) throws Exception{
+    public String consolidarRecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String usuario, List<Map<String, String>> lista) throws Exception{
         Map<String,Object> params = new LinkedHashMap<String,Object>();
         String[] array = new String[lista.size()];        
         int i = 0;
         for(Map<String,String> recibo : lista){
             array[i++] = recibo.get("nmrecibo");
         }
-        String cdunieco = lista.get(0).get("cdunieco");
         params.put("cdunieco", cdunieco);
-        params.put("array",    new SqlArrayValue(array));
+        params.put("cdramo"  , cdramo);
+        params.put("estado"  , estado);
+        params.put("nmpoliza", nmpoliza);
+        params.put("usuario" , usuario);
+        params.put("array"   ,    new SqlArrayValue(array));
         Map<String,Object> procResult = ejecutaSP(new ConsolidarRecibos(getDataSource()),params);
         String folio                  = procResult.get("pv_nmfolcon_o").toString();
         return folio;
@@ -186,6 +189,10 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
         protected ConsolidarRecibos(DataSource dataSource){
             super(dataSource,"PKG_RECIBOS_SISA_SIGS.P_CONSOLIDA_RECIBOS");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("usuario"  , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("array"    , OracleTypes.ARRAY , "LISTA_VARCHAR2"));
             declareParameter(new SqlOutParameter("pv_nmfolcon_o", OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
@@ -194,15 +201,25 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
         }
     }
     
-    public void desconsolidarRecibos(String folio) throws Exception{
+    public void desconsolidarRecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String usuario, String folio) throws Exception{
         Map<String,Object> params = new LinkedHashMap<String,Object>();
-        params.put("folio", folio);
+        params.put("cdunieco", cdunieco);
+        params.put("cdramo"  , cdramo);
+        params.put("estado"  , estado);
+        params.put("nmpoliza", nmpoliza);
+        params.put("usuario" , usuario);
+        params.put("folio"   , folio);
         ejecutaSP(new DesconsolidarRecibos(getDataSource()),params);
     }
     
     protected class DesconsolidarRecibos extends StoredProcedure{
         protected DesconsolidarRecibos(DataSource dataSource){
             super(dataSource,"PKG_RECIBOS_SISA_SIGS.P_DESCONSOLIDA_RECIBOS");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("usuario"  , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("folio" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
@@ -470,6 +487,42 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
             declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneReporteMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public List<Map<String, String>> obtenerBitacoraConsolidacion(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception{
+        Map<String, Object> params = new HashMap<String, Object>();   
+        params.put("pv_cdunieco_i", cdunieco);
+        params.put("pv_cdramo_i",   cdramo);
+        params.put("pv_estado_i",   estado);
+        params.put("pv_nmpoliza_i", nmpoliza);
+        Map<String, Object> resultado = ejecutaSP(new ObtenerBitacoraConsolidacion(getDataSource()), params);
+        logger.debug(Utils.log(
+                "\n###########################################",
+                "\n###### obtenerBitacoraConsolidacion ######",
+                "\n###### resultado=",resultado
+               ));
+        return (List<Map<String, String>>) resultado.get("pv_registro_o");
+    }
+        
+    protected class ObtenerBitacoraConsolidacion extends StoredProcedure {
+        protected ObtenerBitacoraConsolidacion(DataSource dataSource) {
+            super(dataSource,"PKG_RECIBOS_SISA_SIGS.P_OBTIENE_TBITACONS");
+            declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
+            String cols[] = new String[] {
+                    "USUARIO",
+                    "RECIBOS",
+                    "ACCION",
+                    "FECHA",
+                    "NMFOLCON"};
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
             compile();

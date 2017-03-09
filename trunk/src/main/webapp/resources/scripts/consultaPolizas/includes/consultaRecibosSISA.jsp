@@ -35,12 +35,13 @@
 
 //////variables //////
     var _p25_storeRecibos;
-    var _URL_CONSULTA_RECIBOS        = '<s:url namespace="/general" action= "obtenerDatosRecibosSISA" />';
-    var _URL_CONSOLIDA_RECIBOS       = '<s:url namespace="/general" action= "consolidarRecibos"       />';
-    var _URL_DESCONSOLIDA_RECIBOS    = '<s:url namespace="/general" action= "desconsolidarRecibos"    />';
-    var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleReciboSISA"/>';
-    var _URL_OBTENCION_REPORTE       = '<s:url namespace="/general" action= "procesoObtencionReporte" />';
-    var _URL_REPORTE_RECIBOS         = '<s:url namespace="/general" action= "procesoReporteRecibos" />';
+    var _URL_CONSULTA_RECIBOS        = '<s:url namespace="/general" action= "obtenerDatosRecibosSISA"      />';
+    var _URL_CONSOLIDA_RECIBOS       = '<s:url namespace="/general" action= "consolidarRecibos"            />';
+    var _URL_DESCONSOLIDA_RECIBOS    = '<s:url namespace="/general" action= "desconsolidarRecibos"         />';
+    var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleReciboSISA"     />';
+    var _URL_OBTENCION_REPORTE       = '<s:url namespace="/general" action= "procesoObtencionReporte"      />';
+    var _URL_REPORTE_RECIBOS         = '<s:url namespace="/general" action= "procesoReporteRecibos"        />';
+    var _URL_CONSULTA_BITACONS       = '<s:url namespace="/general" action= "obtenerBitacoraConsolidacion" />';
     //var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action="obtieneDetalleRecibo"     />';
     //var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleRecibo"    />';
     var p_cdunieco                   = '<s:property                 value = "params.cdunieco"         />';
@@ -61,21 +62,13 @@
 //////overrides //////
 
 //////componentes dinamicos //////
-    var itemsReciboFields        = [<s:property value="imap.itemsReciboFields"   escapeHtml="false" />];
-    var itemsReciboColumns       = [<s:property value="imap.itemsReciboColumns"  escapeHtml="false" />];
-    var itemsDetalleFields       = [<s:property value="imap.itemsDetalleFields"  escapeHtml="false" />];
-    var itemsDetalleColumns      = [<s:property value="imap.itemsDetalleColumns" escapeHtml="false" />];
-    
-    /*itemsReciboColumns.push({
-        xtype      : 'actioncolumn',
-        itemId     : 'btnReciboDoc',
-        icon       : '${ctx}/resources/fam3icons/icons/eye.png',
-        tooltip    : 'Ver recibo',
-        arrowAlign : 'bottom',
-        handler    : function(view, rowIndex, colIndex, item, e, record){
-            debug('Ver recibo');            
-        }
-    });*/
+    var itemsReciboFields        = [<s:property value="imap.itemsReciboFields"    escapeHtml="false" />];
+    var itemsReciboColumns       = [<s:property value="imap.itemsReciboColumns"   escapeHtml="false" />];
+    var itemsDetalleFields       = [<s:property value="imap.itemsDetalleFields"   escapeHtml="false" />];
+    var itemsDetalleColumns      = [<s:property value="imap.itemsDetalleColumns"  escapeHtml="false" />];
+    var itemsBitacoraFields      = [<s:property value="imap.itemsBitacoraFields"  escapeHtml="false" />];
+    var itemsBitacoraColumns     = [<s:property value="imap.itemsBitacoraColumns" escapeHtml="false" />];
+
 //////componentes dinamicos //////
 
 Ext.onReady(function(){
@@ -89,6 +82,11 @@ Ext.onReady(function(){
     Ext.define('_p25_modeloDetalleRecibo',{
         extend  : 'Ext.data.Model',
         fields  : itemsDetalleFields
+    });
+    
+    Ext.define('_p25_modeloBitacoraRecibo',{
+        extend  : 'Ext.data.Model',
+        fields  : itemsBitacoraFields
     });
     ////// modelos //////
     
@@ -122,16 +120,21 @@ Ext.onReady(function(){
         }
     });
     
-    _p25_storeHistCons = Ext.create('Ext.data.Store', {
-        storeId:'_p25_modeloHistCons',
-        fields:['recibos', 'accion', 'fecha', 'folio'],
-        data:[
-            { 'recibos': '2401,2409',  "accion": 'CONSOLIDAR',      "fecha": '01/03/2017',  "folio": '1243'},
-            { 'recibos': '2401,2409',  "accion": 'DESCONSOLIDAR',   "fecha": '01/03/2017',  "folio": ''},
-            { 'recibos': '2402,2410',  "accion": 'CONSOLIDAR',      "fecha": '01/03/2017',  "folio": '1244'},
-            { 'recibos': '2402,2410',  "accion": 'DESCONSOLIDAR',   "fecha": '01/03/2017',  "folio": ''}
-        ]
+    _p25_storeHistCons = Ext.create('Ext.data.Store',{
+        model    : '_p25_modeloBitacoraRecibo',
+        autoLoad : false,
+        proxy    : {
+            type   : 'ajax',
+            url    : _URL_CONSULTA_BITACONS,
+            reader : {
+                type            : 'json',
+                root            : 'slist1',
+                messageProperty : 'respuesta',
+                successProperty : 'success'
+            }
+        }
     });
+    
     ////// stores //////
     
     ////// componentes //////
@@ -225,8 +228,7 @@ Ext.onReady(function(){
                                 hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');                                    
-                                    consolidarRecibos(obtenerDataSelected(gridRecibos));
-                                    _p25_storeRecibos.reload();
+                                    consolidarRecibos(obtenerDataSelected(gridRecibos));                                    
                                 }
                             },
                             {
@@ -238,7 +240,6 @@ Ext.onReady(function(){
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');
                                     desconsolidarRecibos(obtenerDataSelected(gridRecibos));
-                                    _p25_storeRecibos.reload();
                                 }
                             },
                             {
@@ -294,16 +295,18 @@ Ext.onReady(function(){
                                 handler  : function(){
                                     winSimbologia.show();
                                 }
-                            }/*,
+                            },
                             {
                                 xtype    : 'button', 
                                 itemId   : 'btnHistCons',
                                 text     : 'Historial consolidado',
+                                hidden   : true,
                                 disabled : false,
                                 handler  : function(){
+                                    _p25_storeHistCons.reload();
                                     winHistCons.show();
                                 }
-                            }*/
+                            }
                         ]
                     })
                 ]
@@ -314,6 +317,15 @@ Ext.onReady(function(){
     
     ////// custom //////
     _p25_storeRecibos.load({
+        params: {
+            'params.cdunieco' : p_cdunieco,
+            'params.cdramo'   : p_cdramo,
+            'params.estado'   : p_estado,
+            'params.nmpoliza' : p_nmpoliza
+        }
+    });
+    
+    _p25_storeHistCons.load({
         params: {
             'params.cdunieco' : p_cdunieco,
             'params.cdramo'   : p_cdramo,
@@ -426,8 +438,12 @@ Ext.onReady(function(){
                 loadList  : listaRecibos
             },
             success  : function(response){
-                debug('recibos consolidados con numero de folio');
+                var json = Ext.decode(response.responseText);
+                debug('recibos consolidados con numero de folio',json);
+                _p25_storeRecibos.reload();
+                _fieldById('gridRecibos').getSelectionModel().deselectAll();
                 winMask.close();
+                mensajeCorrecto('Aviso','Se consolido correctamente con n\u00f3mero de folio '+json.respuesta);
             },
             failure  : function(){
                 errorComunicacion();
@@ -452,8 +468,11 @@ Ext.onReady(function(){
                 loadList  : listaRecibos
             },
             success  : function(response){
-                debug('recibos consolidados con numero de folio');
+                debug('recibos desconsolidados');
+                _p25_storeRecibos.reload();
+                _fieldById('gridRecibos').getSelectionModel().deselectAll();
                 winMask.close();
+                mensajeCorrecto('Aviso','Se des consolido correctamente');
             },
             failure  : function(){
                 errorComunicacion();
@@ -576,7 +595,7 @@ Ext.onReady(function(){
     
     winHistCons = Ext.create('Ext.window.Window',{
         title       : 'Historial de consolidacion',
-        width       : 400,
+        width       : 600,
         modal       : true,
         itemId      : 'winHistCons',
         closeAction : 'hide',
@@ -584,7 +603,7 @@ Ext.onReady(function(){
             Ext.create('Ext.form.Panel', {
                 bodyPadding : 15,
                 defaults    : {
-                    width      : 350,
+                    width      : 580,
                     readOnly   : true
                 },
                 items       : [{
@@ -593,17 +612,12 @@ Ext.onReady(function(){
                     store       : _p25_storeHistCons,
                     height      : 285,
                     autoScroll  : true,
-                    columns     : [
-                        { text: 'Recibos',  dataIndex: 'recibos' },
-                        { text: 'Accion',   dataIndex: 'accion'},
-                        { text: 'Fecha',    dataIndex: 'fecha' },
-                        { text: 'Folio',    dataIndex: 'folio' }
-                    ]                    
+                    columns     : itemsBitacoraColumns                    
                 }],
                 buttons     : [{
                     text    : 'Aceptar',
                     handler : function(btn){
-                        winHistCons.close();
+                        _fieldById('winHistCons').close();
                     }
                 }]
             })
