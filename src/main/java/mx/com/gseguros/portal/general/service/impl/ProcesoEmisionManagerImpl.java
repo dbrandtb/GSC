@@ -110,7 +110,8 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	@Value("${ruta.documentos.poliza}")
 	private String rutaDocumentosPoliza;
 	
-	
+	@Value("${caratula.impresion.autos.docextra.url}")
+    private String caratulaImpresionAutosDocExtra;
 	
 	@Autowired
 	private ServiciosManager serviciosManager;
@@ -555,6 +556,8 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				String urlIncisosExcelFlot = incisosFlotillasExcelImpresionAutosUrl;
 				String urlTarjIdent = tarjetaIdenImpresionAutosURL;
 				
+				String urlDocsExtra = this.caratulaImpresionAutosDocExtra;
+				
 				String mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 									"<br>Estimado(a) cliente,<br/><br/>"+
 									"Anexamos a este e-mail la documentaci\u00f3n de la p\u00f3liza de Autom\u00f3viles contratada con GENERAL DE SEGUROS.<br/>"+
@@ -992,6 +995,58 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA, null, null, false
 							);
 				}
+				
+				/**
+				 * Para documento Sanas Practicas
+				 */
+				parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",2";
+				logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
+				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Sanas Pr\u00e1cticas</a>";
+				
+				mesaControlDAO.guardarDocumento(
+						cdunieco
+						,cdramo
+						,"M"
+						,nmpolizaEmitida
+						,nmsuplemEmitida
+						,new Date()
+						,urlDocsExtra + parametros
+						,"Sanas Pr\u00e1cticas"
+						,nmpoliza
+						,ntramite
+						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+						,Constantes.SI
+						,null
+						,"1"
+						,"0"
+						,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
+						);
+				
+				/**
+				 * Para documento Constancia de Recepcion
+				 */
+				parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",1";
+				logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
+				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>";
+				
+				mesaControlDAO.guardarDocumento(
+						cdunieco
+						,cdramo
+						,"M"
+						,nmpolizaEmitida
+						,nmsuplemEmitida
+						,new Date()
+						,urlDocsExtra + parametros
+						,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
+						,nmpoliza
+						,ntramite
+						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+						,Constantes.SI
+						,null
+						,"1"
+						,"0"
+						,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
+						);
 				
 				// JTEZVA 2016 09 08 Se complementan las ligas con los documentos ice
 				mensajeEmail += emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite);

@@ -231,6 +231,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	@Value("${manual.agente.txtinfocobgesgs}")
     private String manualAgenteTxtinfocobgesgs;
 	
+	@Value("${caratula.impresion.autos.docextra.url}")
+    private String caratulaImpresionAutosDocExtra;
+	
 	public ComplementariosAction() {
 		this.session=ActionContext.getContext().getSession();
 	}
@@ -2684,6 +2687,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					String urlTarjIdent = this.tarjetaIdenImpresionAutosUrl;
 					String numIncisosReporte = this.numeroIncisosReporte;
 					
+					String urlDocsExtra = this.caratulaImpresionAutosDocExtra;
+					
 					this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 										"<br>Estimado(a) cliente,<br/><br/>"+
 										"Anexamos a este e-mail la documentaci\u00f3n de la p\u00f3liza de Autom\u00f3viles contratada con GENERAL DE SEGUROS.<br/>"+
@@ -2695,22 +2700,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car\u00e1tula de p\u00f3liza</a>";
-					
-					//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-					//paramsR.put("pv_cdunieco_i", cdunieco);
-					//paramsR.put("pv_cdramo_i",   cdramo);
-					//paramsR.put("pv_estado_i",   "M");
-					//paramsR.put("pv_nmpoliza_i", nmpolizaEmitida);
-					//paramsR.put("pv_nmsuplem_i", nmsuplemEmitida);
-					//paramsR.put("pv_feinici_i",  new Date());
-					//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
-					//paramsR.put("pv_dsdocume_i", "Car\u00e1tula de P\u00f3liza");
-					//paramsR.put("pv_nmsolici_i", nmpoliza);
-					//paramsR.put("pv_ntramite_i", ntramite);
-					//paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
-					//paramsR.put("pv_swvisible_i", Constantes.SI);
-					
-					//kernelManager.guardarArchivo(paramsR);
 					
 					documentosManager.guardarDocumento(
 							cdunieco
@@ -2820,11 +2809,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
 						
-						//paramsR.put("pv_cddocume_i", urlAp + parametros);
-						//paramsR.put("pv_dsdocume_i", "AP");
-						
-						//kernelManager.guardarArchivo(paramsR);
-						
 						documentosManager.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -2854,11 +2838,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
 						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
-						
-						//paramsR.put("pv_cddocume_i", urlCaic + parametros);
-						//paramsR.put("pv_dsdocume_i", "CAIC");
-						
-						//kernelManager.guardarArchivo(paramsR);
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3128,13 +3107,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+pdfEspVidaNom);
 						
 						
-//						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
-						
-						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
-						//paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
-						
-						//kernelManager.guardarArchivo(paramsR);
-						
 						documentosManager.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -3179,6 +3151,62 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,null, false
 								);
 					}
+					
+					/**
+					 * Para documento Sanas Practicas
+					 */
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",2";
+					logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Sanas Pr\u00e1cticas</a>";
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlDocsExtra + parametros
+							,"Sanas Pr\u00e1cticas"
+							,nmpoliza
+							,ntramite
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.EXTERNO_DOCUMENTO_EXTRA
+							,null
+							,null, false
+							);
+
+					/**
+					 * Para documento Constancia de Recepcion
+					 */
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",1";
+					logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>";
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlDocsExtra + parametros
+							,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
+							,nmpoliza
+							,ntramite
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.EXTERNO_DOCUMENTO_EXTRA
+							,null
+							,null, false
+							);
 					
 					// JTEZVA 2016 09 08 Se complementan las ligas con los documentos ice
 					this.mensajeEmail += emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite);

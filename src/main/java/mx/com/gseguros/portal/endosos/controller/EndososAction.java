@@ -220,6 +220,9 @@ public class EndososAction extends PrincipalCoreAction
 	@Value("${manual.agente.txtinfocobgesgs}")
     private String manualAgenteTxtinfocobgesgs;
 	
+	@Value("${caratula.impresion.autos.docextra.url}")
+    private String caratulaImpresionAutosDocExtra;
+	
 	public EndososAction()
 	{
 		logger.debug("new EndososAction");
@@ -13337,6 +13340,7 @@ public String retarificarEndosos()
 					String urlTarjIdent = this.tarjetaIdenImpresionAutosUrl;
 					String numIncisosReporte = this.numeroIncisosReporte;
 					
+					String urlDocsExtra = this.caratulaImpresionAutosDocExtra;
 					
 					/**
 					 * Para Caratula
@@ -13851,6 +13855,67 @@ public String retarificarEndosos()
 								,null, false
 								);
 					}
+					
+					
+					/**
+					 * Para documento Sanas Practicas
+					 */
+					parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",2";
+					logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
+					mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlDocsExtra).append(parametros).append("\">Sanas Pr\u00e1cticas</a>");
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,new Date()
+							,urlDocsExtra + parametros
+							,"Sanas Pr\u00e1cticas"
+							,nmpoliza
+							,ntramite
+							,cdtipsup
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.EXTERNO_DOCUMENTO_EXTRA
+							,null
+							,null, false
+							);
+					
+					/**
+					 * Para documento Constancia de Recepcion
+					 */
+					
+					if(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
+						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",1";
+						logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlDocsExtra).append(parametros).append("\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>");
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlDocsExtra + parametros
+								,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_DOCUMENTO_EXTRA
+								,null
+								,null, false
+								);
+					}
+					
 				}
 			}
 			
