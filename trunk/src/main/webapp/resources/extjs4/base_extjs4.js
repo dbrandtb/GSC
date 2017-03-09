@@ -2073,6 +2073,19 @@ function _procesaAccion(
                                                                         salida = acciones[i];
                                                                         break;
                                                                     }
+                                                                    /*
+                                                                    CUANDO LA RESPUESTA DE LA VALIDACION CLIENTE INICIA CON '*' (EJ: *JTEZVA|PROGRAMADOR)
+                                                                    BUSCAMOS UNA ACCION CUYO VALOR SEA '*', EJECUTAMOS ESA ACCION
+                                                                    Y LE MANDAMOS COMO AUXILIAR LA RESPUESTA JAVA SIN EL '*' (EJ: JTEZVA|PROGRAMADOR)
+                                                                    */
+                                                                    else if (acciones[i].CDVALOR === '*'
+                                                                        && !Ext.isEmpty(valorRespValid)
+                                                                        && valorRespValid.indexOf('*') === 0
+                                                                    ) {
+                                                                        salida = acciones[i];
+                                                                        salida.AUX = valorRespValid.substr(1);
+                                                                        break;
+                                                                    }
                                                                 }
                                                                 if(Ext.isEmpty(salida))
                                                                 {
