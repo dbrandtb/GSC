@@ -682,7 +682,7 @@ Ext.onReady(function()
                         'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:'',
                         'smap1.tomarUnDomicilio' : 'S',
                         'smap1.cargaOrdDomicilio' : json.smap1.nmorddom,
-                        'smap1.muestraBusqueda' : _p29_smap1.cdramo == Ramo.ServicioPublico?'S':'N' // forzamos a que aparezca el campo para buscar personas
+                        'smap1.muestraBusqueda' : _p29_smap1.cdramo == Ramo.ServicioPublico || (_p29_smap1.cdtipsit == TipoSituacion.TuristaLicencia || _p29_smap1.cdtipsit == TipoSituacion.TuristaVehiculo)?'S':'N' // forzamos a que aparezca el campo para buscar personas
                     }
                 });
                 
@@ -761,53 +761,54 @@ Ext.onReady(function()
     }else if(_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoMicro){
         var folio  = _fieldByName('parametros.pv_otvalor33');
     }else{
-        var folio  = _fieldByName('parametros.pv_otvalor37');
+        var folio  = _fieldByName('parametros.pv_otvalor37',null,true);
     }
         
 	   
 	    debug("Valor del Folio --->",folio);
-	    folio.on(
-	    {
-	        'change' : function(comp,val)
-	        {
-	            debug('folio change val:',val,'dummy');
-	        }
-	        ,'blur' : function()
-	        {
-	            debug("Valor 1 -->",!Ext.isEmpty(folio.getValue()));
-	            if(!Ext.isEmpty(folio.getValue())){
-	                Ext.Ajax.request(
-	                {
-	                    url     : _p29_urlObtieneValNumeroSerie
-	                    ,params :
-	                    {
-	                        'smap1.numSerie'  : folio.getValue()
-	                        ,'smap1.feini'   : _fieldByName('feini').getValue()
-	                    }
-	                    ,success : function(response)
-	                    {
-	                        var json=Ext.decode(response.responseText);
-	                        if(json.exito!=true)
-	                        {
-	                            if(!RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol))
-	                            {
-	                                mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
-	                                _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
-	                            }else{
-	                                mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
-	                                _fieldById('_p29_botonEmitir').setDisabled(false);
-	                            }
-	                        }else{
-	                            _fieldById('_p29_botonEmitir').setDisabled(false);
-	                        }
-	                    }
-	                    ,failure : errorComunicacion
-	                }); 
-	            }else{
-	                mensajeError("No se recibio el número de serie");
-	            }
-	        }
-	    });
+	    if(_p29_smap1.cdtipsit!='TL')
+		    folio.on(
+		    {
+		        'change' : function(comp,val)
+		        {
+		            debug('folio change val:',val,'dummy');
+		        }
+		        ,'blur' : function()
+		        {
+		            debug("Valor 1 -->",!Ext.isEmpty(folio.getValue()));
+		            if(!Ext.isEmpty(folio.getValue())){
+		                Ext.Ajax.request(
+		                {
+		                    url     : _p29_urlObtieneValNumeroSerie
+		                    ,params :
+		                    {
+		                        'smap1.numSerie'  : folio.getValue()
+		                        ,'smap1.feini'   : _fieldByName('feini').getValue()
+		                    }
+		                    ,success : function(response)
+		                    {
+		                        var json=Ext.decode(response.responseText);
+		                        if(json.exito!=true)
+		                        {
+		                            if(!RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol))
+		                            {
+		                                mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
+		                                _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
+		                            }else{
+		                                mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
+		                                _fieldById('_p29_botonEmitir').setDisabled(false);
+		                            }
+		                        }else{
+		                            _fieldById('_p29_botonEmitir').setDisabled(false);
+		                        }
+		                    }
+		                    ,failure : errorComunicacion
+		                }); 
+		            }else{
+		                mensajeError("No se recibio el número de serie");
+		            }
+		        }
+		    });
   
 });
 
