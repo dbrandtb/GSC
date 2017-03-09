@@ -115,7 +115,9 @@ var TipoSituacion = {
     RecuperaColectivo     : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECUPERA_COLECTIVO.cdtipsit" />',
     TractoCamionesArmados : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TRACTOCAMIONES_ARMADOS.cdtipsit" />',
     ServicioPublicoMicro  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SERVICIO_PUBLICO_MICRO.cdtipsit" />',
-    ServicioPublicoAuto   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SERVICIO_PUBLICO_AUTO.cdtipsit" />'    
+    ServicioPublicoAuto   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SERVICIO_PUBLICO_AUTO.cdtipsit" />',
+    TuristaLicencia		  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TURISTA_LICENCIA.cdtipsit" />',
+    TuristaVehiculo 	  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TURISTA_VEHICULO.cdtipsit" />' 
  };
  
  //Catalogo de formas de pago

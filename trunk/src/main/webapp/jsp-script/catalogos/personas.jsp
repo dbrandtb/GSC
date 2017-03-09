@@ -1805,7 +1805,12 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 			var form=_p22_formBusqueda();
 			form.down('[name=smap1.rfc]').setFieldLabel('Ingrese el RFC');
 			
-			_p22_formBusqueda().hide();
+			_p22_formBusqueda().hide(); 
+			
+			if(_muestraBusqueda){
+				
+				_p22_formBusqueda().show();
+			}
 
 			irModoAgregar();
 			
