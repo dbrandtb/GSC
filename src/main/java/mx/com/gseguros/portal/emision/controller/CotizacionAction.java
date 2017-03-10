@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.emision.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +66,7 @@ import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.ReportesManager;
@@ -72,6 +76,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoProcesoBloqueo;
 import mx.com.gseguros.portal.general.util.TipoRamo;
@@ -102,35 +107,35 @@ public class CotizacionAction extends PrincipalCoreAction
 	private static SimpleDateFormat renderHora       = new SimpleDateFormat  ("HH:mm");
 	
 	private transient CatalogosManager       catalogosManager;
-	private ConsultasManager                  consultasManager;
-	private String                            error;
-	private Map<String,Item>                  imap;
+	private ConsultasManager                 consultasManager;
+	private String                           error;
+	private Map<String,Item>                 imap;
 	private transient KernelManagerSustituto kernelManager;
-	private PantallasManager                  pantallasManager;
-	private List<Map<String,String>>          slist1;
-	private List<Map<String,String>>          slist2;
-	private Map<String,String>                smap1;
-	private Map<String,String>                params;
-	private StoredProceduresManager           storedProceduresManager;
-	private NadaService          			   nadaService;
-	private TipoCambioDolarGSService          tipoCambioService;
+	private PantallasManager                 pantallasManager;
+	private List<Map<String,String>>         slist1;
+	private List<Map<String,String>>         slist2;
+	private Map<String,String>               smap1;
+	private Map<String,String>               params;
+	private StoredProceduresManager          storedProceduresManager;
+	private NadaService          			 nadaService;
+	private TipoCambioDolarGSService         tipoCambioService;
 	private transient Ice2sigsService        ice2sigsService;
-	private AgentePorFolioService             agentePorFolioService;
+	private AgentePorFolioService            agentePorFolioService;
 	private boolean                          success;
-	private String                            respuesta;
-	private String                            respuestaOculta = null;
+	private String                           respuesta;
+	private String                           respuestaOculta = null;
 	private boolean                          exito           = false;
-	private File                              censo;
-	private String                            censoFileName;
-	private String                            censoContentType;
-	private List<Map<String,Object>>          olist1;
-	private CotizacionManager                 cotizacionManager;
-	private SiniestrosManager                 siniestrosManager;
-	private FlujoVO                           flujo;
-	private String                            start;
-	private String                            limit;
-	private String                            total;
-	private String                            saMed;
+	private File                             censo;
+	private String                           censoFileName;
+	private String                           censoContentType;
+	private List<Map<String,Object>>         olist1;
+	private CotizacionManager                cotizacionManager;
+	private SiniestrosManager                siniestrosManager;
+	private FlujoVO                          flujo;
+	private String start;
+	private String limit;
+	private String total;
+	private String saMed;
 	
 	@Autowired
 	private EmisionManager emisionManager;
@@ -154,7 +159,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private RecuperacionSimpleManager recuperacionSimpleManager;
 	
 	@Autowired
-	private EndososManager endososManager;
+	private EndososManager           endososManager;
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
@@ -197,6 +202,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Value("${sigs.obtenerDatosPorSucRamPol.url}")
     private String sigsObtenerDatosPorSucRamPolUrl;
+
 	
 	public CotizacionAction()
 	{
@@ -1387,7 +1393,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo,
 						"M", nmpolizaEmi, 
-						nmsuplemEmi, this.rutaDocumentosPoliza+"/"+ntramite,
+						nmsuplemEmi, this.getText("ruta.documentos.poliza")+"/"+ntramite,
 						cdunieco, nmpoliza,ntramite, 
 						true, TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(),
 						usuario);
@@ -1692,7 +1698,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
 			boolean conIncisos  = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
 			String modPrim = StringUtils.isNotBlank(smap1.get("modPrim"))?smap1.get("modPrim"):"";
-
+			
 			Map<String,String>tvalopol=new HashMap<String,String>();
 			for(Entry<String,String>en:slist1.get(0).entrySet())
 			{
@@ -1749,14 +1755,17 @@ public class CotizacionAction extends PrincipalCoreAction
 	            }
 	            else
 	            {
-	                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim, cdtipsit);
-	                resp.setExito(true);
+	            	String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim, cdtipsit);
+	            	resp.setExito(true);
 	                resp.setSmap(smap1);
 	                if(!mensajeModPrim.isEmpty())
 	                {
+	                    resp.setExito(false);
 	                    resp.setRespuesta(mensajeModPrim);
 	                    resp.setRespuestaOculta(mensajeModPrim);
 	                }
+	                else
+	                    resp.setExito(true);
 	            }
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
@@ -1806,18 +1815,15 @@ public class CotizacionAction extends PrincipalCoreAction
 	                        {   
 	                            String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza")==null?nmpoliza:resp.getSmap().get("nmpoliza") , cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
 	                        }
-
+	                    
 	                    logger.debug(Utils.log(paqYplan));
 	                    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza")==null?nmpoliza:resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 			        }
 			        if(paqYplan.isEmpty())
 			        {  
 			            paqYplan = cargarPoliza(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), "paqYplan", cdtipsit, null);
-			            if(paqYplan.get(0) != null && paqYplan.get(1) != null)
-			            {
-			                columna = paqYplan.get(1);//forma Pago
-			                fila= paqYplan.get(0);//paquete
-			            }
+			            columna = paqYplan.get(1);//forma Pago
+			            fila= paqYplan.get(0);//paquete
 			        }//pre sonbreado
 			      
 	                if(columna.equals("1P"))                              {columna="PRESTIGIO";}
@@ -1854,7 +1860,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                else if(fila.equals("64")) {fila="Contado";}//  \r\n" + 
 //	                else if() {fila="";}//  SEMESTRAL A\r\n" + 
 			    }
-	            resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap()==null?nmpoliza:resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
+			    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 			    if(!fila.isEmpty() && !columna.isEmpty())
 			    { 
 			        resp.getSmap().put("fila", fila);
@@ -1930,7 +1936,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			            try
 			    		{
 			    			String params  = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",nmpoliza,"&primaObjetivo=",mnprima,"&renuniext=",renuniext,"&renramo=",renramo,"&cdtipsit=",cdtipsit,"&renpoliex=",renpoliex,"&cdplan=",formpagSigs,"&cdperpag=",paquete.toString());
-			    				   mensaje = HttpUtil.sendPost(sigsFacultaDatosPolizaSicapsUrl,params);
+			    				   mensaje = HttpUtil.sendPost(getText("sigs.facultaDatosPolizaSicaps.url"),params);
 			    			if(mensaje != null)
 			    			{
 			    				return mensaje;
@@ -1965,7 +1971,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			try
 			{
 				String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-					  ,respuestaWS =HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl,params);
+					  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
 					HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
 					Map<String,String>parametros = (Map<String,String>)someObject.get("params");
 					String formpagSigs = parametros.get("formpagSigs");
@@ -3413,7 +3419,7 @@ public class CotizacionAction extends PrincipalCoreAction
                         if (lista != null && !lista.isEmpty()) {
                             smap1.put("nmpolant" , lista.get(0).getNmpolant());
                             consultasManager.copiarArchivosRenovacionColectivo(smap1.get("cdunieco"), smap1.get("cdramo"), "M", Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"", 
-                                    tramite.get("NTRAMITE"), this.rutaDocumentosPoliza);
+                                    tramite.get("NTRAMITE"), this.getText("ruta.documentos.poliza"));
                         }else{
                             smap1.put("nmpolant" , "");
                         }
@@ -3597,7 +3603,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						if (lista != null && !lista.isEmpty()) {
 							smap1.put("nmpolant" , lista.get(0).getNmpolant());
 							consultasManager.copiarArchivosRenovacionColectivo(smap1.get("cdunieco"), smap1.get("cdramo"), "M", Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"", 
-                                    tramite.get("NTRAMITE"), this.rutaDocumentosPoliza);
+                                    tramite.get("NTRAMITE"), this.getText("ruta.documentos.poliza"));
 						}else{
 							smap1.put("nmpolant" , "");
 						}
@@ -4341,15 +4347,15 @@ public class CotizacionAction extends PrincipalCoreAction
 		if(StringUtils.isBlank(ntramite))
 		{
 			String timestamp = smap1.get("timestamp");
-			//censo.renameTo(new File(this.rutaDocumentosTemporal+"/censo_"+timestamp));
+			//censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
 			try {
-            	FileUtils.copyFile(censo, new File(this.rutaDocumentosTemporal+"/censo_"+timestamp));
+            	FileUtils.copyFile(censo, new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
             	logger.debug("archivo movido");
 			} catch (Exception e) {
 				logger.error("archivo NO movido", e);
 			}
 			
-			logger.debug("censo renamed to: "+this.rutaDocumentosTemporal+"/censo_"+timestamp);
+			logger.debug("censo renamed to: "+this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
 		}
 		
 		logger.debug(""
@@ -4460,7 +4466,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdelemen = user.getEmpresa().getElementoId();
 			cdsisrol = user.getRolActivo().getClave();
 			
-			rutaDocsTemp = rutaDocumentosTemporal;
+			rutaDocsTemp = getText("ruta.documentos.temporal");
 		}
 		catch(ApplicationException ax)
 		{
@@ -4496,10 +4502,10 @@ public class CotizacionAction extends PrincipalCoreAction
 						,pcpgocte
 						,rutaDocsTemp
 						,censoTimestamp
-						,dominioServerLayouts
-						,userServerLayouts
-						,passServerLayouts
-						,directorioServerLayouts
+						,getText("dominio.server.layouts")
+						,getText("user.server.layouts")
+						,getText("pass.server.layouts")
+						,getText("directorio.server.layouts")
 						,cdtipsit
 						,cdusuari
 						,cdsisrol
@@ -4537,10 +4543,10 @@ public class CotizacionAction extends PrincipalCoreAction
 						,pcpgocte
 						,rutaDocsTemp
 						,censoTimestamp
-						,dominioServerLayouts
-						,userServerLayouts
-						,passServerLayouts
-						,directorioServerLayouts
+						,getText("dominio.server.layouts")
+						,getText("user.server.layouts")
+						,getText("pass.server.layouts")
+						,getText("directorio.server.layouts")
 						,cdtipsit
 						,cdusuari
 						,cdsisrol
@@ -4626,7 +4632,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String estado           = smap1.get("estado");
 		String nmsuplem         = smap1.get("nmsuplem");
 		
-		censo = new File(this.rutaDocumentosTemporal+"/censo_"+censoTimestamp);
+		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
 		
 		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 		boolean pagoRepartido = false;
@@ -4669,7 +4675,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				sheet       = workbook.getSheetAt(0);
 				inTimestamp = System.currentTimeMillis();
 				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
-				archivoTxt  = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
+				archivoTxt  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
 				output      = new PrintStream(archivoTxt);
 			} catch(Exception ex){
 				long etimestamp = System.currentTimeMillis();
@@ -5423,19 +5429,19 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 					exito = FTPSUtils.upload
 							(
-								this.dominioServerLayouts,
-								this.userServerLayouts,
-								this.passServerLayouts,
+								this.getText("dominio.server.layouts"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
 								archivoTxt.getAbsolutePath(),
-								this.directorioServerLayouts+"/"+nombreCenso
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 						    )
 							&&FTPSUtils.upload
 							(
-									this.dominioServerLayouts2,
-									this.userServerLayouts,
-									this.passServerLayouts,
-									archivoTxt.getAbsolutePath(),
-									this.directorioServerLayouts+"/"+nombreCenso
+								this.getText("dominio.server.layouts2"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
+								archivoTxt.getAbsolutePath(),
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 							);
 					
 					if(!exito)
@@ -5576,7 +5582,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String nmrenova         = smap1.get("nmrenova");
 		String esRenovacion		= smap1.get("esRenovacion");
 		String agrupador        = smap1.get("cdpool");
-		censo = new File(this.rutaDocumentosTemporal+"/censo_"+censoTimestamp);
+		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
 		
 		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 		
@@ -5724,7 +5730,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				sheet       = workbook.getSheetAt(0);
 				inTimestamp = System.currentTimeMillis();
 				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
-				archivoTxt  = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
+				archivoTxt  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
 				output      = new PrintStream(archivoTxt);
 			}
 			catch(Exception ex)
@@ -5856,7 +5862,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                String nombre      = "";
 	                double cdgrupo     = -1d;
 	                
-	                //GRUPO
+	              //GRUPO
 	                if(Constantes.SI.equalsIgnoreCase(configCampo.get(0).get("OBLIGATORIO")) || Constantes.NO.equalsIgnoreCase(configCampo.get(0).get("OBLIGATORIO"))){
 		                try {
 		                	cdgrupo = row.getCell(0).getNumericCellValue();
@@ -7096,19 +7102,19 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 					exito = FTPSUtils.upload
 							(
-								dominioServerLayouts
-								,userServerLayouts
-								,passServerLayouts
-								,archivoTxt.getAbsolutePath()
-								,directorioServerLayouts+"/"+nombreCenso
+								this.getText("dominio.server.layouts"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
+								archivoTxt.getAbsolutePath(),
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 						    )
 							&&FTPSUtils.upload
 							(
-								dominioServerLayouts2
-								,userServerLayouts
-								,passServerLayouts
-								,archivoTxt.getAbsolutePath()
-								,directorioServerLayouts+"/"+nombreCenso
+								this.getText("dominio.server.layouts2"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
+								archivoTxt.getAbsolutePath(),
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 							);
 					
 					if(!exito)
@@ -7170,7 +7176,12 @@ public class CotizacionAction extends PrincipalCoreAction
 		String ntramite                = null;
 		String ntramiteVacio           = null;
 		String miTimestamp             = null;
+		String rutaDocumentosTemporal  = null;
 		String tipoCenso               = null;
+		String dominioServerLayouts    = null;
+		String userServerLayouts       = null;
+		String passServerLayouts       = null;
+		String directorioServerLayouts = null;
 		String cdtipsit                = null;
 		String codpostal               = null;
 		String cdedo                   = null;
@@ -7250,6 +7261,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdideext_       = smap1.get("cdideext_");
 			nmpolant        = smap1.get("nmpolant");
 			nmrenova        = smap1.get("nmrenova");
+			
+			rutaDocumentosTemporal  = getText("ruta.documentos.temporal");
+			dominioServerLayouts    = getText("dominio.server.layouts");
+			userServerLayouts       = getText("user.server.layouts");
+			passServerLayouts       = getText("pass.server.layouts");
+			directorioServerLayouts = getText("directorio.server.layouts");
 			
 			String sincensoS      = smap1.get("sincenso");
 			sincenso              = StringUtils.isNotBlank(sincensoS)&&sincensoS.equals("S");
@@ -7409,7 +7426,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			boolean complemento = "S".equals(smap1.get("complemento"));
 			
-			censo = new File(this.rutaDocumentosTemporal+"/censo_"+inTimestamp);
+			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+inTimestamp);
 			
 			String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 			
@@ -7603,7 +7620,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					workbook = WorkbookFactory.create(input);
 					sheet    = workbook.getSheetAt(0);
 					
-					archivoTxt = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
+					archivoTxt = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
 					output     = new PrintStream(archivoTxt);
 					
 					if(workbook.getNumberOfSheets()!=1)
@@ -8166,20 +8183,20 @@ public class CotizacionAction extends PrincipalCoreAction
 						throw new ApplicationException(Utils.join("No hay asegurados para el grupo ",cdgrupoVacio));
 					}
 					
-					boolean transferidoAmbosServer = FTPSUtils.upload(					
-								this.dominioServerLayouts,
-								this.userServerLayouts,
-								this.passServerLayouts,
+					boolean transferidoAmbosServer = FTPSUtils.upload(
+							this.getText("dominio.server.layouts"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
 								archivoTxt.getAbsolutePath(),
-								this.directorioServerLayouts+"/"+nombreCenso
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 							)
 							&&FTPSUtils.upload
 							(
-								this.dominioServerLayouts2,
-								this.userServerLayouts,
-								this.passServerLayouts,
+								this.getText("dominio.server.layouts2"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
 								archivoTxt.getAbsolutePath(),
-								this.directorioServerLayouts+"/"+nombreCenso
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 							);
 						
 					if(!transferidoAmbosServer)
@@ -11244,7 +11261,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 }
 				
 				String urlReporteCotizacion=Utils.join(
-						  rutaServidorReports
+						  getText("ruta.servidor.reports")
 						, "?p_unieco="      , cdunieco
 						, "&p_ramo="        , cdramo
 						, "&p_estado="      , estado
@@ -11256,7 +11273,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						, "&p_cdplan="
 	                    , "&destype=cache"
 	                    , "&desformat=PDF"
-	                    , "&userid="        , passServidorReports
+	                    , "&userid="        , getText("pass.servidor.reports")
 	                    , "&ACCESSIBLE=YES"
 	                    , "&report="        , getText("rdf.cotizacion.nombre."+cdtipsit)
 	                    , "&paramform=no"
@@ -11264,7 +11281,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				String nombreArchivoCotizacion = Utils.join("cotizacion_",nmpoliza,".pdf")
 				       ,pathArchivoCotizacion  = Utils.join(
-				    		   rutaDocumentosPoliza
+				    		   getText("ruta.documentos.poliza")
 				    		   ,"/" , ntramite
 				    		   ,"/" , nombreArchivoCotizacion
 				    		   );
@@ -11295,7 +11312,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						);
 				
 				String urlReporteCotizacion2=Utils.join(
-						  rutaServidorReports
+						  getText("ruta.servidor.reports")
 						, "?p_unieco="      , cdunieco
 						, "&p_ramo="        , cdramo
 						, "&p_estado="      , estado
@@ -11306,7 +11323,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						, "&p_cdplan="
 						, "&destype=cache"
 						, "&desformat=PDF"
-						, "&userid="        , passServidorReports
+						, "&userid="        , getText("pass.servidor.reports")
 						, "&ACCESSIBLE=YES"
 						, "&report="        , getText(Utils.join("rdf.cotizacion2.nombre.",cdtipsit))
 						, "&paramform=no"
@@ -11314,7 +11331,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				String nombreArchivoCotizacion2 = Utils.join("cotizacion2_",nmpoliza,".pdf")
 				       ,pathArchivoCotizacion2  = Utils.join(
-				    		   rutaDocumentosPoliza
+				    		   getText("ruta.documentos.poliza")
 				    		   ,"/" , ntramite
 				    		   ,"/" , nombreArchivoCotizacion2
 				    		   );
@@ -11351,7 +11368,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				{
 					//pdf resumen
 					String urlReporteResumenCotizacion=Utils.join(
-							  rutaServidorReports
+							  getText("ruta.servidor.reports")
 							, "?p_unieco="      , cdunieco
 							, "&p_ramo="        , cdramo
 							, "&p_estado="      , estado
@@ -11361,7 +11378,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							, "&p_suplem=0"
 		                    , "&destype=cache"
 		                    , "&desformat=PDF"
-		                    , "&userid="        , passServidorReports
+		                    , "&userid="        , getText("pass.servidor.reports")
 		                    , "&ACCESSIBLE=YES"
 		                    , "&report="        , getText(Utils.join("rdf.resumen.cotizacion.col.",cdramo))
 		                    , "&paramform=no"
@@ -11369,7 +11386,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					String nombreArchivoResumenCotizacion = Utils.join("resumen_cotizacion_col_",nmpoliza,".pdf")
 					       ,pathArchivoResumenCotizacion  = Utils.join(
-					    		   rutaDocumentosPoliza
+					    		   getText("ruta.documentos.poliza")
 					    		   ,"/" , ntramite
 					    		   ,"/" , nombreArchivoResumenCotizacion
 					    		   );
@@ -11418,7 +11435,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						String nombreCotGrupo = Utils.join("COTIZACION_GRUPO_",i,"_",nmpoliza,TipoArchivo.XLS.getExtension());
 						
 						FileUtils.copyInputStreamToFile(excelGrupo, new File(Utils.join(
-										rutaDocumentosPoliza,"/",ntramite,"/",nombreCotGrupo
+										getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreCotGrupo
 						)));
 						
 						documentosManager.guardarDocumento(
@@ -12994,11 +13011,11 @@ public class CotizacionAction extends PrincipalCoreAction
 					,nmpoliza
 					,complemento
 					,censo
-					,rutaDocumentosTemporal
-					,dominioServerLayouts
-					,userServerLayouts
-					,passServerLayouts
-					,directorioServerLayouts
+					,getText("ruta.documentos.temporal")
+					,getText("dominio.server.layouts")
+					,getText("user.server.layouts")
+					,getText("pass.server.layouts")
+					,getText("directorio.server.layouts")
 					,cdtipsit
 					,user.getUser()
 					,user.getRolActivo().getClave()
@@ -14064,7 +14081,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-    public String tratamientoLayoutEmision()
+	public String tratamientoLayoutEmision()
     {
         this.session=ActionContext.getContext().getSession();
         logger.debug(Utils.log(
@@ -14198,8 +14215,8 @@ public class CotizacionAction extends PrincipalCoreAction
                 );
         return SUCCESS;
     }
-    
-    public String procesarCargaMasivaFlotillaEmision()
+	
+	public String procesarCargaMasivaFlotillaEmision()
     {
         this.session=ActionContext.getContext().getSession();
         logger.debug(Utils.log(
@@ -14222,7 +14239,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 respuesta       = "Error al recuperar layOut Complementario";
                 String inTimestamp =smap1.get("timestamp");
                 String nombreCenso = "excel_"+inTimestamp+".xls";
-                File layOutCompl  = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
+                File layOutCompl  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
                 FileInputStream input       = new FileInputStream(layOutCompl);
                 Workbook workbook    = WorkbookFactory.create(input);
                 Sheet sheet       = workbook.getSheetAt(0);
@@ -14351,7 +14368,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 );
         return SUCCESS;
     }
-		
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
@@ -14554,50 +14571,6 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setSaMed(String saMed) {
 		this.saMed = saMed;
-	}
-	
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getSigsFacultaDatosPolizaSicapsUrl() {
-		return sigsFacultaDatosPolizaSicapsUrl;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
-	}
-
-	public String getRutaDocumentosTemporal() {
-		return rutaDocumentosTemporal;
-	}
-
-	public String getUserServerLayouts() {
-		return userServerLayouts;
-	}
-
-	public String getPassServerLayouts() {
-		return passServerLayouts;
-	}
-
-	public String getDirectorioServerLayouts() {
-		return directorioServerLayouts;
-	}
-
-	public String getDominioServerLayouts() {
-		return dominioServerLayouts;
-	}
-
-	public String getDominioServerLayouts2() {
-		return dominioServerLayouts2;
-	}
-
-	public String getSigsObtenerDatosPorSucRamPolUrl() {
-		return sigsObtenerDatosPorSucRamPolUrl;
 	}
 	
 }
