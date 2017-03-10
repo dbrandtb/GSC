@@ -470,12 +470,14 @@ for(var i in _p30_smap1)
 {
     if(i.slice(0,6)=='boton_')
     {
+    	var text=i.split('_')[1];
         _f1_botones.push(
         {
-            text      : i.split('_')[1]
+            text      : text
             ,icon     : '${ctx}/resources/fam3icons/icons/cog.png'
             ,cdtipsit : _p30_smap1[i]
             ,handler  : function(me){_p30_configuracionPanelDinClic(me.cdtipsit,me.text);}
+            ,hidden	  : (_p30_smap1.turistas!='S' && (text=='AUTO TURISTA' || text=='TURISTA LICENCIA')) || (_p30_smap1.turistas=='S' && text!='AUTO TURISTA' && text!='TURISTA LICENCIA')
         });
     }
 }
