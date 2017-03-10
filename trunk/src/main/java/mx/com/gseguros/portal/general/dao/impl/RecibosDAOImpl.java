@@ -275,7 +275,7 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
     
     protected class ObtenerInfoRecibos extends StoredProcedure {
         protected ObtenerInfoRecibos(DataSource dataSource) {
-            super(dataSource, "P_CONS_RECIBO_POL");
+            super(dataSource, "PKG_RECIBOS_SISA_SIGS.P_CONS_RECIBO_POL");
             declareParameter(new SqlParameter("cdunieco",         OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo",           OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado",           OracleTypes.VARCHAR));
