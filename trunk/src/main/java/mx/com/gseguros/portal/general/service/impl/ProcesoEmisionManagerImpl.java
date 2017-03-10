@@ -784,29 +784,30 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					/**
 					 * Para Incisos Flotillas EXCEL
 					 */
-					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,0";
-					logger.debug("URL Generada para urlIncisosExcelFlot: "+ urlIncisosExcelFlot + parametros);
-					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
-					
-					mesaControlDAO.guardarDocumento(
-							cdunieco
-							,cdramo
-							,"M"
-							,nmpolizaEmitida
-							,nmsuplemEmitida
-							,new Date()
-							,urlIncisosExcelFlot + parametros
-							,"Incisos EXCEL"
-							,nmpoliza
-							,ntramite
-							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
-							,Constantes.SI
-							,null
-							,"1"
-							,"0"
-							,Documento.EXTERNO_INCISOS_FLOTILLAS, null, null, false
-							);
-					
+					if(StringUtils.isNotBlank(urlIncisosExcelFlot)){
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,0";
+						logger.debug("URL Generada para urlIncisosExcelFlot: "+ urlIncisosExcelFlot + parametros);
+						mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
+						
+						mesaControlDAO.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,urlIncisosExcelFlot + parametros
+								,"Incisos EXCEL"
+								,nmpoliza
+								,ntramite
+								,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+								,Constantes.SI
+								,null
+								,"1"
+								,"0"
+								,Documento.EXTERNO_INCISOS_FLOTILLAS, null, null, false
+								);
+					}
 					
 					/**
 					 * Para Tarjeta Identificacion
@@ -996,57 +997,59 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							);
 				}
 				
-				/**
-				 * Para documento Sanas Practicas
-				 */
-				parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",2";
-				logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
-				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Sanas Pr\u00e1cticas</a>";
-				
-				mesaControlDAO.guardarDocumento(
-						cdunieco
-						,cdramo
-						,"M"
-						,nmpolizaEmitida
-						,nmsuplemEmitida
-						,new Date()
-						,urlDocsExtra + parametros
-						,"Sanas Pr\u00e1cticas"
-						,nmpoliza
-						,ntramite
-						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
-						,Constantes.SI
-						,null
-						,"1"
-						,"0"
-						,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
-						);
-				
-				/**
-				 * Para documento Constancia de Recepcion
-				 */
-				parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",1";
-				logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
-				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>";
-				
-				mesaControlDAO.guardarDocumento(
-						cdunieco
-						,cdramo
-						,"M"
-						,nmpolizaEmitida
-						,nmsuplemEmitida
-						,new Date()
-						,urlDocsExtra + parametros
-						,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
-						,nmpoliza
-						,ntramite
-						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
-						,Constantes.SI
-						,null
-						,"1"
-						,"0"
-						,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
-						);
+				if(StringUtils.isNotBlank(urlDocsExtra)){
+					/**
+					 * Para documento Sanas Practicas
+					 */
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",2";
+					logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Sanas Pr\u00e1cticas</a>";
+					
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlDocsExtra + parametros
+							,"Sanas Pr\u00e1cticas"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,"1"
+							,"0"
+							,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
+							);
+					
+					/**
+					 * Para documento Constancia de Recepcion
+					 */
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",1";
+					logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>";
+					
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlDocsExtra + parametros
+							,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
+							,nmpoliza
+							,ntramite
+							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
+							,Constantes.SI
+							,null
+							,"1"
+							,"0"
+							,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
+							);
+				}
 				
 				// JTEZVA 2016 09 08 Se complementan las ligas con los documentos ice
 				mensajeEmail += emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite);
@@ -1059,6 +1062,8 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						ntramite,
 						Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail)
 				);
+				
+				mensajeEmail = Utils.cambiaGuionesBajosPorAcentosHtml(Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail));
 				
 			}
 			
