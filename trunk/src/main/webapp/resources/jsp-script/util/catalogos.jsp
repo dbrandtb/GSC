@@ -283,5 +283,12 @@ var TipoEndoso = {
         EndosoCambioTipoCarga                      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_CAMBIO_TIPO_CARGA.cdTipSup"         />'
         
 }
+// catalogo de banderas ECD
+var FlagsECD = {
+	    PerfilCero  : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_0.perfil" />',
+	    PerfilUno   : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_1.perfil" />',
+	    PerfilDos   : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_2.perfil" />',
+	    PerfilTres  : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_3.perfil" />'
+};
 
 </script>

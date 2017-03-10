@@ -97,7 +97,7 @@ Ext.onReady(function() {
                                     }
                                 });
                                 
-                                //Datos de Coberturas básicas
+                                //Datos de Coberturas bï¿½sicas
                                 storeCoberturasBasicas.load({
                                     params: panelBusqueda.down('form').getForm().getValues(),
                                     callback: function(records, operation, success){
@@ -129,7 +129,7 @@ Ext.onReady(function() {
                                     }
                                 });
                                 
-                                //Datos para enfermedades crónicas
+                                //Datos para enfermedades crï¿½nicas
                                 storeDatosEnfermedades.load({
                                     params: panelBusqueda.down('form').getForm().getValues(),
                                     callback: function(records, operation, success){
@@ -161,7 +161,7 @@ Ext.onReady(function() {
                                     tabDatosGeneralesPoliza.child('#tbVigencia').tab.hide();
                                 
                                 
-                                //Se ocultan pestañas para usuarios de call center
+                                //Se ocultan pestaï¿½as para usuarios de call center
                                 tabDatosGeneralesPoliza.child('#tbRecibos').tab.hide();
                                 /*
                                 if(_IS_USUARIO_CALL_CENTER){
@@ -205,7 +205,7 @@ Ext.onReady(function() {
                                 tabDatosGeneralesPoliza.show();                         
                                 tabDatosGeneralesPoliza.child('#tabDatosGenerales').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tbHistorico').tab.show();
-                                //El histórico de farmacia solo se muestra para SISA
+                                //El histï¿½rico de farmacia solo se muestra para SISA
                                 if(gridSuplementos.getSelectionModel().getSelection()[0].get('origen') == 'SISA') {
                                     tabDatosGeneralesPoliza.child('#tbHistoricoFarmacia').tab.show();
                                 } else {
@@ -226,7 +226,7 @@ Ext.onReady(function() {
                             break;
                             
                             case 4:
-                                //Mostrar sección de Vigencia
+                                //Mostrar secciï¿½n de Vigencia
                                 tabDatosGeneralesPoliza.setActiveTab('tbVigencia');
                                 tabDatosGeneralesPoliza.show();
                                 tabDatosGeneralesPoliza.child('#tabDatosGenerales').tab.hide();
@@ -310,7 +310,7 @@ Ext.onReady(function() {
                 xtype        : 'actioncolumn',
                 id           : 'columnAvisoHospitalizacion',
                 icon         : _CONTEXT+'/resources/fam3icons/icons/building.png',
-                tooltip      : 'Dar Aviso de Hospitalización',
+                tooltip      : 'Dar Aviso de Hospitalizaciï¿½n',
                 flex         : 1,
                 //width        : auto,
                 hidden       : _IS_USUARIO_CALL_CENTER? false : true,
@@ -419,7 +419,7 @@ Ext.onReady(function() {
 													{
 															Ext.Msg.show({
 															title:'Enviar Aviso',
-															msg: 'El Aviso se enviar&aacute;, ¿esta de acuerdo?',
+															msg: 'El Aviso se enviar&aacute;, ï¿½esta de acuerdo?',
 															buttons: Ext.Msg.OKCANCEL,
 															icon: Ext.Msg.INFO,
 															fn: function(buttonId, text, opt) {
@@ -527,7 +527,7 @@ Ext.onReady(function() {
         ]
     });
     
-    /**INFORMACION DEL PÓLIZA ACTUAL**/
+    /**INFORMACION DEL Pï¿½LIZA ACTUAL**/
     //-------------------------------------------------------------------------------------------------------------
     // Modelo
     Ext.define('SuplementoModel', {
@@ -653,14 +653,14 @@ Ext.onReady(function() {
                                     //Mensaje DXN
                                     cambiaTextoMensajeAgente3(records[0].get('dsperpag'));
                                     
-                                    //Resaltar en otro color en plan cuando sea Opción Hospitalaria
-                                    if(records[0].get('dsplan') == 'OPCIÓN HOSPITALARIA'){
+                                    //Resaltar en otro color en plan cuando sea Opciï¿½n Hospitalaria
+                                    if(records[0].get('dsplan') == 'OPCIï¿½N HOSPITALARIA'){
                                     	panelDatosPoliza.down('[name=dsplan]').setFieldStyle({'color':'#005B9A','font-weight':'bold'});                                    	
                                     } else {
                                     	panelDatosPoliza.down('[name=dsplan]').setFieldStyle({'color':'#00E','font-weight':'bold'});
                                     }
                                     
-                                    //Cuando el Agente sea PREVEX que se identifique fácilmente
+                                    //Cuando el Agente sea PREVEX que se identifique fï¿½cilmente
                                     //console.log(records[0].get('cdunieco'));
                                     if(records[0].get('cdunieco') == '1403'){
                                         panelDatosPoliza.down('[name=agente]').setFieldStyle({'color':'#0F6280','font-weight':'bold'});
@@ -1197,7 +1197,7 @@ Ext.onReady(function() {
     /////////////////////
     
     
-    /**INFORMACION DEL GRID DE COBERTURAS BÁSICAS**/
+    /**INFORMACION DEL GRID DE COBERTURAS Bï¿½SICAS**/
     //-------------------------------------------------------------------------------------------------------------    
     //Modelo
     Ext.define('CoberturasBasicasModel',{
@@ -1370,6 +1370,98 @@ Ext.onReady(function() {
     var panelDatosAsegurado = Ext.create('Ext.form.Panel', {
         model : 'DatosAseguradoModel',
         width : 850 ,
+        tbar   : [
+        			{
+        				 xtype	: 'button'
+        			    ,text	: 'E.C.D'
+        			    ,listeners : {
+        			    	beforerender: function(me){
+        			    		me.setLoading(true);
+        			    		Ext.Ajax.request(
+        			    			    {
+        			    			        url      : _URL_CONSULTA_PERFIL
+        			    			        ,params  :
+        			    			        {
+        			    			            'params.listaPersonas'  : ''+panelBusqueda.down('form').getForm().findField("params.cdperson").getValue()
+        			    			            
+        			    			        }
+        			    			        ,success : function(response)
+        			    			        {
+        			    			            me.setLoading(false);
+        			    			            var json = Ext.decode(response.responseText);
+        			    			            debug('### cargar suma asegurada:',json);
+        			    			            if(json.success)
+        			    			            {
+        			    			            	
+        			    			            	var url=_CONTEXT+'/resources/fam3icons/icons/';
+        			    			            	var en=parseInt(json.list[0].PERFIL_FINAL+'')
+        			    			            	
+        			    			            	if(json.list.length>0){
+	        			    			                switch(en){
+	        			    			                	case 0:
+	        			    			                		url+=FlagsECD.PerfilCero;
+	        			    			                		break;
+	        			    			                	case 1:
+	        			    			                		url+=FlagsECD.PerfilUno;
+	        			    			                		break;
+	        			    			                	case 2: 
+	        			    			                		url+=FlagsECD.PerfilDos;
+	        			    			                		break;
+	        			    			                	case 3:
+	        			    			                		url+=FlagsECD.PerfilTres;
+	        			    			                		break;
+	        			    			                	
+	        			    			                }
+        			    			            	}
+        			    			                me.setIcon(url);
+        			    			            }
+        			    			            else
+        			    			            {
+        			    			                mensajeError(json.respuesta);
+        			    			            }
+        			    			        }
+        			    			        ,failure : function()
+        			    			        {
+        			    			            me.setLoading(false);
+        			    			            errorComunicacion();
+        			    			        }
+        			    			    });
+        			    		me.icon= _CONTEXT+''
+        			    	}
+        			    }
+        			    ,handler: function (){
+        			    	try{
+        			    		
+        			    		Ext.create('Ext.window.Window',
+                                        {
+                                            title        : 'E.C.D.'
+                                            //,modal       : true
+                                            ,buttonAlign : 'center'
+                                            ,width       : 350
+                                            ,height      : 300
+                                            ,autoScroll  : true
+                                            ,loader      :
+                                            {
+                                                url       : _URL_CONSULTA_ECD
+                                                ,scripts  : true
+                                                ,autoLoad : true
+                                                ,loadMask : true
+                                                ,ajaxOptions: {
+                                                    method   : 'POST'
+                                                },
+                                                params: {
+                                                    'params.cdperson':panelBusqueda.down('form').getForm().findField("params.cdperson").getValue()
+                                                }
+                                            }
+                                        }).show();
+        			    	
+        			    	}catch(e){
+        			    		console.log(e)
+        			    	}
+        			    }
+        			    
+        			}
+        		  ],
         border : false,
         //height : 280,
         defaults : {
@@ -1704,7 +1796,7 @@ Ext.onReady(function() {
            
     });
     
-    /**INFORMACION DE LA SECCION DE E.C.D. (ENFERMEDADES CRÓNICAS)**/
+    /**INFORMACION DE LA SECCION DE E.C.D. (ENFERMEDADES CRï¿½NICAS)**/
     //-------------------------------------------------------------------------------------------------------------
     Ext.define('EnfermedadesModel', {
                     extend:'Ext.data.Model',
@@ -1881,7 +1973,7 @@ Ext.onReady(function() {
     });
     
 	
-    /***INFORMACIÓN DEL HISTORICO DE POLIZA***/
+    /***INFORMACIï¿½N DEL HISTORICO DE POLIZA***/
     //----------------------------------------
     //Modelo
     Ext.define('HistoricoModel',{
@@ -1978,7 +2070,7 @@ Ext.onReady(function() {
     ]);
     
     
-    /***INFORMACIÓN DEL HISTORICO DE FARMACIA***/    
+    /***INFORMACIï¿½N DEL HISTORICO DE FARMACIA***/    
     //----------------------------------------
     //Model
     Ext.define('FarmaciaModel', {
@@ -2021,7 +2113,7 @@ Ext.onReady(function() {
             dataIndex : 'tigrupo',
             flex      : 1
         },{
-            header    : 'Beneficio Máximo',
+            header    : 'Beneficio Mï¿½ximo',
             dataIndex : 'maximo',
             flex      : 1,
             renderer  : 'usMoney'
@@ -2046,7 +2138,7 @@ Ext.onReady(function() {
             flex      : 1,            
             renderer : function(value, meta) {
                 if(value < 0) {
-                	//Si está excedido, lo marcará en color rojo.
+                	//Si estï¿½ excedido, lo marcarï¿½ en color rojo.
                     meta.style = "background-color:red;usMoney";                    
                 }                
                 return Ext.util.Format.usMoney(value);
@@ -2069,7 +2161,7 @@ Ext.onReady(function() {
     });
     
     
-    /***INFORMACIÓN DE PERIODOS DE VIGENCIA***/    
+    /***INFORMACIï¿½N DE PERIODOS DE VIGENCIA***/    
     //----------------------------------------
     //Model
     Ext.define('VigenciaModel', {
@@ -2120,7 +2212,7 @@ Ext.onReady(function() {
                 dataIndex : 'dias',                            
                 flex      : 1
             },{
-                header    : 'No. Años',
+                header    : 'No. Aï¿½os',
                  xtype      : 'numbercolumn',
                 format      : '0.00',
                 dataIndex   : 'anios',
@@ -2338,7 +2430,7 @@ Ext.onReady(function() {
                                 return;
                             }
                             if(records.length == 0){
-                                showMessage('No hay histórico de farmacia', 'Este asegurado no tiene histórico de farmacia', Ext.Msg.OK, Ext.Msg.INFO);
+                                showMessage('No hay histï¿½rico de farmacia', 'Este asegurado no tiene histï¿½rico de farmacia', Ext.Msg.OK, Ext.Msg.INFO);
                                 return;
                             }
                         }
@@ -2414,7 +2506,7 @@ Ext.onReady(function() {
                             	/*{boxLabel: 'Por n\u00FAmero de p\u00F3liza', name: 'tipoBusqueda', inputValue: 1, checked: true, width: 160},*/                                
                                 {boxLabel: 'Por clave de asegurado', name: 'tipoBusqueda', inputValue: 3, checked: true, width: 160},
                                 {boxLabel: 'Por nombre', name: 'tipoBusqueda', inputValue: 4}
-                                /*Se comenta esta búsqueda porque disminuye el performance.
+                                /*Se comenta esta bï¿½squeda porque disminuye el performance.
                                  * ,{boxLabel: 'Por RFC del contratante', name: 'tipoBusqueda', inputValue: 2}
                                  * */
                                 
@@ -2423,7 +2515,7 @@ Ext.onReady(function() {
                                 change : function(radiogroup, newValue, oldValue, eOpts) {
                                 	Ext.getCmp('subpanelBusquedas').query('panel').forEach(function(c){c.hide();});
                                 	//Ext.getCmp('subpanelBusquedas').query('textfield').forEach(function(c){c.setValue('');});
-                                	//Limpiamos los parámetros
+                                	//Limpiamos los parï¿½metros
                                 	this.up('form').getForm().findField('params.rfc').setValue('');
                                 	this.up('form').getForm().findField('params.cdperson').setValue('');
                                 	this.up('form').getForm().findField('params.nombre').setValue('');
@@ -2614,7 +2706,7 @@ Ext.onReady(function() {
                                             panelBusqueda.setLoading(false);
                                             return;
                                         }
-                                        //Se limpian los parámetros que no corresponden con el filtro                                        
+                                        //Se limpian los parï¿½metros que no corresponden con el filtro                                        
                                         this.up('form').getForm().findField('params.cdperson').setValue('');
                                         this.up('form').getForm().findField('params.nombre').setValue('');
                                         cargaPolizasAsegurado(formBusqueda, btn);
@@ -2627,7 +2719,7 @@ Ext.onReady(function() {
                                             panelBusqueda.setLoading(false);
                                             return;
                                         }
-                                        //Se limpian los parámetros que no corresponden con el filtro                                        
+                                        //Se limpian los parï¿½metros que no corresponden con el filtro                                        
                                         this.up('form').getForm().findField('params.rfc').setValue('');                                        
                                         this.up('form').getForm().findField('params.nombre').setValue('');
                                         cargaPolizasAsegurado(formBusqueda, btn);
@@ -2641,7 +2733,7 @@ Ext.onReady(function() {
                                             panelBusqueda.setLoading(false);
                                             return;
                                         }
-                                        //Se limpian los parámetros que no corresponden con el filtro                                        
+                                        //Se limpian los parï¿½metros que no corresponden con el filtro                                        
                                         this.up('form').getForm().findField('params.rfc').setValue('');
                                         this.up('form').getForm().findField('params.cdperson').setValue('');                                        
                                         cargaPolizasAsegurado(formBusqueda, btn);
@@ -2690,7 +2782,7 @@ Ext.onReady(function() {
         		height: 400
         	},
         	items: [{
-                //Panel de la póliza actual. Está oculto pero de aquí se toman datos. NO ELIMINAR ESTE COMPONENTE.
+                //Panel de la pï¿½liza actual. Estï¿½ oculto pero de aquï¿½ se toman datos. NO ELIMINAR ESTE COMPONENTE.
                 title:'P&Oacute;LIZA',
                 hidden:true,
                 items : [
@@ -2752,7 +2844,7 @@ Ext.onReady(function() {
                 //Limpiar seleccion de la lista de opciones de consulta
                 limpiaSeleccionTiposConsulta();
                                 
-                //Preselecciona automáticamente las opciones.
+                //Preselecciona automï¿½ticamente las opciones.
                 gridSuplementos.getSelectionModel().select(0);
                 listViewOpcionesConsulta.getSelectionModel().select(0);
             }else{
