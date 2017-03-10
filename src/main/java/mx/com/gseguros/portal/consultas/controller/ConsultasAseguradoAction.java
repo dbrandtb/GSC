@@ -35,6 +35,7 @@ import mx.com.gseguros.portal.general.util.RolSistema;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -744,9 +745,20 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	public Map<String, String> getParams() {
 		return params;
 	}
-
+	public void setParams(Map<String, String> params) {
+		this.params = params;
+	}
+	
 	public void setParam(Map<String, String> params) {
 		this.params = params;
+	}
+	public String getParamsJson() {
+		try {
+			return JSONUtil.serialize(params);
+		} catch (Exception e) {
+			logger.error("Error al generar JSON de params",e);
+			return null;
+		}
 	}
 
 	public List<?> getResultados() {

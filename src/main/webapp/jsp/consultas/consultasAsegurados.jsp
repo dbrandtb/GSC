@@ -33,6 +33,8 @@
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
             var _URL_CONSULTA_DOCUMENTOS          = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
             var _URL_LOADER_RECIBOS               = '<s:url namespace="/general"         action="includes/loadRecibos" />';
+            var _URL_CONSULTA_ECD 				  = '<s:url namespace="/consultasAsegurado" action="includes/consultaECD"                    />';
+            var _URL_CONSULTA_PERFIL 				  = '<s:url namespace="/perfilMedico" action="consultarPerfil"                    />';
             
             //Mensajes
             var _MSG_ERROR                       = 'Error';
