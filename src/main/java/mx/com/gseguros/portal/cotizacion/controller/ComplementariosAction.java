@@ -2923,30 +2923,33 @@ public class ComplementariosAction extends PrincipalCoreAction
 						/**
 						 * Para Incisos Flotillas EXCEL
 						 */
-						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
-						logger.debug("URL Generada para urlIncisosEXCELFlotillas: "+ urlIncisosExcelFlot + parametros);
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
 						
-						documentosManager.guardarDocumento(
-								cdunieco
-								,cdramo
-								,"M"
-								,nmpolizaEmitida
-								,nmsuplemEmitida
-								,new Date()
-								,urlIncisosExcelFlot + parametros
-								,"Incisos EXCEL"
-								,nmpoliza
-								,ntramite
-								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-								,Constantes.SI
-								,null
-								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,"0"
-								,Documento.EXTERNO_INCISOS_FLOTILLAS
-								,null
-								,null, false
-								);
+						if(StringUtils.isNotBlank(urlIncisosExcelFlot)){
+							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
+							logger.debug("URL Generada para urlIncisosEXCELFlotillas: "+ urlIncisosExcelFlot + parametros);
+							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
+							
+							documentosManager.guardarDocumento(
+									cdunieco
+									,cdramo
+									,"M"
+									,nmpolizaEmitida
+									,nmsuplemEmitida
+									,new Date()
+									,urlIncisosExcelFlot + parametros
+									,"Incisos EXCEL"
+									,nmpoliza
+									,ntramite
+									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+									,Constantes.SI
+									,null
+									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+									,"0"
+									,Documento.EXTERNO_INCISOS_FLOTILLAS
+									,null
+									,null, false
+									);
+						}
 						
 						/**
 						 * Para Tarjeta Identificacion
@@ -3152,61 +3155,63 @@ public class ComplementariosAction extends PrincipalCoreAction
 								);
 					}
 					
-					/**
-					 * Para documento Sanas Practicas
-					 */
-					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",2";
-					logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
-					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Sanas Pr\u00e1cticas</a>";
-					
-					documentosManager.guardarDocumento(
-							cdunieco
-							,cdramo
-							,"M"
-							,nmpolizaEmitida
-							,nmsuplemEmitida
-							,new Date()
-							,urlDocsExtra + parametros
-							,"Sanas Pr\u00e1cticas"
-							,nmpoliza
-							,ntramite
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-							,Constantes.SI
-							,null
-							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,"0"
-							,Documento.EXTERNO_DOCUMENTO_EXTRA
-							,null
-							,null, false
-							);
-
-					/**
-					 * Para documento Constancia de Recepcion
-					 */
-					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",1";
-					logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
-					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>";
-					
-					documentosManager.guardarDocumento(
-							cdunieco
-							,cdramo
-							,"M"
-							,nmpolizaEmitida
-							,nmsuplemEmitida
-							,new Date()
-							,urlDocsExtra + parametros
-							,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
-							,nmpoliza
-							,ntramite
-							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-							,Constantes.SI
-							,null
-							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-							,"0"
-							,Documento.EXTERNO_DOCUMENTO_EXTRA
-							,null
-							,null, false
-							);
+					if(StringUtils.isNotBlank(urlDocsExtra)){
+						/**
+						 * Para documento Sanas Practicas
+						 */
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",2";
+						logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Sanas Pr\u00e1cticas</a>";
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,urlDocsExtra + parametros
+								,"Sanas Pr\u00e1cticas"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_DOCUMENTO_EXTRA
+								,null
+								,null, false
+								);
+	
+						/**
+						 * Para documento Constancia de Recepcion
+						 */
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",1";
+						logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>";
+						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,urlDocsExtra + parametros
+								,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_DOCUMENTO_EXTRA
+								,null
+								,null, false
+								);
+					}
 					
 					// JTEZVA 2016 09 08 Se complementan las ligas con los documentos ice
 					this.mensajeEmail += emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite);
@@ -3219,6 +3224,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							ntramite,
 							Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail)
 					);
+					
+					mensajeEmail = Utils.cambiaGuionesBajosPorAcentosHtml(Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail));
 				}
 			}
 			catch(Exception ex)
