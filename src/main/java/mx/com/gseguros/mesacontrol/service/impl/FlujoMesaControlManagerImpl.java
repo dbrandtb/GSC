@@ -3768,14 +3768,14 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public Map<String,String> tramiteMC(String ntramite, String nmpoliza, String cdunieco, String cdramo, String cdtipsit) throws Exception
+	public Map<String,String> tramiteMC(String ntramite, String nmsolici, String cdunieco, String cdramo, String cdtipsit) throws Exception
 	{
 	        String mensaje = "Consultando mesa de control para renovacion";
 		try
 		{
-			if(nmpoliza!=null && !nmpoliza.equals("0") && !nmpoliza.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
+			if(nmsolici!=null && !nmsolici.equals("0") && !nmsolici.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
 			{	
-				return siniestrosManager.obtenerTramiteCompletoXNmsolici(nmpoliza, cdunieco, cdramo);
+				return siniestrosManager.obtenerTramiteCompletoXNmsolici(nmsolici, cdunieco, cdramo);
 				
 			}
 			else if(ntramite!=null && !ntramite.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)

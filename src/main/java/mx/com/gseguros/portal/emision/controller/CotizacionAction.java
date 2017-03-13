@@ -1684,7 +1684,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			  planSigs.add(inciso.get("planSigs"));
 			}
 			Utils.validate(slist1, "No se recibieron datos de incisos");
-			String nmpoliza = slist1.get(0).get("nmpoliza");
+			String nmsolici = slist1.get(0).get("nmpoliza");
 			String feini    = slist1.get(0).get("feini");
 			String fefin    = slist1.get(0).get("fefin");
 			String fesolici = slist1.get(0).get("FESOLICI");
@@ -1706,7 +1706,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 			
 			if(fromSigs==null)fromSigs="N";
-			Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmpoliza, cdunieco, cdramo, cdtipsit);
+			Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmsolici, cdunieco, cdramo, cdtipsit);
 			if(parame.get("Mensaje")!=null)
 			{
 				logger.debug(Utils.log(
@@ -1726,7 +1726,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,cdtipsit
 					,cdusuari
 					,cdelemen
-					,nmpoliza
+					,nmsolici
 					,feini
 					,fefin
 					,fesolici
@@ -1749,7 +1749,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            }
 	            else
 	            {
-	                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim, cdtipsit);
+	                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmsolici, modPrim, cdtipsit);
 	                resp.setExito(true);
 	                resp.setSmap(smap1);
 	                if(!mensajeModPrim.isEmpty())
@@ -1791,7 +1791,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                            ,cdunieco
 	                            ,cdramo
 	                            ,"W"
-	                            ,resp.getSmap().get("nmpoliza")==null?nmpoliza:resp.getSmap().get("nmpoliza")
+	                            ,resp.getSmap().get("nmpoliza")==null?nmsolici:resp.getSmap().get("nmpoliza")
 	                            ,cdelemen
 	                            ,cdtipsit
 	                            );
@@ -1804,11 +1804,12 @@ public class CotizacionAction extends PrincipalCoreAction
 	                     
 	                       if(modPrim.isEmpty())
 	                        {   
-	                            String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza")==null?nmpoliza:resp.getSmap().get("nmpoliza") , cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+	                            String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza")==null?nmsolici:resp.getSmap().get("nmpoliza") , cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+	                            resp.setRespuesta(facultada.substring(1,(facultada.length()-1)));
 	                        }
 
 	                    logger.debug(Utils.log(paqYplan));
-	                    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza")==null?nmpoliza:resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
+	                    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap().get("nmpoliza")==null?nmsolici:resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 			        }
 			        if(paqYplan.isEmpty())
 			        {  
@@ -1854,7 +1855,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                else if(fila.equals("64")) {fila="Contado";}//  \r\n" + 
 //	                else if() {fila="";}//  SEMESTRAL A\r\n" + 
 			    }
-	            resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap()==null?nmpoliza:resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
+	            resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap()==null?nmsolici:resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 			    if(!fila.isEmpty() && !columna.isEmpty())
 			    { 
 			        resp.getSmap().put("fila", fila);
