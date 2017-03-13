@@ -1181,8 +1181,9 @@ Ext.onReady(function()
                             ,style        : 'background:#223772;'
                             ,buttonConfig :
                             {
-                                text  : 'Carga masiva...'
-                                ,icon : '${ctx}/resources/fam3icons/icons/book_next.png'
+                                text   : 'Carga masiva...'
+                                ,icon  : '${ctx}/resources/fam3icons/icons/book_next.png'
+                                ,hidden: _p30_smap1.turistas == 'S' 
                             }
                             ,listeners :
                             {
