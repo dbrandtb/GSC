@@ -373,10 +373,7 @@ Ext.onReady(function(){
 	               serie = selected[i].data['codigo_serial'];
 	           }
 	           debug('termina de recorrer seleccionados',folio,serie);
-	           debug('Antes de entrar en condiciones',conso, descon);
-	           if(selected.length === 1){
-	               _habilitarBoton('btnDetalle'      ,true);  //detalle
-	           }
+	           debug('Antes de entrar en condiciones',conso, descon);	           
 	           if(conso === 0 && descon > 1){
 	               _habilitarBoton('btnConsolidar'   ,true);  //consolidar
 	               _habilitarBoton('btnDesglose'     ,true);  //desglose
@@ -388,7 +385,10 @@ Ext.onReady(function(){
 	           }
 	           if(conso > 0 || descon > 0){
 	               _habilitarBoton('btnDesglose'     ,true);  //desglose
-	           }
+	           }	           
+	           if(me.selected.length === 1){
+                   _habilitarBoton('btnDetalle'      ,true);  //detalle
+               }
            }
        } 
     });
