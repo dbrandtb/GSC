@@ -1646,9 +1646,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
-	public Map<String,String> obtenerTramiteCompletoXNmpoliza(Map<String, String> params) throws Exception
+	public Map<String,String> obtenerTramiteCompletoXNmsolici(Map<String, String> params) throws Exception
 	{
-		Map<String, Object> mapResult = ejecutaSP(new obtenerTramiteCompletoXNmpoliza(this.getDataSource()), params);
+		Map<String, Object> mapResult = ejecutaSP(new obtenerTramiteCompletoXNmsolici(this.getDataSource()), params);
 		
 		List<Map<String,String>> listaTramites = (List<Map<String,String>>) mapResult.get("pv_registro_o");
 		if(listaTramites==null||listaTramites.size()==0)
@@ -1660,9 +1660,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		return listaTramites.get(0);
 	}
 	
-	protected class obtenerTramiteCompletoXNmpoliza extends StoredProcedure
+	protected class obtenerTramiteCompletoXNmsolici extends StoredProcedure
 	{
-		protected obtenerTramiteCompletoXNmpoliza(DataSource dataSource)
+		protected obtenerTramiteCompletoXNmsolici(DataSource dataSource)
 		{
 			super(dataSource, "PKG_SATELITES2.P_GET_TRAMITE_X_NMPOLIZA");
 			declareParameter(new SqlParameter("pv_nmsolici_i" , OracleTypes.NUMERIC));

@@ -1022,7 +1022,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                    ,cdramo      = smap1.get("cdramo")
                    ,cdtipsit    = smap1.get("cdtipsit")
                    ,estado      = smap1.get("estado")
-                   ,nmpoliza    = smap1.get("nmpoliza")
+                   ,nmsolici    = smap1.get("nmpoliza")
                    ,feini       = smap1.get("feini")
                    ,fefin       = smap1.get("fefin")
                    ,cdagente    = smap1.get("cdagente")
@@ -1071,7 +1071,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 tvalopol.put("otvalor05","1");
             }
             
-            Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmpoliza, cdunieco, cdramo, cdtipsit);
+            Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmsolici, cdunieco, cdramo, cdtipsit);
             if(parame.get("Mensaje")!=null)
             {
                 logger.debug(Utils.log(
@@ -1083,8 +1083,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             }
             else if(!parame.isEmpty())
             {
-                if(nmpoliza== null && parame.get("NMSOLICI") != null)
-                {nmpoliza = parame.get("NMSOLICI");}
+                if(nmsolici== null && parame.get("NMSOLICI") != null)
+                {nmsolici = parame.get("NMSOLICI");}
                 if(parame.get("CDTIPTRA").equals("21"))
                 {
                     String detalles = cotizacionManager.validaDatosAutoSigs(slist1);
@@ -1104,7 +1104,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,cdramo
                     ,cdtipsit
                     ,estado
-                    ,nmpoliza
+                    ,nmsolici
                     ,feini
                     ,fefin
                     ,cdagente
@@ -1126,7 +1126,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             }
             else
             { //no es por inciso es por poliza el descuento
-                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim, "");
+                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmsolici, modPrim, "");
                 if(!mensajeModPrim.isEmpty())
                 {
                     resp.setExito(false);
@@ -1207,11 +1207,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                
                 if(modPrim.isEmpty() && facultar && !emergency)
                 {  
-                    String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                	String str = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmsolici==null?resp.getSmap().get("nmpoliza"):nmsolici , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                    resp.setRespuesta(str.substring(1,(str.length()-1)));
                 }
-                logger.debug(Utils.log(paqYplan));
+                logger.debug(Utils.log(resp.getRespuesta()));
             }
-            resp.setSlist(cotizacionManager.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza));
+            resp.setSlist(cotizacionManager.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmsolici==null?resp.getSmap().get("nmpoliza"):nmsolici));
             
             respuesta = resp.getRespuesta();
            
