@@ -115,9 +115,7 @@ var TipoSituacion = {
     RecuperaColectivo     : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@RECUPERA_COLECTIVO.cdtipsit" />',
     TractoCamionesArmados : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TRACTOCAMIONES_ARMADOS.cdtipsit" />',
     ServicioPublicoMicro  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SERVICIO_PUBLICO_MICRO.cdtipsit" />',
-    ServicioPublicoAuto   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SERVICIO_PUBLICO_AUTO.cdtipsit" />',
-    TuristaLicencia		  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TURISTA_LICENCIA.cdtipsit" />',
-    TuristaVehiculo 	  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TURISTA_VEHICULO.cdtipsit" />' 
+    ServicioPublicoAuto   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SERVICIO_PUBLICO_AUTO.cdtipsit" />'    
  };
  
  //Catalogo de formas de pago
@@ -134,7 +132,6 @@ var TipoSituacion = {
 	DXNSEMANAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNSEMANAL.codigo" />',
 	DXNANUAL            :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNANUAL.codigo" />',
 	DXNDOCENAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNDOCENAL.codigo" />',
-	CONTADO				:    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@CONTADO.codigo" />',
 	esDxN				:    function(formaPago){
 		
 		var dxn=[
@@ -201,7 +198,6 @@ var RolSistema = {
     ,SubdirectorSalud             : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUBDIRECTOR_SALUD.cdsisrol"           />'
     ,DirectorSalud                : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@DIRECTOR_SALUD.cdsisrol"              />'
     ,GerenteOperacionesEmision    : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@GENERENTE_OPERACION_EMISION.cdsisrol" />'
-    ,SuscriptorSalud              : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR.cdsisrol" />'  
     ,
     
     
@@ -265,30 +261,6 @@ var TipoPersona = {
     Fisica  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoPersona@FISICA.tipoPersona" />',
     Moral  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoPersona@MORAL.tipoPersona" />',
     RegimenSimplificado  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoPersona@REGIMEN_SIMPLIFICADO.tipoPersona" />'
-};
-
-// Catalogo de Tipo de Endoso
-var TipoEndoso = {
-		SumaAseguradaIncremento   	               : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@SUMA_ASEGURADA_INCREMENTO.cdTipSup"        />',
-		SumaAseguradaDecremento    	               : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@SUMA_ASEGURADA_DECREMENTO.cdTipSup"        />',
-		DeducibleMenos			   				   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEDUCIBLE_MENOS.cdTipSup"                  />',
-		DeducibleMas			   				   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEDUCIBLE_MAS.cdTipSup"                    />',
-		BajaCoberturas							   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@BAJA_COBERTURAS.cdTipSup"                  />',
-		AltaCoberturas			 		   		   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ALTA_COBERTURAS.cdTipSup"                  />',
-		DevolucionDePrimasNoDevengadas			   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@DEVOLUCION_PRIMAS_NO_DEVENGADAS.cdTipSup"  />',
-		CancelacionAutomaticaEndodo                : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@CANCELACION_AUTOMATICA_ENDOSO.cdTipSup"    />',
-        RecuperarEndososRehabilitables             : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@REHABILITACION_ENDOSO.cdTipSup"            />',
-        EndosoCambioModelo                         : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_CAMBIO_MODELO.cdTipSup"             />',
-        EndosoCambioDescripcion                    : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_CAMBIO_DESCRIPCION.cdTipSup"        />',
-        EndosoCambioTipoCarga                      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_CAMBIO_TIPO_CARGA.cdTipSup"         />'
-        
-}
-// catalogo de banderas ECD
-var FlagsECD = {
-	    PerfilCero  : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_0.perfil" />',
-	    PerfilUno   : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_1.perfil" />',
-	    PerfilDos   : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_2.perfil" />',
-	    PerfilTres  : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_3.perfil" />'
 };
 
 </script>

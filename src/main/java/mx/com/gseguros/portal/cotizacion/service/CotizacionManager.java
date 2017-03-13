@@ -1221,11 +1221,7 @@ public interface CotizacionManager
 	 */
 	public HashMap<String, String> obtieneCodigosPostalesProductos()throws Exception;
 
-    public String aplicaDescAutos(String cdunieco, String cdramo, String nmpoliza,
-            String modPrim, String cdtipsit)
-            throws Exception;
-    
-    public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception;
+	public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception;
     
     public List<Map<String, String>> cargarResultadosCotizacion(
             String cdusuari, String cdunieco, String cdramo, String estado,
@@ -1234,7 +1230,7 @@ public interface CotizacionManager
     public List<Map<String, String>> cargarResultadosCotizacionAutoFlotilla(
             String cdunieco, String cdramo, String estado, String nmpoliza)
             throws Exception;
-
+    
     /**
      * Metodo que elimina todos los documentos predefinidos de Cotizacion
      * @param cdunieco
@@ -1291,6 +1287,5 @@ public interface CotizacionManager
 	 * @param cdtipsit
 	 */
 	public void eliminarGrupos(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit)throws Exception;
-	
 	
 }

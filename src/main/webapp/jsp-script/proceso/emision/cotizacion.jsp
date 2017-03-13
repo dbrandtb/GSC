@@ -30,21 +30,10 @@ Ext.override(Ext.form.TextField,
 var _0_smap1      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
 var _0_flujo      = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-debug('_0_flujo:', _0_flujo);
-
-var _0_flujoAux = {};
-try {
-    if (!Ext.isEmpty(_0_flujo.aux)) {
-        _0_flujoAux = Ext.decode(_0_flujo.aux);
-    }
-} catch (e) {
-    debugError('WARNING al decodificar _0_flujo.aux como JSON:', _0_flujo, e);
-}
-debug('_0_flujoAux:', _0_flujoAux);
 
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
-var _0_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _0_reportsServerUser = '<s:property value="passServidorReports" />';
+var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                        />';
 var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                        />';
@@ -590,17 +579,6 @@ function _0_comprar()
                     }
                     else
                     {
-                        if (_0_smap1.rstn === 'S') {
-                            mensajeCorrecto(
-                                'Tr\u00e1mite generado',
-                                'Se ha generado el tr\u00e1mite ' + json.smap1.ntramite,
-                                function () {
-                                    _mask();
-                                    location.reload();
-                                }
-                            );
-                            return;
-                        }
                         var callbackNormal = function (callback) {
                             mensajeCorrecto(
                                 'Tr\u00e1mite generado',
@@ -2087,12 +2065,6 @@ function _0_cotizar(boton)
                         ,buttons          :
                         [
                             new _0_BotComprar()
-                            ,{
-                                text    : 'Enviar',
-                                icon    : '${icons}user_go.png',
-                                hidden  : typeof _0_flujoAux.onCotizar !== 'number',
-                                handler : _0_botonOnCotizarClic
-                            }
                             ,new _0_BotDetalles()
                             ,new _0_BotCoberturas()
                             ,new _0_BotEditar()
@@ -2142,7 +2114,7 @@ function _0_cotizar(boton)
                                      }
                                 }
                                 
-                                if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
+                                if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
                                 {
                                     _0_actualizarCotizacionTramite();
                                 }
@@ -2838,7 +2810,7 @@ function _0_actualizarCotizacionTramite(callback)
 
 function _0_recuperarCotizacionDeTramite()
 {
-    if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' )
+    if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' )
     {
         var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
         try
@@ -3436,34 +3408,6 @@ function _0_nmpolizaChange(me)
         me.sucio = false;
     }
 }
-
-function _0_botonOnCotizarClic (me) {
-    debug('_0_botonOnCotizarClic args:', arguments);
-    var ck = 'Enviando datos de cotizaci\u00f3n';
-    try {
-        Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTurnado');
-        new VentanaTurnado({
-            cdtipflu  : _0_flujo.cdtipflu,
-            cdflujomc : _0_flujo.cdflujomc,
-            tipoent   : _0_flujo.tipoent,
-            claveent  : 0,//_0_flujo.claveent,
-            webid     : 0,//_0_flujo.webid,
-            aux       : _0_flujoAux.onCotizar,
-            ntramite  : _0_flujo.ntramite,
-            status    : _0_flujo.status,
-            cdunieco  : _0_flujo.cdunieco,
-            cdramo    : _0_flujo.cdramo,
-            estado    : _0_flujo.estado,
-            nmpoliza  : _0_flujo.nmpoliza,
-            nmsituac  : _0_flujo.nmsituac,
-            nmsuplem  : _0_flujo.nmsuplem,
-            cdusuari  : _0_smap1.cdusuari,
-            cdsisrol  : _GLOBAL_CDSISROL
-        }).mostrar();
-    } catch (e) {
-        manejaException(e, ck);
-    }
-}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -3597,8 +3541,7 @@ Ext.onReady(function()
         ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
         ,disabled : true
         ,handler  : _0_comprar
-        ,hidden   : (_0_smap1.readOnly && _0_smap1.readOnly.length>0)
-            || typeof _0_flujoAux.onCotizar === 'number'
+        ,hidden   : _0_smap1.readOnly&&_0_smap1.readOnly.length>0
     });
     
     Ext.define('_0_BotImprimir',
@@ -5567,50 +5510,6 @@ Ext.onReady(function()
             select : _0_gmiCirchospSelect
         });
     }
-    try{
-	    if(_0_smap1.cdramo==Ramo.ServicioPublico){
-	    	Ext.ComponentQuery
-	    	.query("[fieldLabel*='(FRONTERIZO)'],[fieldLabel*='MERO DE SERIE'],[fieldLabel*='TIPO DE CAMBIO AL D'],[fieldLabel*='PAQUETE'],[fieldLabel*='NOMBRE CLIENTE'],[fieldLabel*='TIPO PERSONA'],[fieldLabel*='FECHA DE NACIMIENTO DEL CONTRATANTE']")
-	    	.forEach(function(it){ 
-		    		it.allowBlank=true; 
-		    		it.hide();
-	    		}
-	    	);
-	    	
-	    	
-	    	
-	    	Ext.ComponentQuery.query('[title=<span style="font:bold 14px Calibri;">DATOS GENERALES</span>]')[0]
-	    	.items
-	    	.items
-	    	.sort(function(a,b){
-	    		if(_0_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
-	    			var ordenOriginal=[16,17,22,1,2,3,4,5,6,25,7,18,19,20,24,23,21,31,32];
-	    		}else if(_0_smap1.cdtipsit==TipoSituacion.ServicioPublicoMicro){
-	    			var ordenOriginal=[16,17,1,22,2,3,4,5,6,18,19,20,24,23,21,30,31];
-	    		}
-	    		
-	    		
-	    		var va=ordenOriginal.indexOf(Number(a.cdatribu));
-	    		var vb=ordenOriginal.indexOf(Number(b.cdatribu));
-	    	    
-	    		if(va==-1 ) va=10000000000;
-	    		if(vb==-1 ) vb=10000000000;
-	    		if(a.fieldLabel=='COTIZACI&Oacute;N') va=-1;
-	    		if(b.fieldLabel=='COTIZACI&Oacute;N') vb=-1;
-	    		if(va>vb){
-	    			return 1;
-	    		}else if(va<vb){
-	    			return -1;
-	    		}
-	    		return 0;
-	    	});
-	    	Ext.ComponentQuery.query('[title=<span style="font:bold 14px Calibri;">DATOS GENERALES</span>]')[0]
-	    	.doLayout();
-	    }
-    }catch(e){
-    	debugError(e);
-    }
-    
     
     // Para TODOS LOS PRODUCTOS (si aplican), se agrega validacion de Codigo Postal vs Estado:
     agregaValidacionCPvsEstado();

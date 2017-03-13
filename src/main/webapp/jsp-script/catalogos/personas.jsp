@@ -229,7 +229,6 @@ if(!Ext.isEmpty(_p22_smap1)){
 	
 	_esCargaClienteNvo = !Ext.isEmpty(_p22_smap1.esCargaClienteNvo) && _p22_smap1.esCargaClienteNvo == "S" ? true : false ;
 	_ocultaBusqueda = !Ext.isEmpty(_p22_smap1.ocultaBusqueda) && _p22_smap1.ocultaBusqueda == "S" ? true : false ;
-	_muestraBusqueda= !Ext.isEmpty(_p22_smap1.muestraBusqueda) && _p22_smap1.muestraBusqueda == "S" ? true : false ;
 	_cargaCompania  = _p22_smap1.esSaludDanios;	
 	_cargaFenacMin = _p22_smap1.cargaFenacMin;
 	_cargaFenacMax = _p22_smap1.cargaFenacMax;
@@ -1617,11 +1616,6 @@ function irModoEdicion(){
 						    {
 						    	_p22_formBusqueda().hide();
 							}
-						    if(_muestraBusqueda){
-								
-								_p22_formBusqueda().show();
-							}
-						    
 							
 						    try{
 								var ventanaMensaje = window.parent;
@@ -1805,12 +1799,7 @@ function importaPersonaWS(esSaludD, codigoCliExt){
 			var form=_p22_formBusqueda();
 			form.down('[name=smap1.rfc]').setFieldLabel('Ingrese el RFC');
 			
-			_p22_formBusqueda().hide(); 
-			
-			if(_muestraBusqueda){
-				
-				_p22_formBusqueda().show();
-			}
+			_p22_formBusqueda().hide();
 
 			irModoAgregar();
 			

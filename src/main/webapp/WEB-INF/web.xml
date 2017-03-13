@@ -3,9 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-    <display-name>gseguros</display-name>
+    <display-name>gseguros_clientes</display-name>
     
-    <!-- <servlet>
+    <servlet>
         <servlet-name>jsp</servlet-name>
         <servlet-class>oracle.jsp.runtimev2.JspServlet</servlet-class>
         <init-param>
@@ -24,8 +24,8 @@
             <param-name>emit_debuginfo</param-name>
             <param-value>true</param-value>
         </init-param>
-    </servlet> -->
-
+    </servlet>
+	
     <context-param>
         <param-name>log4jExposeWebAppRoot</param-name>
         <param-value>false</param-value>

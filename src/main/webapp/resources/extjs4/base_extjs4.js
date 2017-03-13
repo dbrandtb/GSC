@@ -1050,8 +1050,10 @@ function _cargarBotonesEntidad(
 /**
  * Equivalente a NVL base de datos
  */
-function _NVL (origen,valor) {
-    if (Ext.isEmpty(origen) || '_null' === '_' + origen) {
+function _NVL(origen,valor)
+{
+    if(Ext.isEmpty(origen))
+    {
         return !Ext.isEmpty(valor) ? valor : '';
     }
     return origen;
@@ -2071,19 +2073,6 @@ function _procesaAccion(
                                                                     if('x'+acciones[i].CDVALOR=='x'+valorRespValid)
                                                                     {
                                                                         salida = acciones[i];
-                                                                        break;
-                                                                    }
-                                                                    /*
-                                                                    CUANDO LA RESPUESTA DE LA VALIDACION CLIENTE INICIA CON '*' (EJ: *JTEZVA|PROGRAMADOR)
-                                                                    BUSCAMOS UNA ACCION CUYO VALOR SEA '*', EJECUTAMOS ESA ACCION
-                                                                    Y LE MANDAMOS COMO AUXILIAR LA RESPUESTA JAVA SIN EL '*' (EJ: JTEZVA|PROGRAMADOR)
-                                                                    */
-                                                                    else if (acciones[i].CDVALOR === '*'
-                                                                        && !Ext.isEmpty(valorRespValid)
-                                                                        && valorRespValid.indexOf('*') === 0
-                                                                    ) {
-                                                                        salida = acciones[i];
-                                                                        salida.AUX = valorRespValid.substr(1);
                                                                         break;
                                                                     }
                                                                 }

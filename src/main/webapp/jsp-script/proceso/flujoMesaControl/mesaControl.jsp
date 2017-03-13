@@ -724,7 +724,7 @@ Ext.onReady(function()
                                         ui     : 'footer',
                                         layout : {
                                             type    : 'table',
-                                            columns : 5
+                                            columns : 6
                                         },
                                         items : _cargarBotonesEntidad(
                                             record.get('CDTIPFLU'),
