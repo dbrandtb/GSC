@@ -2902,6 +2902,10 @@ function _p28_cotizar(sinTarificar)
                         }
                     }
                     
+                    if (disabledDesc === true && true === _p28_flujoAux.multiDesc) {
+                        disabledDesc = false;
+                    }
+                    
                     _fieldById('_p28_botonAplicarDescuento').setDisabled(disabledDesc);
                     
                     //bloquear comision
@@ -2915,6 +2919,11 @@ function _p28_cotizar(sinTarificar)
                             disabledComi = true;
                         }
                     }
+                    
+                    if (disabledComi === true && true === _p28_flujoAux.multiDesc) {
+                        disabledComi = false;
+                    }
+                    
                     _fieldById('_p28_botonAplicarCesion').setDisabled(disabledComi);
                     
                     /////////////// DXN //////////////////////////////

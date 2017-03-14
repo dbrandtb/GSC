@@ -4780,6 +4780,10 @@ function _p30_cotizar(sinTarificar)
                         }
                     }
                     
+                    if (disabledDesc === true && true === _p30_flujoAux.multiDesc) {
+                        disabledDesc = false;
+                    }
+                    
                     if(_p30_smap1.tipoflot != TipoFlotilla.Flotilla)
                     {
                       _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
@@ -4796,6 +4800,11 @@ function _p30_cotizar(sinTarificar)
                             disabledComi = true;
                         }
                     }
+                    
+                    if (disabledComi === true && true === _p30_flujoAux.multiDesc) {
+                        disabledComi = false;
+                    }
+                    
                     _fieldById('_p30_botonAplicarCesion').setDisabled(disabledComi);
                     
                     var gridTarifas=Ext.create('Ext.panel.Panel',
