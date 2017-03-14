@@ -71,7 +71,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     @Autowired
     private CotizacionManager cotizacionManager;
     
-	@Value("${sigs.facultaDatosPolizaSicaps.url}")
+    @Value("${sigs.facultaDatosPolizaSicaps.url}")
     private String sigsFacultaDatosPolizaSicapsUrl;	
     
     @Value("${ruta.documentos.temporal}")
@@ -1022,7 +1022,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                    ,cdramo      = smap1.get("cdramo")
                    ,cdtipsit    = smap1.get("cdtipsit")
                    ,estado      = smap1.get("estado")
-                   ,nmsolici    = smap1.get("nmpoliza")
+                   ,nmpoliza    = smap1.get("nmpoliza")
                    ,feini       = smap1.get("feini")
                    ,fefin       = smap1.get("fefin")
                    ,cdagente    = smap1.get("cdagente")
@@ -1071,7 +1071,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 tvalopol.put("otvalor05","1");
             }
             
-            Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmsolici, cdunieco, cdramo, cdtipsit);
+            Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmpoliza, cdunieco, cdramo, cdtipsit);
             if(parame.get("Mensaje")!=null)
             {
                 logger.debug(Utils.log(
@@ -1083,8 +1083,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             }
             else if(!parame.isEmpty())
             {
-                if(nmsolici== null && parame.get("NMSOLICI") != null)
-                {nmsolici = parame.get("NMSOLICI");}
+                if(nmpoliza== null && parame.get("NMSOLICI") != null)
+                {nmpoliza = parame.get("NMSOLICI");}
                 if(parame.get("CDTIPTRA").equals("21"))
                 {
                     String detalles = cotizacionManager.validaDatosAutoSigs(slist1);
@@ -1104,7 +1104,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,cdramo
                     ,cdtipsit
                     ,estado
-                    ,nmsolici
+                    ,nmpoliza
                     ,feini
                     ,fefin
                     ,cdagente
@@ -1126,7 +1126,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             }
             else
             { //no es por inciso es por poliza el descuento
-                String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmsolici, modPrim, "");
+            	String mensajeModPrim = cotizacionManager.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim, "");
                 if(!mensajeModPrim.isEmpty())
                 {
                     resp.setExito(false);
@@ -1207,12 +1207,11 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                
                 if(modPrim.isEmpty() && facultar && !emergency)
                 {  
-                	String str = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmsolici==null?resp.getSmap().get("nmpoliza"):nmsolici , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-                    resp.setRespuesta(str.substring(1,(str.length()-1)));
+                    String facultada = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                 }
-                logger.debug(Utils.log(resp.getRespuesta()));
+                logger.debug(Utils.log(paqYplan));
             }
-            resp.setSlist(cotizacionManager.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmsolici==null?resp.getSmap().get("nmpoliza"):nmsolici));
+            resp.setSlist(cotizacionManager.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmpoliza==null?resp.getSmap().get("nmpoliza"):nmpoliza));
             
             respuesta = resp.getRespuesta();
            
@@ -2055,7 +2054,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         try
         {
             String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-                  ,respuestaWS =HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl,params);
+                  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
                 HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
                 Map<String,String>parametros = (Map<String,String>)someObject.get("params");
                 String formpagSigs = parametros.get("formpagSigs");
@@ -2110,7 +2109,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     try
                     {
                         String params  = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",nmpoliza,"&primaObjetivo=",mnprima,"&renuniext=",renuniext,"&renramo=",renramo,"&cdtipsit=",cdtipsit,"&renpoliex=",renpoliex,"&cdplan=",formpagSigs,"&cdperpag=",paquete.toString());
-                               mensaje = HttpUtil.sendPost(sigsFacultaDatosPolizaSicapsUrl,params);
+                               mensaje = HttpUtil.sendPost(getText("sigs.facultaDatosPolizaSicaps.url"),params);
                         if(mensaje != null)
                         {
                             return mensaje;
@@ -2312,7 +2311,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
              
              try{
                  String nombreexcel    = "excel_"+excelTimestamp+".xls";
-                 File archivoTxt       = new File(this.rutaDocumentosTemporal+"/"+nombreexcel);
+                 File archivoTxt       = new File(this.getText("ruta.documentos.temporal")+"/"+nombreexcel);
                  
                  if(excel!=null&&excel.exists())
                  {
@@ -2403,9 +2402,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
      return SUCCESS;
  }
  
-     /*
-     * Getters y setters
-     */
+ 	/*
+ 	 * Getters y setters
+ 	 */
     public void setCotizacionAutoManager(CotizacionAutoManager cotizacionAutoManager) {
         this.cotizacionAutoManager = cotizacionAutoManager;
     }

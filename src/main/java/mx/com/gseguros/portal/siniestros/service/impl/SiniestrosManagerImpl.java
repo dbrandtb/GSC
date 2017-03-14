@@ -710,7 +710,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		params.put("pv_estado_i"   , "W");
 		
 		log.debug("obtenerTramiteCompletoXNmpoliza params: "+params);
-		Map<String,String> tramite = siniestrosDAO.obtenerTramiteCompletoXNmsolici(params);
+		Map<String,String> tramite = siniestrosDAO.obtenerTramiteCompletoXNmpoliza(params);
 		log.debug("obtenerTramiteCompletoXNmpoliza tramite: "+tramite);
 		return tramite;
 	}

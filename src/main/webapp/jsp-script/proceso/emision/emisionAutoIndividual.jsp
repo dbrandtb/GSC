@@ -33,9 +33,6 @@ var url_admin_ret                           = '<s:url namespace="/emision"      
 var _p29_urlRangoPeriodogracia              = '<s:url namespace="/emision"   action="obtieneRangoPeriodoGraciaAgente"              />';
 
 
-    
-
-
 ////// urls //////
 
 ////// variables //////
@@ -754,8 +751,8 @@ Ext.onReady(function()
         ,failure : errorComunicacion
     });
     ////// loaders //////
-   
     
+
     if(_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
         var folio  = _fieldByName('parametros.pv_otvalor35');
     }else if(_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoMicro){
@@ -763,53 +760,53 @@ Ext.onReady(function()
     }else{
         var folio  = _fieldByName('parametros.pv_otvalor37',null,true);
     }
-        
-	   
-	    debug("Valor del Folio --->",folio);
-	    if(_p29_smap1.cdtipsit!='TL')
-		    folio.on(
-		    {
-		        'change' : function(comp,val)
-		        {
-		            debug('folio change val:',val,'dummy');
-		        }
-		        ,'blur' : function()
-		        {
-		            debug("Valor 1 -->",!Ext.isEmpty(folio.getValue()));
-		            if(!Ext.isEmpty(folio.getValue())){
-		                Ext.Ajax.request(
-		                {
-		                    url     : _p29_urlObtieneValNumeroSerie
-		                    ,params :
-		                    {
-		                        'smap1.numSerie'  : folio.getValue()
-		                        ,'smap1.feini'   : _fieldByName('feini').getValue()
-		                    }
-		                    ,success : function(response)
-		                    {
-		                        var json=Ext.decode(response.responseText);
-		                        if(json.exito!=true)
-		                        {
-		                            if(!RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol))
-		                            {
-		                                mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
-		                                _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
-		                            }else{
-		                                mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
-		                                _fieldById('_p29_botonEmitir').setDisabled(false);
-		                            }
-		                        }else{
-		                            _fieldById('_p29_botonEmitir').setDisabled(false);
-		                        }
-		                    }
-		                    ,failure : errorComunicacion
-		                }); 
-		            }else{
-		                mensajeError("No se recibio el número de serie");
-		            }
-		        }
-		    });
-  
+    
+    
+    debug("Valor del Folio --->",folio);
+    if(_p29_smap1.cdtipsit!='TL')
+    folio.on(
+    {
+        'change' : function(comp,val)
+        {
+            debug('folio change val:',val,'dummy');
+        }
+        ,'blur' : function()
+        {
+            debug("Valor 1 -->",!Ext.isEmpty(folio.getValue()));
+            if(!Ext.isEmpty(folio.getValue())){
+                Ext.Ajax.request(
+                {
+                    url     : _p29_urlObtieneValNumeroSerie
+                    ,params :
+                    {
+                        'smap1.numSerie'  : folio.getValue()
+                        ,'smap1.feini'   : _fieldByName('feini').getValue()
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        if(json.exito!=true)
+                        {
+                            if(!RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol))
+                            {
+                                mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
+                                _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
+                            }else{
+                                mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
+                                _fieldById('_p29_botonEmitir').setDisabled(false);
+                            }
+                        }else{
+                            _fieldById('_p29_botonEmitir').setDisabled(false);
+                        }
+                    }
+                    ,failure : errorComunicacion
+                }); 
+            }else{
+                mensajeError("No se recibio el número de serie");
+            }
+        }
+    });
+
 });
 
 ////// funciones //////

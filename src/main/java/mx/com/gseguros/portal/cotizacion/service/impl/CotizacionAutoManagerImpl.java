@@ -281,7 +281,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				if("AT".equals(cdtipsit) && tatri.getNameCdatribu().equals("34")){
 				    
 				    ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
-                    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
+				    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
                     {
                         tatri.setOculto(true);
                         tatri.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
@@ -2375,7 +2375,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				if (StringUtils.isBlank(cdpersonCli) && StringUtils.isNotBlank(cdideperCli)) {
 					logger.debug("Persona proveniente de WS, Se importar�, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
 					
-					
 					logger.debug("<<<>>> Verificando que no se haya insertado el cliente anteriormente... ");
 	    			boolean personaNueva =  true;
 	    			String  newCdPerson   = null;
@@ -2541,14 +2540,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				    				null, null, null, null, null, 
 				    				null, null, null, null, null,
 				    				cli.getFaxCli(), cli.getCelularCli());
-				    			
+	
 							}
 						}
-	    			}
-	    			cdpersonCli = newCdPerson;
-	    			nmorddomCli = "1";
+					
+					}
+		    		cdpersonCli = newCdPerson;
+		    		nmorddomCli = "1";
 				}
-				
 				
 				if(!StringUtils.isBlank(cdpersonCli))
 				{

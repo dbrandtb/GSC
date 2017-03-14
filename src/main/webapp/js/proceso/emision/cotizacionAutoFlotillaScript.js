@@ -46,36 +46,22 @@ function transformaSigsEnIce (sigs) {
         exito: true
     };
     
-    if(sigs.slist1[0].CDRAMO!=null && sigs.slist1[0].CDRAMO == Ramo.AutosFronterizos)
-	{
-    	 for (var att in sigs.smap1) {
-    	    	// a u x . ...
-    	    	//0 1 2 3 4
-    	    	if (att.slice(0, 11) === 'aux.otvalor') {
-    	    		ice.smap1['parametros.pv_otvalor'+att.slice(att.length-2,att.length)] = sigs.smap1[att];
-    	    		delete sigs.smap1[att];
-    	    	}
-    	    }
-	}
-    else
-    {
-        //ice.smap1.parametros.pv_otvalor...
-        for (var att in sigs.slist1[0]) {
-            // p a r a m e t r o s . p v _ o t v a l o r ...
-            //0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-            if (att.slice(0, 21) === 'parametros.pv_otvalor') {
-                ice.smap1[att] = sigs.slist1[0][att];
-            }
+    //ice.smap1.aux...
+    for (var att in sigs.smap1) {
+        // a u x . ...
+        //0 1 2 3 4
+        if (att.slice(0, 4) === 'aux.') {
+            ice.smap1[att] = sigs.smap1[att];
         }
     }
     
-    //ice.smap1.aux...
-    for (var att in sigs.smap1) {
-    	// a u x . ...
-    	//0 1 2 3 4
-    	if (att.slice(0, 4) === 'aux.') {
-    		ice.smap1[att] = sigs.smap1[att];
-    	}
+    //ice.smap1.parametros.pv_otvalor...
+    for (var att in sigs.slist1[0]) {
+        // p a r a m e t r o s . p v _ o t v a l o r ...
+        //0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+        if (att.slice(0, 21) === 'parametros.pv_otvalor') {
+            ice.smap1[att] = sigs.slist1[0][att];
+        }
     }
     
     for (var i = 0; i < sigs.slist1.length; i++) {
