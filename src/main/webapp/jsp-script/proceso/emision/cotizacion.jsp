@@ -43,8 +43,8 @@ try {
 debug('_0_flujoAux:', _0_flujoAux);
 
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
-var _0_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _0_reportsServerUser = '<s:property value="passServidorReports" />';
+var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                        />';
 var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                        />';
@@ -2142,7 +2142,7 @@ function _0_cotizar(boton)
                                      }
                                 }
                                 
-                                if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
+                                if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
                                 {
                                     _0_actualizarCotizacionTramite();
                                 }
@@ -2838,7 +2838,7 @@ function _0_actualizarCotizacionTramite(callback)
 
 function _0_recuperarCotizacionDeTramite()
 {
-    if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' )
+    if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' )
     {
         var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
         try
