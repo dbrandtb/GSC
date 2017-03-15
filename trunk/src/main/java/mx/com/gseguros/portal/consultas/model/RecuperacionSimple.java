@@ -123,6 +123,7 @@ public enum RecuperacionSimple
     ,RECUPERAR_CORREO_AGENTE_TRAMITE                         ("M")
     ,RECUPERAR_HISTORIAL_TRAMITE                             ("L")
     ,RECUPERAR_DETALLES_TRAMITE                              ("L")
+    ,RECUPERAR_RANGO_DESCUENTO_RECARGO                       ("M")
 	;
 	 
 	private String tipo;

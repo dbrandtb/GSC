@@ -1004,4 +1004,12 @@ public interface CotizacionDAO {
 			throws Exception;
 
 	public String aplicaDescAutos(String pcdunieco, String pcdramo, String pnmpoliza, String pdesc, String pisflot) throws Exception;
+	
+	/**
+	 * Mapa de regreso: {
+	 *     MINIMO: -15.5,
+	 *     MAXIMO: 25.5
+	 * }
+	 */
+	public Map<String, String> recuperarRangoDescuentoRecargo (String cdramo, String cdtipsit, String cdusuari, String cdsisrol) throws Exception;
 }

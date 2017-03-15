@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -9179,6 +9178,38 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             declareParameter(new SqlOutParameter("PV_SALIDA_O" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("PV_MSG_ID_O" ,OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("PV_TITLE_O"  ,OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public Map<String, String> recuperarRangoDescuentoRecargo (String cdramo, String cdtipsit, String cdusuari, String cdsisrol) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("pv_cdramo_i"   , cdramo);
+        params.put("pv_cdtipsit_i" , cdtipsit);
+        params.put("pv_cdusuari_i" , cdusuari);
+        params.put("pv_cdsisrol_i" , cdsisrol);
+        Map<String, Object> procRes = ejecutaSP(new RecuperarRangoDescuentoRecargoSP(getDataSource()), params);
+        Map<String, String> result = new HashMap<String, String>();
+        result.put("MINIMO", (String) procRes.get("pv_minimo_o"));
+        result.put("MAXIMO", (String) procRes.get("pv_maximo_o"));
+        if (StringUtils.isBlank(result.get("MINIMO")) || StringUtils.isBlank(result.get("MAXIMO"))) {
+            throw new ApplicationException("No hay rango de descuento/recargo");
+        }
+        return result;
+    }
+    
+    protected class RecuperarRangoDescuentoRecargoSP extends StoredProcedure {
+        protected RecuperarRangoDescuentoRecargoSP (DataSource dataSource) {
+            super(dataSource,"P_COT_GET_MIN_MAX_DESC_RECAR");
+            declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_minimo_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_maximo_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
             compile();
         }
     }
