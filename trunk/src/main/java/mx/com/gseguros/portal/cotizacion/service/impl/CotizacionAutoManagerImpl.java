@@ -1431,6 +1431,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		try
 		{
+			String cdtipsit2=null;
+			if(cdtipsit.equals("ARTL")){
+				cdtipsit2="TL";
+				cdtipsit="AR";
+			}
 			String cdagente = null;
 			
 			paso = "Obteniendo trámite y sucursal";//////
@@ -1521,7 +1526,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<ComponenteVO>gridCols = pantallasDAO.obtenerComponentes(
 					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
 					, cdtipsit, null, cdsisrol
-					, "COTIZACION_FLOTILLA", "COLUMNAS_RENDER", null);
+					, "COTIZACION_FLOTILLA", cdtipsit2!=null?"COLUMNAS_RENDER_TL":"COLUMNAS_RENDER", null);
 			
 			paso = "Filtrando atributos";
 			List<ComponenteVO>aux      = new ArrayList<ComponenteVO>();
@@ -1786,6 +1791,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
 						,cdtipsitIte, null, cdsisrol
 						,"COTIZACION_FLOTILLA", "EDITOR_PLANES", null);
+				if(cdtipsit2!=null)
+					auxEditorPlan.get(0).setObligatorioFlot(true);
 				tatrisitSitIteParcial.add(auxEditorPlan.get(0));
 				
 				paso = "Construyendo componentes de situaciones";
@@ -2278,7 +2285,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							&&key.length()>"parametros.pv_".length()
 							&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
 					{
-						pMovTvalosit.setOtvalor(Integer.parseInt(key.substring("parametros.pv_otvalor".length())),valosit.getValue());
+						
+						
+						pMovTvalosit.setOtvalor( 
+								Integer.parseInt( key.substring("parametros.pv_otvalor".length() ) )
+								
+								, valosit.getValue()
+								);
 					}
 				}
 				listaPMovTvalosit.add(pMovTvalosit);

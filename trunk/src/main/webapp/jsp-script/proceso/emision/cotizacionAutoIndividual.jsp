@@ -3108,6 +3108,7 @@ function _p28_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
                                         ,disabled : true
                                         ,handler  : _p28_enviar
+                                        ,hidden	  : _p28_smap1.cdtipsit==TipoSituacion.TuristaVehiculo || _p28_smap1.cdtipsit==TipoSituacion.TuristaLicencia
                                     }
                                     ,{
                                         itemId    : '_p28_botonImprimir'
@@ -3116,13 +3117,15 @@ function _p28_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
                                         ,disabled : true
                                         ,handler  : _p28_imprimir
+                                        ,hidden	  : _p28_smap1.cdtipsit==TipoSituacion.TuristaVehiculo || _p28_smap1.cdtipsit==TipoSituacion.TuristaLicencia
                                     }
                                     ,{
                                         itemId   : '_p28_botonCesion'
-                                        ,xtype   : 'button'
+                                         ,xtype   : 'button'
                                         ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
                                         ,text    : 'Cesi&oacute;n de comisi&oacute;n'
                                         ,handler : _p28_cesionClic
+                                        ,hidden	  : _p28_smap1.cdtipsit==TipoSituacion.TuristaVehiculo || _p28_smap1.cdtipsit==TipoSituacion.TuristaLicencia
                                     }
                                     ,{
                                         itemId    : '_p28_botonComprar'
