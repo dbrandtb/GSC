@@ -46,7 +46,6 @@ import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.SituacionVO;
 import mx.com.gseguros.portal.consultas.model.SuplementoVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
-import mx.com.gseguros.portal.consultas.service.ConsultasPerfilMedicoManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -93,8 +92,6 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	private long limit;
 	
 	private long totalCount;
-	
-	private List<Map<String, String>> list;
 
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
@@ -108,9 +105,6 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	@Autowired
 	private ConveniosManager conveniosManager;
 
-	@Autowired
-    private ConsultasPerfilMedicoManager consultasManager;
-	
 	private HashMap<String, String> params;
 
 	private PolizaDTO datosPoliza;
@@ -1254,6 +1248,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
+	
     /**
      * Consulta los incisos de una poliza
      * @return Nombre del result del action 
@@ -1324,130 +1319,6 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
         }
         return result;
     }
-    
-    //consulta informacion del asegurado y le concatena la informacion del perfil medico de cada uno de ellos
-     public String consultarPerfiles () {
-            String result = ERROR;
-    		try {
-    			//recibe y valida parametros
-    			String cdunieco 		= params.get("cdunieco"),
-    					cdramo 			= params.get("cdramo"),
-    					estado 			= params.get("estado"),
-    					nmpoliza 		= params.get("nmpoliza"),
-    					suplemento 		= params.get("suplemento"),
-    					icodpoliza 		= params.get("icodpoliza"),
-    					listaPersonas 	= params.get("listaPersonas");
-                /*Utils.validate(cdunieco, "Falta cdunieco",
-                		cdramo, 		 "Falta cdramo",
-                		estado, 		 "Falta estado",
-                		nmpoliza = 		 "Falta nmpoliza",
-                		suplemento = 	 "Falta suplemento",
-                		icodpoliza = 	 "Falta icodpoliza",
-                		listaPersonas, 	 "Falta listaPersonas");*/
-    			
-    			//consulta la informacion de los asegurados
-    			PolizaVO poliza = new PolizaVO();
-    			poliza.setCdunieco(cdunieco);
-    			poliza.setCdramo(cdramo);
-    			poliza.setEstado(estado);
-    			poliza.setNmpoliza(nmpoliza);
-    			poliza.setNmsuplem(suplemento);
-    			poliza.setIcodpoliza(icodpoliza);
-    			datosAsegurados = consultasPolizaManager.obtieneAsegurados(poliza);
-    			List<AseguradoVO> datosAseguradosDef = new ArrayList<AseguradoVO>();
-    			
-    			if(datosAsegurados != null) {
-    				logger.debug("Asegurados obtenidos:{}", datosAsegurados.size());
-    				params.put("pv_lsperson_i", listaPersonas);
-    	            list = consultasManager.consultaPerfilAsegurados(params);
-    	            
-    	            //se debe recorrer la lista de AseguradoVO y recorrer la lista de perfiles para completar el objeto 
-    	            for(int i=0; i<datosAsegurados.size(); i++){
-    	            	//se obtienen valores del asegurado
-    	            	AseguradoVO asegurado = new AseguradoVO();
-    	            	asegurado = datosAsegurados.get(i);
-    	            	AseguradoVO aseg = new AseguradoVO();
-    	            	
-    	            	for(int j=0; j<list.size(); j++){
-    	            		//se le agregan los datos del perfil
-    	            		logger.debug("asegurado "+asegurado.getCdperson() + " cdperson de perfil " + list.get(j).get("CDPERSON"));
-    	            		
-    	            		if (asegurado.getCdperson().equals(list.get(j).get("CDPERSON"))){
-    	            			
-    	            			String cantIcd = list.get(j).get("CANT_ICD");
-    	            			asegurado.setCantIcd(cantIcd);
-    	            			
-    	            			String maxPerfil = list.get(j).get("MAX_PERFIL");
-    	            			asegurado.setMaxPerfil(maxPerfil);
-    	            			
-    	            			String numPerfil = list.get(j).get("NUM_PERFIL");
-    	            			asegurado.setNumPerfil(numPerfil);
-    	            			
-    	            			String perfilFinal=list.get(j).get("PERFIL_FINAL");
-    	            			asegurado.setPerfilFinal(perfilFinal);
-    	            			
-    	            			//se agrega el asegurado a la lista definitiva
-        	            		logger.debug("perfil asegurado agregado: " + asegurado.getCdperson() + " plan: " + asegurado.getCdplan() + " perfil: " + asegurado.getPerfilFinal());
-    	            		}
-    	            		else{
-    	            			asegurado.setCantIcd("0");
-    	            			asegurado.setMaxPerfil("0");
-    	            			asegurado.setNumPerfil("0");
-    	            			asegurado.setPerfilFinal("0");
-    	            			
-    	            			//se agrega el asegurado a la lista definitiva
-        	            		logger.debug("perfil asegurado default agregado: " + asegurado.getCdperson() + " plan: " + asegurado.getCdplan() + " perfil: " + asegurado.getPerfilFinal());
-    	            		}
-    	            		datosAseguradosDef.add(asegurado);
-    	            		
-    	            		//Temporal solo para probar, se debe borrar despues.
-    	            		logger.debug("perfils 1 " + asegurado.getPerfilFinal());
-    	            		AseguradoVO asegurado2 = new AseguradoVO();
-    	            		
-    	            		asegurado2.setCdperson("514609");
-    	            		asegurado2.setNmsituac("nmsituac");
-    	            		asegurado2.setCdtipsit("cdtipsit");
-    	            		asegurado2.setNombre("nombre");
-    	            		asegurado2.setCdrfc("cdrfc");
-    	            		asegurado2.setCdrol("cdrol");
-    	            		asegurado2.setDsrol("dsrol");
-    	            		asegurado2.setSexo("sexo");
-    	            		asegurado2.setFenacimi("fenacimi");
-    	            		asegurado2.setStatus("status");
-    	            		asegurado2.setParentesco("parentesco");
-    	            		asegurado2.setGrupo("grupo");
-    	            		asegurado2.setCdgrupo("cdgrupo");
-    	            		asegurado2.setFamilia("familia");
-    	            		asegurado2.setCdfamilia("cdfamilia");
-    	            		asegurado2.setCdplan("cdplan");
-    	            		asegurado2.setDsplan("dsplan");
-    	            		asegurado2.setTotal(10);
-    	            		asegurado2.setCantIcd("0");
-	            			asegurado2.setMaxPerfil("2");
-	            			asegurado2.setNumPerfil("0");
-	            			asegurado2.setPerfilFinal("0");
-	            			
-    	            		logger.debug("perfils 2" +asegurado2.getPerfilFinal());
-    	    	            datosAseguradosDef.add(asegurado2);
-    	    	            logger.debug("tamaño de la lista "+ datosAseguradosDef.size());
-    	    	            logger.debug("perfil 1 y perfils 2 " +asegurado.getPerfilFinal() + " "+asegurado2.getPerfilFinal());
-    	            	}//for j
-    	            }//for i
-    	            
-    	            datosAsegurados=datosAseguradosDef;
-
-    			}//fin del if
-                
-    			//message = "Correcto";
-    			success= true;
-    			result = SUCCESS;
-                
-    		} catch (Exception e) {
-    			logger.error("Error al obtener los datos del Asegurado ", e);
-    			return SUCCESS;
-    		}
-            return result;
-        }
     
     
     // Getters and setters:
@@ -1739,6 +1610,5 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	public String getPassServidorReports() {
 		return passServidorReports;
 	}
-
 	
 }

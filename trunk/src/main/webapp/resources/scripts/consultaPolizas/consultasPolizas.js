@@ -88,24 +88,25 @@ Ext.onReady(function() {
                                 
                                 //Datos para asegurados
                                 var params = panelBusqueda.down('form').getForm().getValues();
-                               
-                                //Perfil Medico
-                                var listaPersonas = params['params.cdperson'];
-                                params['params.listaPersonas'] = listaPersonas;
-                                //Perfil Medico
-                                
                                 params['params.nombre'] = null;
                                 storeAsegurados.getProxy().extraParams = params;
+//                                storeAsegurados.getProxy().extraParams = panelBusqueda.down('form').getForm().getValues();
                                 debug('se asignaron extra params', storeAsegurados.getProxy().extraParams);
                                 storeAsegurados.load({
+                                    //params: panelBusqueda.down('form').getForm().getValues(),
                                     callback: function(records, operation, success){
-
+                                    	
+//                                    	_fieldByName('filtrarFam',gridDatosAsegurado).setValue('');
+//                                    	_fieldByName('filtrarAseg',gridDatosAsegurado).setValue('');
+//                                    	_fieldByName('filtrarCveAseg',gridDatosAsegurado).setValue('');
+//                                    	
+//                                    	storeAsegurados.clearFilter();
+                                    	
                                         if(!success){
                                             showMessage('Error', 'Error al obtener los datos del asegurado', Ext.Msg.OK, Ext.Msg.ERROR);
                                         }
                                     }
                                 });
-                                
                                 break;
                                 
                                 case 2: //Consulta de Agentes
@@ -687,13 +688,7 @@ Ext.onReady(function() {
             {type:'string', name:'familia'},
             {type:'string', name:'cdfamilia'},
             {type:'string', name:'dsplan'},
-            {type:'string', name:'parentesco'},
-            //Perfil Medico
-            {type:'string', name:'cantIcd'},
-            {type:'string', name:'maxPerfil'},
-            {type:'string', name:'numPerfil'},
-            {type:'string', name:'perfilFinal'}
-            //Perfil Medico
+            {type:'string', name:'parentesco'}
         ],
         idProperty: 'cdperson'
     });
@@ -733,7 +728,6 @@ Ext.onReady(function() {
      }
      */
     });
-    
     
     gridDatosAsegurado = Ext.create('Ext.grid.Panel', {
         title   : 'DATOS DE LOS ASEGURADOS',
@@ -907,145 +901,16 @@ Ext.onReady(function() {
                     _reporteEdoCta(values,"Estado de Cuenta aplicaci&oacute;n Fondo");//cdunieco,cdramo, cdperson, nmpoliza
                 }
             },
-            //Perfil Medico
-            {
-    			//header: 'Actions',
-    			xtype: 'actioncolumn',
-    			width: 20,
-    			//fixed: true,
-    			//align: 'center',
-    			getClass: function (val, meta, rec) {
-    			//getClass: this.getActionClass,
-    			//getActionClass: function (val, meta, rec) {
-    				debug('Entre al getActionClass this ', this, 'perfilFinal ', rec.get('perfilFinal'));
-			        //if (rec.get('perfilFinal').equals('3')) {
-    				//switch(rec.get('perfilFinal')){
-	        		//case '3':{
-    				if (rec.get('perfilFinal')=='0') {
-			        	debug('Entre al getActionClass Perfil 3');
-			            this.tooltip = 'Perfil 3';
-			            this.icon = _CONTEXT+'/resources/fam3icons/icons/flag_red.png';
-			            return 'Perfil 3';
-			        }
-			        if (rec.get('perfilFinal')=='2') {
-			        	debug('Entre al getActionClass Perfil 2');
-			            this.tooltip = 'Perfil 2';
-			            this.icon = _CONTEXT+'/resources/fam3icons/icons/flag_yellow.png';
-			            return 'Perfil 2';
-			        }
-			        if (rec.get('perfilFinal')=='1') {
-			        	debug('Entre al getActionClass Perfil 1');
-			            this.tooltip = 'Perfil 1';
-			            this.icon = _CONTEXT+'/resources/fam3icons/icons/flag_green.png';
-			            return 'Perfil 1';
-			        }
-			        if (rec.get('perfilFinal')=='3') {
-			        	debug('Entre al getActionClass Perfil 0');
-			            this.tooltip = 'Perfil 0';
-			            this.icon = _CONTEXT+'/resources/fam3icons/icons/flag_white.png';
-			            return 'Perfil 0';
-			        }
-    			}
-			},
-            //verifico el perfil antes de colocar el flag correspondiente
-            /*{
-                xtype        : 'actioncolumn',
-                tooltip      : 'Perfil Medico',
-                width        : 20,
-                listeners :
-                {
-                    beforerender : function(me, grid, rowIndex)
-                    {
-						debug('antes de mostrar el icono -> me ', me, 'gridAsegurado ', gridDatosAsegurado.getStore());
-        			    me.setLoading(true);
-        			    Ext.Ajax.request({
-        			    	url      : _URL_CONSULTA_PERFIL
-        			    	,params  :
-        			    	{
-        			    		'params.listaPersonas'  : ''+panelBusqueda.down('form').getForm().findField("params.cdperson").getValue()      
-        			    	}
-        			    	,success : function(response)
-        			    	{
-        			    	     me.setLoading(false);
-        			    	     var json = Ext.decode(response.responseText);
-        			    	     debug('### json:',json);
-        			    	     if(json.success){
-        			    		 	var url=_CONTEXT+'/resources/fam3icons/icons/';
-        			    			var en=parseInt(json.list[0].PERFIL_FINAL+'')
-        			    			            	
-        			    			if(json.list.length>0){
-	        			    			switch(en){
-	        			    				case 0:
-	        			    			    	url+=FlagsECD.PerfilCero;
-	        			    			     	break;
-	        			    			   	case 1:
-	        			    			    	url+=FlagsECD.PerfilUno;
-	        			    			   		break;
-	        			    			    case 2: 
-	        			    			        url+=FlagsECD.PerfilDos;
-	        			    			   		break;
-	        			    			    case 3:
-	        			    			    	url+=FlagsECD.PerfilTres;
-	        			    			    	break;        	
-	        			    			    }
-        			    			 }
-        			    			debug('url ', url);
-        			    		   	me.icon=url;
-        			    		   	debug('me.icon ', me.icon);
-        			    		}
-        			    		else{
-        			    			mensajeError(json.respuesta);
-        			    		}
-        			    	}
-        			    	,failure : function(){
-        			    		me.setLoading(false);
-        			    		errorComunicacion();
-        			    	}
-        			    });
-        			}
-                },
-                
-            	handler      : function(grid,rowIndex)
-                {
-                    var record = grid.getStore().getAt(rowIndex);
-                    debug('record cdperson ==> :',record,record.get('cdperson'));
-                    var values = panelBusqueda.down('form').getForm().getValues();
-                    values['params.nmsituac']=record.get('nmsituac');
-                    values['params.swfonsin']= "S";
-                    values['params.cdperson']= record.get('cdperson');
-                    
-                    _consultaIcds(values,"Consulta de ICDs");
-                }
-            },
-            */
-            //Perfil Medico
-            {text:'Perfil',dataIndex:'perfilFinal',width:90 , align:'left',
-            	renderer: function(value, metaData, record, rowIndex , colIndex, store, view) {
-            		//Probando creacion de boton
-            		debug('Aqui deberia crear el boton***');
-            		botonPerfil;
-            		//fin boton
-            		
-            		debug('value ', value);
-            		value2='Perfil '+value;
-                    if (value2 == 'Perfil 3') {
-                    	metaData.style += 'color:red;font-weight:bold;';
-                    } else {
-                    	metaData.style += 'color:green;font-weight:bold;';
-                    }
-                    return value2;
-                }
-            },
-            {text:'Plan',flex: 1,dataIndex:'dsplan',width:90 , align:'left'},
-            {text:'Tipo de <br/>asegurado',flex: 1,dataIndex:'parentesco',width:80 , align:'left'},
-            {text:'Clave <br/>Asegurado',flex: 1,dataIndex:'cdperson',width:80,align:'left'},
-            {text:'Nombre',flex: 1,dataIndex:'nombre',width:180,align:'left'},
-            {text:'Estatus',flex: 1,dataIndex:'status',width:80,align:'left'},
-            {text:'RFC',flex: 1,dataIndex:'cdrfc',width:100,align:'left'},
-            {text:'Sexo',flex: 1,dataIndex:'sexo',width:60 , align:'left'},
-            {text:'Grupo',flex: 1,dataIndex:'grupo', itemId: 'grupo',width:100, align:'left', hidden: true},
-            {text:'Familia',flex: 1,dataIndex:'familia', itemId: 'familia',width:100, align:'left', hidden: true},
-            {text:'Fecha Nac.',flex: 1,dataIndex:'fenacimi',width:90, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
+            {text:'Plan',dataIndex:'dsplan',width:90 , align:'left'},
+            {text:'Tipo de <br/>asegurado',dataIndex:'parentesco',width:80 , align:'left'},
+            {text:'Clave <br/>Asegurado',dataIndex:'cdperson',width:80,align:'left'},
+            {text:'Nombre',dataIndex:'nombre',width:180,align:'left'},
+            {text:'Estatus',dataIndex:'status',width:80,align:'left'},
+            {text:'RFC',dataIndex:'cdrfc',width:100,align:'left'},
+            {text:'Sexo',dataIndex:'sexo',width:60 , align:'left'},
+            {text:'Grupo',dataIndex:'grupo', itemId: 'grupo',width:100, align:'left', hidden: true},
+            {text:'Familia',dataIndex:'familia', itemId: 'familia',width:100, align:'left', hidden: true},
+            {text:'Fecha Nac.',dataIndex:'fenacimi',width:90, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
         ],
         tbar: [{
                 xtype : 'textfield',
@@ -1068,6 +933,13 @@ Ext.onReady(function() {
                 labelWidth : 80,
                 width: 240
             },{
+//            },'-',{
+//                xtype : 'textfield',
+//                name : 'filtrarFam',
+//                fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Familia:</span>',
+//                labelWidth : 80,
+//                width: 240
+//            },{
 	            xtype    : 'button',
 	            text     : 'Buscar',
 	            icon     : _CONTEXT+'/resources/fam3icons/icons/zoom.png',
@@ -1096,24 +968,7 @@ Ext.onReady(function() {
             displayInfo: true,
             displayMsg: 'Asegurados {0} - {1} of {2}',
             emptyMsg: "No hay asegurados"
-        }),
-        listeners: {
-			cellclick: function ( grd, td, cellIndex, record, tr, rowIndex, e, eOpts ) {
-				debug('>cellclick');
-								
-                var record = grd.getStore().getAt(rowIndex);
-                debug('record cdperson ==> :',record, 'cdperson: ', record.get('cdperson'));
-                var values = panelBusqueda.down('form').getForm().getValues();
-                values['params.nmsituac']=record.get('nmsituac');
-                values['params.swfonsin']= "S";
-                values['params.cdperson']= record.get('cdperson');
-                    
-                _consultaIcds(values,"Consulta de ICDs");
-                
-                debug('<cellclick');
-			
-			}
-		}
+        })
     });
     
     
@@ -1153,98 +1008,6 @@ Ext.onReady(function() {
     });
     
     
-    var botonPerfil = Ext.create('Ext.Button', {
-        			    text	: 'E.C.D'
-        			    //,renderTo:  
-        			    ,listeners : {
-        			    	beforerender: function(me)
-        			    	{
-        			    		me.setLoading(true);
-        			    		Ext.Ajax.request(
-        			    			    {
-        			    			        url      : _URL_CONSULTA_PERFIL
-        			    			        ,params  :
-        			    			        {
-        			    			            'params.listaPersonas'  : ''+panelBusqueda.down('form').getForm().findField("params.cdperson").getValue()
-        			    			            
-        			    			        }
-        			    			        ,success : function(response)
-        			    			        {
-        			    			            me.setLoading(false);
-        			    			            var json = Ext.decode(response.responseText);
-        			    			            debug('### cargar suma asegurada:',json);
-        			    			            if(json.success)
-        			    			            {
-        			    			            	
-        			    			            	var url=_CONTEXT+'/resources/fam3icons/icons/';
-        			    			            	var en=parseInt(json.list[0].PERFIL_FINAL+'')
-        			    			            	
-        			    			            	if(json.list.length>0){
-	        			    			                switch(en){
-	        			    			                	case 0:
-	        			    			                		url+=FlagsECD.PerfilCero;
-	        			    			                		break;
-	        			    			                	case 1:
-	        			    			                		url+=FlagsECD.PerfilUno;
-	        			    			                		break;
-	        			    			                	case 2: 
-	        			    			                		url+=FlagsECD.PerfilDos;
-	        			    			                		break;
-	        			    			                	case 3:
-	        			    			                		url+=FlagsECD.PerfilTres;
-	        			    			                		break;
-	        			    			                	
-	        			    			                }
-        			    			            	}
-        			    			                me.setIcon(url);
-        			    			            }
-        			    			            else
-        			    			            {
-        			    			                mensajeError(json.respuesta);
-        			    			            }
-        			    			        }
-        			    			        ,failure : function()
-        			    			        {
-        			    			            me.setLoading(false);
-        			    			            errorComunicacion();
-        			    			        }
-        			    			    });
-        			    		me.icon= _CONTEXT+''
-        			    	}
-        			    }
-        			    ,handler: function (){
-        			    	try{
-        			    		
-        			    		Ext.create('Ext.window.Window',
-                                        {
-                                            title        : 'E.C.D.'
-                                            //,modal       : true
-                                            ,buttonAlign : 'center'
-                                            ,width       : 350
-                                            ,height      : 300
-                                            ,autoScroll  : true
-                                            ,loader      :
-                                            {
-                                                url       : _URL_CONSULTA_ECD
-                                                ,scripts  : true
-                                                ,autoLoad : true
-                                                ,loadMask : true
-                                                ,ajaxOptions: {
-                                                    method   : 'POST'
-                                                },
-                                                params: {
-                                                    'params.cdperson':panelBusqueda.down('form').getForm().findField("params.cdperson").getValue()
-                                                }
-                                            }
-                                        }).show();
-        			    	
-        			    	}catch(e){
-        			    		console.log(e)
-        			    	}
-        			    }
-        			    
-        			})
-        			//fin boton
     // GRID PARA LOS DATOS DEL ASEGURADO
     
     var oculto;
@@ -2246,54 +2009,5 @@ Ext.onReady(function() {
     		}
     	});
     };
-    
-    /**
-     * Perfil Medico: Consulta lista de ICDs
-     */
-    function _consultaIcds(values, nombre)
-    {
-    	debug(">_consultaIcds");
-        
-    	var me = this;
-        debug("values ", values, "nombre ", nombre, "this ", this);
-        var urlRequestViewRep = _URL_CONSULTA_ICDS + '?params.cdperson=' + values['params.cdperson'];
-        //+ '?destype=cache'
-        //+ '&p_cdperson='      + values['params.cdperson'];
-        debug(urlRequestViewRep);
-        //Perfil medico: solo para probar
-
-    	// Se crea ventana para mostrar el detalle del asegurado:
-    	Ext.create('Ext.window.Window',
-                                        {
-                                            title        : 'E.C.D.'
-                                            //,modal       : true
-                                            ,buttonAlign : 'center'
-                                            ,width       : 350
-                                            ,height      : 300
-                                            ,autoScroll  : true
-                                            ,loader      :
-                                            {
-                                                url       : _URL_CONSULTA_ICDS
-                                                ,scripts  : true
-                                                ,autoLoad : true
-                                                ,loadMask : true
-                                                ,ajaxOptions: {
-                                                    method   : 'POST'
-                                                },
-                                                params: {
-                                                    'params.cdperson':values['params.cdperson']
-                                                }
-                                            }
-                                        }).show();
-        
-        debug("<_consultaIcds");
-    }   
-
-    
-
-    /**
-     * Perfil Medico: funcion para cambiar el icono del grid
-     */
-    
-    
+  
 });
