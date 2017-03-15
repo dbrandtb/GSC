@@ -144,6 +144,18 @@
             </result>
         </action>
         
+        <action name="consultaPerfiles" class="ConsultasPolizaAction"
+            method="consultarPerfiles">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosAsegurados.*,
+                    success,
+                    totalCount
+                </param>
+            </result>
+        </action>
+        
         <action name="consultaCopagosPoliza" class="ConsultasPolizaAction"
             method="consultaCopagosPoliza">
             <result type="json">
