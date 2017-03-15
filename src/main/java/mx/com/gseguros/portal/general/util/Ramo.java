@@ -9,7 +9,8 @@ public enum Ramo {
 	SALUD_VITAL      ("2"),
 	SERVICIO_PUBLICO ("6"),
 	GASTOS_MEDICOS_MAYORES("7"),
-	MESA_CONTROL     ("999");
+	MESA_CONTROL     ("999"),
+	GASTOS_MEDICOS_MAYORES_PRUEBA ("11");
 
 	private String cdramo;
 

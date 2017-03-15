@@ -95,6 +95,8 @@
             	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ms.nombre" />';
             }else if(inputCdtipsit == 'RI'){
             	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ri.nombre" />';
+            }else if(inputCdtipsit == 'GMPI'){
+                _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.gmpi.nombre" />';
             }
             
             if(Ext.isEmpty(_NOMBRE_REPORTE_CARATULA)){
@@ -444,7 +446,7 @@ function _p29_guardarComplementario(callback)
     {
         form.setLoading(true);
         //dxn
-        if( inputCdtipsit!='MC' && inputCdtipsit!='AT'){
+        if( inputCdtipsit!='MC' && inputCdtipsit!='AT' && inputCdtipsit!='GMPI'){
             
             guardaEmpleado();
         }
@@ -1686,7 +1688,7 @@ function _p29_emitirClicComplementarios()
 		                                    
 		                                        try{
 		                                          
-		                                            if(inputCdtipsit=='MC' || inputCdtipsit=='AT'){
+		                                            if(inputCdtipsit=='MC' || inputCdtipsit=='AT' || inputCdtipsit=='GMPI'){
                                                        
                                                         return;
                                                     }

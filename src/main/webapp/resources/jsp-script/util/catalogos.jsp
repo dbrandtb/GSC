@@ -87,7 +87,8 @@ var Ramo = {
     Multisalud          : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo"/>',
     Recupera            : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo"/>',
     SaludVital          : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo"/>',
-    ServicioPublico     : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SERVICIO_PUBLICO.cdramo"/>'
+    ServicioPublico     : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SERVICIO_PUBLICO.cdramo"/>',
+    GastosMedicosMayoresPrueba : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES_PRUEBA.cdramo"/>'
 };
 
 

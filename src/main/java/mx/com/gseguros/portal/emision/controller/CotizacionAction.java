@@ -855,6 +855,36 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		if (exito) {
+		    try {
+		        List<ComponenteVO> tatripol = pantallasManager.obtenerComponentes(
+		                null, //cdtiptra
+		                null, //cdunieco
+		                "|" + cdramo + "|",
+		                "|" + cdtipsit + "|",
+		                null, //estado
+		                cdsisrol,
+		                "COTIZACION_CUSTOM",
+		                "TATRI_POL",
+		                null //orden
+		                );
+		        if (tatripol.size() == 0) {
+		            throw new ApplicationException("WARNING no hay TATRI_POL");
+		        }
+		        
+		        gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+		        gc.setEsMovil(session != null && session.containsKey("ES_MOVIL") && ((Boolean)session.get("ES_MOVIL")) == true);
+		        if (!gc.isEsMovil() && smap1.containsKey("movil")) {
+		            gc.setEsMovil(true);
+		        }
+		        
+		        gc.generaComponentes(tatripol, true, false, true, false, false, false);
+		        imap.put("tatripol", gc.getItems());
+		    } catch (Exception ex) {
+		        logger.error("Error al recuperar tatripol (COTIZACION_CUSTOM>TATRI_POL)", ex);
+		    }
+		}
+		
 		//respuesta
 		String respuesta = null;
 		if(exito)
