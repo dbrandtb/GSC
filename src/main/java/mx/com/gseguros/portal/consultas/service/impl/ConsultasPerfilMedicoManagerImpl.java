@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PerfilAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPerfilMedicoManager;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPerfilMedicoDAO;
 

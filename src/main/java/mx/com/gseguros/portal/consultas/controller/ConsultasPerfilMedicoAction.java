@@ -18,10 +18,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.consultas.model.PerfilAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPerfilMedicoManager;
-import mx.com.gseguros.portal.consultas.service.impl.ConsultasPerfilMedicoManagerImpl;
-import mx.com.gseguros.portal.documentos.service.DocumentosManager;
-import mx.com.gseguros.portal.emision.service.EmisionManager;
-import mx.com.gseguros.portal.general.service.TemplateManager;
+import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.utils.Utils;
 
 @Controller
@@ -35,20 +32,18 @@ public class ConsultasPerfilMedicoAction extends PrincipalCoreAction {
     private String message;
     private Map<String, String> params;
     private List<Map<String, String>> list;
-    private List<PerfilAseguradoVO> listaPerfiles;
     
     
     @Autowired
     private ConsultasPerfilMedicoManager consultasManager;
     
-    
+    //consulta el perfil medico de uno o mas asegurados
     @Action(value   = "consultarPerfil",
     	results = { @Result(name="success", type="json") 
     	})
     public String consultarPerfil () {
         String result = ERROR;
         try {
-            logger.debug("entrando al action");
         	// validar sesion
             UserVO usuarioSesion = Utils.validateSession(session);
             Utils.validate(params, "No hay datos");
@@ -57,7 +52,6 @@ public class ConsultasPerfilMedicoAction extends PrincipalCoreAction {
             Utils.validate(listaPersonas, "Falta listaPersonas");
             
             params.put("pv_lsperson_i", listaPersonas);
-            
             this.list = consultasManager.consultaPerfilAsegurados(params);
                        
             message = "Correcto";
@@ -69,7 +63,8 @@ public class ConsultasPerfilMedicoAction extends PrincipalCoreAction {
         }
         return result;
     }
-     
+
+    
     @Action(value   = "consultarIcds",
     	results = { @Result(name="success", type="json") 
     	})

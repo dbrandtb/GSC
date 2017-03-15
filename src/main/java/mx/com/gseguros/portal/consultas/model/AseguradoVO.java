@@ -1,6 +1,8 @@
 package mx.com.gseguros.portal.consultas.model;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -37,6 +39,14 @@ public class AseguradoVO implements Serializable{
 	private String dsplan;
 	
 	private long total;
+	
+	//Perfil Medico
+	private String cantIcd;
+	private String maxPerfil;
+	private String numPerfil;
+	private String perfilFinal;
+	private List<Map<String,String>> icds;
+	//Perfil Medico
 	
 	//TODO: Agregar atributos para el Afiliado en SISA o crear un AfiliadoVO con ellos
 	/*
@@ -198,5 +208,38 @@ public class AseguradoVO implements Serializable{
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
 	}	
+	
+	//Perfil Medico
+	public String getPerfilFinal() {
+		return perfilFinal;
+	}
+	public void setPerfilFinal(String perfilFinal) {
+		this.perfilFinal = perfilFinal;
+	}
+	public List<Map<String, String>> getIcds() {
+		return icds;
+	}
+	public void setIcds(List<Map<String, String>> icds) {
+		this.icds = icds;
+	}
+	public String getCantIcd() {
+		return cantIcd;
+	}
+	public void setCantIcd(String cantIcd) {
+		this.cantIcd = cantIcd;
+	}
+	public String getMaxPerfil() {
+		return maxPerfil;
+	}
+	public void setMaxPerfil(String maxPerfil) {
+		this.maxPerfil = maxPerfil;
+	}
+	public String getNumPerfil() {
+		return numPerfil;
+	}
+	public void setNumPerfil(String numPerfil) {
+		this.numPerfil = numPerfil;
+	}
+	//Perfil Medico
 		
 }
