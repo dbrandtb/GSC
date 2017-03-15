@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.emision.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,7 +63,6 @@ import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.ReportesManager;
@@ -74,7 +72,6 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
-import mx.com.gseguros.portal.general.util.TipoArchivo;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoProcesoBloqueo;
 import mx.com.gseguros.portal.general.util.TipoRamo;
@@ -6804,8 +6801,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		throw new ApplicationException("El Asegurado no puede ir en blanco");
 		                	}
 		                }
-                        
-                        boolean exitoValidacion;
+                        bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
+                        /*boolean exitoValidacion;
                         if(StringUtils.isNotBlank(cveAsegurado) && (Integer.parseInt(cveAsegurado) > 0)){
                             long timestamp=System.currentTimeMillis();
                             Map<String,Object>managerResult=personasManager.obtenerPersonaPorCdperson(cveAsegurado,timestamp);
@@ -6826,7 +6823,7 @@ public class CotizacionAction extends PrincipalCoreAction
                             	logger.debug("ID ASEGURADO: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
                             	bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
                             }                            
-                        }
+                        }*/
                     } catch(Exception ex2) { 
                         logger.warn("error al leer el campo 'Id. Asegurado', se intentara como string ==>");
                         try {
@@ -6838,8 +6835,8 @@ public class CotizacionAction extends PrincipalCoreAction
     		                		throw new ApplicationException("El Asegurado no puede ir en blanco");
     		                	}
     		                }
-                            
-                            boolean exitoValidacion;
+                            bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+                            /*boolean exitoValidacion;
                             if(StringUtils.isNotBlank(cveAsegurado)){
                                 long timestamp=System.currentTimeMillis();
                                 Map<String,Object>managerResult=personasManager.obtenerPersonaPorCdperson(cveAsegurado,timestamp);
@@ -6860,7 +6857,7 @@ public class CotizacionAction extends PrincipalCoreAction
                                 	logger.debug("ID ASEGURADO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
                                 	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
                                 }                                
-                            }
+                            }*/
                             
                             //bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
                         } catch(Exception ex) {
@@ -11348,6 +11345,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null, false
 						);
 				
+				/*
 				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit TMS:
 				if (Ramo.MULTISALUD.getCdramo().equals(cdramo)
 						&& !TipoSituacion.TRADICIONALES_MEGASALUD.getCdtipsit().equals(cdtipsit))
@@ -11446,6 +11444,7 @@ public class CotizacionAction extends PrincipalCoreAction
 								);
 					}
 				}
+				*/
 			}
 			
 			exito = true;
