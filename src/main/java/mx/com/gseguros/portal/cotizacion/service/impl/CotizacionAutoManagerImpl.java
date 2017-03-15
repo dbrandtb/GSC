@@ -281,7 +281,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				if("AT".equals(cdtipsit) && tatri.getNameCdatribu().equals("34")){
 				    
 				    ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
-                    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
+				    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
                     {
                         tatri.setOculto(true);
                         tatri.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
@@ -1431,11 +1431,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		try
 		{
-			String cdtipsit2=null;
-			if(cdtipsit.equals("ARTL")){
-				cdtipsit2="TL";
-				cdtipsit="AR";
-			}
 			String cdagente = null;
 			
 			paso = "Obteniendo trámite y sucursal";//////
@@ -1526,7 +1521,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<ComponenteVO>gridCols = pantallasDAO.obtenerComponentes(
 					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
 					, cdtipsit, null, cdsisrol
-					, "COTIZACION_FLOTILLA", cdtipsit2!=null?"COLUMNAS_RENDER_TL":"COLUMNAS_RENDER", null);
+					, "COTIZACION_FLOTILLA", "COLUMNAS_RENDER", null);
 			
 			paso = "Filtrando atributos";
 			List<ComponenteVO>aux      = new ArrayList<ComponenteVO>();
@@ -1791,8 +1786,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
 						,cdtipsitIte, null, cdsisrol
 						,"COTIZACION_FLOTILLA", "EDITOR_PLANES", null);
-				if(cdtipsit2!=null)
-					auxEditorPlan.get(0).setObligatorioFlot(true);
 				tatrisitSitIteParcial.add(auxEditorPlan.get(0));
 				
 				paso = "Construyendo componentes de situaciones";
@@ -2285,13 +2278,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							&&key.length()>"parametros.pv_".length()
 							&&key.substring(0, "parametros.pv_".length()).equals("parametros.pv_"))
 					{
-						
-						
-						pMovTvalosit.setOtvalor( 
-								Integer.parseInt( key.substring("parametros.pv_otvalor".length() ) )
-								
-								, valosit.getValue()
-								);
+						pMovTvalosit.setOtvalor(Integer.parseInt(key.substring("parametros.pv_otvalor".length())),valosit.getValue());
 					}
 				}
 				listaPMovTvalosit.add(pMovTvalosit);
@@ -2387,7 +2374,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 
 				if (StringUtils.isBlank(cdpersonCli) && StringUtils.isNotBlank(cdideperCli)) {
 					logger.debug("Persona proveniente de WS, Se importar�, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
-					
 					
 					logger.debug("<<<>>> Verificando que no se haya insertado el cliente anteriormente... ");
 	    			boolean personaNueva =  true;
@@ -2554,14 +2540,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				    				null, null, null, null, null, 
 				    				null, null, null, null, null,
 				    				cli.getFaxCli(), cli.getCelularCli());
-				    			
+	
 							}
 						}
-	    			}
-	    			cdpersonCli = newCdPerson;
-	    			nmorddomCli = "1";
+					
+					}
+		    		cdpersonCli = newCdPerson;
+		    		nmorddomCli = "1";
 				}
-				
 				
 				if(!StringUtils.isBlank(cdpersonCli))
 				{

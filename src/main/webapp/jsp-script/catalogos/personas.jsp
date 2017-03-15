@@ -3891,23 +3891,6 @@ function agregaEditaDomicilio(editMode, recordCargar){
 						}
 				});
 				
-		        _fieldByName('CDTIPDOM',formDomicilio).on({
-					change: function(me, val){
-		    				try{
-			    				if(val == '26'){
-			    					_fieldByName('CDEDO',formDomicilio).setFieldLabel('REGI&Oacute;N');
-			    					_fieldByName('CDMUNICI',formDomicilio).setFieldLabel('PA&Iacute;S');
-			    				}else{
-			    					_fieldByName('CDEDO',formDomicilio).setFieldLabel('ESTADO');
-			    					_fieldByName('CDMUNICI',formDomicilio).setFieldLabel('MUNICIPIO');
-			    				}
-		    				}
-		    				catch(e){
-		    					debug(e);
-		    				}
-					}
-				});
-				
 	        windowDomicilio.show(null,function(){
 	        	
 	        	formDomicilio.setLoading(true);

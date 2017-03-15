@@ -43,8 +43,8 @@ var _p29_urlObtieneValNumeroSerie           = '<s:url namespace="/emision"      
 var MontoMaximo = 0;
 var MontoMinimo = 0;
 
-var _p30_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p30_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 
@@ -200,12 +200,6 @@ var cargarXpoliza = false;
 
 var _p30_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p30_smap1:',_p30_smap1);
-///Parche para TL
-if(_p30_smap1.cdtipsit=='ARTL'){
-	_p30_smap1.cdtipsit='AR';
-	_p30_smap1.cdtipsit2='TL';
-}
-/////////////////
 var _p28_smap1 =
 {
     cdtipsit : _p30_smap1.cdtipsit
@@ -549,7 +543,6 @@ var _p30_tatrisitAutoWindows  = [];
                     text     : 'B&uacute;squeda de veh&iacute;culo'
                     ,icon    : '${ctx}/resources/fam3icons/icons/car.png'
                     ,handler : function(bot) { _p30_editarAutoAceptar(bot,_p30_editarAutoBuscar); }
-                    ,hidden	 : _p30_smap1.turistas=='S'
                 }
             ]
         };
@@ -597,14 +590,7 @@ debug('_p30_tatrisitAutoWindows:'  , _p30_tatrisitAutoWindows);
 Ext.onReady(function()
 {
     //_grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p30_smap1.cdramo);
-    
-	///Parche para TL
-	if(_p30_smap1.cdtipsit=='ARTL'){
-		_p30_smap1.cdtipsit='AR';
-		_p30_smap1.cdtipsit2='TL';
-	}
-	/////////////////
-	
+
     Ext.Ajax.timeout = 3*60*60*1000; // 1 hora
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
@@ -3612,15 +3598,6 @@ function _p30_agregarAuto()
 {
     debug('>_p30_agregarAuto');
     
-    try{
-    	if(_p30_smap1.turistas=='S' && _p30_store.count()>=3){
-    		mensajeWarning('Solo puedes agregar 3 incisos');
-    		return;
-    	}
-    	
-    }catch(e){
-    	debugError(e);
-    }
     var valido=true;
     if(valido&&_p30_smap1.cdramo+'x'=='5x')
     {
@@ -4137,13 +4114,11 @@ function _p30_cotizar(sinTarificar)
         }
         else
         {
-        	if(_p30_smap1.turistas!='S'){ 
-	            valido = _p30_store.getCount()>=5;
-	            if(!valido)
-	            {
-	                mensajeWarning('Debe capturar al menos cinco incisos');
-	            }
-        	}
+            valido = _p30_store.getCount()>=5;
+            if(!valido)
+            {
+                mensajeWarning('Debe capturar al menos cinco incisos');
+            }
         }
     }
     
@@ -4193,7 +4168,8 @@ function _p30_cotizar(sinTarificar)
     	   !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
 //     	   (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
     	   )
-    	{	
+    	{
+    		
     		var ncamiones = 0;
             var ntractocamiones = 0;
             var nsemiremolques = 0;
@@ -4562,15 +4538,6 @@ function _p30_cotizar(sinTarificar)
         
         for(var cdtipsitPanel in recordsCdtipsit)
         {
-        	try{
-        		if(_p30_smap1.turistas=='S'){
-		        	if(recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25'] instanceof Array ){
-		        		recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25']=recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25'][0]
-		        	}
-        		}
-        	}catch(e){
-        		debugError(e)
-        	}
             json.slist3.push(recordsCdtipsit[cdtipsitPanel].data);
         }
         
@@ -4584,30 +4551,11 @@ function _p30_cotizar(sinTarificar)
         
         _p30_store.each(function(record)
         {
-        	try{
-        		if(_p30_smap1.turistas=='S'){
-        			if(record.data['parametros.pv_otvalor25'] instanceof Array ){
-                		record.data['parametros.pv_otvalor25']=record.data['parametros.pv_otvalor25'][0]
-                	}
-        		}
-        	}catch(e){
-        		debugError(e)
-        	}
-        	
             json.slist2.push(record.data);
         });
         
         storeTvalosit.each(function(record)
         {
-        	try{
-        		if(_p30_smap1.turistas=='S'){
-        			if(record.data['parametros.pv_otvalor25'] instanceof Array ){
-                		record.data['parametros.pv_otvalor25']=record.data['parametros.pv_otvalor25'][0]
-                	}
-        		}
-        	}catch(e){
-        		debugError(e)
-        	}
             json.slist1.push(record.data);
         });
         
@@ -4806,7 +4754,7 @@ function _p30_cotizar(sinTarificar)
                                         if(_p30_smap1.tipoflot == TipoFlotilla.Flotilla)
                                         {
                                           modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formDescuento'))[0].lastValue;
-                                        }    
+                                        } 
                                         _p30_cotizar(modPrim);
                                     }
                                     else
@@ -4832,14 +4780,10 @@ function _p30_cotizar(sinTarificar)
                             disabledDesc = true;
                         }
                     }
+                    //                     _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
                     
                     if (disabledDesc === true && true === _p30_flujoAux.multiDesc) {
                         disabledDesc = false;
-                    }
-                    
-                    if(_p30_smap1.tipoflot != TipoFlotilla.Flotilla)
-                    {
-                      _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
                     }
                     
                     //bloquear comision
@@ -4859,20 +4803,7 @@ function _p30_cotizar(sinTarificar)
                     }
                     
                     _fieldById('_p30_botonAplicarCesion').setDisabled(disabledComi);
-                    var formasPago=[]
-                    try{
-                    	if(_p30_smap1.turistas=='S'){
-	                    	json.slist1.forEach(function(it){
-	                    		if(!FormaPago.esDxN(it.CDPERPAG))
-	                    			formasPago.push(it);
-	                    	});
-                    	}else{
-                    		formasPago=json.slist1;
-                    	}
-                    	
-                    }catch(e){
-                    	debugError(e)
-                    }
+                    
                     var gridTarifas=Ext.create('Ext.panel.Panel',
                     {
                         itemId : '_p30_gridTarifas'
@@ -4885,7 +4816,7 @@ function _p30_cotizar(sinTarificar)
                                 ,store            : Ext.create('Ext.data.Store',
                                 {
                                     model : '_p30_modeloTarifa'
-                                    ,data : formasPago
+                                    ,data : json.slist1
                                 })
                                 ,columns          :
                                 [
