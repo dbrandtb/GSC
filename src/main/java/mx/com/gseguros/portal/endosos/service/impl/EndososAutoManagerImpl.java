@@ -7901,7 +7901,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String nsuplogi,
 			String fesolici,
 			String feendoso,
-			Map<String, String> valosit
+			Map<String, String> valosit, 
+			String usuarioCaptura
 			) throws Exception {
 		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
@@ -8042,7 +8043,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					cdideext,
 					edocivil,
 					cdunieco, // cdsucemi
-					cdusuari,
+					usuarioCaptura,
 					nuevaPersona ? "I" : "U");
 			if (nuevaPersona) {
 				paso = "Recuperando domicilio del titular";
