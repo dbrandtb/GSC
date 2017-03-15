@@ -4979,9 +4979,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                StringBuilder bufferLineaStr = new StringBuilder();
 	                boolean       filaBuena      = true;
 	                
-	                String fechaNac =  null;
-	                String fecanti  = null;
-	                String feingreso =  null;
+	                String nombre1         =  null;
+	                String nombre2         =  null;
+	                String apellidoP       =  null;
+	                String apellidoM       =  null;
+	                String fechaNac        =  null;
+	                String cveAsegurado    =  null;
+	                String fecanti         =  null;
+	                String feingreso       =  null;
 	                
 	                if(Utils.isRowEmpty(row))
 	                {
@@ -5122,7 +5127,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		.append("|")
 		                		.toString()
 		                		);
-		                bufferLinea.append(
+	                    apellidoP = row.getCell(3).getStringCellValue();
+                        bufferLinea.append(
 		                		new StringBuilder(row.getCell(3).getStringCellValue())
 		                		.append("|")
 		                		.toString()
@@ -5148,7 +5154,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		.append("|")
 		                		.toString()
 		                		);
-		                bufferLinea.append(
+	                    apellidoM = row.getCell(4).getStringCellValue();
+	                    bufferLinea.append(
 		                		new StringBuilder(row.getCell(4).getStringCellValue())
 		                		.append("|")
 		                		.toString()
@@ -5174,6 +5181,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		.append("|")
 		                		.toString()
 		                		);
+		                nombre1 = row.getCell(5).getStringCellValue();
 		                bufferLinea.append(
 		                		new StringBuilder(row.getCell(5).getStringCellValue())
 		                		.append("|")
@@ -5192,50 +5200,42 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
 	                }
 	              //SEGUNDO NOMBRE
-	                try
-                	{
-		                auxCell=row.getCell(6);
-		                logger.debug(
-		                		new StringBuilder("SEGUNDO NOMBRE: ")
-		                		.append(
-		                				auxCell!=null?
-		                						auxCell.getStringCellValue()
-		                						:""
-		                		)
-		                		.append("|")
-		                		.toString()
-		                		);
-		                bufferLinea.append(
-		                		auxCell!=null?
-		                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
-		                				:"|"
-		                		);
-		                
-		                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
-		                
-		                if("T".equals(parentesco))
-		                {
-		                	if(nFamilia > 0){
-		                		listaFamilias.put(nFamilia, filasFamilia);
-		                		filasFamilia = new ArrayList<Map<String,String>>(); 
-		                	}
-		                	
-		                	nFamilia++;
-		                	familias.put(nFamilia,"");
-		                	estadoFamilias.put(nFamilia,true);
-		                	titulares.put(nFamilia,nombre);
-		                	
-		                }
-                	}
-	                catch(Exception ex)
-	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (G) de la fila ",fila," "));
-	                }
-	                finally
-	                {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
-	                }
+                    try
+                    {
+                        auxCell=row.getCell(6);
+                        logger.debug("SEGUNDO NOMBRE: "+(
+                                auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+                                ));
+                        bufferLinea.append(
+                                auxCell!=null?auxCell.getStringCellValue()+"|":"|"
+                                );
+                        nombre2 = auxCell!=null?auxCell.getStringCellValue():"";
+                        nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
+                        
+                        if("T".equals(parentesco))
+                        {
+                            if(nFamilia > 0){
+                                listaFamilias.put(nFamilia, filasFamilia);
+                                filasFamilia = new ArrayList<Map<String,String>>(); 
+                            }
+                            
+                            nFamilia++;
+                            familias.put(nFamilia,"");
+                            estadoFamilias.put(nFamilia,true);
+                            titulares.put(nFamilia,nombre);
+                            
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        filaBuena = false;
+                        bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (G) de la fila ",fila," "));
+                    }
+                    finally
+                    {
+                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
+                    }
+	                
 	              //SEXO
 	                try
                 	{
@@ -6151,15 +6151,62 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(29)),"-"));
 	                }
-	              //ID ASEGURADO
-                    try {
+	              //ID. ASEGURADO
+	                try {
                         logger.debug("ID. ASEGURADO: "+(String.format("%.0f",row.getCell(30).getNumericCellValue())+"|"));
-                        bufferLinea.append(String.format("%.0f",row.getCell(30).getNumericCellValue())+"|");
-                    } catch(Exception ex2) {
-                        logger.warn("error al leer Id. Asegurado, se intentara como string:",ex2);
+                        auxCell=row.getCell(30);
+                        cveAsegurado = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue()):"";
+                        bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
+                        /*boolean exitoValidacion;
+                        if(StringUtils.isNotBlank(cveAsegurado) && (Integer.parseInt(cveAsegurado) > 0)){
+                            long timestamp=System.currentTimeMillis();
+                            Map<String,Object>managerResult=personasManager.obtenerPersonaPorCdperson(cveAsegurado,timestamp);
+                            exitoValidacion = (Boolean)managerResult.get("exito");
+                           if(exitoValidacion){
+                        	   logger.debug("ID ASEGURADO: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
+                        	   bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
+                           }else{
+                               filaBuena = false;
+                               bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' :"+cveAsegurado+" ,no se encuentra en SICAPS (AE) de la fila ",fila," "));
+                           }                            
+                        }else{
+                            String respuesta  = personasManager.obtieneAseguradoSICAPS((nombre1+" "+nombre2),apellidoP,apellidoM,renderFechas.parse(fechaNac));
+                            if(Integer.parseInt(respuesta) > 0){
+                                filaBuena = false;
+                                bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado'. El asegurado ya se encuentra en SICAPS clave: "+respuesta +" (AE) de la fila ",fila," "));
+                            }else{
+                            	logger.debug("ID ASEGURADO: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
+                            	bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
+                            }                            
+                        }*/
+                    } catch(Exception ex2) { 
+                        logger.warn("error al leer el campo 'Id. Asegurado', se intentara como string ==>");
                         try {
                             auxCell=row.getCell(30);
+                            cveAsegurado = auxCell!=null?auxCell.getStringCellValue():"";
                             bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+                            /*boolean exitoValidacion;
+                            if(StringUtils.isNotBlank(cveAsegurado)){
+                                long timestamp=System.currentTimeMillis();
+                                Map<String,Object>managerResult=personasManager.obtenerPersonaPorCdperson(cveAsegurado,timestamp);
+                                exitoValidacion = (Boolean)managerResult.get("exito");
+                               if(exitoValidacion){
+                            	   logger.debug("ID ASEGURADO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+                            	   bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+                               }else{
+                                   filaBuena = false;
+                                   bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' :"+cveAsegurado+" ,no se encuentra en SICAPS (AE) de la fila ",fila," "));
+                               }                            
+                            }else{
+                                String respuesta  = personasManager.obtieneAseguradoSICAPS((nombre1+" "+nombre2),apellidoP,apellidoM,renderFechas.parse(fechaNac));
+                                if(Integer.parseInt(respuesta) > 0){
+                                    filaBuena = false;
+                                    bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado'. El asegurado ya se encuentra en SICAPS clave: "+respuesta +" (AE) de la fila ",fila," "));
+                                }else{
+                                	logger.debug("ID ASEGURADO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
+                                	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
+                                }                                
+                            }*/
                         } catch(Exception ex) {
                             filaBuena = false;
                             bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' (AE) de la fila ",fila," "));
