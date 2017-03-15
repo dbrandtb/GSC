@@ -3135,7 +3135,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						parametros.put("param21"                  , null);
 						parametros.put("param22"                  , null);
 						parametros.put("param23"                  , null);
-						parametros.put("param24"                  , null);
+						parametros.put("param24"                  , "0");//usuario default externo
 						parametros.put("param25_pv_accion_i"      , "I");
 						String[] tipos=new String[]{
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",

@@ -585,7 +585,8 @@ public interface EndososAutoManager
 			String nsuplogi,
 			String fesolici,
 			String feendoso,
-			Map<String, String> valosit
+			Map<String, String> valosit,
+			String usuarioCaptura
 			) throws Exception;
 	
 	public List<Map<String, String>> tarificarEndosoAltaAsegurados (String cdusuari, String cdelemen, String cdunieco,

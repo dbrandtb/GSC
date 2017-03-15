@@ -42,7 +42,7 @@ public interface PersonasDAO
 	 * @param cdideext
 	 * @param cdestcivil
 	 * @param cdsucemi
-	 * @param cdusuario
+	 * @param usuarioExternoInterno Numero Entero
 	 * @param accion
 	 * @throws Exception
 	 */
@@ -69,7 +69,7 @@ public interface PersonasDAO
 			,String cdideext
 			,String cdestcivil
 			,String cdsucemi
-			,String cdusuario
+			,String usuarioExternoInterno
 			,String accion) throws Exception;
 
 	/**
