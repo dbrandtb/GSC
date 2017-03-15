@@ -5807,6 +5807,7 @@ function _p30_comprar()
 	                           ,'smap1.ntramite' : json.smap1.ntramite
 	                           ,'smap1.swexiper' : swExiper
 	                           ,'smap1.tipoflot' : _p30_smap1.tipoflot
+	                           ,'smap1.cdtipsit2': _p30_smap1.cdtipsit2
 	                       };
 	                       
 	                       if(!Ext.isEmpty(_p30_flujo))
