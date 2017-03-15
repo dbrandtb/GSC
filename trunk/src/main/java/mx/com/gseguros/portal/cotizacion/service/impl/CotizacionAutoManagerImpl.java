@@ -4034,6 +4034,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		try
 		{
+			String cdtipsit2=null;
+			if("ARTL".equals(cdtipsit)){
+				cdtipsit="AR";
+				cdtipsit2="TL";
+			}
 			paso = "Procesando datos de entrada";
 			resp.getSmap().put("cdusuari" , cdusuari);
 			
@@ -4095,7 +4100,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<ComponenteVO>agenteComp  = pantallasDAO.obtenerComponentes(null, null, null, null, null, null
 					,"EMISION_AUTO_FLOT", "AGENTE", null);
 			List<ComponenteVO>gridColumns = pantallasDAO.obtenerComponentes(null, null, null, null, null, null
-					,"EMISION_AUTO_FLOT", "COLUMNAS_RENDER", null);
+					,"EMISION_AUTO_FLOT", cdtipsit2!=null?"COLUMNAS_RENDER_TL":"COLUMNAS_RENDER", null);
 			
 			paso = "Generando componentes";
 			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());

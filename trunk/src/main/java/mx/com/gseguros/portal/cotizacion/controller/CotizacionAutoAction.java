@@ -959,6 +959,10 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,renovacion
                     );
             
+            if("ARTL".equals(cdtipsit)){
+            	smap1.put("cdtipsit","AR");
+            	smap1.put("cdtipsit2","TL");
+            }
             exito     = resp.isExito();
             respuesta = resp.getRespuesta();
             
@@ -1511,7 +1515,8 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                    ,cdtipsit = smap1.get("cdtipsit")
                    ,estado   = smap1.get("estado")
                    ,nmpoliza = smap1.get("nmpoliza")
-                   ,ntramite = smap1.get("ntramite");
+                   ,ntramite = smap1.get("ntramite")
+                   ,cdtipsit2 = smap1.get("cdtipsit2");
             
             Utils.validate(
                     cdunieco  , "No se recibi\u00f3 la sucursal"
@@ -1525,7 +1530,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             ManagerRespuestaImapSmapVO resp = cotizacionAutoManager.emisionAutoFlotilla(
                     cdunieco
                     ,cdramo
-                    ,cdtipsit
+                    ,cdtipsit2!=null && !cdtipsit2.trim().equals("") ? "ARTL" : cdtipsit 
                     ,estado
                     ,nmpoliza
                     ,ntramite
