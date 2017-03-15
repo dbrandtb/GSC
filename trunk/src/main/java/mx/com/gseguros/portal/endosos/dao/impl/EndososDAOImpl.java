@@ -6484,64 +6484,6 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
     }
     
     @Override
-    public Map<String,Object> guardarEndosoCambioTipoCarga(
-            String cdusuari
-            ,String cdsisrol
-            ,String cdelemen
-            ,String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            ,String cdtipsup
-            ,String tstamp
-            ,Date   feefecto
-            )throws Exception
-    {
-        Map<String,Object> params = new LinkedHashMap<String,Object>();
-        params.put("cdusuari" , cdusuari);
-        params.put("cdsisrol" , cdsisrol);
-        params.put("cdelemen" , cdelemen);
-        params.put("cdunieco" , cdunieco);
-        params.put("cdramo"   , cdramo);
-        params.put("estado"   , estado);
-        params.put("nmpoliza" , nmpoliza);
-        params.put("cdtipsup" , cdtipsup);
-        params.put("tstamp"   , tstamp);
-        params.put("feefecto" , feefecto);
-        params.put("idproces" , Utils.generaTimestamp());
-        Map<String,Object> resParams = ejecutaSP(new GuardarEndosoCambioTipoCarga(getDataSource()),params);
-        return resParams;
-    }
-    
-    protected class GuardarEndosoCambioTipoCarga extends StoredProcedure
-    {
-        protected GuardarEndosoCambioTipoCarga(DataSource dataSource)
-        {
-            //super(dataSource,"PKG_ENDOSOS.P_ENDOSO_DEVOLUCION_PRIMAS");
-            super(dataSource,"P_CAMBIO_TIPO_CARGA");
-            declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("tstamp"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("feefecto" , OracleTypes.DATE));
-            declareParameter(new SqlParameter("idproces" , OracleTypes.VARCHAR));
-            
-            declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_tipoflot_o" , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_nsuplogi_o" , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
     public List<Map<String,String>> obtieneDatosEndCamModelo(Map<String, String> params)throws Exception
     {
         List<Map<String,String>>lista = null;
