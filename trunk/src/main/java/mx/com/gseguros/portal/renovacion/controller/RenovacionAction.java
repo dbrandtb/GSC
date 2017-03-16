@@ -24,11 +24,20 @@ import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
-
+@Controller
+@Scope("prototype")
+@ParentPackage(value="default")
+@Namespace("/renovacion")
 public class RenovacionAction extends PrincipalCoreAction
 {
 	private static final long        serialVersionUID = 6666057023524182296L;
@@ -43,6 +52,7 @@ public class RenovacionAction extends PrincipalCoreAction
 	private List<Map<String,String>> slist1           = null;
 	
 	//Dependencias inyectadas
+	@Autowired
 	private RenovacionManager renovacionManager;
 	
 	@Autowired
@@ -885,6 +895,40 @@ public class RenovacionAction extends PrincipalCoreAction
                 .append("\n##########################################################")
                 .toString()
                 );
+        return SUCCESS;
+	}
+	
+	@Action(value   = "renovarColectivo",
+            results = { @Result(name="success", type="json") }
+            )
+	public String renovacionColectivo(){
+		logger.debug(Utils.log(
+				"\n####################################",
+				"\n###### renovacionColectivo ######",
+				"\n###### params=",params
+				));
+        try{
+            Utils.validate(params, "No se recibieron parametros");
+            logger.debug("entro");
+            String cdusuari = "AUTOMATICO"
+				,cdunieco   = params.get("cdunieco")
+				,cdramo     = params.get("cdramo")
+				,nmpoliza   = params.get("nmpoliza")
+				,fecdesde   = params.get("fecdesde")
+				,fechasta   = params.get("fechasta")
+				,procedimiento = params.get("procedimiento");
+	            
+            renovacionManager.renovacionColectivo(cdusuari,cdunieco,cdramo,nmpoliza,fecdesde,fechasta,procedimiento);
+            exito = true;
+        }
+        catch(Exception ex){
+            exito     = false;
+            respuesta = Utils.manejaExcepcion(ex);
+        }
+        logger.debug(Utils.log(
+				"\n###### renovacionColectivo ######",
+				"\n####################################"
+				));
         return SUCCESS;
 	}
 	//Getters y setters

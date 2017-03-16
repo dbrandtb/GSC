@@ -238,6 +238,12 @@
         <action name="manualWSrecibos" class="beanDatosComplementarios" method="ejecutaWSManualRecibos">
             <result name="success" type="json" />
         </action>
+        
+        <!-- Consulta de Asegurados -->
+        <action name="initConsultaAsegurados" class="ConsultasPolizaAction" method="initConsultaAsegurados">
+            <result name="success">/jsp/consultas/consultasPolizasAsegurados.jsp</result>
+        </action>
+        
 	</package>
 	
 	<package name="loginApp" namespace="/touchApp" extends="struts-default, json-default">

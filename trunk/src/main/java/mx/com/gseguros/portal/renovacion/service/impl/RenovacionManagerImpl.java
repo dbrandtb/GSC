@@ -17,6 +17,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -1113,6 +1114,41 @@ public class RenovacionManagerImpl implements RenovacionManager
 	        Utils.generaExcepcion(ex, paso);
 	    }
 	    return result;
+	}
+	
+	@Override
+	public void renovacionColectivo(String cdusuari,String cdunieco,String cdramo,String nmpoliza,String fecdesde,String fechasta,String procedimiento)throws Exception{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ renovacionColectivo @@@@@@")
+				.toString());
+		String paso = "";
+		    try{
+		        paso = "Validando valor de exclusion";
+		        if(procedimiento.equals("COLECTIVO")){
+					paso = "VALIDA_RENOVACION_COLECTIVO";
+					logger.debug(paso);
+					
+					renovacionDAO.validaRenovacionColectivo(cdusuari, cdunieco, cdramo, nmpoliza);
+					
+				}
+                if(procedimiento.equals("RENOVAR_X_FECHAS")){
+					paso = "RENOVAR_X_FECHAS_COLECTIVOS";
+					logger.debug(paso);
+					logger.debug("Entro a paso 1");
+					renovacionDAO.renovaXFechasColectivo(cdusuari, fecdesde, fechasta); 
+					logger.debug("Entro a paso 2");
+				}
+		    }
+		    catch(Exception ex){
+		        Utils.generaExcepcion(ex, paso);
+		    }
+		    logger.info(
+					new StringBuilder()
+					.append("\n@@@@@@ renovacionColectivo @@@@@@")
+					.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+					.toString());
 	}
 	
 	//Getters y setters

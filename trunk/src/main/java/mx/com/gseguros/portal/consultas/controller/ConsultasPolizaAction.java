@@ -1320,6 +1320,36 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
         return result;
     }
     
+
+    public String initConsultaAsegurados() {
+    	logger.debug("initConsultaAsegurados params:{}", params);
+		return SUCCESS;
+	}
+    
+    @Action(value   = "consultaAseguradosF",
+            results = { @Result(name="success", type="json") }
+            )
+    public String consultaAsegurados() {
+		logger.info("\n######################################\n###### consultaAsegurados ######");
+		logger.info("params: {}", params);
+		try {
+			String ntramite = params.get("ntramite");
+			datosAsegurados = siniestrosManager.obtenerTramiteCompletoAsegurados(ntramite, start, limit);
+			if(datosAsegurados != null && datosAsegurados.size() > 0) {
+				logger.debug("Asegurados obtenidos : "+datosAsegurados.size());
+				totalCount = datosAsegurados.get(0).getTotal();
+			} else {
+				logger.debug("No hay Asegurados");
+			}
+			//logger.debug("datosAsegurados : "+datosAsegurados);
+		} catch (Exception ex) {
+			logger.error("error consultaAsegurados", ex);
+		}
+		logger.info("\n###### consultaAsegurados ######\n######################################");
+		success = true;
+		return SUCCESS;
+	}
+    
     
     // Getters and setters:
 
