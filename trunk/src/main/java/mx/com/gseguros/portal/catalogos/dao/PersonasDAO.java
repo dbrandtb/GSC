@@ -113,7 +113,7 @@ public interface PersonasDAO
 	 * @param nmnumero
 	 * @param nmnumint
 	 * @param cdtipdom
-	 * @param cdusuario
+	 * @param usuarioExternoInterno Numero Entero
 	 * @param swactivo
 	 * @param accion
 	 * @throws Exception
@@ -129,7 +129,7 @@ public interface PersonasDAO
 			,String nmnumero
 			,String nmnumint
 			,String cdtipdom
-			,String cdusuario
+			,String usuarioExternoInterno
 			,String swactivo
 			,String accion) throws Exception;
 

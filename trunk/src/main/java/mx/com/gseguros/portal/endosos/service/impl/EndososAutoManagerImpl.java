@@ -8158,7 +8158,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						mdomicilTitular.get("NMNUMERO"),
 						mdomicilTitular.get("NMNUMINT"),
 						"1", // cdtipdom
-						cdusuari,
+						usuarioCaptura,
 						"S", // swactivo
 						"I");
 			}
