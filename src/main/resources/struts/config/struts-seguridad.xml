@@ -240,8 +240,11 @@
         </action>
         
         <!-- Consulta de Asegurados -->
-        <action name="initConsultaAsegurados" class="ConsultasPolizaAction" method="initConsultaAsegurados">
-            <result name="success">/jsp/consultas/consultasPolizasAsegurados.jsp</result>
+        <action name="initConsultaAseguradosPoliza" class="ConsultasPolizaAction" method="initConsultaAseguradosPoliza">
+            <result name="success">/jsp/consultas/consultaAseguradosPoliza.jsp</result>
+        </action>
+        <action name="consultaAseguradosPoliza" class="ConsultasPolizaAction" method="consultaAseguradosPoliza">
+            <result name="success" type="json" />
         </action>
         
 	</package>

@@ -1321,16 +1321,13 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
     }
     
 
-    public String initConsultaAsegurados() {
-    	logger.debug("initConsultaAsegurados params:{}", params);
+    public String initConsultaAseguradosPoliza() {
+    	logger.debug("initConsultaAseguradosPoliza params:{}", params);
 		return SUCCESS;
 	}
     
-    @Action(value   = "consultaAseguradosF",
-            results = { @Result(name="success", type="json") }
-            )
-    public String consultaAsegurados() {
-		logger.info("\n######################################\n###### consultaAsegurados ######");
+    public String consultaAseguradosPoliza() {
+		logger.info("\n######################################\n###### consultaAseguradosPoliza ######");
 		logger.info("params: {}", params);
 		try {
 			String ntramite = params.get("ntramite");
@@ -1345,7 +1342,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		} catch (Exception ex) {
 			logger.error("error consultaAsegurados", ex);
 		}
-		logger.info("\n###### consultaAsegurados ######\n######################################");
+		logger.info("\n###### consultaAseguradosPoliza ######\n######################################");
 		success = true;
 		return SUCCESS;
 	}

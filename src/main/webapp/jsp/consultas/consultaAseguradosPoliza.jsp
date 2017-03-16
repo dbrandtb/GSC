@@ -22,12 +22,9 @@
         
 var _CONTEXT = '${ctx}';
 
-var _URL_CONSULTA_DATOS_ASEGURADO     = '<s:url namespace="/consultasPoliza" action="consultaAseguradosF" />';
+var _URL_CONSULTA_DATOS_ASEGURADO     = '<s:url namespace="/seguridad" action="consultaAseguradosPoliza" />';
             
-Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
-
 var ntramite = <s:property value="params.ntramite"/>;
-
 var gridDatosAsegurado;
 
 Ext.onReady(function() {
