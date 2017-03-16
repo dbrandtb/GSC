@@ -97,7 +97,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
     private ConsultasPolizaDAO consultasPolizaDAO;
 	
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO) throws Exception{
 		
 		logger.debug(">>>>> Entrando a metodo WS Cotiza y Emite para Auto");
 		
@@ -940,7 +940,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	
 	
 	public Integer enviaRecibosAutosSigs(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal){
+			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal) throws Exception{
 		
 		logger.debug(">>>>> Entrando a metodo WS Envia Recibos para Auto");
 		
@@ -1070,6 +1070,10 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				
 			} catch (Exception e){
 				logger.error("Error en validacion de Emision Exitosa y VidaPorRecibo! " + e.getMessage(),e);
+				if(e.getMessage().contains("Error en spValidaEmisionSigs"))
+				{
+					throw e;
+				}
 				return errorEjec;
 			}
 		}else{
