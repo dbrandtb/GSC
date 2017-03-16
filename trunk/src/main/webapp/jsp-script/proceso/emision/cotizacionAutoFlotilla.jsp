@@ -5095,6 +5095,7 @@ function _p30_cotizar(sinTarificar)
                                         ,xtype   : 'button'
                                         ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
                                         ,text    : 'Recargo Pago Fraccionado'
+                                        ,tooltip : 'Aplicable solo para Flotillas'
                                         ,disabled: true
                                         ,handler : _p30_aplicaRecargoPF
                                     }
