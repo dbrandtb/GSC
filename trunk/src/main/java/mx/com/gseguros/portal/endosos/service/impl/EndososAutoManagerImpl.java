@@ -68,6 +68,7 @@ import mx.com.gseguros.ws.autosgs.emision.model.EmisionAutosVO;
 import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
+
 @Service
 public class EndososAutoManagerImpl implements EndososAutoManager
 {
@@ -7687,8 +7688,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	{	
 		//codigo recuperado de gseguros que no existia en gseguros_clientes
 		logger.debug(Utils.log(
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ guardarEndosoRehabilitacionDespago @@@@@@"
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarEndosoDespago @@@@@@"
 				,"\n@@@@@@ cdunieco      = " , cdunieco
 				,"\n@@@@@@ cdramo        = " , cdramo
 				,"\n@@@@@@ estado        = " , estado
@@ -7697,15 +7698,16 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				,"\n@@@@@@ nmrecibo      = " , nmrecibo
 				,"\n@@@@@@ nmimpres      = " , nmimpres
 				,"\n@@@@@@ cdtipsup      = " , cdtipsup
+				,"\n@@@@@@ usuarioSesion = " , usuarioSesion
+				,"\n@@@@@@ cdusuari      = " , cdusuari
+				,"\n@@@@@@ cdsisrol      = " , cdsisrol
+				,"\n@@@@@@ flujo         = " , flujo
 				));
 		
 		String paso = null;
 		
 		try
 		{
-			
-			String tstamp = Utils.generaTimestamp();
-			
 			paso = "Guardando recibo despago";
 			logger.debug(paso);
 			
@@ -7725,6 +7727,27 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String nmsuplemGen     = (String) resParams.get("pv_nmsuplem_o");
 			String ntramite        = (String) resParams.get("pv_ntramite_o");
 			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			String nsuplogi        = (String) resParams.get("pv_nsuplogi_o");
+			Date   feinival        = (Date)   resParams.get("pv_feinival_o");
+			
+			logger.debug(Utils.log("nsuplogi=",nsuplogi,",feinival=",feinival));
+			
+			String mensajeDespacho = this.confirmarGuardandoDetallesTramiteEndoso(
+					ntramite
+					,cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,nmsuplemGen
+					,cdtipsup
+					,nsuplogi
+					,null //dscoment
+					,feinival
+					,flujo
+					,cdusuari
+					,cdsisrol
+					,false //confirmar
+					);
 			
 			boolean esProductoSalud = consultasDAO.esProductoSalud(cdramo);
 			
@@ -7745,7 +7768,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
 				if(aux == null || !aux.isExitoRecibos()){
-					logger.error("Error al ejecutar los WS de endoso para rehabilitcion de despago");
+					logger.error("Error al ejecutar los WS de endoso para Despago");
 					
 					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
 					
@@ -7765,12 +7788,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				
 				paso = "Ejecutando caratula";
 				logger.debug(paso);
-				//TODO: se debe verificar como se llena el parametro incisosAfectados
-				//codigo recuperado de gseguros que no existia en gseguros_clientes
-				Map<String,String> incisosAfectados = new HashMap<String, String>();
-				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
-			}		
-			
+				
+				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, null);
+			}
 		}
 		catch(Exception ex)
 		{
@@ -7778,10 +7798,10 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 		}
 		
 		logger.debug(Utils.log(
-				"\n@@@@@@ guardarEndosoRehabilitacionDespago @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				 "\n@@@@@@ guardarEndosoDespago @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
-			}
+	}
 	
 	@Override
 	public Map<String, String> guardarFechaEfectoEndosoPendiente (String cdunieco, String cdramo, String estado,
