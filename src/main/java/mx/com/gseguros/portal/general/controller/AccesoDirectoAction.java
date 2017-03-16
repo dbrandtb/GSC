@@ -60,6 +60,8 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	public static final String REDIRECT_SIMPLE         = "redirectSimple";
 	public static final String ACCESO_RSTN_COTIZACION_SALUD_IND = "RstnCotiSalInd";
 	public static final String ACCESO_RSTN_COMPLEMENTARIOS_SALUD_IND = "RstnCompSalInd";
+	public static final String ACCESO_RSTN_COTIZAR_SALUD_COLECTIVO = "RstnCotiSalCol";
+	public static final String ACCESO_RSTN_COMPLEMENTARIOS_SALUD_COL = "RstnCompSalCol";
 	public static final String ACCESO_RSTN_CONSULTA_ASEGURADOS = "RstnConsAseg";
 	
 	/**
@@ -165,8 +167,10 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				|| REDIRECT_SIMPLE.equals(acceso)
                 || ACCESO_RSTN_COTIZACION_SALUD_IND.equals(acceso)
 				|| ACCESO_RSTN_COMPLEMENTARIOS_SALUD_IND.equals(acceso)
+				|| ACCESO_RSTN_COTIZAR_SALUD_COLECTIVO.equals(acceso)
+				|| ACCESO_RSTN_COMPLEMENTARIOS_SALUD_COL.equals(acceso)
 				|| ACCESO_RSTN_CONSULTA_ASEGURADOS.equals(acceso)
-				) {
+		        ) {
 			
 			// Patch para traducir el rol, ya que el portal manda un codigo: 
 			if (ACCESO_CONSULTA_POLIZAS.equals(acceso)) {

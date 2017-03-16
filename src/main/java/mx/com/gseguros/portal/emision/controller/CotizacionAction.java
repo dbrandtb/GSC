@@ -39,7 +39,6 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
-import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.model.AseguradosFiltroVO;
@@ -65,6 +64,7 @@ import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.ReportesManager;
@@ -3400,6 +3400,23 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
+			    if (smap1 != null && "S".equals(smap1.get("rstn")) && StringUtils.isNotBlank(smap1.get("ntramiteRstn"))) {
+			        String pasoRstn = "Construyendo flujo RSTN";
+			        try {
+	                    UserVO user = Utils.validateSession(session);
+	                    String ntramiteRstn = smap1.get("ntramiteRstn");
+	                    Utils.validate(ntramiteRstn, "Falta ntramiteRstn");
+	                    String cdsisrolRstn = user.getRolActivo().getClave();
+	                    if ("S".equals(smap1.get("emitirRstn"))) {
+	                        cdsisrolRstn = "EMITIR";
+	                    }
+	                    flujo = flujoMesaControlManager.generarYRecuperarFlujoRSTN(ntramiteRstn, user.getUser(), cdsisrolRstn);
+	                    smap1 = null;
+	                } catch (Exception ex) {
+	                    Utils.generaExcepcion(ex, pasoRstn);
+	                }
+			    }
+			    
 				if(flujo!=null)
 				{
 					paso = "Recuperando datos del flujo";
