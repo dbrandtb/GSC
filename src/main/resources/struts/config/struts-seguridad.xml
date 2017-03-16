@@ -198,19 +198,6 @@
                 <param name="namespace">${params.namespace}</param>
                 <param name="actionName">${params.actionName}</param>
             </result>
-            <result name="RstnCotiSalInd" type="redirectAction">
-                <param name="namespace">/emision</param>
-                <param name="actionName">cotizacion</param>
-                <param name="smap1.cdramo">${params.cdramo}</param>
-                <param name="smap1.cdtipsit">${params.cdtipsit}</param>
-                <param name="smap1.rstn">S</param>
-            </result>
-            <result name="RstnCompSalInd" type="redirectAction">
-                <param name="namespace">/</param>
-                <param name="actionName">datosComplementarios</param>
-                <param name="map1.rstn">S</param>
-                <param name="map1.ntramite">${params.showCase}</param>
-            </result>
         </action>
         
         <action name="descargaDocInline" class="documentosPolizaAction" method="descargaDocumento">

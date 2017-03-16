@@ -24,11 +24,13 @@ import org.springframework.stereotype.Service;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.catalogos.dao.ClienteDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
+import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
@@ -59,6 +61,7 @@ import mx.com.gseguros.portal.general.util.TipoFlotilla;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.rehabilitacion.dao.RehabilitacionDAO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -101,6 +104,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	
 	@Autowired
 	private MesaControlDAO mesaControlDAO;
+	
+	@Autowired
+	private AutosSIGSDAO autosDAOSIGS;
 	
 	@Autowired
 	private ClienteDAO clienteDAOSIGS;
@@ -2076,7 +2082,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			try{
 				
-				Integer res = autosSIGSDAO.endosoAseguradoAlterno(paramsEnd);
+				Integer res = autosDAOSIGS.endosoAseguradoAlterno(paramsEnd);
 				
 				logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso: " + res);
 				
@@ -2163,7 +2169,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB"     , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso"   , datosEnd.get("FEndoso"));
 					
-					Integer res = autosSIGSDAO.endosoAdaptacionesRC(paramsEnd);
+					Integer res = autosDAOSIGS.endosoAdaptacionesRC(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio AdaptacionesRC numero de endoso: " + res);
 					
@@ -2254,7 +2260,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vFEndoso"    , datosEnd.get("FEndoso"));
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					
-					Integer res = autosSIGSDAO.endosoVigenciaPol(paramsEnd);
+					Integer res = autosDAOSIGS.endosoVigenciaPol(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Vigencia, numero de endoso: " + res);
 					
@@ -2339,7 +2345,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vTexto"    , datosEnd.get("Texto"));
 					paramsEnd.put("vFEndoso"    , datosEnd.get("FEndoso"));
 					
-					Integer res = autosSIGSDAO.endosoTextoLibre(paramsEnd);
+					Integer res = autosDAOSIGS.endosoTextoLibre(paramsEnd);
 					
 					logger.debug("Respuesta de endosoTextoLibre, numero de endoso: " + res);
 					
@@ -2438,7 +2444,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			try{
 				
-				Integer res = autosSIGSDAO.endosoBeneficiario(paramsEnd);
+				Integer res = autosDAOSIGS.endosoBeneficiario(paramsEnd);
 				
 				logger.debug("Respuesta de Cambio Beneficiario numero de endoso: " + res);
 				
@@ -2525,7 +2531,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso", datosEnd.get("FEndoso"));
 					
-					Integer res = autosSIGSDAO.endosoPlacasMotor(paramsEnd);
+					Integer res = autosDAOSIGS.endosoPlacasMotor(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Placas Motor, numero de endoso: " + res);
 					
@@ -2613,7 +2619,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso", datosEnd.get("FEndoso"));
 					
-					Integer res = autosSIGSDAO.endosoTipoServicio(paramsEnd);
+					Integer res = autosDAOSIGS.endosoTipoServicio(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Tipo Servicio, numero de endoso: " + res);
 					
@@ -2700,7 +2706,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					paramsEnd.put("vEndoB" , (endosoRecuperado==-1)?0:endosoRecuperado);
 					paramsEnd.put("vFEndoso"   , datosEnd.get("FEndoso"));
 					
-					Integer res = autosSIGSDAO.endosoSerie(paramsEnd);
+					Integer res = autosDAOSIGS.endosoSerie(paramsEnd);
 					
 					logger.debug("Respuesta de Cambio Serie numero de endoso: " + res);
 					
@@ -4107,31 +4113,31 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						 * Para Incisos Flotillas EXCEL
 						 */
 						if(StringUtils.isNotBlank(urlIncisosExcelFlot)){
-							parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
-							logger.debug("URL Generada para urlIncisosExcelFlot: "+ urlIncisosExcelFlot + parametros);
-							
-							mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlIncisosExcelFlot).append(parametros).append("\">Relaci\u00f3n de Incisos EXCEL</a>");
-							
-							mesaControlDAO.guardarDocumento(
-									cdunieco
-									,cdramo
-									,estado
-									,nmpoliza
-									,nmsuplem
-									,new Date()
-									,urlIncisosExcelFlot + parametros
-									,"Incisos EXCEL"+" ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
-									,nmpoliza
-									,ntramite
-									,cdtipsup
-									,Constantes.SI
-									,null
-									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-									,"0"
-									,Documento.EXTERNO_INCISOS_FLOTILLAS, null, null, false
-									);
-						}
+						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
+						logger.debug("URL Generada para urlIncisosExcelFlot: "+ urlIncisosExcelFlot + parametros);
 						
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlIncisosExcelFlot).append(parametros).append("\">Relaci\u00f3n de Incisos EXCEL</a>");
+						
+						mesaControlDAO.guardarDocumento(
+								cdunieco
+								,cdramo
+								,estado
+								,nmpoliza
+								,nmsuplem
+								,new Date()
+								,urlIncisosExcelFlot + parametros
+								,"Incisos EXCEL"+" ("+endosoIt.get("TIPOEND")+" - "+endosoIt.get("NUMEND")+")"
+								,nmpoliza
+								,ntramite
+								,cdtipsup
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_INCISOS_FLOTILLAS, null, null, false
+								);
+						
+						}
 						/**
 						 * Para Tarjeta Identificacion
 						 */
@@ -4388,14 +4394,42 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					}
 					
 					if(StringUtils.isNotBlank(urlDocsExtra)){
-						/**
-						 * Para documento Sanas Practicas
-						 */
+					/**
+					 * Para documento Sanas Practicas
+					 */
+					
+					parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",2";
+					logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
+					
+					mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlDocsExtra).append(parametros).append("\">Sanas Pr\u00e1cticas</a>");
+					
+					mesaControlDAO.guardarDocumento(
+							cdunieco
+							,cdramo
+							,estado
+							,nmpoliza
+							,nmsuplem
+							,new Date()
+							,urlDocsExtra + parametros
+							,"Sanas Pr\u00e1cticas"
+							,nmpoliza
+							,ntramite
+							,cdtipsup
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
+							);
+					
+					/**
+					 * Para documento Constancia de Recepcion
+					 */
+					if(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
+						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",1";
+						logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
 						
-						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",2";
-						logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
-						
-						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlDocsExtra).append(parametros).append("\">Sanas Pr\u00e1cticas</a>");
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlDocsExtra).append(parametros).append("\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>");
 						
 						mesaControlDAO.guardarDocumento(
 								cdunieco
@@ -4405,7 +4439,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,nmsuplem
 								,new Date()
 								,urlDocsExtra + parametros
-								,"Sanas Pr\u00e1cticas"
+								,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
 								,nmpoliza
 								,ntramite
 								,cdtipsup
@@ -4415,39 +4449,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 								,"0"
 								,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
 								);
-						
-						/**
-						 * Para documento Constancia de Recepcion
-						 */
-						if(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
-							parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",1";
-							logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
-							
-							mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlDocsExtra).append(parametros).append("\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>");
-							
-							mesaControlDAO.guardarDocumento(
-									cdunieco
-									,cdramo
-									,estado
-									,nmpoliza
-									,nmsuplem
-									,new Date()
-									,urlDocsExtra + parametros
-									,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
-									,nmpoliza
-									,ntramite
-									,cdtipsup
-									,Constantes.SI
-									,null
-									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-									,"0"
-									,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
-									);
-						}
 					}
+
+					
 				}
 			}
-			
+			}
 			mensajeEmail.append(emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite));
             
             mensajeEmail.append("<br/><br/><br/>Agradecemos su preferencia.<br/>").append(
@@ -7061,7 +7068,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						
 					try{
 						
-						String res = autosSIGSDAO.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+						String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 						String respuesta[] = res.split("\\|");
 						
 						if(Integer.parseInt(respuesta[0].toString()) == 0 ){
@@ -7207,7 +7214,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paramsEnd.put("vUSER"  , cdusuari);
 
 				endosoRecuperado = -1;
-				String res = autosSIGSDAO.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+				String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 				String respu[] = res.split("\\|");
 				logger.debug("Respuesta de Cambio AseguradoAlterno numero de endoso =========> : " + res);
 				
@@ -7362,7 +7369,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paramsEnd.put("vUSER"       , usuarioCaptura);
 			
 			endosoRecuperado = -1;
-			String res = autosSIGSDAO.CambioClientenombreRFCfechaNacimiento(paramsEnd);
+			String res = autosDAOSIGS.CambioClientenombreRFCfechaNacimiento(paramsEnd);
 			String respu[] = res.split("\\|");
 			if(Integer.parseInt(respu[0].toString()) == 0 ){
 				logger.error("Endoso Cambio AseguradoAlterno no exitoso: XX Sin numero de endoso.");
@@ -7901,8 +7908,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String nsuplogi,
 			String fesolici,
 			String feendoso,
-			Map<String, String> valosit, 
-			String usuarioCaptura
+			Map<String, String> valosit
 			) throws Exception {
 		logger.debug(Utils.log(
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
@@ -8043,7 +8049,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 					cdideext,
 					edocivil,
 					cdunieco, // cdsucemi
-					usuarioCaptura,
+					cdusuari,
 					nuevaPersona ? "I" : "U");
 			if (nuevaPersona) {
 				paso = "Recuperando domicilio del titular";
@@ -9286,7 +9292,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	                    paramsEnd.put("vEndoB"      , (endosoRecuperado==-1)?0:endosoRecuperado);
 	                    
 	                    
-	                    Integer res = autosSIGSDAO.EndoBeneficiarioVidaAuto(paramsEnd);
+	                    Integer res = autosDAOSIGS.EndoBeneficiarioVidaAuto(paramsEnd);
 	                    
 	                    logger.debug("Respuesta de Beneficiario Vida Auto, numero de endoso: " + res);
 	                    
@@ -9351,7 +9357,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	        }
 	        
 	        return true;
-	    }	   
+	    }
 	    
 	    @Override
         public Map<String,Item> endosoAjusteSiniestralidad(
@@ -9385,28 +9391,12 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                         ,null //orden
                         );
                 
-                    paso = "Recuperando columnas de cobertura";
-                    logger.debug(paso);
-                    List<ComponenteVO> columnasCobertura = pantallasDAO.obtenerComponentes(
-                            cdtipsup//cdtiptra
-                            ,null //cdunieco
-                            ,cdramo
-                            ,null //cdtipsit
-                            ,null //estado
-                            ,null //cdsisrol
-                            ,"ENDOSO_AJUSTE_SINIESTRALIDAD"
-                            ,"COLUMNAS_COBERTURA"
-                            ,null //orden
-                            );
-                
                 paso = "Construyendo componentes";
                 logger.debug(paso);
                 GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
                 gc.generaComponentes(columnasInciso, true, false, false, true, true, false);
                 items.put("incisoColumns" , gc.getColumns());
                 
-                gc.generaComponentes(columnasCobertura, true, true, false, true, true, false);
-                items.put("coberturaColumns" , gc.getColumns());
             }
             catch(Exception ex)
             {
@@ -9459,7 +9449,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
             String paso = null;
             try
             {
-                /*paso = "Guardando incisos temporales";
+                paso = "Guardando incisos temporales";
                 logger.debug(paso);
                 for(Map<String,String> inciso : incisos)
                 {
@@ -9484,7 +9474,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                             ,null    , null , null , null , null , null , null , null , null
                             ,tstamp
                             );
-                }*/
+                }
                 
                 // Se genera el endoso, se confirma y se genera el tramite:
                 paso = "Confirmando endoso";
@@ -9600,8 +9590,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                         paramsEnd.put("vRamo"          , datosEnd.get("Ramo"));
                         paramsEnd.put("vPoliza"        , datosEnd.get("Poliza"));
                         paramsEnd.put("vInciso"        , datosEnd.get("Inciso"));
-                        paramsEnd.put("vDescripcion"   , "xxx");//datosEnd.get("Descripcion"));
-                        paramsEnd.put("vModelo"        , datosEnd.get("Modelo"));
+                        paramsEnd.put("vCveCarga"      , datosEnd.get("ClaveCarga"));
+                        paramsEnd.put("vTipoCarga"     , "xxx");//se manda estatico ya que este dato se recupera de lado de SIGS
                         paramsEnd.put("vFEndoso"       , datosEnd.get("FEndoso"));
                         paramsEnd.put("vUser"          , datosEnd.get("Usuario"));
                         paramsEnd.put("vEndoB"         , (endosoRecuperado==-1)?0:endosoRecuperado);
@@ -9774,12 +9764,13 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                         paramsEnd.put("vSucursal"      , datosEnd.get("Sucursal"));
                         paramsEnd.put("vRamo"          , datosEnd.get("Ramo"));
                         paramsEnd.put("vPoliza"        , datosEnd.get("Poliza"));
-                        paramsEnd.put("vInciso"        , datosEnd.get("Inciso"));
-                        paramsEnd.put("vCveCarga"      , datosEnd.get("ClaveCarga"));
-                        paramsEnd.put("vTipoCarga"     , "xxx");//se manda estatico ya que este dato se recupera de lado de SIGS
-                        paramsEnd.put("vFEndoso"       , datosEnd.get("FEndoso"));
-                        paramsEnd.put("vUser"          , datosEnd.get("Usuario"));
-                        paramsEnd.put("vEndoB"         , (endosoRecuperado==-1)?0:endosoRecuperado);
+                        paramsEnd.put("vTEndoso"       , StringUtils.isBlank(datosEnd.get("TEndoso"))?" " : datosEnd.get("TEndoso"));
+                        paramsEnd.put("vInciso"        , datosEnd.get("Endoso"));
+                        paramsEnd.put("vCveCarga"      , datosEnd.get("Inciso"));
+                        paramsEnd.put("vTipoCarga"     , datosEnd.get("Servicio"));
+                        paramsEnd.put("vFEndoso"       , datosEnd.get("TipoUso"));
+                        paramsEnd.put("vUser"          , (endosoRecuperado==-1)?0:endosoRecuperado);
+                        paramsEnd.put("vEndoB"         , datosEnd.get("FEndoso"));
                         
                         Integer res = autosSIGSDAO.endosoTipoCarga(paramsEnd);
                         
