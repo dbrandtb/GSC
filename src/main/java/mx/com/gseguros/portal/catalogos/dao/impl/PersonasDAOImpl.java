@@ -522,7 +522,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			,String nmnumero
 			,String nmnumint
 			,String cdtipdom
-			,String cdusuario
+			,String usuarioExternoInterno
 			,String swactivo
 			,String accion) throws Exception
 	{
@@ -538,7 +538,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("nmnumero" , nmnumero);
 		params.put("nmnumint" , nmnumint);
 		params.put("cdtipdom" , cdtipdom);
-		params.put("cdusuario" , cdusuario);
+		params.put("cdusuarioExtInt" , usuarioExternoInterno);
 		params.put("swactivo" , swactivo);
 		params.put("accion"   , accion);
 		logger.debug(
@@ -567,7 +567,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			declareParameter(new SqlParameter("nmnumero"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmnumint"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipdom"       , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdusuario"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuarioExtInt", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swactivo"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"         , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
