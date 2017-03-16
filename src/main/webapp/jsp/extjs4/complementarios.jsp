@@ -724,6 +724,18 @@ function _p29_emitirClicComplementarios()
 	                                                                            debug(json);
 	                                                                            if(json.success==true)
 		                                                            	    	{
+		                                                            	    	    if ((!Ext.isEmpty(panDatComFlujo)) && 'RSTN' === panDatComFlujo.aux) {
+		                                                            	    	        mensajeCorrecto(
+		                                                            	    	            'P\u00f3liza emitida',
+		                                                            	    	            'Se ha emitido la p\u00f3liza ' + json.panel2.nmpoliex,
+		                                                            	    	            function () {
+		                                                            	    	                _mask();
+		                                                            	    	                location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?nmpoliex=' + json.panel2.nmpoliex;
+		                                                            	    	            }
+		                                                            	    	        );
+		                                                            	    	        return;
+		                                                            	    	    }
+		                                                            	    	    
 		                                                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
 		                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
 		                                                            	    		

@@ -540,27 +540,21 @@ function _fieldByNameDown(name,parent,ocultarErrores){
     return comp;
 }
 
-function _fieldByLabel(label,parent,ocultarErrores)
-{
+function _fieldByLabel (label, parent, ocultarErrores) {
     //debug('_fieldByLabel:',label);
     //debug('ocultarErrores:',ocultarErrores,'DUMMY');
-    
-    var comp;
-    var arr = [];
-    if(parent)
-    {
-        arr = Ext.ComponentQuery.query('[fieldLabel='+label+']',parent);
-    }
-    else
-    {
+    var comp, arr = [];
+    if (!Ext.isEmpty(parent)) {
+        if (typeof parent === 'string') {
+            parent = _fieldById(parent);
+        }
+        arr = Ext.ComponentQuery.query('[fieldLabel='+label+']', parent);
+    } else {
         arr = Ext.ComponentQuery.query('[fieldLabel='+label+']');
     }
-    if(arr.length==0&&(Ext.isEmpty(ocultarErrores)||ocultarErrores==false))
-    {
-        mensajeError('No se encuentra el campo "'+label+'"');
-    }
-    else
-    {
+    if (arr.length === 0 && true !== ocultarErrores) {
+        mensajeError('No se encuentra el campo "' + label + '"');
+    } else {
         comp = arr[arr.length-1];
     }
     //debug('_fieldByLabel comp:',comp);

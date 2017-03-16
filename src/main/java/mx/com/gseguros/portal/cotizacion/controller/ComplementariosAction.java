@@ -763,7 +763,10 @@ public class ComplementariosAction extends PrincipalCoreAction
             parametros.putAll(map1);
             parametros.put("pv_status", "V");
             parametros.put("pv_nmsuplem", "0");
-            kernelManager.pMovTvalopol(parametros);
+            
+            if (!Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(map1.get("pv_cdramo"))) {
+                kernelManager.pMovTvalopol(parametros);
+            }
             
 			success = true;
 		}
