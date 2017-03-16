@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
 import org.springframework.jdbc.core.RowMapper;
@@ -1052,4 +1053,64 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
                 compile();
             }
         }  
+        
+        @Override
+        public void validaRenovacionColectivo(String cdusuari, String cdunieco, String cdramo, String nmpoliza) throws Exception{
+            Map<String,String>params=new LinkedHashMap<String,String>();
+
+            params.put("pv_cdusuari_i" , cdusuari);
+            params.put("pv_cdunieco_i" , cdunieco);
+            params.put("pv_cdramo_i"   , cdramo);
+            params.put("pv_nmpoliza_i" , nmpoliza);
+            Map<String,Object> procRes = ejecutaSP(new ValidaRenovacionColectivo(getDataSource()),params);
+    		String error = (String)procRes.get("pv_msg_id_o");
+    		if(StringUtils.isNotBlank(error))
+    		{
+    			throw new ApplicationException(error);
+    		}
+        }
+        
+        protected class ValidaRenovacionColectivo extends StoredProcedure{
+            protected ValidaRenovacionColectivo(DataSource dataSource)
+            {
+                super(dataSource,"PKG_RENOVA.P_RENUEVA_X_POL_COLEC_SALUD");
+                declareParameter(new SqlParameter("pv_cdusuari_i"  , OracleTypes.VARCHAR));
+                declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
+                declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
+                declareParameter(new SqlParameter("pv_nmpoliza_i"  , OracleTypes.VARCHAR));
+                declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+                declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+                compile();
+            }
+        }
+        
+        @Override
+        public void renovaXFechasColectivo(String cdusuari, String fecdesde, String fechasta) throws Exception{
+            Map<String,Object> params = new LinkedHashMap<String,Object>();
+
+            params.put("pv_cdusuari_i"   , cdusuari);
+            params.put("pv_fecdesde_i"   , Utils.parse(fecdesde));
+            params.put("pv_fechasta_i"   , Utils.parse(fechasta));
+            logger.debug("params:"+params);
+            
+            Map<String,Object> procRes = ejecutaSP(new RenovarXFechasColectivo(getDataSource()),params);
+    		String error = (String)procRes.get("pv_msg_id_o");
+    		if(StringUtils.isNotBlank(error))
+    		{
+    			throw new ApplicationException(error);
+    		}
+        }
+        
+        protected class RenovarXFechasColectivo extends StoredProcedure{
+            protected RenovarXFechasColectivo(DataSource dataSource)
+            {
+                super(dataSource,"PKG_RENOVA.P_RENUEVA_X_FECHAS_COLEC_SALUD");
+                declareParameter(new SqlParameter("pv_cdusuari_i"  , OracleTypes.VARCHAR));
+                declareParameter(new SqlParameter("pv_fecdesde_i"  , OracleTypes.DATE));
+                declareParameter(new SqlParameter("pv_fechasta_i"  , OracleTypes.DATE));
+                declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+                declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+                compile();
+            }
+        }
 }
