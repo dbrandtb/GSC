@@ -1637,6 +1637,15 @@ Ext.onReady(function()
     
     ////// custom //////
     
+    try{
+    	if(_p30_smap1.turistas=='S'){
+	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).allowBlank=true;
+	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).isValid();
+    	}
+    }catch(e){
+    	debugError(e)
+    }
+    
     //fechas
     _fieldByName('feini').on(
     {
