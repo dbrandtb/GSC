@@ -5421,7 +5421,15 @@ function _p30_detalles()
             	   var totalIncisos = json.slist1.length;
             	   var j= Number(i);
             	   var cobertura = json.slist1[j].COBERTURA;
-            	   
+            	   try{
+            		   if(_p30_smap1.turistas == 'S' ){
+            			   if(!json.slist1[j+1]){
+            				   break;
+            			   }
+            		   }
+            	   }catch(e){
+            		   debugError(e)
+            	   }
             	   debug('### Cobertura: ',j,'/',totalIncisos,' - ',cobertura);
             	   
             	    	 if(cobertura.indexOf('Recargo')!=-1)
