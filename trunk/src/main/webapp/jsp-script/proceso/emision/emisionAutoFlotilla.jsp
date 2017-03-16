@@ -787,7 +787,7 @@ function _p31_nuevaClic()
         ,params :
         {
             'smap1.cdramo'    : _p31_smap1.cdramo
-            ,'smap1.cdtipsit' : _p31_smap1.cdtipsit
+            ,'smap1.cdtipsit' : _p31_smap1.cdtipsit2!='TL'?_p31_smap1.cdtipsit:"ARTL"
             ,'smap1.tipoflot' : _p31_smap1.tipoflot
         }
         ,standardSubmit : true
