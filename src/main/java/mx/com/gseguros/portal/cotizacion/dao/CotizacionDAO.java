@@ -1006,6 +1006,16 @@ public interface CotizacionDAO {
 	public String aplicaDescAutos(String pcdunieco, String pcdramo, String pnmpoliza, String pdesc, String pisflot) throws Exception;
 	
 	/**
+	 * Metodo que aplica recargo por pago fraccionado en renovaciones al finalizar la cotización
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param nmpoliza
+	 * @param recargoPF
+	 * @param flotilla
+	 */
+	public String aplicaRecargoPagoFraccionado(String cdunieco, String cdramo, String nmpoliza, String recargoPF, String flotilla) throws Exception;
+	
+	/**
 	 * Mapa de regreso: {
 	 *     MINIMO: -15.5,
 	 *     MAXIMO: 25.5

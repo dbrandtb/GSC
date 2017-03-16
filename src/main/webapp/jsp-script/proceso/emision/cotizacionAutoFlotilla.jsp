@@ -4653,6 +4653,11 @@ function _p30_cotizar(sinTarificar)
                            mensajeError(json.smap1.msnPantalla);
                     }
                 	
+                	if(!Ext.isEmpty(json.respuesta))
+                    {
+                		mensajeWarning(json.respuesta);
+                    }
+                	
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(json.smap1.nmpoliza);
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
@@ -4713,6 +4718,28 @@ function _p30_cotizar(sinTarificar)
                             ,value : 'Indique el porcentaje de comisi&oacute;n que desea ceder'
                         }
                     ];
+                    
+                    var itemsRecargoPF =
+                        [
+                            {
+                                xtype  : 'displayfield'
+                                ,value : 'Indique el porcentaje de recargo por pago fraccionado que desea aplicar'
+                            },
+                            Ext.create('Ext.form.NumberField',{
+                            	fieldLabel:'PORCENTAJE RECARGO POR PAGO FRACCIONADO',
+                            	label:'PORCENTAJE RECARGO POR PAGO FRACCIONADO',
+                            	allowBlank:true,
+                            	name:'otvalor.recargoPF',
+                            	readOnly:false,
+                            	swobligaflot:false,
+                            	swobligaemiflot:false,
+                            	hidden:false,
+                            	style:'margin:5px',
+                            	allowDecimals:true,
+                            	decimalSeparator:'.',
+                            	minValue:0
+                            	})
+                        ];
                     
                     <s:if test='%{getImap().get("panel6Items")!=null}'>
                         var itemsaux = [<s:property value="imap.panel6Items" />];
@@ -4817,6 +4844,51 @@ function _p30_cotizar(sinTarificar)
                             }
                         ]
                     });
+                    var _p30_PanelRecargoPF = Ext.create('Ext.form.Panel',
+                            {
+                                itemId        : '_p30_PanelRecargoPF'
+                                ,border       : 0
+                                ,defaults     : { style : 'margin:5px;' }
+                                ,style        : 'margin-left:535px;'
+                                ,width        : 450
+                                ,windowCesion : Ext.create('Ext.window.Window'
+                                ,{
+                                    title        : 'RECARGO POR PAGO FRACCIONADO'
+                                    ,autoScroll  : true
+                                    ,closeAction : 'hide'
+                                    ,modal       : true
+                                    ,items       :
+                                    [   
+                                        Ext.create('Ext.form.Panel',
+                                        {
+                                            itemId       : '_p30_formRecargoPF'
+                                            ,border      : 0
+                                            ,defaults    : { style : 'margin:5px;' }
+                                            ,items       : itemsRecargoPF
+                                            ,buttonAlign : 'center'
+                                            ,buttons     :
+                                            [
+                                                {
+                                                    itemId   : '_p30_botonAplicarRecargoPF'
+                                                    ,text    : 'Aplicar'
+                                                    ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                    ,handler : function(me)
+                                                    {
+                                                        if(me.up('form').getForm().isValid())
+                                                        {
+                                                        	me.up('window').hide();
+                                                        }
+                                                        else
+                                                        {
+                                                            mensajeWarning('Favor de verificar los datos');
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        })
+                                    ]
+                                })
+                            });
                     
                     _p30_formDescuento.loadRecord(new _p30_modelo(form.formOculto.getValues()));
                     _fieldById('_p30_formCesion').loadRecord(new _p30_modelo(form.formOculto.getValues()));
@@ -5008,6 +5080,15 @@ function _p30_cotizar(sinTarificar)
                                         ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
                                         ,text    : 'Cesi&oacute;n de comisi&oacute;n'
                                         ,handler : _p30_cesionClic
+                                    }
+                                    ,{
+                                        itemId   : '_p30_botonRecargoPF'
+                                        ,xtype   : 'button'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
+                                        ,text    : 'Recargo Pago Fraccionado'
+                                        ,disabled: true
+                                        ,hide    :true //!Ext.isEmpty(_p30_flujo) ? (_p30_flujo.cdflujomc != 240 && _p30_flujo.cdtipflu != 103) : true
+                                        ,handler : _p30_aplicaRecargoPF
                                     }
                                     ,{
                                         itemId    : '_p30_botonComprar'
@@ -5251,6 +5332,7 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p30_botonDetalles').setDisabled(true);
         _fieldById('_p30_botonCoberturas').setDisabled(true);
         _fieldById('_p30_botonComprar').setDisabled(true);
+        _fieldById('_p30_botonRecargoPF').setDisabled(true);
     }
     else
     {
@@ -5264,6 +5346,7 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p30_botonDetalles').setDisabled(false);
         _fieldById('_p30_botonCoberturas').setDisabled(false);
         _fieldById('_p30_botonComprar').setDisabled(false);
+        _fieldById('_p30_botonRecargoPF').setDisabled(false);
     }
 }
 
@@ -5273,6 +5356,14 @@ function _p30_cesionClic()
     _fieldById('_p30_formDescuento').windowCesion.show();
     centrarVentanaInterna(_fieldById('_p30_formDescuento').windowCesion);
     debug('<_p30_cesionClic');
+}
+
+function _p30_aplicaRecargoPF()
+{
+    debug('>_p30_PanelRecargoPFClic');
+    _fieldById('_p30_PanelRecargoPF').windowCesion.show();
+    centrarVentanaInterna(_fieldById('_p30_PanelRecargoPF').windowCesion);
+    debug('<_p30_PanelRecargoPFClic');
 }
 
 function _p30_editar()
@@ -5760,6 +5851,7 @@ function _p30_comprar()
         ,'smap1.cdagenteExt'   : _p30_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue() : ''
         ,'smap1.flotilla'      : 'si'
         ,'smap1.tipoflot'      : _p30_smap1.tipoflot
+        ,'smap1.recargoPF'     : Ext.isEmpty(_fieldByName('otvalor.recargoPF',_fieldById('_p30_formRecargoPF')).getValue())?'0':_fieldByName('otvalor.recargoPF',_fieldById('_p30_formRecargoPF')).getValue()
     };
     
     if(!Ext.isEmpty(_p30_flujo))

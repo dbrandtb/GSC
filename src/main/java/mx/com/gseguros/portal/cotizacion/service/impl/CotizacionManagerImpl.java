@@ -11701,6 +11701,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		this.cotizacionDAO.eliminarGrupos(cdunieco, cdramo, estado, nmpoliza, cdtipsit);
 	}
 	
+	@Override
+	public String aplicaRecargoPagoFraccionado(String cdunieco, String cdramo, String nmpoliza, String recargoPF, String flotilla) throws Exception{
+		return this.cotizacionDAO.aplicaRecargoPagoFraccionado( cdunieco,  cdramo,  nmpoliza,  recargoPF,  flotilla);
+	}
+	
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////

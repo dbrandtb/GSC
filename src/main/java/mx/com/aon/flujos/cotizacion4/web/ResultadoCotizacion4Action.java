@@ -899,6 +899,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	String cdagenteExt = null;
     	boolean esFlotilla = false;
     	String tipoflot    = null;
+    	String recargoPF   = null;
     	
     	Date fechaHoy = new Date();
     	
@@ -952,6 +953,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     						&&StringUtils.isNotBlank(fechaFin);
     				esFlotilla  = StringUtils.isNotBlank(smap1.get("flotilla"))&&smap1.get("flotilla").equalsIgnoreCase("si");
     				tipoflot    = smap1.get("tipoflot");
+    				recargoPF   = smap1.get("recargoPF");
     			}
     			
     			if(!completos)
@@ -1865,6 +1867,26 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				
 			}
     		
+    	}
+    	
+    	//Se aplic el recargo por pago fraccionado en caso de renovaciones
+    	if(exito)
+    	{
+    		if(StringUtils.isNotBlank(recargoPF) && !recargoPF.equals("0"))
+    		{
+    			try
+        		{
+    				cotizacionManager.aplicaRecargoPagoFraccionado(comprarCdunieco, comprarCdramo, comprarNmpoliza, recargoPF, esFlotilla==true?"1":"0");
+        		}
+    			catch(Exception ex)
+        		{
+        			long timestamp  = System.currentTimeMillis();
+//        			exito           = false;
+        			respuesta       = "Error al aplicar recargo por pago fraccionado"+timestamp;
+        			respuestaOculta = ex.getMessage();
+        			logger.error(respuesta,ex);
+        		}
+    		}
     	}
     	
         logger.debug(Utils.log(
