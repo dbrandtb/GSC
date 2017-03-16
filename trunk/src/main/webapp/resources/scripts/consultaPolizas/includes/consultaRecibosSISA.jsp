@@ -382,11 +382,15 @@ Ext.onReady(function(){
 	               seleccionarConsolidados(folio);
 	               _habilitarBoton('btnDesconsolidar',true);  //desconsolidar
 	               _habilitarBoton('btnDesglose'     ,true);  //desglose
+	               _habilitarBoton('btnDetalle'      ,true);  //detalle
 	           }
 	           if(conso > 0 || descon > 0){
 	               _habilitarBoton('btnDesglose'     ,true);  //desglose
 	           }	           
 	           if(me.selected.length === 1){
+                   _habilitarBoton('btnDetalle'      ,true);  //detalle
+               }
+               if(me.selected.length > 1 && sonConsolidados() === true){
                    _habilitarBoton('btnDetalle'      ,true);  //detalle
                }
            }
@@ -511,6 +515,30 @@ Ext.onReady(function(){
         _habilitarBoton('btnDetalle'      ,false);
         _habilitarBoton('btnDesglose'     ,false);
         debug('<deshabilitarBotones');
+    }
+    
+    function sonConsolidados(){
+        debug('>sonConsolidados');
+        gridRecibos = _fieldById('gridRecibos');
+        var folio;
+        var result = true;
+        try{
+            var gridStore = gridRecibos.getSelectionModel().getSelection();
+            debug('gridStore ',gridStore); 
+            for(var s = 0; s < gridStore.length; s++){
+                var rec = gridStore[s].data;
+                if(folio != rec['folio'] && s > 0){
+                    result = false;
+                    break;
+                }
+                folio = rec['folio'];
+            }
+        }
+        catch(err){
+            debug("Error",err.message);
+        }
+        debug('<sonConsolidados', result);
+        return result;
     }
     ////// funciones //////
     
