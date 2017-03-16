@@ -7683,10 +7683,105 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 	@Override
 	public void guardarEndosoRehabilitacionDespago(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String nmrecibo, String nmimpres, String cdtipsup, UserVO usuarioSesion, String cdusuari,
-			String cdsisrol, FlujoVO flujo) throws Exception {
-		// TODO Auto-generated method stub
+			String cdsisrol, FlujoVO flujo) throws Exception 
+	{	
+		//codigo recuperado de gseguros que no existia en gseguros_clientes
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarEndosoRehabilitacionDespago @@@@@@"
+				,"\n@@@@@@ cdunieco      = " , cdunieco
+				,"\n@@@@@@ cdramo        = " , cdramo
+				,"\n@@@@@@ estado        = " , estado
+				,"\n@@@@@@ nmpoliza      = " , nmpoliza
+				,"\n@@@@@@ nmsuplem      = " , nmsuplem
+				,"\n@@@@@@ nmrecibo      = " , nmrecibo
+				,"\n@@@@@@ nmimpres      = " , nmimpres
+				,"\n@@@@@@ cdtipsup      = " , cdtipsup
+				));
 		
-	}
+		String paso = null;
+		
+		try
+		{
+			
+			String tstamp = Utils.generaTimestamp();
+			
+			paso = "Guardando recibo despago";
+			logger.debug(paso);
+			
+			Map<String,Object> resParams = endososDAO.guardaEndosoDespago(
+					     cdunieco
+						,cdramo
+						,estado
+						,nmpoliza
+						,nmsuplem
+						,nmrecibo
+						,nmimpres
+						,usuarioSesion.getUser()
+						,usuarioSesion.getRolActivo().getClave()
+						,cdtipsup
+						);
+			
+			String nmsuplemGen     = (String) resParams.get("pv_nmsuplem_o");
+			String ntramite        = (String) resParams.get("pv_ntramite_o");
+			String tipoGrupoInciso = (String) resParams.get("pv_tipoflot_o");
+			
+			boolean esProductoSalud = consultasDAO.esProductoSalud(cdramo);
+			
+			if(esProductoSalud) {
+				paso = "Enviando a Web Service para Recibos de Salud";
+				logger.debug(paso);
+				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplemGen, null, 
+						cdunieco, "0", ntramite, 
+						true, cdtipsup, 
+						usuarioSesion);
+			}else{
+				paso = "Enviando a Web Service Sigs";
+				logger.debug(paso);
+				
+				EmisionAutosVO aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, null, usuarioSesion);
+				if(aux == null || !aux.isExitoRecibos()){
+					logger.error("Error al ejecutar los WS de endoso para rehabilitcion de despago");
+					
+					boolean endosoRevertido = endososManager.revierteEndosoFallido(cdunieco, cdramo, estado, nmpoliza, null, nmsuplemGen, (aux == null)? Integer.valueOf(99999) : aux.getResRecibos(), "Error en endoso auto, tipo: "+TipoEndoso.findByKey(Integer.valueOf(cdtipsup)), false);
+					
+					if(aux!=null && aux.isEndosoSinRetarif()){
+			    		throw new ApplicationException("Endoso sin Tarifa. "+(endosoRevertido?"Endoso revertido exitosamente.":"Error al revertir el endoso"));
+			    	}
+					
+					if(endosoRevertido){
+						logger.error("Endoso revertido exitosamente.");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. Favor de volver a intentar.");
+					}else{
+						logger.error("Error al revertir el endoso");
+						throw new ApplicationException("Error al generar el endoso, en WS. Consulte a Soporte. No se ha revertido el endoso.");
+					}
+					
+				}
+				
+				paso = "Ejecutando caratula";
+				logger.debug(paso);
+				//TODO: se debe verificar como se llena el parametro incisosAfectados
+				//codigo recuperado de gseguros que no existia en gseguros_clientes
+				Map<String,String> incisosAfectados = new HashMap<String, String>();
+				ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, incisosAfectados);
+			}		
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		
+		logger.debug(Utils.log(
+				"\n@@@@@@ guardarEndosoRehabilitacionDespago @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+			}
 	
 	@Override
 	public Map<String, String> guardarFechaEfectoEndosoPendiente (String cdunieco, String cdramo, String estado,
