@@ -211,6 +211,11 @@
                 <param name="map1.rstn">S</param>
                 <param name="map1.ntramite">${params.showCase}</param>
             </result>
+            <result name="RstnConsAseg" type="redirectAction">
+                <param name="namespace">/consultasPoliza</param>
+                <param name="actionName">initConsultaAseguradosPoliza</param>
+                <param name="params.ntramite">${params.showCase}</param>
+            </result>
         </action>
         
         <action name="descargaDocInline" class="documentosPolizaAction" method="descargaDocumento">
@@ -236,14 +241,6 @@
         </action>
         <!-- Lanzar recibos desde SIGS -->
         <action name="manualWSrecibos" class="beanDatosComplementarios" method="ejecutaWSManualRecibos">
-            <result name="success" type="json" />
-        </action>
-        
-        <!-- Consulta de Asegurados -->
-        <action name="initConsultaAseguradosPoliza" class="ConsultasPolizaAction" method="initConsultaAseguradosPoliza">
-            <result name="success">/jsp/consultas/consultaAseguradosPoliza.jsp</result>
-        </action>
-        <action name="consultaAseguradosPoliza" class="ConsultasPolizaAction" method="consultaAseguradosPoliza">
             <result name="success" type="json" />
         </action>
         
