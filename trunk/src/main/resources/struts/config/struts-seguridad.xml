@@ -211,6 +211,20 @@
                 <param name="map1.rstn">S</param>
                 <param name="map1.ntramite">${params.showCase}</param>
             </result>
+            <result name="RstnCotiSalCol" type="redirectAction">
+                <param name="namespace">/emision</param>
+                <param name="actionName">cotizacionGrupo2</param>
+                <param name="smap1.cdramo">${params.cdramo}</param>
+                <param name="smap1.cdtipsit">${params.cdtipsit}</param>
+                <param name="smap1.rstn">S</param>
+            </result>
+            <result name="RstnCompSalCol" type="redirectAction">
+                <param name="namespace">/emision</param>
+                <param name="actionName">cotizacionGrupo2</param>
+                <param name="smap1.rstn">S</param>
+                <param name="smap1.ntramiteRstn">${params.showCase}</param>
+                <param name="smap1.emitirRstn">${params.issue}</param>
+            </result>
             <result name="RstnConsAseg" type="redirectAction">
                 <param name="namespace">/consultasPoliza</param>
                 <param name="actionName">initConsultaAseguradosPoliza</param>
@@ -243,7 +257,6 @@
         <action name="manualWSrecibos" class="beanDatosComplementarios" method="ejecutaWSManualRecibos">
             <result name="success" type="json" />
         </action>
-        
 	</package>
 	
 	<package name="loginApp" namespace="/touchApp" extends="struts-default, json-default">
