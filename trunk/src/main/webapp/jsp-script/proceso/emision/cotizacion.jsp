@@ -596,7 +596,7 @@ function _0_comprar()
                                 'Se ha generado el tr\u00e1mite ' + json.smap1.ntramite,
                                 function () {
                                     _mask();
-                                    location.reload();
+                                    location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + json.smap1.ntramite;
                                 }
                             );
                             return;
