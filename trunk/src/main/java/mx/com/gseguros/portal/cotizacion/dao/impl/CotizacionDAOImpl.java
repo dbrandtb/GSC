@@ -9183,6 +9183,62 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     }
     
     @Override
+	public String aplicaRecargoPagoFraccionado(String cdunieco, String cdramo, String nmpoliza, String recargoPF, String flotilla)throws Exception
+	{
+    	String mensaje = "";
+        try 
+        {
+	    	Map<String,String>params=new LinkedHashMap<String,String>();
+			params.put("PCDUNIECO" , cdunieco);
+			params.put("PCDRAMO"   , cdramo);
+			params.put("PNMPOLIZA"   , nmpoliza);
+			params.put("PRF" , recargoPF);
+			params.put("PISFLOT" , flotilla);
+			
+			logger.debug(
+					new StringBuilder()
+					.append("\n***************************************************")
+					.append("\n****** P_APLICA_RF_AUTOS **************************")
+					.append("\n****** params=").append(params)
+					.append("\n***************************************************")
+					.toString());
+			Map<String,Object>procRes   = ejecutaSP(new AplicaRecargoPagoFraccionado(getDataSource()), params);
+        
+		    int idMsn = Integer.parseInt(procRes.get("PV_MSG_ID_O")+"");
+			if(idMsn==0)
+	        {
+	            mensaje = procRes.get("PV_SALIDA_O")!=null && !procRes.get("PV_SALIDA_O").toString().isEmpty()?procRes.get("PV_SALIDA_O").toString():"";
+	        }
+	        else
+	        {
+	            throw new Exception("Error al aplicar recargo por pago fraccionado.");   
+	        }
+	        return mensaje;
+        }
+		catch (Exception e) 
+        {
+            throw new Exception("Error al aplicar recargo por pago fraccionado."+mensaje);
+        } 
+	}
+	
+	protected class AplicaRecargoPagoFraccionado extends StoredProcedure
+	{
+		protected AplicaRecargoPagoFraccionado(DataSource dataSource)
+		{
+			super(dataSource,"P_APLICA_RF_AUTOS");
+			declareParameter(new SqlParameter("PCDUNIECO" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("PCDRAMO"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("PNMPOLIZA" , OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("PRF"     , OracleTypes.FLOAT));
+            declareParameter(new SqlParameter("PISFLOT"   , OracleTypes.SMALLINT));
+            declareParameter(new SqlOutParameter("PV_SALIDA_O" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("PV_MSG_ID_O" ,OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("PV_TITLE_O"  ,OracleTypes.VARCHAR));
+            compile();
+		}
+	}
+	
+    @Override
     public Map<String, String> recuperarRangoDescuentoRecargo (String cdramo, String cdtipsit, String cdusuari, String cdsisrol) throws Exception {
         Map<String, String> params = new LinkedHashMap<String, String>();
         params.put("pv_cdramo_i"   , cdramo);

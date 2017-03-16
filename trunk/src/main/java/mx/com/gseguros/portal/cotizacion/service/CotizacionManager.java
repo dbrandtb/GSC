@@ -1292,5 +1292,13 @@ public interface CotizacionManager
 	 */
 	public void eliminarGrupos(String cdunieco, String cdramo, String estado, String nmpoliza, String cdtipsit)throws Exception;
 	
-	
+	/**
+	 * Metodo que aplica recargo por pago fraccionado en renovaciones al finalizar la cotización
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param nmpoliza
+	 * @param recargoPF
+	 * @param flotilla
+	 */
+	public String aplicaRecargoPagoFraccionado(String cdunieco, String cdramo, String nmpoliza, String recargoPF, String flotilla) throws Exception;
 }
