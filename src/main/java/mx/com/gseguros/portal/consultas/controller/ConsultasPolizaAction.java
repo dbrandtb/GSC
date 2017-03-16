@@ -1320,12 +1320,19 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
         return result;
     }
     
-
+	@Action(
+			value   = "initConsultaAseguradosPoliza",
+			results = { @Result(name="success", location="/jsp/consultas/consultaAseguradosPoliza.jsp") }
+	)
     public String initConsultaAseguradosPoliza() {
     	logger.debug("initConsultaAseguradosPoliza params:{}", params);
 		return SUCCESS;
 	}
     
+	@Action(
+			value   = "consultaAseguradosPoliza",
+			results = { @Result(name="success", type="json") }
+			)
     public String consultaAseguradosPoliza() {
 		logger.info("\n######################################\n###### consultaAseguradosPoliza ######");
 		logger.info("params: {}", params);

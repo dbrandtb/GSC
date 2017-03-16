@@ -5,24 +5,12 @@
     <head>
         <title>Consulta de p&oacute;lizas</title>
         
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        
-        <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css" />
-        <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs4/extra-custom-theme.css" />
-        <script type="text/javascript" src="${ctx}/resources/jquery/jquery-1.10.2.min.js"></script>
-        <script type="text/javascript" src="${ctx}/resources/extjs4/ext-all.js"></script>
-        <!--<script type="text/javascript" src="${ctx}/resources/extjs4/ext-all-debug-w-comments.js"></script>-->
-        <script type="text/javascript" src="${ctx}/resources/extjs4/locale/ext-lang-es.js?${now}"></script>
-        <%@ include file="/resources/jsp-script/util/variablesGlobales.jsp"%>
-        <%@ include file="/resources/jsp-script/util/catalogos.jsp"%>
-        <script type="text/javascript" src="${ctx}/resources/extjs4/base_extjs4.js?${now}"></script>
-        <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js?${now}"></script>
         <script type="text/javascript" src="${ctx}/resources/extjs4/plugins/pagingpersistence/pagingselectionpersistence.js?${now}"></script>
         <script type="text/javascript">
         
 var _CONTEXT = '${ctx}';
 
-var _URL_CONSULTA_DATOS_ASEGURADO     = '<s:url namespace="/seguridad" action="consultaAseguradosPoliza" />';
+var _URL_CONSULTA_DATOS_ASEGURADO     = '<s:url namespace="/consultasPoliza" action="consultaAseguradosPoliza" />';
             
 var ntramite = <s:property value="params.ntramite"/>;
 var gridDatosAsegurado;
@@ -99,7 +87,9 @@ Ext.onReady(function() {
         store   : storeAsegurados,
         id      : 'gridDatosAsegurado',
         renderTo: 'dvConsultasPolizas',
-        width   : 950,
+        //width   : 950,
+        width   : 810,
+        height  : 500,
         autoScroll:true,
         selModel: Ext.create('Ext.selection.CheckboxModel', {mode: 'MULTI'}),
         plugins: [{ptype : 'pagingselectpersist'}],
@@ -298,6 +288,6 @@ Ext.onReady(function() {
         
     </head>
     <body>
-        <div id="dvConsultasPolizas" style="height:400px"></div>
+        <div id="dvConsultasPolizas" style="height:550px"></div>
     </body>
 </html>
