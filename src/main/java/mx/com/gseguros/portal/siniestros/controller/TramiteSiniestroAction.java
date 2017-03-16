@@ -15,7 +15,6 @@ import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -65,16 +64,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
-
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-    
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-    
-    @Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;	
-    
+	
 	/**
 	* Funcion para cargar la pantalla principal del alta de tramite
 	* @param params
@@ -834,7 +824,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				success =  false;
 				return SUCCESS;
 			}
-			File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
+			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
 			if(!carpeta.exists()){
 				logger.debug("no existe la carpeta::: {}", paramsO.get("pv_ntramite_i"));
 				carpeta.mkdir();
@@ -849,19 +839,19 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			UserVO usuario=(UserVO)session.get("USUARIO");
 	
 			String urlContrareciboSiniestro = ""
-					+ rutaServidorReports
+					+ getText("ruta.servidor.reports")
 					+ "?p_usuario=" + usuario.getUser() 
 					+ "&p_TRAMITE=" + paramsO.get("pv_ntramite_i")
 					+ "&destype=cache"
 					+ "&desformat=PDF"
-					+ "&userid="+passServidorReports
+					+ "&userid="+getText("pass.servidor.reports")
 					+ "&ACCESSIBLE=YES"
 					+ "&report="+getText("rdf.siniestro.contrarecibo.nombre")
 					+ "&paramform=no"
 					;
 					String nombreArchivo = getText("siniestro.contrarecibo.nombre");
 					String pathArchivo=""
-					+ rutaDocumentosPoliza
+					+ getText("ruta.documentos.poliza")
 					+ "/" + paramsO.get("pv_ntramite_i")
 					+ "/" + nombreArchivo
 			;
@@ -1105,17 +1095,5 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 
 	public void setValidaCdTipsitTramite(String validaCdTipsitTramite) {
 		this.validaCdTipsitTramite = validaCdTipsitTramite;
-	}
-	
-    public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
 	}
 }

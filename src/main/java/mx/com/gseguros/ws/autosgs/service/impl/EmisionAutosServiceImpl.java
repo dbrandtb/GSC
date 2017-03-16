@@ -623,7 +623,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						
 					}
 				} catch (Exception e1) {
-					logger.error("Error en obtencion y mapeo de datos para envio de Emision WS Autos",e1);
+					logger.error("Error en PL de obtencion de datos para envio de Emision WS Autos",e1);
 					return null;
 				}	
 				
