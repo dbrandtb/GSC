@@ -5096,7 +5096,6 @@ function _p30_cotizar(sinTarificar)
                                         ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
                                         ,text    : 'Recargo Pago Fraccionado'
                                         ,disabled: true
-                                        ,hide    :true //!Ext.isEmpty(_p30_flujo) ? (_p30_flujo.cdflujomc != 240 && _p30_flujo.cdtipflu != 103) : true
                                         ,handler : _p30_aplicaRecargoPF
                                     }
                                     ,{
@@ -5355,7 +5354,7 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p30_botonDetalles').setDisabled(false);
         _fieldById('_p30_botonCoberturas').setDisabled(false);
         _fieldById('_p30_botonComprar').setDisabled(false);
-        _fieldById('_p30_botonRecargoPF').setDisabled(false);
+        _fieldById('_p30_botonRecargoPF').setDisabled(_p30_smap1.tipoflot=='F'?false:true);
     }
 }
 
