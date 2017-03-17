@@ -11238,7 +11238,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,status   , "Falta status"
 					);
 			
-			if(cotizacionManager.isEstatusGeneraDocumentosCotizacion(status))
+			if(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(cdramo) || cotizacionManager.isEstatusGeneraDocumentosCotizacion(status))
 			{
 			
 				int bloqueos = 0;
@@ -11344,6 +11344,11 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						,null, false
 						);
+                
+                if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(cdramo)) {
+                    HttpUtil.enviarArchivoRSTN(
+                            ntramite, nombreArchivoCotizacion, pathArchivoCotizacion, Utils.join("COTIZACION EN RESUMEN (",nmpoliza,")"));
+                }
 				
 				String urlReporteCotizacion2=Utils.join(
 						  rutaServidorReports
@@ -11395,6 +11400,10 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null, false
 						);
 				
+				if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(cdramo)) {
+				    HttpUtil.enviarArchivoRSTN(
+                            ntramite, nombreArchivoCotizacion2, pathArchivoCotizacion2, Utils.join("COTIZACION A DETALLE (",nmpoliza,")"));
+				}
 				
 				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit TMS:
 				if (Ramo.MULTISALUD.getCdramo().equals(cdramo)

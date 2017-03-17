@@ -4656,6 +4656,24 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                        else
 	                        {
 	                            if ('S' === _p25_smap1.rstn) {
+	                                try {
+	                                    Ext.Ajax.request({
+	                                        url    : _p25_guardarReporteCotizacion,
+	                                        params : {
+	                                            'smap1.cdunieco' : json.smap1.cdunieco,
+	                                            'smap1.cdramo'   : json.smap1.cdramo,
+	                                            'smap1.estado'   : 'W',
+	                                            'smap1.nmpoliza' : json.smap1.nmpoliza,
+	                                            'smap1.cdperpag' : _fieldByName('cdperpag').getValue(),
+	                                            'smap1.cdtipsit' : _p25_smap1.cdtipsit,
+	                                            'smap1.ntramite' : json.smap1.ntramite,
+	                                            'smap1.nGrupos'  : _p25_storeGrupos.getCount(),
+	                                            'smap1.status'   : '14'
+	                                        }
+	                                    });
+	                                } catch (e) {
+	                                    manejaException(e, 'Generando y enviando documentos de cotizacion');
+	                                }
 	                                mensajeCorrecto(
 	                                    'Tr\u00e1mite generado',
 	                                    'Se ha generado el tr\u00e1mite ' + json.smap1.ntramite,
