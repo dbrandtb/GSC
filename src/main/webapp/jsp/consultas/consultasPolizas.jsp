@@ -46,11 +46,11 @@
             //Variable para conocer el rol activo del sistema.
             var cdSisRolActivo = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
             
-          
+            
             //Variables para la generacion de Reportes
-            var _urlViewReport      = '<s:property value="rutaServidorReports" />';
-            var _reportsServerUser  = '<s:property value="passServidorReports" />';
-            var _reporteEdoCtaSin   = '<s:text name="rdf.siniestro.estadocuenta.nombre" />';
+            var _urlViewReport      = '<s:text name="ruta.servidor.reports" />';
+            var _reportsServerUser  = '<s:text name="pass.servidor.reports" />';
+            var _reporteEdoCtaSin   = '<s:text name="rdf.siniestro.estadocuenta.nombreMod" />';
             var _urlViewDoc         = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
             
             var _botonesGrid = [

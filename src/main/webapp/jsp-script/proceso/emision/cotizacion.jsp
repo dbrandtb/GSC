@@ -43,8 +43,8 @@ try {
 debug('_0_flujoAux:', _0_flujoAux);
 
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
-var _0_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _0_reportsServerUser = '<s:property value="passServidorReports" />';
+var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                        />';
 var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                        />';
@@ -596,7 +596,7 @@ function _0_comprar()
                                 'Se ha generado el tr\u00e1mite ' + json.smap1.ntramite,
                                 function () {
                                     _mask();
-                                    location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + json.smap1.ntramite;
+                                    location.reload();
                                 }
                             );
                             return;
@@ -2142,7 +2142,7 @@ function _0_cotizar(boton)
                                      }
                                 }
                                 
-                                if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
+                                if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
                                 {
                                     _0_actualizarCotizacionTramite();
                                 }
@@ -2838,7 +2838,7 @@ function _0_actualizarCotizacionTramite(callback)
 
 function _0_recuperarCotizacionDeTramite()
 {
-    if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' )
+    if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' )
     {
         var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
         try
@@ -3681,9 +3681,6 @@ Ext.onReady(function()
     		var itemsFormAgrupados=[
     	            		 _0_fieldNtramite
     	    			    ,_0_fieldNmpoliza
-    	    			    <s:if test='%{imap.containsKey("tatripol")}'>
-    	    			    ,<s:property value="imap.tatripol"/>
-    	    			    </s:if>
     	    			    ,<s:property value="imap.camposAgrupados"/>
     	    			    ,{
     	                        name        : 'FESOLICI'
@@ -5392,35 +5389,35 @@ Ext.onReady(function()
     }
     
     // Se busca la imagen para mostrar en el cotizador segun el producto:
-    if (_0_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba) {
-        Ext.Ajax.request({
-            url    : _0_urlObtenerParametros,
-            params :{
-                'smap1.parametro' : 'IMAGEN_COTIZACION',
-                'smap1.cdramo'   : _0_smap1.cdramo,
-                'smap1.cdtipsit' : _0_smap1.cdtipsit
-            },
-            success : function(response) {
-                var json=Ext.decode(response.responseText);
-                debug('########## Respuesta:',json);
-                if(json.exito) {
-                    Ext.create('Ext.window.Window', {
-                        focusOnToFront : false, //evitamos que obtenga el focus en automatico
-                        closable : false,
-                        header: false,
-                        border: false,
-                        resizable: false,
-                        width: Number(json.smap1.P2VALOR),
-                        height: Number(json.smap1.P3VALOR),
-                        items: [{
-                            xtype : 'image',
-                            src : '${ctx}/images/proceso/cotizacion/'+json.smap1.P1VALOR
-                        }]
-                    }).showAt(Number(json.smap1.P4VALOR), Number(json.smap1.P5VALOR));
-               }
-            }
-        });
-    }
+    /*
+    Ext.Ajax.request({
+        url    : _0_urlObtenerParametros,
+        params :{
+            'smap1.parametro' : 'IMAGEN_COTIZACION',
+            'smap1.cdramo'   : _0_smap1.cdramo,
+            'smap1.cdtipsit' : _0_smap1.cdtipsit
+        },
+        success : function(response) {
+            var json=Ext.decode(response.responseText);
+            debug('########## Respuesta:',json);
+            if(json.exito) {
+                Ext.create('Ext.window.Window', {
+                    focusOnToFront : false, //evitamos que obtenga el focus en automatico
+                    closable : false,
+                    header: false,
+                    border: false,
+                    resizable: false,
+                    width: Number(json.smap1.P2VALOR),
+                    height: Number(json.smap1.P3VALOR),
+                    items: [{
+                        xtype : 'image',
+                        src : '${ctx}/images/proceso/cotizacion/'+json.smap1.P1VALOR
+                    }]
+                }).showAt(Number(json.smap1.P4VALOR), Number(json.smap1.P5VALOR));
+           }
+        }
+    });
+    */
     
     if(_0_smap1.ntramite&&_0_smap1.ntramite.length>0)
     {
@@ -5614,29 +5611,6 @@ Ext.onReady(function()
     	debugError(e);
     }
     
-    if (_0_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba
-        && !Ext.isEmpty(_fieldLikeLabel('DESCUENTO', null, true))
-        ) {
-        var ck = 'Recuperando rango de descuento/recargo';
-        try {
-            _request({
-                mask   : ck,
-                url    : _GLOBAL_URL_RECUPERACION,
-                params : {
-                    'params.consulta' : 'RECUPERAR_RANGO_DESCUENTO_RECARGO',
-                    'params.cdramo'   : _0_smap1.cdramo,
-                    'params.cdtipsit' : _0_smap1.cdtipsit
-                },
-                success : function (json) {
-                    var comp = _fieldLikeLabel('DESCUENTO');
-                    comp.setMinValue(json.params.MINIMO);
-                    comp.setMaxValue(json.params.MAXIMO);
-                }
-            });
-        } catch (e) {
-            manejaException(e, ck);
-        }
-    }
     
     // Para TODOS LOS PRODUCTOS (si aplican), se agrega validacion de Codigo Postal vs Estado:
     agregaValidacionCPvsEstado();
