@@ -93,13 +93,6 @@ public class RecibosManagerImpl implements RecibosManager {
             imap.put("itemsDetalleFields"  , gc.getFields());
             imap.put("itemsDetalleColumns" , gc.getColumns());
             
-            List<ComponenteVO> itemsBitacoraRecibo = pantallasDAO.obtenerComponentes(
-                    null,null,null,null,null,cdsisrol,"CONSULTA_RECIBOS_SISA","MODELO_BITACONS",null);          
-            gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-            gc.generaComponentes(itemsBitacoraRecibo, true, true, false, true, true, false);          
-            imap.put("itemsBitacoraFields"  , gc.getFields());
-            imap.put("itemsBitacoraColumns" , gc.getColumns());            
-            
             resp.setImap(imap);
         }
         catch(Exception ex){
@@ -138,10 +131,9 @@ public class RecibosManagerImpl implements RecibosManager {
                ,"\n@@@@@@ lista    = " , lista
                ));
         String folio = "";    
-        String paso  = "";        
+        String paso  = "";
         try{
-            String usuario = user.getUser().toString();
-            folio = recibosDAO.consolidarRecibos(cdunieco, cdramo, estado, nmpoliza, usuario, lista);
+            folio = recibosDAO.consolidarRecibos(lista);
             actualizarFolioSIGS(cdunieco, cdramo, estado, nmpoliza, folio, user, lista);            
         }
         catch(Exception ex){
@@ -164,9 +156,8 @@ public class RecibosManagerImpl implements RecibosManager {
         String paso = "";
         try{
             paso = "Antes de desconsolidar recibos";
-            String usuario = user.getUser().toString();
             for(Map<String, String> recibo:lista){
-                recibosDAO.desconsolidarRecibos(cdunieco, cdramo, estado, nmpoliza, usuario, recibo.get("folio"));
+                recibosDAO.desconsolidarRecibos(recibo.get("folio"));
                 actualizarFolioSIGS(cdunieco, cdramo, estado, nmpoliza, recibo.get("nmrecibo"), user, lista);
             }
         }
@@ -262,20 +253,6 @@ public class RecibosManagerImpl implements RecibosManager {
             Utils.generaExcepcion(ex, paso);
         }
         return inputStr;
-    }
-    
-    @Override
-    public List<Map<String, String>> obtenerBitacoraConsolidacion(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception{
-        List<Map<String, String>> lista = new ArrayList<Map<String,String>>();
-        String paso = "";
-        try{
-            paso = "Obteniendo bitacora de consolidacion";
-            lista = recibosDAO.obtenerBitacoraConsolidacion(cdunieco, cdramo, estado, nmpoliza);
-        }
-        catch(Exception ex){
-            Utils.generaExcepcion(ex, paso);
-        }
-        return lista;
     }
     
     public void setRecibosDAO(RecibosDAO recibosDAO) {

@@ -623,16 +623,13 @@ Ext.define('VentanaHistorial',
                                     ],
                                     renderer: function (klass, item) {
                                         debug('ventanaHistorialChartDetallesTipsForm renderer args:', arguments);
-                                        var recordRaw = item.storeItem.raw;
-                                        if (me.cdsisrol === 'EJECUTIVOCUENTA' && recordRaw.SWAGENTE !== 'S') {
-                                            recordRaw.COMMENTS = '';
-                                        }
+                                        var record = item.storeItem;
                                         _fieldById('ventanaHistorialChartDetallesTipsForm').getForm().loadRecord({
                                             getData : function () {
-                                                return recordRaw;
+                                                return record.raw;
                                             }
                                         });
-                                        this.setTitle('Tr\u00e1mite ' + me.ntramite + ' movimiento ' + recordRaw.NMORDINA);
+                                        this.setTitle('Tr\u00e1mite ' + me.ntramite + ' movimiento ' + record.raw.NMORDINA);
                                     }
                                 }
                             }

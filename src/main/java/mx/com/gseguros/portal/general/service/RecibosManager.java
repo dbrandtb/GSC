@@ -49,6 +49,4 @@ public interface RecibosManager {
 	public InputStream obtenerDatosReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String[] lista) throws Exception;
 	
 	public InputStream obtenerReporteRecibos(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
-	
-	public List<Map<String, String>> obtenerBitacoraConsolidacion(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 }

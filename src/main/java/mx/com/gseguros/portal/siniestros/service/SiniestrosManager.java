@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -750,5 +749,4 @@ public interface SiniestrosManager {
     
 	public String validaProveedorPD(String ntramite) throws Exception; // (EGS)
     
-	public List<AseguradoVO> obtenerTramiteCompletoAsegurados(String ntramite, long start, long limit) throws Exception;
 }
