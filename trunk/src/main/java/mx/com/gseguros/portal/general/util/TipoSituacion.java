@@ -23,7 +23,9 @@ public enum TipoSituacion {
 	TRACTOCAMIONES_ARMADOS    ("TC"),
 	REMOLQUES_INDISTINTOS     ("RQ"),
 	TURISTA_LICENCIA          ("TL"),
-	TURISTA_VEHICULO          ("TV")
+	TURISTA_VEHICULO          ("TV"),
+	GASTOS_MEDICOS_MAYORES_PRUEBA_IND ("GMPI"),
+	GASTOS_MEDICOS_MAYORES_PRUEBA_COL ("GMPC")
 	;
 
 	private String cdtipsit;
