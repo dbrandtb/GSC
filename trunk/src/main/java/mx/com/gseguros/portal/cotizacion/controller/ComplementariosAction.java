@@ -2444,7 +2444,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						}catch(Exception ex)
 						{
 							logger.error("error en el pl de emitir",ex);
-							mensajeRespuesta = ex.getMessage();
+							mensajeRespuesta = ex.getMessage()!=null?ex.getMessage().trim().equals("")?"Error en el Web Service para emitir":ex.getMessage():"Error en el Web Service para emitir";
 							success          = false;
 						}
 						
