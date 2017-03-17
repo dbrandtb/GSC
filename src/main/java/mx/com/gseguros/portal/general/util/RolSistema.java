@@ -35,7 +35,7 @@ public enum RolSistema {
 	SUBDIRECTOR_SALUD("SUBDIRSALUD"),
 	DIRECTOR_SALUD("DIRECSALUD"),
     GENERENTE_OPERACION_EMISION("GERENTEOPEMI");
-    
+
 	private String cdsisrol;
 
 	private RolSistema(String cdsisrol) {

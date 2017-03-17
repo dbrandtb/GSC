@@ -10,7 +10,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
@@ -926,23 +925,4 @@ public class Utils
     	}
     	return sb.toString();
     }
-    
-    /**
-	 * Formatea un long que representa una fecha en milisegundos a un string con el contenido de una fecha
-	 * @param fecha
-	 * @return
-	 */
-	public static String formateaFechaMilisegundos(long fecha) {
-		String sFecha="";
-		try {
-			final Calendar cal = Calendar.getInstance();
-        	cal.setTimeInMillis(fecha);
-        	final SimpleDateFormat sdfParser = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", new Locale("ES"));
-        	sFecha = sdfParser.format(cal.getTime());
-		} catch (Exception e) {
-			logger.error("Error al formateaFechaMilisegundos ", e);
-		}
-		return sFecha;
-	}
-	
 }

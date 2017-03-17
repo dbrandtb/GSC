@@ -992,34 +992,4 @@ public interface CotizacionDAO {
 	 */
 	HashMap<String, String> obtieneCodigosPostalesProductos() throws Exception;
 
-	/**
-	 * Obtiene las coberturas por plan y si son obligatorias. 
-	 * @param pv_cdramo_i
-	 * @param pv_cdplan_i
-	 * @param pv_cdtipsit_i
-	 * @return lista de coberturas por plan
-	 * @throws Exception
-	 */
-	public List<Map<String, String>> getCoberturas(String pv_cdramo_i, String pv_cdplan_i, String pv_cdtipsit_i)
-			throws Exception;
-
-	public String aplicaDescAutos(String pcdunieco, String pcdramo, String pnmpoliza, String pdesc, String pisflot) throws Exception;
-	
-	/**
-	 * Metodo que aplica recargo por pago fraccionado en renovaciones al finalizar la cotización
-	 * @param cdunieco
-	 * @param cdramo
-	 * @param nmpoliza
-	 * @param recargoPF
-	 * @param flotilla
-	 */
-	public String aplicaRecargoPagoFraccionado(String cdunieco, String cdramo, String nmpoliza, String recargoPF, String flotilla) throws Exception;
-	
-	/**
-	 * Mapa de regreso: {
-	 *     MINIMO: -15.5,
-	 *     MAXIMO: 25.5
-	 * }
-	 */
-	public Map<String, String> recuperarRangoDescuentoRecargo (String cdramo, String cdtipsit, String cdusuari, String cdsisrol) throws Exception;
 }

@@ -35,13 +35,12 @@
 
 //////variables //////
     var _p25_storeRecibos;
-    var _URL_CONSULTA_RECIBOS        = '<s:url namespace="/general" action= "obtenerDatosRecibosSISA"      />';
-    var _URL_CONSOLIDA_RECIBOS       = '<s:url namespace="/general" action= "consolidarRecibos"            />';
-    var _URL_DESCONSOLIDA_RECIBOS    = '<s:url namespace="/general" action= "desconsolidarRecibos"         />';
-    var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleReciboSISA"     />';
-    var _URL_OBTENCION_REPORTE       = '<s:url namespace="/general" action= "procesoObtencionReporte"      />';
-    var _URL_REPORTE_RECIBOS         = '<s:url namespace="/general" action= "procesoReporteRecibos"        />';
-    var _URL_CONSULTA_BITACONS       = '<s:url namespace="/general" action= "obtenerBitacoraConsolidacion" />';
+    var _URL_CONSULTA_RECIBOS        = '<s:url namespace="/general" action= "obtenerDatosRecibosSISA" />';
+    var _URL_CONSOLIDA_RECIBOS       = '<s:url namespace="/general" action= "consolidarRecibos"       />';
+    var _URL_DESCONSOLIDA_RECIBOS    = '<s:url namespace="/general" action= "desconsolidarRecibos"    />';
+    var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleReciboSISA"/>';
+    var _URL_OBTENCION_REPORTE       = '<s:url namespace="/general" action= "procesoObtencionReporte" />';
+    var _URL_REPORTE_RECIBOS         = '<s:url namespace="/general" action= "procesoReporteRecibos" />';
     //var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action="obtieneDetalleRecibo"     />';
     //var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action= "obtieneDetalleRecibo"    />';
     var p_cdunieco                   = '<s:property                 value = "params.cdunieco"         />';
@@ -51,24 +50,27 @@
     var p_nmsuplem                   = '<s:property                 value = "params.nmsuplem"         />';
     var pRcb_wndDetalleRecibo;
     var winSimbologia;
-    var arrRolesConso                = [RolSistema.SuscriptorTecnico, 
-                                        RolSistema.SuscriptorSalud,
-                                        RolSistema.SupervisorTecnico,
-                                        RolSistema.GerenteOperacionesEmision,
-                                        RolSistema.SubdirectorSalud];
 //////variables //////
 
 //////overrides //////
 //////overrides //////
 
 //////componentes dinamicos //////
-    var itemsReciboFields        = [<s:property value="imap.itemsReciboFields"    escapeHtml="false" />];
-    var itemsReciboColumns       = [<s:property value="imap.itemsReciboColumns"   escapeHtml="false" />];
-    var itemsDetalleFields       = [<s:property value="imap.itemsDetalleFields"   escapeHtml="false" />];
-    var itemsDetalleColumns      = [<s:property value="imap.itemsDetalleColumns"  escapeHtml="false" />];
-    var itemsBitacoraFields      = [<s:property value="imap.itemsBitacoraFields"  escapeHtml="false" />];
-    var itemsBitacoraColumns     = [<s:property value="imap.itemsBitacoraColumns" escapeHtml="false" />];
-
+    var itemsReciboFields        = [<s:property value="imap.itemsReciboFields"   escapeHtml="false" />];
+    var itemsReciboColumns       = [<s:property value="imap.itemsReciboColumns"  escapeHtml="false" />];
+    var itemsDetalleFields       = [<s:property value="imap.itemsDetalleFields"  escapeHtml="false" />];
+    var itemsDetalleColumns      = [<s:property value="imap.itemsDetalleColumns" escapeHtml="false" />];
+    
+    /*itemsReciboColumns.push({
+        xtype      : 'actioncolumn',
+        itemId     : 'btnReciboDoc',
+        icon       : '${ctx}/resources/fam3icons/icons/eye.png',
+        tooltip    : 'Ver recibo',
+        arrowAlign : 'bottom',
+        handler    : function(view, rowIndex, colIndex, item, e, record){
+            debug('Ver recibo');            
+        }
+    });*/
 //////componentes dinamicos //////
 
 Ext.onReady(function(){
@@ -82,11 +84,6 @@ Ext.onReady(function(){
     Ext.define('_p25_modeloDetalleRecibo',{
         extend  : 'Ext.data.Model',
         fields  : itemsDetalleFields
-    });
-    
-    Ext.define('_p25_modeloBitacoraRecibo',{
-        extend  : 'Ext.data.Model',
-        fields  : itemsBitacoraFields
     });
     ////// modelos //////
     
@@ -119,22 +116,6 @@ Ext.onReady(function(){
             }
         }
     });
-    
-    _p25_storeHistCons = Ext.create('Ext.data.Store',{
-        model    : '_p25_modeloBitacoraRecibo',
-        autoLoad : false,
-        proxy    : {
-            type   : 'ajax',
-            url    : _URL_CONSULTA_BITACONS,
-            reader : {
-                type            : 'json',
-                root            : 'slist1',
-                messageProperty : 'respuesta',
-                successProperty : 'success'
-            }
-        }
-    });
-    
     ////// stores //////
     
     ////// componentes //////
@@ -225,10 +206,10 @@ Ext.onReady(function(){
                                 itemId   : 'btnConsolidar',
                                 text     : 'Consolidar',
                                 disabled : true,
-                                hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');                                    
-                                    consolidarRecibos(obtenerDataSelected(gridRecibos));                                    
+                                    consolidarRecibos(obtenerDataSelected(gridRecibos));
+                                    _p25_storeRecibos.reload();
                                 }
                             },
                             {
@@ -236,10 +217,10 @@ Ext.onReady(function(){
                                 itemId   : 'btnDesconsolidar',
                                 text     : 'Desconsolidar',
                                 disabled : true,
-                                hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');
                                     desconsolidarRecibos(obtenerDataSelected(gridRecibos));
+                                    _p25_storeRecibos.reload();
                                 }
                             },
                             {
@@ -295,17 +276,6 @@ Ext.onReady(function(){
                                 handler  : function(){
                                     winSimbologia.show();
                                 }
-                            },
-                            {
-                                xtype    : 'button', 
-                                itemId   : 'btnHistCons',
-                                text     : 'Historial consolidado',
-                                hidden   : true,
-                                disabled : false,
-                                handler  : function(){
-                                    _p25_storeHistCons.reload();
-                                    winHistCons.show();
-                                }
                             }
                         ]
                     })
@@ -317,15 +287,6 @@ Ext.onReady(function(){
     
     ////// custom //////
     _p25_storeRecibos.load({
-        params: {
-            'params.cdunieco' : p_cdunieco,
-            'params.cdramo'   : p_cdramo,
-            'params.estado'   : p_estado,
-            'params.nmpoliza' : p_nmpoliza
-        }
-    });
-    
-    _p25_storeHistCons.load({
         params: {
             'params.cdunieco' : p_cdunieco,
             'params.cdramo'   : p_cdramo,
@@ -373,7 +334,10 @@ Ext.onReady(function(){
 	               serie = selected[i].data['codigo_serial'];
 	           }
 	           debug('termina de recorrer seleccionados',folio,serie);
-	           debug('Antes de entrar en condiciones',conso, descon);	           
+	           debug('Antes de entrar en condiciones',conso, descon);
+	           if(selected.length === 1){
+	               _habilitarBoton('btnDetalle'      ,true);  //detalle
+	           }
 	           if(conso === 0 && descon > 1){
 	               _habilitarBoton('btnConsolidar'   ,true);  //consolidar
 	               _habilitarBoton('btnDesglose'     ,true);  //desglose
@@ -382,17 +346,10 @@ Ext.onReady(function(){
 	               seleccionarConsolidados(folio);
 	               _habilitarBoton('btnDesconsolidar',true);  //desconsolidar
 	               _habilitarBoton('btnDesglose'     ,true);  //desglose
-	               _habilitarBoton('btnDetalle'      ,true);  //detalle
 	           }
 	           if(conso > 0 || descon > 0){
 	               _habilitarBoton('btnDesglose'     ,true);  //desglose
-	           }	           
-	           if(me.selected.length === 1){
-                   _habilitarBoton('btnDetalle'      ,true);  //detalle
-               }
-               if(me.selected.length > 1 && sonConsolidados() === true){
-                   _habilitarBoton('btnDetalle'      ,true);  //detalle
-               }
+	           }
            }
        } 
     });
@@ -442,12 +399,8 @@ Ext.onReady(function(){
                 loadList  : listaRecibos
             },
             success  : function(response){
-                var json = Ext.decode(response.responseText);
-                debug('recibos consolidados con numero de folio',json);
-                _p25_storeRecibos.reload();
-                _fieldById('gridRecibos').getSelectionModel().deselectAll();
+                debug('recibos consolidados con numero de folio');
                 winMask.close();
-                mensajeCorrecto('Aviso','Se consolido correctamente con n\u00f3mero de folio '+json.respuesta);
             },
             failure  : function(){
                 errorComunicacion();
@@ -472,11 +425,8 @@ Ext.onReady(function(){
                 loadList  : listaRecibos
             },
             success  : function(response){
-                debug('recibos desconsolidados');
-                _p25_storeRecibos.reload();
-                _fieldById('gridRecibos').getSelectionModel().deselectAll();
+                debug('recibos consolidados con numero de folio');
                 winMask.close();
-                mensajeCorrecto('Aviso','Se des consolido correctamente');
             },
             failure  : function(){
                 errorComunicacion();
@@ -515,30 +465,6 @@ Ext.onReady(function(){
         _habilitarBoton('btnDetalle'      ,false);
         _habilitarBoton('btnDesglose'     ,false);
         debug('<deshabilitarBotones');
-    }
-    
-    function sonConsolidados(){
-        debug('>sonConsolidados');
-        gridRecibos = _fieldById('gridRecibos');
-        var folio;
-        var result = true;
-        try{
-            var gridStore = gridRecibos.getSelectionModel().getSelection();
-            debug('gridStore ',gridStore); 
-            for(var s = 0; s < gridStore.length; s++){
-                var rec = gridStore[s].data;
-                if(folio != rec['folio'] && s > 0){
-                    result = false;
-                    break;
-                }
-                folio = rec['folio'];
-            }
-        }
-        catch(err){
-            debug("Error",err.message);
-        }
-        debug('<sonConsolidados', result);
-        return result;
     }
     ////// funciones //////
     
@@ -618,38 +544,7 @@ Ext.onReady(function(){
                     }
                 }]
             })
-        ]
-    });
-    
-    winHistCons = Ext.create('Ext.window.Window',{
-        title       : 'Historial de consolidacion',
-        width       : 600,
-        modal       : true,
-        itemId      : 'winHistCons',
-        closeAction : 'hide',
-        items       : [
-            Ext.create('Ext.form.Panel', {
-                bodyPadding : 15,
-                defaults    : {
-                    width      : 580,
-                    readOnly   : true
-                },
-                items       : [{
-                    xtype       : 'grid',
-                    itemId      : 'idGridHistCons',
-                    store       : _p25_storeHistCons,
-                    height      : 285,
-                    autoScroll  : true,
-                    columns     : itemsBitacoraColumns                    
-                }],
-                buttons     : [{
-                    text    : 'Aceptar',
-                    handler : function(btn){
-                        _fieldById('winHistCons').close();
-                    }
-                }]
-            })
-        ]
+        ]         
     });
 });
 </script>

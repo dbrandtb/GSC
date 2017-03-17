@@ -1158,8 +1158,8 @@ Ext.onReady(function() {
                             'params.cdunieco': panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
                             'params.cdramo'  : panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
                             'params.estado'  : panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
-                            'params.nmpoliza': panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue()//,
-                            //'params.nmsuplem': panelBusqueda.down('form').getForm().findField("params.suplemento").getValue()
+                            'params.nmpoliza': panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
+                            'params.nmsuplem': panelBusqueda.down('form').getForm().findField("params.suplemento").getValue()
                         }
                     });
                 }
@@ -2009,5 +2009,5 @@ Ext.onReady(function() {
     		}
     	});
     };
-  
+    
 });
