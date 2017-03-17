@@ -445,6 +445,7 @@ Ext.onReady(function()
                                                     conceptos['timestamp'] = timestamp;
                                                     conceptos['accion']    = 'guardar';
                                                     
+                                                    _fieldById('_p31_panelpri').setLoading(true);
                                                     Ext.Ajax.request(
                                                     {
                                                         url       : _p31_urlProcesaCargaMasiva
@@ -455,6 +456,7 @@ Ext.onReady(function()
                                                         }
                                                         ,success  : function(response)
                                                         {
+                                                        	_fieldById('_p31_panelpri').setLoading(false);
                                                             var json=Ext.decode(response.responseText);
                                                             debug('respuesta al cargar el archivo para complementar',json);
                                                             if(json.exito)
