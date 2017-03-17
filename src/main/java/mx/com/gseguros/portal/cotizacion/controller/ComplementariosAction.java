@@ -3695,10 +3695,20 @@ public class ComplementariosAction extends PrincipalCoreAction
 		Ice2sigsService.Operacion operation = Ice2sigsService.Operacion.valueOf(operacion);
 		
 		String cdIdeperRes = null;
+		
+		UserVO usuarioSesion = null;
+		if(session != null){
+			usuarioSesion = (UserVO) session.get("USUARIO");
+		}
+		
+		if(usuarioSesion == null){
+			usuarioSesion = new UserVO();
+			usuarioSesion.setUser("ICE");
+		}
 
 		// Ejecutamos el Web Service de Cliente Salud:
 		//ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, operation, (UserVO) session.get("USUARIO"));
-		ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, null,operation, null, (UserVO) session.get("USUARIO"), true);
+		ClienteGeneralRespuesta resCli = ice2sigsService.ejecutaWSclienteGeneral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, null,operation, null, usuarioSesion, true);
 		
 		if(resCli != null && Ice2sigsService.Estatus.EXITO.getCodigo() == resCli.getCodigo() && ArrayUtils.isNotEmpty(resCli.getClientesGeneral())){
 			cdIdeperRes = resCli.getClientesGeneral()[0].getNumeroExterno();
@@ -3755,6 +3765,16 @@ public class ComplementariosAction extends PrincipalCoreAction
 			Utils.validate(nmpoliza , "No se recibieron par\u00e1metros");
 			Utils.validate(nmsuplem , "No se recibieron par\u00e1metros");
 			
+			UserVO usuarioSesion = null;
+			if(session != null){
+				usuarioSesion = (UserVO) session.get("USUARIO");
+			}
+			
+			if(usuarioSesion == null){
+				usuarioSesion = new UserVO();
+				usuarioSesion.setUser("ICE");
+			}
+			
 			if(StringUtils.isBlank(tipoMov) && StringUtils.isBlank(nmtramite) && StringUtils.isBlank(nmsolici)){
 				Map<String,String> datos =  consultasPolizaManager.obtieneDatosLigasRecibosPoliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 				
@@ -3772,7 +3792,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				//Utils.validate(nmsolici , "No se obtuvieron par\u00e1metros");
 
 				// Ejecutamos el Web Service de Recibos Sincrono:
-				success = ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, false, tipoMov, (UserVO) session.get("USUARIO"));
+				success = ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, false, tipoMov, usuarioSesion);
 
 				Utils.validate(success, "No se regeneraron correctamente todos los recibos.");
 				
@@ -3789,14 +3809,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 					}
 					
 					if(success && esDxn){
-						success = recibosSigsService.generaRecibosDxN(cdunieco, cdramo, estado, nmpoliza, nmsuplem, sucursal, nmsolici, nmtramite, (UserVO) session.get("USUARIO"));
+						success = recibosSigsService.generaRecibosDxN(cdunieco, cdramo, estado, nmpoliza, nmsuplem, sucursal, nmsolici, nmtramite, usuarioSesion);
 					}
 					Utils.validate(success, "No se regeneraron todos los recibos y calendarios Dxn. Verificar en Tbitacobros");
 				}
 				
 			}else{
 				// Ejecutamos el Web Service de Recibos Asincrono:
-				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, true, tipoMov, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, true, tipoMov, usuarioSesion);
 			}
 			
 			
@@ -3823,9 +3843,19 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String sucursal = map1.get("sucursal");
 		String nmsolici = map1.get("nmsolici");
 		String nmtramite = map1.get("nmtramite");
+		
+		UserVO usuarioSesion = null;
+		if(session != null){
+			usuarioSesion = (UserVO) session.get("USUARIO");
+		}
+		
+		if(usuarioSesion == null){
+			usuarioSesion = new UserVO();
+			usuarioSesion.setUser("ICE");
+		}
 
 		// Ejecutamos el Web Service de Recibos DxN:
-		recibosSigsService.generaRecibosDxN(cdunieco, cdramo, estado, nmpoliza, nmsuplem, sucursal, nmsolici, nmtramite, (UserVO) session.get("USUARIO"));
+		recibosSigsService.generaRecibosDxN(cdunieco, cdramo, estado, nmpoliza, nmsuplem, sucursal, nmsolici, nmtramite, usuarioSesion);
 		success = true;
 		return SUCCESS;
 	}
