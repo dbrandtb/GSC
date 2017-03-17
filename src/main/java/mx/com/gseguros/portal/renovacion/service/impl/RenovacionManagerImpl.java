@@ -1137,7 +1137,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 					paso = "RENOVAR_X_FECHAS_COLECTIVOS";
 					logger.debug(paso);
 					logger.debug("Entro a paso 1");
-					renovacionDAO.renovaXFechasColectivo(cdusuari, fecdesde, fechasta); 
+					renovacionDAO.renovaXFechasColectivo(cdusuari, Utils.formateaFecha(fecdesde), Utils.formateaFecha(fechasta)); 
 					logger.debug("Entro a paso 2");
 				}
 		    }
