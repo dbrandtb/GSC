@@ -5614,27 +5614,40 @@ Ext.onReady(function()
     	debugError(e);
     }
     
-    if (_0_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba
-        && !Ext.isEmpty(_fieldLikeLabel('DESCUENTO', null, true))
-        ) {
-        var ck = 'Recuperando rango de descuento/recargo';
-        try {
-            _request({
-                mask   : ck,
-                url    : _GLOBAL_URL_RECUPERACION,
-                params : {
-                    'params.consulta' : 'RECUPERAR_RANGO_DESCUENTO_RECARGO',
-                    'params.cdramo'   : _0_smap1.cdramo,
-                    'params.cdtipsit' : _0_smap1.cdtipsit
-                },
-                success : function (json) {
-                    var comp = _fieldLikeLabel('DESCUENTO');
-                    comp.setMinValue(json.params.MINIMO);
-                    comp.setMaxValue(json.params.MAXIMO);
-                }
-            });
-        } catch (e) {
-            manejaException(e, ck);
+    if (_0_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba) {
+        if (!Ext.isEmpty(_fieldLikeLabel('DESCUENTO', null, true))) {
+            var ck = 'Recuperando rango de descuento/recargo';
+            try {
+                _request({
+                    mask   : ck,
+                    url    : _GLOBAL_URL_RECUPERACION,
+                    params : {
+                        'params.consulta' : 'RECUPERAR_RANGO_DESCUENTO_RECARGO',
+                        'params.cdramo'   : _0_smap1.cdramo,
+                        'params.cdtipsit' : _0_smap1.cdtipsit
+                    },
+                    success : function (json) {
+                        var comp = _fieldLikeLabel('DESCUENTO');
+                        comp.setMinValue(json.params.MINIMO);
+                        comp.setMaxValue(json.params.MAXIMO);
+                    }
+                });
+            } catch (e) {
+                manejaException(e, ck);
+            }
+        }
+        
+        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true)) && !Ext.isEmpty(_fieldByLabel('DEDUCIBLE', null, true))) {
+            var planCmp = _fieldByLabel('PLAN', null, true),
+                deduCmp = _fieldByLabel('DEDUCIBLE', null, true);
+            deduCmp.anidado = true;
+            deduCmp.heredar = function () {
+                deduCmp.getStore().load({
+                    params : {
+                        'params.idPadre' : planCmp.getValue()
+                    }
+                });
+            };
         }
     }
     

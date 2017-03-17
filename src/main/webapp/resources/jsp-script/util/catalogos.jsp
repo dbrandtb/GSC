@@ -118,7 +118,9 @@ var TipoSituacion = {
     ServicioPublicoMicro  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SERVICIO_PUBLICO_MICRO.cdtipsit" />',
     ServicioPublicoAuto   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SERVICIO_PUBLICO_AUTO.cdtipsit" />',
     TuristaLicencia		  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TURISTA_LICENCIA.cdtipsit" />',
-    TuristaVehiculo 	  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TURISTA_VEHICULO.cdtipsit" />' 
+    TuristaVehiculo 	  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TURISTA_VEHICULO.cdtipsit" />' ,
+    GastosMedicosMayoresPruebaInd : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@GASTOS_MEDICOS_MAYORES_PRUEBA_IND.cdtipsit" />',
+    GastosMedicosMayoresPruebaCol : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@GASTOS_MEDICOS_MAYORES_PRUEBA_COL.cdtipsit" />'
  };
  
  //Catalogo de formas de pago

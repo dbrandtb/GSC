@@ -2699,6 +2699,10 @@ function _p25_editorPlanHijos(combo)
                     var editor = cols[i].field;
                     editor.getStore().clearFilter();
                     editor.getStore().filter('key', combo.getValue());
+                } else if (cols[i].text === 'DEDUCIBLE') {
+                    var editor = cols[i].field;
+                    editor.getStore().clearFilter();
+                    editor.getStore().filter('key', combo.getValue());
                 }
             }
         } catch (e) {
@@ -7462,6 +7466,9 @@ function _p25quitarFiltroSumaAsegRamo11 () {
             debug('cols:', cols);
             for (var i = 0; i < cols.length; i++) {
                 if (cols[i].text === 'SUMA ASEGURADA') {
+                    var editor = cols[i].field;
+                    editor.getStore().clearFilter();
+                } else if (cols[i].text === 'DEDUCIBLE') {
                     var editor = cols[i].field;
                     editor.getStore().clearFilter();
                 }
