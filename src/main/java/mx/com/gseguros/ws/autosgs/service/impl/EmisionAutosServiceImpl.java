@@ -1070,11 +1070,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				
 			} catch (Exception e){
 				logger.error("Error en validacion de Emision Exitosa y VidaPorRecibo! " + e.getMessage(),e);
-				if(e.getMessage().contains("Error en spValidaEmisionSigs"))
-				{
-					throw e;
-				}
-				return errorEjec;
+				throw e;
+//				return errorEjec;
 			}
 		}else{
 			logger.warn("Aviso, No se tienen datos de Recibos Autos");
