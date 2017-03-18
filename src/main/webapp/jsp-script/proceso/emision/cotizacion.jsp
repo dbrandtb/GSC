@@ -5637,6 +5637,43 @@ Ext.onReady(function()
             }
         }
         
+        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true))) {
+            var planCmp = _fieldByLabel('PLAN', null, true);
+            _0_formAgrupados.remove(planCmp, false);
+            _0_formAgrupados.insert(2, planCmp);
+        }
+        
+        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true)) && !Ext.isEmpty(_fieldByLabel('SUMA ASEGURADA', null, true))) {
+            var planCmp = _fieldByLabel('PLAN', null, true),
+                sumaCmp = _fieldByLabel('SUMA ASEGURADA', null, true);
+            sumaCmp.anidado = true;
+            sumaCmp.heredar = function () {
+                sumaCmp.getStore().load({
+                    params : {
+                        'params.idPadre' : planCmp.getValue()
+                    }
+                });
+            };
+        }
+        
+        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true)) && !Ext.isEmpty(_fieldLikeLabel('ULO M', null, true))) {
+            var planCmp = _fieldByLabel('PLAN', null, true),
+                circCmp = _fieldLikeLabel('ULO M', null, true);
+            circCmp.anidado = true;
+            circCmp.heredar = function () {
+                circCmp.getStore().load({
+                    params : {
+                        'params.idPadre' : planCmp.getValue()
+                    }
+                });
+            };
+            planCmp.on({
+                blur : function () {
+                    circCmp.heredar();
+                }
+            });
+        } 
+        
         if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true)) && !Ext.isEmpty(_fieldByLabel('DEDUCIBLE', null, true))) {
             var planCmp = _fieldByLabel('PLAN', null, true),
                 deduCmp = _fieldByLabel('DEDUCIBLE', null, true);

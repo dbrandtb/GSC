@@ -2703,7 +2703,15 @@ function _p25_editorPlanHijos(combo)
                     var editor = cols[i].field;
                     editor.getStore().clearFilter();
                     editor.getStore().filter('key', combo.getValue());
-                }
+                } else if (cols[i].text.indexOf('ULO HOSPITAL') !== -1) {
+                    var editor = cols[i].field;
+                    editor.getStore().clearFilter();
+                    editor.getStore().filter('key', combo.getValue());
+                }/* else if (cols[i].text.indexOf('VEL HOSPITAL') !== -1) {
+                    var editor = cols[i].field;
+                    editor.getStore().clearFilter();
+                    editor.getStore().filter('key', combo.getValue());
+                }*/
             }
         } catch (e) {
             manejaException(e, ck);
@@ -7489,7 +7497,13 @@ function _p25quitarFiltroSumaAsegRamo11 () {
                 } else if (cols[i].text === 'DEDUCIBLE') {
                     var editor = cols[i].field;
                     editor.getStore().clearFilter();
-                }
+                } else if (cols[i].text.indexOf('ULO HOSPITAL') !== -1) {
+                    var editor = cols[i].field;
+                    editor.getStore().clearFilter();
+                }/* else if (cols[i].text.indexOf('VEL HOSPITAL') !== -1) {
+                    var editor = cols[i].field;
+                    editor.getStore().clearFilter();
+                }*/
             }
         }
     } catch (e) {
