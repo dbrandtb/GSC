@@ -171,7 +171,7 @@ public class RecibosAction extends PrincipalCoreAction {
                            cdramo,   "No se recibio el ramo",
                            estado,   "No se recibio el estado",
                            nmpoliza,  "No se recibio la poliza");  
-            respuesta = recibosManager.consolidarRecibos(cdunieco, cdramo, estado, nmpoliza, userVO, loadList);
+            recibosManager.consolidarRecibos(cdunieco, cdramo, estado, nmpoliza, userVO, loadList);
             success = true;
         }
         catch(Exception ex){
@@ -306,33 +306,6 @@ public class RecibosAction extends PrincipalCoreAction {
         }
         return SUCCESS;
     }
-    
-    public String obtenerBitacoraConsolidacion() throws Exception{
-        logger.debug(Utils.log(
-                "\n###########################################"
-               ,"\n###### obtenerBitacoraConsolidacion ######"
-               ,"\n###### params=",params
-               ));
-        try{
-            Utils.validate(params,   "No se recibieron parametros");
-            String cdunieco = params.get("cdunieco");
-            String cdramo   = params.get("cdramo");
-            String estado   = params.get("estado");
-            String nmpoliza = params.get("nmpoliza");
-            Utils.validate(cdunieco, "No se recibio la oficina",
-                           cdramo,   "No se recibio el producto",
-                           estado,   "No se recibio el estado",
-                           nmpoliza, "No se recibio la poliza");        
-            slist1 = recibosManager.obtenerBitacoraConsolidacion(cdunieco, cdramo, estado, nmpoliza);
-            exito = true;
-        }
-        catch(Exception ex){
-            exito = false;
-            Utils.manejaExcepcion(ex);
-        }
-        return SUCCESS;
-    }
-    
     
 	// Getters and setters:
 	public Map<String, String> getParams() {

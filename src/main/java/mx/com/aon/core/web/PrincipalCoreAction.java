@@ -12,8 +12,6 @@ import com.opensymphony.xwork2.ActionSupport;
 
 public abstract class PrincipalCoreAction extends ActionSupport implements SessionAware {
 
-    // RBS: Prueba de cambio de encoding: á Á é É i Í ó Ó u Ú
-    
 	private static final long serialVersionUID = -7975229967003917194L;
 
 	protected final transient Logger logger = Logger.getLogger(PrincipalCoreAction.class);

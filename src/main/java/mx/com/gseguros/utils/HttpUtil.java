@@ -12,9 +12,9 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
-
 import mx.com.gseguros.exception.ApplicationException;
+
+import org.apache.log4j.Logger;
 
 public class HttpUtil {
 
@@ -237,36 +237,5 @@ public class HttpUtil {
 		return response.toString();
 		
 	}
-    
-    public static void enviarArchivoRSTN (String ntramite, String nombreArchivo, String nombreArchivoCompleto, String descripcion) {
-        String params = Utils.join("repositoryId=A1&folder=", ntramite,
-                "&idName=", nombreArchivo,
-                "&fullFileName=", nombreArchivoCompleto,
-                "&contentType=application/pdf&description=", descripcion);
-        logger.debug(Utils.log("\n°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°",
-                               "\n°°°°°° enviarArchivoRSTN °°°°°°",
-                               "\n°°°°°° params = ", params,
-                               "\n°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"));
-        try {
-            new HttpUtil.ThreadEnviarDocRstn(params).start();
-        } catch (Exception ex) {
-            logger.error("WARNING al instanciar hilo para enviar archivo a RSTN", ex);
-        }
-    }
-    
-    public static class ThreadEnviarDocRstn extends Thread {
-        String params;
-        public ThreadEnviarDocRstn (String params) {
-            this.params = params;
-        }
-        public void run() {
-            try {
-                Thread.sleep(30000);
-                HttpUtil.sendPost("http://10.1.1.134:9005/cmis-rs/cmis/documentos/json", this.params);
-            } catch (Exception ex) {
-                logger.error("WARNING al enviar archivo a RSTN", ex);
-            }
-        }
-    }
 
 }
