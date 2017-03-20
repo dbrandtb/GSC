@@ -7583,9 +7583,50 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 	}
 	
 	@Override
-	public void insertaRegistroInfoCenso(Map<String, String> params)throws Exception
-	{
-		ejecutaSP(new InsertaReistroInfoCenso(getDataSource()),params);
+	public void insertaRegistroInfoCenso (List<Map<String, String>> lista) throws Exception {
+	    String[][] array = new String[lista.size()][];
+        
+        int i = 0;
+        for (Map<String,String> permiso : lista) {
+            array[i++] = new String[]{
+                    permiso.get("pv_cdunieco_i"),
+                    permiso.get("pv_cdramo_i"),
+                    permiso.get("pv_estado_i"),
+                    permiso.get("pv_nmpoliza_i"),
+                    permiso.get("pv_cdgrupo_i"),
+                    permiso.get("pv_parentesco_i"),
+                    permiso.get("pv_dsapellido_i"),
+                    permiso.get("pv_dsapellido1_i"),
+                    permiso.get("pv_dsnombre_i"),
+                    permiso.get("pv_dsnombre1_i"),
+                    permiso.get("pv_otsexo_i"),
+                    permiso.get("pv_fenacimi_i"),
+                    permiso.get("pv_cdpostal_i"),
+                    permiso.get("pv_dsestado_i"),
+                    permiso.get("pv_dsmunicipio_i"),
+                    permiso.get("pv_dscolonia_i"),
+                    permiso.get("pv_dsdomici_i"),
+                    permiso.get("pv_nmnumero_i"),
+                    permiso.get("pv_nmnumint_i"),
+                    permiso.get("pv_cdrfc_i"),
+                    permiso.get("pv_dsemail_i"),
+                    permiso.get("pv_nmtelefo_i"),
+                    permiso.get("pv_identidad_i"),
+                    permiso.get("pv_fecantig_i"),
+                    permiso.get("pv_expocupacion_i"),
+                    permiso.get("pv_peso_i"),
+                    permiso.get("pv_estatura_i"),
+                    permiso.get("pv_expsobrepeso_i"),
+                    permiso.get("pv_edocivil_i"),
+                    permiso.get("pv_feingresoempleo_i"),
+                    permiso.get("pv_plaza_i"),
+                    permiso.get("pv_idasegurado_i")
+            };
+        }
+        
+        Map<String, Object> params = new LinkedHashMap<String, Object>();
+        params.put("array" , new SqlArrayValue(array));
+		ejecutaSP(new InsertaReistroInfoCenso(getDataSource()), params);
 	}
 	
 	protected class InsertaReistroInfoCenso extends StoredProcedure
@@ -7593,7 +7634,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 		protected InsertaReistroInfoCenso(DataSource dataSource)
 		{
 			super(dataSource,"PKG_TRAD.P_INS_ZWCENSOTRAD_REG_BUENO");
-			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+			/*declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
@@ -7625,6 +7666,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("pv_feingresoempleo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_plaza_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_idasegurado_i"    , OracleTypes.VARCHAR));
+			*/
+			declareParameter(new SqlParameter("array"    , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

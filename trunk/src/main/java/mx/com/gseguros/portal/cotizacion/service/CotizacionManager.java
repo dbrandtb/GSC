@@ -1054,8 +1054,7 @@ public interface CotizacionManager
 	 * @param params
 	 * @throws Exception
 	 */
-	public void insertaRegistroInfoCenso(Map<String, String> params)
-			throws Exception;
+	public void insertaRegistroInfoCenso (List<Map<String,String>> lista) throws Exception;
 	
 	/**
 	 * 

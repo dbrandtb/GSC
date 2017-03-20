@@ -6376,10 +6376,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            				Integer numFam = entry.getKey();
 	            				
 	            				if(estadoFamilias.containsKey(numFam) && estadoFamilias.get(numFam)){
-	            					
+	            				    List<Map<String,String>> listaZwcenso = new ArrayList<Map<String,String>> ();
 	            					for(Map<String,String> paramsElemFam: listaFamilias.get(numFam)){
-	            						cotizacionDAO.insertaRegistroInfoCenso(paramsElemFam);
+	            					    listaZwcenso.add(paramsElemFam);
 	            					}
+	            					cotizacionDAO.insertaRegistroInfoCenso(listaZwcenso);
 	            				}
 	            			}
 	    				}
@@ -6466,9 +6467,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 
 	@Override
-	public void insertaRegistroInfoCenso(Map<String, String> params)
-			throws Exception{
-		cotizacionDAO.insertaRegistroInfoCenso(params);
+	public void insertaRegistroInfoCenso (List<Map<String,String>> lista) throws Exception{
+		cotizacionDAO.insertaRegistroInfoCenso(lista);
 	}
 	
 	@Override

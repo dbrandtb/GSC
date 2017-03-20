@@ -7106,10 +7106,11 @@ public class CotizacionAction extends PrincipalCoreAction
 	            				Integer numFam = entry.getKey();
 	            				
 	            				if(estadoFamilias.containsKey(numFam) && estadoFamilias.get(numFam)){
-	            					
+	            				    List<Map<String,String>> listaZwcenso = new ArrayList<Map<String,String>> ();
 	            					for(Map<String,String> paramsElemFam: listaFamilias.get(numFam)){
-	            						cotizacionManager.insertaRegistroInfoCenso(paramsElemFam);
+	            					    listaZwcenso.add(paramsElemFam);
 	            					}
+	            					cotizacionManager.insertaRegistroInfoCenso(listaZwcenso);
 	            				}
 	            			}
 	    				}
