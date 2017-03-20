@@ -2392,15 +2392,38 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		//atributo variable para recuperar tatrigar
 		
-		try
-		{
-			resp.getSmap().put("customCode", consultasDAO.recuperarCodigoCustom("25", cdsisrol));
+		if (resp.isExito()) {
+		    try {
+		        resp.getSmap().put("customCode", consultasDAO.recuperarCodigoCustom("25", cdsisrol));
+		    } catch (Exception ex) {
+		        resp.getSmap().put("customCode", "/* error */");
+		        logger.error("Error sin impacto al recuperar codigo custom",ex);
+		    }
 		}
-		catch(Exception ex)
-		{
-			resp.getSmap().put("customCode", "/* error */");
-			logger.error("Error sin impacto al recuperar codigo custom",ex);
-		}
+		
+		if (resp.isExito()) {
+            try {
+                StringBuilder switchCoberturaTatrisitString = new StringBuilder("_x");
+                List<ComponenteVO> switchCoberturaTatrisitListaCmp = pantallasDAO.obtenerComponentes(
+                        null, //cdtiptra, 
+                        null, //cdunieco, 
+                        "|" + cdramo + "|", 
+                        "|" + cdtipsit + "|", 
+                        null, //estado, 
+                        cdsisrol, 
+                        "COTIZACION_GRUPO", 
+                        "SWITCH_COBER_VALOSIT", 
+                        null
+                        );
+                for (ComponenteVO switchCoberturaTatrisitListaCmpIte : switchCoberturaTatrisitListaCmp) {
+                    switchCoberturaTatrisitString.append(",_").append(switchCoberturaTatrisitListaCmpIte.getLabel());
+                }
+                resp.getSmap().put("swtichCoberturaTatrisit", switchCoberturaTatrisitString.toString());
+            } catch (Exception ex) {
+                resp.getSmap().put("swtichCoberturaTatrisit", "_x");
+                logger.error("Error sin impacto al recuperar codigo custom",ex);
+            }
+        }
 		
 		logger.info(
 				new StringBuilder()
