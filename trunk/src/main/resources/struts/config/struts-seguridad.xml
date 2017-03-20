@@ -204,12 +204,14 @@
                 <param name="smap1.cdramo">${params.cdramo}</param>
                 <param name="smap1.cdtipsit">${params.cdtipsit}</param>
                 <param name="smap1.rstn">S</param>
+                <param name="smap1.caseIdRstn">${params.caseId}</param>
             </result>
             <result name="RstnCompSalInd" type="redirectAction">
                 <param name="namespace">/</param>
                 <param name="actionName">datosComplementarios</param>
                 <param name="map1.rstn">S</param>
                 <param name="map1.ntramite">${params.showCase}</param>
+                <param name="map1.caseIdRstn">${params.caseId}</param>
             </result>
             <result name="RstnCotiSalCol" type="redirectAction">
                 <param name="namespace">/emision</param>
@@ -217,6 +219,7 @@
                 <param name="smap1.cdramo">${params.cdramo}</param>
                 <param name="smap1.cdtipsit">${params.cdtipsit}</param>
                 <param name="smap1.rstn">S</param>
+                <param name="smap1.caseIdRstn">${params.caseId}</param>
             </result>
             <result name="RstnCompSalCol" type="redirectAction">
                 <param name="namespace">/emision</param>
@@ -224,6 +227,7 @@
                 <param name="smap1.rstn">S</param>
                 <param name="smap1.ntramiteRstn">${params.showCase}</param>
                 <param name="smap1.emitirRstn">${params.issue}</param>
+                <param name="smap1.caseIdRstn">${params.caseId}</param>
             </result>
             <result name="RstnConsAseg" type="redirectAction">
                 <param name="namespace">/consultasPoliza</param>
