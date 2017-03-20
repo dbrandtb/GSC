@@ -131,6 +131,20 @@ if (Number(_p25_smap1.status) === 24
     _p25_smap1.modificarTodo = true;
 }
 
+_p25_smap1.mapaSwitchCoberValosit = {};
+try {
+    var listaSwitchCoberValosit = _p25_smap1.swtichCoberturaTatrisit.split(',');
+    debug('listaSwitchCoberValosit:', listaSwitchCoberValosit);
+    var mapaSwitchCoberValosit = {};
+    for (var i = 0; i < listaSwitchCoberValosit.length; i++) {
+        mapaSwitchCoberValosit[listaSwitchCoberValosit[i]] = 'S';
+    }
+    debug('mapaSwitchCoberValosit:', mapaSwitchCoberValosit);
+    _p25_smap1.mapaSwitchCoberValosit = mapaSwitchCoberValosit;
+} catch (e) {
+    debugError('WARNING al manejar switch de cobertura tvalosit', e);
+}
+
 var posicionExtraprimaOcup;
 
 //se declara el mapa como cotcol para el archivo comun funcionesCotizacionGrupo.js
@@ -3174,7 +3188,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                     }
                                                     ,{
                                                         xtype       : 'checkbox' 
-                                                        ,boxLabel   : 'Amparada'
+                                                        ,boxLabel   : 'Amparada' + (_p25_smap1.mapaSwitchCoberValosit['_' + json.slist1[j].CDGARANT] === 'S' ? '**' : '')
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
 	                                                    ,checked    : json.slist1[j].SWOBLIGA == 'S' // && (json.slist1[j].SWSELECCIONADO == 'S')
