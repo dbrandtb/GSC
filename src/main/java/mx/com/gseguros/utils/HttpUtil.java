@@ -12,9 +12,9 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
-
 import mx.com.gseguros.exception.ApplicationException;
+
+import org.apache.log4j.Logger;
 
 public class HttpUtil {
 
@@ -23,8 +23,6 @@ public class HttpUtil {
 	public static final String GET = "GET";
 	public static final String POST = "POST";
 	public static final int CODIGO_RESPUESTA_OK = 200;
-	public static final int RSTN_DOC_CLASS_COTIZACION = 1;
-	public static final int RSTN_DOC_CLASS_EMISION = 2;
 	
 	
 	/**
@@ -239,41 +237,5 @@ public class HttpUtil {
 		return response.toString();
 		
 	}
-    
-    public static void enviarArchivoRSTN (String caseIdRstn, String nombreArchivo, String nombreArchivoCompleto, String descripcion,
-            int CLASE_DOC_RSTN) {
-        String params = Utils.join(
-                "repositoryId=ObjectStore",
-                "&folder=", caseIdRstn,
-                "&idName=", nombreArchivo,
-                "&fullFileName=", nombreArchivoCompleto,
-                "&contentType=application/pdf",
-                "&description=", descripcion,
-                "&documentClass=", (CLASE_DOC_RSTN == HttpUtil.RSTN_DOC_CLASS_COTIZACION ? "Cotizacion" : "Emision"));
-        logger.debug(Utils.log("\n°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°",
-                               "\n°°°°°° enviarArchivoRSTN °°°°°°",
-                               "\n°°°°°° params = ", params,
-                               "\n°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"));
-        try {
-            new HttpUtil.ThreadEnviarDocRstn(params).start();
-        } catch (Exception ex) {
-            logger.error("WARNING al instanciar hilo para enviar archivo a RSTN", ex);
-        }
-    }
-    
-    public static class ThreadEnviarDocRstn extends Thread {
-        String params;
-        public ThreadEnviarDocRstn (String params) {
-            this.params = params;
-        }
-        public void run() {
-            try {
-                Thread.sleep(30000);
-                HttpUtil.sendPost("http://10.1.1.134:9005/cmis-rs/cmis/documentos/json", this.params);
-            } catch (Exception ex) {
-                logger.error("WARNING al enviar archivo a RSTN", ex);
-            }
-        }
-    }
 
 }
