@@ -2697,6 +2697,27 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(),daoExc);
 		}
 	}
+
+	@Override
+	public String actualizarReqautes(String reqautes, String ntramite, String nfactura, String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String nmsituac, String aaapertu, String status,
+			String nmsinies) throws Exception {	// (EGS)
+		try{
+			return siniestrosDAO.actualizarReqautes(reqautes, ntramite, nfactura, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies);
+		}catch (DaoException daoExc){
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public String validaAutEspLimMedi(String nmautesp, String ntramite, String nfactura, String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String nmsituac, String nmsinies) throws Exception { // (EGS)
+		try{
+		return siniestrosDAO.validaAutEspLimMedi(nmautesp, ntramite, nfactura, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, nmsinies);
+		}catch (DaoException daoExc){
+			throw new Exception(daoExc.getMessage(),daoExc);
+		}
+	}
 	
 	@Override
 	public List<AseguradoVO> obtenerTramiteCompletoAsegurados(String ntramite, long start, long limit) throws Exception

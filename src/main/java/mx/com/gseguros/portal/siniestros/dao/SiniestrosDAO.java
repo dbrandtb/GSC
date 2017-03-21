@@ -610,5 +610,41 @@ public interface SiniestrosDAO {
     public List<GenericVO> obtieneListadoValidacionesGrales() throws Exception;
     
 	public String validaProveedorPD(String ntramite) throws Exception; // (EGS)
+	
+	/**
+	 * Marcar registro para solicitud de autorizacion especial: caso excedente de medicamentos. (Actualiza campo reqautes de tabla msiniest) (EGS)
+	 * @param reqautes
+	 * @param ntramite
+	 * @param nfactura
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param nmsituac
+	 * @param aaapertu
+	 * @param status
+	 * @param nmsinies
+	 * @return
+	 * @throws Exception
+	 */
+	public String actualizarReqautes(String reqautes, String ntramite, String nfactura, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String aaapertu, String status, String nmsinies) throws Exception;	//(EGS)
+	
+	/**
+	 * Validamos que exista una autorizacion especial por excedente de medicamentos. (EGS)
+	 * @param nmautesp
+	 * @param ntramite
+	 * @param nfactura
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param nmsituac
+	 * @param nmsinies
+	 * @return
+	 * @throws Exception
+	 */
+	public String validaAutEspLimMedi(String nmautesp, String ntramite, String nfactura, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String nmsinies) throws Exception; //(EGS) 
 
 }

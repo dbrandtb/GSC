@@ -5425,6 +5425,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			paramsAutoriEspecial.put("pv_comments_i",params.get("comments"));
 			paramsAutoriEspecial.put("pv_cduser_i", usuario.getUser());
 			paramsAutoriEspecial.put("pv_ferecepc_i",fechaProcesamiento);
+			paramsAutoriEspecial.put("pv_val_lim_i", params.get("valLimite")); // (EGS)
 			msgResult = siniestrosManager.guardaListaAutorizacionEspecial(paramsAutoriEspecial);
 			logger.debug("Valor de Respuesta --->"+msgResult);
 			
@@ -5574,8 +5575,28 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						if(importeDisponible <=limite && +importePagarAsegurado <= importeDisponible){
 							
 						}else{
-							banderaValidacion = "1";
-							mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el L�mite permitido. <br/>";							
+							//(EGS) Para los que sobrepasan el limite permitido, revisamos si tienen autorizacion especial
+							StringBuilder msg = new StringBuilder();
+							if((siniestroIte.get("REQAUTES").equalsIgnoreCase("1") && Integer.valueOf(siniestroIte.get("NMAUTESP")) > 0)){
+								// Revisamos si la autorizacion especial es por excedente en límite de medicamentos
+								try{
+									String resp = siniestrosManager.validaAutEspLimMedi(siniestroIte.get("NMAUTESP"), params.get("ntramite"), factura.get("NFACTURA"), siniestroIte.get("CDUNIECO"), siniestroIte.get("CDRAMO"), siniestroIte.get("ESTADO"), siniestroIte.get("NMPOLIZA"), siniestroIte.get("NMSUPLEM"), siniestroIte.get("NMSITUAC"), siniestroIte.get("NMSINIES"));
+									logger.debug("resp ===> :{}",resp);
+									if(!(Integer.valueOf(resp) > 0)){
+										banderaValidacion = "1";
+										mensaje = msg.append(mensaje).append(" Siniestro ").append(siniestroIte.get("NMSINIES")).append(" sobrepasa l&iacute;mite permitido. Se requiere autorizaci&oacute;n especial por Excedente L&iacute;mite Medicamentos. <br/>").toString();
+									}
+								}
+								catch(Exception ex) {
+									success=false;
+									logger.error("Error al obtener facturas de tramite : {}", ex.getMessage(), ex);
+									mensaje=ex.getMessage();
+								}
+							}else{ //(EGS) fin
+								banderaValidacion = "1";
+								//mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el L&iacute;mite permitido. <br/>";
+								mensaje = msg.append(mensaje).append(" Siniestro ").append(siniestroIte.get("NMSINIES")).append(" sobrepasa l&iacute;mite permitido. Se requiere autorizaci&oacute;n especial por Excedente L&iacute;mite Medicamentos. <br/>").toString();
+							}
 						}
 					}
 				}
@@ -6112,6 +6133,25 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.debug(mensaje);
 		}catch(Exception e){
 			logger.debug("Error durante la validacion de proveedor, pago directo",e.getMessage(),e);
+			success = false;
+			mensaje = "";
+		}
+		return SUCCESS;
+	}
+	
+	// (EGS)
+	public String actualizarReqautes(){	
+		logger.debug("Entra a actualizarReqautes {}", slist1);
+		logger.debug("Valor de mapa {}",smap);
+		try{
+			for(int i = 0; i < slist1.size(); i++){
+				mensaje = siniestrosManager.actualizarReqautes(slist1.get(i).get("REQAUTES"), smap.get("ntramite"), smap.get("nfactura"), slist1.get(i).get("CDUNIECO"), 
+													 slist1.get(i).get("CDRAMO"), slist1.get(i).get("ESTADO"), slist1.get(i).get("NMPOLIZA"), 
+													 slist1.get(i).get("NMSUPLEM"), slist1.get(i).get("NMSITUAC"), slist1.get(i).get("AAAPERTU"), 
+													 slist1.get(i).get("STATUS"), slist1.get(i).get("NMSINIES"));
+			}
+		}catch(Exception e){
+			logger.debug("Error en actualizarReqautes", e.getMessage(),e);
 			success = false;
 			mensaje = "";
 		}

@@ -1374,6 +1374,16 @@
 				</param>
 			</result>
 		</action>
+
+        <!-- agregado (EGS) para marcar afiliados que sobrepasen limite de medicamentos -->
+        <action name="actualizarReqautes" class="siniestrosAction" method="actualizarReqautes">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json" />
+        </action>
+        
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>
