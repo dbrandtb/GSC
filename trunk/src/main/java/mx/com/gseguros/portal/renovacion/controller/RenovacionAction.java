@@ -918,7 +918,7 @@ public class RenovacionAction extends PrincipalCoreAction
 				,fechasta   = params.get("fechasta")
 				,procedimiento = params.get("procedimiento");
 	            
-            renovacionManager.renovacionColectivo(cdusuari,cdunieco,cdramo,nmpoliza,fecdesde,fechasta,procedimiento);
+            respuesta = renovacionManager.renovacionColectivo(cdusuari,cdunieco,cdramo,nmpoliza,fecdesde,fechasta,procedimiento);
             exito = true;
         }
         catch(Exception ex){

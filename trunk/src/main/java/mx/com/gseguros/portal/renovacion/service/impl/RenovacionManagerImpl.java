@@ -1117,27 +1117,28 @@ public class RenovacionManagerImpl implements RenovacionManager
 	}
 	
 	@Override
-	public void renovacionColectivo(String cdusuari,String cdunieco,String cdramo,String nmpoliza,String fecdesde,String fechasta,String procedimiento)throws Exception{
+	public String renovacionColectivo(String cdusuari,String cdunieco,String cdramo,String nmpoliza,String fecdesde,String fechasta,String procedimiento)throws Exception{
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.append("\n@@@@@@ renovacionColectivo @@@@@@")
 				.toString());
 		String paso = "";
+		String result = "";
 		    try{
 		        paso = "Validando valor de exclusion";
 		        if(procedimiento.equals("COLECTIVO")){
 					paso = "VALIDA_RENOVACION_COLECTIVO";
 					logger.debug(paso);
 					
-					renovacionDAO.validaRenovacionColectivo(cdusuari, cdunieco, cdramo, nmpoliza);
+					result = renovacionDAO.validaRenovacionColectivo(cdusuari, cdunieco, cdramo, nmpoliza);
 					
 				}
                 if(procedimiento.equals("RENOVAR_X_FECHAS")){
 					paso = "RENOVAR_X_FECHAS_COLECTIVOS";
 					logger.debug(paso);
 					logger.debug("Entro a paso 1");
-					renovacionDAO.renovaXFechasColectivo(cdusuari, Utils.formateaFecha(fecdesde), Utils.formateaFecha(fechasta)); 
+					result = renovacionDAO.renovaXFechasColectivo(cdusuari, Utils.formateaFecha(fecdesde), Utils.formateaFecha(fechasta)); 
 					logger.debug("Entro a paso 2");
 				}
 		    }
@@ -1149,6 +1150,7 @@ public class RenovacionManagerImpl implements RenovacionManager
 					.append("\n@@@@@@ renovacionColectivo @@@@@@")
 					.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 					.toString());
+		    return result;
 	}
 	
 	//Getters y setters

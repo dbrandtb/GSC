@@ -1055,7 +1055,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
         }  
         
         @Override
-        public void validaRenovacionColectivo(String cdusuari, String cdunieco, String cdramo, String nmpoliza) throws Exception{
+        public String validaRenovacionColectivo(String cdusuari, String cdunieco, String cdramo, String nmpoliza) throws Exception{
             Map<String,String>params=new LinkedHashMap<String,String>();
 
             params.put("pv_cdusuari_i" , cdusuari);
@@ -1068,6 +1068,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
     		{
     			throw new ApplicationException(error);
     		}
+    		return error;
         }
         
         protected class ValidaRenovacionColectivo extends StoredProcedure{
@@ -1085,7 +1086,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
         }
         
         @Override
-        public void renovaXFechasColectivo(String cdusuari, String fecdesde, String fechasta) throws Exception{
+        public String renovaXFechasColectivo(String cdusuari, String fecdesde, String fechasta) throws Exception{
             Map<String,Object> params = new LinkedHashMap<String,Object>();
 
             params.put("pv_cdusuari_i"   , cdusuari);
@@ -1099,6 +1100,7 @@ public class RenovacionDAOImpl extends AbstractManagerDAO implements RenovacionD
     		{
     			throw new ApplicationException(error);
     		}
+    		return error;
         }
         
         protected class RenovarXFechasColectivo extends StoredProcedure{
