@@ -260,6 +260,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String result   = SUCCESS;
 		UserVO usuario  = null;
 		String cdsisrol = null;
+		String caseIdRstn = null;
 		
 		if (exito && map1 != null && "S".equals(map1.get("rstn")) && StringUtils.isNotBlank(map1.get("ntramite"))) { // para RSTN recuperar datos
 		    try {
@@ -269,6 +270,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		            String ntramite = map1.get("ntramite");
 		            Utils.validate(ntramite, "Falta ntramite");
 		            flujo = flujoMesaControlManager.generarYRecuperarFlujoRSTN(ntramite, user.getUser(), user.getRolActivo().getClave());
+		            caseIdRstn = map1.get("caseIdRstn");
 		            map1 = null;
 		        } catch (Exception ex) {
 		            Utils.generaExcepcion(ex, paso);
@@ -296,6 +298,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 					cdtipsit = tramite.get("CDTIPSIT");
 					map1 = new HashMap<String, String>();
 					map1.put("ntramite" , flujo.getNtramite());
+					
+					map1.put("caseIdRstn", caseIdRstn);
 					
 					if("RECUPERAR".equals(flujo.getAux()))
 					{
