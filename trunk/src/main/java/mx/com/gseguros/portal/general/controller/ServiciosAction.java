@@ -11,9 +11,9 @@ import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.beans.factory.annotation.Value;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
@@ -26,6 +26,7 @@ import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.portal.general.util.TipoRamo;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
 @Controller
@@ -498,6 +499,32 @@ public class ServiciosAction extends PrincipalCoreAction
 			"\n###################################"
 		));
 		return SUCCESS;
+	}
+	
+	@Action(value   = "enviarDocRstn",
+            results = {
+                @Result(name="success" , location="/jsp-script/servicios/respuesta.jsp")
+            })
+	public String enviarDocRstn () {
+	    logger.debug(Utils.log("\n###########################",
+	                           "\n###### enviarDocRstn ######",
+	                           "\n###### params = ", params));
+	    try {
+	        HttpUtil.enviarArchivoRSTN(
+	                params.get("caseIdRstn"),
+	                params.get("fileName"),
+	                params.get("fullPath"),
+	                params.get("fileDesc"),
+	                "Cotizacion".equals(params.get("docClass"))
+	                    ? HttpUtil.RSTN_DOC_CLASS_COTIZACION
+	                    : HttpUtil.RSTN_DOC_CLASS_EMISION);
+	    } catch (Exception ex) {
+	        respuesta = Utils.manejaExcepcion(ex);
+	    }
+        logger.debug(Utils.log("\n###### respuesta = ", respuesta,
+                               "\n###### enviarDocRstn ######",
+                               "\n###########################"));
+	    return SUCCESS;
 	}
 	
 	/*

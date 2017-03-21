@@ -400,6 +400,7 @@ function _0_comprar()
             ,'smap1.nmorddomCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.NMORDDOM
             ,'smap1.cdideperCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER
             ,'smap1.cdagenteExt'   : (_0_smap1.cdramo == '6' || _0_smap1.cdramo == '16') ? _fieldByLabel('AGENTE').getValue() : ''
+            ,'smap1.caseIdRstn'    : _NVL(_0_smap1.caseIdRstn)
         }
         ,success : function(response,opts)
         {

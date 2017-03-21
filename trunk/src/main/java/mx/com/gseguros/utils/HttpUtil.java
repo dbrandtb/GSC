@@ -23,6 +23,8 @@ public class HttpUtil {
 	public static final String GET = "GET";
 	public static final String POST = "POST";
 	public static final int CODIGO_RESPUESTA_OK = 200;
+	public static final int RSTN_DOC_CLASS_COTIZACION = 1;
+	public static final int RSTN_DOC_CLASS_EMISION = 2;
 	
 	
 	/**
@@ -238,11 +240,16 @@ public class HttpUtil {
 		
 	}
     
-    public static void enviarArchivoRSTN (String ntramite, String nombreArchivo, String nombreArchivoCompleto, String descripcion) {
-        String params = Utils.join("repositoryId=A1&folder=", ntramite,
+    public static void enviarArchivoRSTN (String caseIdRstn, String nombreArchivo, String nombreArchivoCompleto, String descripcion,
+            int CLASE_DOC_RSTN) {
+        String params = Utils.join(
+                "repositoryId=A1",
+                "&folder=", caseIdRstn,
                 "&idName=", nombreArchivo,
                 "&fullFileName=", nombreArchivoCompleto,
-                "&contentType=application/pdf&description=", descripcion);
+                "&contentType=application/pdf",
+                "&description=", descripcion,
+                "&documentClass=", (CLASE_DOC_RSTN == HttpUtil.RSTN_DOC_CLASS_COTIZACION ? "Cotizacion" : "Emision"));
         logger.debug(Utils.log("\n°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°",
                                "\n°°°°°° enviarArchivoRSTN °°°°°°",
                                "\n°°°°°° params = ", params,
