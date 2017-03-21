@@ -133,7 +133,7 @@ public interface RenovacionManager
 	/*
 	 * 
 	 */
-	public void renovacionColectivo(
+	public String renovacionColectivo(
 			String cdusuari,
 			String cdunieco,
 			String cdramo,

@@ -60,8 +60,8 @@ Ext.onReady(function()
 									fieldLabel : 'Tipo Renovacion',
 									labelAlign : 'left',
 									store : new Ext.data.SimpleStore({
-												data : [['COLECTIVO', 'Renovacion por Poliza'],
-														['RENOVAR_X_FECHAS', 'Renovacion por Rango']],
+												data : [['COLECTIVO', 'RENOVACIÓN POR PÓLIZA'],
+														['RENOVAR_X_FECHAS', 'RENOVACIÓN POR RANGO']],
 												id : 'COLECTIVO',
 												fields : ['value', 'text']
 											}),
@@ -69,7 +69,8 @@ Ext.onReady(function()
 									value: 'COLECTIVO',
 									displayField : 'text',
 									editable : false,
-									name : 'division'
+									name : 'division',
+									width: 250
 									/*itemId : 'stationStatusReportClosedStatus',
 									flex : 1,
 									listeners : {
@@ -79,16 +80,45 @@ Ext.onReady(function()
 										}
 									}*/
 								},{
-									xtype: 'textfield',
-							        name: 'Sucursal',
-							        fieldLabel: 'Sucursal',
-							        allowBlank: false 
-						    	}, {
-							        xtype: 'textfield',
-							        name: 'Ramo',
-							        fieldLabel: 'Ramo',
-							        allowBlank: false
-						        },{
+									xtype : 'combobox',
+									fieldLabel : 'Sucursal',
+									labelAlign : 'left',
+									store : new Ext.data.SimpleStore({
+												data : [['1000', '1000 - SALUD MATRIZ']],
+												id : '1000',
+												fields : ['value', 'text']
+											}),
+									valueField : 'value',
+									value: '1000',
+									displayField : 'text',
+									editable : false,
+									name : 'Sucursal',
+									width: 250
+								},{
+									xtype : 'combobox',
+									fieldLabel : 'Ramo',
+									labelAlign : 'left',
+									store : new Ext.data.SimpleStore({
+												data : [['4', 'MULTISALUD'],
+														['11', 'GASTOS MEDICOS MAYORES PRUEBA']],
+												id : '4',
+												fields : ['value', 'text']
+											}),
+									valueField : 'value',
+									value: '4',
+									displayField : 'text',
+									editable : false,
+									name : 'Ramo',
+									width: 350
+									/*itemId : 'stationStatusReportClosedStatus',
+									flex : 1,
+									listeners : {
+										'select' : function(combo, record) {
+											// we can get the selected value using getValue()
+											closedStatusSelectedID = this.getValue();
+										}
+									}*/
+								},{
 							       xtype: 'textfield',
 							        name: 'Poliza',
 							        fieldLabel: 'No. Poliza',
@@ -115,7 +145,9 @@ Ext.onReady(function()
                         text     : 'Renovar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
                         ,handler : function(){
-                        	
+                        	 var ck = 'Renovando......';
+                            _mask(ck); //Para bloquear pantalla
+                            
                         	Ext.Ajax.request({
 				        		url       : _renovarPolizas,
 				        		params     : 
@@ -131,9 +163,11 @@ Ext.onReady(function()
 				        		{
 				                	_unmask();
 				            		var resp = Ext.decode(response.responseText);
-				            		debug('resp',resp);
-				            		if(resp.exito){
-				            			//
+				            		debug('resp: ',resp);
+				            		if(resp.exito==true){
+					                    mensajeCorrecto(
+					                        'Renovación'
+					                        ,'La Póliza ha sido Renovada')
 				            		}
 				            		else{
 				            			mensajeError(resp.respuesta);
