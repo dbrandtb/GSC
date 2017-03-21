@@ -132,6 +132,7 @@
 			var _URL_VALIDA_IMPASEGURADOSINIESTRO		= '<s:url namespace="/siniestros" 		action="validaImporteTramiteAsegurados"/>';
 			var _URL_LISTA_TIPOEVENTO                   = '<s:url namespace="/siniestros"       action="consultaListaTipoEventoSiniestro" />';
 			var _URL_ALTA_EVENTO                        = '<s:url namespace="/siniestros"       action="consultaDatosTipoEventoAlta" />';
+			var _URL_REQAUTES							= '<s:url namespace="/siniestros"		action="actualizarReqautes" />'; // (EGS) para marcar afiliados que excedan limite de medicamentos
 			
 			var _11_itemsForm	= [
 				<s:property value="imap.itemsForm" />
@@ -156,6 +157,7 @@
 			var _fenacimi			= "";	// (EGS)
 			var _genero				= "";	// (EGS)
 			var _edad				= "";	// (EGS)
+			var _11_fueraVigencia	= "0";	// (EGS)
 			
 			//iteramos el arreglos de loas Facturas para hacer la asignacion
 			<s:set name="contadorFactura" value="0" />
@@ -2153,12 +2155,15 @@
 														//Obtenemos los datos
 														if(Ext.decode(response.responseText).datosValidacion != null){
 															var jsonValidacion =Ext.decode(response.responseText).datosValidacion;
+															debug("jsonValidacion ", jsonValidacion);
 															if(+jsonValidacion[0].VALRANGO <= 0){
 																debug("Valor 1 ==>");
-																mensajeWarning('La autorizaci&oacute;n '+jsonValidacion[0].NMAUTESP+' no contempla el rango de fecha.<br/> '+
+																if (_11_fueraVigencia == "1"){	//(EGS) agregamos if para que solo muestre el mensaje si siniestro fuera de vigencia y no hay autorizacion especial por fuera de vigencia
+																	mensajeWarning('La autorizaci&oacute;n '+jsonValidacion[0].NMAUTESP+' no contempla el rango de fecha.<br/> '+
 																	'Favor de validarlo con el Gerente de Siniestros.',function(){
 																	cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(),panelInicialPral.down('[name=params.nfactura]').getValue());
-																});
+																	});
+																}	// (EGS)
 															}
 															
 															if(+jsonValidacion[0].VALRANGO > 0){
@@ -3353,6 +3358,7 @@
 					},
 					listeners: {
 							itemclick: function(dv, record, item, index, e){
+								_11_fueraVigencia = "0";	// (EGS) reiniciamos valor
 								//1.- Validamos que el asegurado este vigente
 								if(record.get('desEstatusCliente')=="Vigente") {
 									var valorFechaOcurrencia;
@@ -3374,6 +3380,7 @@
 					                         if(Ext.decode(response.responseText).validacionGeneral =="V"){
 												if((valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
 													if( valorFechaOcurrencia >= valorFechaAltaAsegurado ) {
+														_11_fueraVigencia = "1";	// (EGS) indicamos que siniestro sale de vigencia de la poliza
 															panelListadoAsegurado.down('[name="cdUniecoAsegurado"]').setValue(record.get('cdunieco'));
 															panelListadoAsegurado.down('[name="cdRamoAsegurado"]').setValue(record.get('cdramo'));
 															panelListadoAsegurado.down('[name="estadoAsegurado"]').setValue(record.get('estado'));
@@ -6939,6 +6946,7 @@
                 var imporTotalFactura=0;
                 var resultadoTope = "";
                 var banderaValidacion = 0;
+                var asegLimExced = []; //(EGS) arreglo guarda asegurados que exceden el limite
                 for(var i = 0; i < aseguradosTotales.length; i++) {
                     debug()
                     totalPago = 0;
@@ -6997,13 +7005,28 @@
                             //resultadoTope = resultadoTope + 'La Factura ' + nfactura + ' del siniestro '+ aseguradosTotales[i].NMSINIES+ ' Es éxitoso. <br/>';
                         }else{
                             banderaValidacion = 1;
-                            resultadoTope = resultadoTope + 'El CR '+ntramite+' de Factura ' + nfactura + ' del siniestro '+ aseguradosTotales[i].NMSINIES+ ' Sobrepasa el límite permitido. <br/>';                            
+                            resultadoTope = resultadoTope + 'El CR '+ntramite+' de Factura ' + nfactura + ' del siniestro '+ aseguradosTotales[i].NMSINIES+ ' Sobrepasa el límite permitido. <br/>';
+                            aseguradosTotales[i].REQAUTES = "1";	//(EGS) marcamos el siniestro para autorización especial, porque sobrepasa el límite
+                            
+                            asegLimExced.push(aseguradosTotales[i]);	//(EGS) lo agregamos al arreglo a enviar
                         }
                     }
                 }
                 
                 if(banderaValidacion == "1"){
                     centrarVentanaInterna(mensajeWarning(resultadoTope));
+                    // (EGS) Actualizamos registros que requieren autorizacion especial por excedente límite medicamentos
+	                var mapa = {ntramite : ntramite, nfactura : nfactura};
+                    var json = {smap : mapa, slist1 : asegLimExced};
+                    debug('datos a enviar:',json);
+                    Ext.Ajax.request({
+                    	url			: _URL_REQAUTES
+                    	,jsonData	: json
+                    	,success	: function(response){
+                    		debug("Habiendo actualizado", json);
+                    	}
+                    });
+                    // fin (EGS)
                 }
                 
                 panelComplementos.down('[name=params.subtotalFac]').setValue(subtotalFactura);
