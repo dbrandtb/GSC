@@ -1209,12 +1209,26 @@ public class CotizacionAction extends PrincipalCoreAction
 		String ntramite = smap1.get("ntramite");
 		String fechaIni = smap1.get("feini");
 		String fechaFin = smap1.get("fefin");
+		String caseIdRstn = smap1.get("caseIdRstn");
 		
 		try
 		{
 			String paso = null;
 			try
 			{
+			    if (StringUtils.isNotBlank(ntramite) && StringUtils.isNotBlank(caseIdRstn)) {
+			        try {
+                        cotizacionManager.actualizarOtvalorTramitePorDsatribu(
+                                ntramite
+                                ,"CASEIDRSTN"
+                                ,caseIdRstn
+                                ,"U"
+                                );
+                    } catch (Exception ex) {
+                        logger.error("WARNING al guardar caseIdRstn en otvalor", ex);
+                    }
+			    }
+			    
 				//---------------------------------
 				paso = "Obtener datos del usuario";
 				logger.debug(Utils.log("","paso=",paso));
@@ -11225,7 +11239,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			       ,cdtipsit = smap1.get("cdtipsit")
 			       ,ntramite = smap1.get("ntramite")
 			       ,nGrupos  = smap1.get("nGrupos")
-			       ,status   = smap1.get("status");
+			       ,status   = smap1.get("status")
+			       ,caseIdRstn = smap1.get("caseIdRstn");
 			
 			Utils.validate(
 					cdunieco  , "Falta cdunieco"
@@ -11348,7 +11363,8 @@ public class CotizacionAction extends PrincipalCoreAction
                 
                 if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(cdramo)) {
                     HttpUtil.enviarArchivoRSTN(
-                            ntramite, nombreArchivoCotizacion, pathArchivoCotizacion, Utils.join("COTIZACION EN RESUMEN (",nmpoliza,")"));
+                            caseIdRstn, nombreArchivoCotizacion, pathArchivoCotizacion, Utils.join("COTIZACION EN RESUMEN (",nmpoliza,")"),
+                            HttpUtil.RSTN_DOC_CLASS_COTIZACION);
                 }
 				
 				String urlReporteCotizacion2=Utils.join(
@@ -11403,7 +11419,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(cdramo)) {
 				    HttpUtil.enviarArchivoRSTN(
-                            ntramite, nombreArchivoCotizacion2, pathArchivoCotizacion2, Utils.join("COTIZACION A DETALLE (",nmpoliza,")"));
+				            caseIdRstn, nombreArchivoCotizacion2, pathArchivoCotizacion2, Utils.join("COTIZACION A DETALLE (",nmpoliza,")"),
+                            HttpUtil.RSTN_DOC_CLASS_COTIZACION);
 				}
 				
 				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit TMS:

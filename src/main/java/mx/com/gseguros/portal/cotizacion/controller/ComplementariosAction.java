@@ -2114,6 +2114,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String cdIdeperRes     = null;
 		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		boolean esFlotilla     = false;
+		String caseIdRstn = null;
+		
 		tipoGrupoInciso = "I";
 		
 		Date fechaHoy = new Date();
@@ -2136,6 +2138,23 @@ public class ComplementariosAction extends PrincipalCoreAction
 						&&panel1.get("tipoGrupoInciso").equals("C"))
 				{
 					tipoGrupoInciso = "C";
+				}
+				
+				if (success) {
+				    caseIdRstn = panel2.get("caseIdRstn");
+				    logger.debug(Utils.log("caseIdRstn: ", caseIdRstn));
+				    if (StringUtils.isNotBlank(caseIdRstn)) {
+				        try {
+				            cotizacionManager.actualizarOtvalorTramitePorDsatribu(
+			                        ntramite
+			                        ,"CASEIDRSTN"
+			                        ,caseIdRstn
+			                        ,"U"
+			                        );
+				        } catch (Exception ex) {
+				            logger.error("WARNING al guardar caseIdRstn en otvalor", ex);
+				        }
+				    }
 				}
 				
 				if(!success)

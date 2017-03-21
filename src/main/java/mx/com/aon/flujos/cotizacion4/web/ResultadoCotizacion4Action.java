@@ -900,6 +900,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	boolean esFlotilla = false;
     	String tipoflot    = null;
     	String recargoPF   = null;
+    	String caseIdRstn  = null;
     	
     	Date fechaHoy = new Date();
     	
@@ -954,6 +955,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     				esFlotilla  = StringUtils.isNotBlank(smap1.get("flotilla"))&&smap1.get("flotilla").equalsIgnoreCase("si");
     				tipoflot    = smap1.get("tipoflot");
     				recargoPF   = smap1.get("recargoPF");
+    				caseIdRstn  = smap1.get("caseIdRstn");
     			}
     			
     			if(!completos)
@@ -1442,7 +1444,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            
 	            if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(comprarCdramo)) {
 	                HttpUtil.enviarArchivoRSTN(
-	                        ntramite, nombreArchivoCotizacion, pathArchivoCotizacion, Utils.join("COTIZACION (", comprarNmpoliza, ")"));
+	                        caseIdRstn, nombreArchivoCotizacion, pathArchivoCotizacion, Utils.join("COTIZACION (", comprarNmpoliza, ")"),
+	                        HttpUtil.RSTN_DOC_CLASS_COTIZACION);
 	            }
             }
     		catch(Exception ex)

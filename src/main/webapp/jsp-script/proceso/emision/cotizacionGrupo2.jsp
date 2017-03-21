@@ -4690,7 +4690,8 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                                            'smap1.cdtipsit' : _p25_smap1.cdtipsit,
 	                                            'smap1.ntramite' : json.smap1.ntramite,
 	                                            'smap1.nGrupos'  : _p25_storeGrupos.getCount(),
-	                                            'smap1.status'   : '14'
+	                                            'smap1.status'   : '14',
+	                                            'smap1.caseIdRstn' : _NVL(_p25_smap1.caseIdRstn)
 	                                        }
 	                                    });
 	                                } catch (e) {
@@ -6886,6 +6887,7 @@ function _p25_emitir2(ventana,button)
         ,'smap1.feini'    : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
         ,'smap1.fefin'    : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
         ,'smap1.ntramite' : _p25_ntramite
+        ,'smap1.caseIdRstn' : _NVL(_p25_smap1.caseIdRstn)
     };
     debug('parametros para emitir:',params);
     ventana.setLoading(true);

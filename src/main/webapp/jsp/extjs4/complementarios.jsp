@@ -716,6 +716,7 @@ function _p29_emitirClicComplementarios()
 	                                                                            ,'panel2.pv_estado'   : inputEstado
 	                                                                            ,'panel2.pv_nmpoliza' : inputNmpoliza
 	                                                                            ,'panel2.pv_cdtipsit' : inputCdtipsit
+	                                                                            ,'panel2.caseIdRstn'  : _NVL(panDatComMap1.caseIdRstn)
 	                                                                        }
 	                                                                        ,success:function(response)
 	                                                                        {
