@@ -243,7 +243,7 @@ public class HttpUtil {
     public static void enviarArchivoRSTN (String caseIdRstn, String nombreArchivo, String nombreArchivoCompleto, String descripcion,
             int CLASE_DOC_RSTN) {
         String params = Utils.join(
-                "repositoryId=A1",
+                "repositoryId=ObjectStore",
                 "&folder=", caseIdRstn,
                 "&idName=", nombreArchivo,
                 "&fullFileName=", nombreArchivoCompleto,
