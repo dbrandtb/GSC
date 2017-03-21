@@ -940,7 +940,11 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	 */
 	@Override
 	public void validarAgenteParaNuevoTramite(String cdagente, String ramo, String cdtipend) throws Exception {
-		logger.debug(Utils.log(
+		
+	    logger.warn("****** spvalidaagente COMENTADO   TODO: DESCOMENTAR ****");
+	    
+	    /*
+	    logger.debug(Utils.log(
 				"\n*******************************************",
 				"\n****** validarAgenteParaNuevoTramite ******",
 				"\n****** cdagente = ", cdagente,
@@ -986,6 +990,8 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 				"\n****** validarAgenteParaNuevoTramite ******",
 				"\n*******************************************"
 				));
+				
+		*/
 	}
 	
 	public class ValidarAgenteParaNuevoTramiteSP extends StoredProcedure {
