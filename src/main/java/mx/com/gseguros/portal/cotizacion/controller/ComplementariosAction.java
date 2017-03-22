@@ -28,7 +28,6 @@ import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -183,56 +182,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public static final String SUCURSAL_SALUD_NOVA = "1403";
 
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-	
-	@Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-	
-	@Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-	
-	@Value("${recibo.impresion.autos.url}")
-    private String reciboImpresionAutosUrl;
-
-	@Value("${caic.impresion.autos.url}")
-    private String caicImpresionAutosUrl;	
-	
-	@Value("${aeua.impresion.autos.url}")
-    private String aeuaImpresionAutosUrl;	
-	
-	@Value("${ap.impresion.autos.url}")
-    private String apImpresionAutosUrl;
-
-	@Value("${incisos.flotillas.impresion.autos.url}")
-    private String incisosFlotillasImpresionAutosUrl;			
-
-	@Value("${incisos.flotillas.excel.impresion.autos.url}")
-	private String incisosFlotillasExcelImpresionAutosUrl;			
-				
-	@Value("${tarjeta.iden.impresion.autos.url}")
-    private String tarjetaIdenImpresionAutosUrl;				
-					
-	@Value("${numero.incisos.reporte}")
-    private String numeroIncisosReporte;	
-	
-	@Value("${caratula.impresion.autos.url}")
-    private String caratulaImpresionAutosUrl;
-	
-	@Value("${caratula.impresion.autos.serviciopublico.url}")
-    private String caratulaImpresionAutosServiciopublicoUrl;
-	
-	@Value("${manual.agente.txtinfocobredgs}")
-    private String manualAgenteTxtinfocobredgs;
-	
-	@Value("${manual.agente.condgralescobsegvida}")
-    private String manualAgenteCondgralescobsegvida;
-	
-	@Value("${manual.agente.txtinfocobgesgs}")
-    private String manualAgenteTxtinfocobgesgs;
-	
-	@Value("${caratula.impresion.autos.docextra.url}")
-    private String caratulaImpresionAutosDocExtra;
 	
 	public ComplementariosAction() {
 		this.session=ActionContext.getContext().getSession();
@@ -260,26 +209,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String result   = SUCCESS;
 		UserVO usuario  = null;
 		String cdsisrol = null;
-		String caseIdRstn = null;
-		
-		if (exito && map1 != null && "S".equals(map1.get("rstn")) && StringUtils.isNotBlank(map1.get("ntramite"))) { // para RSTN recuperar datos
-		    try {
-		        String paso = "Construyendo flujo RSTN";
-		        try {
-		            UserVO user = Utils.validateSession(session);
-		            String ntramite = map1.get("ntramite");
-		            Utils.validate(ntramite, "Falta ntramite");
-		            flujo = flujoMesaControlManager.generarYRecuperarFlujoRSTN(ntramite, user.getUser(), user.getRolActivo().getClave());
-		            caseIdRstn = map1.get("caseIdRstn");
-		            map1 = null;
-		        } catch (Exception ex) {
-		            Utils.generaExcepcion(ex, paso);
-		        }
-		    } catch (Exception ex) {
-		        exito = false;
-		        respuesta = Utils.manejaExcepcion(ex);
-		    }
-		}
 		
 		if(exito)
 		{
@@ -298,8 +227,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 					cdtipsit = tramite.get("CDTIPSIT");
 					map1 = new HashMap<String, String>();
 					map1.put("ntramite" , flujo.getNtramite());
-					
-					map1.put("caseIdRstn", caseIdRstn);
 					
 					if("RECUPERAR".equals(flujo.getAux()))
 					{
@@ -767,10 +694,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             parametros.putAll(map1);
             parametros.put("pv_status", "V");
             parametros.put("pv_nmsuplem", "0");
-            
-            if (!Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(map1.get("pv_cdramo"))) {
-                kernelManager.pMovTvalopol(parametros);
-            }
+            kernelManager.pMovTvalopol(parametros);
             
 			success = true;
 		}
@@ -2118,8 +2042,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String cdIdeperRes     = null;
 		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		boolean esFlotilla     = false;
-		String caseIdRstn = null;
-		
 		tipoGrupoInciso = "I";
 		
 		Date fechaHoy = new Date();
@@ -2142,23 +2064,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						&&panel1.get("tipoGrupoInciso").equals("C"))
 				{
 					tipoGrupoInciso = "C";
-				}
-				
-				if (success) {
-				    caseIdRstn = panel2.get("caseIdRstn");
-				    logger.debug(Utils.log("caseIdRstn: ", caseIdRstn));
-				    if (StringUtils.isNotBlank(caseIdRstn)) {
-				        try {
-				            cotizacionManager.actualizarOtvalorTramitePorDsatribu(
-			                        ntramite
-			                        ,"CASEIDRSTN"
-			                        ,caseIdRstn
-			                        ,"U"
-			                        );
-				        } catch (Exception ex) {
-				            logger.error("WARNING al guardar caseIdRstn en otvalor", ex);
-				        }
-				    }
 				}
 				
 				if(!success)
@@ -2382,7 +2287,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
-		rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+		rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 		
 		////// ws cliente y recibos
 		if(success)
@@ -2467,7 +2372,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						}catch(Exception ex)
 						{
 							logger.error("error en el pl de emitir",ex);
-							mensajeRespuesta = ex.getMessage()!=null?ex.getMessage().trim().equals("")?"Error en el Web Service para emitir":ex.getMessage():"Error en el Web Service para emitir";
+							mensajeRespuesta = ex.getMessage();
 							success          = false;
 						}
 						
@@ -2628,7 +2533,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            	try
 	            	{
 	            		String origen  = Utils.join(rutaDocsBaseDatos,doc.get("CDDOCUME"));
-	            		String destino = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",doc.get("CDDOCUME"));
+	            		String destino = Utils.join(getText("ruta.documentos.poliza"),"/",ntramite,"/",doc.get("CDDOCUME"));
 	            		logger.debug(Utils.log("\nIntentando mover desde:",origen,",hacia:",destino));
 	            		FileUtils.moveFile(
 	            				new File(origen)
@@ -2658,10 +2563,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug("docu iterado: "+docu);
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
-					String url=this.rutaServidorReports
+					String url=this.getText("ruta.servidor.reports")
 							+ "?destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+this.passServidorReports
+							+ "&userid="+this.getText("pass.servidor.reports")
 							+ "&report="+descripl
 							+ "&paramform=no"
 							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -2704,26 +2609,23 @@ public class ComplementariosAction extends PrincipalCoreAction
 					if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
 				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
 				    	){
-						urlCaratula = this.caratulaImpresionAutosUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.url");
 					}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
-						urlCaratula = this.caratulaImpresionAutosServiciopublicoUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
 					}
 					
 					if("C".equalsIgnoreCase(tipoGrupoInciso)){
-						urlCaratula = this.caratulaImpresionAutosServiciopublicoUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.flotillas.url");
 					}
 					
-					String urlRecibo = this.reciboImpresionAutosUrl;
-					String urlCaic = this.caicImpresionAutosUrl;
-					String urlAeua = this.aeuaImpresionAutosUrl;
-					String urlAp = this.apImpresionAutosUrl;
+					String urlRecibo = this.getText("recibo.impresion.autos.url");
+					String urlCaic = this.getText("caic.impresion.autos.url");
+					String urlAeua = this.getText("aeua.impresion.autos.url");
+					String urlAp = this.getText("ap.impresion.autos.url");
 					
-					String urlIncisosFlot = this.incisosFlotillasImpresionAutosUrl;
-					String urlIncisosExcelFlot = this.incisosFlotillasExcelImpresionAutosUrl;
-					String urlTarjIdent = this.tarjetaIdenImpresionAutosUrl;
-					String numIncisosReporte = this.numeroIncisosReporte;
-					
-					String urlDocsExtra = this.caratulaImpresionAutosDocExtra;
+					String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
+					String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
+					String numIncisosReporte = this.getText("numero.incisos.reporte");
 					
 					this.mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 										"<br>Estimado(a) cliente,<br/><br/>"+
@@ -2736,6 +2638,22 @@ public class ComplementariosAction extends PrincipalCoreAction
 					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0";
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car\u00e1tula de p\u00f3liza</a>";
+					
+					//HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					//paramsR.put("pv_cdunieco_i", cdunieco);
+					//paramsR.put("pv_cdramo_i",   cdramo);
+					//paramsR.put("pv_estado_i",   "M");
+					//paramsR.put("pv_nmpoliza_i", nmpolizaEmitida);
+					//paramsR.put("pv_nmsuplem_i", nmsuplemEmitida);
+					//paramsR.put("pv_feinici_i",  new Date());
+					//paramsR.put("pv_cddocume_i", urlCaratula + parametros);
+					//paramsR.put("pv_dsdocume_i", "Car\u00e1tula de P\u00f3liza");
+					//paramsR.put("pv_nmsolici_i", nmpoliza);
+					//paramsR.put("pv_ntramite_i", ntramite);
+					//paramsR.put("pv_tipmov_i",   TipoEndoso.EMISION_POLIZA.getCdTipSup());
+					//paramsR.put("pv_swvisible_i", Constantes.SI);
+					
+					//kernelManager.guardarArchivo(paramsR);
 					
 					documentosManager.guardarDocumento(
 							cdunieco
@@ -2845,6 +2763,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlAp + parametros+"\">Anexo cobertura de AP</a>";
 						
+						//paramsR.put("pv_cddocume_i", urlAp + parametros);
+						//paramsR.put("pv_dsdocume_i", "AP");
+						
+						//kernelManager.guardarArchivo(paramsR);
+						
 						documentosManager.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -2874,6 +2797,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
 						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaic + parametros+"\">Anexo de cobertura RC USA</a>";
+						
+						//paramsR.put("pv_cddocume_i", urlCaic + parametros);
+						//paramsR.put("pv_dsdocume_i", "CAIC");
+						
+						//kernelManager.guardarArchivo(paramsR);
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -2935,6 +2863,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
 						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci\u00f3n de Incisos Flotillas</a>";
 						
+						//paramsR.put("pv_cddocume_i", urlIncisosFlot + parametros);
+						//paramsR.put("pv_dsdocume_i", "Incisos Flotillas");
+						
+						//kernelManager.guardarArchivo(paramsR);
+						
 						documentosManager.guardarDocumento(
 								cdunieco
 								,cdramo
@@ -2955,37 +2888,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,null
 								,null, false
 								);
-
-						/**
-						 * Para Incisos Flotillas EXCEL
-						 */
-						
-						if(StringUtils.isNotBlank(urlIncisosExcelFlot)){
-							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
-							logger.debug("URL Generada para urlIncisosEXCELFlotillas: "+ urlIncisosExcelFlot + parametros);
-							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
-							
-							documentosManager.guardarDocumento(
-									cdunieco
-									,cdramo
-									,"M"
-									,nmpolizaEmitida
-									,nmsuplemEmitida
-									,new Date()
-									,urlIncisosExcelFlot + parametros
-									,"Incisos EXCEL"
-									,nmpoliza
-									,ntramite
-									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-									,Constantes.SI
-									,null
-									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-									,"0"
-									,Documento.EXTERNO_INCISOS_FLOTILLAS
-									,null
-									,null, false
-									);
-						}
 						
 						/**
 						 * Para Tarjeta Identificacion
@@ -3070,7 +2972,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de reduce GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteTxtinfocobredgs+"\">Reduce GS</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobredgs")+"\">Reduce GS</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3079,7 +2981,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteTxtinfocobredgs
+								,this.getText("manual.agente.txtinfocobredgs")
 								,"Reduce GS"
 								,nmpoliza
 								,ntramite
@@ -3098,7 +3000,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de gestoria GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteTxtinfocobgesgs+"\">Gestoria GS</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobgesgs")+"\">Gestoria GS</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3107,7 +3009,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteTxtinfocobgesgs
+								,this.getText("manual.agente.txtinfocobgesgs")
 								,"Gestoria GS"
 								,nmpoliza
 								,ntramite
@@ -3129,10 +3031,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 						String reporteEspVida = this.getText("rdf.emision.nombre.esp.cobvida");
 						String pdfEspVidaNom = "SOL_VIDA_AUTO.pdf";
 						
-						String url=this.rutaServidorReports
+						String url=this.getText("ruta.servidor.reports")
 								+ "?destype=cache"
 								+ "&desformat=PDF"
-								+ "&userid="+this.passServidorReports
+								+ "&userid="+this.getText("pass.servidor.reports")
 								+ "&report="+reporteEspVida
 								+ "&paramform=no"
 								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -3145,6 +3047,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 						
 						HttpUtil.generaArchivo(url,rutaCarpeta+"/"+pdfEspVidaNom);
 						
+						
+//						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\"http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf\">Especificaciones Seguro de Vida</a>";
+						
+						//paramsR.put("pv_cddocume_i", "http://gswas.com.mx/cas/web/agentes/Manuales/EspecificacionesSeguroVida.pdf");
+						//paramsR.put("pv_dsdocume_i", "Especificaciones Seguro de Vida");
+						
+						//kernelManager.guardarArchivo(paramsR);
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3167,7 +3076,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,null, false
 								);
 
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteCondgralescobsegvida+"\">Condiciones Generales Seguro de Vida</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.condgralescobsegvida")+"\">Condiciones Generales Seguro de Vida</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3176,7 +3085,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteCondgralescobsegvida
+								,this.getText("manual.agente.condgralescobsegvida")
 								,"Condiciones Generales Seguro de Vida"
 								,nmpoliza
 								,ntramite
@@ -3186,64 +3095,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 								,"0"
 								,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA
-								,null
-								,null, false
-								);
-					}
-					
-					if(StringUtils.isNotBlank(urlDocsExtra)){
-						/**
-						 * Para documento Sanas Practicas
-						 */
-						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",2";
-						logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Sanas Pr\u00e1cticas</a>";
-						
-						documentosManager.guardarDocumento(
-								cdunieco
-								,cdramo
-								,"M"
-								,nmpolizaEmitida
-								,nmsuplemEmitida
-								,new Date()
-								,urlDocsExtra + parametros
-								,"Sanas Pr\u00e1cticas"
-								,nmpoliza
-								,ntramite
-								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-								,Constantes.SI
-								,null
-								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,"0"
-								,Documento.EXTERNO_DOCUMENTO_EXTRA
-								,null
-								,null, false
-								);
-	
-						/**
-						 * Para documento Constancia de Recepcion
-						 */
-						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",1";
-						logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>";
-						
-						documentosManager.guardarDocumento(
-								cdunieco
-								,cdramo
-								,"M"
-								,nmpolizaEmitida
-								,nmsuplemEmitida
-								,new Date()
-								,urlDocsExtra + parametros
-								,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
-								,nmpoliza
-								,ntramite
-								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-								,Constantes.SI
-								,null
-								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,"0"
-								,Documento.EXTERNO_DOCUMENTO_EXTRA
 								,null
 								,null, false
 								);
@@ -3260,8 +3111,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 							ntramite,
 							Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail)
 					);
-					
-					mensajeEmail = Utils.cambiaGuionesBajosPorAcentosHtml(Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail));
 				}
 			}
 			catch(Exception ex)
@@ -3561,7 +3410,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 
-	rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+	rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 	
 	////// ws cliente y recibos
 	if(success)
@@ -3818,7 +3667,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 				success = ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, false, tipoMov, usuarioSesion);
 
 				Utils.validate(success, "No se regeneraron correctamente todos los recibos.");
-				
 				
 				if(success && (TipoEndoso.EMISION_POLIZA.getCdTipSup().toString().equalsIgnoreCase((tipoMov)) || TipoEndoso.RENOVACION.getCdTipSup().toString().equalsIgnoreCase((tipoMov)) )){
 					boolean esDxn = false;
@@ -4560,15 +4408,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			logger.debug("nombreRdf = {}", nombreRdf);
 			
-			String rutaCarpeta = Utils.join(this.rutaDocumentosPoliza, "/", ntramite);
+			String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"), "/", ntramite);
 			
 			String url = Utils.join(
-					this.rutaServidorReports,
+					this.getText("ruta.servidor.reports"),
 					"?destype=cache",
 					"&desformat=PDF",
 					"&paramform=no",
 					"&ACCESSIBLE=YES", //parametro que habilita salida en PDF
-					"&userid=", this.passServidorReports,
+					"&userid=", this.getText("pass.servidor.reports"),
 					"&report=", nombreRdf,
 					"&p_ntramite=", ntramite,
 					"&p_ramo=", cdramo,
@@ -4887,14 +4735,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setParams(Map<String, String> params) {
 		this.params = params;
-	}
-
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
 	}
 
 }

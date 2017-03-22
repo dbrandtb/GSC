@@ -3768,14 +3768,14 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public Map<String,String> tramiteMC(String ntramite, String nmsolici, String cdunieco, String cdramo, String cdtipsit) throws Exception
+	public Map<String,String> tramiteMC(String ntramite, String nmpoliza, String cdunieco, String cdramo, String cdtipsit) throws Exception
 	{
 	        String mensaje = "Consultando mesa de control para renovacion";
 		try
 		{
-			if(nmsolici!=null && !nmsolici.equals("0") && !nmsolici.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
+			if(nmpoliza!=null && !nmpoliza.equals("0") && !nmpoliza.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
 			{	
-				return siniestrosManager.obtenerTramiteCompletoXNmsolici(nmsolici, cdunieco, cdramo);
+				return siniestrosManager.obtenerTramiteCompletoXNmsolici(nmpoliza, cdunieco, cdramo);
 				
 			}
 			else if(ntramite!=null && !ntramite.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1)
@@ -4110,42 +4110,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
                                      "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	}
 	
-	@Override
-	public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception {
-	    logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-	                           "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-	                           "\n@@@@@@ ntramite = ", ntramite,
-	                           "\n@@@@@@ cdusuari = ", cdusuari,
-	                           "\n@@@@@@ cdsisrol = ", cdsisrol));
-	    FlujoVO flujo = null;
-	    String paso = "Construyendo flujo RSTN";
-	    try {
-	        flujo = flujoMesaControlDAO.generarYRecuperarFlujoRSTN(ntramite, cdusuari, cdsisrol);
-	    } catch (Exception ex) {
-	        Utils.generaExcepcion(ex, paso);
-	    }
-        logger.debug(Utils.log("\n@@@@@@ flujo = ", flujo,
-                               "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-                               "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-        return flujo;
-	}
-	
 	@Deprecated
 	@Override
 	public Map<String, String> recuperaTflujomc (String cdflujomc) throws Exception {
 	    return flujoMesaControlDAO.recuperaTflujomc(cdflujomc);
-	}
-	
-	@Override
-	public String obtenerSuplementoTramite(String ntramite) throws Exception{
-	    String paso = "";
-	    String suplemento = null;
-	    try{
-	        suplemento = flujoMesaControlDAO.obtenerSuplementoTramite(ntramite);
-	    }
-	    catch(Exception ex){
-	        Utils.generaExcepcion(ex, paso);
-	    }
-	    return suplemento;
 	}
 }
