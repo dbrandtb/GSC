@@ -4547,4 +4547,24 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
             compile();
         }
     }
+    
+    @Override
+    public String obtenerSuplementoTramite(String ntramite)throws Exception{
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        params.put("ntramite"   , ntramite);;
+        Map<String,Object> procRes = ejecutaSP(new ObtenerSuplementoTramite(getDataSource()),params);        
+        String cdtipfluSalida = (String)procRes.get("pv_cdtipflu_o");      
+        return cdtipfluSalida;
+    }
+    
+    protected class ObtenerSuplementoTramite extends StoredProcedure{
+        protected ObtenerSuplementoTramite(DataSource dataSource){
+            super(dataSource,"P_GET_NMSUPLEM_X_NTRAMITE");
+            declareParameter(new SqlParameter("ntramite"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }

@@ -983,4 +983,6 @@ public interface FlujoMesaControlDAO {
     public String recuperarCorreoAgenteTramite (String ntramite) throws Exception;
     
     public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception;
+    
+    public String obtenerSuplementoTramite(String ntramite)throws Exception;
 }
