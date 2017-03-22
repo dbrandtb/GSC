@@ -4135,4 +4135,17 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	public Map<String, String> recuperaTflujomc (String cdflujomc) throws Exception {
 	    return flujoMesaControlDAO.recuperaTflujomc(cdflujomc);
 	}
+	
+	@Override
+	public String obtenerSuplementoTramite(String ntramite) throws Exception{
+	    String paso = "";
+	    String suplemento = null;
+	    try{
+	        suplemento = flujoMesaControlDAO.obtenerSuplementoTramite(ntramite);
+	    }
+	    catch(Exception ex){
+	        Utils.generaExcepcion(ex, paso);
+	    }
+	    return suplemento;
+	}
 }

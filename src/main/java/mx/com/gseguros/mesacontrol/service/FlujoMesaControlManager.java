@@ -438,4 +438,6 @@ public interface FlujoMesaControlManager
 	
 	@Deprecated
 	public Map<String,String> recuperaTflujomc(String cdflujomc) throws Exception;
+	
+	public String obtenerSuplementoTramite(String ntramite) throws Exception;
 }
