@@ -319,9 +319,12 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						List<Map<String,String>> siniesxfactura = siniestrosManager.listaSiniestrosTramite2(params.get("pv_ntramite_i"),facturas.get(i).get("NFACTURA"));
 						
 						for(int a=0; a< siniesxfactura.size();a++){
-							siniestrosManager.getAltaSiniestroSinAutorizacion(msgResult,siniesxfactura.get(a).get("CDUNIECO"),siniesxfactura.get(a).get("CDRAMO"),
+							String nmsini = siniesxfactura.get(a).get("NMSINIES") + ""; //(EGS)
+							if(!nmsini.equalsIgnoreCase("null")){ //(EGS)
+								siniestrosManager.getAltaSiniestroSinAutorizacion(msgResult,siniesxfactura.get(a).get("CDUNIECO"),siniesxfactura.get(a).get("CDRAMO"),
 									siniesxfactura.get(a).get("ESTADO"),siniesxfactura.get(a).get("NMPOLIZA"),siniesxfactura.get(a).get("NMSUPLEM"),siniesxfactura.get(a).get("NMSITUAC"),
 									siniesxfactura.get(a).get("CDTIPSIT"),renderFechas.parse(siniesxfactura.get(a).get("FEOCURRE")),facturas.get(i).get("NFACTURA"), siniesxfactura.get(a).get("SECTWORKSIN"));
+							} //(EGS)
 						}
 					}
 					
