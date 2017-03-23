@@ -729,7 +729,7 @@ Ext.onReady(function()
 	                    'smap1.cargaFenacMin' : _aplicaCobVida?_FechaMinEdad:'',
 	                    'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:'',
 	                    'smap1.tomarUnDomicilio' : 'S',
-	                    'smap1.cargaOrdDomicilio' : json.smap1.nmorddom
+	                    'smap1.cargaOrdDomicilio' : json.smap1.nmorddom,
 	                    'smap1.muestraBusqueda' : _p31_smap1.cdtipsit2 == "TL"?'S':'N' 
                     }
                 });
