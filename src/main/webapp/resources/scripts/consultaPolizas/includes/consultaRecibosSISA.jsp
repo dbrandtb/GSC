@@ -350,18 +350,22 @@ Ext.onReady(function(){
            var serie    = 0;
            var folio    = 0;
            deshabilitarBotones();
-           if(selected.length > 0){
-               debug('Antes de recorrer seleccionados');
+           if(me.selected.length > 0){
+               debug('Antes de recorrer seleccionados ',me.selected);
                _habilitarBoton('btnDesglose'     ,true);
-	           for(var i = 0; i < selected.length; i++){
+	           for(var i = 0; i < me.selected.items.length; i++){
 	               if(i == 0){
-                       serie = selected[i].data['codigo_serial'];  
-                   } 
-	               if(esConsolidado(selected[i].data)){
+                       serie = me.selected.items[i].data['codigo_serial'];  
+                   }                   
+	               if(esConsolidado(me.selected.items[i].data)){
 	                   conso++;
 	               }
 	               else{
-	                   if(selected[i].data['codigo_serial'] === serie && selected[i].data['status'] === EstadoRecibo.Pendiente){
+	                   debug('No es consolidado ');
+	                   debug('x ',me.selected.items[i].data['codigo_serial']);
+	                   debug('y ',serie);
+	                   debug('z ',me.selected.items[i].data['status']);
+	                   if(me.selected.items[i].data['codigo_serial'] === serie && me.selected.items[i].data['status'] === EstadoRecibo.Pendiente){
 	                       descon++;
 	                   }
 	                   else{
@@ -369,27 +373,33 @@ Ext.onReady(function(){
 	                       break;
 	                   }
 	               }
-	               folio = selected[i].data['folio'];
-	               serie = selected[i].data['codigo_serial'];
+	               folio = me.selected.items[i].data['folio'];
+	               serie = me.selected.items[i].data['codigo_serial'];
 	           }
 	           debug('termina de recorrer seleccionados',folio,serie);
-	           debug('Antes de entrar en condiciones',conso, descon);	           
+	           debug('Antes de entrar en condiciones',conso, descon);
+	           debug('Seleccionados ',me.selected.length);
+	           
 	           if(conso === 0 && descon > 1){
 	               _habilitarBoton('btnConsolidar'   ,true);  //consolidar
 	               _habilitarBoton('btnDesglose'     ,true);  //desglose
 	           }
-	           if(conso === 1 && descon === 0){
+	           
+	           if(conso === 1 && sonConsolidados()){
 	               seleccionarConsolidados(folio);
 	               _habilitarBoton('btnDesconsolidar',true);  //desconsolidar
 	               _habilitarBoton('btnDesglose'     ,true);  //desglose
 	               _habilitarBoton('btnDetalle'      ,true);  //detalle
 	           }
-	           if(conso > 0 || descon > 0){
+	           
+	           if(me.selected.length > 1){
 	               _habilitarBoton('btnDesglose'     ,true);  //desglose
-	           }	           
+	           }
+	           
 	           if(me.selected.length === 1){
                    _habilitarBoton('btnDetalle'      ,true);  //detalle
                }
+               
                if(me.selected.length > 1 && sonConsolidados() === true){
                    _habilitarBoton('btnDetalle'      ,true);  //detalle
                }
@@ -520,6 +530,8 @@ Ext.onReady(function(){
     function sonConsolidados(){
         debug('>sonConsolidados');
         gridRecibos = _fieldById('gridRecibos');
+        var consolidado    = 0;
+        var desconsolidado = 0;
         var folio;
         var result = true;
         try{
@@ -527,11 +539,21 @@ Ext.onReady(function(){
             debug('gridStore ',gridStore); 
             for(var s = 0; s < gridStore.length; s++){
                 var rec = gridStore[s].data;
-                if(folio != rec['folio'] && s > 0){
+                if(!Ext.isEmpty(rec['folio'])){
+                    consolidado++;
+                    folio = rec['folio'];
+                }
+                else{
+                    desconsolidado++;
+                }
+                if(desconsolidado > 0){
                     result = false;
                     break;
                 }
-                folio = rec['folio'];
+                if(!Ext.isEmpty(folio) && rec['folio'] != folio){
+                    result = false;
+                    break;
+                }
             }
         }
         catch(err){
