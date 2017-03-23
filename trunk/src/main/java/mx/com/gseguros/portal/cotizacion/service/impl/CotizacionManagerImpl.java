@@ -11700,6 +11700,15 @@ public class CotizacionManagerImpl implements CotizacionManager
     }
     
     @Override
+    public List<Map<String, String>> cargarResultadosCotizacionLicenciaFlotilla(
+            String cdunieco, String cdramo, String estado, String nmpoliza)
+            throws Exception
+    {
+        return cotizacionDAO.cargarResultadosCotizacionLicenciaFlotilla(cdunieco, cdramo, estado, nmpoliza);
+        
+    }
+    
+    @Override
 	public void eliminaDocsCotiza(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String ntramite) throws Exception{
 		this.cotizacionDAO.eliminaDocsCotiza(cdunieco, cdramo, estado, nmpoliza, ntramite);
