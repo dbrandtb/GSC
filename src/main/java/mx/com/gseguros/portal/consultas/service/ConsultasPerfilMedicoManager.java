@@ -13,5 +13,7 @@ public interface ConsultasPerfilMedicoManager {
 	public List<Map<String, String>> consultaPerfilAsegurados(Map<String,String> params) throws Exception;
 	
 	public PerfilAseguradoVO consultaICDSAsegurado(Map<String,String> params) throws Exception;
+	
+	public List<AseguradoVO> obtienePerfilAsegurados(PolizaVO poliza, long start, long limit) throws Exception;
 
 }

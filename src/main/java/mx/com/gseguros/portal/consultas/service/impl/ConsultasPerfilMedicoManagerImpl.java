@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PerfilAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPerfilMedicoManager;
+import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPerfilMedicoDAO;
@@ -34,6 +36,13 @@ public class ConsultasPerfilMedicoManagerImpl implements ConsultasPerfilMedicoMa
 	@Value("${consultar.perfil.medico.sisa}")
     private boolean consultarPerfilMedicoSisa;
 	
+	@Autowired
+	private ConsultasPolizaManager consultasPolizaManager;
+	
+	private List<AseguradoVO> datosAsegurados;
+	private long totalCount;
+	private List<Map<String, String>> list;
+	
 	
 	//Consulta en SISA el perfil medico de la lista de asegurados dada 
 	private List<Map<String, String>> consultaPerfilAseguradosSISA(Map<String,String> params) throws Exception{
@@ -52,7 +61,6 @@ public class ConsultasPerfilMedicoManagerImpl implements ConsultasPerfilMedicoMa
 		return listaPerfil;
 	}
 	
-	
 	//Consulta en SICAPS el perfil medico de la lista de asegurados dada 
 	private List<Map<String, String>> consultaPerfilAseguradosICE(Map<String,String> params) throws Exception{
 		
@@ -68,7 +76,6 @@ public class ConsultasPerfilMedicoManagerImpl implements ConsultasPerfilMedicoMa
 		}
 		return listaICE;
 	}
-
 	
 	//Consulta el perfil medico de los asegurados en ambas plataformas
 	@Override
@@ -104,6 +111,82 @@ public class ConsultasPerfilMedicoManagerImpl implements ConsultasPerfilMedicoMa
 		return listaPerfil;
 	};
 	
+	//metodo llamado desde el action para la consulta de asegurados y sus perfiles medicos
+	@Override
+	public List<AseguradoVO> obtienePerfilAsegurados(PolizaVO poliza, long start, long limit) throws Exception {
+		try{
+			this.datosAsegurados = consultasPolizaManager.obtieneAsegurados(poliza,start,limit);			
+			String listaPersonas = "";
+			//consulta la informacion de los asegurados
+			String paso="Consultando informacion de asegurados";
+			logger.debug(paso);
+			List<AseguradoVO> datosAseguradosDef = new ArrayList<AseguradoVO>();
+			
+			if(datosAsegurados != null && datosAsegurados.size() > 0) {
+				paso="consulta de asegurados exitosa: "+datosAsegurados.size();
+				logger.debug(paso);
+				totalCount = datosAsegurados.get(0).getTotal();
+				
+				//se debe armar la lista de cdperson para hacer la consulta de perfiles
+				String listaPersonasTmp="";
+				for(int k=0; k<datosAsegurados.size(); k++){
+					AseguradoVO asegurado = new AseguradoVO();
+		        	asegurado = datosAsegurados.get(k);
+		        	listaPersonasTmp =  asegurado.getCdperson() + ",";
+		        	listaPersonas = listaPersonas + listaPersonasTmp;
+				}
+				paso = "armando la lista de personas para consultar el perfil medico: ";
+				logger.debug(paso);
+				listaPersonas=listaPersonas.substring(0, listaPersonas.length()-1);
+				
+				//consulta la informacion de perfiles
+				paso="consultando la informacion de los perfiles de las siguientes personas: "+listaPersonas;
+				logger.debug(paso);
+				
+				Map<String,String> parametro = new HashMap<String,String>();
+				parametro.put("pv_lsperson_i", listaPersonas);
+				try{
+		            list = consultaPerfilAsegurados(parametro);
+		            paso = "Consulta exitosa de los perfiles: " + list.size();
+		            logger.debug(paso);
+		            //se debe recorrer la lista de AseguradoVO y recorrer la lista de perfiles para completar el objeto 
+		            for(int i=0; i<datosAsegurados.size(); i++){
+		            	
+		            	//se obtienen valores del asegurado
+		            	AseguradoVO asegurado = new AseguradoVO();
+		            	asegurado = datosAsegurados.get(i);
+		            	
+		            	for(int j=0; j<list.size(); j++){
+		            		//se le agregan los datos del perfil
+		            		if (datosAsegurados.get(i).getCdperson().equals(list.get(j).get("CDPERSON"))){
+		            			String cantIcd = list.get(j).get("CANT_ICD");
+		            			datosAsegurados.get(i).setCantIcd(cantIcd);
+		            			
+		            			String maxPerfil = list.get(j).get("MAX_PERFIL");
+		            			datosAsegurados.get(i).setMaxPerfil(maxPerfil);
+		            			
+		            			String numPerfil = list.get(j).get("NUM_PERFIL");
+		            			datosAsegurados.get(i).setNumPerfil(numPerfil);
+		            			
+		            			String perfilFinal=list.get(j).get("PERFIL_FINAL");
+		            			datosAsegurados.get(i).setPerfilFinal(perfilFinal);
+		            		}//if
+		            	}//for j
+		            }//for i
+		            paso= "agregando informacion de perfiles a los asegurados: ";
+            		logger.debug(paso);
+				}//try
+				catch (Exception ex){
+					logger.debug("Error consultando el perfil de los asegurados");
+				}
+			}//if
+		}//try
+		catch (Exception e){
+			throw new ApplicationException("Ha ocurrido un error al consultar los asegurados",e);
+		}
+		logger.debug("retorno datos de asegurados: "+datosAsegurados.size());
+		return datosAsegurados;
+	}
 	
 	//consulta la lista de ICDs de un asegurado dado
 	@Override
@@ -115,7 +198,6 @@ public class ConsultasPerfilMedicoManagerImpl implements ConsultasPerfilMedicoMa
 			logger.debug(paso);
 			List<Map<String, String>> lista;
 			lista = (List<Map<String, String>>) consultasICEDAO.consultaICDSAsegurado(params);
-			//se recibe la lista y se arma el objeto VO con el resultado de ICE
 			listaIcds.setIcds(lista);
 		}
 		catch (Exception e){

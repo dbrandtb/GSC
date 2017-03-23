@@ -46,6 +46,7 @@ import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.SituacionVO;
 import mx.com.gseguros.portal.consultas.model.SuplementoVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
+import mx.com.gseguros.portal.consultas.service.ConsultasPerfilMedicoManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -92,6 +93,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	private long limit;
 	
 	private long totalCount;
+	
+	private List<Map<String, String>> list;
 
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
@@ -105,6 +108,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	@Autowired
 	private ConveniosManager conveniosManager;
 
+	@Autowired
+    private ConsultasPerfilMedicoManager perfilMedicoManager;
+	
 	private HashMap<String, String> params;
 
 	private PolizaDTO datosPoliza;
@@ -1320,40 +1326,50 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
         return result;
     }
     
-	@Action(
-			value   = "initConsultaAseguradosPoliza",
-			results = { @Result(name="success", location="/jsp/consultas/consultaAseguradosPoliza.jsp") }
-	)
-    public String initConsultaAseguradosPoliza() {
-    	logger.debug("initConsultaAseguradosPoliza params:{}", params);
-		return SUCCESS;
-	}
     
-	@Action(
-			value   = "consultaAseguradosPoliza",
-			results = { @Result(name="success", type="json") }
-			)
-    public String consultaAseguradosPoliza() {
-		logger.info("\n######################################\n###### consultaAseguradosPoliza ######");
-		logger.info("params: {}", params);
-		try {
-			String ntramite = params.get("ntramite");
-			datosAsegurados = siniestrosManager.obtenerTramiteCompletoAsegurados(ntramite, start, limit);
-			if(datosAsegurados != null && datosAsegurados.size() > 0) {
-				logger.debug("Asegurados obtenidos : "+datosAsegurados.size());
+    //consulta informacion del asegurado y le concatena la informacion del perfil medico de cada uno de ellos
+    public String consultarPerfiles () {
+           String result = ERROR;
+   		try {
+   			//recibe y valida parametros
+   			String cdunieco 		= params.get("cdunieco"),
+   					cdramo 			= params.get("cdramo"),
+   					estado 			= params.get("estado"),
+   					nmpoliza 		= params.get("nmpoliza"),
+   					suplemento 		= params.get("suplemento"),
+   					icodpoliza 		= params.get("icodpoliza"),
+   					cdperson		= params.get("cdperson"),
+   	    			nmsitaux		= params.get("nmsitaux"),
+   	    			familia			= params.get("familia"),
+   	    			nombre			= params.get("nombre");
+   			
+   			//seteo los parametros
+   			PolizaVO poliza = new PolizaVO();
+   			poliza.setCdunieco(cdunieco);
+   			poliza.setCdramo(cdramo);
+   			poliza.setEstado(estado);
+   			poliza.setNmpoliza(nmpoliza);
+   			poliza.setNmsuplem(suplemento);
+   			poliza.setIcodpoliza(icodpoliza);
+   			poliza.setCdperson(cdperson);
+   			poliza.setNmsitaux(nmsitaux);
+   			poliza.setFamilia(familia);
+   			poliza.setNombre(nombre);
+   			//totalCount=0;
+   			datosAsegurados = perfilMedicoManager.obtienePerfilAsegurados(poliza,start,limit);	
+   			if(datosAsegurados != null && datosAsegurados.size() > 0) {
 				totalCount = datosAsegurados.get(0).getTotal();
-			} else {
-				logger.debug("No hay Asegurados");
-			}
-			//logger.debug("datosAsegurados : "+datosAsegurados);
-		} catch (Exception ex) {
-			logger.error("error consultaAsegurados", ex);
-		}
-		logger.info("\n###### consultaAseguradosPoliza ######\n######################################");
-		success = true;
-		return SUCCESS;
-	}
-    
+   			}
+   			
+   			success= true;
+   			result = SUCCESS;
+               
+   		} catch (Exception e) {
+   			logger.error("Error al obtener los datos del Asegurado ", e);
+   			//return SUCCESS;
+   		}
+           return result;
+       }
     
     // Getters and setters:
 

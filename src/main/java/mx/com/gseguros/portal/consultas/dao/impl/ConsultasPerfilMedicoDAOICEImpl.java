@@ -22,14 +22,9 @@ public class ConsultasPerfilMedicoDAOICEImpl extends AbstractManagerDAO implemen
     //Consulta de Perfil Medico del Asegurado
   	@Override
   	public List<Map<String,String>> consultaPerfilAsegurados(Map<String,String> params) throws Exception {
-  		logger.debug("iniciando consulta de perfil de asegurados en el DAO");
   		Map<String,Object>respuesta   = ejecutaSP(new consultaPerfilMedico(getDataSource()),params);
-  		
   		PerfilAseguradoVO perfilAsegurado = new PerfilAseguradoVO ();		
   		List<Map<String,String>>lista = (List<Map<String,String>>)respuesta.get("pv_registro_o");
-
-  		logger.debug("viendo el tamano de la lista " +  lista.size());
-
   		return lista;
   	}
   		
@@ -37,7 +32,6 @@ public class ConsultasPerfilMedicoDAOICEImpl extends AbstractManagerDAO implemen
   		protected consultaPerfilMedico(DataSource dataSource) {
   			super(dataSource, "PKG_PERFIL_MEDICO.P_GET_PERFIL_ASEGURADOS");
   			declareParameter(new SqlParameter("pv_lsperson_i", OracleTypes.VARCHAR));
-  			
   			String[] cols = new String[]{
   					"CDPERSON"
   					,"CANT_ICD"
@@ -45,7 +39,6 @@ public class ConsultasPerfilMedicoDAOICEImpl extends AbstractManagerDAO implemen
   					,"NUM_PERFIL"
   					,"PERFIL_FINAL"
   			};
-  				
   			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
   	   		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
   	   		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -56,14 +49,9 @@ public class ConsultasPerfilMedicoDAOICEImpl extends AbstractManagerDAO implemen
   //Consulta de ICDs por asegurado
   	@Override
   	public List<Map<String,String>> consultaICDSAsegurado(Map<String,String> params) throws Exception {
-  		
   		Map<String,Object>respuesta   = ejecutaSP(new consultaICDS(getDataSource()),params);
-  		
   		PerfilAseguradoVO perfilAsegurado = new PerfilAseguradoVO ();		
   		List<Map<String,String>>lista = (List<Map<String,String>>)respuesta.get("pv_registro_o");
-
-  		logger.debug("viendo el tamano de la lista " +  lista.size());
-
   		return lista;
   	}
 
@@ -71,14 +59,12 @@ public class ConsultasPerfilMedicoDAOICEImpl extends AbstractManagerDAO implemen
   		protected consultaICDS(DataSource dataSource) {
   			super(dataSource, "PKG_PERFIL_MEDICO.P_GET_LISTA_ICDS");
   			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
-  						
   			String[] cols = new String[]{
   				"CDPERSON"
   				,"CDICD"
   				,"DSICD"
   				,"PERFIL"
   			};
-  							
   			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
   			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
   			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
