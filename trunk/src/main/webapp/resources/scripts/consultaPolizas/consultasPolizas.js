@@ -914,7 +914,7 @@ Ext.onReady(function() {
                 }
             },
             //Perfil Medico
-            {
+            /*{
     			xtype: 'actioncolumn',
     			width: 20,
     			autoShow: true,
@@ -935,7 +935,7 @@ Ext.onReady(function() {
 	    			}
     			},
                 {*/
-    			getClass: function (val, meta, rec) {
+    			/*getClass: function (val, meta, rec) {
     				debug('Entre al getClass this ', this, 'perfilFinal ', rec.get('perfilFinal'));
     				var url=_CONTEXT+'/resources/fam3icons/icons/';
     				this.icon = url+FlagsECD.PerfilCero; //inicializando el icono
@@ -983,33 +983,33 @@ Ext.onReady(function() {
                 	_consultaIcds(values,"Consulta de ICDs");
     			}
     			//}]
-			},
+			},*/
             //Perfil Medico
-            /*{text:'Perfil',dataIndex:'perfilFinal', width:90 , align:'left',
+            {text:'Perfil',dataIndex:'perfilFinal', width:90 , align:'left',
             	renderer: function(value, metaData, record, rowIndex , colIndex, store, view) {
             		debug('entre en el renderer value ', value);
+            		value2='Perfil '+value;
                     if (value == '3') {
                     	debug('if3 ', value);
-                    	metaData.style += 'color:red;font-weight:bold;';
+                    	metaData.style += 'color:red;font-weight:bold;text-decoration: underline;';
                     } 
                     if (value == '2') {
                     	debug('if2 ', value);
-                    	metaData.style += 'color:yellow;font-weight:bold;';
+                    	metaData.style += 'color:yellow;font-weight:bold;text-decoration: underline;';
                     } 
                     if (value == '1') {
                     	debug('if1 ', value);
-                    	metaData.style += 'color:green;font-weight:bold;';
+                    	metaData.style += 'color:green;font-weight:bold;text-decoration: underline;';
                     }
-                    if ((value == '0') || (value == '')) {
+                    if ((value == '0') || (value == '') || (value==null)) {
                     	debug('if0 ', value);
-                    	metaData.style += 'color:blue;font-weight:bold;';
+                    	metaData.style += 'color:blue;font-weight:bold;text-decoration: underline;';
+                    	value2='Perfil 0';
                     } 
-                    
-            		value2='Perfil '+value;
-            		debug('entre en el renderer value2 ', value2);
+            		debug('valor del perfil: ', value2);
                     return value2;
                 }
-            },*/
+            },
             {text:'Plan',flex: 1,dataIndex:'dsplan',width:90 , align:'left'},
             {text:'Tipo de <br/>asegurado',flex: 1,dataIndex:'parentesco',width:80 , align:'left'},
             {text:'Clave <br/>Asegurado',flex: 1,dataIndex:'cdperson',width:80,align:'left'},
@@ -1078,25 +1078,27 @@ Ext.onReady(function() {
             displayMsg: 'Asegurados {0} - {1} of {2}',
             emptyMsg: "No hay asegurados"
         })
-        /*
+        
         ,listeners: {
 			cellclick: function ( grd, td, cellIndex, record, tr, rowIndex, e, eOpts ) {
-				debug('>cellclick');
-								
-                var record = grd.getStore().getAt(rowIndex);
-                debug('record cdperson ==> :',record, 'cdperson: ', record.get('cdperson'));
-                var values = panelBusqueda.down('form').getForm().getValues();
-                values['params.nmsituac']=record.get('nmsituac');
-                values['params.swfonsin']= "S";
-                values['params.cdperson']= record.get('cdperson');
-                    
-                _consultaIcds(values,"Consulta de ICDs");
-                
+				//debug('>cellclick ', ' td ', td, ' cellInde ', cellIndex, ' tr ', tr, ' rowIndex ', rowIndex , ' e ', e);
+				debug('>cellclick ');
+				if (cellIndex==7){	
+					
+	                var record = grd.getStore().getAt(rowIndex);
+	                debug('record cdperson ==> :',record, 'cdperson: ', record.get('cdperson'));
+	                var values = panelBusqueda.down('form').getForm().getValues();
+	                values['params.nmsituac']=record.get('nmsituac');
+	                values['params.swfonsin']= "S";
+	                values['params.cdperson']= record.get('cdperson');
+	                    
+	                _consultaIcds(values,"Consulta de ICDs");
+				}
                 debug('<cellclick');
 			
 			}
 		}
-		*/
+		
     });
     
     
