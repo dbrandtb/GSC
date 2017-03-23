@@ -1300,4 +1300,7 @@ public interface CotizacionManager
 	 * @param flotilla
 	 */
 	public String aplicaRecargoPagoFraccionado(String cdunieco, String cdramo, String nmpoliza, String recargoPF, String flotilla) throws Exception;
+
+	public List<Map<String, String>> cargarResultadosCotizacionLicenciaFlotilla(String cdunieco, String cdramo, String estado,
+			String nmpoliza) throws Exception;
 }

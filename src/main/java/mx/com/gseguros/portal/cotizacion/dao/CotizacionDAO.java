@@ -1021,4 +1021,7 @@ public interface CotizacionDAO {
 	 * }
 	 */
 	public Map<String, String> recuperarRangoDescuentoRecargo (String cdramo, String cdtipsit, String cdusuari, String cdsisrol) throws Exception;
+
+	public List<Map<String, String>> cargarResultadosCotizacionLicenciaFlotilla(String cdunieco, String cdramo, String estado,
+			String nmpoliza) throws Exception;
 }

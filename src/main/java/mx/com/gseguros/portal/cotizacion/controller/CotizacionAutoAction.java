@@ -1034,7 +1034,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                    ,nmorddomCli = smap1.get("nmorddomCli")
                    ,cdideperCli = smap1.get("cdideperCli")
                    ,tipoflot    = smap1.get("tipoflot");
-            
+            boolean licencias = "S".equals(smap1.get("licencias"));
                 
             Utils.validate(
                      cdunieco , "No se recibi\u00f3 la sucursal"
@@ -1065,15 +1065,15 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     tvalopol.put(Utils.join("otvalor",StringUtils.leftPad(key.substring("tvalopol_".length()),2,"0")),en.getValue());
                 }
             }
-            
-            if(tvalopol.get("otvalor05").contains("DOLARES"))
-            {
-                tvalopol.put("otvalor05","2");
-            }
-            else
-            {
-                tvalopol.put("otvalor05","1");
-            }
+            if(!licencias)
+	            if(tvalopol.get("otvalor05").contains("DOLARES"))
+	            {
+	                tvalopol.put("otvalor05","2");
+	            }
+	            else
+	            {
+	                tvalopol.put("otvalor05","1");
+	            }
             
             Map<String,String>parame = flujoMesaControlManager.tramiteMC(ntramite, nmsolici, cdunieco, cdramo, cdtipsit);
             if(parame.get("Mensaje")!=null)
@@ -1216,8 +1216,11 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 }
                 logger.debug(Utils.log(resp.getRespuesta()));
             }
-            resp.setSlist(cotizacionManager.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmsolici==null?resp.getSmap().get("nmpoliza"):nmsolici));
-            
+            if(licencias){
+            	resp.setSlist(cotizacionManager.cargarResultadosCotizacionLicenciaFlotilla(cdunieco, cdramo, estado, nmsolici==null?resp.getSmap().get("nmpoliza"):nmsolici));
+            }else{
+            	resp.setSlist(cotizacionManager.cargarResultadosCotizacionAutoFlotilla(cdunieco, cdramo, estado, nmsolici==null?resp.getSmap().get("nmpoliza"):nmsolici));
+            }
             respuesta = resp.getRespuesta();
            
             smap1.putAll(resp.getSmap());

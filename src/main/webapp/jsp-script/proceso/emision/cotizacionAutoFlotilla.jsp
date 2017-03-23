@@ -4562,6 +4562,7 @@ function _p30_cotizar(sinTarificar)
                 ,notarificar : !Ext.isEmpty(sinTarificar)&&sinTarificar==true? 'si':'no'
                 ,tipoflot    : _p30_smap1.tipoflot
                 ,modPrim     : sinTarificar == false || sinTarificar== true ? "" : sinTarificar
+                ,licencias	 : _p30_smap1.cdtipsit2 ? 'S':'N'
             }
             ,slist1 : []
             ,slist2 : []
@@ -5565,7 +5566,7 @@ function _p30_detalles()
 			               	nuevoElementoCoberturas = {
 			                        COBERTURA  :  'Total de Coberturas'
 			                       ,PRIMA      :  totalCoberturas+""
-			                       ,ORDEN      :  '500'
+			                       ,ORDEN      :  _p30_smap1.turistas=='S'?'580':'500'
 			                       ,TITULO     :  json.slist1[j].TITULO
 			                       ,CDRAMO     :  json.slist1[j].CDRAMO
 			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
@@ -5576,7 +5577,7 @@ function _p30_detalles()
 			                nuevoElementoGlobales = {
 			                        COBERTURA  : 'Total de Conceptos Globales'
 			                       ,PRIMA      :  totalGlobales+""
-			                       ,ORDEN      :  '995'
+			                       ,ORDEN      :  _p30_smap1.turistas=='S'?'998':'995'//999
 			                       ,TITULO     :  json.slist1[j].TITULO
 			                       ,CDRAMO     :  json.slist1[j].CDRAMO
 			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
@@ -5584,21 +5585,24 @@ function _p30_detalles()
 			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
 			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
 			                }
-			                nuevoElementoTotal = {
-			                        COBERTURA: 'Total por Inciso'
-			                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
-			                       ,ORDEN      :  '999'
-			                       ,TITULO     :  json.slist1[j].TITULO
-			                       ,CDRAMO     :  json.slist1[j].CDRAMO
-			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
-			                       ,ESTADO     :  json.slist1[j].ESTADO
-			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
-			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
-			                       }
+			               	
+			               	if(_p30_smap1.turistas!='S')
+				                nuevoElementoTotal = {//quitar
+				                        COBERTURA: 'Total por Inciso'
+				                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
+				                       ,ORDEN      :  '999'
+				                       ,TITULO     :  json.slist1[j].TITULO
+				                       ,CDRAMO     :  json.slist1[j].CDRAMO
+				                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
+				                       ,ESTADO     :  json.slist1[j].ESTADO
+				                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
+				                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
+				                       }
 			               	
 			               	json.slist1.push(nuevoElementoCoberturas);
 			                json.slist1.push(nuevoElementoGlobales);
-			                json.slist1.push(nuevoElementoTotal);
+			                if(_p30_smap1.turistas!='S')
+			                	json.slist1.push(nuevoElementoTotal);
 			               	
 			               	totalCoberturas = 0;
 			                totalGlobales = 0;
@@ -5624,8 +5628,9 @@ function _p30_detalles()
                             store    : Ext.create('Ext.data.Store',
                             {
                                 model       : '_p30_modeloDetalleCotizacion'
-                                ,groupField : 'TITULO'
-                                ,sorters    :
+                               // ,groupField : 'TITULO'
+                                //,groupDir	: 'DESC'
+                              /*  ,sorters    :
                                 [
                                     {
                                         sorterFn : function(o1,o2)
@@ -5638,7 +5643,41 @@ function _p30_detalles()
                                             return Number(o1.get('ORDEN')) < Number(o2.get('ORDEN')) ? -1 : 1;
                                         }
                                     }
-                                ]
+                                ]*/
+                                ,groupers: [{
+                                    property: 'TITULO',
+                                    sorterFn: function(o1, o2){
+                                    	debug(o1," # ",o2)
+                                    	try{
+                                        	if(_p30_smap1.turistas=='S'){
+                                        		var a=o1.get('TITULO'),
+                                        	 	b=o2.get('TITULO')
+                                        	 	
+                                            	a=Number(a.split("_")[0]);
+                                            	b=Number(b.split("_")[0]);
+                                            	if(a==0)
+                                            		a=99999;
+                                            	if(b==0)
+                                            		b=99999;
+                                            	
+                                            	if(a>b){
+                                            		return 1;
+                                            	}else if(a<b)
+                                            		return -1
+                                            		
+                                            	
+                                        	}
+                                        }catch(e){
+                                        	debugError(e)
+                                        }
+                                        debug('sorting:',o1,o2);
+                                        if (Number(o1.get('ORDEN')) == Number(o2.get('ORDEN')))
+                                        {
+                                            return 0;
+                                        }
+                                        return Number(o1.get('ORDEN')) < Number(o2.get('ORDEN')) ? -1 : 1;
+                                    }
+                                }]
                                 ,proxy      :
                                 {
                                     type    : 'memory'
@@ -5699,10 +5738,24 @@ function _p30_detalles()
                                         var sum = 0;
                                         for ( var i = 0; i < json.slist1.length; i++)
                                         {
-                                            if(json.slist1[i].COBERTURA == 'Total por Inciso')
+                                            if(json.slist1[i].COBERTURA == 'Total por Inciso' && _p30_smap1.turistas!='S'  )
                                             	{
                                             	   sum += parseFloat(json.slist1[i].PRIMA);
                                                 }
+                                            else if(json.slist1[i].COBERTURA =='Total de Coberturas' && _p30_smap1.turistas=='S'){
+                                            	sum += parseFloat(json.slist1[i].PRIMA);
+                                            }
+                                        }
+                                        try{
+                                        	if(_p30_smap1.turistas=='S')
+	                                        	json.slist1.forEach(function(it){
+	                                        		
+	                                        		if(Number(it.TITULO.split("_")[0])==0 && it.COBERTURA=='Total de Conceptos Globales'){
+	                                        			sum += parseFloat(it.PRIMA);
+	                                        		}
+	                                        	})
+                                        }catch(e){
+                                        	debugError(e)
                                         }
                                         this.setText('Total: '+ Ext.util.Format.usMoney(sum));
                                         this.callParent();
