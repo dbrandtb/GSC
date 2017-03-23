@@ -1369,11 +1369,13 @@ Ext.onReady(function() {
     //FORMULARIO ASEGURADO
     var panelDatosAsegurado = Ext.create('Ext.form.Panel', {
         model : 'DatosAseguradoModel',
+        itemId: 'formDatosAsegurado',
         width : 850 ,
         tbar   : [
         			{
         				 xtype	: 'button'
         			    ,text	: 'E.C.D'
+        			    ,itemId : 'btnECD'
         			    ,listeners : {
         			    	beforerender: function(me){
         			    		me.setLoading(true);
@@ -1964,6 +1966,11 @@ Ext.onReady(function() {
                     
                     // Recargar store con busqueda de historicos de la poliza seleccionada
                     cargaStoreSuplementos(formBusqueda.getValues());
+                    try{
+                		_fieldById('btnECD',null,true).fireEvent('beforerender',_fieldById('btnECD',null,true))
+                	}catch(e){
+                		debugError(e);
+                	}
                     
                 }else{
                     showMessage('Aviso', 'Seleccione un registro', Ext.Msg.OK, Ext.Msg.INFO);
