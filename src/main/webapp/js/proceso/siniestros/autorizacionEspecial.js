@@ -335,7 +335,7 @@ Ext.onReady(function() {
 				        	}
 				        },
 				        coberturaAfectada
-				        ,{xtype: 'checkbox', id: 'genCheckboxC', name: 'genCheckboxC', boxLabel: 'Excedente L&iacute;mite Medicamentos', hideLabel: true, //(EGS)
+				        ,{xtype: 'checkbox', id: 'genCheckboxC', name: 'genCheckboxC', boxLabel: 'Excedente en L&iacute;mite', hideLabel: true, //(EGS)
 				        	listeners: {
 				        		change: function(){
 				        			debug("Change Excedente medicamentos");
