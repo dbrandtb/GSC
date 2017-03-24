@@ -1641,6 +1641,7 @@ Ext.onReady(function()
     	if(_p30_smap1.turistas=='S'){
 	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).allowBlank=true;
 	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).isValid();
+	    	_fieldByLabel("MONEDA").setValue("2");
     	}
     }catch(e){
     	debugError(e)
