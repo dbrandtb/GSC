@@ -10,16 +10,12 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
-import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
-import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
-import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
@@ -61,10 +57,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	private FlujoMesaControlManager flujoMesaControlManager;
 	
 	private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(SiniestrosManagerImpl.class);
-	
-	@Autowired
-	@Qualifier("consultasDAOICEImpl")
-	private ConsultasPolizaDAO consultasPolizaDAOICE;
 	
 	@Override
 	public List<AutorizacionServicioVO> getConsultaAutorizacionesEsp(String nmautser) throws Exception {
@@ -2696,49 +2688,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		} catch (DaoException daoExc){
 			throw new Exception(daoExc.getMessage(),daoExc);
 		}
-	}
-
-	@Override
-	public String actualizarReqautes(String reqautes, String ntramite, String nfactura, String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String nmsituac, String aaapertu, String status,
-			String nmsinies) throws Exception {	// (EGS)
-		try{
-			return siniestrosDAO.actualizarReqautes(reqautes, ntramite, nfactura, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies);
-		}catch (DaoException daoExc){
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-
-	@Override
-	public String validaAutEspLimMedi(String nmautesp, String ntramite, String nfactura, String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String nmsituac, String nmsinies) throws Exception { // (EGS)
-		try{
-		return siniestrosDAO.validaAutEspLimMedi(nmautesp, ntramite, nfactura, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, nmsinies);
-		}catch (DaoException daoExc){
-			throw new Exception(daoExc.getMessage(),daoExc);
-		}
-	}
-	
-	@Override
-	public List<AseguradoVO> obtenerTramiteCompletoAsegurados(String ntramite, long start, long limit) throws Exception
-	{
-		Map<String,String> params = new HashMap<String,String>();
-		List<AseguradoVO> asegurados;
-		
-		params.put("pv_ntramite_i" , ntramite);
-		log.debug("obtenerTramiteCompleto params: "+params);
-		Map<String,String> tramite = siniestrosDAO.obtenerTramiteCompleto(params);
-		//logger.debug("tramite: "+tramite);
-		PolizaVO poliza = new PolizaVO();
-		poliza.setCdunieco(tramite.get("CDUNIECO"));
-		poliza.setCdramo(tramite.get("CDRAMO"));
-		poliza.setEstado(tramite.get("ESTADO"));
-		poliza.setNmpoliza(tramite.get("NMPOLIZA"));
-		poliza.setNmsuplem(tramite.get("NMSUPLEM"));
-		//logger.debug("poliza: "+ poliza);
-		asegurados = consultasPolizaDAOICE.obtieneAsegurados(poliza, start, limit);
-		//log.debug("obtenerTramiteCompleto tramite: "+asegurados);
-		return asegurados;
 	}
     
 }
