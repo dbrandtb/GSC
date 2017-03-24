@@ -227,10 +227,6 @@
                 </param>
             </result>
         </action>
-        
-        <action name="includes/consultaECD"  class="ConsultasAseguradoAction" >
-            <result name="success">/jsp/consultas/consultaECD.jsp</result>
-        </action>
            		
     </package>
     
