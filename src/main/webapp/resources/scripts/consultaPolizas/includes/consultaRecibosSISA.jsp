@@ -540,8 +540,7 @@ Ext.onReady(function(){
             for(var s = 0; s < gridStore.length; s++){
                 var rec = gridStore[s].data;
                 if(!Ext.isEmpty(rec['folio'])){
-                    consolidado++;
-                    folio = rec['folio'];
+                    consolidado++;                    
                 }
                 else{
                     desconsolidado++;
@@ -550,10 +549,13 @@ Ext.onReady(function(){
                     result = false;
                     break;
                 }
+                debug('folio ',folio);
+                debug('rec[folio] ',rec['folio']);
                 if(!Ext.isEmpty(folio) && rec['folio'] != folio){
                     result = false;
                     break;
                 }
+                folio = rec['folio'];
             }
         }
         catch(err){
