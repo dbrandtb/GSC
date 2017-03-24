@@ -7090,7 +7090,12 @@ public String retarificarEndosos()
 				cdramo   = flujo.getCdramo();
 				estado   = flujo.getEstado();
 				nmpoliza = flujo.getNmpoliza();
-				nmsuplem = flujo.getNmsuplem();
+				
+				nmsuplem = flujoMesaControlManager.obtenerSuplementoTramite(flujo.getNtramite());
+				
+				if (StringUtils.isBlank(nmsuplem) || "-1".equals(nmsuplem)) {
+				    throw new ApplicationException("Error al recuperar suplemento de endoso");
+				}
 				
 				Map<String,Object> datos = flujoMesaControlDAO.recuperarDatosTramiteValidacionCliente(
 						flujo.getCdtipflu()

@@ -4553,7 +4553,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
         Map<String,String> params = new LinkedHashMap<String,String>();
         params.put("ntramite"   , ntramite);;
         Map<String,Object> procRes = ejecutaSP(new ObtenerSuplementoTramite(getDataSource()),params);        
-        String cdtipfluSalida = (String)procRes.get("pv_cdtipflu_o");      
+        String cdtipfluSalida = (String)procRes.get("pv_nmsuplem_o");      
         return cdtipfluSalida;
     }
     
