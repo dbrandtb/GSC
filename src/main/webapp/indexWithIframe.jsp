@@ -93,13 +93,13 @@
             border-top:0 none;
         }
         .add {
-            background-image:url(resources/extjs4/resources/fam3icons/icons/add.gif) !important;
+            background-image:url(resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.gif) !important;
         }
         .option {
-            background-image:url(resources/extjs4/resources/fam3icons/icons/plugin.gif) !important;
+            background-image:url(resources/extjs4/resources/ext-theme-classic/images/icons/fam/plugin.gif) !important;
         }
         .remove {
-            background-image:url(resources/extjs4/resources/fam3icons/icons/delete.gif) !important;
+            background-image:url(resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.gif) !important;
         }
         .save {
             background-image:url(resources/fam3icons/icons/script_save.png) !important;

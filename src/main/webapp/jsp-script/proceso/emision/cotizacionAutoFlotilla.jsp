@@ -43,8 +43,8 @@ var _p29_urlObtieneValNumeroSerie           = '<s:url namespace="/emision"      
 var MontoMaximo = 0;
 var MontoMinimo = 0;
 
-var _p30_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p30_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 
@@ -323,7 +323,7 @@ var _p30_panel7Items =
         {
            type    : 'table'
           ,columns : 1
-          ,style   : 'width: 20px !important;'
+          ,style   : 'width:7px !important;'
           ,align   : 'right'
        }
        ,border : 0
@@ -335,7 +335,7 @@ var _p30_panel7Items =
                 ,fieldLabel  : 'SUCURSAL'
                 ,name        : 'sucursal'               
                 ,sinOverride : true
-                ,labelWidth  : 100
+                ,labelWidth  : 170
                 ,style       : 'margin:0px;margin-left:5px;'//'margin:5px;margin-left:15px;width:20px !important;'
                 ,value       : !Ext.isEmpty(_p30_smap1.renuniext) ? _p30_smap1.renuniext : ''
                 ,listeners   :
@@ -350,7 +350,7 @@ var _p30_panel7Items =
                    ,fieldLabel  : 'RAMO'
                    ,name        : 'ramo'                   
                    ,sinOverride : true                   
-                   ,labelWidth  : 100
+                   ,labelWidth  : 170
                    ,style       : 'margin:0px;margin-left:5px;'//'width : 30px !important;'
                    ,value       : !Ext.isEmpty(_p30_smap1.renramo) ? _p30_smap1.renramo : ''
                    ,listeners   :
@@ -365,7 +365,7 @@ var _p30_panel7Items =
                  ,fieldLabel  : 'POLIZA'
                  ,name        : 'poliza'
                  ,sinOverride : true                 
-                 ,labelWidth  : 100
+                 ,labelWidth  : 170
                  ,style       : 'margin:0px;margin-left:5px;'//'width : 50px !important;'
                  ,value       : !Ext.isEmpty(_p30_smap1.renpoliex) ? _p30_smap1.renpoliex : ''
                  ,listeners   :
@@ -605,7 +605,7 @@ Ext.onReady(function()
 	}
 	/////////////////
 	
-    Ext.Ajax.timeout = 3*60*60*1000; // 1 hora
+    Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
@@ -1051,7 +1051,7 @@ Ext.onReady(function()
     ,{
         xtype   : 'fieldset'
         ,itemId : '_p30_fieldBusquedaPoliza'
-        ,width  : 290
+        ,width  : 300
         ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
         ,items  : _p30_panel7Items
         ,hidden : !Ext.isEmpty(_p30_flujo) ? (_p30_flujo.cdflujomc != 240 && _p30_flujo.cdtipflu != 103) : true
@@ -1641,7 +1641,6 @@ Ext.onReady(function()
     	if(_p30_smap1.turistas=='S'){
 	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).allowBlank=true;
 	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).isValid();
-	    	_fieldByLabel("MONEDA").setValue("2");
     	}
     }catch(e){
     	debugError(e)
@@ -3622,15 +3621,6 @@ function _p30_agregarAuto()
 {
     debug('>_p30_agregarAuto');
     
-    try{
-    	if(_p30_smap1.turistas=='S' && _p30_store.count()>=3){
-    		mensajeWarning('Solo puedes agregar 3 incisos');
-    		return;
-    	}
-    	
-    }catch(e){
-    	debugError(e);
-    }
     var valido=true;
     if(valido&&_p30_smap1.cdramo+'x'=='5x')
     {
@@ -4203,7 +4193,8 @@ function _p30_cotizar(sinTarificar)
     	   !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
 //     	   (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
     	   )
-    	{	
+    	{
+    		
     		var ncamiones = 0;
             var ntractocamiones = 0;
             var nsemiremolques = 0;
@@ -4560,10 +4551,8 @@ function _p30_cotizar(sinTarificar)
                 ,feini       : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
                 ,fefin       : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
                 ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
-                ,notarificar : !Ext.isEmpty(sinTarificar)&&sinTarificar==true? 'si':'no'
+                ,notarificar : sinTarificar ? 'si' : ''
                 ,tipoflot    : _p30_smap1.tipoflot
-                ,modPrim     : sinTarificar == false || sinTarificar== true ? "" : sinTarificar
-                ,licencias	 : _p30_smap1.cdtipsit2 ? 'S':'N'
             }
             ,slist1 : []
             ,slist2 : []
@@ -4664,11 +4653,6 @@ function _p30_cotizar(sinTarificar)
                            mensajeError(json.smap1.msnPantalla);
                     }
                 	
-                	if(!Ext.isEmpty(json.respuesta))
-                    {
-                		mensajeWarning(json.respuesta);
-                    }
-                	
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(json.smap1.nmpoliza);
                     _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
@@ -4729,28 +4713,6 @@ function _p30_cotizar(sinTarificar)
                             ,value : 'Indique el porcentaje de comisi&oacute;n que desea ceder'
                         }
                     ];
-                    
-                    var itemsRecargoPF =
-                        [
-                            {
-                                xtype  : 'displayfield'
-                                ,value : 'Indique el porcentaje de recargo por pago fraccionado que desea aplicar'
-                            },
-                            Ext.create('Ext.form.NumberField',{
-                            	fieldLabel:'PORCENTAJE RECARGO POR PAGO FRACCIONADO',
-                            	label:'PORCENTAJE RECARGO POR PAGO FRACCIONADO',
-                            	allowBlank:true,
-                            	name:'otvalor.recargoPF',
-                            	readOnly:false,
-                            	swobligaflot:false,
-                            	swobligaemiflot:false,
-                            	hidden:false,
-                            	style:'margin:5px',
-                            	allowDecimals:true,
-                            	decimalSeparator:'.',
-                            	minValue:0
-                            	})
-                        ];
                     
                     <s:if test='%{getImap().get("panel6Items")!=null}'>
                         var itemsaux = [<s:property value="imap.panel6Items" />];
@@ -4840,12 +4802,7 @@ function _p30_cotizar(sinTarificar)
                                 {
                                     if(me.up('form').getForm().isValid())
                                     {
-                                        var modPrim = false;
-                                        if(_p30_smap1.tipoflot == TipoFlotilla.Flotilla)
-                                        {
-                                          modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formDescuento'))[0].lastValue;
-                                        }    
-                                        _p30_cotizar(modPrim);
+                                        _p30_cotizar();
                                     }
                                     else
                                     {
@@ -4855,51 +4812,6 @@ function _p30_cotizar(sinTarificar)
                             }
                         ]
                     });
-                    var _p30_PanelRecargoPF = Ext.create('Ext.form.Panel',
-                            {
-                                itemId        : '_p30_PanelRecargoPF'
-                                ,border       : 0
-                                ,defaults     : { style : 'margin:5px;' }
-                                ,style        : 'margin-left:535px;'
-                                ,width        : 450
-                                ,windowCesion : Ext.create('Ext.window.Window'
-                                ,{
-                                    title        : 'RECARGO POR PAGO FRACCIONADO'
-                                    ,autoScroll  : true
-                                    ,closeAction : 'hide'
-                                    ,modal       : true
-                                    ,items       :
-                                    [   
-                                        Ext.create('Ext.form.Panel',
-                                        {
-                                            itemId       : '_p30_formRecargoPF'
-                                            ,border      : 0
-                                            ,defaults    : { style : 'margin:5px;' }
-                                            ,items       : itemsRecargoPF
-                                            ,buttonAlign : 'center'
-                                            ,buttons     :
-                                            [
-                                                {
-                                                    itemId   : '_p30_botonAplicarRecargoPF'
-                                                    ,text    : 'Aplicar'
-                                                    ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                                                    ,handler : function(me)
-                                                    {
-                                                        if(me.up('form').getForm().isValid())
-                                                        {
-                                                        	me.up('window').hide();
-                                                        }
-                                                        else
-                                                        {
-                                                            mensajeWarning('Favor de verificar los datos');
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        })
-                                    ]
-                                })
-                            });
                     
                     _p30_formDescuento.loadRecord(new _p30_modelo(form.formOculto.getValues()));
                     _fieldById('_p30_formCesion').loadRecord(new _p30_modelo(form.formOculto.getValues()));
@@ -4915,14 +4827,10 @@ function _p30_cotizar(sinTarificar)
                             disabledDesc = true;
                         }
                     }
+                    _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
                     
                     if (disabledDesc === true && true === _p30_flujoAux.multiDesc) {
                         disabledDesc = false;
-                    }
-                    
-                    if(_p30_smap1.tipoflot != TipoFlotilla.Flotilla)
-                    {
-                      _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
                     }
                     
                     //bloquear comision
@@ -5091,15 +4999,6 @@ function _p30_cotizar(sinTarificar)
                                         ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
                                         ,text    : 'Cesi&oacute;n de comisi&oacute;n'
                                         ,handler : _p30_cesionClic
-                                    }
-                                    ,{
-                                        itemId   : '_p30_botonRecargoPF'
-                                        ,xtype   : 'button'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
-                                        ,text    : 'Recargo Pago Fraccionado'
-                                        ,tooltip : 'Aplicable solo para Flotillas'
-                                        ,disabled: true
-                                        ,handler : _p30_aplicaRecargoPF
                                     }
                                     ,{
                                         itemId    : '_p30_botonComprar'
@@ -5343,7 +5242,6 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p30_botonDetalles').setDisabled(true);
         _fieldById('_p30_botonCoberturas').setDisabled(true);
         _fieldById('_p30_botonComprar').setDisabled(true);
-        _fieldById('_p30_botonRecargoPF').setDisabled(true);
     }
     else
     {
@@ -5357,7 +5255,6 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p30_botonDetalles').setDisabled(false);
         _fieldById('_p30_botonCoberturas').setDisabled(false);
         _fieldById('_p30_botonComprar').setDisabled(false);
-        _fieldById('_p30_botonRecargoPF').setDisabled(_p30_smap1.tipoflot=='F'?false:true);
     }
 }
 
@@ -5367,14 +5264,6 @@ function _p30_cesionClic()
     _fieldById('_p30_formDescuento').windowCesion.show();
     centrarVentanaInterna(_fieldById('_p30_formDescuento').windowCesion);
     debug('<_p30_cesionClic');
-}
-
-function _p30_aplicaRecargoPF()
-{
-    debug('>_p30_PanelRecargoPFClic');
-    _fieldById('_p30_PanelRecargoPF').windowCesion.show();
-    centrarVentanaInterna(_fieldById('_p30_PanelRecargoPF').windowCesion);
-    debug('<_p30_PanelRecargoPFClic');
 }
 
 function _p30_editar()
@@ -5567,7 +5456,7 @@ function _p30_detalles()
 			               	nuevoElementoCoberturas = {
 			                        COBERTURA  :  'Total de Coberturas'
 			                       ,PRIMA      :  totalCoberturas+""
-			                       ,ORDEN      :  _p30_smap1.turistas=='S'?'580':'500'
+			                       ,ORDEN      :  '500'
 			                       ,TITULO     :  json.slist1[j].TITULO
 			                       ,CDRAMO     :  json.slist1[j].CDRAMO
 			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
@@ -5578,7 +5467,7 @@ function _p30_detalles()
 			                nuevoElementoGlobales = {
 			                        COBERTURA  : 'Total de Conceptos Globales'
 			                       ,PRIMA      :  totalGlobales+""
-			                       ,ORDEN      :  _p30_smap1.turistas=='S'?'998':'995'//999
+			                       ,ORDEN      :  '995'
 			                       ,TITULO     :  json.slist1[j].TITULO
 			                       ,CDRAMO     :  json.slist1[j].CDRAMO
 			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
@@ -5586,24 +5475,21 @@ function _p30_detalles()
 			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
 			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
 			                }
-			               	
-			               	if(_p30_smap1.turistas!='S')
-				                nuevoElementoTotal = {//quitar
-				                        COBERTURA: 'Total por Inciso'
-				                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
-				                       ,ORDEN      :  '999'
-				                       ,TITULO     :  json.slist1[j].TITULO
-				                       ,CDRAMO     :  json.slist1[j].CDRAMO
-				                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
-				                       ,ESTADO     :  json.slist1[j].ESTADO
-				                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
-				                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
-				                       }
+			                nuevoElementoTotal = {
+			                        COBERTURA: 'Total por Inciso'
+			                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
+			                       ,ORDEN      :  '999'
+			                       ,TITULO     :  json.slist1[j].TITULO
+			                       ,CDRAMO     :  json.slist1[j].CDRAMO
+			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
+			                       ,ESTADO     :  json.slist1[j].ESTADO
+			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
+			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
+			                       }
 			               	
 			               	json.slist1.push(nuevoElementoCoberturas);
 			                json.slist1.push(nuevoElementoGlobales);
-			                if(_p30_smap1.turistas!='S')
-			                	json.slist1.push(nuevoElementoTotal);
+			                json.slist1.push(nuevoElementoTotal);
 			               	
 			               	totalCoberturas = 0;
 			                totalGlobales = 0;
@@ -5629,9 +5515,8 @@ function _p30_detalles()
                             store    : Ext.create('Ext.data.Store',
                             {
                                 model       : '_p30_modeloDetalleCotizacion'
-                               // ,groupField : 'TITULO'
-                                //,groupDir	: 'DESC'
-                              /*  ,sorters    :
+                                ,groupField : 'TITULO'
+                                ,sorters    :
                                 [
                                     {
                                         sorterFn : function(o1,o2)
@@ -5644,41 +5529,7 @@ function _p30_detalles()
                                             return Number(o1.get('ORDEN')) < Number(o2.get('ORDEN')) ? -1 : 1;
                                         }
                                     }
-                                ]*/
-                                ,groupers: [{
-                                    property: 'TITULO',
-                                    sorterFn: function(o1, o2){
-                                    	debug(o1," # ",o2)
-                                    	try{
-                                        	if(_p30_smap1.turistas=='S'){
-                                        		var a=o1.get('TITULO'),
-                                        	 	b=o2.get('TITULO')
-                                        	 	
-                                            	a=Number(a.split("_")[0]);
-                                            	b=Number(b.split("_")[0]);
-                                            	if(a==0)
-                                            		a=99999;
-                                            	if(b==0)
-                                            		b=99999;
-                                            	
-                                            	if(a>b){
-                                            		return 1;
-                                            	}else if(a<b)
-                                            		return -1
-                                            		
-                                            	
-                                        	}
-                                        }catch(e){
-                                        	debugError(e)
-                                        }
-                                        debug('sorting:',o1,o2);
-                                        if (Number(o1.get('ORDEN')) == Number(o2.get('ORDEN')))
-                                        {
-                                            return 0;
-                                        }
-                                        return Number(o1.get('ORDEN')) < Number(o2.get('ORDEN')) ? -1 : 1;
-                                    }
-                                }]
+                                ]
                                 ,proxy      :
                                 {
                                     type    : 'memory'
@@ -5739,24 +5590,10 @@ function _p30_detalles()
                                         var sum = 0;
                                         for ( var i = 0; i < json.slist1.length; i++)
                                         {
-                                            if(json.slist1[i].COBERTURA == 'Total por Inciso' && _p30_smap1.turistas!='S'  )
+                                            if(json.slist1[i].COBERTURA == 'Total por Inciso')
                                             	{
                                             	   sum += parseFloat(json.slist1[i].PRIMA);
                                                 }
-                                            else if(json.slist1[i].COBERTURA =='Total de Coberturas' && _p30_smap1.turistas=='S'){
-                                            	sum += parseFloat(json.slist1[i].PRIMA);
-                                            }
-                                        }
-                                        try{
-                                        	if(_p30_smap1.turistas=='S')
-	                                        	json.slist1.forEach(function(it){
-	                                        		
-	                                        		if(Number(it.TITULO.split("_")[0])==0 && it.COBERTURA=='Total de Conceptos Globales'){
-	                                        			sum += parseFloat(it.PRIMA);
-	                                        		}
-	                                        	})
-                                        }catch(e){
-                                        	debugError(e)
                                         }
                                         this.setText('Total: '+ Ext.util.Format.usMoney(sum));
                                         this.callParent();
@@ -5914,7 +5751,6 @@ function _p30_comprar()
         ,'smap1.cdagenteExt'   : _p30_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue() : ''
         ,'smap1.flotilla'      : 'si'
         ,'smap1.tipoflot'      : _p30_smap1.tipoflot
-        ,'smap1.recargoPF'     : Ext.isEmpty(_fieldByName('otvalor.recargoPF',_fieldById('_p30_formRecargoPF')).getValue())?'0':_fieldByName('otvalor.recargoPF',_fieldById('_p30_formRecargoPF')).getValue()
     };
     
     if(!Ext.isEmpty(_p30_flujo))
@@ -7911,5 +7747,5 @@ function _p30_botonOnCotizarClic (me) {
 </script>
 <script type="text/javascript" src="${ctx}/js/proceso/emision/cotizacionAutoFlotillaScript.js?now=${now}"></script>
 </head>
-<body><div id="_p30_divpri" style="height:1500px;"></div></body>
+<body><div id="_p30_divpri" style="height:1200px;"></div></body>
 </html>
