@@ -5587,7 +5587,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 									logger.debug("resp ===> :{}",resp);
 									if(!(Integer.valueOf(resp) > 0)){
 										banderaValidacion = "1";
-										mensaje = msg.append(mensaje).append(" Siniestro ").append(siniestroIte.get("NMSINIES")).append(" sobrepasa l&iacute;mite permitido. Se requiere autorizaci&oacute;n especial por Excedente L&iacute;mite Medicamentos. <br/>").toString();
+										mensaje = msg.append(mensaje).append(" Siniestro ").append(siniestroIte.get("NMSINIES")).append(" sobrepasa l&iacute;mite permitido. Se requiere autorizaci&oacute;n especial por Excedente en L&iacute;mite. <br/>").toString();
 									}
 								}
 								catch(Exception ex) {
@@ -5598,7 +5598,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							}else{ //(EGS) fin
 								banderaValidacion = "1";
 								//mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el L&iacute;mite permitido. <br/>";
-								mensaje = msg.append(mensaje).append(" Siniestro ").append(siniestroIte.get("NMSINIES")).append(" sobrepasa l&iacute;mite permitido. Se requiere autorizaci&oacute;n especial por Excedente L&iacute;mite Medicamentos. <br/>").toString();
+								mensaje = msg.append(mensaje).append(" Siniestro ").append(siniestroIte.get("NMSINIES")).append(" sobrepasa l&iacute;mite permitido. Se requiere autorizaci&oacute;n especial por Excedente en L&iacute;mite. <br/>").toString();
 							}
 						}
 					}
