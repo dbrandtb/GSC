@@ -77,7 +77,7 @@ public class ClausuladoDAOImpl extends AbstractManagerDAO implements ClausuladoD
     protected class ObtieneClausulas extends StoredProcedure {
     	
     	protected ObtieneClausulas(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_obtiene_clausulas");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_obtiene_clausulas");
     		
     		declareParameter(new SqlParameter("pv_cdcla_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_descrip_i", OracleTypes.VARCHAR));
@@ -103,7 +103,7 @@ public class ClausuladoDAOImpl extends AbstractManagerDAO implements ClausuladoD
     protected class InsertaClausula extends StoredProcedure {
     	
     	protected InsertaClausula(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_INSERTA_CLAUSU");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_INSERTA_CLAUSU");
     		
     		declareParameter(new SqlParameter("pv_descrip_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_conten_i", OracleTypes.CLOB));
@@ -116,7 +116,7 @@ public class ClausuladoDAOImpl extends AbstractManagerDAO implements ClausuladoD
     protected class ActualizaClausula extends StoredProcedure {
     	
     	protected ActualizaClausula(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_ACTUALIZA_CLAUSU");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_ACTUALIZA_CLAUSU");
     		
     		declareParameter(new SqlParameter("pv_cdtipcla_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_descrip_i", OracleTypes.VARCHAR));
@@ -130,7 +130,7 @@ public class ClausuladoDAOImpl extends AbstractManagerDAO implements ClausuladoD
     protected class ConsultaDetalleClausula extends StoredProcedure {
     	
     	protected ConsultaDetalleClausula(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_obtiene_detalle_clausula");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_obtiene_detalle_clausula");
     		
     		declareParameter(new SqlParameter("pv_cdcla_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("vDslinea", OracleTypes.VARCHAR));

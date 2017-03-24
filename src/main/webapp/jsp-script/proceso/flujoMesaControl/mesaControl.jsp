@@ -1,4 +1,4 @@
-CDTIPSUP<%@ include file="/taglibs.jsp"%>
+<%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -724,7 +724,7 @@ Ext.onReady(function()
                                         ui     : 'footer',
                                         layout : {
                                             type    : 'table',
-                                            columns : 6
+                                            columns : 5
                                         },
                                         items : _cargarBotonesEntidad(
                                             record.get('CDTIPFLU'),
@@ -811,7 +811,7 @@ Ext.onReady(function()
             
             cdtiptraCmp.setValue(records[0].get('aux'));
             
-            //cdtipsupCmp.setValue(records[0].get('aux2'));
+            cdtipsupCmp.setValue(records[0].get('aux2'));
             
             if (records[0].get('aux3') === 'S') {
                 nmpolizaCmp.allowBlank      = false;

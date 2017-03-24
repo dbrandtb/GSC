@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -142,15 +141,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	@Autowired
 	private MesaControlManager mesaControlManager;
 
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-    
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-    
-    @Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-    
 	/**
 	* metodo para consultar la poliza en especifico
 	* @param unieco, Ramo, Estado, Nmpoliza, cdperson
@@ -319,12 +309,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						List<Map<String,String>> siniesxfactura = siniestrosManager.listaSiniestrosTramite2(params.get("pv_ntramite_i"),facturas.get(i).get("NFACTURA"));
 						
 						for(int a=0; a< siniesxfactura.size();a++){
-							String nmsini = siniesxfactura.get(a).get("NMSINIES") + ""; //(EGS)
-							if(!nmsini.equalsIgnoreCase("null")){ //(EGS)
-								siniestrosManager.getAltaSiniestroSinAutorizacion(msgResult,siniesxfactura.get(a).get("CDUNIECO"),siniesxfactura.get(a).get("CDRAMO"),
+							siniestrosManager.getAltaSiniestroSinAutorizacion(msgResult,siniesxfactura.get(a).get("CDUNIECO"),siniesxfactura.get(a).get("CDRAMO"),
 									siniesxfactura.get(a).get("ESTADO"),siniesxfactura.get(a).get("NMPOLIZA"),siniesxfactura.get(a).get("NMSUPLEM"),siniesxfactura.get(a).get("NMSITUAC"),
 									siniesxfactura.get(a).get("CDTIPSIT"),renderFechas.parse(siniesxfactura.get(a).get("FEOCURRE")),facturas.get(i).get("NFACTURA"), siniesxfactura.get(a).get("SECTWORKSIN"));
-							} //(EGS)
 						}
 					}
 					
@@ -790,7 +777,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				}
 			}
 			
-			File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
+			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
 			if(!carpeta.exists()){
 				logger.debug("no existe la carpeta : {}",paramsO.get("pv_ntramite_i"));
 				carpeta.mkdir();
@@ -803,19 +790,19 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				logger.debug("existe la carpeta :{}",paramsO.get("pv_ntramite_i"));
 			}
 			String urlContrareciboSiniestro = ""
-					+ rutaServidorReports
+					+ getText("ruta.servidor.reports")
 					+ "?p_usuario=" + usuario.getUser() 
 					+ "&p_ntramite=" + paramsO.get("pv_ntramite_i")
 					+ "&destype=cache"
 					+ "&desformat=PDF"
-					+ "&userid="+passServidorReports
+					+ "&userid="+getText("pass.servidor.reports")
 					+ "&ACCESSIBLE=YES"
 					+ "&report="+ nombreRdf
 					+ "&paramform=no"
 					;
 			String nombreArchivo = getText("pdf.siniestro.cartarechazo.nombre");
 			String pathArchivo=""
-					+ rutaDocumentosPoliza
+					+ getText("ruta.documentos.poliza")
 					+ "/" + paramsO.get("pv_ntramite_i")
 					+ "/" + nombreArchivo
 					;
@@ -1254,7 +1241,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				paramsO.putAll(params);
 				
 				//String nombreRdf = getText("rdf.siniestro.cartafiniquito.nombre");
-				File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
+				File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
 				if(!carpeta.exists()){
 					logger.debug("no existe la carpeta: {}",paramsO.get("pv_ntramite_i"));
 					carpeta.mkdir();
@@ -1275,7 +1262,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					}
 					
 					String urlFiniquitoSiniestro = ""
-							+ rutaServidorReports
+							+ getText("ruta.servidor.reports")
 							+ "?p_unieco=" + siniestro.getCdunieco() 
 							+ "&p_ramo="   + siniestro.getCdramo()
 							+ "&p_estado=" + siniestro.getEstado()
@@ -1287,14 +1274,14 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							+ "&p_sinies="+ siniestro.getNmsinies()
 							+ "&destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+passServidorReports
+							+ "&userid="+getText("pass.servidor.reports")
 							+ "&ACCESSIBLE=YES"
 							+ "&report="+ nombreRdf
 							+ "&paramform=no"
 							;
 					String nombreArchivo = siniestro.getNmsinies() +"_"+ siniestro.getAapertu() +"_" + getText("pdf.siniestro.finiquito.nombre");
 					String pathArchivo=""
-							+ rutaDocumentosPoliza
+							+ getText("ruta.documentos.poliza")
 							+ "/" + paramsO.get("pv_ntramite_i")
 							+ "/" + nombreArchivo
 							;
@@ -5428,7 +5415,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			paramsAutoriEspecial.put("pv_comments_i",params.get("comments"));
 			paramsAutoriEspecial.put("pv_cduser_i", usuario.getUser());
 			paramsAutoriEspecial.put("pv_ferecepc_i",fechaProcesamiento);
-			paramsAutoriEspecial.put("pv_val_lim_i", params.get("valLimite")); // (EGS)
 			msgResult = siniestrosManager.guardaListaAutorizacionEspecial(paramsAutoriEspecial);
 			logger.debug("Valor de Respuesta --->"+msgResult);
 			
@@ -5578,28 +5564,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						if(importeDisponible <=limite && +importePagarAsegurado <= importeDisponible){
 							
 						}else{
-							//(EGS) Para los que sobrepasan el limite permitido, revisamos si tienen autorizacion especial
-							StringBuilder msg = new StringBuilder();
-							if((siniestroIte.get("REQAUTES").equalsIgnoreCase("1") && Integer.valueOf(siniestroIte.get("NMAUTESP")) > 0)){
-								// Revisamos si la autorizacion especial es por excedente en límite de medicamentos
-								try{
-									String resp = siniestrosManager.validaAutEspLimMedi(siniestroIte.get("NMAUTESP"), params.get("ntramite"), factura.get("NFACTURA"), siniestroIte.get("CDUNIECO"), siniestroIte.get("CDRAMO"), siniestroIte.get("ESTADO"), siniestroIte.get("NMPOLIZA"), siniestroIte.get("NMSUPLEM"), siniestroIte.get("NMSITUAC"), siniestroIte.get("NMSINIES"));
-									logger.debug("resp ===> :{}",resp);
-									if(!(Integer.valueOf(resp) > 0)){
-										banderaValidacion = "1";
-										mensaje = msg.append(mensaje).append(" Siniestro ").append(siniestroIte.get("NMSINIES")).append(" sobrepasa l&iacute;mite permitido. Se requiere autorizaci&oacute;n especial por Excedente L&iacute;mite Medicamentos. <br/>").toString();
-									}
-								}
-								catch(Exception ex) {
-									success=false;
-									logger.error("Error al obtener facturas de tramite : {}", ex.getMessage(), ex);
-									mensaje=ex.getMessage();
-								}
-							}else{ //(EGS) fin
-								banderaValidacion = "1";
-								//mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el L&iacute;mite permitido. <br/>";
-								mensaje = msg.append(mensaje).append(" Siniestro ").append(siniestroIte.get("NMSINIES")).append(" sobrepasa l&iacute;mite permitido. Se requiere autorizaci&oacute;n especial por Excedente L&iacute;mite Medicamentos. <br/>").toString();
-							}
+							banderaValidacion = "1";
+							mensaje = mensaje + "El CR "+factura.get("NTRAMITE")+" la Factura " + factura.get("NFACTURA") + " del siniestro "+ siniestroIte.get("NMSINIES") + " sobrepasa el L�mite permitido. <br/>";							
 						}
 					}
 				}
@@ -6136,25 +6102,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 			logger.debug(mensaje);
 		}catch(Exception e){
 			logger.debug("Error durante la validacion de proveedor, pago directo",e.getMessage(),e);
-			success = false;
-			mensaje = "";
-		}
-		return SUCCESS;
-	}
-	
-	// (EGS)
-	public String actualizarReqautes(){	
-		logger.debug("Entra a actualizarReqautes {}", slist1);
-		logger.debug("Valor de mapa {}",smap);
-		try{
-			for(int i = 0; i < slist1.size(); i++){
-				mensaje = siniestrosManager.actualizarReqautes(slist1.get(i).get("REQAUTES"), smap.get("ntramite"), smap.get("nfactura"), slist1.get(i).get("CDUNIECO"), 
-													 slist1.get(i).get("CDRAMO"), slist1.get(i).get("ESTADO"), slist1.get(i).get("NMPOLIZA"), 
-													 slist1.get(i).get("NMSUPLEM"), slist1.get(i).get("NMSITUAC"), slist1.get(i).get("AAAPERTU"), 
-													 slist1.get(i).get("STATUS"), slist1.get(i).get("NMSINIES"));
-			}
-		}catch(Exception e){
-			logger.debug("Error en actualizarReqautes", e.getMessage(),e);
 			success = false;
 			mensaje = "";
 		}
@@ -6752,17 +6699,5 @@ public class SiniestrosAction extends PrincipalCoreAction {
 
 	public void setDatosValidacionGral(List<GenericVO> datosValidacionGral) {
 		this.datosValidacionGral = datosValidacionGral;
-	}
-	
-    public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
 	}
 }
