@@ -1969,7 +1969,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<ComponenteVO>tatripolAux = new ArrayList<ComponenteVO>();
 			for(ComponenteVO tatri:tatripol)
 			{
-				if("S".equals(tatri.getSwpresen()))
+				if("S".equals(tatri.getSwpresen()) || ("TL".equals(cdtipsit2) && ("F".equals(tatri.getCdcondicvis().trim()) || "C".equals(tatri.getCdcondicvis().trim())) ))
 				{
 					tatripolAux.add(tatri);
 				}
