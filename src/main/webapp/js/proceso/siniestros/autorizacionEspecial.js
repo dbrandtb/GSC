@@ -22,7 +22,6 @@ Ext.onReady(function() {
 			{type:'string',		name:'NMAUTESP'}, 			{type:'string',		name:'VALRANGO'},
 			{type:'string',		name:'VALCOBER'}, 			{type:'string',		name:'CDGARANT'},
 			{type:'string',		name:'COMMENTS'}
-		   ,{type:'string',		name:'VALEXCEDE'}	// (EGS)
         ]
 	});
 	
@@ -201,7 +200,7 @@ Ext.onReady(function() {
 					{   xtype: 'actioncolumn',      width: 40,          sortable: false,            menuDisabled: true,
 	                    items: [{
 	                        icon: _CONTEXT+'/resources/fam3icons/icons/application_edit.png',
-	                        tooltip: 'Generar Autorizaci\u00F3n Especial',	//(EGS)
+	                        tooltip: 'Editar Proveedor',
 	                        scope: this,
 	                        handler: _11_editar
 	                    }]
@@ -294,7 +293,6 @@ Ext.onReady(function() {
 			{    xtype : 'textfield',		fieldLabel : 'valRango',		name : 'valRango',				value:'0',		hidden:true		},
 			{    xtype : 'textfield',		fieldLabel : 'valGarant',		name : 'valGarant',				value:'0',		hidden:true		},
 			{    xtype : 'textfield',		fieldLabel : 'No. autorizacion',name : 'nmautespecial',			value:'0',		hidden:true		},
-			{	 xtype : 'textfield',		fieldLabel : 'valLimite',		name : 'valLimite',				value: 0,		hidden:true		}, // (EGS)
 			{
 				xtype: 'fieldcontainer',
 				colspan:2,
@@ -335,18 +333,6 @@ Ext.onReady(function() {
 				        	}
 				        },
 				        coberturaAfectada
-				        ,{xtype: 'checkbox', id: 'genCheckboxC', name: 'genCheckboxC', boxLabel: 'Excedente en L&iacute;mite', hideLabel: true, //(EGS)
-				        	listeners: {
-				        		change: function(){
-				        			debug("Change Excedente medicamentos");
-				        			if(Ext.getCmp('genCheckboxC').getValue() == true){
-				        				panelConfiguracion.down('[name="valLimite"]').setValue("1");
-				        			}else{
-				        				panelConfiguracion.down('[name="valLimite"]').setValue("0");
-				        			}
-				        		}
-				        	}
-				        } // fin (EGS)
 			        ]
 			},
 			comentarios
@@ -359,7 +345,7 @@ Ext.onReady(function() {
     		handler: function() {
 				var form = this.up('form').getForm();
     			if (form.isValid()){
-    				if(Ext.getCmp('genCheckboxA').getValue() == false && Ext.getCmp('genCheckboxB').getValue() == false && Ext.getCmp('genCheckboxC').getValue() == false){	//(EGS) agregamos tercer condición
+    				if(Ext.getCmp('genCheckboxA').getValue() == false && Ext.getCmp('genCheckboxB').getValue() == false){
         				Ext.Msg.show({
 	                    	title:'Datos incompletos',
 	                    	msg: 'Seleccione al menos un motivo para la confirmaci&oacute;n de autorizaci&oacute;n especial.',
@@ -489,15 +475,6 @@ Ext.onReady(function() {
 	        panelConfiguracion.down('[name="valGarant"]').setValue("0");
 	        Ext.getCmp('genCheckboxB').setValue(false);
 	    }
-	    // (EGS)
-	    if(_11_recordActivo.get('VALEXCEDE') > 0){
-	    	Ext.getCmp('genCheckboxC').setValue(true);
-	    	panelConfiguracion.down('[name="valLimite"]').setValue("1");
-	    }else{
-	    	Ext.getCmp('genCheckboxC').setValue(false);
-	    	panelConfiguracion.down('[name="valLimite"]').setValue("0");
-	    }
-	    // fin (EGS)
 		modPolizasAltaTramite.show();
 		centrarVentanaInterna(modPolizasAltaTramite);
 	}

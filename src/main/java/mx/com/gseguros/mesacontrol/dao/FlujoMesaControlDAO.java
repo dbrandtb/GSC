@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.mesacontrol.dao.impl.FlujoMesaControlDAOImpl;
-import mx.com.gseguros.mesacontrol.model.FlujoVO;
 
 public interface FlujoMesaControlDAO {
 
@@ -555,7 +554,7 @@ public interface FlujoMesaControlDAO {
 			)throws Exception;
 	
 	public String ejecutaValidacion(String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac,
-            String nmsuplem, String cdvalidafk, String cdusuari, String cdsisrol, String cdvalida) throws Exception;
+			String nmsuplem, String cdvalidafk, String cdusuari, String cdsisrol, String cdvalida) throws Exception;
 	
 	public List<Map<String,String>>cargarAccionesEntidad(
 			String cdtipflu
@@ -981,8 +980,4 @@ public interface FlujoMesaControlDAO {
     public void cambiarTipoEndosoTramite (String ntramite, String cdtipsup) throws Exception;
     
     public String recuperarCorreoAgenteTramite (String ntramite) throws Exception;
-    
-    public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception;
-    
-    public String obtenerSuplementoTramite(String ntramite)throws Exception;
 }
