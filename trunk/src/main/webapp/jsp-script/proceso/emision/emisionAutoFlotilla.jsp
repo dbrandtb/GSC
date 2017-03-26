@@ -948,7 +948,7 @@ function _p31_guardar(callback)
     
     if(valido)
     {
-        valido = _fieldByName('_p22_formBusqueda').hidden;
+        valido = _fieldByName('_p22_formBusqueda').isValid();
         if(!valido)
         {
             mensajeWarning('Falta registrar un cliente');
