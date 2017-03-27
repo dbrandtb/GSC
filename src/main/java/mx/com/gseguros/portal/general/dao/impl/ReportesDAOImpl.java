@@ -341,7 +341,7 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     
     protected class ExportaTablaApoyo extends StoredProcedure {
     	protected ExportaTablaApoyo(DataSource dataSource) {
-    		super(dataSource,"PKG_TABAPOYO.P_EXPORTA_TABLA_APOYO");
+    		super(dataSource,"PKG_TABAPOYO_PRE.P_EXPORTA_TABLA_APOYO");
     		declareParameter(new SqlParameter("pv_cdreporte_i"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_usuario_i"     , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_cdtabla"       , OracleTypes.VARCHAR));
