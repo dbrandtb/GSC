@@ -2963,6 +2963,18 @@ function _p28_cotizar(sinTarificar)
                     }
                     ///////////////// DXN /////////////////////////////
                     
+                    //// FORMAS DE PAGO PARA TURISTAS INICIO
+					try{
+						if(TipoSituacion.TuristaLicencia== _p28_smap1.cdtipsit || TipoSituacion.TuristaVehiculo==_p28_smap1.cdtipsit){
+							formasPago=turistasFormaPago(_fieldByName('feini').getValue()
+    								,_fieldByName('fefin').getValue()
+    								,formasPago)
+						}
+					}catch(e){
+						debugError(e)
+					}                    	
+                    //// FORMAS DE PAGO PARA TURISTAS FIN
+                    
                     /////// FILTRO PARA LOS PLANES DE COTIZACION
                     var columnas = Ext.decode(json.smap1.columnas);
                     try{
@@ -7092,6 +7104,28 @@ function _p28_botonOnCotizarClic (me) {
     } catch (e) {
         manejaException(e, ck);
     }
+}
+
+function turistasFormaPago(feini,fefin,listFP){
+	try{
+		var date1 = feini;
+		var date2 = fefin;
+		var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+		var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+		var fp=[];
+		if(diffDays<=365){
+			listFP.forEach(function(it){
+				if(it.CDPERPAG==FormaPago.ANUAL || it.CDPERPAG==FormaPago.CONTADO){
+					fp.push(it)
+					return;
+				}
+			})
+			return fp;
+		}
+	}catch(e){
+		debugError(e)
+	}
+	return listFP;
 }
 
 ////// funciones //////

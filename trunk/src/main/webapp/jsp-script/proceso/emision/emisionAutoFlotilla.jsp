@@ -1075,6 +1075,26 @@ function _p31_mostrarVistaPrevia()
                                     sorterFn : function(o1,o2)
                                     {
                                         debug('sorting:',o1,o2);
+                                        try{
+                                        	if(_p31_smap1.cdtipsit2=='TL'){
+                                        		var a=o1.get('TITULO'),
+                                        	 	b=o2.get('TITULO')
+                                        	 	
+                                            	a=Number(a.split("_")[0]);
+                                            	b=Number(b.split("_")[0]);
+                                            	if(a==0)
+                                            		a=99999;
+                                            	if(b==0)
+                                            		b=99999;
+                                            	
+                                            	if(a>b){
+                                            		return 1;
+                                            	}else if(a<b)
+                                            		return -1
+                                        	}
+                                        }catch(e){
+                                        	debugError(e)
+                                        }
                                         if (o1.get('COBERTURA') == o2.get('COBERTURA'))
                                         {
                                             return 0;
