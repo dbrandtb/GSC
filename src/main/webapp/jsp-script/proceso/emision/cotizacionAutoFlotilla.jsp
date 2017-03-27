@@ -4949,6 +4949,10 @@ function _p30_cotizar(sinTarificar)
 	                    		if(!FormaPago.esDxN(it.CDPERPAG))
 	                    			formasPago.push(it);
 	                    	});
+	                    	
+	                    	formasPago=turistasFormaPago(_fieldByName('feini').getValue()
+	                    								,_fieldByName('fefin').getValue()
+	                    								,formasPago)
                     	}else{
                     		formasPago=json.slist1;
                     	}
@@ -5590,23 +5594,21 @@ function _p30_detalles()
 			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
 			                }
 			               	
-			               	if(_p30_smap1.turistas!='S')
-				                nuevoElementoTotal = {//quitar
-				                        COBERTURA: 'Total por Inciso'
-				                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
-				                       ,ORDEN      :  '999'
-				                       ,TITULO     :  json.slist1[j].TITULO
-				                       ,CDRAMO     :  json.slist1[j].CDRAMO
-				                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
-				                       ,ESTADO     :  json.slist1[j].ESTADO
-				                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
-				                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
-				                       }
+			                nuevoElementoTotal = {
+			                        COBERTURA: 'Total por Inciso'
+			                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
+			                       ,ORDEN      :  '999'
+			                       ,TITULO     :  json.slist1[j].TITULO
+			                       ,CDRAMO     :  json.slist1[j].CDRAMO
+			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
+			                       ,ESTADO     :  json.slist1[j].ESTADO
+			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
+			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
+			                       }
 			               	
 			               	json.slist1.push(nuevoElementoCoberturas);
 			                json.slist1.push(nuevoElementoGlobales);
-			                if(_p30_smap1.turistas!='S')
-			                	json.slist1.push(nuevoElementoTotal);
+			                json.slist1.push(nuevoElementoTotal);
 			               	
 			               	totalCoberturas = 0;
 			                totalGlobales = 0;
@@ -5615,7 +5617,15 @@ function _p30_detalles()
 			                ordenIva = 900;
                      }
 	            }
-
+               debug('### antes:',json.slist1);
+               if(_p30_smap1.turistas=='S'){
+	               json.slist1.forEach(function(it,idx,arr){
+	            	   if(Number(it.PRIMA)==0){
+	            		   arr.splice(idx, 1)
+	            	   }
+	               })
+               }
+               debug('### despues:',json.slist1);
                debug('### detalles:',json);
                               
                centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -7353,7 +7363,7 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit)
                        RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
                       )
                     {
-                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                        var agenteCmp  = _fieldByLabel('AGENTE'  , _fieldById('_p30_form'));
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
                         agenteCmp.forceSelection=false;
                         negocioCmp.forceSelection=false;
@@ -7380,7 +7390,7 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit)
                         RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
                        )
                     {
-                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                        var agenteCmp  = _fieldByLabel('AGENTE'  , _fieldById('_p30_form'));
                         agenteCmp.getStore().load(
                         {
                             params :
@@ -7389,7 +7399,7 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit)
                             }
                             ,callback : function()
                             {
-                                var agenteCmp  = _fieldLikeLabel('AGENTE' , _fieldById('_p30_form'));
+                                var agenteCmp  = _fieldByLabel('AGENTE', _fieldById('_p30_form'));
                                 //agenteCmp.select(agenteCmp.getValue());
                                 agenteCmp.forceSelection=true;
                                 var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
@@ -7469,7 +7479,7 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit)
                         RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
                       )
                     {
-                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                        var agenteCmp  = _fieldByLabel('AGENTE' , _fieldById('_p30_form'));
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
                         agenteCmp.forceSelection=false;
                         negocioCmp.forceSelection=false;
@@ -7496,7 +7506,7 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit)
                           RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
                        )
                     {
-                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                        var agenteCmp  = _fieldByLabel('AGENTE' , _fieldById('_p30_form'));
                         agenteCmp.getStore().load(
                         {
                             params :
@@ -7505,7 +7515,7 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit)
                             }
                             ,callback : function()
                             {
-                                var agenteCmp  = _fieldLikeLabel('AGENTE' , _fieldById('_p30_form'));
+                                var agenteCmp  = _fieldByLabel('AGENTE', _fieldById('_p30_form'));
                                 //agenteCmp.select(agenteCmp.getValue());
                                 agenteCmp.forceSelection=true;
                                 var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
@@ -7908,6 +7918,28 @@ function _p30_botonOnCotizarClic (me) {
     } catch (e) {
         manejaException(e, ck);
     }
+}
+
+function turistasFormaPago(feini,fefin,listFP){
+	try{
+		var date1 = feini;
+		var date2 = fefin;
+		var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+		var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+		var fp=[];
+		if(diffDays<=365){
+			listFP.forEach(function(it){
+				if(it.CDPERPAG==FormaPago.ANUAL || it.CDPERPAG==FormaPago.CONTADO){
+					fp.push(it)
+					return;
+				}
+			})
+			return fp;
+		}
+	}catch(e){
+		debugError(e);
+	}
+	return listFP;
 }
 ////// funciones //////
 <%-- include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" --%>
