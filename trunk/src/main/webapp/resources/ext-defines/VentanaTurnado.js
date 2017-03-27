@@ -183,7 +183,7 @@ Ext.define('VentanaTurnado',
                                                                     ,acciones[0].WEBIDDEST
                                                                     ,acciones[0].AUX
                                                                     ,win.config.ntramite
-                                                                    ,win.config.aux
+                                                                    ,String(win.config.aux).split('|')[0] //por si viene: 13|MATKAA|SUSCRIAUTO
                                                                     ,win.config.cdunieco
                                                                     ,win.config.cdramo
                                                                     ,win.config.estado
