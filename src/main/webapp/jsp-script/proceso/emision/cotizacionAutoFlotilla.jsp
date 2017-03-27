@@ -5076,6 +5076,7 @@ function _p30_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
                                         ,disabled : true
                                         ,handler  : _p30_enviar
+                                        ,hidden	  : _p30_smap1.turistas=='S'
                                     }
                                     ,{
                                         itemId    : '_p30_botonImprimir'
@@ -5084,6 +5085,7 @@ function _p30_cotizar(sinTarificar)
                                         ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
                                         ,disabled : true
                                         ,handler  : _p30_imprimir
+                                        ,hidden	  : _p30_smap1.turistas=='S'
                                     }
                                     ,{
                                         itemId   : '_p30_botonCesion'
@@ -5091,6 +5093,7 @@ function _p30_cotizar(sinTarificar)
                                         ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
                                         ,text    : 'Cesi&oacute;n de comisi&oacute;n'
                                         ,handler : _p30_cesionClic
+                                        ,hidden	  : _p30_smap1.turistas=='S'
                                     }
                                     ,{
                                         itemId   : '_p30_botonRecargoPF'

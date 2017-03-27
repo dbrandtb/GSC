@@ -398,8 +398,9 @@ Ext.onReady(function()
 								    ,style        : 'background:#223772;'
 								    ,buttonConfig :
 								    {
-								        text  : 'Cargar layout complementario...'
-								        ,icon : '${ctx}/resources/fam3icons/icons/book_next.png'
+								        text   : 'Cargar layout complementario...'
+								        ,icon  : '${ctx}/resources/fam3icons/icons/book_next.png'
+								        ,hidden: _p31_smap1.cdtipsit2==TipoSituacion.TuristaLicencia
 								    }
 								    ,listeners :
 								    {
