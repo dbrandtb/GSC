@@ -49,12 +49,13 @@ Ext.create('Ext.grid.Panel', {
     title: 'Consulta de ECDs por Asegurado',
     store: _p34_storePolizas,
     columns: [
-        { text: 'ICD',  dataIndex: 'CDICD' },
-        { text: 'Perfil de ICD', dataIndex: 'PERFIL' },
-        { text: 'Diagn\u00f3stico', dataIndex: 'DSICD' }
+        { text: 'ICD',  dataIndex: 'CDICD', width: '20%'},
+        { text: 'Perfil de ICD', dataIndex: 'PERFIL', width: '20%'},
+        { text: 'Diagn\u00f3stico', dataIndex: 'DSICD', width: '60%'}
     ],
     height: 300,
-    width: 350,
+    width: 750,
+    //forceFit: true,
     renderTo: "_p999_divpri"
 });
     

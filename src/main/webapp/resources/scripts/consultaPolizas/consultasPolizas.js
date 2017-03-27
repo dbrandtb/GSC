@@ -1083,7 +1083,7 @@ Ext.onReady(function() {
 			cellclick: function ( grd, td, cellIndex, record, tr, rowIndex, e, eOpts ) {
 				//debug('>cellclick ', ' td ', td, ' cellInde ', cellIndex, ' tr ', tr, ' rowIndex ', rowIndex , ' e ', e);
 				debug('>cellclick ');
-				if (cellIndex==7){	
+				if (cellIndex==7){//7 es la columna donde se visualiza la informacion del perfil medico	
 					
 	                var record = grd.getStore().getAt(rowIndex);
 	                debug('record cdperson ==> :',record, 'cdperson: ', record.get('cdperson'));
@@ -2242,10 +2242,7 @@ Ext.onReady(function() {
     	var me = this;
         debug("values ", values, "nombre ", nombre, "this ", this);
         var urlRequestViewRep = _URL_CONSULTA_ICDS + '?params.cdperson=' + values['params.cdperson'];
-        //+ '?destype=cache'
-        //+ '&p_cdperson='      + values['params.cdperson'];
         debug(urlRequestViewRep);
-        //Perfil medico: solo para probar
 
     	// Se crea ventana para mostrar el detalle del asegurado:
     	Ext.create('Ext.window.Window',
@@ -2253,7 +2250,7 @@ Ext.onReady(function() {
                                             title        : 'E.C.D.'
                                             //,modal       : true
                                             ,buttonAlign : 'center'
-                                            ,width       : 350
+                                            ,width       : 800
                                             ,height      : 300
                                             ,autoScroll  : true
                                             ,loader      :

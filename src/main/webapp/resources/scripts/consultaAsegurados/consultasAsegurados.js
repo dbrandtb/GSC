@@ -1439,7 +1439,7 @@ Ext.onReady(function() {
                                             title        : 'E.C.D.'
                                             //,modal       : true
                                             ,buttonAlign : 'center'
-                                            ,width       : 350
+                                            ,width       : 800
                                             ,height      : 300
                                             ,autoScroll  : true
                                             ,loader      :
