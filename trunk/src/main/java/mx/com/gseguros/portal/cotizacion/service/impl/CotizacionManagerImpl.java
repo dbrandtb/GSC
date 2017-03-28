@@ -3327,6 +3327,39 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                    {
 	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(12)),"-"));
 	                    }
+                        
+                        try {
+                            auxCell = row.getCell(13);
+                            String valor = "";
+                            if (auxCell != null && auxCell.getStringCellValue() !=null && StringUtils.isNotBlank(auxCell.getStringCellValue())) {
+                                valor = auxCell.getStringCellValue();
+                                if (!"S".equals(valor) && !"C".equals(valor)) {
+                                    throw new ApplicationException(Utils.join("Solo se permite S o C en estado civil N", fila));
+                                }
+                            }
+                            logger.debug(Utils.join("ESTADO CIVIL: ", valor, "|"));
+                            bufferLinea.append(Utils.join(valor, "|"));
+                        } catch (Exception ex) {
+                            filaBuena = false;
+                            bufferErroresCenso.append(Utils.join("Error en el campo 'Estado civil' (N) de la fila ",fila," "));
+                        } finally {
+                            bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(13)),"-"));
+                        }
+                        
+                        try {
+                            auxCell = row.getCell(14);
+                            String valor = "";
+                            if (auxCell !=null) {
+                                valor = String.format("%.0f",auxCell.getNumericCellValue());
+                            }
+                            logger.debug(Utils.join("NUMERO DE DEPENDIENTES: ", valor, "|"));
+                            bufferLinea.append(Utils.join(valor, "|"));
+                        } catch (Exception ex) {
+                            filaBuena = false;
+                            bufferErroresCenso.append(Utils.join("Error en el campo 'Numero de dependientes' (O) de la fila ",fila," "));
+                        } finally {
+                            bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(14)),"-"));
+                        }
 		                
 		                bufferLinea.append("\n");
 		                logger.debug("** NUEVA_FILA **");
@@ -6238,6 +6271,21 @@ public class CotizacionManagerImpl implements CotizacionManager
                         bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(30)),"-"));
                     }
 	                /* nuevos para SSI fin */
+
+                    try {
+                        auxCell = row.getCell(31);
+                        String valor = "";
+                        if (auxCell !=null) {
+                            valor = String.format("%.0f",auxCell.getNumericCellValue());
+                        }
+                        logger.debug(Utils.join("NUMERO DE DEPENDIENTES: ", valor, "|"));
+                        bufferLinea.append(Utils.join(valor, "|"));
+                    } catch (Exception ex) {
+                        filaBuena = false;
+                        bufferErroresCenso.append(Utils.join("Error en el campo 'Numero de dependientes' (AF) de la fila ",fila," "));
+                    } finally {
+                        bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(31)),"-"));
+                    }
 	                
 	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
