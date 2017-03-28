@@ -1191,6 +1191,7 @@ Ext.onReady(function()
                                         ,defaultType : 'radiofield'
                                         ,defaults    : { style : 'margin : 5px;' }
                                         ,layout      : 'hbox'
+                                        ,hidden      : _p25_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba
                                         ,items       :
                                         [
                                             {
