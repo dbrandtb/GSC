@@ -165,10 +165,11 @@ public class RecibosManagerImpl implements RecibosManager {
         try{
             paso = "Antes de desconsolidar recibos";
             String usuario = user.getUser().toString();
-            for(Map<String, String> recibo:lista){
-                recibosDAO.desconsolidarRecibos(cdunieco, cdramo, estado, nmpoliza, usuario, recibo.get("folio"));
-                actualizarFolioSIGS(cdunieco, cdramo, estado, nmpoliza, recibo.get("nmrecibo"), user, lista);
-            }
+//            for(Map<String, String> recibo:lista){
+//                logger.debug(Utils.log("\n@@@@@@ recibo : lista @@@@@@", recibo));
+//                recibosDAO.desconsolidarRecibos(cdunieco, cdramo, estado, nmpoliza, usuario, lista.get(0).get("folio"));
+                actualizarReciboSIGS(cdunieco, cdramo, estado, nmpoliza, user, lista);
+//            }
         }
         catch(Exception ex){
             Utils.generaExcepcion(ex, paso);
@@ -204,6 +205,7 @@ public class RecibosManagerImpl implements RecibosManager {
                 String ntramite = map.get("ntramite");
                 paso = "Antes de obtener info para SIGS";
                 infoRecibos = recibosDAO.obtenerInfoRecibos(cdunieco, cdramo, estado, nmpoliza, nmrecibo, nmsuplem);
+                logger.debug("Operacion "+infoRecibos.size());
                 paso = "logueando info recibos";
                 logger.debug(infoRecibos);
                 paso = "Antes de recorrer info recibos";
@@ -220,14 +222,6 @@ public class RecibosManagerImpl implements RecibosManager {
                     Utils.log("rmdbrn",reciboWrap.getRecibo().getRmdbRn());                    
                     ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdunieco, ntramite, false, user, reciboWrap);
                 }
-                /*for(Map<String, String> mapa:infoRecibos){
-                    paso = "Antes de cast ReciboWrapper";
-                    ReciboWrapper reciboWrap = (ReciboWrapper) mapa;
-                    reciboWrap.setOperacion(String.valueOf(Operacion.ACTUALIZA));
-                    reciboWrap.getRecibo().setRmdbRn(Integer.parseInt(rmdbRn));
-                    Utils.log("rmdbrn",reciboWrap.getRecibo().getRmdbRn());
-                    logger.debug(reciboWrap.getRecibo());
-                }*/
             }
             paso = "Actualizando informacion de recibos en SIGS";
         }
@@ -236,6 +230,43 @@ public class RecibosManagerImpl implements RecibosManager {
         }
     }
 
+    @Override
+    public void actualizarReciboSIGS(String cdunieco, String cdramo, String estado, String nmpoliza, UserVO user, List<Map<String, String>> lista) throws Exception{
+        String paso = "";
+        List<Map<String, String>> infoRecibos = new ArrayList<Map<String,String>>();
+        try{
+            paso = "Obteniendo informacion de recibos";
+            for(Map<String, String> map : lista){
+                String nmrecibo = map.get("nmrecibo");
+                String nmsuplem = map.get("nmsuplem");
+                String ntramite = map.get("ntramite");
+                paso = "Antes de obtener info para SIGS";
+                infoRecibos = recibosDAO.obtenerInfoRecibos(cdunieco, cdramo, estado, nmpoliza, nmrecibo, nmsuplem);
+                logger.debug("Operacion "+infoRecibos.size());
+                paso = "logueando info recibos";
+                logger.debug(infoRecibos);
+                paso = "Antes de recorrer info recibos";
+                Utils.log(paso);
+                for(int i = 0; i < infoRecibos.size(); i++){
+                    paso = "Antes de cast ReciboWrapper";
+                    Utils.log(paso);
+                    ReciboWrapper reciboWrap = (ReciboWrapper) infoRecibos.get(i);
+                    reciboWrap.setOperacion(String.valueOf(Operacion.ACTUALIZA));
+                    reciboWrap.getRecibo().setRmdbRn(Integer.parseInt(nmrecibo));
+                    logger.debug("Operacion "+reciboWrap.getOperacion());
+                    logger.debug("rmdbrn "+reciboWrap.getRecibo().getRmdbRn());
+                    Utils.log("Operacion",reciboWrap.getOperacion());
+                    Utils.log("rmdbrn",reciboWrap.getRecibo().getRmdbRn());                    
+                    ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdunieco, ntramite, false, user, reciboWrap);
+                }
+            }
+            paso = "Actualizando informacion de recibos en SIGS";
+        }
+        catch(Exception ex){
+            Utils.generaExcepcion(ex, paso);
+        }
+    }
+    
     @Override
     public InputStream obtenerDatosReporte(String cdunieco, String cdramo, String estado, String nmpoliza, String[] lista) throws Exception {
         String paso = "";
