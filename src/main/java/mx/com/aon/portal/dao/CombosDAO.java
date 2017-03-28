@@ -53,7 +53,7 @@ public class CombosDAO extends AbstractDAO{
     protected class ComboCargaMasiva extends CustomStoredProcedure {
 
         protected ComboCargaMasiva(DataSource dataSource) {
-            super(dataSource, "PKG_LISTAS.P_LISTA_CARGA_MASIVA");
+            super(dataSource, "PKG_LISTAS_PRE.P_LISTA_CARGA_MASIVA");
 
             declareParameter(new SqlParameter("pv_cdregion_i", OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_cdpais_i", OracleTypes.VARCHAR));
@@ -82,7 +82,7 @@ public class CombosDAO extends AbstractDAO{
     protected class ComboTipoCancelacion extends CustomStoredProcedure {
 
         protected ComboTipoCancelacion(DataSource dataSource) {
-            super(dataSource, "PKG_LISTAS.P_LISTA_TCATALOG");
+            super(dataSource, "PKG_LISTAS_PRE.P_LISTA_TCATALOG");
 
 
             declareParameter(new SqlParameter("pv_cdtabla_i", OracleTypes.VARCHAR));
@@ -133,7 +133,7 @@ public class CombosDAO extends AbstractDAO{
     protected class ComboRolFuncionalidades extends CustomStoredProcedure {
 
         protected ComboRolFuncionalidades(DataSource dataSource) {
-            super(dataSource, "PKG_LISTAS.P_ROLES_X_NIVEL");
+            super(dataSource, "PKG_LISTAS_PRE.P_ROLES_X_NIVEL");
 
             declareParameter(new SqlParameter("pv_cdelemento_i", OracleTypes.VARCHAR));
 
@@ -160,7 +160,7 @@ public class CombosDAO extends AbstractDAO{
     protected class ComboUsuarioFuncionalidades extends CustomStoredProcedure {
 
         protected ComboUsuarioFuncionalidades(DataSource dataSource) {
-            super(dataSource, "PKG_LISTAS.P_USUARIO_X_NIVELROL");
+            super(dataSource, "PKG_LISTAS_PRE.P_USUARIO_X_NIVELROL");
 
             declareParameter(new SqlParameter("pv_cdelemento_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdrol_i", OracleTypes.VARCHAR));
@@ -521,7 +521,7 @@ public class CombosDAO extends AbstractDAO{
     protected class ComboCodigoPostal extends CustomStoredProcedure {
 
         protected ComboCodigoPostal(DataSource dataSource) {
-            super(dataSource, "PKG_LISTAS.P_OBTIENE_CODPOS");
+            super(dataSource, "PKG_LISTAS_PRE.P_OBTIENE_CODPOS");
             declareParameter(new SqlParameter("pv_cdpais_i", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ComboCodigoPostalMapper()));
             declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
@@ -594,7 +594,7 @@ public class CombosDAO extends AbstractDAO{
     protected class ComboObtienePoliza extends CustomStoredProcedure {
 
         protected ComboObtienePoliza(DataSource dataSource) {
-            super(dataSource, "PKG_LISTAS.P_OBTIENE_NMPOLIEX");
+            super(dataSource, "PKG_LISTAS_PRE.P_OBTIENE_NMPOLIEX");
           
             declareParameter(new SqlParameter("pv_cdunieco_i",OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_cdramo_i",OracleTypes.NUMERIC));

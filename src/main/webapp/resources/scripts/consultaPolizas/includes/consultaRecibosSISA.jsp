@@ -225,7 +225,8 @@ Ext.onReady(function(){
                                 itemId   : 'btnConsolidar',
                                 text     : 'Consolidar',
                                 disabled : true,
-                                hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
+                                //hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
+                                hidden   : true,
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');                                    
                                     consolidarRecibos(obtenerDataSelected(gridRecibos));                                    
@@ -236,7 +237,8 @@ Ext.onReady(function(){
                                 itemId   : 'btnDesconsolidar',
                                 text     : 'Desconsolidar',
                                 disabled : true,
-                                hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
+                                //hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
+                                hidden   : true,
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');
                                     desconsolidarRecibos(obtenerDataSelected(gridRecibos));
@@ -422,7 +424,7 @@ Ext.onReady(function(){
     }
     
     function obtenerDataSelected(grid){
-        debug('>obtenerDataSelected',grid);
+        debug('>obtenerDataSelected');
         var seleccionados = grid.getSelectionModel().getSelection();
         debug('grid',seleccionados);
         var listaRecibos = [];
@@ -501,7 +503,7 @@ Ext.onReady(function(){
         gridRecibos = _fieldById('gridRecibos');
         try{
             for(var s in gridRecibos.store.data.items){
-                var rec = gridRecibos.store.getAt(s).raw;
+                var rec = gridRecibos.store.getAt(s).data;
                 //debug('rec',rec);
                 if(folio === rec['folio']){
                     debug('rec',rec);

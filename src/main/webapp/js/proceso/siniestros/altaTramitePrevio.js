@@ -338,7 +338,7 @@ Ext.onReady(function() {
                             var datosExtras = Ext.decode(response.responseText);
                             if(Ext.decode(response.responseText).datosInformacionAdicional != null){
                                 var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
-
+                                
                                 if(cveCauSini.REQVALIDACION =="S"){
                                     //Visualizamos el campo
                                     panelInicialPral.down('[name=idCveBeneficiario]').show();
@@ -348,7 +348,7 @@ Ext.onReady(function() {
                                     panelInicialPral.down('[name=idCveBeneficiario]').setValue('0');
                                     panelInicialPral.down('[name=idCveBeneficiario]').hide();
                                 }
-
+                                
                                 limpiarRegistrosTipoPago(e.getValue());
                                 if(panelInicialPral.down('combo[name=cmbOficReceptora]').getValue() == "1104"){
                                     panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
@@ -594,7 +594,7 @@ Ext.onReady(function() {
     ////////////////   DECLARACION DE EDITOR DE INCISOS  ////////////
     ///////////////////////////////////////////////////////////////*/
 
-    //1.- GRID´S PARA EL PAGO DIRECTO
+    //1.- GRIDï¿½S PARA EL PAGO DIRECTO
     Ext.define('EditorFacturaDirecto', {
         extend: 'Ext.grid.Panel',
         name:'editorFacturaDirecto',
@@ -693,7 +693,7 @@ Ext.onReady(function() {
         }
     });
     gridFacturaDirecto=new EditorFacturaDirecto();
-    //2.- GRID´S PARA EL PAGO REEMBOLSO
+    //2.- GRIDï¿½S PARA EL PAGO REEMBOLSO
     Ext.define('EditorFacturaReembolso', {
         extend: 'Ext.grid.Panel',
         name:'editorFacturaReembolso',
@@ -852,7 +852,7 @@ Ext.onReady(function() {
         }
     });
     gridFacturaReembolso =new EditorFacturaReembolso();
-    //3.- GRID´S PARA EL PAGO INDEMNIZATORIO GMMI
+    //3.- GRIDï¿½S PARA EL PAGO INDEMNIZATORIO GMMI
     Ext.define('EditorPagoIndemnizatorio', {
         extend: 'Ext.grid.Panel',
         name:'editorPagoIndemnizatorio',
@@ -1007,7 +1007,7 @@ Ext.onReady(function() {
         }
     });
     gridPagoIndemnizatorio =new EditorPagoIndemnizatorio();
-    //4.- GRID´S PARA EL PAGO INDEMNIZATORIO RECUPERA
+    //4.- GRIDï¿½S PARA EL PAGO INDEMNIZATORIO RECUPERA
     Ext.define('EditorPagoIndemnizatorioRecupera', {
         extend: 'Ext.grid.Panel',
         name:'editorPagoIndemnizatorioRecupera',
@@ -1149,7 +1149,7 @@ Ext.onReady(function() {
     });
     gridPagoIndemnizatorioRecupera =new EditorPagoIndemnizatorioRecupera();
     
-    /* PANEL PARA LA BUSQUEDA DE LA INFORMACIÓN DEL ASEGURADO PARA LA BUSQUEDA DE LAS POLIZAS */
+    /* PANEL PARA LA BUSQUEDA DE LA INFORMACIï¿½N DEL ASEGURADO PARA LA BUSQUEDA DE LAS POLIZAS */
     gridPolizasAltaTramite= Ext.create('Ext.grid.Panel', {
         id            : 'polizaGridAltaTramite',
         store         : storeListadoPoliza,
@@ -1203,7 +1203,7 @@ Ext.onReady(function() {
 		                         if(Ext.decode(response.responseText).validacionGeneral =="V"){
 			                        if( (valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
 			                            if( valorFechaOcurrencia >= valorFechaAltaAsegurado ){
-			                                    //cumple la condición la fecha de ocurrencia es menor igual a la fecha de alta de tramite
+			                                    //cumple la condiciï¿½n la fecha de ocurrencia es menor igual a la fecha de alta de tramite
 			                                    panelInicialPral.down('[name="cdunieco"]').setValue(record.get('cdunieco'));
 			                                    panelInicialPral.down('[name="estado"]').setValue(record.get('estado'));
 			                                    panelInicialPral.down('[name="cdramo"]').setValue(record.get('cdramo'));
@@ -1218,7 +1218,7 @@ Ext.onReady(function() {
 			                                    panelInicialPral.down('[name="txtAutEspecial"]').setValue("0");
 			                                    modPolizasAltaTramite.hide();
 			                            }else{
-			                                // No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
+			                                // No se cumple la condiciï¿½n la fecha de ocurrencia es mayor a la fecha de alta de tramite
 			                                Ext.Msg.show({
 			                                    title:'Error',
 			                                    msg: 'La fecha de ocurrencia es mayor a la fecha de alta del asegurado',

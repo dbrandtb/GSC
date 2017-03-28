@@ -118,14 +118,9 @@ public enum RecuperacionSimple
 	,RECUPERAR_DESPACHADOR_DATOS_USUARIOS                    ("L")
     ,RECUPERAR_DESPACHADOR_DATOS_USER_ALL_X_ROL              ("L")
     ,RECUPERAR_DESPACHADOR_DATOS_ZONA                        ("L")
-    ,RECUPERAR_ENDOSOS_SINIESTRALIDAD                        ("L")
-    ,RECUPERAR_ENDOSOS_SINIESTRALIDAD_REHA                   ("L")
     ,RECUPERAR_CORREO_AGENTE_TRAMITE                         ("M")
     ,RECUPERAR_HISTORIAL_TRAMITE                             ("L")
     ,RECUPERAR_DETALLES_TRAMITE                              ("L")
-    ,VALIDA_RENOVACION_COLECTIVO                             ("L")
-    ,RENOVAR_X_FECHAS_COLECTIVOS                             ("L")
-    ,RECUPERAR_RANGO_DESCUENTO_RECARGO                       ("M")
 	;
 	 
 	private String tipo;
