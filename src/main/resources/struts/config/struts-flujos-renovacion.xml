@@ -63,10 +63,5 @@
         <action name="validateValueExclusion" class="renovacionAction" method="validateValueExclusion">
             <result type="json" />
         </action>
-        
-        <action name="renovarColectivos" class="renovacionAction" method="renovacionIndividual">
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/renovacion/renovacionColectiva.jsp</result>
-        </action>
     </package>
 </struts>
