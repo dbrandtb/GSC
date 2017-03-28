@@ -422,7 +422,7 @@ Ext.onReady(function(){
     }
     
     function obtenerDataSelected(grid){
-        debug('>obtenerDataSelected');
+        debug('>obtenerDataSelected',grid);
         var seleccionados = grid.getSelectionModel().getSelection();
         debug('grid',seleccionados);
         var listaRecibos = [];
@@ -501,7 +501,7 @@ Ext.onReady(function(){
         gridRecibos = _fieldById('gridRecibos');
         try{
             for(var s in gridRecibos.store.data.items){
-                var rec = gridRecibos.store.getAt(s).data;
+                var rec = gridRecibos.store.getAt(s).raw;
                 //debug('rec',rec);
                 if(folio === rec['folio']){
                     debug('rec',rec);
