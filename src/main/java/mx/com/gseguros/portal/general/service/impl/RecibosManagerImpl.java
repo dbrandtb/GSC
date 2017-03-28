@@ -165,9 +165,7 @@ public class RecibosManagerImpl implements RecibosManager {
         try{
             paso = "Antes de desconsolidar recibos";
             String usuario = user.getUser().toString();
-//            for(Map<String, String> recibo:lista){
-//                logger.debug(Utils.log("\n@@@@@@ recibo : lista @@@@@@", recibo));
-//                recibosDAO.desconsolidarRecibos(cdunieco, cdramo, estado, nmpoliza, usuario, lista.get(0).get("folio"));
+                recibosDAO.desconsolidarRecibos(cdunieco, cdramo, estado, nmpoliza, usuario, lista.get(0).get("folio"));
                 actualizarReciboSIGS(cdunieco, cdramo, estado, nmpoliza, user, lista);
 //            }
         }
