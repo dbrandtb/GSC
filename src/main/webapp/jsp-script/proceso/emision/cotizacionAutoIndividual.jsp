@@ -7113,7 +7113,7 @@ function turistasFormaPago(feini,fefin,listFP){
 		var timeDiff = Math.abs(date2.getTime() - date1.getTime());
 		var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
 		var fp=[];
-		if(diffDays<=365){
+		if(diffDays<365){
 			listFP.forEach(function(it){
 				if(it.CDPERPAG==FormaPago.ANUAL || it.CDPERPAG==FormaPago.CONTADO){
 					fp.push(it)

@@ -1451,8 +1451,8 @@ function _p31_emitirFinal(me)
             ,'panel1.pv_nmpoliza'     : _p31_smap1.nmpoliza
             ,'panel2.pv_nmpoliza'     : _p31_smap1.nmpoliza
             ,'panel2.pv_cdtipsit'     : _p31_smap1.cdtipsit
-            ,'panel1.flotilla'        : 'si'
-            ,'panel1.tipoGrupoInciso' : 'C'
+            ,'panel1.flotilla'        : _p31_smap1.cdtipsit2=='TL'?null:'si'
+            ,'panel1.tipoGrupoInciso' : _p31_smap1.cdtipsit2=='TL'?null:'C'
         }
         ,success:function(response)
         {
