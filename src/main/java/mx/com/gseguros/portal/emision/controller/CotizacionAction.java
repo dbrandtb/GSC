@@ -14317,7 +14317,7 @@ public class CotizacionAction extends PrincipalCoreAction
                         celda.setValue(celdatrim);
                     }
                 }
-                logger.debug("Valores de pantalla sin espacios creado. ");
+                logger.debug("Valores de pantalla sin espacios creado.");
                 
                 while (rowIterator.hasNext()) 
                 {   //filaVista  >>>   olist1.get(fila)
@@ -14343,7 +14343,7 @@ public class CotizacionAction extends PrincipalCoreAction
                            }
                            row.getCell(0).setCellValue(clveVeh);row.getCell(4).setCellValue(modelo);row.getCell(6).setCellValue(valorVeh);row.getCell(9).setCellValue(serie);
                            row.getCell(3).setCellValue(String.format(row.getCell(3).toString()).trim());
-                           
+                    //valida datos ingresados previamente con los de lay out ingresado       
                     if(    !olistMod.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.MOTOS.getCdtipsit())//Clave no aplicable para motos 
                         && !olistMod.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())//Ni autos fonterizos
                         && !olistMod.get(fila).containsValue(row.getCell(0).toString())) //Clave Vehiculo
@@ -14363,79 +14363,85 @@ public class CotizacionAction extends PrincipalCoreAction
 //                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente  en el inciso "+(fila+1)+" en el numero de serie "+row.getCell(9).toString();
 //                        exito           = false;   break;
 //                    }
-                    
-                    logger.debug("El excel introducido, coincide en el inciso numero: "+fila);
+                    //Obliga a tener los siguientes datos
+                    logger.debug("El excel introducido, coincide en el inciso numero: "+(fila+1));
                     if(row.getCell(10) == null || row.getCell(10).toString().equals(""))// Numero de motor
-                    {   respuesta       ="Favor de introducir numero de motor en el inciso "+(fila)+" en el layout a ingresado";
+                    {   respuesta       ="Favor de introducir numero de motor en el inciso "+(fila+1)+" en el layout a ingresado";
                         exito           = false;   break;
                     }if(row.getCell(11) == null || row.getCell(11).toString().equals(""))// Placas
-                    {   respuesta       ="Favor de introducir placas en el inciso "+(fila)+" en el layout a ingresado";
+                    {   respuesta       ="Favor de introducir placas en el inciso "+(fila+1)+" en el layout a ingresado";
                         exito           = false;   break;   
-                    }if(row.getCell(12) == null || row.getCell(12).toString().equals(""))// Conductor 
-                    {   respuesta       ="Favor de introducir conductor en el inciso "+(fila)+" en el layout a ingresado";
-                        exito           = false;   break;
-                    }if(row.getCell(9) == null)                               // Numero se Serie
-                    {   respuesta       ="Favor de introducir beneficiario en el inciso "+(fila)+" en el layout a ingresado";
-                        exito           = false;   break;
                     }
-//                    if(row.getCell(13) == null)                               // Beneficiario
+//                    if(row.getCell(12) == null || row.getCell(12).toString().equals(""))// Conductor 
+//                    {   respuesta       ="Favor de introducir conductor en el inciso "+(fila+1)+" en el layout a ingresado";
+//                        exito           = false;   break;
+//                    }if(row.getCell(13) == null)                               // Beneficiario
 //                    {   respuesta       ="Favor de introducir beneficiario en el inciso "+(fila)+" en el layout a ingresado";
 //                        exito           = false;   break;
 //                    }
                     
-                    respuesta = "Actualizando valores complementariosen el inciso: "+(fila);
-                    
-                    //Motor
-                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
-                    {   olist1.get(fila).put("parametros.pv_otvalor27",row.getCell(10).toString());
-                    }else{
-                        olist1.get(fila).put("parametros.pv_otvalor38",row.getCell(10).toString());
+                    respuesta = "Actualizando valores complementarios en el inciso: "+(fila);
+                    if(row.getCell(10)!=null)
+                    {//Motor
+	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+	                    {   olist1.get(fila).put("parametros.pv_otvalor27",row.getCell(10).toString());
+	                    }else{
+	                        olist1.get(fila).put("parametros.pv_otvalor38",row.getCell(10).toString());
+	                    }
                     }
-                    //Placas
-                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
-                    {   olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(11).toString());
-                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
-                        olist1.get(fila).put("parametros.pv_otvalor35",row.getCell(11).toString());
-                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
-                        olist1.get(fila).put("parametros.pv_otvalor28",row.getCell(11).toString());
-                    }else{
-                        olist1.get(fila).put("parametros.pv_otvalor39",row.getCell(11).toString());
+                    if(row.getCell(11)!=null)
+                    {//Placas
+		                if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
+		                {   olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(11).toString());
+		                }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
+		                    olist1.get(fila).put("parametros.pv_otvalor35",row.getCell(11).toString());
+		                }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+		                    olist1.get(fila).put("parametros.pv_otvalor28",row.getCell(11).toString());
+		                }else{
+		                    olist1.get(fila).put("parametros.pv_otvalor39",row.getCell(11).toString());
+		                }
                     }
-                    //Conductor
-                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
-                    {   olist1.get(fila).put("parametros.pv_otvalor44",row.getCell(12).toString());
-                    }else{
-                        olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(12).toString());
+                    if(row.getCell(12)!=null)
+                    {//Conductor
+	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+	                    {   olist1.get(fila).put("parametros.pv_otvalor44",row.getCell(12).toString());
+	                    }else{
+	                        olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(12).toString());
+	                    }
                     }
-                    //BENEFICIARIO PREFERENTE
-                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.REMOLQUES_INDISTINTOS.getCdtipsit()))
-                    {   olist1.get(fila).put("parametros.pv_otvalor25",row.getCell(13).toString());
-                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
-                        olist1.get(fila).put("parametros.pv_otvalor37",row.getCell(13).toString());
-                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit())){
-                        olist1.get(fila).put("parametros.pv_otvalor47",row.getCell(13).toString());
-                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit())){
-                        olist1.get(fila).put("parametros.pv_otvalor49",row.getCell(13).toString());
-                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())){
-                        olist1.get(fila).put("parametros.pv_otvalor53",row.getCell(13).toString());
-                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())){
-                        olist1.get(fila).put("parametros.pv_otvalor56",row.getCell(13).toString());
-                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
-                        olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(13).toString());
-                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.TURISTA_LICENCIA.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.TURISTA_VEHICULO.getCdtipsit())){
-                        olist1.get(fila).put("parametros.pv_otvalor41",row.getCell(13).toString());
-                    }else{
-                        olist1.get(fila).put("parametros.pv_otvalor42",row.getCell(13).toString());
+                    if(row.getCell(13)!=null)
+                    {//BENEFICIARIO PREFERENTE
+	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.REMOLQUES_INDISTINTOS.getCdtipsit()))
+	                    {   olist1.get(fila).put("parametros.pv_otvalor25",row.getCell(13).toString());
+	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
+	                        olist1.get(fila).put("parametros.pv_otvalor37",row.getCell(13).toString());
+	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit())){
+	                        olist1.get(fila).put("parametros.pv_otvalor47",row.getCell(13).toString());
+	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit())){
+	                        olist1.get(fila).put("parametros.pv_otvalor49",row.getCell(13).toString());
+	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())){
+	                        olist1.get(fila).put("parametros.pv_otvalor53",row.getCell(13).toString());
+	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())){
+	                        olist1.get(fila).put("parametros.pv_otvalor56",row.getCell(13).toString());
+	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+	                        olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(13).toString());
+	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.TURISTA_LICENCIA.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.TURISTA_VEHICULO.getCdtipsit())){
+	                        olist1.get(fila).put("parametros.pv_otvalor41",row.getCell(13).toString());
+	                    }else{
+	                        olist1.get(fila).put("parametros.pv_otvalor42",row.getCell(13).toString());
+	                    }
                     }
-                    //NUMERO DE SERIE
-                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
-                    {   if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor03",row.getCell(9).toString());}
-                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
-                    	if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor33",row.getCell(9).toString());}
-                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
-                    {   if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor35",row.getCell(9).toString());}
-                    }else{
-                    	if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor37",row.getCell(9).toString());}
+                    if(row.getCell(9)!=null)
+                    {//NUMERO DE SERIE
+	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+	                    {   if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor03",row.getCell(9).toString());}
+	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
+	                    	if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor33",row.getCell(9).toString());}
+	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
+	                    {   if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor35",row.getCell(9).toString());}
+	                    }else{
+	                    	if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor37",row.getCell(9).toString());}
+	                    }
                     }
                     fila++;                    
                 }
