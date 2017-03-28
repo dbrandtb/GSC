@@ -2457,19 +2457,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 							)
 					{
 						EmisionAutosVO aux=null;
-						try{
 							
-							aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
-							edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite,cdtipsit , us);
+						aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
+						edoPoliza, nmpolizaEmitida, nmsuplemEmitida, ntramite,cdtipsit , us);
+					
+						success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex());
+						retryWS = !success;
 						
-							success = aux!=null && StringUtils.isNotBlank(aux.getNmpoliex()) && !"0".equals(aux.getNmpoliex());
-							retryWS = !success;
-						}catch(Exception ex)
-						{
-							logger.error("error en el pl de emitir",ex);
-							mensajeRespuesta = ex.getMessage()!=null?ex.getMessage().trim().equals("")?"Error en el Web Service para emitir":ex.getMessage():"Error en el Web Service para emitir";
-							success          = false;
-						}
 						
 						
 						if(success)
@@ -2505,7 +2499,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 							}
 							
 						}else {
-							//mensajeRespuesta = "Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza";
+							mensajeRespuesta = "Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza";
 						}
 						
 						if(!success){
