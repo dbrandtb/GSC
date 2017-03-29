@@ -174,7 +174,36 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 		Integer resp = null;
 		Map<String, Object> mapResult = ejecutaSP(new ConfirmaRecibosAuto(getDataSource()), params);
 		resp = (Integer) mapResult.get("rs");
-		
+		if(resp!=0 || resp==null){
+			String cod="Error desconocido";
+			if(resp!=null)
+				switch(resp){
+					case 1:
+						cod="Poliza no existe";
+						break;
+					case 2:
+						cod="Total de recibos no concuerda con forma de pago";
+						break;
+					case 3:
+						cod="Total de prima neta de recibos no cuadra con total de poliza";
+						break;
+					case 4:
+						cod="Total de iva de recibos no cuadra con total de poliza";
+						break;
+					case 5:
+						cod="Total de recargo  de recibos no cuadra con total de poliza";
+						break;
+					case 6:
+						cod="Total de derechos de recibos no cuadra con total de poliza";
+						break;
+					case 7:
+						cod="Existe Error en vigencia de recibos vs vigencia de poliza";
+						break;
+					default:
+						cod="Error desconocido";
+				}
+			throw new ApplicationException(Utils.join("Error en spValidaEmisionSigs, respuesta: ",resp," - ",cod));
+		}
 	
 		return resp;
 	}
