@@ -30,7 +30,7 @@
 }
 
 .rosa-row .x-grid-cell { 
-    background-color: #FBF8EF; 
+    background-color: #F5A9A9; 
     color: #900; 
 }
 
@@ -702,6 +702,13 @@ Ext.onReady(function(){
                         fieldLabel  : 'Generado(Fuera de vigencia)',
                         labelWidth  : 160,
                         fieldStyle  : 'background-color: #FFFFFF; background-image: none; width:150px;'
+                    },
+                    {
+                        xtype       : 'textfield',
+                        name        : 'fieldDespagoId',
+                        fieldLabel  : 'Despago',
+                        labelWidth  : 160,
+                        fieldStyle  : 'background-color: #F5A9A9; background-image: none; width:150px;'
                     }
                 ],
                 buttons     : [{
