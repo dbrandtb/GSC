@@ -789,6 +789,23 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
+    try{
+	    if( _p28_smap1.cdtipsit==TipoSituacion.TuristaVehiculo){
+	    	_fieldLikeLabel('VALOR VEH').on(
+	    			{
+	    				change:function(me,n,v){ 
+		    					if(me.maximoTotal<n ){ 
+		    						me.setValue(v); 
+		    						mensajeWarning('Valor m&aacute;ximo '+me.maximoTotal)
+		    					}  
+	    			
+	    					}
+	    				}
+	    			)
+	    }
+    }catch(e){
+    	debugError(e);
+    }
     
     //dxn
     
@@ -2372,7 +2389,7 @@ Ext.onReady(function()
     ////// loaders //////
     _p28_cargarConfig();
     
-    if('|AR|CR|PC|PP|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')!=-1)
+    if('|AR|CR|PC|PP|TV|'.lastIndexOf('|'+_p28_smap1.cdtipsit+'|')!=-1)
     {
         debug('@CUSTOM valor max');
         var valorCmp = _fieldLikeLabel('VALOR VEH');
