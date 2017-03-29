@@ -685,7 +685,7 @@ Ext.onReady(function(){
                     {
                         xtype       : 'textfield',
                         name        : 'fieldGeneradoId',
-                        fieldLabel  : 'Generado',
+                        fieldLabel  : 'Devuelto',
                         labelWidth  : 160,
                         fieldStyle  : 'background-color: #F3F781; background-image: none; width:150px;'
                     },
@@ -699,7 +699,7 @@ Ext.onReady(function(){
                     {
                         xtype       : 'textfield',
                         name        : 'fieldGeneradoNoId',
-                        fieldLabel  : 'Generado(Fuera de vigencia)',
+                        fieldLabel  : 'Generado(Fuera de vigor)',
                         labelWidth  : 160,
                         fieldStyle  : 'background-color: #FFFFFF; background-image: none; width:150px;'
                     },
