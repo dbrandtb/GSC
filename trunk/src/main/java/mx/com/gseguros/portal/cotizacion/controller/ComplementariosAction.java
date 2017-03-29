@@ -2505,7 +2505,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 							}
 							
 						}else {
-							mensajeRespuesta = "Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza";
+							if(StringUtils.isBlank(mensajeRespuesta))
+								mensajeRespuesta = "Error en el Web Service de emisi\u00f3n. No se pudo emitir la p\u00f3liza";
 						}
 						
 						if(!success){
