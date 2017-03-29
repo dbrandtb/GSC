@@ -43,8 +43,8 @@ var _p29_urlObtieneValNumeroSerie           = '<s:url namespace="/emision"      
 var MontoMaximo = 0;
 var MontoMinimo = 0;
 
-var _p30_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p30_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 
@@ -4206,7 +4206,8 @@ function _p30_cotizar(sinTarificar)
     	   !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
 //     	   (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
     	   )
-    	{	
+    	{
+    		
     		var ncamiones = 0;
             var ntractocamiones = 0;
             var nsemiremolques = 0;
@@ -4847,7 +4848,7 @@ function _p30_cotizar(sinTarificar)
                                         if(_p30_smap1.tipoflot == TipoFlotilla.Flotilla)
                                         {
                                           modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formDescuento'))[0].lastValue;
-                                        }    
+                                        } 
                                         _p30_cotizar(modPrim);
                                     }
                                     else
@@ -4918,14 +4919,10 @@ function _p30_cotizar(sinTarificar)
                             disabledDesc = true;
                         }
                     }
+                    //                     _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
                     
                     if (disabledDesc === true && true === _p30_flujoAux.multiDesc) {
                         disabledDesc = false;
-                    }
-                    
-                    if(_p30_smap1.tipoflot != TipoFlotilla.Flotilla)
-                    {
-                      _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
                     }
                     
                     //bloquear comision
@@ -5597,21 +5594,23 @@ function _p30_detalles()
 			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
 			                }
 			               	
-			                nuevoElementoTotal = {
-			                        COBERTURA: 'Total por Inciso'
-			                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
-			                       ,ORDEN      :  '999'
-			                       ,TITULO     :  json.slist1[j].TITULO
-			                       ,CDRAMO     :  json.slist1[j].CDRAMO
-			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
-			                       ,ESTADO     :  json.slist1[j].ESTADO
-			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
-			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
-			                       }
+			               	
+				                nuevoElementoTotal = {
+				                        COBERTURA: 'Total por Inciso'
+				                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
+				                       ,ORDEN      :  '999'
+				                       ,TITULO     :  json.slist1[j].TITULO
+				                       ,CDRAMO     :  json.slist1[j].CDRAMO
+				                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
+				                       ,ESTADO     :  json.slist1[j].ESTADO
+				                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
+				                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
+				                       }
 			               	
 			               	json.slist1.push(nuevoElementoCoberturas);
 			                json.slist1.push(nuevoElementoGlobales);
-			                json.slist1.push(nuevoElementoTotal);
+			                
+			                	json.slist1.push(nuevoElementoTotal);
 			               	
 			               	totalCoberturas = 0;
 			                totalGlobales = 0;
