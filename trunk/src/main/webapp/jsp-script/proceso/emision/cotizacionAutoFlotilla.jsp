@@ -304,6 +304,7 @@ _p30_gridCols.push(
             ,icon    : '${ctx}/resources/fam3icons/icons/cog.png'
             ,iconBkp : '${ctx}/resources/fam3icons/icons/cog.png'
             ,handler : _p30_gridBotonConfigClic
+            ,disabled	 : _p30_smap1.turistas=='S'
         }
         ,{
             tooltip  : 'Eliminar'
@@ -1643,8 +1644,9 @@ Ext.onReady(function()
 	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).allowBlank=true;
 	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).isValid();
 	    	_fieldByLabel("MONEDA").setValue("2");
-	    	_fieldByLabel('DERECHO AGENTE',_fieldById("_p30_fieldsetTatripol"),true).setMargin('0 0 0 15')
-	    	_fieldById("fsPanel1").insert(Ext.ComponentQuery.query("#fsPanel1>[xtype]").length-2,_fieldByLabel('DERECHO AGENTE',_fieldById("_p30_fieldsetTatripol"),true))
+	    	_fieldByLabel("MONEDA").setReadOnly(true);
+	    	_fieldByLabel('DERECHO AGENTE',_fieldById("_p30_fieldsetTatripol"),true).setMargin('0 0 0 15');
+	    	_fieldById("fsPanel1").insert(Ext.ComponentQuery.query("#fsPanel1>[xtype]").length-2,_fieldByLabel('DERECHO AGENTE',_fieldById("_p30_fieldsetTatripol"),true));
     	}
     }catch(e){
     	debugError(e)
