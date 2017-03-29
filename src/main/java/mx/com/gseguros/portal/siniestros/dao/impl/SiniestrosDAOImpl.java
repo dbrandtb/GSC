@@ -704,8 +704,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 	protected class GuardaListaTDeTautsSP extends StoredProcedure {
 
 		protected GuardaListaTDeTautsSP(DataSource dataSource) {
-			//super(dataSource, "PKG_PRESINIESTRO.P_GUARDA_TDETAUTS"); ESTA ES LA LINEA CORRECTA. SE COMENTA SOLO POR PRUEBAS. YA ESTA EN REPOSITORIO VERSION. 6027
-			super(dataSource, "P_GUARDA_TDETAUTS");
+			super(dataSource, "PKG_PRESINIESTRO.P_GUARDA_TDETAUTS");
 			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipaut_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdmedico_i", OracleTypes.VARCHAR));
