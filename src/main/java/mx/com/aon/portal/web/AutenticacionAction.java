@@ -16,7 +16,6 @@ import org.apache.struts2.dispatcher.SessionMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -40,12 +39,6 @@ public class AutenticacionAction extends PrincipalCoreAction {
 	private boolean success;
 	private String errorMessage;
 
-	@Value("${login.auth.ldap.activa}")
-    private String loginAuthLdapActiva;	
-	
-	@Value("${login.modo.agregar.usuarios.ldap}")
-    private String loginModoAgregarUsuariosLdap;	
-	
 	public String execute() throws Exception {
 		logger.debug("Entrando a execute");
 		return INPUT;
@@ -67,7 +60,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		/**
 		 * Si es true agrega los usuarios en LDAP si ya existen previamente en BD (flujo temporal), <br/> false si solo autentica en LDAP y BD (flujo correcto)
 		 */
-		if(new Boolean(loginModoAgregarUsuariosLdap)){
+		if(new Boolean(getText("login.modo.agregar.usuarios.ldap"))){
 			logger.debug("Autentificacion,entrando a modo Agregar Usuarios a LDAP");
 			return autenticaUsuarioAgregaLDAP();
 		}
@@ -77,7 +70,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		try {
 			
 			boolean existeUsuario = true;
-			if(new Boolean(loginAuthLdapActiva)){
+			if(new Boolean(getText("login.auth.ldap.activa"))){
 				existeUsuario = loginManager.validaUsuarioLDAP(false, user, password); 
 			}
 			if (existeUsuario) {
@@ -342,19 +335,12 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		return params;
 	}
 
+
 	public void setParams(Map<String, String> params) {
 		this.params = params;
 	}
 
 	public mx.com.gseguros.portal.general.service.NavigationManager getNavigationManagerNuevo() {
 		return navigationManagerNuevo;
-	}
-	
-	public String getLoginAuthLdapActiva() {
-		return loginAuthLdapActiva;
-	}
-
-	public String getLoginModoAgregarUsuariosLdap() {
-		return loginModoAgregarUsuariosLdap;
 	}
 }
