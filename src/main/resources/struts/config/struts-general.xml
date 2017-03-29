@@ -142,6 +142,10 @@
         <action name="obtenerBitacoraConsolidacion" class="recibosAction" method="obtenerBitacoraConsolidacion">
             <result type="json"/>
         </action>
+        
+        <action name="obtenerLigaRecibo" class="recibosAction" method="obtenerLigaRecibo">
+            <result type="json"/>
+        </action>
 	</package>
 	
 </struts>

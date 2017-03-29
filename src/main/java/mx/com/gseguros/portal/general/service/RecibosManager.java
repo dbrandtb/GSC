@@ -53,4 +53,17 @@ public interface RecibosManager {
 	public InputStream obtenerReporteRecibos(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 	
 	public List<Map<String, String>> obtenerBitacoraConsolidacion(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+	
+	public void generaDocumentoReciboConsolidado(
+            String cdunieco, 
+            String cdramo, 
+            String estado, 
+            String nmpoliza, 
+            String nmsuplem, 
+            String nmsolici, 
+            String ntramite,
+            String nmimpres,
+            String folio) throws Exception;
+	
+	public String obtenerLigaRecibo(String cdunieco, String cdramo, String estado, String nmpoliza, String folio) throws Exception;
 }
