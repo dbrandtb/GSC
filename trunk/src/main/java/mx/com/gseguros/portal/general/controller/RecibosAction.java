@@ -333,6 +333,33 @@ public class RecibosAction extends PrincipalCoreAction {
         return SUCCESS;
     }
     
+    public String obtenerLigaRecibo() throws Exception{
+        logger.debug(Utils.log(
+                "\n###########################################"
+               ,"\n###### obtenerLigaRecibo ######"
+               ,"\n###### params=",params
+               ));
+        try{
+            Utils.validate(params,   "No se recibieron parametros");
+            String cdunieco = params.get("cdunieco");
+            String cdramo   = params.get("cdramo");
+            String estado   = params.get("estado");
+            String nmpoliza = params.get("nmpoliza");
+            String folio    = params.get("nmfolcon");
+            Utils.validate(cdunieco, "No se recibio la oficina",
+                           cdramo,   "No se recibio el producto",
+                           estado,   "No se recibio el estado",
+                           nmpoliza, "No se recibio la poliza",
+                           folio,    "No se recibio el folio de consolidacion");        
+            respuesta = recibosManager.obtenerLigaRecibo(cdunieco, cdramo, estado, nmpoliza, folio);
+            exito = true;
+        }
+        catch(Exception ex){
+            exito = false;
+            Utils.manejaExcepcion(ex);
+        }
+        return SUCCESS;
+    }
     
 	// Getters and setters:
 	public Map<String, String> getParams() {

@@ -158,6 +158,8 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
                     "nsuplogi",
                     "cdtipsup",
                     "dstipsup",
+                    "nmsolici",
+                    "swdespago",
                     "consecutivo"
             };
             declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -525,6 +527,63 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
             declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public void borrarDocumentoReciboConsolidado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmfolio) throws Exception{
+        Map<String, Object> params = new HashMap<String, Object>();   
+        params.put("pv_cdunieco_i", cdunieco);
+        params.put("pv_cdramo_i",   cdramo);
+        params.put("pv_estado_i",   estado);
+        params.put("pv_nmpoliza_i", nmpoliza);
+        params.put("pv_nmfolcon_i", nmfolio);
+        ejecutaSP(new BorrarDocumentoReciboConsolidado(getDataSource()), params);
+        logger.debug(Utils.log(
+                "\n###########################################",
+                "\n###### borrarDocumentoReciboConsolidado ######"
+               ));
+    }
+        
+    protected class BorrarDocumentoReciboConsolidado extends StoredProcedure {
+        protected BorrarDocumentoReciboConsolidado(DataSource dataSource) {
+            super(dataSource,"PKG_RECIBOS_SISA_SIGS.P_BORRAR_TDOCUPOL_RECIBO");
+            declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmfolcon_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public String obtenerLigaRecibo(String cdunieco, String cdramo, String estado, String nmpoliza, String folio) throws Exception{
+        Map<String,Object> params = new LinkedHashMap<String,Object>();
+        params.put("cdunieco", cdunieco);
+        params.put("cdramo"  , cdramo);
+        params.put("estado"  , estado);
+        params.put("nmpoliza", nmpoliza);
+        params.put("nmfolcon", folio);
+        Map<String,Object> procResult = ejecutaSP(new ObtenerLigaRecibo(getDataSource()),params);
+        String liga                  = procResult.get("pv_liga_o").toString();
+        return liga;
+    }
+    
+    protected class ObtenerLigaRecibo extends StoredProcedure{
+        protected ObtenerLigaRecibo(DataSource dataSource){
+            super(dataSource,"PKG_RECIBOS_SISA_SIGS.P_OBTENER_LIGA_RECIBO_CON");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmfolcon" , OracleTypes.VARCHAR));            
+            declareParameter(new SqlOutParameter("pv_liga_o"    , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
             compile();
         }
     }

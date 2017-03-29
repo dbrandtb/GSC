@@ -46,4 +46,8 @@ public interface RecibosDAO {
 	public InputStream obtenerReporteRecibos(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 	
 	public List<Map<String, String>> obtenerBitacoraConsolidacion(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+	
+	public void borrarDocumentoReciboConsolidado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmfolio) throws Exception;
+	
+	public String obtenerLigaRecibo(String cdunieco, String cdramo, String estado, String nmpoliza, String folio) throws Exception;	
 }

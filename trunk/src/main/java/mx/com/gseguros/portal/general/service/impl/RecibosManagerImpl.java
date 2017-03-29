@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.general.service.impl;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +10,16 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
+import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.dao.RecibosDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -22,7 +27,10 @@ import mx.com.gseguros.portal.general.model.DetalleReciboVO;
 import mx.com.gseguros.portal.general.model.ReciboVO;
 import mx.com.gseguros.portal.general.service.RecibosManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.renovacion.service.impl.RenovacionManagerImpl;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.impl.AutosSIGSDAOImpl.EjecutaVidaPorRecibo;
@@ -30,6 +38,8 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Operacion;
+import mx.com.gseguros.ws.ice2sigs.service.impl.Ice2sigsServiceImpl;
+import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
 public class RecibosManagerImpl implements RecibosManager {
 
@@ -42,6 +52,15 @@ public class RecibosManagerImpl implements RecibosManager {
 	
 	@Autowired
 	private Ice2sigsService ice2sigsService;
+	
+	@Autowired
+	private MesaControlDAO mesaControlDAO;
+	
+	@Value("${recibos.impresion.consolidado.url}")
+	private String urlImpresionRecibos;
+	
+	@Autowired
+	private transient KernelManagerSustituto kernelManager;
 	
 	@Override
 	public List<ReciboVO> obtieneRecibos(String cdunieco, String cdramo, String nmpoliza, String nmsuplem) throws Exception {
@@ -165,9 +184,9 @@ public class RecibosManagerImpl implements RecibosManager {
         try{
             paso = "Antes de desconsolidar recibos";
             String usuario = user.getUser().toString();
-                recibosDAO.desconsolidarRecibos(cdunieco, cdramo, estado, nmpoliza, usuario, lista.get(0).get("folio"));
-                actualizarReciboSIGS(cdunieco, cdramo, estado, nmpoliza, user, lista);
-//            }
+            recibosDAO.desconsolidarRecibos(cdunieco, cdramo, estado, nmpoliza, usuario, lista.get(0).get("folio"));
+            actualizarReciboSIGS(cdunieco, cdramo, estado, nmpoliza, user, lista);
+            recibosDAO.borrarDocumentoReciboConsolidado(cdunieco, cdramo, estado, nmpoliza, lista.get(0).get("folio"));
         }
         catch(Exception ex){
             Utils.generaExcepcion(ex, paso);
@@ -197,10 +216,18 @@ public class RecibosManagerImpl implements RecibosManager {
         List<Map<String, String>> infoRecibos = new ArrayList<Map<String,String>>();
         try{
             paso = "Obteniendo informacion de recibos";
+            String nmrecibo = null;
+            String nmsuplem = null;
+            String ntramite = null;
+            String nmsolici = null;
+            String nmimpres = null;
+            boolean exitoso = false;
             for(Map<String, String> map : lista){
-                String nmrecibo = map.get("nmrecibo");
-                String nmsuplem = map.get("nmsuplem");
-                String ntramite = map.get("ntramite");
+                nmrecibo = map.get("nmrecibo");
+                nmsuplem = map.get("nmsuplem");
+                ntramite = map.get("ntramite");
+                nmsolici = map.get("nmsolici");
+                nmimpres = map.get("nmimpres");
                 paso = "Antes de obtener info para SIGS";
                 infoRecibos = recibosDAO.obtenerInfoRecibos(cdunieco, cdramo, estado, nmpoliza, nmrecibo, nmsuplem);
                 logger.debug("Operacion "+infoRecibos.size());
@@ -219,7 +246,11 @@ public class RecibosManagerImpl implements RecibosManager {
                     Utils.log("Operacion",reciboWrap.getOperacion());
                     Utils.log("rmdbrn",reciboWrap.getRecibo().getRmdbRn());                    
                     ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdunieco, ntramite, false, user, reciboWrap);
+                    exitoso = true;                    
                 }
+            }
+            if(exitoso){
+                generaDocumentoReciboConsolidado(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsolici, ntramite, nmimpres, rmdbRn);
             }
             paso = "Actualizando informacion de recibos en SIGS";
         }
@@ -306,8 +337,70 @@ public class RecibosManagerImpl implements RecibosManager {
         }
         return lista;
     }
+
+    @Override
+    public void generaDocumentoReciboConsolidado(
+            String cdunieco, 
+            String cdramo, 
+            String estado, 
+            String nmpoliza, 
+            String nmsuplem, 
+            String nmsolici, 
+            String ntramite,
+            String nmimpres,
+            String folio) throws Exception{
+        
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pv_cdunieco_i", cdunieco);
+        params.put("pv_cdramo_i", cdramo);
+        params.put("pv_estado_i", estado);
+        params.put("pv_nmpoliza_i", nmpoliza);
+        params.put("pv_nmsuplem_i", nmsuplem);
+        params.put("pv_ntramite_i", ntramite);
+        String cdtipsit   = kernelManager.obtenCdtipsit(params);
+        params.put("pv_cdtipsit_i", cdtipsit);    
+        String cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
+        
+        String parametros = "?"+cdunieco+","+cdtipsitGS+","+nmpoliza+","+nmimpres+","+folio;
+        
+        logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
+        
+        mesaControlDAO.guardarDocumento(
+                cdunieco,
+                cdramo,
+                estado,
+                nmpoliza,
+                nmsuplem,
+                new Date(),
+                urlImpresionRecibos + parametros,
+                "ReciboConsolidado "+folio,
+                nmsolici,
+                ntramite,
+                "1",
+                Constantes.SI,
+                null,
+                TipoTramite.POLIZA_NUEVA.getCdtiptra(),
+                "0",
+                Documento.RECIBO, null, null, false
+                );
+    }
+    
+    @Override
+    public String obtenerLigaRecibo(String cdunieco, String cdramo, String estado, String nmpoliza, String folio) throws Exception{
+        String paso = "";
+        String liga = "";
+        try{
+            paso = "Antes de obtener liga de recibo consolidado";
+            liga = recibosDAO.obtenerLigaRecibo(cdunieco, cdramo, estado, nmpoliza, folio);
+        }
+        catch(Exception ex){
+            Utils.generaExcepcion(ex, paso);
+        }
+        return liga;
+    }
     
     public void setRecibosDAO(RecibosDAO recibosDAO) {
         this.recibosDAO = recibosDAO;
-    }
+    }    
+
 }
