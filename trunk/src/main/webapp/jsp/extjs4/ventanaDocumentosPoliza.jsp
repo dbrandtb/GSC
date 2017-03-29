@@ -106,9 +106,9 @@ function callbackDocumentoSubidoPoliza(mensajeRespuesta)
     }
 }
 
-function panDocEditarClic(row)
+function panDocEditarClic(row,indexRec)
 {
-    var record=panDocStoreDoc.getAt(row);
+    var record=panDocStoreDoc.getAt(indexRec);
     debug('record a editar:',record.data);
     centrarVentanaInterna(Ext.create('Ext.window.Window',
     {
@@ -169,7 +169,7 @@ function panDocEditarClic(row)
     }).show());
 }
 
-function panDocBorrarClic(row,confir)
+function panDocBorrarClic(row,confir,indexRec)
 {
     var confirmado = !Ext.isEmpty(confir)&&confir==true;
     
@@ -179,21 +179,22 @@ function panDocBorrarClic(row,confir)
         {
             if(btn === 'yes')
             {
-                panDocBorrarClic(row,true);
+                panDocBorrarClic(row,true,indexRec);
             }
         }));
     }
     else
     {
-        var record=panDocStoreDoc.getAt(row);
-        debug('record a borrar:',record.data);
+        var recordDoc = panDocStoreDoc.getAt(indexRec);
+        debug('record Cambiado a borrar:',recordDoc.data);
+        
         Ext.Ajax.request(
         {
             url     : panDocUrlBorrarDocumento
             ,params :
             {
-                'smap1.ntramite'  : record.get('ntramite')
-                ,'smap1.cddocume' : record.get('cddocume')
+                'smap1.ntramite'  : recordDoc.get('ntramite')
+                ,'smap1.cddocume' : recordDoc.get('cddocume')
             }
             ,success : function(response)
             {
@@ -972,13 +973,15 @@ Ext.onReady(function()
                         ,width    : 30
                         ,renderer : function(v,meta,record,row)
                         {
+                        	var indexRec = panDocStoreDoc.indexOf(record);
+                        	
                             if(v=='N')
                             {
                                 v='';
                             }
                             else
                             {
-                                v='<a href="#" onclick="panDocEditarClic('+row+'); return false;"><img src="${ctx}/resources/fam3icons/icons/pencil.png" data-qtip="Editar" /></a>';
+                                v='<a href="#" onclick="panDocEditarClic('+row+','+indexRec+'); return false;"><img src="${ctx}/resources/fam3icons/icons/pencil.png" data-qtip="Editar" /></a>';
                             }
                             return v;
                         }
@@ -987,13 +990,16 @@ Ext.onReady(function()
                         ,width    : 30
                         ,renderer : function(v,meta,record,row)
                         {
+                        	
+                        	var indexRec = panDocStoreDoc.indexOf(record);
+                        	
                             if(v=='N')
                             {
                                 v='';
                             }
                             else
                             {
-                                v='<a href="#" onclick="panDocBorrarClic('+row+'); return false;"><img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Borrar" /></a>';
+                                v='<a href="#" onclick="panDocBorrarClic('+row+',false,'+indexRec+'); return false;"><img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Borrar" /></a>';
                             }
                             return v;
                         }
