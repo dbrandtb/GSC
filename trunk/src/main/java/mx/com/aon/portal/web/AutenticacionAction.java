@@ -1,15 +1,7 @@
 package mx.com.aon.portal.web;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.portal.model.IsoVO;
-import mx.com.aon.portal.model.RamaVO;
-import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.service.LoginManager;
-import mx.com.aon.portal.service.NavigationManager;
-import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utils;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.SessionMap;
@@ -19,6 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
+
+import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.IsoVO;
+import mx.com.aon.portal.model.RamaVO;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.service.LoginManager;
+import mx.com.aon.portal.service.NavigationManager;
+import mx.com.gseguros.utils.Constantes;
 
 public class AutenticacionAction extends PrincipalCoreAction {
 
@@ -51,10 +51,20 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		return INPUT;
 	}
 
-	
+	/**
+	 * Verifica si el usuario existe en LDAP
+	 * @return mapa con datos de la verificacion
+	 * @throws Exception
+	 */
 	public String existeUsuarioLDAP() throws Exception {
 		try {
-			success = loginManager.validaUsuarioLDAP(true, user, password);
+		    params = new HashMap<String, String>();
+            boolean existeUsuarioLDAP = loginManager.validaUsuarioLDAP(true, user, password);
+            params.put("existeUsuarioLDAP", String.valueOf(existeUsuarioLDAP));
+            params.put("modoAutenticacionLDAP", loginAuthLdapActiva);
+            params.put("modoAgregarUsuariosLDAP", loginModoAgregarUsuariosLdap);
+            
+			success = true;
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 			errorMessage = "Error al validar credenciales de usuario en el servidor: " + ex.getMessage();
