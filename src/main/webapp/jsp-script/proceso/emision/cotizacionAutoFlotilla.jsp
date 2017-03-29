@@ -1608,7 +1608,7 @@ Ext.onReady(function()
     
     _p30_ventanaCdtipsit = Ext.create('Ext.window.Window',
     {
-        title        : 'ELEGIR TIPO DE VEH&Iacute;CULO'
+        title        : _p30_smap1.turistas!='S'?'ELEGIR TIPO DE VEH&Iacute;CULO':'ELEGIR TIPO DE LICENCIA'
         ,modal       : true
         ,closeAction : 'hide'
         ,items       : _p30_editorCdtipsit
@@ -1643,8 +1643,8 @@ Ext.onReady(function()
 	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).allowBlank=true;
 	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).isValid();
 	    	_fieldByLabel("MONEDA").setValue("2");
-	    	_fieldByLabel('DERECHO AGENTE').setMargin('0 0 0 15')
-	    	_fieldById("fsPanel1").insert(Ext.ComponentQuery.query("#fsPanel1>[xtype]").length-2,_fieldByLabel('DERECHO AGENTE'))
+	    	_fieldByLabel('DERECHO AGENTE',_fieldById("_p30_fieldsetTatripol"),true).setMargin('0 0 0 15')
+	    	_fieldById("fsPanel1").insert(Ext.ComponentQuery.query("#fsPanel1>[xtype]").length-2,_fieldByLabel('DERECHO AGENTE',_fieldById("_p30_fieldsetTatripol"),true))
     	}
     }catch(e){
     	debugError(e)
