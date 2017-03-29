@@ -97,7 +97,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
     private ConsultasPolizaDAO consultasPolizaDAO;
 	
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO) throws Exception{
 		
 		logger.debug(">>>>> Entrando a metodo WS Cotiza y Emite para Auto");
 		
@@ -940,7 +940,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	
 	
 	public Integer enviaRecibosAutosSigs(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal){
+			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal) throws Exception{
 		
 		logger.debug(">>>>> Entrando a metodo WS Envia Recibos para Auto");
 		
@@ -1049,33 +1049,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						logger.debug("Respuesta al validar recibos y emision para el Endoso: "+endosoIt.get("NUMEND")+" Tipo: "+endosoIt.get("TIPOEND")+". :: Respuesta: "+valida);
 						
 						if(valida == null || valida != 0){
-							String cod="";
-							switch(valida){
-								case 1:
-									cod="Poliza no existe";
-									break;
-								case 2:
-									cod="Total de recibos no concuerda con forma de pago";
-									break;
-								case 3:
-									cod="Total de prima neta de recibos no cuadra con total de poliza";
-									break;
-								case 4:
-									cod="Total de iva de recibos no cuadra con total de poliza";
-									break;
-								case 5:
-									cod="Total de recargo  de recibos no cuadra con total de poliza";
-									break;
-								case 6:
-									cod="Total de derechos de recibos no cuadra con total de poliza";
-									break;
-								case 7:
-									cod="Existe Error en vigencia de recibos vs vigencia de poliza";
-									break;
-								default:
-									cod="Error desconocido";
-							}
-							logger.error("Error en la validacion de envio de recibos a SIGS, No se han enviado correctamente la emision para el Endoso: "+endosoIt.get("NUMEND")+" Tipo: "+endosoIt.get("TIPOEND")+". "+cod);
+							logger.error("Error en la validacion de envio de recibos a SIGS, No se han enviado correctamente la emision para el Endoso: "+endosoIt.get("NUMEND")+" Tipo: "+endosoIt.get("TIPOEND")+".");
 							return valida;
 						}else{
 							logger.info("Envio de Recibos de Auto a SIGS realizado correctamente... Llamando spVidaxRecibo...");
@@ -1096,7 +1070,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				
 			} catch (Exception e){
 				logger.error("Error en validacion de Emision Exitosa y VidaPorRecibo! " + e.getMessage(),e);
-				return errorEjec;
+				throw e;
+//				return errorEjec;
 			}
 		}else{
 			logger.warn("Aviso, No se tienen datos de Recibos Autos");
