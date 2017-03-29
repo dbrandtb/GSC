@@ -2526,6 +2526,19 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			throw new ApplicationException("No se encontraron usuarios");
 		}
+		for (Map<String, String> user : lista) {
+		    new ContarTramitesUsuarioRol(user).start(); // Mando N hilos
+		}
+		int respuestas = 0;
+		while (respuestas < lista.size()) { // Mientras tenga hilos pendientes
+		    Thread.sleep(100);
+		    respuestas = 0;
+		    for (Map<String, String> user : lista) { // Cuento los hilos que han respondido
+	            if (user.containsKey("TOTAL")) {
+	                respuestas = respuestas + 1;
+	            }
+	        }
+		}
 		return lista;
 	}
 	
@@ -2533,13 +2546,13 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarUsuariosReasignacionTramite(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_USUARIOS_REASIGNA");
+			super(dataSource,"P_MC_GET_USUARIOS_REASIGNA");
 			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 			        "NTRAMITE", "CDUSUARI_ACTUAL", "STATUS_ACTUAL", "CDSISROL_ACTUAL",
-			        "CDUSUARI", "CDSISROL", "DSUSUARI", "TOTAL", "STATUS", "DSSISROL"
+			        "CDUSUARI", "CDSISROL", "DSUSUARI", "STATUS", "DSSISROL"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
@@ -6003,6 +6016,36 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    private class ContarTramitesUsuarioRol extends Thread {
+        private Map<String, String> usuario;
+        public ContarTramitesUsuarioRol (Map<String, String> usuario) {
+            this.usuario = usuario;
+            this.usuario.put("pv_cdusuari_i", this.usuario.get("CDUSUARI"));
+            this.usuario.put("pv_cdsisrol_i", this.usuario.get("CDSISROL"));
+        }
+        @Override
+        public void run () {
+            try {
+                usuario.put("TOTAL", (String) ejecutaSP(new ContarTramitesUsuarioRolSP(getDataSource()), usuario).get("pv_count_o"));
+            } catch (Exception ex) {
+                logger.debug(Utils.join("Error al contar tramites de ", this.usuario), ex);
+                usuario.put("TOTAL", "ERROR");
+            }
+        }
+    }
+    
+    protected class ContarTramitesUsuarioRolSP extends StoredProcedure {
+        protected ContarTramitesUsuarioRolSP (DataSource dataSource) {
+            super(dataSource,"P_MC_GET_CONTEO_TRAMITES_USER");
+            declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_count_o"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
             compile();
         }
     }
