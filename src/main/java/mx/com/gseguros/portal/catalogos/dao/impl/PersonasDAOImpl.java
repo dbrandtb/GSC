@@ -11,6 +11,13 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.StoredProcedure;
+
 import mx.com.aon.portal.dao.ObtieneTatriperMapper;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
@@ -20,13 +27,6 @@ import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.StoredProcedure;
 
 public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 {
@@ -40,16 +40,15 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	 * @throws Exception
 	 */
 	@Override
-	public List<Map<String,String>>obtenerPersonasPorRFC(Map<String,String>params) throws Exception
-	{
-		logger.debug(
-				new StringBuilder()
-				.append("\n*****************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_MPERSONA ******")
-				.append("\n****** params=").append(params)
-				.append("\n*****************************************")
-				.toString()
-				);
+	public List<Map<String,String>>obtenerPersonasPorRFC(String rfc, String nombre, String nombre2, String apat, String amat,
+            String validaTienePoliza) throws Exception {
+	    Map<String, String> params = new LinkedHashMap<String, String>();
+	    params.put("pv_cdrfc_i"    , rfc);
+        params.put("pv_dsnombre_i" , nombre);
+        params.put("pv_dsnombre1_i" , nombre2);
+        params.put("pv_dsapellido_i"   , apat);
+        params.put("pv_dsapellido1_i"   , amat);
+        params.put("pv_validapol_i"   , validaTienePoliza);
 		Map<String, Object> resultado = ejecutaSP(new ObtenerPersonasPorRFC(getDataSource()), params);
 		List<Map<String,String>>listaPersonas=(List<Map<String,String>>)resultado.get("pv_registro_o");
 		if(listaPersonas==null)

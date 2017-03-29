@@ -12,7 +12,8 @@ public interface PersonasDAO
 	/**
 	 * Obtiene personas por RFC de PKG_CONSULTA.P_GET_MPERSONA
 	 */
-	public List<Map<String,String>>obtenerPersonasPorRFC(Map<String,String>params) throws Exception;
+	public List<Map<String,String>>obtenerPersonasPorRFC(String rfc, String nombre, String nombre2, String apat, String amat,
+	        String validaTienePoliza) throws Exception;
 	
 	@Deprecated
 	public Map<String,String>obtenerPersonaPorCdperson(Map<String,String>params) throws Exception;
