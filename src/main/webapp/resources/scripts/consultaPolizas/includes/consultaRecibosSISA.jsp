@@ -15,7 +15,7 @@
 }
 
 .generado-row .x-grid-cell { 
-    background-color: #F3F781; 
+    background-color: #80FF00; 
     color: #900; 
 }
 
@@ -401,6 +401,7 @@ Ext.onReady(function(){
            var descon   = 0;
            var serie    = 0;
            var folio    = 0;
+           var noPend   = 0;
            deshabilitarBotones();
            if(me.selected.length > 0){
                debug('Antes de recorrer seleccionados ',me.selected);
@@ -440,15 +441,26 @@ Ext.onReady(function(){
 	           
 	           if(conso === 1 && sonConsolidados()){
 	               seleccionarConsolidados(folio);
-	               _habilitarBoton('btnDesconsolidar',true);  //desconsolidar
-	               _habilitarBoton('btnVerRecibo',true);      //ver recibo
+	               if(contarConsolidadosNoPendientes() < 1){
+	                   _habilitarBoton('btnDesconsolidar',true);  //desconsolidar
+	               }
+	               else{
+                       debug('else contarConsolidadosNoPendientes() ',contarConsolidadosNoPendientes());
+                   }
+	               _habilitarBoton('btnVerRecibo'    ,true);  //ver recibo
 	               _habilitarBoton('btnDesglose'     ,true);  //desglose
 	               _habilitarBoton('btnDetalle'      ,true);  //detalle
 	           }
 	           
 	           if(conso > 1 && sonConsolidados()){
                    seleccionarConsolidados(folio);
-                   _habilitarBoton('btnDesconsolidar',true);  //desconsolidar
+                   if(contarConsolidadosNoPendientes() < 1){
+                       debug('entro a if de pendientes');
+                       _habilitarBoton('btnDesconsolidar',true);  //desconsolidar
+                   }
+                   else{
+                       debug('else contarConsolidadosNoPendientes() ',contarConsolidadosNoPendientes());
+                   }
                    _habilitarBoton('btnVerRecibo'    ,true);  //ver recibo
                    _habilitarBoton('btnDesglose'     ,true);  //desglose
                    _habilitarBoton('btnDetalle'      ,true);  //detalle
@@ -476,7 +488,7 @@ Ext.onReady(function(){
     function esConsolidado(data){
         debug('>esConsolidado', data);
         var consolidado = false;
-        if(!Ext.isEmpty(data['folio']) && data['status'] === EstadoRecibo.Pendiente){
+        if(!Ext.isEmpty(data['folio'])){ //&& data['status'] === EstadoRecibo.Pendiente){
             consolidado = true;
         }
         debug('<esConsolidado',consolidado);
@@ -633,6 +645,24 @@ Ext.onReady(function(){
         var win = window.open(url, '_blank');
         win.focus();
     }
+    
+    function contarConsolidadosNoPendientes(){
+        debug('>contarConsolidadosNoPendientes');
+        gridRecibos = _fieldById('gridRecibos').getSelectionModel().getSelection();
+        var noPendientes = 0;
+        try{
+            for(var s = 0; s < gridRecibos.length; s++){
+                if(gridRecibos[s].data['status'] != EstadoRecibo.Pendiente){
+                    noPendientes++;
+                }
+            }
+        }
+        catch(err){
+            debug("Error",err.message);
+        }        
+        debug('<contarConsolidadosNoPendientes',noPendientes);
+        return noPendientes;
+    }
     ////// funciones //////
     
     pRcb_wndDetalleRecibo = Ext.create('Ext.window.Window', {
@@ -687,7 +717,7 @@ Ext.onReady(function(){
                         name        : 'fieldGeneradoId',
                         fieldLabel  : 'Devuelto',
                         labelWidth  : 160,
-                        fieldStyle  : 'background-color: #F3F781; background-image: none; width:150px;'
+                        fieldStyle  : 'background-color: #80FF00; background-image: none; width:150px;'
                     },
                     {
                         xtype       : 'textfield',
