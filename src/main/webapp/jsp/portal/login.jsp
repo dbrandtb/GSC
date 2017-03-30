@@ -10,12 +10,15 @@
 	    <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 	    <script language="javascript">
 	        var _CONTEXT = "${ctx}";
-	        var _URL_VALIDA_USUARIO =                   '<s:url namespace="/seguridad" action="autenticaUsuario" />';
-	        var _URL_VALIDA_EXISTE_USUARIO =            '<s:url namespace="/seguridad" action="existeUsuarioLDAP" />';
-	        //var _GLOBAL_URL_GRABAR_EVENTO = '<s:url namespace="/servicios" action="grabarEvento" />';
+	        var _URL_VALIDA_USUARIO = '<s:url namespace="/seguridad" action="autenticaUsuario" />';
+	        var _URL_VALIDA_EXISTE_USUARIO = '<s:url namespace="/seguridad" action="existeUsuarioLDAP" />';
+	        
+	        var _MODO_AGREGAR_USUARIOS_A_LDAP = <s:text name="login.modo.agregar.usuarios.ldap"/>;
+	        
+	        var _GLOBAL_URL_GRABAR_EVENTO = '<s:url namespace="/servicios" action="grabarEvento" />';
 	        //funcion para revisar si estas en un iframe
 	        //http://stackoverflow.com/questions/326069/how-to-identify-if-a-webpage-is-being-loaded-inside-an-iframe-or-directly-into-t
-	        function inIframe() {
+	        function inIframe () {
 	            try {
 	                return window.self !== window.top;
 	            } catch (e) {
@@ -70,7 +73,7 @@
 			</tr>
 	        <tr> 
 			    <td colspan="5" class="textologin">
-                    <br>INFORMACI&Oacute;N DE GENERAL DE SEGUROS.<br><br><br><br>
+                    <br>INFORMACI&Oacute;N DE GENERAL DE SEGUROS b 0.9.45<br><br><br><br>  
 			    </td>
 			</tr>
 	    </table>
