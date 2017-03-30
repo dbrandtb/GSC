@@ -351,8 +351,20 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
     	if(_p30_smap1.cdramo=='5')
         {
            var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
+           try{
+   	        if(_p30_smap1.turistas=='S'){
+   	        	itemsTatripol.push(_fieldByName('aux.otvalor18',null,true));
+   	    	}
+           }catch(e){
+           	debugError(e);
+           }
            if(itemsTatripol[1].fieldLabel == "MONEDA")
            {
+        	  
+        	  
+        	   if(_p30_smap1.turistas=='S'){
+        		   json.smap1.moneda=json.smap1['aux.otvalor05']
+        	   }
            	  if(json.smap1.moneda == '2')
            	  {
               itemsTatripol[1].setValue('DOLARES');
@@ -458,4 +470,211 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
     } catch (e) {
         manejaException(e, ck);
     }
+}
+
+function _p30_actualizarCotizacionTramite(callback)
+{
+    var ck = 'Registrando cotizaci\u00f3n de tr\u00e1mite';
+    try
+    {
+        _mask(ck);
+        Ext.Ajax.request(
+        {
+            url      : _p30_urlActualizarOtvalorTramiteXDsatribu
+            ,params  :
+            {
+                'params.ntramite'  : _p30_flujo.ntramite
+                ,'params.dsatribu' : 'COTIZACI%N%TR%MITE%'
+                ,'params.otvalor'  : _fieldByName('nmpoliza').getValue()
+                ,'params.accion'   : 'U'
+            }
+            ,success : function(response)
+            {
+                _unmask();
+                var ck = 'Decodificando respuesta al guardar estatus de tr\u00e1mite';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### guardar estatus de tramite:',json);
+                    if(json.success===true)
+                    {
+                        var ck = 'Guardando detalle de cotiazci\u00f3n de tr\u00e1mite';
+                        try
+                        {
+                            _mask(ck);
+                            Ext.Ajax.request(
+                            {
+                                url      : _p30_urlDetalleTramite
+                                ,params  :
+                                {
+                                    'smap1.ntramite'  : _p30_flujo.ntramite
+                                    ,'smap1.status'   : _p30_flujo.status
+                                    ,'smap1.dscoment' : 'Se guard\u00f3 la cotizaci\u00f3n '+_fieldByName('nmpoliza').getValue()
+                                    ,'smap1.swagente' : 'S'
+                                }
+                                ,success : function(response)
+                                {
+                                    _unmask();
+                                    var ck = 'Decodificando respuesta al guardar detalle de cotizaci\u00f3n de tr\u00e1mite';
+                                    try
+                                    {
+                                        var jsonDetalle = Ext.decode(response.responseText);
+                                        debug('### guardar detalle cotizacion tramite:',jsonDetalle);
+                                        if(!Ext.isEmpty(callback))
+                                        {
+                                            callback();
+                                        }
+                                    }
+                                    catch(e)
+                                    {
+                                        manejaException(e,ck);
+                                    }
+                                }
+                                ,failure : function()
+                                {
+                                    _unmask();
+                                    errorComunicacion(null,'Error al guardar detalle de cotizaci\u00f3n de tr\u00e1mite');
+                                }
+                            });
+                        }
+                        catch(e)
+                        {
+                            _unmask();
+                            manejaException(e,ck);
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _unmask();
+                errorComunicacion(null,'Error al guardar estatus de tr\u00e1mite');
+            }
+        });
+    }
+    catch(e)
+    {
+        _unmask();
+        manejaException(e,ck);
+    }
+}
+
+function _p30_actualizarSwexiperTramite(callback)
+{
+    var ck = 'Registrando estado de cliente de tr\u00e1mite';
+    try
+    {
+        var swExiper =
+        (
+            !Ext.isEmpty(_p30_recordClienteRecuperado)
+            && Ext.isEmpty(_p30_recordClienteRecuperado.raw.CLAVECLI)
+            && !Ext.isEmpty(_p30_recordClienteRecuperado.raw.CDIDEPER)
+        ) ? 'N' : 'S' ;
+    
+        _mask(ck);
+        Ext.Ajax.request(
+        {
+            url      : _p30_urlActualizarOtvalorTramiteXDsatribu
+            ,params  :
+            {
+                'params.ntramite'  : _p30_flujo.ntramite
+                ,'params.dsatribu' : 'SWEXIPER'
+                ,'params.otvalor'  : swExiper
+                ,'params.accion'   : 'U'
+            }
+            ,success : function(response)
+            {
+                _unmask();
+                var ck = 'Decodificando respuesta al guardar estado de cliente de tr\u00e1mite';
+                try
+                {
+                    var json = Ext.decode(response.responseText);
+                    debug('### guardar estatus de cliente de tramite:',json);
+                    if(json.success===true)
+                    {
+                        if(!Ext.isEmpty(callback))
+                        {
+                            callback();
+                        }
+                    }
+                    else
+                    {
+                        mensajeError(json.message);
+                    }
+                }
+                catch(e)
+                {
+                    manejaException(e,ck);
+                }
+            }
+            ,failure : function()
+            {
+                _unmask();
+                errorComunicacion(null,'Error al guardar estado de cliente de tr\u00e1mite');
+            }
+        });
+    }
+    catch(e)
+    {
+        _unmask();
+        manejaException(e,ck);
+    }
+}
+
+function _p30_botonOnCotizarClic (me) {
+    debug('_p30_botonOnCotizarClic args:', arguments);
+    var ck = 'Enviando datos de cotizaci\u00f3n';
+    try {
+        Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTurnado');
+        new VentanaTurnado({
+            cdtipflu  : _p30_flujo.cdtipflu,
+            cdflujomc : _p30_flujo.cdflujomc,
+            tipoent   : _p30_flujo.tipoent,
+            claveent  : 0,//_p28_flujo.claveent,
+            webid     : 0,//_p28_flujo.webid,
+            aux       : _p30_flujoAux.onCotizar,
+            ntramite  : _p30_flujo.ntramite,
+            status    : _p30_flujo.status,
+            cdunieco  : _p30_flujo.cdunieco,
+            cdramo    : _p30_flujo.cdramo,
+            estado    : _p30_flujo.estado,
+            nmpoliza  : _p30_flujo.nmpoliza,
+            nmsituac  : _p30_flujo.nmsituac,
+            nmsuplem  : _p30_flujo.nmsuplem,
+            cdusuari  : _p30_smap1.cdusuari,
+            cdsisrol  : _GLOBAL_CDSISROL
+        }).mostrar();
+    } catch (e) {
+        manejaException(e, ck);
+    }
+}
+
+function turistasFormaPago(feini,fefin,listFP){
+	try{
+		var date1 = feini;
+		var date2 = fefin;
+		var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+		var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+		var fp=[];
+		if(diffDays<365){
+			listFP.forEach(function(it){
+				if(it.CDPERPAG==FormaPago.ANUAL || it.CDPERPAG==FormaPago.CONTADO){
+					fp.push(it)
+					return;
+				}
+			})
+			return fp;
+		}
+	}catch(e){
+		debugError(e);
+	}
+	return listFP;
 }
