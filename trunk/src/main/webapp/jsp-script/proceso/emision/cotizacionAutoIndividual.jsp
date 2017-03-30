@@ -803,6 +803,11 @@ Ext.onReady(function()
 	    				}
 	    			)
 	    }
+	    if( _p28_smap1.cdtipsit==TipoSituacion.TuristaVehiculo || _p28_smap1.cdtipsit==TipoSituacion.TuristaLicencia ){
+		    _fieldByLabel("MONEDA").getStore().filter([{filterFn: function(item) {
+	            
+	            return item.get("key") == '2'; }}])
+	    }
     }catch(e){
     	debugError(e);
     }
