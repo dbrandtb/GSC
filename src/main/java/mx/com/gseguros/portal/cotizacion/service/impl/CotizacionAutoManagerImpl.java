@@ -1520,7 +1520,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			List<ComponenteVO>auxEditorSit = pantallasDAO.obtenerComponentes(
 					TipoTramite.POLIZA_NUEVA.getCdtiptra(), null, cdramo
 					, cdtipsit, null, cdsisrol
-					, "COTIZACION_FLOTILLA", "EDITOR_SITUACION", null);
+					, "COTIZACION_FLOTILLA", cdtipsit2!=null?"EDITOR_SITUACION_TL":"EDITOR_SITUACION", null);
 			
 			paso = "Recuperando columnas";
 			List<ComponenteVO>gridCols = pantallasDAO.obtenerComponentes(
