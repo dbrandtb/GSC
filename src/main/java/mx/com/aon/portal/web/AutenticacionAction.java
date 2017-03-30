@@ -1,16 +1,6 @@
 package mx.com.aon.portal.web;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.SessionMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
-import com.opensymphony.xwork2.ActionContext;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.IsoVO;
@@ -19,6 +9,15 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.LoginManager;
 import mx.com.aon.portal.service.NavigationManager;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.Utils;
+
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.SessionMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionContext;
 
 public class AutenticacionAction extends PrincipalCoreAction {
 
@@ -40,31 +39,15 @@ public class AutenticacionAction extends PrincipalCoreAction {
 	private boolean success;
 	private String errorMessage;
 
-	@Value("${login.auth.ldap.activa}")
-    private String loginAuthLdapActiva;	
-	
-	@Value("${login.modo.agregar.usuarios.ldap}")
-    private String loginModoAgregarUsuariosLdap;	
-	
 	public String execute() throws Exception {
 		logger.debug("Entrando a execute");
 		return INPUT;
 	}
 
-	/**
-	 * Verifica si el usuario existe en LDAP
-	 * @return mapa con datos de la verificacion
-	 * @throws Exception
-	 */
+	
 	public String existeUsuarioLDAP() throws Exception {
 		try {
-		    params = new HashMap<String, String>();
-            boolean existeUsuarioLDAP = loginManager.validaUsuarioLDAP(true, user, password);
-            params.put("existeUsuarioLDAP", String.valueOf(existeUsuarioLDAP));
-            params.put("modoAutenticacionLDAP", loginAuthLdapActiva);
-            params.put("modoAgregarUsuariosLDAP", loginModoAgregarUsuariosLdap);
-            
-			success = true;
+			success = loginManager.validaUsuarioLDAP(true, user, password);
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 			errorMessage = "Error al validar credenciales de usuario en el servidor: " + ex.getMessage();
@@ -77,7 +60,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		/**
 		 * Si es true agrega los usuarios en LDAP si ya existen previamente en BD (flujo temporal), <br/> false si solo autentica en LDAP y BD (flujo correcto)
 		 */
-		if(new Boolean(loginModoAgregarUsuariosLdap)){
+		if(new Boolean(getText("login.modo.agregar.usuarios.ldap"))){
 			logger.debug("Autentificacion,entrando a modo Agregar Usuarios a LDAP");
 			return autenticaUsuarioAgregaLDAP();
 		}
@@ -87,7 +70,7 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		try {
 			
 			boolean existeUsuario = true;
-			if(new Boolean(loginAuthLdapActiva)){
+			if(new Boolean(getText("login.auth.ldap.activa"))){
 				existeUsuario = loginManager.validaUsuarioLDAP(false, user, password); 
 			}
 			if (existeUsuario) {
@@ -352,19 +335,12 @@ public class AutenticacionAction extends PrincipalCoreAction {
 		return params;
 	}
 
+
 	public void setParams(Map<String, String> params) {
 		this.params = params;
 	}
 
 	public mx.com.gseguros.portal.general.service.NavigationManager getNavigationManagerNuevo() {
 		return navigationManagerNuevo;
-	}
-	
-	public String getLoginAuthLdapActiva() {
-		return loginAuthLdapActiva;
-	}
-
-	public String getLoginModoAgregarUsuariosLdap() {
-		return loginModoAgregarUsuariosLdap;
 	}
 }

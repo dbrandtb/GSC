@@ -900,7 +900,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     	boolean esFlotilla = false;
     	String tipoflot    = null;
     	String recargoPF   = null;
-    	String caseIdRstn  = null;
     	
     	Date fechaHoy = new Date();
     	
@@ -955,7 +954,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     				esFlotilla  = StringUtils.isNotBlank(smap1.get("flotilla"))&&smap1.get("flotilla").equalsIgnoreCase("si");
     				tipoflot    = smap1.get("tipoflot");
     				recargoPF   = smap1.get("recargoPF");
-    				caseIdRstn  = smap1.get("caseIdRstn");
     			}
     			
     			if(!completos)
@@ -1441,12 +1439,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            		,null
 	            		,null, false
 	            		);
-	            
-	            if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(comprarCdramo)) {
-	                HttpUtil.enviarArchivoRSTN(
-	                        caseIdRstn, nombreArchivoCotizacion, pathArchivoCotizacion, Utils.join("COTIZACION (", comprarNmpoliza, ")"),
-	                        HttpUtil.RSTN_DOC_CLASS_COTIZACION);
-	            }
             }
     		catch(Exception ex)
     		{
@@ -1630,7 +1622,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(comprarCdramo)
 				    	){
 			    		
-			    		
 			    		logger.debug("<<<>>> Verificando que no se haya insertado el cliente anteriormente... ");
 		    			boolean personaNueva =  true;
 		    			String  newCdPerson   = null;
@@ -1656,212 +1647,213 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 								}else{
 									usuarioCaptura = usuario.getCodigoPersona();
 								}
-								
-							}
-				    		
-				    		HashMap<String, Object> paramsTip =  new HashMap<String, Object>();
-				    		paramsTip.put("pv_cdramo_i", comprarCdramo);
-				    		paramsTip.put("pv_cdtipsit_i",   cdtipsit);
 							
-					    	String cdtipsitGS = kernelManagerSustituto.obtenSubramoGS(paramsTip);
-					    	
-					    	ClienteGeneral clienteGeneral = new ClienteGeneral();
-					    	//clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
-					    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
-					    	clienteGeneral.setNumeroExterno(cdideperCli);
-					    	
-					    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
-					    	
-					    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
-					    		ClienteGeneral cli = null;
+						}
+			    		
+			    		HashMap<String, Object> paramsTip =  new HashMap<String, Object>();
+			    		paramsTip.put("pv_cdramo_i", comprarCdramo);
+			    		paramsTip.put("pv_cdtipsit_i",   cdtipsit);
+						
+				    	String cdtipsitGS = kernelManagerSustituto.obtenSubramoGS(paramsTip);
+				    	
+				    	ClienteGeneral clienteGeneral = new ClienteGeneral();
+				    	//clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
+				    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
+				    	clienteGeneral.setNumeroExterno(cdideperCli);
+				    	
+				    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
+				    	
+				    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
+				    		ClienteGeneral cli = null;
+				    		
+				    		if(clientesRes.getClientesGeneral().length == 1){
+				    			logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
+				    			cli = clientesRes.getClientesGeneral()[0];
+				    		}else {
+				    			logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
+				    		}
+				    		
+				    		if(cli != null){
+				    			
+				    			//IR POR NUEVO CDPERSON:
+				    			newCdPerson = kernelManagerSustituto.generaCdperson();
 					    		
-					    		if(clientesRes.getClientesGeneral().length == 1){
-					    			logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
-					    			cli = clientesRes.getClientesGeneral()[0];
-					    		}else {
-					    			logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
-					    		}
+					    		logger.debug("Insertando nueva persona, cdperson generado: " +newCdPerson);
 					    		
-					    		if(cli != null){
-					    			
-					    			//IR POR NUEVO CDPERSON:
-						    		newCdPerson = kernelManagerSustituto.generaCdperson();
-						    		
-						    		logger.debug("Insertando nueva persona, cdperson generado: " +newCdPerson);
-						    		
-						    		
-						    		String apellidoPat = "";
-							    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
-							    		apellidoPat = cli.getApellidopCli();
-							    	}
-							    	
-							    	String apellidoMat = "";
-							    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
-							    		apellidoMat = cli.getApellidomCli();
-							    	}
-							    	
-						    		Calendar calendar =  Calendar.getInstance();
-						    		
-						    		String sexo = "H"; //Hombre
-							    	if(cli.getSexoCli() > 0){
-							    		if(cli.getSexoCli() == 2) sexo = "M";
-							    	}
-							    	
-							    	String tipoPersona = "F"; //Fisica
-							    	if(cli.getFismorCli() > 0){
-							    		if(cli.getFismorCli() == 2){
-							    			tipoPersona = "M";
-							    		}else if(cli.getFismorCli() == 3){
-							    			tipoPersona = "S";
-							    		}
-							    	}
-							    	/*
-							    	String nacionalidad = "001";// Nacional
-							    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
-							    		nacionalidad = "002";
-							    	}
-							    	*/
-							    	
-							    	if(cli.getFecnacCli()!= null){
-							    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
-							    	}
-							    	
-							    	
-							    	Calendar calendarIngreso =  Calendar.getInstance();
-							    	if(cli.getFecaltaCli() != null){
-							    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
-							    	}
-							    	
-							    	String nacionalidad = "001";// Nacional
-							    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
-							    		nacionalidad = "002";
-							    	}
-							    	
-						    		//GUARDAR MPERSONA
-						    		
-						    		Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
-									parametros.put("pv_cdperson_i"    , newCdPerson);
-									parametros.put("pv_cdtipide_i"    , "1");
-									parametros.put("pv_cdideper_i"    , cli.getNumeroExterno());
-									parametros.put("pv_dsnombre_i"    , (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
-									parametros.put("pv_cdtipper_i"    , "1");
-									parametros.put("pv_otfisjur_i"    , tipoPersona);
-									parametros.put("pv_otsexo_i"      , sexo);
-									parametros.put("pv_fenacimi_i"    , calendar.getTime());
-									parametros.put("pv_cdrfc_i"       , cli.getRfcCli());
-									parametros.put("pv_dsemail_i"     , cli.getMailCli());
-									parametros.put("pv_dsnombre1_i"   , null);
-									parametros.put("pv_dsapellido_i"  , (cli.getFismorCli() == 1) ? apellidoPat : "");
-									parametros.put("pv_dsapellido1_i" , (cli.getFismorCli() == 1) ? apellidoMat : "");
-									parametros.put("pv_feingreso_i"   , calendarIngreso.getTime());
-									parametros.put("pv_cdnacion_i"    , nacionalidad);
-									parametros.put("pv_canaling_i"    , cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())));
-									parametros.put("pv_conducto_i"    , null);
-									parametros.put("pv_ptcumupr_i"    , null);
-									parametros.put("pv_residencia_i"  , null);
-									parametros.put("pv_nongrata_i"    , null);
-									parametros.put("pv_cdideext_i"    , null);
-									parametros.put("pv_cdestciv_i"    , null);
-									parametros.put("pv_cdsucemi_i"    , cli.getSucursalCli());
-									parametros.put("pv_cdusuario_i"    , usuarioCaptura);
-									parametros.put("pv_dsocupacion_i" , null);
-									parametros.put("pv_accion_i"      , "I");
-									kernelManagerSustituto.movMpersona(parametros);
-						    		
-						    		//GUARDAR DOMICILIO
-						    		HashMap<String,String> paramDomicil = new HashMap<String, String>();
-					    			paramDomicil.put("pv_cdperson_i", newCdPerson);
-					    			paramDomicil.put("pv_nmorddom_i", "1");
-					    			paramDomicil.put("pv_msdomici_i", cli.getCalleCli() +" "+ cli.getNumeroCli());
-					    			paramDomicil.put("pv_nmtelefo_i", cli.getTelefonoCli());
-					    			
-					    			String codPosImp = cli.getCodposCli();
-					    			if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
-					    			    codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
-					    			}
-					    			
-					    			paramDomicil.put("pv_cdpostal_i", codPosImp);
-					    			
-					    			String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
-					    			if(edoAdosPos2.length() ==  1){
-					    				edoAdosPos2 = "0"+edoAdosPos2;
-					    			}
-					    			
-					    			HashMap<String,String> paramsMunCol = new HashMap<String, String>();
-					    			paramsMunCol.put("pv_cdpostal_i", codPosImp);
-					    			paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
-					    			paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
-					    			paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
-					                
-					                Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
-					    			
-					                
-					    			paramDomicil.put("pv_cdedo_i",    codPosImp+edoAdosPos2);
-					    			paramDomicil.put("pv_cdmunici_i", munycol.get("CDMUNICI"));
-					    			paramDomicil.put("pv_cdcoloni_i", munycol.get("CDCOLONI"));
-					    			paramDomicil.put("pv_nmnumero_i", cli.getNumeroCli());
-					    			paramDomicil.put("pv_nmnumint_i", null);
-					    			paramDomicil.put("pv_cdtipdom_i", "1");
-					    			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
-					    			paramDomicil.put("pv_swactivo_i", Constantes.SI);
-					    			
-					    			paramDomicil.put("pv_accion_i", "I");
-				
-					    			kernelManagerSustituto.pMovMdomicil(paramDomicil);
-					    			
-					    			HashMap<String,String> paramValoper = new HashMap<String, String>();
-					    			paramValoper.put("pv_cdunieco", "0");
-					    			paramValoper.put("pv_cdramo",   "0");
-					    			paramValoper.put("pv_estado",   null);
-					    			paramValoper.put("pv_nmpoliza", "0");
-					    			paramValoper.put("pv_nmsituac", null);
-					    			paramValoper.put("pv_nmsuplem", null);
-					    			paramValoper.put("pv_status",   null);
-					    			paramValoper.put("pv_cdrol",    "1");
-					    			paramValoper.put("pv_cdperson", newCdPerson);
-					    			paramValoper.put("pv_cdatribu", null);
-					    			paramValoper.put("pv_cdtipsit", null);
-					    			
-					    			paramValoper.put("pv_otvalor01", cli.getCveEle());
-					    			paramValoper.put("pv_otvalor02", cli.getPasaporteCli());
-					    			paramValoper.put("pv_otvalor08", cli.getOrirecCli());
-					    			paramValoper.put("pv_otvalor11", cli.getNacCli());
-					    			paramValoper.put("pv_otvalor20", (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0");
-					    			paramValoper.put("pv_otvalor25", cli.getCurpCli());
-					    			paramValoper.put("pv_otvalor38", cli.getTelefonoCli());
-					    			paramValoper.put("pv_otvalor39", cli.getMailCli());
-	
-					    			paramValoper.put("pv_otvalor51", cli.getFaxCli());
-					    			paramValoper.put("pv_otvalor52", cli.getCelularCli());
-					    			
-					    			kernelManagerSustituto.pMovTvaloper(paramValoper);
-					    			
-					    		}
-					    	}
-		    			}
-		    			
-		    			Map<String,String> parametrosBorrarMpoliper=new HashMap<String,String>(0);
-	    				parametrosBorrarMpoliper.put("pv_cdunieco_i" , comprarCdunieco);
-	    				parametrosBorrarMpoliper.put("pv_cdramo_i"   , comprarCdramo);
-	    				parametrosBorrarMpoliper.put("pv_estado_i"   , "W");
-	    				parametrosBorrarMpoliper.put("pv_nmpoliza_i" , comprarNmpoliza);
-	    				kernelManagerSustituto.borrarMpoliper(parametrosBorrarMpoliper);
-		    			
-		    			LinkedHashMap<String,Object> paramsMpoliper=new LinkedHashMap<String,Object>(0);
-		    			paramsMpoliper.put("pv_cdunieco_i" , comprarCdunieco);
-		    			paramsMpoliper.put("pv_cdramo_i"   , comprarCdramo);
-		    			paramsMpoliper.put("pv_estado_i"   , "W");
-		    			paramsMpoliper.put("pv_nmpoliza_i" , comprarNmpoliza);
-		    			paramsMpoliper.put("pv_nmsituac_i" , "0");
-						paramsMpoliper.put("pv_cdrol_i"    , "1");
-						paramsMpoliper.put("pv_cdperson_i" , newCdPerson);
-						paramsMpoliper.put("pv_nmsuplem_i" , "0");
-						paramsMpoliper.put("pv_status_i"   , "V");
-						paramsMpoliper.put("pv_nmorddom_i" , "1");
-						paramsMpoliper.put("pv_swreclam_i" , null);
-						paramsMpoliper.put("pv_accion_i"   , "I");
-						paramsMpoliper.put("pv_swexiper_i" , "S");
-						kernelManagerSustituto.movMpoliper(paramsMpoliper);
+					    		
+					    		String apellidoPat = "";
+						    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
+						    		apellidoPat = cli.getApellidopCli();
+						    	}
+						    	
+						    	String apellidoMat = "";
+						    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
+						    		apellidoMat = cli.getApellidomCli();
+						    	}
+						    	
+					    		Calendar calendar =  Calendar.getInstance();
+					    		
+					    		String sexo = "H"; //Hombre
+						    	if(cli.getSexoCli() > 0){
+						    		if(cli.getSexoCli() == 2) sexo = "M";
+						    	}
+						    	
+						    	String tipoPersona = "F"; //Fisica
+						    	if(cli.getFismorCli() > 0){
+						    		if(cli.getFismorCli() == 2){
+						    			tipoPersona = "M";
+						    		}else if(cli.getFismorCli() == 3){
+						    			tipoPersona = "S";
+						    		}
+						    	}
+						    	/*
+						    	String nacionalidad = "001";// Nacional
+						    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+						    		nacionalidad = "002";
+						    	}
+						    	*/
+						    	
+						    	if(cli.getFecnacCli()!= null){
+						    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
+						    	}
+						    	
+						    	
+						    	Calendar calendarIngreso =  Calendar.getInstance();
+						    	if(cli.getFecaltaCli() != null){
+						    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
+						    	}
+						    	
+						    	String nacionalidad = "001";// Nacional
+						    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+						    		nacionalidad = "002";
+						    	}
+						    	
+					    		//GUARDAR MPERSONA
+					    		
+					    		Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+								parametros.put("pv_cdperson_i"    , newCdPerson);
+								parametros.put("pv_cdtipide_i"    , "1");
+								parametros.put("pv_cdideper_i"    , cli.getNumeroExterno());
+								parametros.put("pv_dsnombre_i"    , (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc());
+								parametros.put("pv_cdtipper_i"    , "1");
+								parametros.put("pv_otfisjur_i"    , tipoPersona);
+								parametros.put("pv_otsexo_i"      , sexo);
+								parametros.put("pv_fenacimi_i"    , calendar.getTime());
+								parametros.put("pv_cdrfc_i"       , cli.getRfcCli());
+								parametros.put("pv_dsemail_i"     , cli.getMailCli());
+								parametros.put("pv_dsnombre1_i"   , null);
+								parametros.put("pv_dsapellido_i"  , (cli.getFismorCli() == 1) ? apellidoPat : "");
+								parametros.put("pv_dsapellido1_i" , (cli.getFismorCli() == 1) ? apellidoMat : "");
+								parametros.put("pv_feingreso_i"   , calendarIngreso.getTime());
+								parametros.put("pv_cdnacion_i"    , nacionalidad);
+								parametros.put("pv_canaling_i"    , cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())));
+								parametros.put("pv_conducto_i"    , null);
+								parametros.put("pv_ptcumupr_i"    , null);
+								parametros.put("pv_residencia_i"  , null);
+								parametros.put("pv_nongrata_i"    , null);
+								parametros.put("pv_cdideext_i"    , null);
+								parametros.put("pv_cdestciv_i"    , null);
+								parametros.put("pv_cdsucemi_i"    , cli.getSucursalCli());
+								parametros.put("pv_cdusuario_i"    , usuarioCaptura);
+								parametros.put("pv_dsocupacion_i" , null);
+								parametros.put("pv_accion_i"      , "I");
+								kernelManagerSustituto.movMpersona(parametros);
+					    		
+					    		//GUARDAR DOMICILIO
+					    		HashMap<String,String> paramDomicil = new HashMap<String, String>();
+				    			paramDomicil.put("pv_cdperson_i", newCdPerson);
+				    			paramDomicil.put("pv_nmorddom_i", "1");
+				    			paramDomicil.put("pv_msdomici_i", cli.getCalleCli() +" "+ cli.getNumeroCli());
+				    			paramDomicil.put("pv_nmtelefo_i", cli.getTelefonoCli());
+				    			
+				    			String codPosImp = cli.getCodposCli();
+				    			if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
+				    			    codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
+				    			}
+				    			
+				    			paramDomicil.put("pv_cdpostal_i", codPosImp);
+				    			
+				    			String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
+				    			if(edoAdosPos2.length() ==  1){
+				    				edoAdosPos2 = "0"+edoAdosPos2;
+				    			}
+				    			
+				    			HashMap<String,String> paramsMunCol = new HashMap<String, String>();
+				    			paramsMunCol.put("pv_cdpostal_i", codPosImp);
+				    			paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
+				    			paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
+				    			paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
+				                
+				                Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
+				    			
+				                
+				    			paramDomicil.put("pv_cdedo_i",    codPosImp+edoAdosPos2);
+				    			paramDomicil.put("pv_cdmunici_i", munycol.get("CDMUNICI"));
+				    			paramDomicil.put("pv_cdcoloni_i", munycol.get("CDCOLONI"));
+				    			paramDomicil.put("pv_nmnumero_i", cli.getNumeroCli());
+				    			paramDomicil.put("pv_nmnumint_i", null);
+				    			paramDomicil.put("pv_cdtipdom_i", "1");
+				    			paramDomicil.put("pv_cdusuario_i", usuarioCaptura);
+				    			paramDomicil.put("pv_swactivo_i", Constantes.SI);
+				    			
+				    			paramDomicil.put("pv_accion_i", "I");
+			
+				    			kernelManagerSustituto.pMovMdomicil(paramDomicil);
+				    			
+				    			HashMap<String,String> paramValoper = new HashMap<String, String>();
+				    			paramValoper.put("pv_cdunieco", "0");
+				    			paramValoper.put("pv_cdramo",   "0");
+				    			paramValoper.put("pv_estado",   null);
+				    			paramValoper.put("pv_nmpoliza", "0");
+				    			paramValoper.put("pv_nmsituac", null);
+				    			paramValoper.put("pv_nmsuplem", null);
+				    			paramValoper.put("pv_status",   null);
+				    			paramValoper.put("pv_cdrol",    "1");
+				    			paramValoper.put("pv_cdperson", newCdPerson);
+				    			paramValoper.put("pv_cdatribu", null);
+				    			paramValoper.put("pv_cdtipsit", null);
+				    			
+				    			paramValoper.put("pv_otvalor01", cli.getCveEle());
+				    			paramValoper.put("pv_otvalor02", cli.getPasaporteCli());
+				    			paramValoper.put("pv_otvalor08", cli.getOrirecCli());
+				    			paramValoper.put("pv_otvalor11", cli.getNacCli());
+				    			paramValoper.put("pv_otvalor20", (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0");
+				    			paramValoper.put("pv_otvalor25", cli.getCurpCli());
+				    			paramValoper.put("pv_otvalor38", cli.getTelefonoCli());
+				    			paramValoper.put("pv_otvalor39", cli.getMailCli());
+
+				    			paramValoper.put("pv_otvalor51", cli.getFaxCli());
+				    			paramValoper.put("pv_otvalor52", cli.getCelularCli());
+				    			
+				    			kernelManagerSustituto.pMovTvaloper(paramValoper);
+				    			
+				    		}
+				    	}
+	    			}
+				    			
+				    			Map<String,String> parametrosBorrarMpoliper=new HashMap<String,String>(0);
+			    				parametrosBorrarMpoliper.put("pv_cdunieco_i" , comprarCdunieco);
+			    				parametrosBorrarMpoliper.put("pv_cdramo_i"   , comprarCdramo);
+			    				parametrosBorrarMpoliper.put("pv_estado_i"   , "W");
+			    				parametrosBorrarMpoliper.put("pv_nmpoliza_i" , comprarNmpoliza);
+			    				kernelManagerSustituto.borrarMpoliper(parametrosBorrarMpoliper);
+				    			
+				    			LinkedHashMap<String,Object> paramsMpoliper=new LinkedHashMap<String,Object>(0);
+				    			paramsMpoliper.put("pv_cdunieco_i" , comprarCdunieco);
+				    			paramsMpoliper.put("pv_cdramo_i"   , comprarCdramo);
+				    			paramsMpoliper.put("pv_estado_i"   , "W");
+				    			paramsMpoliper.put("pv_nmpoliza_i" , comprarNmpoliza);
+				    			paramsMpoliper.put("pv_nmsituac_i" , "0");
+								paramsMpoliper.put("pv_cdrol_i"    , "1");
+								paramsMpoliper.put("pv_cdperson_i" , newCdPerson);
+								paramsMpoliper.put("pv_nmsuplem_i" , "0");
+								paramsMpoliper.put("pv_status_i"   , "V");
+								paramsMpoliper.put("pv_nmorddom_i" , "1");
+								paramsMpoliper.put("pv_swreclam_i" , null);
+								paramsMpoliper.put("pv_accion_i"   , "I");
+								paramsMpoliper.put("pv_swexiper_i" , "S");
+								kernelManagerSustituto.movMpoliper(paramsMpoliper);
+				    			
 			    	}
 	    		}
     		catch(Exception ex)
