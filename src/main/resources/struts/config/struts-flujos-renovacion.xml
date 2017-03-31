@@ -6,6 +6,10 @@
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp-script/proceso/renovacion/pantallaRenovacion.jsp</result>
         </action>
+        <action name="graficas" class="renovacionAction" method="pantallaRenovacion">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/renovacion/graficas.jsp</result>
+        </action>
         <action name="buscarPolizasRenovables" class="renovacionAction" method="buscarPolizasRenovables">
             <result type="json" />
         </action>
