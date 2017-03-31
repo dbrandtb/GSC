@@ -119,7 +119,6 @@
                 <param name="smap1.cdramo">${params.cdramo}</param>
                 <param name="smap1.cdtipsit">${params.cdtipsit}</param>
                 <param name="smap1.tipoflot">${params.tipoflot}</param>
-                <param name="smap1.turistas">${params.turistas}</param>
             </result>
             <result name="cotizadorGrupo" type="redirectAction">
                 <param name="namespace">/emision</param>
@@ -199,42 +198,6 @@
                 <param name="namespace">${params.namespace}</param>
                 <param name="actionName">${params.actionName}</param>
             </result>
-            <result name="RstnCotiSalInd" type="redirectAction">
-                <param name="namespace">/emision</param>
-                <param name="actionName">cotizacion</param>
-                <param name="smap1.cdramo">${params.cdramo}</param>
-                <param name="smap1.cdtipsit">${params.cdtipsit}</param>
-                <param name="smap1.rstn">S</param>
-                <param name="smap1.caseIdRstn">${params.caseId}</param>
-            </result>
-            <result name="RstnCompSalInd" type="redirectAction">
-                <param name="namespace">/</param>
-                <param name="actionName">datosComplementarios</param>
-                <param name="map1.rstn">S</param>
-                <param name="map1.ntramite">${params.showCase}</param>
-                <param name="map1.caseIdRstn">${params.caseId}</param>
-            </result>
-            <result name="RstnCotiSalCol" type="redirectAction">
-                <param name="namespace">/emision</param>
-                <param name="actionName">cotizacionGrupo2</param>
-                <param name="smap1.cdramo">${params.cdramo}</param>
-                <param name="smap1.cdtipsit">${params.cdtipsit}</param>
-                <param name="smap1.rstn">S</param>
-                <param name="smap1.caseIdRstn">${params.caseId}</param>
-            </result>
-            <result name="RstnCompSalCol" type="redirectAction">
-                <param name="namespace">/emision</param>
-                <param name="actionName">cotizacionGrupo2</param>
-                <param name="smap1.rstn">S</param>
-                <param name="smap1.ntramiteRstn">${params.showCase}</param>
-                <param name="smap1.emitirRstn">${params.issue}</param>
-                <param name="smap1.caseIdRstn">${params.caseId}</param>
-            </result>
-            <result name="RstnConsAseg" type="redirectAction">
-                <param name="namespace">/consultasPoliza</param>
-                <param name="actionName">initConsultaAseguradosPoliza</param>
-                <param name="params.ntramite">${params.showCase}</param>
-            </result>
         </action>
         
         <action name="descargaDocInline" class="documentosPolizaAction" method="descargaDocumento">
@@ -248,10 +211,6 @@
         
         <!-- crear carpeta desde Base de Datos -->
         <action name="creaCarpeta" class="documentosPolizaAction" method="creaCarpeta">
-            <result name="success" type="json" />
-        </action>
-        <!-- lista archivos de un directorio -->
-        <action name="listarDirectorio" class="documentosPolizaAction" method="listarDirectorio">
             <result name="success" type="json" />
         </action>
         <!-- crear carpeta desde Base de Datos -->

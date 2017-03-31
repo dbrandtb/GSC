@@ -9,26 +9,15 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
-import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
-import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
-import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
-import mx.com.gseguros.portal.general.dao.PantallasDAO;
-import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
-import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
-import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
@@ -53,9 +42,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 {
 	private static Logger logger = Logger.getLogger(SiniestrosManagerImpl.class);
 	
-	@Autowired
-	private PantallasDAO  pantallasDAO;
-	
 	private SiniestrosDAO siniestrosDAO;
 	
 	@Autowired
@@ -71,10 +57,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	private FlujoMesaControlManager flujoMesaControlManager;
 	
 	private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(SiniestrosManagerImpl.class);
-	
-	@Autowired
-	@Qualifier("consultasDAOICEImpl")
-	private ConsultasPolizaDAO consultasPolizaDAOICE;
 	
 	@Override
 	public List<AutorizacionServicioVO> getConsultaAutorizacionesEsp(String nmautser) throws Exception {
@@ -2707,7 +2689,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(),daoExc);
 		}
 	}
-
+    
 	@Override
 	public String actualizarReqautes(String reqautes, String ntramite, String nfactura, String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String nmsituac, String aaapertu, String status,
@@ -2728,95 +2710,4 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(),daoExc);
 		}
 	}
-	
-	@Override
-	public List<AseguradoVO> obtenerTramiteCompletoAsegurados(String ntramite, long start, long limit) throws Exception
-	{
-		Map<String,String> params = new HashMap<String,String>();
-		List<AseguradoVO> asegurados;
-		
-		params.put("pv_ntramite_i" , ntramite);
-		log.debug("obtenerTramiteCompleto params: "+params);
-		Map<String,String> tramite = siniestrosDAO.obtenerTramiteCompleto(params);
-		//logger.debug("tramite: "+tramite);
-		PolizaVO poliza = new PolizaVO();
-		poliza.setCdunieco(tramite.get("CDUNIECO"));
-		poliza.setCdramo(tramite.get("CDRAMO"));
-		poliza.setEstado(tramite.get("ESTADO"));
-		poliza.setNmpoliza(tramite.get("NMPOLIZA"));
-		poliza.setNmsuplem(tramite.get("NMSUPLEM"));
-		//logger.debug("poliza: "+ poliza);
-		asegurados = consultasPolizaDAOICE.obtieneAsegurados(poliza, start, limit);
-		//log.debug("obtenerTramiteCompleto tramite: "+asegurados);
-		return asegurados;
-	}
-	
-	@Override
-	public ManagerRespuestaImapVO pantallaReservaSiniestralidad(String cdsisrol) throws Exception
-	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ pantallaReservaSiniestralidad @@@@@@")
-				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
-				.toString());
-		ManagerRespuestaImapVO resp = new ManagerRespuestaImapVO(true);
-		String paso = "";
-		//obtener componentes
-		try
-		{
-			paso = "antes de obtener componentes busqueda";
-			List<ComponenteVO>componentesBusqueda=pantallasDAO.obtenerComponentes(
-					null,null,null,null,null,cdsisrol,"PANTALLA_RESERVA_SINIESTRALIDAD","BUSQUEDA",null);
-			
-			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			
-			gc.generaComponentes(componentesBusqueda, true, false, true, false, false, false);
-			
-			Map<String,Item> imap = new HashMap<String,Item>();
-			resp.setImap(imap);			
-			imap.put("busquedaItems" , gc.getItems());
-			
-			
-				
-		}
-		catch(Exception ex)
-		{
-			Utils.generaExcepcion(ex, ex.getMessage().toString());
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@ ").append(resp)
-				.append("\n@@@@@@ pantallaReservaSiniestralidad @@@@@@")
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.toString());
-		return resp;
-	}
-	
-	@Override
-	public List<Map<String, String>> getDatosRenovaSiniestralidad(String pv_CdUniEco_i 
-																,String pv_CdRamo_i  
-																,String pv_nmpoliza_i
-																,String pv_cdperson  
-																,String pv_nmsinies
-																,String pv_fecdesde  
-																,String pv_fechasta  
-																,String pv_start_i
-																,String pv_limit_i 
-																,String pv_ntramite_i) throws Exception {
-		
-		
-		return siniestrosDAO.obtieneListaDatosRenovaSiniestralidad(pv_CdUniEco_i 
-				,pv_CdRamo_i  
-				,pv_nmpoliza_i
-				,pv_cdperson  
-				,pv_nmsinies
-				,Utils.formateaFecha(pv_fecdesde)  
-				,Utils.formateaFecha(pv_fechasta)  
-				,pv_start_i
-				,pv_limit_i 
-				,pv_ntramite_i);
-	}
-    
 }

@@ -27,9 +27,6 @@ import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.portal.general.service.EjecutarComandoSshService;
-import mx.com.gseguros.portal.general.service.ImpresionService;
-import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.wizard.configuracion.producto.dao.ProductoDAO;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.ClausulaVO;
 import mx.com.gseguros.wizard.configuracion.producto.definicion.model.PeriodoVO;
@@ -41,7 +38,6 @@ import mx.com.gseguros.wizard.configuracion.producto.util.WizardUtils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.jdbc.support.lob.OracleLobHandler;
 import org.springframework.jdbc.support.nativejdbc.SimpleNativeJdbcExtractor;
@@ -60,9 +56,6 @@ import org.springframework.jdbc.support.nativejdbc.SimpleNativeJdbcExtractor;
  * 
  */
 public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke implements ProductoManager {
-	
-	@Autowired
-	private EjecutarComandoSshService  ejecutarComandoSshService;
 
 	private static Logger logger = Logger.getLogger(ProductoManagerImpl.class);
 	/**
@@ -789,42 +782,5 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 		}
 
 		return res.getMsgText();
-	}
-	
-	@Override
-	public String generarProducto(String codigoProducto,String server,String usuario,String pass)
-			throws ApplicationException {
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ generarProducto @@@@@@"
-				,"\n@@@@@@ codigoProducto=" , codigoProducto
-				,"\n@@@@@@ server="   , server
-				,"\n@@@@@@ usuario=" , usuario
-				,"\n@@@@@@ pass=" , pass
-				));
-		String mensaje=null;
-		try {
-//			CacheSistema.generarProducto(codigoProducto);
-//			CacheSistema.cargarProducto(codigoProducto);
-			long timestamp = System.currentTimeMillis();
-			List<String> cmds=new ArrayList();
-			cmds.add("touch ppp.xtx"+timestamp);
-			cmds.add("cd /ice/cnf;");
-			cmds.add("cp seus4_PRODUC.cnf seus4_PRODUC.cnf."+timestamp+";");
-			cmds.add("cd /ice/bin;");
-			cmds.add("./sigsgtta.exe "+codigoProducto+" ice/ice@GSEGUROS");
-			mensaje=ejecutarComandoSshService.ejectutarCmd(server, usuario, pass, cmds);
-			
-		} catch (Exception e) {
-			logger.error("Ejecutando ssh {}", e);
-			throw new ApplicationException(e.getMessage());
-		}
-
-		logger.debug(Utils.log(
-				  "\n@@@@@@ mensaje=",mensaje,
-				  "\n@@@@@@ generarProducto @@@@@@"
-				, "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-		return mensaje;
 	}
 }
