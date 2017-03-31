@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 ////// variables //////
-var contexto					= '${ctx}';
+var _CONTEXT = '${ctx}';
 
 var _URL_RENOVA_SINIESTRALIDAD  =	'<s:url namespace="/siniestros" action="consultaRenovaSiniestros" />';
 
