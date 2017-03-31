@@ -7,7 +7,6 @@ import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -755,19 +754,5 @@ public interface SiniestrosManager {
     
 	public String validaAutEspLimMedi(String nmautesp, String ntramite, String nfactura, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String nmsinies) throws Exception; //(EGS) 
 
-	public List<AseguradoVO> obtenerTramiteCompletoAsegurados(String ntramite, long start, long limit) throws Exception;
 	
-	public ManagerRespuestaImapVO pantallaReservaSiniestralidad(String cdsisrol) throws Exception;
-	
-	public List<Map<String, String>> getDatosRenovaSiniestralidad(String pv_CdUniEco_i 
-																,String pv_CdRamo_i  
-																,String pv_nmpoliza_i
-																,String pv_cdperson  
-																,String pv_nmsinies
-																,String pv_fecdesde  
-																,String pv_fechasta  
-																,String pv_start_i
-																,String pv_limit_i 
-																,String pv_ntramite_i)throws Exception;
-
 }

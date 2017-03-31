@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -33,7 +32,6 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
@@ -133,10 +131,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	private List<Map<String,String>>  datosInformacionAdicional;
 	private List<Map<String,String>>  datosValidacion;
 	
-	private boolean     exito            = false;
-	private String      respuesta;
-	private String      respuestaOculta  = null;
-	
 	@Autowired
 	@Qualifier("consultasAseguradoManagerImpl")
 	private ConsultasAseguradoManager consultasAseguradoManager;
@@ -147,15 +141,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	@Autowired
 	private MesaControlManager mesaControlManager;
 
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-    
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-    
-    @Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-    
 	/**
 	* metodo para consultar la poliza en especifico
 	* @param unieco, Ramo, Estado, Nmpoliza, cdperson
@@ -324,12 +309,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						List<Map<String,String>> siniesxfactura = siniestrosManager.listaSiniestrosTramite2(params.get("pv_ntramite_i"),facturas.get(i).get("NFACTURA"));
 						
 						for(int a=0; a< siniesxfactura.size();a++){
-							String nmsini = siniesxfactura.get(a).get("NMSINIES") + ""; //(EGS)
-							if(!nmsini.equalsIgnoreCase("null")){ //(EGS)
-								siniestrosManager.getAltaSiniestroSinAutorizacion(msgResult,siniesxfactura.get(a).get("CDUNIECO"),siniesxfactura.get(a).get("CDRAMO"),
+							siniestrosManager.getAltaSiniestroSinAutorizacion(msgResult,siniesxfactura.get(a).get("CDUNIECO"),siniesxfactura.get(a).get("CDRAMO"),
 									siniesxfactura.get(a).get("ESTADO"),siniesxfactura.get(a).get("NMPOLIZA"),siniesxfactura.get(a).get("NMSUPLEM"),siniesxfactura.get(a).get("NMSITUAC"),
 									siniesxfactura.get(a).get("CDTIPSIT"),renderFechas.parse(siniesxfactura.get(a).get("FEOCURRE")),facturas.get(i).get("NFACTURA"), siniesxfactura.get(a).get("SECTWORKSIN"));
-							} //(EGS)
 						}
 					}
 					
@@ -795,7 +777,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				}
 			}
 			
-			File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
+			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
 			if(!carpeta.exists()){
 				logger.debug("no existe la carpeta : {}",paramsO.get("pv_ntramite_i"));
 				carpeta.mkdir();
@@ -808,19 +790,19 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				logger.debug("existe la carpeta :{}",paramsO.get("pv_ntramite_i"));
 			}
 			String urlContrareciboSiniestro = ""
-					+ rutaServidorReports
+					+ getText("ruta.servidor.reports")
 					+ "?p_usuario=" + usuario.getUser() 
 					+ "&p_ntramite=" + paramsO.get("pv_ntramite_i")
 					+ "&destype=cache"
 					+ "&desformat=PDF"
-					+ "&userid="+passServidorReports
+					+ "&userid="+getText("pass.servidor.reports")
 					+ "&ACCESSIBLE=YES"
 					+ "&report="+ nombreRdf
 					+ "&paramform=no"
 					;
 			String nombreArchivo = getText("pdf.siniestro.cartarechazo.nombre");
 			String pathArchivo=""
-					+ rutaDocumentosPoliza
+					+ getText("ruta.documentos.poliza")
 					+ "/" + paramsO.get("pv_ntramite_i")
 					+ "/" + nombreArchivo
 					;
@@ -1259,7 +1241,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				paramsO.putAll(params);
 				
 				//String nombreRdf = getText("rdf.siniestro.cartafiniquito.nombre");
-				File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
+				File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
 				if(!carpeta.exists()){
 					logger.debug("no existe la carpeta: {}",paramsO.get("pv_ntramite_i"));
 					carpeta.mkdir();
@@ -1280,7 +1262,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					}
 					
 					String urlFiniquitoSiniestro = ""
-							+ rutaServidorReports
+							+ getText("ruta.servidor.reports")
 							+ "?p_unieco=" + siniestro.getCdunieco() 
 							+ "&p_ramo="   + siniestro.getCdramo()
 							+ "&p_estado=" + siniestro.getEstado()
@@ -1292,14 +1274,14 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							+ "&p_sinies="+ siniestro.getNmsinies()
 							+ "&destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+passServidorReports
+							+ "&userid="+getText("pass.servidor.reports")
 							+ "&ACCESSIBLE=YES"
 							+ "&report="+ nombreRdf
 							+ "&paramform=no"
 							;
 					String nombreArchivo = siniestro.getNmsinies() +"_"+ siniestro.getAapertu() +"_" + getText("pdf.siniestro.finiquito.nombre");
 					String pathArchivo=""
-							+ rutaDocumentosPoliza
+							+ getText("ruta.documentos.poliza")
 							+ "/" + paramsO.get("pv_ntramite_i")
 							+ "/" + nombreArchivo
 							;
@@ -6165,84 +6147,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}
 		return SUCCESS;
 	}
-	
-	public String reservaSiniestralidad(){
-		logger.info(
-				new StringBuilder()
-				.append("\n#####################################")
-				.append("\n###### reservaSiniestralidad ########")
-				.append("\n###### smap1=").append(smap)
-				.toString()
-				);
-		
-		success = true;
-		
-		String cdsisrol = null;
-		
-		//datos completos
-		try
-		{
-			UserVO usuario = (UserVO)session.get("USUARIO");
-			cdsisrol = usuario.getRolActivo().getClave();
-			ManagerRespuestaImapVO managerResponse = siniestrosManager.pantallaReservaSiniestralidad(cdsisrol);
-			exito           = managerResponse.isExito();
-			respuesta       = managerResponse.getRespuesta();
-			respuestaOculta = managerResponse.getRespuestaOculta();
-			if(exito)
-			{
-				imap = managerResponse.getImap();
-			}
-		}
-		catch(Exception ex)
-		{
-			long timestamp  = System.currentTimeMillis();
-			success         = false;
-			respuesta       = new StringBuilder("Error al obtener atributos de pantalla #").append(timestamp).toString();
-			respuestaOculta = ex.getMessage();
-			logger.error(respuesta,ex);
-		}
-		logger.info(
-				new StringBuilder()
-				.append("\n###### slist1=").append(slist1)
-				.append("\n###### reservaSiniestralidad #########")
-				.append("\n#####################################")
-				.toString()
-				);
-		return SUCCESS;
-	}
-	
-	public String consultaRenovaSiniestralidad(){
-		logger.debug("Entra a consultaDatosAutEspecial params de entrada :{} ",params);
-		try {
-			String pv_CdUniEco_i = params.get("pv_CdUniEco_i")
-                  ,pv_CdRamo_i   = params.get("pv_CdRamo_i")
-                  ,pv_nmpoliza_i = params.get("pv_nmpoliza_i")
-                  ,pv_cdperson   = params.get("pv_cdperson")
-                  ,pv_nmsinies   = params.get("pv_nmsinies")
-                  ,pv_fecdesde   = params.get("pv_fecdesde")
-                  ,pv_fechasta   = params.get("pv_fechasta")
-                  ,pv_start_i    = params.get("pv_start_i")
-                  ,pv_limit_i    = params.get("pv_limit_i")
-                  ,pv_ntramite_i = params.get("pv_ntramite_i");
-			datosValidacion = siniestrosManager.getDatosRenovaSiniestralidad(pv_CdUniEco_i 
-																			,pv_CdRamo_i  
-																			,pv_nmpoliza_i
-																			,pv_cdperson  
-																			,pv_nmsinies
-																			,pv_fecdesde  
-																			,pv_fechasta  
-																			,pv_start_i
-																			,pv_limit_i 
-																			,pv_ntramite_i);
-			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
-		}catch( Exception e){
-			logger.error("Error al obtener consultaDatosAutEspecial : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		setSuccess(true);
-		return SUCCESS;
-	}
-		
     
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
@@ -6835,17 +6739,5 @@ public class SiniestrosAction extends PrincipalCoreAction {
 
 	public void setDatosValidacionGral(List<GenericVO> datosValidacionGral) {
 		this.datosValidacionGral = datosValidacionGral;
-	}
-	
-    public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
 	}
 }
