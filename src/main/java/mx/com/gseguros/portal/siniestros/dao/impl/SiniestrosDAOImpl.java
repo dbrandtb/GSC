@@ -6263,5 +6263,64 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 		
 	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListaDatosRenovaSiniestralidad(String pv_CdUniEco_i 
+			,String pv_CdRamo_i  
+			,String pv_nmpoliza_i
+			,String pv_cdperson  
+			,String pv_nmsinies
+			,String pv_fecdesde  
+			,String pv_fechasta  
+			,String pv_start_i
+			,String pv_limit_i 
+			,String pv_ntramite_i) throws Exception {
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		
+		logger.debug("params: {} "+params);
+  
+		params.put("pv_CdUniEco_i" , pv_CdUniEco_i);
+		params.put("pv_CdRamo_i"   , pv_CdRamo_i  );
+		params.put("pv_nmpoliza_i" , pv_nmpoliza_i);
+		params.put("pv_cdperson"   , pv_cdperson  );
+		params.put("pv_nmsinies"   , pv_nmsinies);
+		params.put("pv_fecdesde"   , Utils.parse(pv_fecdesde));
+		params.put("pv_fechasta"   , Utils.parse(pv_fechasta));
+		params.put("pv_start_i"    , pv_start_i);
+		params.put("pv_limit_i"    , pv_limit_i); 
+		params.put("pv_ntramite_i" , pv_ntramite_i);
+        logger.debug("params:"+params);
+        
+		
+		Map<String, Object> result = ejecutaSP(new ListaRenovaSiniestralidad(this.getDataSource()), params);
+		logger.debug("result: {}"+result);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ListaRenovaSiniestralidad extends StoredProcedure {
+		protected ListaRenovaSiniestralidad(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_RESERVAS_SINI.P_SHOW_DETALLE_RESERVAS");
+			declareParameter(new SqlParameter("pv_CdUniEco_i",   	 OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_CdRamo_i",   	 OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fecdesde",   OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_fechasta",   OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_start_i",   OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_limit_i",   OracleTypes.NUMERIC));
+			//declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"TIPO_PAGO", "CDUNIECO", "DSUNIECO", "CDRAMO", "DSRAMO", "ESTADO", "NMPOLIZA", "FECINIVIG", "FEcFINVIG",
+					"AAAPERTU", "NMSINIES", "FECHA_OCURRENCIA", "CDICD", "DESC_ICD", "CDCAUSA", "CDPERSON", "NOMBRE_ASEGURADO", 
+					"FENACIMI", "EDAD", "SEXO", "NTRAMITE", "MONTO_RESERVADO", "MONTO_APROBADO", "MONTO_PAGADO"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
     
 }
