@@ -49,9 +49,5 @@ public interface RecibosDAO {
 	
 	public void borrarDocumentoReciboConsolidado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmfolio) throws Exception;
 	
-	public String obtenerLigaRecibo(String cdunieco, String cdramo, String estado, String nmpoliza, String folio) throws Exception;
-	
-	public String obtenerSuplementoEmision(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
-	
-	public String obtenerTramiteEmision(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+	public String obtenerLigaRecibo(String cdunieco, String cdramo, String estado, String nmpoliza, String folio) throws Exception;	
 }

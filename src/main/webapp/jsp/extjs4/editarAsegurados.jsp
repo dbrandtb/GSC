@@ -1619,10 +1619,6 @@ debug("validarYGuardar flag:2");
                                                                            }
                                                                        ]
                                                                    },{
-                                                                       header     : 'ID. Asegurado'
-                                                                       ,dataIndex : 'CLAVECLI'
-                                                                       ,flex      : 1
-                                                                   },{
                                                                        header     : 'RFC'
                                                                        ,dataIndex : 'RFCCLI'
                                                                        ,flex      : 1
@@ -1773,11 +1769,6 @@ debug("validarYGuardar flag:2");
                                                                            }
                                                                        ]
                                                                    },{
-                                                                       header     : 'ID. Asegurado'
-                                                                       ,dataIndex : 'CLAVECLI'
-                                                                       ,flex      : 1
-                                                                   }
-                                                                   ,{
                                                                        header     : 'RFC'
                                                                        ,dataIndex : 'RFCCLI'
                                                                        ,flex      : 1
@@ -2074,7 +2065,7 @@ debug("validarYGuardar flag:2");
                         }
                     }],
                     /*tbar: [{
-                        icon:'resources/extjs4/resources/fam3icons/icons/add.png',
+                        icon:'resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
                         text: 'Agregar',
                         scope: this,
                         handler: this.onAddClick
@@ -2667,7 +2658,7 @@ debug("validarYGuardar flag:2");
                 --%>
                 {
                     text:'Guardar',
-                    icon: contextop2+'/resources/fam3icons/icons/accept.png',
+                    icon: contextop2+'/resources/fam3icons/icons/fam/accept.png',
                     handler:function(){
                         debug('form1p2',Ext.getCmp('form1p2').getForm().isValid());
                         if(Ext.getCmp('form1p2').getForm().isValid())
