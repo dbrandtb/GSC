@@ -228,25 +228,30 @@ public class RecibosManagerImpl implements RecibosManager {
                 ntramite = map.get("ntramite");
                 nmsolici = map.get("nmsolici");
                 nmimpres = map.get("nmimpres");
-                paso = "Antes de obtener info para SIGS";
-                infoRecibos = recibosDAO.obtenerInfoRecibos(cdunieco, cdramo, estado, nmpoliza, nmrecibo, nmsuplem);
-                logger.debug("Operacion "+infoRecibos.size());
-                paso = "logueando info recibos";
-                logger.debug(infoRecibos);
-                paso = "Antes de recorrer info recibos";
-                Utils.log(paso);
-                for(int i = 0; i < infoRecibos.size(); i++){
-                    paso = "Antes de cast ReciboWrapper";
+                if(ntramite != null){
+                    paso = "Antes de obtener info para SIGS";
+                    infoRecibos = recibosDAO.obtenerInfoRecibos(cdunieco, cdramo, estado, nmpoliza, nmrecibo, nmsuplem);
+                    logger.debug("Operacion "+infoRecibos.size());
+                    paso = "logueando info recibos";
+                    logger.debug(infoRecibos);
+                    paso = "Antes de recorrer info recibos";
                     Utils.log(paso);
-                    ReciboWrapper reciboWrap = (ReciboWrapper) infoRecibos.get(i);
-                    reciboWrap.setOperacion(String.valueOf(Operacion.ACTUALIZA));
-                    reciboWrap.getRecibo().setRmdbRn(Integer.parseInt(rmdbRn));
-                    logger.debug("Operacion "+reciboWrap.getOperacion());
-                    logger.debug("rmdbrn "+reciboWrap.getRecibo().getRmdbRn());
-                    Utils.log("Operacion",reciboWrap.getOperacion());
-                    Utils.log("rmdbrn",reciboWrap.getRecibo().getRmdbRn());                    
-                    ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdunieco, ntramite, false, user, reciboWrap);
-                    exitoso = true;                    
+                    for(int i = 0; i < infoRecibos.size(); i++){
+                        paso = "Antes de cast ReciboWrapper";
+                        Utils.log(paso);
+                        ReciboWrapper reciboWrap = (ReciboWrapper) infoRecibos.get(i);
+                        reciboWrap.setOperacion(String.valueOf(Operacion.ACTUALIZA));
+                        reciboWrap.getRecibo().setRmdbRn(Integer.parseInt(rmdbRn));
+                        logger.debug("Operacion "+reciboWrap.getOperacion());
+                        logger.debug("rmdbrn "+reciboWrap.getRecibo().getRmdbRn());
+                        Utils.log("Operacion",reciboWrap.getOperacion());
+                        Utils.log("rmdbrn",reciboWrap.getRecibo().getRmdbRn());                    
+                        ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdunieco, ntramite, false, user, reciboWrap);
+                        exitoso = true;                    
+                    }
+                }
+                else{
+                    throw new Exception("No se pudo actualizar folio de sigs");
                 }
             }
             if(exitoso){
@@ -349,33 +354,31 @@ public class RecibosManagerImpl implements RecibosManager {
             String ntramite,
             String nmimpres,
             String folio) throws Exception{
-        
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<String, Object>();        
         params.put("pv_cdunieco_i", cdunieco);
-        params.put("pv_cdramo_i", cdramo);
-        params.put("pv_estado_i", estado);
+        params.put("pv_cdramo_i",   cdramo);
+        params.put("pv_estado_i",   estado);
         params.put("pv_nmpoliza_i", nmpoliza);
         params.put("pv_nmsuplem_i", nmsuplem);
         params.put("pv_ntramite_i", ntramite);
         String cdtipsit   = kernelManager.obtenCdtipsit(params);
         params.put("pv_cdtipsit_i", cdtipsit);    
-        String cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
-        
+        String cdtipsitGS = kernelManager.obtenCdtipsitGS(params);        
         String parametros = "?"+cdunieco+","+cdtipsitGS+","+nmpoliza+","+nmimpres+","+folio;
-        
         logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
-        
+        String nmsuplemEmi = obtenerSuplementoEmision(cdunieco, cdramo, estado, nmpoliza);
+        String ntramiteEmi = obtenerTramiteEmision(cdunieco, cdramo, estado, nmpoliza);
         mesaControlDAO.guardarDocumento(
                 cdunieco,
                 cdramo,
                 estado,
                 nmpoliza,
-                nmsuplem,
+                nmsuplemEmi,
                 new Date(),
                 urlImpresionRecibos + parametros,
                 "ReciboConsolidado "+folio,
                 nmsolici,
-                ntramite,
+                ntramiteEmi,
                 "1",
                 Constantes.SI,
                 null,
@@ -397,6 +400,34 @@ public class RecibosManagerImpl implements RecibosManager {
             Utils.generaExcepcion(ex, paso);
         }
         return liga;
+    }
+    
+    @Override
+    public String obtenerSuplementoEmision(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception{
+        String paso = "";
+        String nmsuplem = "";
+        try{
+            paso = "Antes de obtener suplemento de emision";
+            nmsuplem = recibosDAO.obtenerSuplementoEmision(cdunieco, cdramo, estado, nmpoliza);
+        }
+        catch(Exception ex){
+            Utils.generaExcepcion(ex, paso);
+        }
+        return nmsuplem;
+    }
+    
+    @Override
+    public String obtenerTramiteEmision(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception{
+        String paso = "";
+        String ntramite = "";
+        try{
+            paso = "Antes de obtener tramite de emision";
+            ntramite = recibosDAO.obtenerTramiteEmision(cdunieco, cdramo, estado, nmpoliza);
+        }
+        catch(Exception ex){
+            Utils.generaExcepcion(ex, paso);
+        }
+        return ntramite;
     }
     
     public void setRecibosDAO(RecibosDAO recibosDAO) {

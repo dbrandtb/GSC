@@ -587,4 +587,56 @@ public class RecibosDAOImpl extends AbstractManagerDAO implements RecibosDAO {
             compile();
         }
     }
+    
+    @Override
+    public String obtenerSuplementoEmision(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception{
+        Map<String,Object> params = new LinkedHashMap<String,Object>();
+        params.put("cdunieco", cdunieco);
+        params.put("cdramo"  , cdramo);
+        params.put("estado"  , estado);
+        params.put("nmpoliza", nmpoliza);
+        Map<String,Object> procResult = ejecutaSP(new ObtenerSuplementoEmision(getDataSource()),params);
+        String nmsuplem               = procResult.get("pv_nmsuplem_o").toString();
+        return nmsuplem;
+    }
+    
+    protected class ObtenerSuplementoEmision extends StoredProcedure{
+        protected ObtenerSuplementoEmision(DataSource dataSource){
+            super(dataSource,"PKG_RECIBOS_SISA_SIGS.P_OBTENER_SUPLEM_EMI");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nmsuplem_o", OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public String obtenerTramiteEmision(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception{
+        Map<String,Object> params = new LinkedHashMap<String,Object>();
+        params.put("cdunieco", cdunieco);
+        params.put("cdramo"  , cdramo);
+        params.put("estado"  , estado);
+        params.put("nmpoliza", nmpoliza);
+        Map<String,Object> procResult = ejecutaSP(new ObtenerTramiteEmision(getDataSource()),params);
+        String nmsuplem               = procResult.get("pv_ntramite_o").toString();
+        return nmsuplem;
+    }
+    
+    protected class ObtenerTramiteEmision extends StoredProcedure{
+        protected ObtenerTramiteEmision(DataSource dataSource){
+            super(dataSource,"PKG_RECIBOS_SISA_SIGS.P_OBTENER_TRAMITE_EMI");
+            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_ntramite_o", OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }
