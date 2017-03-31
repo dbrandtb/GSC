@@ -1396,6 +1396,21 @@
 		<!--<action name="complementoCitasMedicas" class="siniestrosAction"  method="altaCitasMedica">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>
 		</action>-->
+		
+		<action name="reservasSiniestralidad" class="siniestrosAction" method="reservaSiniestralidad">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/siniestros/reservaSiniestralidad.jsp</result>
+        </action>
+        
+        <action name="consultaRenovaSiniestros" class="siniestrosAction" method="consultaRenovaSiniestralidad">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					success
+				</param>
+			</result>
+		</action>
     </package>
 
 </struts>

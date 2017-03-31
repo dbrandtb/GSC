@@ -33,6 +33,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
@@ -131,6 +132,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	private Map<String, String> map1;
 	private List<Map<String,String>>  datosInformacionAdicional;
 	private List<Map<String,String>>  datosValidacion;
+	
+	private boolean     exito            = false;
+	private String      respuesta;
+	private String      respuestaOculta  = null;
 	
 	@Autowired
 	@Qualifier("consultasAseguradoManagerImpl")
@@ -6160,6 +6165,84 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}
 		return SUCCESS;
 	}
+	
+	public String reservaSiniestralidad(){
+		logger.info(
+				new StringBuilder()
+				.append("\n#####################################")
+				.append("\n###### reservaSiniestralidad ########")
+				.append("\n###### smap1=").append(smap)
+				.toString()
+				);
+		
+		success = true;
+		
+		String cdsisrol = null;
+		
+		//datos completos
+		try
+		{
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			cdsisrol = usuario.getRolActivo().getClave();
+			ManagerRespuestaImapVO managerResponse = siniestrosManager.pantallaReservaSiniestralidad(cdsisrol);
+			exito           = managerResponse.isExito();
+			respuesta       = managerResponse.getRespuesta();
+			respuestaOculta = managerResponse.getRespuestaOculta();
+			if(exito)
+			{
+				imap = managerResponse.getImap();
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp  = System.currentTimeMillis();
+			success         = false;
+			respuesta       = new StringBuilder("Error al obtener atributos de pantalla #").append(timestamp).toString();
+			respuestaOculta = ex.getMessage();
+			logger.error(respuesta,ex);
+		}
+		logger.info(
+				new StringBuilder()
+				.append("\n###### slist1=").append(slist1)
+				.append("\n###### reservaSiniestralidad #########")
+				.append("\n#####################################")
+				.toString()
+				);
+		return SUCCESS;
+	}
+	
+	public String consultaRenovaSiniestralidad(){
+		logger.debug("Entra a consultaDatosAutEspecial params de entrada :{} ",params);
+		try {
+			String pv_CdUniEco_i = params.get("pv_CdUniEco_i")
+                  ,pv_CdRamo_i   = params.get("pv_CdRamo_i")
+                  ,pv_nmpoliza_i = params.get("pv_nmpoliza_i")
+                  ,pv_cdperson   = params.get("pv_cdperson")
+                  ,pv_nmsinies   = params.get("pv_nmsinies")
+                  ,pv_fecdesde   = params.get("pv_fecdesde")
+                  ,pv_fechasta   = params.get("pv_fechasta")
+                  ,pv_start_i    = params.get("pv_start_i")
+                  ,pv_limit_i    = params.get("pv_limit_i")
+                  ,pv_ntramite_i = params.get("pv_ntramite_i");
+			datosValidacion = siniestrosManager.getDatosRenovaSiniestralidad(pv_CdUniEco_i 
+																			,pv_CdRamo_i  
+																			,pv_nmpoliza_i
+																			,pv_cdperson  
+																			,pv_nmsinies
+																			,pv_fecdesde  
+																			,pv_fechasta  
+																			,pv_start_i
+																			,pv_limit_i 
+																			,pv_ntramite_i);
+			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
+		}catch( Exception e){
+			logger.error("Error al obtener consultaDatosAutEspecial : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		setSuccess(true);
+		return SUCCESS;
+	}
+		
     
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {

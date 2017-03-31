@@ -645,6 +645,16 @@ public interface SiniestrosDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	public String validaAutEspLimMedi(String nmautesp, String ntramite, String nfactura, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String nmsinies) throws Exception; //(EGS) 
-
+	public String validaAutEspLimMedi(String nmautesp, String ntramite, String nfactura, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String nmsinies) throws Exception; //(EGS)
+	
+	public List<Map<String, String>> obtieneListaDatosRenovaSiniestralidad(String pv_CdUniEco_i 
+			,String pv_CdRamo_i  
+			,String pv_nmpoliza_i
+			,String pv_cdperson  
+			,String pv_nmsinies
+			,String pv_fecdesde  
+			,String pv_fechasta  
+			,String pv_start_i
+			,String pv_limit_i 
+			,String pv_ntramite_i) throws Exception;
 }
