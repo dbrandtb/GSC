@@ -4278,33 +4278,33 @@ function _p30_cotizar(sinTarificar)
             }
     	}
     	
-//    	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
-//    	     try 
-//    	     {
-//    	         _p30_store.each
-//    	         (
-//    	          function(record)
-//    	             {
-//    	                if( ',CR,'.lastIndexOf(','+record.get('cdtipsit')+',')!=-1)
-//    	                {
-//    	                    var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
-//    	                    if(record.get(tipoVehiName)-0==2){
-//    	                        record.cdtipsit_panel = 'PC';
-//    	                    }
-//    	                    else if(record.get(tipoVehiName)-0==4)
-//    	                    {
-//    	                        record.cdtipsit_panel = 'TC';
-//    	                    }else if(record.get(tipoVehiName)-0==13)
-//    	                    {
-//    	                        record.cdtipsit_panel = 'RQ';
-//    	                    }
-//    	                }
-//    	             }
-//    	         );
-//    	     }catch (e) 
-//    	     {
-//    	        debug(e);//debugError , ck
-//    	     }
+   	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
+   	     try 
+   	     {
+   	         _p30_store.each
+   	         (
+   	          function(record)
+   	             {
+   	                if( ',CR,'.lastIndexOf(','+record.get('cdtipsit')+',')!=-1)
+   	                {
+   	                    var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+   	                    if(record.get(tipoVehiName)-0==2){
+   	                        record.cdtipsit_panel = 'PC';
+   	                    }
+   	                    else if(record.get(tipoVehiName)-0==4)
+   	                    {
+   	                        record.cdtipsit_panel = 'TC';
+   	                    }else if(record.get(tipoVehiName)-0==13)
+   	                    {
+   	                        record.cdtipsit_panel = 'RQ';
+   	                    }
+   	                }
+   	             }
+   	         );
+   	     }catch (e) 
+   	     {
+   	        debug(e);//debugError , ck
+   	     }
     }
     
     if(valido)
@@ -4374,17 +4374,21 @@ function _p30_cotizar(sinTarificar)
             var cdtipsitPanel  = _p30_smap1['destino_'+cdtipsit];
             var recordBase     = recordsCdtipsit[cdtipsitPanel];
             var recordTvalosit = new _p30_modelo(record.data);
-            
-            //---
+
             if(cdtipsitPanel==cdtipsit)
             {
                 for(var prop in recordTvalosit.getData())
                 {
-                    var valor = recordTvalosit.get(prop);
+                	var propReal= !Ext.isEmpty(record.cdtipsit_panel)
+          				    && prop.slice(0,prop.length-2)=='parametros.pv_otvalor'
+          				    &&!Ext.isEmpty(recordBase.raw[prop])
+          				    ? prop.slice(0,prop.length-2)+valorOtCorrespondiente(prop.slice(prop.length-2,prop.length),cdtipsit,recordBase)
+          				    : prop;
+          			var valor = recordTvalosit.get(propReal);
                     var base  = recordBase.get(prop);
-                    if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
+                    if(Ext.isEmpty(valor)&&!Ext.isEmpty(base)&& propReal!='parametros.pv_otvalorX')
                     {
-                        recordTvalosit.set(prop,base);
+                    	recordTvalosit.set(propReal,base);
                     }
                 }
             }
@@ -4408,7 +4412,6 @@ function _p30_cotizar(sinTarificar)
                         )
                         {
                             debug('set normal, porque es adicional');
-                            //alert('ADIC!-'+fieldLabel+'-'+prop);
                             recordTvalosit.set(prop,base);
                         }
                         else
@@ -4430,55 +4433,6 @@ function _p30_cotizar(sinTarificar)
                     }
                 }
             }
-            //---
-            
-            /*
-            for(var prop in recordTvalosit.data)
-            {
-                var valor = recordTvalosit.get(prop);
-                var base  = recordBase.get(prop);
-                if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
-                {
-                    if(cdtipsitPanel==cdtipsit)
-                    {
-                        recordTvalosit.set(prop,base);
-                    }
-                    else
-                    {
-                        var cmpOriginal = _p30_paneles[cdtipsitPanel].down('[name='+prop+']');
-                        debug('cmpOriginal:',cmpOriginal);
-                        if(!Ext.isEmpty(cmpOriginal))
-                        {
-	                        debug('cmpOriginal.auxiliar:',cmpOriginal.auxiliar,'.');
-	                        var fieldLabel = cmpOriginal.fieldLabel;
-	                        debug('fieldLabel:',fieldLabel);
-	                        if(cmpOriginal.auxiliar=='adicional')
-	                        {
-	                            debug('set normal, porque es adicional');
-	                            //alert('ADIC!-'+fieldLabel+'-'+prop);
-	                            recordTvalosit.set(prop,base);
-	                        }
-	                        else
-	                        {
-	                            var cmpByLabel  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*='+_substringComa(fieldLabel)+']');
-	                            if(!Ext.isEmpty(cmpByLabel))
-	                            {
-	                                var nameByLabel = cmpByLabel.name;
-	                                debug('set en nameByLabel para cdtipsit:',nameByLabel,cdtipsit,'.');
-	                                recordTvalosit.set(nameByLabel,base);
-	                                //alert('SI!-'+fieldLabel+'-'+nameByLabel);
-	                            }
-	                            else
-	                            {
-	                                //alert('NO!-'+fieldLabel+'-'+cdtipsit);
-	                                debug('No existe el dsatribu en el cdtipsit:',fieldLabel,cdtipsit,'.');
-	                            }
-	                        }
-                        }
-                    }
-                }
-            }
-            */
             
             if(_p30_smap1.mapeo=='DIRECTO')
             {
@@ -7802,6 +7756,47 @@ function _p30_recuperarCotizacionDeTramite()
 }
 
 
+
+function valorOtCorrespondiente(valorOtUtil,tipsitfake,recordBase){
+	try{
+        if(tipsitfake == 'RQ')
+        {           //OTVALORRQ        //OTVALORCR
+        	     if(valorOtUtil=='28'){valorOtUtil='55';}
+        	else if(valorOtUtil=='29'){valorOtUtil='35';}
+        	else if(valorOtUtil=='30'){valorOtUtil='27';}
+        	else if(valorOtUtil=='33'){valorOtUtil='28';}
+        	else if(valorOtUtil=='34'){valorOtUtil='29';}
+        	else if(valorOtUtil=='35'){valorOtUtil='30';}
+        	else if(valorOtUtil=='36'){valorOtUtil='62';}
+        	else if(valorOtUtil=='37'){valorOtUtil='63';}
+        	else if(valorOtUtil=='38'){valorOtUtil='64';}
+        	else if(valorOtUtil=='39'){valorOtUtil='65';}
+        }else if(tipsitfake == 'TC'){
+          	     if(valorOtUtil=='29'){valorOtUtil='52';}
+          	else if(valorOtUtil=='30'){valorOtUtil='27';}
+          	else if(valorOtUtil=='33'){valorOtUtil='28';}
+          	else if(valorOtUtil=='34'){valorOtUtil='29';}
+          	else if(valorOtUtil=='35'){valorOtUtil='30';}
+          	else if(valorOtUtil=='36'){valorOtUtil='41';}
+          	else if(valorOtUtil=='41'){valorOtUtil='53';}
+          	else if(valorOtUtil=='44'){valorOtUtil='42';}
+          	else if(valorOtUtil=='45'){valorOtUtil='44';}
+          	else if(valorOtUtil=='46'){valorOtUtil='33';}
+          	else if(valorOtUtil=='47'){valorOtUtil='35';}
+          	else if(valorOtUtil=='48'){valorOtUtil='47';}
+          	else if(valorOtUtil=='53'){valorOtUtil='55';}
+          	else if(valorOtUtil=='54'){valorOtUtil='X';}//DEDUCIBLE DE LA COBERTURA RC ECOLOGÍCA
+          	else if(valorOtUtil=='55'){valorOtUtil='62';}
+          	else if(valorOtUtil=='56'){valorOtUtil='63';}
+          	else if(valorOtUtil=='57'){valorOtUtil='64';}
+          	else if(valorOtUtil=='58'){valorOtUtil='65';}
+        }
+		return valorOtUtil;
+	}catch(e){
+		debugError(e);
+	}
+	return listFP;
+}
 ////// funciones //////
 <%-- include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" --%>
 </script>
