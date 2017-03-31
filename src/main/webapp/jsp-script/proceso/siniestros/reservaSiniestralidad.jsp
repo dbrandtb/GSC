@@ -33,17 +33,10 @@ Ext.onReady(function()
 			{type:'string',		name:'ESTADO'		    },
 			{type:'string',		name:'NMPOLIZA'	        },
 			{type:'string',		name:'NTRAMITE'		    },
-			/*{type:'string',		name:'NMSITUAC'	        },
-			{type:'string',		name:'CDPERSON'		    },
-			{type:'string',		name:'TIPOPAGO'	        },
-			{type:'string',		name:'CDTIPSIT'		    },
-			{type:'string',		name:'VALRANGO'	        },
-			{type:'string',		name:'VALCOBER'		    },
-			{type:'string',		name:'CDGARANT'	        },
-			{type:'string',		name:'COMMENTS'		    },*/
+			{type:'string',		name:'TIPO_PAGO'        },
 			{type:'string',		name:'POLIZA'           },
 			{type:'string',		name:'NMSINIES'   	    },
-			{type:'string',		name:'DSUNIECO'      },
+			{type:'string',		name:'DSUNIECO'         },
 			{type:'string',		name:'FECINIVIG'  	    },
 			{type:'string',		name:'FECFINVIG'        },
 			{type:'string',		name:'AAAPERTU' 	    }, 
@@ -58,8 +51,9 @@ Ext.onReady(function()
             {type:'string',		name:'MONTO_RESERVADO'  },
             {type:'string',		name:'MONTO_APROBADO' 	}, 
             {type:'string',		name:'MONTO_PAGADO'     },
-            {type:'string',		name:'DSRAMO'     },
-            {type:'string',		name:'CDCAUSA'     }
+            {type:'string',		name:'DSRAMO'           },
+            {type:'string',		name:'CDCAUSA'          },
+			{type:'string',     name:'FENACIMI'        }
         ]
 	});
     ////// modelos //////
@@ -167,14 +161,7 @@ Ext.onReady(function()
 					{	header     : 'Estado'         ,	dataIndex : 'ESTADO',		flex : 1, 	hidden   : true	},
 					{	header     : 'Nmpoliza'       ,	dataIndex : 'NMPOLIZA',		flex : 1, 	hidden   : true	},
 					{	header     : 'Ntramite'       ,	dataIndex : 'NTRAMITE',		flex : 1, 	hidden   : true	},
-					/*{	header     : 'Nmsituac'       ,	dataIndex : 'NMSITUAC',		flex : 1, 	hidden   : true	},
-					{	header     : 'Cdperson'       ,	dataIndex : 'CDPERSON',		flex : 1, 	hidden   : true	},
-					{	header     : 'TipoPago'       ,	dataIndex : 'TIPOPAGO',		flex : 1, 	hidden   : true	},
-					{	header     : 'Cdtipsit'       ,	dataIndex : 'CDTIPSIT',		flex : 1, 	hidden   : true	},
-					{	header     : 'Val Rango'      ,	dataIndex : 'VALRANGO',		flex : 1, 	hidden   : true	},
-					{	header     : 'Val Cobertura'  ,	dataIndex : 'VALCOBER',		flex : 1, 	hidden   : true	},
-					{	header     : 'Cobertura'      ,	dataIndex : 'CDGARANT',		flex : 1, 	hidden   : true	},
-					{	header     : 'Comentarios'    ,	dataIndex : 'COMMENTS',		flex : 1, 	hidden   : true	},*/
+					{	header     : 'Tipo Pago'      , dataIndex : 'TIPO_PAGO',    width : 200             },
 					{	header     : 'Poliza'         , dataIndex : 'POLIZA'      , width : 150				},
 					{	header     : 'Siniestro'      , dataIndex : 'NMSINIES'    ,	width : 130				},
 					{	header     : 'Sucursal'       ,	dataIndex : 'DSUNIECO' ,	width : 150				},
@@ -188,10 +175,12 @@ Ext.onReady(function()
 					{	header     : 'Nom. Asegurado<br/> Afectado'             , dataIndex : 'NOMBRE_ASEGURADO', width : 150},
 					{	header     : 'Edad'                                     , dataIndex : 'EDAD',		      width : 100},
 					{	header     : 'Sexo'                                     , dataIndex : 'SEXO',		      width : 200},
-					{	header     : 'Tipo Pago'                                , dataIndex : 'TIPO_PAGO',		  width : 200},
 					{	header     : 'Monto Reservado'                          , dataIndex : 'MONTO_RESERVADO',  width : 200},
 					{	header     : 'Monto Aprobado'                           , dataIndex : 'MONTO_APROBADO',	  width : 200},
-					{	header     : 'Monto Pagado'                             , dataIndex : 'MONTO_PAGADO',     width : 200}
+					{	header     : 'Monto Pagado'                             , dataIndex : 'MONTO_PAGADO',     width : 200},
+					{	header     : 'Ramo'                                     , dataIndex : 'DSRAMO',           width : 200},
+					{	header     : 'Causa Siniestro'                          , dataIndex : 'CDCAUSA',          width : 200},
+					{	header     : 'Fecha Nacimiento'                         , dataIndex : 'FENACIMI',         width : 200}
 					
 				],
 				bbar     :{

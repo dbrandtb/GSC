@@ -6294,6 +6294,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		
 		Map<String, Object> result = ejecutaSP(new ListaRenovaSiniestralidad(this.getDataSource()), params);
 		logger.debug("result: {}"+result);
+
 		return (List<Map<String,String>>)result.get("pv_registro_o");
 	}
 	
@@ -6310,12 +6311,35 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_fechasta",   OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_start_i",   OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_limit_i",   OracleTypes.NUMERIC));
-			//declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"TIPO_PAGO", "CDUNIECO", "DSUNIECO", "CDRAMO", "DSRAMO", "ESTADO", "NMPOLIZA", "FECINIVIG", "FEcFINVIG",
-					"AAAPERTU", "NMSINIES", "FECHA_OCURRENCIA", "CDICD", "DESC_ICD", "CDCAUSA", "CDPERSON", "NOMBRE_ASEGURADO", 
-					"FENACIMI", "EDAD", "SEXO", "NTRAMITE", "MONTO_RESERVADO", "MONTO_APROBADO", "MONTO_PAGADO"
+					"CDUNIECO"	        	
+					,"CDRAMO"	        
+					,"ESTADO"		    
+					,"NMPOLIZA"	        
+					,"NTRAMITE"		    
+					,"TIPO_PAGO"        
+					,"POLIZA"           
+					,"NMSINIES"   	    
+					,"DSUNIECO"         
+					,"FECINIVIG"  	    
+					,"FECFINVIG"        
+					,"AAAPERTU" 	     
+					,"FECHA_OCURRENCIA" 
+					,"CDICD" 	         
+					,"DESC_ICD" 	     
+					,"CDPERSON" 		 
+					,"NOMBRE_ASEGURADO" 
+					,"EDAD" 		     
+					,"SEXO" 		     
+					,"MONTO_RESERVADO"  
+					,"MONTO_APROBADO" 	 
+					,"MONTO_PAGADO"     
+					,"DSRAMO"           
+					,"CDCAUSA"          
+					,"FENACIMI"  
 			};
+			//declareParameter(new SqlOutParameter("pv_cant_regis"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
