@@ -60,7 +60,7 @@ Ext.onReady(function()
     
     ////// stores //////
 	var storeGridAutEspecial = new Ext.data.Store({
-		pageSize	: 10
+		pageSize	: 25
 		,model		: 'modeloAutEspecial'
 		,autoLoad	: false
 		,proxy		: {
@@ -148,14 +148,14 @@ Ext.onReady(function()
 				,style         : 'margin:5px'
 				,height        : 400
 				,columns       : [
-					{/*   xtype: 'actioncolumn',      width: 40,          sortable: false,            menuDisabled: true,
+					{   xtype: 'actioncolumn',      width: 40,          sortable: false,            menuDisabled: true,
 	                    items: [{
 	                        icon: _CONTEXT+'/resources/fam3icons/icons/application_edit.png',
 	                        tooltip: 'Generar Autorizaci\u00F3n Especial',	//(EGS)
 	                        scope: this,
 	                        handler: function(){}
 	                    }]
-	                 */},
+	                 },
 					{	header     : 'Cdunieco'       ,	dataIndex : 'CDUNIECO',		flex : 1, 	hidden   : true	},
 					{	header     : 'Cdramo'         ,	dataIndex : 'CDRAMO',		flex : 1, 	hidden   : true	},
 					{	header     : 'Estado'         ,	dataIndex : 'ESTADO',		flex : 1, 	hidden   : true	},
