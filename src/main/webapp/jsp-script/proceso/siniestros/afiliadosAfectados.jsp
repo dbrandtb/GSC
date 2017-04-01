@@ -59,6 +59,7 @@
             var _MULTISALUD								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
             var _GMMI									= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
             var _RECUPERA								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
+            var _GMPRUEBA                               = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES_PRUEBA.cdramo" />';
             //cdtiptra
             var _TIPO_TRAMITE_SINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra"/>';
             var _TIPO_PAGO_AUTOMATICO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@PAGO_AUTOMATICO.cdtiptra"/>';
@@ -1676,10 +1677,10 @@
 								}
 							},
 							{
-								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',			width: 90, hidden : _tipoProducto != _GMMI
+								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',			width: 90, hidden : (_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
 							},
 							{
-								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : _tipoProducto != _GMMI
+								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : (_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
 							},
 							{
 								header: 'Fecha<br/>Ocurrencia',		dataIndex: 'FEOCURRE'
@@ -2204,7 +2205,8 @@
 															debug("Valor de respuesta ==> ",Ext.decode(response.responseText).datosValidacion);
 															if(Ext.decode(response.responseText).datosValidacion != null){
 																var jsonValidacion =Ext.decode(response.responseText).datosValidacion;
-																debug("Valor de respuesta ==> ",jsonValidacion);
+																debug("Valor de respuesta 2 ==> ",jsonValidacion);
+																debug("Valor de respuesta 3 ==> ",+jsonValidacion[0].VALCOBER);
 																if(+jsonValidacion[0].VALCOBER <= 0){
 																	mensajeWarning('La autorizaci&oacute;n '+jsonValidacion[0].NMAUTESP+' no incluye la cobertura no amparada.<br/> '+
 																		'Favor de validarlo con el Gerente de operaci&oacute;n de siniestros.');
@@ -5855,6 +5857,9 @@
             ,success : function (response) {
                 var idReclamacion = record.raw.NMSINIES;
                 debug(idReclamacion);
+                var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
+                debug("Valor de respuesta"+json); 
+                
                 valido = idReclamacion && idReclamacion>0;
                 if(!valido){
                     //Preguntamos si esta seguro de generar el siniestro

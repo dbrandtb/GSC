@@ -20,18 +20,22 @@
             var _SALUD_VITAL						= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo" />';
             var _MULTISALUD							= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
             var _GMMI								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
+            var _GMMPRUEBA                          = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES_PRUEBA.cdramo" />';
             var _RECUPERA							= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
             
             var _CODIGO_CAUSA_ENFERMEDAD		    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ENFERMEDAD.codigo"/>';
             var _CODIGO_CAUSA_ACCIDENTE			    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ACCIDENTE.codigo"/>';
             var _CODIGO_CAUSA_MATERNIDAD		    = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@MATERNIDAD.codigo"/>';
             var _AUTORIZACION_SERVICIO			    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@AUTORIZACION_SERVICIOS.cdtiptra"/>';	
+            var _CAT_RAMOS                          = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOS"/>';
+            var _0_urlRutaReporte                   = '<s:property value="rutaServidorReports" />';
+            var _0_reportsServerUser                = '<s:property value="passServidorReports" />';
+            var _urlViewReport                      = '<s:property value="rutaServidorReports" />';
+            var _reportsServerUser                  = '<s:property value="passServidorReports" />';
             
             var _URL_TIPO_AUTORIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposAutorizacion.json';
             
             var _URL_CATALOGOS                      = '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
-            var _CAT_RAMOS		       				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOS"/>';
-            
             var _VER_COBERTURAS		    			= '<s:url namespace="/consultasPoliza"  action="includes/verCoberturasPoliza" />';
             var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"  action="consultaListaAsegurado" />';
             var _URL_CONSULTA_LISTADO_AUTORIZACION 	= '<s:url namespace="/siniestros"  action="consultaListaAutorizacion" />';
@@ -40,25 +44,20 @@
             var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros"  action="consultaListaSubcobertura" />';
             var _URL_LISTA_CPTICD					= '<s:url namespace="/siniestros"  action="consultaListaCPTICD" />';
             var _URL_LISTA_ICD						= '<s:url namespace="/siniestros"  action="consultaListaICD" />'; // (EGS)
-            
             var _URL_CONSULTA_DEDUCIBLE_COPAGO		= '<s:url namespace="/siniestros"  action="consultaListaDatSubGeneral" />';
             var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros"  action="consultaListaPoliza" />';
-            
             var _URL_LISTA_TABULADOR				= '<s:url namespace="/siniestros"  action="consultaListaPorcentaje" />';
             var _URL_TIPO_MEDICO					= '<s:url namespace="/siniestros"  action="consultaTipoMedico" />';
             var _URL_LISTADO_CONCEP_EQUIP    		= '<s:url namespace="/siniestros"  action="consultaListaTDeTauts" />';
-            
             var _URL_GUARDA_AUTORIZACION			= '<s:url namespace="/siniestros"  action="guardaAutorizacionServicio" />';
             var _VER_AUTORIZACION_SERVICIO 			= '<s:url namespace="/siniestros"  action="includes/verAutorizacionServicio" />';
             var _UR_LISTA_PLAZAS 					= '<s:url namespace="/siniestros"  action="consultaListaPlazas"/>';
             var _URL_NUMERO_DIAS					= '<s:url namespace="/siniestros"  action="consultaNumeroDias"/>';
-            
             var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"  action="consultaPolizaUnica"/>';
             var _URL_EXCLUSION_PENALIZACION			= '<s:url namespace="/siniestros"  action="validaExclusionPenalizacion"/>';
             var _URL_PORCENTAJE_PENALIZACION		= '<s:url namespace="/siniestros"  action="validaPorcentajePenalizacion"/>';
             var panDocUrlViewDoc                    = '<s:url namespace ="/documentos" action="descargaDocInline" />';
             var venDocUrlImpConrec                  = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
-            
             var _p12_urlMesaControl              	= '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
             var _URL_MONTO_MAXIMO					= '<s:url namespace="/siniestros"  action="consultaMontoMaximo"/>';
             var _URL_MESES_MAXIMO_MAT				= '<s:url namespace="/siniestros"  action="consultaMesesMaximoMaternidad"/>';
@@ -66,7 +65,6 @@
             var _URL_NUM_MESES_TIEMPO_ESPERA   		= '<s:url namespace="/siniestros"  action="obtieneMesesTiempoEspera" />';
             var _UR_LISTA_RAMO_SALUD				= '<s:url namespace="/siniestros"  action="consultaRamosSalud"/>';
             var _URL_MONTO_DISP_PROVEEDOR           = '<s:url namespace="/siniestros"  action="obtieneRequiereAutServ"/>';
-            
             var _URL_LOADER_DATOS_POLIZA            = '<s:url namespace="/consultasPoliza" action="includes/ventanaDatosPoliza" />';
             var _URL_LOADER_ASEGURADOS_POLIZA       = '<s:url namespace="/consultasPoliza" action="includes/ventanaAseguradosPoliza" />';
             var _URL_LOADER_RECIBOS                 = '<s:url namespace="/general"         action="includes/loadRecibos" />';
@@ -78,7 +76,15 @@
             var _URL_LOADER_EXLUSION_ICD_ASEGURADOS = '<s:url namespace="/siniestros"      action="includes/exclusionICDAsegurado" />';
             var _URL_VAL_CAUSASINI			        = '<s:url namespace="/siniestros" 	   action="consultaInfCausaSiniestroProducto" />';
             var _URL_LISTA_TIPOEVENTO               = '<s:url namespace="/siniestros"      action="consultaListaTipoEventoSiniestro" />';
-            var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
+            var _urlViewDoc                         = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
+            var _URL_CONSULTA_DOCUMENTOS            = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
+            var _URL_CONSULTA_CLAUSULAS_POLIZA      = '<s:url namespace="/consultasPoliza" action="consultaClausulasPoliza" />';
+            var _URL_cargaHistorialSinies           = '<s:url namespace="/siniestros" action="cargaICDExcluidosAsegurado" />';
+            var _0_reporteVistaPreviaGral           = '<s:text name="rdf.siniestro.autorizacion.servicio.nombre.GNP" />';
+            var _0_reporteVistaPreviaProv           = '<s:text name="rdf.siniestro.autorizacion.servicio.nombre.GNPEXP" />';
+            var _reporteEdoCtaSin                   = '<s:text name="rdf.siniestro.estadocuenta.nombre" />';
+            var valorAction                         = <s:property value='paramsJson' escapeHtml='false'/>;
+            
             debug("valor d_SALUD_VITAL --->",_SALUD_VITAL);
         </script>
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionServicios.js?${now}"></script>
@@ -90,7 +96,7 @@
             <div id="div_clau"></div>
    </div>-->
     	<!-- <div style="height:1500px;">-->
-    	<div style="height:1800px;">
+    	<div style="height:2000px;">
             <div id="div_clau"></div>
             <!-- <div id="divResultados" style="margin-top:10px;"></div>-->
         </div> 

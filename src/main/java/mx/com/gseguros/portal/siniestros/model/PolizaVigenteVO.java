@@ -43,6 +43,7 @@ public class PolizaVigenteVO implements Serializable {
 	private String dsTipsit;
 	private String genero; // (EGS)
 	private String fenacimi; // (EGS)
+	private String cirHosp;
 	 
 	
 	
@@ -405,5 +406,15 @@ public class PolizaVigenteVO implements Serializable {
 	public void setFenacimi(String fenacimi){
 		this.fenacimi = fenacimi;
 	} // fin (EGS)
+
+
+	public String getCirHosp() {
+		return cirHosp;
+	}
+
+
+	public void setCirHosp(String cirHosp) {
+		this.cirHosp = cirHosp;
+	}
 	
 }
