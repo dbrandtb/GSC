@@ -690,6 +690,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	AutorizacionServicioVO consulta = new AutorizacionServicioVO();
         	consulta.setNmautser(rs.getString("nmautser"));
+        	consulta.setNtramite(rs.getString("ntramite"));
             return consulta;
         }
     }
@@ -926,6 +927,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setDsTipsit(rs.getString("DESCTIPSIT"));
         	consulta.setGenero(rs.getString("GENERO")); // (EGS)
         	consulta.setFenacimi(Utils.formateaFecha(rs.getString("FENACIMI"))); // (EGS)
+        	consulta.setCirHosp(rs.getString("CIRHOSP"));
             return consulta;
         }
     }

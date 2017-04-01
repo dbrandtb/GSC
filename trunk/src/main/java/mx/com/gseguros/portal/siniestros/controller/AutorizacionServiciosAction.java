@@ -494,6 +494,9 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.GMMI");
 			}
+			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.GMMI");
+			}
 			
 			String urlAutorizacionServicio = ""
 				+ rutaServidorReports
@@ -707,7 +710,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		logger.debug("Entra a obtieneMesesTiempoEspera Params: {}", params);
 		try {
 			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor01"),params.get("cdtabla"));
-			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" a�os";
+			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
 			logger.debug("mesesTiempoEspera: {} mensaje de respuesta : {}", mesesTiempoEspera,mensaje);
 		}catch( Exception e){
 			logger.error("Error obtieneMesesTiempoEspera : {}", e.getMessage(), e);
