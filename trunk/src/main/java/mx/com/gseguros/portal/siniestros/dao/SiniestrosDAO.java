@@ -657,4 +657,13 @@ public interface SiniestrosDAO {
 			,String pv_start_i
 			,String pv_limit_i 
 			,String pv_ntramite_i) throws Exception;
+
+	public List<Map<String, String>> obtieneListaTopIcd(String pv_CdUniEco_i, String pv_CdRamo_i, String pv_nmpoliza_i,
+			String pv_cdperson, String pv_nmsinies, String pv_fecdesde, String pv_fechasta, String pv_top) throws Exception;
+
+	public List<Map<String, String>> obtieneListaReservas(String pv_CdUniEco_i, String pv_CdRamo_i, String pv_nmpoliza_i,
+			String pv_cdperson, String pv_nmsinies, String pv_fecdesde, String pv_fechasta) throws Exception;
+
+	public List<Map<String, String>> obtieneListaReservasSolo(String pv_CdUniEco_i, String pv_CdRamo_i, String pv_nmpoliza_i,
+			String pv_cdperson, String pv_nmsinies, String pv_fecdesde, String pv_fechasta) throws Exception;
 }

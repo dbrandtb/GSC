@@ -1383,6 +1383,10 @@
             </interceptor-ref>
             <result type="json" />
         </action>
+        <action name="graficas" class="renovacionAction" method="pantallaRenovacion">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/renovacion/graficas.jsp</result>
+        </action>
         
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
@@ -1407,6 +1411,40 @@
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
 					datosValidacion.*,
+					slist1.*,
+					graficas.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="topIcd" class="siniestrosAction" method="topIcd">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					slist1.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="reservas" class="siniestrosAction" method="reservas">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					slist1.*,
+					success
+				</param>
+			</result>
+		</action>
+		<action name="reservasTipPag" class="siniestrosAction" method="reservasTipPag">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					slist1.*,
 					success
 				</param>
 			</result>

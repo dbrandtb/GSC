@@ -2818,5 +2818,66 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 				,pv_limit_i 
 				,pv_ntramite_i);
 	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListaTopIcd(String pv_CdUniEco_i 
+																,String pv_CdRamo_i  
+																,String pv_nmpoliza_i
+																,String pv_cdperson  
+																,String pv_nmsinies
+																,String pv_fecdesde  
+																,String pv_fechasta  
+																,String pv_top ) throws Exception {
+		
+		
+		return siniestrosDAO.obtieneListaTopIcd(pv_CdUniEco_i 
+				,pv_CdRamo_i  
+				,pv_nmpoliza_i
+				,pv_cdperson  
+				,pv_nmsinies
+				,Utils.formateaFecha(pv_fecdesde)  
+				,Utils.formateaFecha(pv_fechasta)  
+				,pv_top );
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListaReservas(String pv_CdUniEco_i 
+																,String pv_CdRamo_i  
+																,String pv_nmpoliza_i
+																,String pv_cdperson  
+																,String pv_nmsinies
+																,String pv_fecdesde  
+																,String pv_fechasta  ) throws Exception {
+		
+		
+		return siniestrosDAO.obtieneListaReservas(pv_CdUniEco_i 
+				,pv_CdRamo_i  
+				,pv_nmpoliza_i
+				,pv_cdperson  
+				,pv_nmsinies
+				,Utils.formateaFecha(pv_fecdesde)  
+				,Utils.formateaFecha(pv_fechasta)  
+				);
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListaReservasSolo(String pv_CdUniEco_i 
+																,String pv_CdRamo_i  
+																,String pv_nmpoliza_i
+																,String pv_cdperson  
+																,String pv_nmsinies
+																,String pv_fecdesde  
+																,String pv_fechasta  ) throws Exception {
+		
+		
+		return siniestrosDAO.obtieneListaReservasSolo(pv_CdUniEco_i 
+				,pv_CdRamo_i  
+				,pv_nmpoliza_i
+				,pv_cdperson  
+				,pv_nmsinies
+				,Utils.formateaFecha(pv_fecdesde)  
+				,Utils.formateaFecha(pv_fechasta)  
+				);
+	}
     
 }

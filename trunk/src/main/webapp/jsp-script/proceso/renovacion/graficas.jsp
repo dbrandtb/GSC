@@ -6,6 +6,9 @@
 <script>
 ////// urls //////
 var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+var _url_topicd = '<s:url namespace="/siniestros" action="topIcd" />';
+var _url_reservas = '<s:url namespace="/siniestros" action="reservas" />';
+var _url_reservasTipPag = '<s:url namespace="/siniestros" action="reservasTipPag" />';
 ////// urls //////
 
 ////// variables //////
@@ -23,10 +26,29 @@ Ext.onReady(function()
     Ext.define('icdModel', {
 	    extend: 'Ext.data.Model',
 	    fields: [
-	         { name: 'icd'			,type: 'string' },
-	         { name: 'reservado'	,type: 'int'  	},
-	         { name: 'aprovado' 	,type: 'int' 	},
-	         { name: 'pagado'	  	,type: 'int'	}
+	    	 { name: 'DESC_ICD'			,type: 'string' },
+	         { name: 'CDICD'			,type: 'string' },
+	         { name: 'MONTO_RESERVADO'	,type: 'int'  	},
+	         { name: 'MONTO_APROBADO' 	,type: 'int' 	},
+	         { name: 'MONTO_PAGADO'	  	,type: 'int'	}
+	    ]
+	});
+    
+    Ext.define('tipoPagoModel', {
+	    extend: 'Ext.data.Model',
+	    fields: [
+	         { name: 'TIPO_PAGO'		,type: 'string' },
+	         { name: 'MONTO_RESERVADO'	,type: 'int'  	},
+	         { name: 'MONTO_APROBADO' 	,type: 'int' 	},
+	         { name: 'MONTO_PAGADO'	  	,type: 'int'	}
+	    ]
+	});
+    
+    Ext.define('reservasModel', {
+	    extend: 'Ext.data.Model',
+	    fields: [
+	         { name: 'TITULO'		,type: 'string' },
+	         { name: 'DAT1'	,type: 'int'  	}
 	    ]
 	});
     ////// modelos //////
@@ -35,13 +57,83 @@ Ext.onReady(function()
     
     var store = Ext.create('Ext.data.Store', {
 	    model: 'icdModel',
-	    data: [
-	        { icd: "ICD 1", reservado: 5, aprovado: 8, pagado: 2 },
-	        { icd: "ICD 2", reservado: 5, aprovado: 8, pagado: 2 },
-	        { icd: "ICD 3", reservado: 5, aprovado: 8, pagado: 2 },
-	        { icd: "ICD 4", reservado: 5, aprovado: 8, pagado: 2 },
-	        { icd: "ICD 5", reservado: 5, aprovado: 8, pagado: 2 }
-	    ]
+	    autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url:_url_topicd,
+            extraParams : {
+            	'params.pv_CdUniEco_i'   : ""
+				,'params.pv_CdRamo_i'    : ""
+				,'params.pv_nmpoliza_i'  : null
+				,'params.pv_fecdesde'   : new Date("10/1/2016")
+				,'params.pv_fechasta'   : new Date()
+				,'params.pv_cdperson'  : null
+				,'params.pv_nmsinies' : null
+				,'params.pv_ntramite_i'  : null
+				,'params.pv_start_i'  : 0
+				,'params.pv_limit_i'  : 25
+            },
+            reader:
+            {
+                type: 'json',
+                root: 'slist1'
+            }
+        }
+	});
+    
+    var storeTipoPago = Ext.create('Ext.data.Store', {
+	    model: 'tipoPagoModel',
+	    autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url:_url_reservasTipPag,
+            extraParams : {
+            	'params.pv_CdUniEco_i'   : ""
+				,'params.pv_CdRamo_i'    : ""
+				,'params.pv_nmpoliza_i'  : null
+				,'params.pv_fecdesde'   : new Date("10/1/2016")
+				,'params.pv_fechasta'   : new Date()
+				,'params.pv_cdperson'  : null
+				,'params.pv_nmsinies' : null
+				,'params.pv_ntramite_i'  : null
+				,'params.pv_start_i'  : 0
+				,'params.pv_limit_i'  : 25
+            },
+            reader:
+            {
+                type: 'json',
+                root: 'slist1'
+            }
+        }
+	});
+    
+    var storeReservas = Ext.create('Ext.data.Store', {
+	    model: 'reservasModel',
+	    autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url:_url_reservas,
+            extraParams : {
+            	'params.pv_CdUniEco_i'   : ""
+				,'params.pv_CdRamo_i'    : ""
+				,'params.pv_nmpoliza_i'  : null
+				,'params.pv_fecdesde'   : new Date("10/1/2016")
+				,'params.pv_fechasta'   : new Date()
+				,'params.pv_cdperson'  : null
+				,'params.pv_nmsinies' : null
+				,'params.pv_ntramite_i'  : null
+				,'params.pv_start_i'  : 0
+				,'params.pv_limit_i'  : 25
+            },
+            reader:
+            {
+                type: 'json',
+                root: 'slist1'
+            }
+        }
 	});
     ////// stores //////
     
@@ -57,16 +149,16 @@ Ext.onReady(function()
     	   axes: [{
                type: 'numeric',
                position: 'left',
-               fields: 'reservado',
+               fields: 'MONTO_RESERVADO',
                grid: true,
                minimum: 0,
                label: {
-                   renderer: function(v) { return v + '%'; }
+                   renderer: function(v) { return  '$ ' + v; }
                }
            }, {
                type: 'category',
                position: 'bottom',
-               fields: 'icd',
+               fields: 'CDICD',
                grid: true,
                label: {
                    rotate: {
@@ -77,9 +169,9 @@ Ext.onReady(function()
            series: [{
                type: 'column',
                axis: 'left',
-               title: [ 'IE', 'Firefox', 'Chrome', 'Safari' ],
-               xField: 'icd',
-               yField: [ 'reservado', 'aprovado', 'pagado',  ],
+               title: [ 'Reservado', 'Aprobado', 'Pagado'],
+               xField: 'CDICD',
+               yField: [ 'MONTO_RESERVADO', 'MONTO_APROBADO', 'MONTO_PAGADO'  ],
                style: {
                    opacity: 0.80
                },
@@ -92,14 +184,121 @@ Ext.onReady(function()
                    trackMouse: true,
                    style: 'background: #FFF',
                    height: 20,
+                   width: "auto",
                    renderer: function(storeItem, item) {
                        var browser = item.series.title[Ext.Array.indexOf(item.series.yField, item.yField)];
-                       this.setTitle(browser + ' for ' + storeItem.get('month') + ': ' + storeItem.get(item.yField) + '%');
+                       Ext.util.Format.currencySign="$";
+                       this.setTitle(browser + ' para ' + storeItem.get('DESC_ICD') + ': ' +Ext.util.Format.currency(storeItem.get(item.yField)) );
                    }
                }
            }]
     	});
     
+    var chartTipoPago=Ext.create('Ext.chart.Chart', {
+    	width:400,
+        height: 410,
+        padding: '10 0 0 0',
+        animate: true,
+        shadow: false,
+        style: 'background: #fff;',
+        legend: {
+            position: 'right',
+            boxStrokeWidth: 0,
+            labelFont: '12px Helvetica'
+        },
+        store: storeTipoPago,
+        insetPadding: 40,
+        axes: [{
+            type: 'numeric',
+            position: 'bottom',
+            fields: 'MONTO_RESERVADO',
+            grid: true,
+            label: {
+                renderer: function(v) { 
+                	Ext.util.Format.currencySign="$";
+                	return Ext.util.Format.currency(v); }
+            },
+            minimum: 0
+        }, {
+            type: 'category',
+            position: 'left',
+            fields: 'TIPO_PAGO',
+            grid: true
+        }],
+        series: [{
+            type: 'bar',
+            axis: 'bottom',
+            title: [ 'Monto Reservado', 'Monto Aprovado', 'Monto Pagado' ],
+            xField: 'TIPO_PAGO',
+            yField: [ 'MONTO_RESERVADO', 'MONTO_APROBADO', 'MONTO_PAGADO' ],
+            stacked: true,
+            style: {
+                opacity: 0.80
+            },
+            highlight: {
+                fill: '#000',
+                'stroke-width': 2,
+                stroke: '#fff'
+            },
+            tips: {
+                trackMouse: true,
+                style: 'background: #FFF',
+                height: 20,
+                width: 350,
+                renderer: function(storeItem, item) {
+                    var browser = item.series.title[Ext.Array.indexOf(item.series.yField, item.yField)];
+                    Ext.util.Format.currencySign="$"
+                    this.setTitle(browser + ' for ' + storeItem.get('TIPO_PAGO') + ': ' + Ext.util.Format.currency(storeItem.get(item.yField)) );
+                }
+            }
+        }]
+ 	});
+    
+    var chartReservas=Ext.create('Ext.chart.Chart', {
+ 	   
+ 	   width: 400,
+ 	   height: 300,
+ 	   animate: true,
+ 	  shadow: false,
+ 	   store: storeReservas,
+ 	  height: 410,
+      padding: '10 0 0 0',
+      style: 'background: #fff',
+      insetPadding: 40,
+      legend: {
+          field: 'TITULO',
+          position: 'bottom',
+          boxStrokeWidth: 0,
+          labelFont: '12px Helvetica'
+      },
+ 	 
+        series: [{
+            type: 'pie',
+            angleField: 'DAT1',
+            donut: 50,
+            label: {
+                field: 'TITULO',
+                display: 'outside',
+                calloutLine: true
+            },
+            showInLegend: true,
+            highlight: {
+                fill: '#000',
+                'stroke-width': 1,
+                stroke: '#ccc'
+            },
+            tips: {
+                trackMouse: true,
+                style: 'background: #FFF',
+                height: 20,
+                width: 250,
+                renderer: function(storeItem, item) {
+                	Ext.util.Format.currencySign="$"
+                    this.setTitle(storeItem.get('TITULO') + ': ' + Ext.util.Format.currency(storeItem.get('DAT1')) );
+                }
+            }
+        }]
+ 	});
     Ext.create('Ext.panel.Panel',
     {
         defaults  : { style : 'margin:5px;' }
@@ -191,20 +390,10 @@ Ext.onReady(function()
         	        }
         	    }]
         	}),
-        	Ext.create('Ext.tab.Panel', {
-        	    items: [{
-        	        title: 'SINIESTRAL',
-        	        items:
-        	        	[
-        	        		chart
-        	        	]
-        	    }, {
-        	        title: 'TOP 15 ICD',
-        	        tabConfig: {
-        	            title: 'Custom Title',
-        	            tooltip: 'A button tooltip'
-        	        }
-        	    }]
+        	Ext.create('Ext.panel.Panel', {
+        		layout:'hbox',
+        		autoScroll:true,
+        	    items: [chart,chartTipoPago,chartReservas]
         	})
         ]
     });
