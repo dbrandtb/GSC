@@ -411,9 +411,15 @@ Ext.onReady(function()
 									store.extraParams=params
 									storeTipoPago.extraParams=params
 									storeReservas.extraParams=params
-									store.load();
-									storeTipoPago.load();
-									storeReservas.load();
+									store.load({
+										params:params
+									});
+									storeTipoPago.load({
+										params:params
+									});
+									storeReservas.load({
+										params:params
+									});
 									var jsonResponse = Ext.decode(response.responseText);
 									if(jsonResponse.datosValidacion &&jsonResponse.datosValidacion.length == 0) {
 										if(null == null){
