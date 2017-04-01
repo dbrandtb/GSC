@@ -132,6 +132,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	private Map<String, String> map1;
 	private List<Map<String,String>>  datosInformacionAdicional;
 	private List<Map<String,String>>  datosValidacion;
+	private Map<String,List<Map<String,String>>> graficas;
 	
 	private boolean     exito            = false;
 	private String      respuesta;
@@ -6223,7 +6224,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
                   ,pv_fechasta   = params.get("pv_fechasta")
                   ,pv_start_i    = params.get("pv_start_i")
                   ,pv_limit_i    = params.get("pv_limit_i")
-                  ,pv_ntramite_i = params.get("pv_ntramite_i");
+                  ,pv_ntramite_i = params.get("pv_ntramite_i")
+					,pv_top=null;
 			datosValidacion = siniestrosManager.getDatosRenovaSiniestralidad(pv_CdUniEco_i 
 																			,pv_CdRamo_i  
 																			,pv_nmpoliza_i
@@ -6234,6 +6236,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 																			,pv_start_i
 																			,pv_limit_i 
 																			,pv_ntramite_i);
+			
 			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
 		}catch( Exception e){
 			logger.error("Error al obtener consultaDatosAutEspecial : {}", e.getMessage(), e);
@@ -6241,6 +6244,112 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}
 		setSuccess(true);
 		return SUCCESS;
+	}
+	
+	public String topIcd(){
+		
+		logger.debug("Entra a topIcd params de entrada :{} ",params);
+		try {
+			String pv_CdUniEco_i = params.get("pv_CdUniEco_i")
+                  ,pv_CdRamo_i   = params.get("pv_CdRamo_i")
+                  ,pv_nmpoliza_i = params.get("pv_nmpoliza_i")
+                  ,pv_cdperson   = params.get("pv_cdperson")
+                  ,pv_nmsinies   = params.get("pv_nmsinies")
+                  ,pv_fecdesde   = params.get("pv_fecdesde")
+                  ,pv_fechasta   = params.get("pv_fechasta")
+                  ,pv_top 		 = params.get("pv_top");
+			
+		
+			slist1=siniestrosManager.obtieneListaTopIcd(pv_CdUniEco_i
+																	, pv_CdRamo_i
+																	, pv_nmpoliza_i
+																	, pv_cdperson
+																	, pv_nmsinies
+																	, pv_fecdesde
+																	, pv_fechasta
+																	, pv_top);
+			
+			
+			
+			
+			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
+		}catch( Exception e){
+			logger.error("Error al obtener consultaDatosAutEspecial : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		setSuccess(true);
+		return SUCCESS;
+		
+	}
+	
+	public String reservas(){
+		
+		logger.debug("Entra a reservas params de entrada :{} ",params);
+		try {
+			String pv_CdUniEco_i = params.get("pv_CdUniEco_i")
+                  ,pv_CdRamo_i   = params.get("pv_CdRamo_i")
+                  ,pv_nmpoliza_i = params.get("pv_nmpoliza_i")
+                  ,pv_cdperson   = params.get("pv_cdperson")
+                  ,pv_nmsinies   = params.get("pv_nmsinies")
+                  ,pv_fecdesde   = params.get("pv_fecdesde")
+                  ,pv_fechasta   = params.get("pv_fechasta")
+                  ,pv_top 		 = params.get("pv_top");
+			
+		
+			slist1=siniestrosManager.obtieneListaReservasSolo(pv_CdUniEco_i
+					, pv_CdRamo_i
+					, pv_nmpoliza_i
+					, pv_cdperson
+					, pv_nmsinies
+					, pv_fecdesde
+					, pv_fechasta);
+			
+			
+			
+			
+			logger.debug("Respuesta reservas : {}",slist1);
+		}catch( Exception e){
+			logger.error("Error al obtener reservas : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		setSuccess(true);
+		return SUCCESS;
+		
+	}
+	
+public String reservasTipPag(){
+		
+		logger.debug("Entra a reservasTipPag params de entrada :{} ",params);
+		try {
+			String pv_CdUniEco_i = params.get("pv_CdUniEco_i")
+                  ,pv_CdRamo_i   = params.get("pv_CdRamo_i")
+                  ,pv_nmpoliza_i = params.get("pv_nmpoliza_i")
+                  ,pv_cdperson   = params.get("pv_cdperson")
+                  ,pv_nmsinies   = params.get("pv_nmsinies")
+                  ,pv_fecdesde   = params.get("pv_fecdesde")
+                  ,pv_fechasta   = params.get("pv_fechasta")
+                  ,pv_top 		 = params.get("pv_top");
+			
+		
+			slist1=siniestrosManager.obtieneListaReservas(pv_CdUniEco_i
+					, pv_CdRamo_i
+					, pv_nmpoliza_i
+					, pv_cdperson
+					, pv_nmsinies
+					, pv_fecdesde
+					, pv_fechasta);
+			
+			
+			
+			
+			logger.debug("Respuesta reservasTipPag : {}",slist1);
+		}catch( Exception e){
+			logger.error("Error al obtener reservasTipPag : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		setSuccess(true);
+		return SUCCESS;
+		
 	}
 		
     
@@ -6847,5 +6956,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 
 	public String getRutaDocumentosPoliza() {
 		return rutaDocumentosPoliza;
+	}
+	
+	public Map<String, List<Map<String, String>>> getGraficas() {
+		return graficas;
+	}
+
+	public void setGraficas(Map<String, List<Map<String, String>>> graficas) {
+		this.graficas = graficas;
 	}
 }

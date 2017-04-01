@@ -20,6 +20,7 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
 
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
@@ -6346,5 +6347,188 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListaTopIcd(String pv_CdUniEco_i 
+			,String pv_CdRamo_i  
+			,String pv_nmpoliza_i
+			,String pv_cdperson  
+			,String pv_nmsinies
+			,String pv_fecdesde  
+			,String pv_fechasta  
+			,String pv_top) throws Exception {
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		
+		
+		params.put("pv_CdUniEco_i" , pv_CdUniEco_i);
+		params.put("pv_CdRamo_i"   , pv_CdRamo_i  );
+		params.put("pv_nmpoliza_i" , pv_nmpoliza_i);
+		params.put("pv_cdperson"   , pv_cdperson  );
+		params.put("pv_nmsinies"   , pv_nmsinies);
+		params.put("pv_fecdesde"   , Utils.parse(pv_fecdesde));
+		params.put("pv_fechasta"   , Utils.parse(pv_fechasta));
+		params.put("pv_top"    , "5"); 
+        logger.debug("params:"+params);
+        
+		
+		Map<String, Object> result = ejecutaSP(new ObtieneListaTopIcd(this.getDataSource()), params);
+		logger.debug("result: {}"+result);
+
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListaTopIcd extends StoredProcedure {
+		protected ObtieneListaTopIcd(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_RESERVAS_SINI.P_TOPS_ICDS");
+			declareParameter(new SqlParameter("pv_CdUniEco_i",   	 OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_CdRamo_i",   	 OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fecdesde",   OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_fechasta",   OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_top",   OracleTypes.VARCHAR));
+			
+			String[] cols = new String[]{
+					"CDICD"	        	
+					,"DESC_ICD"	        
+					,"MONTO_RESERVADO"		    
+					,"MONTO_APROBADO"	        
+					,"MONTO_PAGADO"		    
+					
+			};
+			//declareParameter(new SqlOutParameter("pv_cant_regis"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
     
+	@Override
+	public List<Map<String, String>> obtieneListaReservas(String pv_CdUniEco_i 
+			,String pv_CdRamo_i  
+			,String pv_nmpoliza_i
+			,String pv_cdperson  
+			,String pv_nmsinies
+			,String pv_fecdesde  
+			,String pv_fechasta) throws Exception {
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		
+		
+		params.put("pv_CdUniEco_i" , pv_CdUniEco_i);
+		params.put("pv_CdRamo_i"   , pv_CdRamo_i  );
+		params.put("pv_nmpoliza_i" , pv_nmpoliza_i);
+		params.put("pv_cdperson"   , pv_cdperson  );
+		params.put("pv_nmsinies"   , pv_nmsinies);
+		params.put("pv_fecdesde"   , Utils.parse(pv_fecdesde));
+		params.put("pv_fechasta"   , Utils.parse(pv_fechasta));
+        logger.debug("params:"+params);
+        
+		
+		Map<String, Object> result = ejecutaSP(new ObtieneListaReservas(this.getDataSource()), params);
+		logger.debug("result: {}"+result);
+
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListaReservas extends StoredProcedure {
+		protected ObtieneListaReservas(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_RESERVAS_SINI.P_SHOW_RESERVAS_TIPPAG");
+			declareParameter(new SqlParameter("pv_CdUniEco_i",   	 OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_CdRamo_i",   	 OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fecdesde",   OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_fechasta",   OracleTypes.DATE));
+			String[] cols = new String[]{
+					"TIPO_PAGO"	        
+					,"MONTO_RESERVADO"		    
+					,"MONTO_APROBADO"	        
+					,"MONTO_PAGADO"		    
+					
+			};
+			//declareParameter(new SqlOutParameter("pv_cant_regis"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListaReservasSolo(String pv_CdUniEco_i 
+			,String pv_CdRamo_i  
+			,String pv_nmpoliza_i
+			,String pv_cdperson  
+			,String pv_nmsinies
+			,String pv_fecdesde  
+			,String pv_fechasta) throws Exception {
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		
+		
+		params.put("pv_CdUniEco_i" , pv_CdUniEco_i);
+		params.put("pv_CdRamo_i"   , pv_CdRamo_i  );
+		params.put("pv_nmpoliza_i" , pv_nmpoliza_i);
+		params.put("pv_cdperson"   , pv_cdperson  );
+		params.put("pv_nmsinies"   , pv_nmsinies);
+		params.put("pv_fecdesde"   , Utils.parse(pv_fecdesde));
+		params.put("pv_fechasta"   , Utils.parse(pv_fechasta));
+        logger.debug("params:"+params);
+        
+		
+		Map<String, Object> result = ejecutaSP(new ObtieneListaReservasSolo(this.getDataSource()), params);
+		logger.debug("result: {}"+result);
+		List<Map<String,String>> ret=(List<Map<String,String>>)result.get("pv_registro_o");
+		
+		if(ret.size()<=0){
+			throw new ApplicationException("No hay datos");
+		}
+		List<Map<String,String>> dat=new ArrayList<Map<String,String>>();
+		Map<String, String> map = ret.get(0);
+		Map<String, String> map2= new HashMap<String, String>();
+		map2.put("TITULO", "Monto Reservado");
+		map2.put("DAT1", map.get("MONTO_RESERVADO"));
+		
+		dat.add(map2);
+		map2=new HashMap<String, String>();
+		
+		map2.put("TITULO", "Monto Aprobado");
+		map2.put("DAT1", map.get("MONTO_APROBADO"));
+		dat.add(map2);
+		map2=new HashMap<String, String>();
+		
+		map2.put("TITULO", "Monto Pagado");
+		map2.put("DAT1", map.get("MONTO_PAGADO"));
+		dat.add(map2);
+		return dat;
+	}
+	
+	protected class ObtieneListaReservasSolo extends StoredProcedure {
+		protected ObtieneListaReservasSolo(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_RESERVAS_SINI.P_SHOW_RESERVAS");
+			declareParameter(new SqlParameter("pv_CdUniEco_i",   	 OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_CdRamo_i",   	 OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fecdesde",   OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_fechasta",   OracleTypes.DATE));
+			String[] cols = new String[]{
+					"MONTO_RESERVADO"		    
+					,"MONTO_APROBADO"	        
+					,"MONTO_PAGADO"		    
+					
+			};
+			//declareParameter(new SqlOutParameter("pv_cant_regis"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

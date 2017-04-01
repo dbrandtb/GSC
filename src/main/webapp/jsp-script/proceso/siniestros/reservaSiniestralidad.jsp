@@ -9,10 +9,17 @@ var _CONTEXT = '${ctx}';
 
 var _URL_RENOVA_SINIESTRALIDAD  =	'<s:url namespace="/siniestros" action="consultaRenovaSiniestros" />';
 
+var _url_topicd = '<s:url namespace="/siniestros" action="topIcd" />';
+var _url_reservas = '<s:url namespace="/siniestros" action="reservas" />';
+var _url_reservasTipPag = '<s:url namespace="/siniestros" action="reservasTipPag" />';
+
 var sesionDsrol   						      = _GLOBAL_CDSISROL;
 
 var itemsFormularioBusqueda      = [<s:property value="imap.busquedaItems" 				  escapeHtml="false" />];
 
+var datosTopIcd 		= null;
+var datosReservasTippag = null;
+var datosReservas 		= null;
 ////// variables //////
 
 ////// componentes dinamicos //////
@@ -24,6 +31,287 @@ Ext.onReady(function()
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
+    
+    
+    
+    ////////////////////////CHARTS///////////////////////////////////
+    
+    
+     ////// modelos //////
+    Ext.define('icdModel', {
+	    extend: 'Ext.data.Model',
+	    fields: [
+	    	 { name: 'DESC_ICD'			,type: 'string' },
+	         { name: 'CDICD'			,type: 'string' },
+	         { name: 'MONTO_RESERVADO'	,type: 'int'  	},
+	         { name: 'MONTO_APROBADO' 	,type: 'int' 	},
+	         { name: 'MONTO_PAGADO'	  	,type: 'int'	}
+	    ]
+	});
+    
+    Ext.define('tipoPagoModel', {
+	    extend: 'Ext.data.Model',
+	    fields: [
+	         { name: 'TIPO_PAGO'		,type: 'string' },
+	         { name: 'MONTO_RESERVADO'	,type: 'int'  	},
+	         { name: 'MONTO_APROBADO' 	,type: 'int' 	},
+	         { name: 'MONTO_PAGADO'	  	,type: 'int'	}
+	    ]
+	});
+    
+    Ext.define('reservasModel', {
+	    extend: 'Ext.data.Model',
+	    fields: [
+	         { name: 'TITULO'		,type: 'string' },
+	         { name: 'DAT1'	,type: 'int'  	}
+	    ]
+	});
+    ////// modelos //////
+    
+    ////// stores //////
+    
+    var store = Ext.create('Ext.data.Store', {
+	    model: 'icdModel',
+	    autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url:_url_topicd,
+            extraParams : {
+            	'params.pv_CdUniEco_i'   : _fieldByName('cdunieco').getValue()
+				,'params.pv_CdRamo_i'    : _fieldByName('cdramo').getValue()
+				,'params.pv_nmpoliza_i'  : _fieldByName('nmpoliza').getValue()
+				,'params.pv_fecdesde'   : _fieldByName('fecini').getValue()
+				,'params.pv_fechasta'   : _fieldByName('fecfin').getValue()
+				,'params.pv_cdperson'  : _fieldByName('cdperson').getValue()
+				,'params.pv_nmsinies' : _fieldByName('siniestro').getValue()
+				,'params.pv_ntramite_i'  : _fieldByName('tramite').getValue()
+				,'params.pv_start_i'  : 0
+				,'params.pv_limit_i'  : 25
+            },
+            reader:
+            {
+                type: 'json',
+                root: 'slist1'
+            }
+        }
+	});
+    
+    var storeTipoPago = Ext.create('Ext.data.Store', {
+	    model: 'tipoPagoModel',
+	    autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url:_url_reservasTipPag,
+            extraParams : {
+            	'params.pv_CdUniEco_i'   : _fieldByName('cdunieco').getValue()
+				,'params.pv_CdRamo_i'    : _fieldByName('cdramo').getValue()
+				,'params.pv_nmpoliza_i'  : _fieldByName('nmpoliza').getValue()
+				,'params.pv_fecdesde'   : _fieldByName('fecini').getValue()
+				,'params.pv_fechasta'   : _fieldByName('fecfin').getValue()
+				,'params.pv_cdperson'  : _fieldByName('cdperson').getValue()
+				,'params.pv_nmsinies' : _fieldByName('siniestro').getValue()
+				,'params.pv_ntramite_i'  : _fieldByName('tramite').getValue()
+            },
+            reader:
+            {
+                type: 'json',
+                root: 'slist1'
+            }
+        }
+	});
+    
+    var storeReservas = Ext.create('Ext.data.Store', {
+	    model: 'reservasModel',
+	    autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url:_url_reservas,
+            extraParams : {
+            	'params.pv_CdUniEco_i'   : _fieldByName('cdunieco').getValue()
+				,'params.pv_CdRamo_i'    : _fieldByName('cdramo').getValue()
+				,'params.pv_nmpoliza_i'  : _fieldByName('nmpoliza').getValue()
+				,'params.pv_fecdesde'   : _fieldByName('fecini').getValue()
+				,'params.pv_fechasta'   : _fieldByName('fecfin').getValue()
+				,'params.pv_cdperson'  : _fieldByName('cdperson').getValue()
+				,'params.pv_nmsinies' : _fieldByName('siniestro').getValue()
+				,'params.pv_ntramite_i'  : _fieldByName('tramite').getValue()
+            },
+            reader:
+            {
+                type: 'json',
+                root: 'slist1'
+            }
+        }
+	});
+    ////// stores //////
+    
+    ////// componentes //////
+    ////// componentes //////
+    
+    ////// contenido //////
+    var chart=Ext.create('Ext.chart.Chart', {
+    	   
+    	   width:900,
+    	   height: 300,
+    	   store: store,
+    	   axes: [{
+               type: 'numeric',
+               position: 'left',
+               fields: 'MONTO_RESERVADO',
+               grid: true,
+               minimum: 0,
+               label: {
+                   renderer: function(v) { return  '$ ' + v; }
+               }
+           }, {
+               type: 'category',
+               position: 'bottom',
+               fields: 'CDICD',
+               grid: true,
+               label: {
+                   rotate: {
+                       degrees: -45
+                   }
+               }
+           }],
+           series: [{
+               type: 'column',
+               axis: 'left',
+               title: [ 'Reservado', 'Aprobado', 'Pagado'],
+               xField: 'CDICD',
+               yField: [ 'MONTO_RESERVADO', 'MONTO_APROBADO', 'MONTO_PAGADO'  ],
+               style: {
+                   opacity: 0.80
+               },
+               highlight: {
+                   fill: '#000',
+                   'stroke-width': 1,
+                   stroke: '#000'
+               },
+               tips: {
+                   trackMouse: true,
+                   style: 'background: #FFF',
+                   height: 20,
+                   width: 400,
+                   renderer: function(storeItem, item) {
+                       var browser = item.series.title[Ext.Array.indexOf(item.series.yField, item.yField)];
+                       Ext.util.Format.currencySign="$";
+                       this.setTitle(browser + ' para ' + storeItem.get('DESC_ICD') + ': ' +Ext.util.Format.currency(storeItem.get(item.yField)) );
+                   }
+               }
+           }]
+    	});
+    
+    var chartTipoPago=Ext.create('Ext.chart.Chart', {
+    	width:1000,
+        height: 410,
+        padding: '10 0 0 0',
+        animate: true,
+        shadow: false,
+        style: 'background: #fff;',
+        legend: {
+            position: 'right',
+            boxStrokeWidth: 0,
+            labelFont: '12px Helvetica'
+        },
+        store: storeTipoPago,
+        insetPadding: 40,
+        axes: [{
+            type: 'numeric',
+            position: 'bottom',
+            fields: 'MONTO_RESERVADO',
+            grid: true,
+            label: {
+                renderer: function(v) { 
+                	Ext.util.Format.currencySign="$";
+                	return Ext.util.Format.currency(v); }
+            },
+            minimum: 0
+        }, {
+            type: 'category',
+            position: 'left',
+            fields: 'TIPO_PAGO',
+            grid: true
+        }],
+        series: [{
+            type: 'bar',
+            axis: 'bottom',
+            title: [ 'Monto Reservado', 'Monto Aprovado', 'Monto Pagado' ],
+            xField: 'TIPO_PAGO',
+            yField: [ 'MONTO_RESERVADO', 'MONTO_APROBADO', 'MONTO_PAGADO' ],
+            stacked: true,
+            style: {
+                opacity: 0.80
+            },
+            highlight: {
+                fill: '#000',
+                'stroke-width': 2,
+                stroke: '#fff'
+            },
+            tips: {
+                trackMouse: true,
+                style: 'background: #FFF',
+                height: 20,
+                width: 350,
+                renderer: function(storeItem, item) {
+                    var browser = item.series.title[Ext.Array.indexOf(item.series.yField, item.yField)];
+                    Ext.util.Format.currencySign="$"
+                    this.setTitle(browser + ' for ' + storeItem.get('TIPO_PAGO') + ': ' + Ext.util.Format.currency(storeItem.get(item.yField)) );
+                }
+            }
+        }]
+ 	});
+    
+    var chartReservas=Ext.create('Ext.chart.Chart', {
+ 	   
+    	width:1000,
+ 	   height: 300,
+ 	   animate: true,
+ 	  shadow: false,
+ 	   store: storeReservas,
+ 	  height: 410,
+      padding: '10 0 0 0',
+      style: 'background: #fff',
+      insetPadding: 40,
+      legend: {
+          field: 'TITULO',
+          position: 'bottom',
+          boxStrokeWidth: 0,
+          labelFont: '12px Helvetica'
+      },
+ 	 
+        series: [{
+            type: 'pie',
+            angleField: 'DAT1',
+            donut: 50,
+            label: {
+                field: 'TITULO',
+                display: 'outside',
+                calloutLine: true
+            },
+            showInLegend: true,
+            highlight: {
+                fill: '#000',
+                'stroke-width': 1,
+                stroke: '#ccc'
+            },
+            tips: {
+                trackMouse: true,
+                style: 'background: #FFF',
+                height: 20,
+                width: 250,
+                renderer: function(storeItem, item) {
+                	Ext.util.Format.currencySign="$"
+                    this.setTitle(storeItem.get('TITULO') + ': ' + Ext.util.Format.currency(storeItem.get('DAT1')) );
+                }
+            }
+        }]
+ 	});
+    
+    ///////////////////////////////////////////////////////////
     ////// modelos //////
     Ext.define('modeloAutEspecial',{
 		extend:'Ext.data.Model',
@@ -79,6 +367,7 @@ Ext.onReady(function()
     Ext.create('Ext.panel.Panel',
     {
         renderTo    : '_p25_divpri'
+        ,autoScroll : true
         ,itemId     : 'formBusqueda'
         ,defaults   : { style : 'margin : 5px;' }
         ,border     : 0
@@ -101,6 +390,8 @@ Ext.onReady(function()
                         text     : 'Buscar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
                         ,handler : function(){
+                        	_mask("Cargando...");
+                        	
                         	storeGridAutEspecial.removeAll();
 							var params = {
 								'params.pv_CdUniEco_i'   : _fieldByName('cdunieco').getValue()
@@ -115,14 +406,24 @@ Ext.onReady(function()
 								,'params.pv_limit_i'  : 25
 							};
 							cargaStorePaginadoLocal(storeGridAutEspecial, _URL_RENOVA_SINIESTRALIDAD, 'datosValidacion', params, function(options, success, response){
+								_unmask();
 								if(success){
+									store.extraParams=params
+									storeTipoPago.extraParams=params
+									storeReservas.extraParams=params
+									store.load();
+									storeTipoPago.load();
+									storeReservas.load();
 									var jsonResponse = Ext.decode(response.responseText);
 									if(jsonResponse.datosValidacion &&jsonResponse.datosValidacion.length == 0) {
 										if(null == null){
 											centrarVentanaInterna(showMessage("Aviso", "No existe tr&aacute;mites.", Ext.Msg.OK, Ext.Msg.INFO));
 										}
+										_fieldById("graficas").hide();
 										return;
 									}
+									_fieldById("graficas").show();
+									debug(jsonResponse);
 								}else{
 									centrarVentanaInterna(showMessage('Error', 'Error al obtener los datos',Ext.Msg.OK, Ext.Msg.ERROR));
 								}
@@ -140,6 +441,30 @@ Ext.onReady(function()
                 		}
                 }
             })
+            
+        ,
+        Ext.create('Ext.tab.Panel', {
+        	
+        	itemId:"graficas",
+            
+            items: [{
+                title: 'RESERVAS',
+                items:[
+                	chartReservas
+                ]
+            }, {
+                title: 'RESERVAS TIPO PAGO',
+                items:[
+                	chartTipoPago
+                ]
+            },
+            {
+                title: 'TOP ICD',
+                items:[
+                	chart
+                ]
+            }]
+        })
         ,Ext.create('Ext.grid.Panel',{
 				id             : 'clausulasGridId'
 				,title         : 'Reserva Siniestros'
@@ -194,6 +519,7 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
+    _fieldById("graficas").hide();
     var form = _fieldById('_p25_busquedaForm');
     
    /* _fieldByName('division',form).getStore().on({
@@ -320,5 +646,5 @@ function _p25_limpiarFiltros(button,e)
 ////// funciones //////
 </script>
 </head>
-<body><div id="_p25_divpri" style="height:600px;"></div></body>
+<body><div id="_p25_divpri" style="height:1000px;"></div></body>
 </html>
