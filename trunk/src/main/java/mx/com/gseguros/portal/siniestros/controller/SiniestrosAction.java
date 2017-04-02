@@ -1941,7 +1941,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		if(causaSiniestro != null){
 			if(!causaSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 				//1.- Verificamos el el Ramo
-				if(ramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || ramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){ //SALUD VITAL
+				if(ramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || ramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())|| ramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){ //SALUD VITAL
 					if(tipoCopago.equalsIgnoreCase("%")){
 						copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp + Double.parseDouble(""+copagoOriginalPoliza);
 						if(copagoPenaPorcentaje <= 0){
@@ -2166,7 +2166,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							
 							if(informacionGral.size()> 0){
 								aseguradoObj.put("CAUSASINIESTRO", informacionGral.get(0).get("CDCAUSA"));
-								if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+								if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) ||cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
 									if(informacionGral.get(0).get("CDCAUSA").toString().equalsIgnoreCase(CausaSiniestro.ENFERMEDAD.getCodigo())){
 										// Verificamos la Cobertura que tiene el asegurado
 										HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
@@ -2212,7 +2212,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								paramExclusion.put("pv_nmpoliza_i",nmpoliza);
 								paramExclusion.put("pv_nmsituac_i",nmsituac);
 								
-								if(cdramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+								if(cdramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
 									logger.debug("Valor de aplicaPenalZonaHosp : {} ",aplicaPenalZonaHosp);
 									logger.debug("Valor de aplicaPenalCircHosp : {} ",aplicaPenalCircHosp);
 									// Validacion por Cambio de Zona
@@ -2293,7 +2293,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								}
 							}
 							
-							if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){//GMMI
+							if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) ||cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){//GMMI
 								if(existeCobertura == true){
 									deducibleSiniestroIte = 0d;
 								}
@@ -2721,7 +2721,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){ // Diferente de Accidente
 									subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
 								}else{
-									if(cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+									if(cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) ||cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
 										subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
 									}else{
 										subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP);
@@ -3162,7 +3162,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						//verificamos la causa del siniestro
 						String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
 						if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
-							if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+							if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) ||siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
 								//GMMI
 								if(existeCobertura == true){
 									deducibleFacturaIte = 0d;
@@ -3176,7 +3176,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						logger.debug("--->>>>>>> DIFERENTE DE HOSPITALIZACION Y AYUDA DE MATERNIDAD");
 						String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
 						if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
-							if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+							if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
 								//GMMI
 								if(existeCobertura == true){
 									deducibleFacturaIte = 0d;
@@ -3900,7 +3900,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						
 						if(informacionGral.size()> 0){
 							aseguradoObj.put("CAUSASINIESTRO", informacionGral.get(0).get("CDCAUSA"));
-							if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+							if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
 								if(informacionGral.get(0).get("CDCAUSA").toString().equalsIgnoreCase(CausaSiniestro.ENFERMEDAD.getCodigo())){
 									HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
 									paramCobertura.put("pv_ntramite_i",factura.get("NTRAMITE"));
@@ -3943,7 +3943,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							paramExclusion.put("pv_cdramo_i",cdramo);
 							paramExclusion.put("pv_nmpoliza_i",nmpoliza);
 							paramExclusion.put("pv_nmsituac_i",nmsituac);
-							if(cdramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+							if(cdramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())|| cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
 								logger.debug("Valor de aplicaPenalZonaHosp : {} ",aplicaPenalZonaHosp);
 								logger.debug("Valor de aplicaPenalCircHosp : {} ",aplicaPenalCircHosp);
 								if(aplicaPenalZonaHosp.equalsIgnoreCase("N")){
@@ -4021,7 +4021,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							}
 						}
 						
-						if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){//GMMI
+						if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){//GMMI
 							if(existeCobertura == true){
 								deducibleSiniestroIte = 0d;
 							}
@@ -4408,7 +4408,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){ // Diferente de Accidente
 								subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
 							}else{
-								if(cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+								if(cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
 									subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
 								}else{
 									subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP);
@@ -4849,7 +4849,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					//verificamos la causa del siniestro
 					String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
 					if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
-						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
 							//GMMI
 							if(existeCobertura == true){
 								deducibleFacturaIte = 0d;
@@ -4863,7 +4863,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					logger.debug("--->>>>>>> DIFERENTE DE HOSPITALIZACION Y AYUDA DE MATERNIDAD");
 					String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
 					if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
-						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
 							//GMMI
 							if(existeCobertura == true){
 								deducibleFacturaIte = 0d;
