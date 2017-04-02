@@ -219,6 +219,10 @@
 			<result>/jsp-script/proceso/siniestros/altaTramitePrevio.jsp</result>
 		</action>
 		
+        <action name="altaTramitePrevio" class="tramiteSiniestroAction"  method="altaTramite">
+            <result>/jsp-script/proceso/siniestros/altaTramitePrevio.jsp</result>
+        </action>
+        
 		<action name="complementoAltaTramite" class="tramiteSiniestroAction"  method="altaTramite">
 			<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
 		</action>
