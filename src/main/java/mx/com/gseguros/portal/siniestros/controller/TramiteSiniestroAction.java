@@ -158,7 +158,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					valores.put("otvalor13",TipoPrestadorServicio.CLINICA.getCdtipo());
 				}
 				
-				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && (params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) || params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo()))){
 					valores.put("otvalor12","7RDH");
 					valores.put("otvalor14","7RDH001");
 				}
@@ -241,7 +241,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				modMesaControl.put("pv_otvalor26_i",params.get("pv_cdtipsit_i"));
 				modMesaControl.put("pv_otvalor27_i",params.get("idCveBeneficiario"));
 				
-				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && (params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) || params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo()))){
 					modMesaControl.put("pv_otvalor12","7RDH");
 					modMesaControl.put("pv_otvalor14","7RDH001");
 				}
@@ -401,7 +401,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			String tipoPago = params.get("cmbTipoPago");
 			for(int i=0;i<datosTablas.size();i++) {
 				
-				if((cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo())) {
+				if((cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())|| cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo())) {
 					valorFactura = params.get("nmtramite")+""+(slist1.size());
 				}else{
 					valorFactura = datosTablas.get(i).get("nfactura");
@@ -414,8 +414,8 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					datosTablas.get(i).get("cdtipser"),
 					(cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()))?"0":datosTablas.get(i).get("cdpresta"),
 					datosTablas.get(i).get("ptimport"),
-					((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH":null),
-					((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH001":null),
+					(((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH":null),
+					(((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo()))&& tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH001":null),
 					null,
 					null,
 					datosTablas.get(i).get("cdmoneda"),
