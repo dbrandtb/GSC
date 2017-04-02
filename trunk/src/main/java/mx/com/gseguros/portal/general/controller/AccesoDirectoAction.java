@@ -63,7 +63,10 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	public static final String ACCESO_RSTN_COTIZAR_SALUD_COLECTIVO = "RstnCotiSalCol";
 	public static final String ACCESO_RSTN_COMPLEMENTARIOS_SALUD_COL = "RstnCompSalCol";
 	public static final String ACCESO_RSTN_CONSULTA_ASEGURADOS = "RstnConsAseg";
-	
+	public static final String ACCESO_RSTN_AUTORIZACION_SERVICIO = "RstnAutorizacionServ";
+	public static final String ACCESO_RSTN_ALTA_PREVIO= "RstnAltaTramitePrevio";
+	public static final String ACCESO_RSTN_ALTA_COMPLEMENTO = "RstnAltaTramiteComplemento";
+	public static final String ACCESO_RSTN_CONSULTA_SINIESTROS = "RstnConsutaSiniestros";
 	/**
 	 * Success property
 	 */
@@ -170,6 +173,10 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				|| ACCESO_RSTN_COTIZAR_SALUD_COLECTIVO.equals(acceso)
 				|| ACCESO_RSTN_COMPLEMENTARIOS_SALUD_COL.equals(acceso)
 				|| ACCESO_RSTN_CONSULTA_ASEGURADOS.equals(acceso)
+				|| ACCESO_RSTN_AUTORIZACION_SERVICIO.equals(acceso)
+				|| ACCESO_RSTN_ALTA_PREVIO.equals(acceso)
+				|| ACCESO_RSTN_ALTA_COMPLEMENTO.equals(acceso)
+				|| ACCESO_RSTN_CONSULTA_SINIESTROS.equals(acceso)
 		        ) {
 			
 			// Patch para traducir el rol, ya que el portal manda un codigo: 
