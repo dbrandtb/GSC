@@ -5803,8 +5803,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
             declareParameter(new SqlParameter("pv_copago_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_nmautser_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_swautori_i" , OracleTypes.VARCHAR));            
-            declareParameter(new SqlParameter("pv_feingreso_i" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_feegreso_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_feingreso_i" , OracleTypes.DATE));	//(EGS)
+            declareParameter(new SqlParameter("pv_feegreso_i" , OracleTypes.DATE));	//(EGS)
             declareParameter(new SqlParameter("pv_cveEvento_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cveAlta_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_accion_i" , OracleTypes.VARCHAR));
