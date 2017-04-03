@@ -1,20 +1,15 @@
 package mx.com.gseguros.utils;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
-
-import mx.com.gseguros.exception.ApplicationException;
 
 public class HttpUtil {
 
@@ -23,8 +18,6 @@ public class HttpUtil {
 	public static final String GET = "GET";
 	public static final String POST = "POST";
 	public static final int CODIGO_RESPUESTA_OK = 200;
-	public static final int RSTN_DOC_CLASS_COTIZACION = 1;
-	public static final int RSTN_DOC_CLASS_EMISION = 2;
 	
 	
 	/**
@@ -185,95 +178,12 @@ public class HttpUtil {
 		in.close();
 		logger.debug("Respuesta GET --> " + response.toString());
 	}
-	*/
 
 	public static void main(String[] args) throws Exception {
     //for (int i = 0; i <= 5; i++) {
-//			HttpRequestUtil.generaReporte("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CARATULA.rdf&paramform=no&p_unieco=1&p_cdramo=2&p_estado='W'&p_poliza=1250&desname=/opt/ice/gseguros/documentos/1250/CARATULA.pdf", "E:\\poliza.pdf");
+			HttpRequestUtil.generaReporte("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CARATULA.rdf&paramform=no&p_unieco=1&p_cdramo=2&p_estado='W'&p_poliza=1250&desname=/opt/ice/gseguros/documentos/1250/CARATULA.pdf", "E:\\poliza.pdf");
     //}
-		HttpUtil.sendPost("http://10.1.21.142:8080/wsCAS/rest/usuarios/getIdUsuByLogin","login=A1");
 	}
-	
-	
-	public static String sendPost(String url, String params) throws Exception {
-		
-		logger.debug(Utils.log("sendPost url=",url,",params=",params));
-		
-		URL obj = new URL(url);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-		//add reuqest header
-		con.setRequestMethod("POST");
-		//con.setRequestProperty("User-Agent", USER_AGENT);
-		//con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-		String urlParameters = params;
-		
-		// Send post request
-		con.setDoOutput(true);
-		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-		wr.writeBytes(urlParameters);
-		wr.flush();
-		wr.close();
-
-		int responseCode = con.getResponseCode();
-		logger.debug(Utils.log("sendPost Sending 'POST' request to URL : ",url));
-		logger.debug(Utils.log("sendPost Post parameters : ", urlParameters));
-		logger.debug(Utils.log("sendPost Response Code : ",responseCode));
-
-		if(responseCode < 200 || responseCode>=300) {
-			throw new ApplicationException(Utils.join("Codigo de respuesta erroneo: ",responseCode));
-		}
-		BufferedReader in = new BufferedReader(
-		       new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-		
-		//print result
-		logger.debug(Utils.log("sendPost response=",response.toString()));
-		return response.toString();
-		
-	}
-    
-    public static void enviarArchivoRSTN (String caseIdRstn, String nombreArchivo, String nombreArchivoCompleto, String descripcion,
-            int CLASE_DOC_RSTN) {
-        String params = Utils.join(
-                "repositoryId=ObjectStore",
-                "&folder=", caseIdRstn,
-                "&idName=", nombreArchivo,
-                "&fullFileName=", nombreArchivoCompleto,
-                "&contentType=application/pdf",
-                "&description=", descripcion,
-                "&documentClass=", (CLASE_DOC_RSTN == HttpUtil.RSTN_DOC_CLASS_COTIZACION ? "Cotizacion" : "Emision"));
-        logger.debug(Utils.log("\n°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°",
-                               "\n°°°°°° enviarArchivoRSTN °°°°°°",
-                               "\n°°°°°° params = ", params,
-                               "\n°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"));
-        try {
-            new HttpUtil.ThreadEnviarDocRstn(params).start();
-        } catch (Exception ex) {
-            logger.error("WARNING al instanciar hilo para enviar archivo a RSTN", ex);
-        }
-    }
-    
-    public static class ThreadEnviarDocRstn extends Thread {
-        String params;
-        public ThreadEnviarDocRstn (String params) {
-            this.params = params;
-        }
-        public void run() {
-            try {
-                Thread.sleep(30000);
-                HttpUtil.sendPost("http://10.1.1.134:9005/cmis-rs/cmis/documentos/json", this.params);
-            } catch (Exception ex) {
-                logger.error("WARNING al enviar archivo a RSTN", ex);
-            }
-        }
-    }
+	*/
 
 }

@@ -331,7 +331,7 @@ public class ReglaNegocioManagerImpl implements ReglaNegocioManager {
 	}
 	
 	public String borraVarTmp(String cdVariat) throws ApplicationException {
-		String res = "Variable temporal borrada con \u00e9xito";
+		String res = "Variable temporal borrada con &eacute;xito";
 		Map params = new HashMap<String, String>();
 		params.put("pv_cdvariat_i", cdVariat);
 		 

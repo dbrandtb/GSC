@@ -6,12 +6,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.EmpresaVO;
@@ -26,6 +20,12 @@ import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.utils.Constantes;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  *
  * @author HMLT
@@ -36,37 +36,25 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	
 	static final Logger logger = LoggerFactory.getLogger(AccesoDirectoAction.class);
 
-	public static final String DEFAULT_DATE_FORMAT_PARAM       = "defaultDateFormat";
+	public static final String DEFAULT_DATE_FORMAT_PARAM = "defaultDateFormat";
 	public static final String DEFAULT_DECIMAL_SEPARATOR_PARAM = "defaultDecimalSeparator";
 	public static final String DEFAULT_DECIMAL_PRECISION_PARAM = "decimalPrecision";
 	
 	public static final String ACCESO_CODIGOS_POSTALES = "codigosPostales";
-	public static final String ACCESO_COTIZADOR        = "cotizador";
+	public static final String ACCESO_COTIZADOR = "cotizador";
 	public static final String ACCESO_COTIZADOR_AUTO_INDIVIDUAL = "cotizadorAutoIndividual";
-	public static final String ACCESO_COTIZADOR_AUTO_FLOTILLA   = "cotizadorAutoFlotilla";
-	public static final String ACCESO_COTIZADOR_GRUPO  = "cotizadorGrupo";
+	public static final String ACCESO_COTIZADOR_AUTO_FLOTILLA = "cotizadorAutoFlotilla";
+	public static final String ACCESO_COTIZADOR_GRUPO = "cotizadorGrupo";
 	public static final String ACCESO_COTIZADOR_GRUPO2 = "cotizadorGrupo2";
 	public static final String ACCESO_CONSULTA_POLIZAS = "consultaPolizas";
-	public static final String ACCESO_CONSULTA_ASEGURADOS       = "consultaAsegurados";
-	public static final String ACCESO_CLIENTE_UNICO    = "clienteUnico";
-	public static final String ACCESO_ENDOSO_POLIZAS_NO_SICAPS  = "endosoPolizasNoSICAPS";
+	public static final String ACCESO_CONSULTA_ASEGURADOS = "consultaAsegurados";
+	public static final String ACCESO_CLIENTE_UNICO = "clienteUnico";
+	public static final String ACCESO_ENDOSO_POLIZAS_NO_SICAPS = "endosoPolizasNoSICAPS";
 	public static final String ACCESO_ENDOSO_DOMPOLIZAS_NO_SICAPS = "endosoDomicilioNOSICAPS";  
-	public static final String ENDOSOS_AUTOS           = "endososAutos";
-	public static final String FLUJO_MESA_CONTROL      = "flujoMesaControl";
-	public static final String IMPRESION_DOCUMENTOS    = "impresionDocumentos";
-	public static final String IMPRESION_RECIBOS       = "impresionRecibos";
-	public static final String MENU_PRINCIPAL          = "menuPrincipal";
-	public static final String MESA_CONTROL_AGENTES    = "mesaControlAgentes";
-	public static final String REDIRECT_SIMPLE         = "redirectSimple";
-	public static final String ACCESO_RSTN_COTIZACION_SALUD_IND = "RstnCotiSalInd";
-	public static final String ACCESO_RSTN_COMPLEMENTARIOS_SALUD_IND = "RstnCompSalInd";
-	public static final String ACCESO_RSTN_COTIZAR_SALUD_COLECTIVO = "RstnCotiSalCol";
-	public static final String ACCESO_RSTN_COMPLEMENTARIOS_SALUD_COL = "RstnCompSalCol";
-	public static final String ACCESO_RSTN_CONSULTA_ASEGURADOS = "RstnConsAseg";
-	public static final String ACCESO_RSTN_AUTORIZACION_SERVICIO = "RstnAutorizacionServ";
-	public static final String ACCESO_RSTN_ALTA_PREVIO= "RstnAltaTramitePrevio";
-	public static final String ACCESO_RSTN_ALTA_COMPLEMENTO = "RstnAltaTramiteComplemento";
-	public static final String ACCESO_RSTN_CONSULTA_SINIESTROS = "RstnConsutaSiniestros";
+	public static final String ENDOSOS_AUTOS = "endososAutos";
+	public static final String MENU_PRINCIPAL = "menuPrincipal";
+	public static final String MESA_CONTROL_AGENTES = "mesaControlAgentes";
+
 	/**
 	 * Success property
 	 */
@@ -164,20 +152,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				|| MESA_CONTROL_AGENTES.equals(acceso)
 				|| ACCESO_ENDOSO_POLIZAS_NO_SICAPS.equals(acceso)
 				|| ACCESO_ENDOSO_DOMPOLIZAS_NO_SICAPS.equals(acceso)
-				|| FLUJO_MESA_CONTROL.equals(acceso)
-				|| IMPRESION_DOCUMENTOS.equals(acceso)
-				|| IMPRESION_RECIBOS.equals(acceso)
-				|| REDIRECT_SIMPLE.equals(acceso)
-                || ACCESO_RSTN_COTIZACION_SALUD_IND.equals(acceso)
-				|| ACCESO_RSTN_COMPLEMENTARIOS_SALUD_IND.equals(acceso)
-				|| ACCESO_RSTN_COTIZAR_SALUD_COLECTIVO.equals(acceso)
-				|| ACCESO_RSTN_COMPLEMENTARIOS_SALUD_COL.equals(acceso)
-				|| ACCESO_RSTN_CONSULTA_ASEGURADOS.equals(acceso)
-				|| ACCESO_RSTN_AUTORIZACION_SERVICIO.equals(acceso)
-				|| ACCESO_RSTN_ALTA_PREVIO.equals(acceso)
-				|| ACCESO_RSTN_ALTA_COMPLEMENTO.equals(acceso)
-				|| ACCESO_RSTN_CONSULTA_SINIESTROS.equals(acceso)
-		        ) {
+				) {
 			
 			// Patch para traducir el rol, ya que el portal manda un codigo: 
 			if (ACCESO_CONSULTA_POLIZAS.equals(acceso)) {
