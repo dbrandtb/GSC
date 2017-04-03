@@ -43,6 +43,7 @@
 			var _ROL_COORD_MEDICO						= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@GERENTE_MEDICO_MULTIREGIONAL.cdsisrol" />';
 			var _OPERADOR_REC							= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@OPERADOR_SINIESTROS.cdsisrol" />';
 			var _COORDINADOR_REC						= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@COORDINADOR_SINIESTROS.cdsisrol" />';
+			var _GERENTE_REC							= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@GERENTE_OPERACION_SINIESTROS.cdsisrol"/>'; // (EGS)
 			//Tipo de pagos
 			var _TIPO_PAGO_DIRECTO						= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
 			var _TIPO_PAGO_REEMBOLSO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
@@ -59,7 +60,6 @@
             var _MULTISALUD								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
             var _GMMI									= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
             var _RECUPERA								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
-            var _GMPRUEBA                               = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES_PRUEBA.cdramo" />';
             //cdtiptra
             var _TIPO_TRAMITE_SINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra"/>';
             var _TIPO_PAGO_AUTOMATICO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@PAGO_AUTOMATICO.cdtiptra"/>';
@@ -1206,8 +1206,13 @@
 					hideTrigger	:true,					allowBlank:false,
 					listeners	: {	//(EGS)
 						'blur'	: function(e){
-							debug("blur...");
-							_11_clickAplicarCambiosFactura();
+							debug("blur...",_GLOBAL_CDSISROL, _11_params.STATUS, _STATUS_TRAMITE_CONFIRMADO, _COORDINADOR_REC, _GERENTE_REC);
+							if(_11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA){
+								_11_clickAplicarCambiosFactura();
+							}
+							if(_11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC)){
+								_11_clickAplicarCambiosFactura();
+							}
 						}
 					}
 				});
@@ -1646,11 +1651,13 @@
 									{
 										icon	 : '${ctx}/resources/fam3icons/icons/accept.png'
 										,tooltip : 'Guardar'
+										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 										,handler : guardarDatosComplementarios
 									},
 									{
 										icon	 : '${ctx}/resources/fam3icons/icons/user_delete.png'
 										,tooltip : 'Eliminar Asegurado'
+										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 										,handler : eliminarAsegurado
 										
 									}
@@ -1677,10 +1684,10 @@
 								}
 							},
 							{
-								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',			width: 90, hidden : (_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
+								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',			width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
-								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : (_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
+								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
 								header: 'Fecha<br/>Ocurrencia',		dataIndex: 'FEOCURRE'
@@ -2059,12 +2066,14 @@
 									,icon	 : '${ctx}/resources/fam3icons/icons/user_add.png'
 									,handler : _p21_agregarAsegurado
 									,hidden  : (_tipoPago != _TIPO_PAGO_DIRECTO)
+									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 								},
 								{
 									text	: 'Generar Calculo'
 									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
 									,handler : _p21_generarCalculo
 									,hidden  : (_cdtipoProceso  == "1")
+									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 								}
 							],							
 						listeners: {
@@ -2205,8 +2214,7 @@
 															debug("Valor de respuesta ==> ",Ext.decode(response.responseText).datosValidacion);
 															if(Ext.decode(response.responseText).datosValidacion != null){
 																var jsonValidacion =Ext.decode(response.responseText).datosValidacion;
-																debug("Valor de respuesta 2 ==> ",jsonValidacion);
-																debug("Valor de respuesta 3 ==> ",+jsonValidacion[0].VALCOBER);
+																debug("Valor de respuesta ==> ",jsonValidacion);
 																if(+jsonValidacion[0].VALCOBER <= 0){
 																	mensajeWarning('La autorizaci&oacute;n '+jsonValidacion[0].NMAUTESP+' no incluye la cobertura no amparada.<br/> '+
 																		'Favor de validarlo con el Gerente de operaci&oacute;n de siniestros.');
@@ -2358,6 +2366,7 @@
 									,{
 										icon	 : '${ctx}/resources/fam3icons/icons/page_edit.png'
 										,tooltip : 'Ajuste'
+										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 										,handler : _mostrarVentanaAjustes
 									}
 								]
@@ -2591,12 +2600,14 @@
 								{
 									text	: 'Agregar Concepto'
 									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 									,handler : _p21_agregarConcepto
 									//, hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
 								},
 								{
 									text	: 'Guardar Concepto'
 									,icon:_CONTEXT+'/resources/fam3icons/icons/disk.png'
+									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 									,handler : function() {
 										_guardarConceptosxFactura();
 									}
@@ -3192,6 +3203,7 @@
 					,buttons: [ {
 							text:'Aplicar Cambios Factura',
 							icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
+							disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true, //(EGS)  
 							handler:function() {
 								debug("Aplicar Cambios Factura");
 								_11_clickAplicarCambiosFactura(); // (EGS) codigo original se convierte en funcion para re-utilizarlo
@@ -5857,9 +5869,6 @@
             ,success : function (response) {
                 var idReclamacion = record.raw.NMSINIES;
                 debug(idReclamacion);
-                var json=Ext.decode(response.responseText).datosInformacionAdicional[0];
-                debug("Valor de respuesta"+json); 
-                
                 valido = idReclamacion && idReclamacion>0;
                 if(!valido){
                     //Preguntamos si esta seguro de generar el siniestro
@@ -7192,6 +7201,7 @@
 	// Se hace función para re-utilizarlo
 	function _11_clickAplicarCambiosFactura(){
 		debug("_11_clickAplicarCambiosFactura");
+		
 		var valido = panelInicialPral.isValid();
 		if(!valido) {
 			datosIncompletos();
