@@ -433,7 +433,9 @@ public interface SiniestrosDAO {
 	
 	public void eliminacionDocumentosxTramite(String ntramite) throws Exception;
 	
-	public String obtieneMesesTiempoEsperaICDCPT(String valorICDCPT, String nomTabla) throws Exception;
+	public String obtieneMesesTiempoEspera(String valorICDCPT, String nomTabla) throws Exception;
+	
+	public String obtieneMesesTiempoEsperaICDCPT(String cdramo, String cdtipsit, String cdicd, String dsplan) throws Exception;
 	
 	public String obtieneUsuarioTurnadoSiniestro(String ntramite, String rolDestino) throws Exception;
 
@@ -666,4 +668,6 @@ public interface SiniestrosDAO {
 
 	public List<Map<String, String>> obtieneListaReservasSolo(String pv_CdUniEco_i, String pv_CdRamo_i, String pv_nmpoliza_i,
 			String pv_cdperson, String pv_nmsinies, String pv_fecdesde, String pv_fechasta) throws Exception;
+	
+	public List<GenericVO> obtieneListadoCPTUnico(String cdicd) throws Exception;
 }

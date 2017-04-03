@@ -595,6 +595,16 @@
 				</param>
 			</result>
 		</action>
+		
+		<action name="consultaListaCPTUnico" class="siniestrosAction" method="consultaListaCPTUnico"> 
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosValidacionGral.*,
+                    success
+                </param>
+            </result>
+        </action>
 
 		<action name="afiliadosAfectados" class="siniestrosAction" method="afiliadosAfectados">
 			<result name="success">/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</result>

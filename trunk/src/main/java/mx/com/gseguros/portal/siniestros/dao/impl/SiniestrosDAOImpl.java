@@ -3860,7 +3860,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public String obtieneMesesTiempoEsperaICDCPT(String valorICDCPT, String nomTabla)
+	public String obtieneMesesTiempoEspera(String valorICDCPT, String nomTabla)
 			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdtabla_i", nomTabla);
@@ -6533,4 +6533,61 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+    public List<GenericVO> obtieneListadoCPTUnico(String cdicd)
+			throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdicd_i", cdicd);
+		
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoCPTUnico(getDataSource()), params);
+		return (List<GenericVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListadoCPTUnico extends StoredProcedure
+	{
+		protected ObtieneListadoCPTUnico(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_CATALOGO_ICDXCPT"); // Nuevo PL a invocar (EGS)
+			declareParameter(new SqlParameter("pv_cdicd_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosGenericos()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	protected class DatosGenericos  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	GenericVO consulta = new GenericVO();
+        	consulta.setKey(rs.getString("OTCLAVE1"));
+        	consulta.setValue(rs.getString("OTVALOR01"));
+            return consulta;
+        }
+    }
+	
+	@Override
+	public String obtieneMesesTiempoEsperaICDCPT(String cdramo, String cdtipsit, String cdicd, String dsplan)
+			throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_cdtipsit_i", cdtipsit);
+		params.put("pv_cdicd_i", cdicd);
+		params.put("pv_dsplan_i", dsplan);
+		Map<String, Object> resultado = ejecutaSP(new ObtieneMesesTiempoEsperaICDCPT(getDataSource()), params);
+		return (String) resultado.get("pv_registro_o");
+	}
+	
+    protected class ObtieneMesesTiempoEsperaICDCPT extends StoredProcedure {
+    	
+    	protected ObtieneMesesTiempoEsperaICDCPT(DataSource dataSource) {
+    		super(dataSource, "PKG_PRESINIESTRO.P_OBTIENE_MESES_TESPERAICD");
+    		declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdicd_i",    OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_dsplan_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

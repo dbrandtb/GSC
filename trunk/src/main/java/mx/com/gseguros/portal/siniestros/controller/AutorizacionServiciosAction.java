@@ -709,8 +709,14 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	public String obtieneMesesTiempoEspera(){
 		logger.debug("Entra a obtieneMesesTiempoEspera Params: {}", params);
 		try {
-			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor01"),params.get("cdtabla"));
-			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
+			if(params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+				mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEsperaICD(params.get("cdramo"),params.get("cdtipsit"),params.get("cdicd"),params.get("dsplan"));
+				mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
+			}else{
+				mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor01"),params.get("cdtabla"));
+				mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
+			}
+
 			logger.debug("mesesTiempoEspera: {} mensaje de respuesta : {}", mesesTiempoEspera,mensaje);
 		}catch( Exception e){
 			logger.error("Error obtieneMesesTiempoEspera : {}", e.getMessage(), e);
