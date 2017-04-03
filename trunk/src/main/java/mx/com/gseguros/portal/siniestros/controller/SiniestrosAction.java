@@ -2263,12 +2263,14 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							List<Map<String, String>> listaFactura = siniestrosManager.P_GET_FACTURAS_SINIESTRO(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, cdtipsit);
 							logger.debug("Paso 19.- Informacion de la Factura aplicacion de IVA's : {} ",listaFactura);
 							
-							if(listaFactura.get(0).get("APLICA_IVA") != null){
-								aplicaIVA       = listaFactura.get(0).get("APLICA_IVA");
-								seleccionAplica = listaFactura.get(0).get("ANTES_DESPUES");
-								ivaRetenido     = listaFactura.get(0).get("IVARETENIDO");
-								if(!StringUtils.isNotBlank(ivaRetenido)){
-									ivaRetenido = "N";
+							if(!listaFactura.isEmpty()){	// (EGS)
+								if(listaFactura.get(0).get("APLICA_IVA") != null){
+									aplicaIVA       = listaFactura.get(0).get("APLICA_IVA");
+									seleccionAplica = listaFactura.get(0).get("ANTES_DESPUES");
+									ivaRetenido     = listaFactura.get(0).get("IVARETENIDO");
+									if(!StringUtils.isNotBlank(ivaRetenido)){
+										ivaRetenido = "N";
+									}
 								}
 							}
 							
@@ -3991,12 +3993,14 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						List<Map<String, String>> listaFactura = siniestrosManager.P_GET_FACTURAS_SINIESTRO(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, cdtipsit);
 						logger.debug("Paso 19.- Informacion de la Factura aplicacion de IVA's : {} ",listaFactura);
 						
-						if(listaFactura.get(0).get("APLICA_IVA") != null){
-							aplicaIVA       = listaFactura.get(0).get("APLICA_IVA");
-							seleccionAplica = listaFactura.get(0).get("ANTES_DESPUES");
-							ivaRetenido     = listaFactura.get(0).get("IVARETENIDO");
-							if(!StringUtils.isNotBlank(ivaRetenido)){
-								ivaRetenido = "N";
+						if(!listaFactura.isEmpty()){	// (EGS)
+							if(listaFactura.get(0).get("APLICA_IVA") != null){
+								aplicaIVA       = listaFactura.get(0).get("APLICA_IVA");
+								seleccionAplica = listaFactura.get(0).get("ANTES_DESPUES");
+								ivaRetenido     = listaFactura.get(0).get("IVARETENIDO");
+								if(!StringUtils.isNotBlank(ivaRetenido)){
+									ivaRetenido = "N";
+								}
 							}
 						}
 						

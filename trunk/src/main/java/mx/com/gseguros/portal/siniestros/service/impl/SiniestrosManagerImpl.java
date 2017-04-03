@@ -2533,8 +2533,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		params.put("pv_copago_i", 	copago);
 		params.put("pv_nmautser_i", nmcallcenter);
 		params.put("pv_swautori_i", aplicaCambio);
-		params.put("pv_feingreso_i", feingreso);
-		params.put("pv_feegreso_i", feegreso);
+		logger.debug("pv_feingreso_i=='"+ StringUtils.isBlank(feingreso) +"'");
+		logger.debug("pv_feegreso_i=='"+ StringUtils.isBlank(feegreso) +"'");
+		
+		params.put("pv_feingreso_i", StringUtils.isNotBlank(feingreso) && !feingreso.equals("null")  ? Utils.parse(feingreso) : null);	//(EGS)
+		params.put("pv_feegreso_i",  StringUtils.isNotBlank(feegreso) && !feegreso.equals("null")  ? Utils.parse(feegreso) :null);	//(EGS)
 		params.put("pv_cveEvento_i", cveEvento);
 		params.put("pv_cveAlta_i", cveAlta);		
 		params.put("pv_accion_i", accion);
