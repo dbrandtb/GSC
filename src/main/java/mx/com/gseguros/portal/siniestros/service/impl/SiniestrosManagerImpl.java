@@ -1717,7 +1717,17 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	public String obtieneMesesTiempoEspera(String valorICDCPT, String nomTabla) throws Exception {
 		// TODO Auto-generated method stub
 		try {
-			return siniestrosDAO.obtieneMesesTiempoEsperaICDCPT(valorICDCPT,nomTabla);
+			return siniestrosDAO.obtieneMesesTiempoEspera(valorICDCPT,nomTabla);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public String obtieneMesesTiempoEsperaICD(String cdramo, String cdtipsit, String cdicd, String dsplan) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.obtieneMesesTiempoEsperaICDCPT(cdramo,cdtipsit,cdicd,dsplan);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -2881,6 +2891,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 				,Utils.formateaFecha(pv_fecdesde)  
 				,Utils.formateaFecha(pv_fechasta)  
 				);
+	}
+	
+	@Override
+	public List<GenericVO> getConsultaListaCPTUnico(String cdicd) // (EGS)
+			throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoCPTUnico(cdicd);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
 	}
     
 }

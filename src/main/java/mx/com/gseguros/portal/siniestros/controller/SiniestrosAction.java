@@ -1053,6 +1053,17 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String consultaListaCPTUnico(){
+		logger.debug("Entra a consultaListaCPTUnico params de entrada :{}",params);
+		try {
+			datosValidacionGral = siniestrosManager.getConsultaListaCPTUnico(params.get("cdicd"));
+		}catch( Exception e){
+			logger.error("Error al consultaListaCPTUnico la Lista de ICD's : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
 	/**
 	* Funcion que nos muestra la informacion de las pantalla principal de facturas y afiliados
 	* @param params

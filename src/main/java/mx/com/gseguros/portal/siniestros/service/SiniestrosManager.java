@@ -571,6 +571,8 @@ public interface SiniestrosManager {
 
 	public String obtieneMesesTiempoEspera(String valorICDCPT, String nomTabla) throws Exception;
 	
+	public String obtieneMesesTiempoEsperaICD(String cdramo, String cdtipsit, String cdicd, String dsplan) throws Exception;
+	
 	public String obtieneUsuarioTurnadoSiniestro(String ntramite, String rolDestino) throws Exception;
 	//public String requiereAutorizacionServ(String cobertura, String subcobertura)throws Exception;
 	
@@ -778,5 +780,7 @@ public interface SiniestrosManager {
 
 	public List<Map<String, String>> obtieneListaReservasSolo(String pv_CdUniEco_i, String pv_CdRamo_i, String pv_nmpoliza_i,
 			String pv_cdperson, String pv_nmsinies, String pv_fecdesde, String pv_fechasta) throws Exception;
+	
+	public List<GenericVO> getConsultaListaCPTUnico(String cdicd) throws Exception;
 
 }
