@@ -5,19 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.WSEmisionAutoException;
-import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
@@ -25,13 +15,10 @@ import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
-import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
-import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
-import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.dao.AseguradoDAO;
 import mx.com.gseguros.portal.general.service.ProcesoEmisionManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
@@ -49,6 +36,15 @@ import mx.com.gseguros.ws.autosgs.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
@@ -79,9 +75,6 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	@Value("${incisos.flotillas.impresion.autos.url}")
 	private String incisosFlotillasImpresionAutosURL;
 	
-	@Value("${incisos.flotillas.excel.impresion.autos.url}")
-	private String incisosFlotillasExcelImpresionAutosUrl;		
-	
 	@Value("${tarjeta.iden.impresion.autos.url}")
 	private String tarjetaIdenImpresionAutosURL;
 
@@ -110,8 +103,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	@Value("${ruta.documentos.poliza}")
 	private String rutaDocumentosPoliza;
 	
-	@Value("${caratula.impresion.autos.docextra.url}")
-    private String caratulaImpresionAutosDocExtra;
+	
 	
 	@Autowired
 	private ServiciosManager serviciosManager;
@@ -151,28 +143,16 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 	@Autowired
 	private DocumentosManager documentosManager;
 	
-	@Autowired
-	private EmisionManager emisionManager;
-	
-	@Autowired
-	private FlujoMesaControlDAO flujoMesaControlDAO;
-	
-	@Autowired
-	private DespachadorManager despachadorManager;
-	
 	@Override
 	public Map<String, String> emitir(String cdunieco, String cdramo, String estado, String nmpoliza, 
 			String cdtipsit, String ntramite, String cdusuari, String cdsisrol, String cdelemento,
-            String cveusuariocaptura, boolean esFlotilla, String tipoGrupoInciso, String polizaremota)
-            throws Exception {
+			String cveusuariocaptura, boolean esFlotilla, String tipoGrupoInciso) throws Exception {
 		
 		Map<String, String> result = new HashMap<String, String>();
 		
 		String paso = null;
 		
 		try {
-		    Date fechaHoy = new Date();
-		    
 			// Datos de la sesion del usuario:
 			paso = "Obteniendo datos del usuario";
 			DatosUsuario datUs = cotizacionDAO.cargarInformacionUsuario(cdusuari, cdtipsit);
@@ -198,7 +178,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				
 				result.put("necesitaAutorizacion" , "S");
 				
-				String msjeEnvio = "La p\u00f3liza se envi\u00f3 a autorizaci\u00f3n debido a que:<br/>";
+				String msjeEnvio = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";
 				for(Map<String, String> iAseguradoEdadInvalida : listaAseguradosEdadInvalida) {
 					msjeEnvio = msjeEnvio + iAseguradoEdadInvalida.get("NOMBRE");
 					if(iAseguradoEdadInvalida.get("SUPERAMINI").substring(0, 1).equals("-")) {
@@ -207,23 +187,25 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						msjeEnvio = msjeEnvio + " supera la edad de "+iAseguradoEdadInvalida.get("EDADMAXI")+" a&ntilde;os<br/>";
 					}
 				}
+				
+				Map<String, String> otvalores = new HashMap<String,String>();
+				otvalores.put("otvalor01", cdusuari);
+				otvalores.put("otvalor02", cdelemento);
+				otvalores.put("otvalor03", ntramite);
+				otvalores.put("otvalor04", cdpersonSesion);
+				otvalores.put("otvalor05", "EMISION");
+				String ntramiteAutorizacion = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo, estado, nmpoliza, 
+						"0", cdunieco, cdunieco, TipoTramite.EMISION_EN_ESPERA.getCdtiptra(), new Date(), null,
+						null, null, new Date(), EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
+						msjeEnvio, null, cdtipsit, cdusuari, cdsisrol, null, null, null, otvalores, null);
+				
+				msjeEnvio = msjeEnvio + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
 	        	
-	        	RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-	        	        cdusuari,
-	        	        cdsisrol,
-	        	        ntramite,
-	        	        EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
-	        	        msjeEnvio,
-	        	        null,  // cdrazrecha
-	        	        null,  // cdusuariDes
-	        	        null,  // cdsisrolDes
-	        	        false, // permisoAgente
-	        	        false, // porEscalamiento
-	        	        fechaHoy,
-	        	        false  // sinGrabarDetalle
-	        	        );
+	        	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
+	        			"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")",
+	        			cdusuari, null, cdsisrol,"N", null, null);
 	        	
-	        	msjeEnvio = Utils.join(msjeEnvio, ". ", despacho.getMessage());
+	        	mesaControlDAO.actualizaStatusMesaControl(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
 	        	
 				throw new ApplicationException(msjeEnvio, "Error " + paso);
 			}
@@ -236,25 +218,30 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				if(!cuadroNatural) {
 					necesitaAutorizacion = true;
 					result.put("necesitaAutorizacion", "S");
-					String msjeAutorizacion = "La p\u00f3liza se envi\u00f3 a autorizaci\u00f3n debido a que se cambio el cuadro de comisiones";
+					String msjeAutorizacion = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que se cambio el cuadro de comisiones";
 					
-					RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-	                        cdusuari,
-	                        cdsisrol,
-	                        ntramite,
-	                        EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
-	                        msjeAutorizacion,
-	                        null,  // cdrazrecha
-	                        null,  // cdusuariDes
-	                        null,  // cdsisrolDes
-	                        false, // permisoAgente
-	                        false, // porEscalamiento
-	                        fechaHoy,
-	                        false  // sinGrabarDetalle
-	                        );
-	                
-					msjeAutorizacion = Utils.join(msjeAutorizacion, ". ", despacho.getMessage());
+					Map<String, String> otvalores = new HashMap<String,String>();
+					otvalores.put("otvalor01", cdusuari);
+					otvalores.put("otvalor02", cdelemento);
+					otvalores.put("otvalor03", ntramite);
+					otvalores.put("otvalor04", cdpersonSesion);
+					otvalores.put("otvalor05", "EMISION");
+					String ntramiteAutorizacion = mesaControlDAO.movimientoMesaControl(cdunieco, cdramo, estado, nmpoliza, 
+							"0", cdunieco, cdunieco, TipoTramite.EMISION_EN_ESPERA.getCdtiptra(),
+							new Date(), null, null, null, new Date(), 
+							EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo(),
+							msjeAutorizacion, null, cdtipsit,
+							cdusuari, cdsisrol, null,null,null,
+							otvalores, null);
 					
+					msjeAutorizacion = msjeAutorizacion + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
+					
+		        	mesaControlDAO.movimientoDetalleTramite(ntramite, new Date(), null,
+		        			"El tr\u00e1mite se envi\u00f3 a autorizaci\u00f3n ("+ntramiteAutorizacion+")",
+		        			cdusuari, null, cdsisrol,"N", null, null);
+					
+		        	mesaControlDAO.actualizaStatusMesaControl(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+		        	
 					throw new ApplicationException(msjeAutorizacion, "Error " + paso);
 				}
 			}
@@ -270,19 +257,10 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			////// emision
 			paso = "Emitiendo poliza";
 			
-			EmisionVO emision = null;
-			if(cdramo.equals(Ramo.RECUPERA.getCdramo()) && cdtipsit.equals(TipoSituacion.RECUPERA_INDIVIDUAL.getCdtipsit())) {
-			    // Caso especial para Recupera Individual:
-			    emision = emisionDAO.emitirPolizaRemotaRecupera(cdusuari, cdunieco, cdramo, estado, nmpoliza, 
-                    "1", "0", cdelemento, cdunieco, null, cdperpag, 
-                    cdpersonSesion, new Date(), ntramite, polizaremota);
-			} else {
-			    
-			    emision = emisionDAO.emitir(cdusuari, cdunieco, cdramo, estado, nmpoliza, 
-                    "1", "0", cdelemento, cdunieco, null, cdperpag, 
-                    cdpersonSesion, new Date(), ntramite);
-			}
-			logger.debug("Emision obtenida: " + emision);
+			EmisionVO emision = emisionDAO.emitir(cdusuari, cdunieco, cdramo, estado, nmpoliza, 
+					"1", "0", cdelemento, cdunieco, null, cdperpag, 
+					cdpersonSesion, new Date(), ntramite);
+			logger.debug("emision obtenida " + emision);
 			
 			String nmpolizaEmitida = emision.getNmpoliza();
 			String nmpoliexEmitida = emision.getNmpoliex();
@@ -299,8 +277,8 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			
 			try {
             	serviciosManager.grabarEvento(new StringBuilder("\nEmision")
-            	    ,Constantes.MODULO_EMISION  //cdmodulo
-            	    ,Constantes.EVENTO_EMISION  //cdevento
+            	    ,"EMISION"  //cdmodulo
+            	    ,"EMISION"  //cdevento
             	    ,new Date() //fecha
             	    ,cdusuari
             	    ,cdsisrol
@@ -379,7 +357,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 			}
 				
 			////// ws de cotizacion y emision para autos
-			paso ="Invocando WS de emisi�n";
+			paso ="Invocando WS de emisi\u00f3n";
 			if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
 				    		|| Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)
 				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)) {
@@ -553,14 +531,11 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				String urlAp = apImpresionAutosURL;
 				
 				String urlIncisosFlot = incisosFlotillasImpresionAutosURL;
-				String urlIncisosExcelFlot = incisosFlotillasExcelImpresionAutosUrl;
 				String urlTarjIdent = tarjetaIdenImpresionAutosURL;
-				
-				String urlDocsExtra = this.caratulaImpresionAutosDocExtra;
 				
 				String mensajeEmail = "<span style=\"font-family: Verdana, Geneva, sans-serif;\">"+
 									"<br>Estimado(a) cliente,<br/><br/>"+
-									"Anexamos a este e-mail la documentaci\u00f3n de la p\u00f3liza de Autom\u00f3viles contratada con GENERAL DE SEGUROS.<br/>"+
+									"Anexamos a este e-mail la documentaci&oacute;n de la p&oacute;liza de Autom&oacute;viles contratada con GENERAL DE SEGUROS.<br/>"+
 									"Para visualizar el documento favor de dar click en el link correspondiente.<br/>";
 				
 				/**
@@ -568,7 +543,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 				 */
 				parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0";
 				logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
-				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car\u00e1tula de p\u00f3liza</a>";
+				mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlCaratula + parametros+"\">Car&aacute;tula de p&oacute;liza</a>";
 				
 				mesaControlDAO.guardarDocumento(
 						cdunieco
@@ -578,7 +553,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						,nmsuplemEmitida
 						,new Date()
 						,urlCaratula + parametros
-						,"Car\u00e1tula de P\u00f3liza"
+						,"Car&aacute;tula de P&oacute;liza"
 						,nmpoliza
 						,ntramite
 						,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
@@ -586,7 +561,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 						,null
 						,"1"
 						,"0"
-						,Documento.EXTERNO_CARATULA, null, null, false
+						,Documento.EXTERNO_CARATULA, null, null
 						);
 				
 				
@@ -643,7 +618,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 								,"0"
 								,Documento.RECIBO
 								,null
-								,null, false
+								,null
 								);
 					}
 				}
@@ -693,7 +668,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,"1"
 							,"0"
-							,Documento.EXTERNO_AP, null, null, false
+							,Documento.EXTERNO_AP, null, null
 							);
 				}
 				
@@ -722,7 +697,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,"1"
 							,"0"
-							,Documento.EXTERNO_CAIC, null, null, false
+							,Documento.EXTERNO_CAIC, null, null
 							);
 				}
 
@@ -750,7 +725,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,"1"
 							,"0"
-							,Documento.EXTERNO_AEUA, null, null, false
+							,Documento.EXTERNO_AEUA, null, null
 							);
 				}
 				
@@ -760,7 +735,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 					 */
 					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0";
 					logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
-					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci\u00f3n de Incisos Flotillas</a>";
+					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosFlot + parametros+"\">Relaci&oacute;n de Incisos Flotillas</a>";
 					
 					mesaControlDAO.guardarDocumento(
 							cdunieco
@@ -778,36 +753,9 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,"1"
 							,"0"
-							,Documento.EXTERNO_INCISOS_FLOTILLAS, null, null, false
+							,Documento.EXTERNO_INCISOS_FLOTILLAS, null, null
 							);
-
-					/**
-					 * Para Incisos Flotillas EXCEL
-					 */
-					if(StringUtils.isNotBlank(urlIncisosExcelFlot)){
-						parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",,0,0";
-						logger.debug("URL Generada para urlIncisosExcelFlot: "+ urlIncisosExcelFlot + parametros);
-						mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
-						
-						mesaControlDAO.guardarDocumento(
-								cdunieco
-								,cdramo
-								,"M"
-								,nmpolizaEmitida
-								,nmsuplemEmitida
-								,new Date()
-								,urlIncisosExcelFlot + parametros
-								,"Incisos EXCEL"
-								,nmpoliza
-								,ntramite
-								,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
-								,Constantes.SI
-								,null
-								,"1"
-								,"0"
-								,Documento.EXTERNO_INCISOS_FLOTILLAS, null, null, false
-								);
-					}
+					
 					
 					/**
 					 * Para Tarjeta Identificacion
@@ -859,7 +807,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 									,null
 									,"1"
 									,"0"
-									,Documento.EXTERNO_TARJETA_IDENTIFICACION, null, null, false
+									,Documento.EXTERNO_TARJETA_IDENTIFICACION, null, null
 									);
 						}
 						
@@ -905,7 +853,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,"1"
 							,"0"
-							,Documento.EXTERNO_REDUCE_GS, null, null, false
+							,Documento.EXTERNO_REDUCE_GS, null, null
 							);
 					
 				}
@@ -932,7 +880,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,"1"
 							,"0"
-							,Documento.EXTERNO_GESTORIA_GS, null, null, false
+							,Documento.EXTERNO_GESTORIA_GS, null, null
 							);
 					
 				}
@@ -974,7 +922,7 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
-							,Documento.EXTERNO_ESPECIF_SEGURO_VIDA, null, null, false
+							,Documento.EXTERNO_ESPECIF_SEGURO_VIDA, null, null
 							);
 
 					mesaControlDAO.guardarDocumento(
@@ -993,98 +941,22 @@ public class ProcesoEmisionManagerImpl implements ProcesoEmisionManager {
 							,null
 							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
 							,"0"
-							,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA, null, null, false
+							,Documento.EXTERNO_CONDIC_GRALES_SEGURO_VIDA, null, null
 							);
 				}
-				
-				if(StringUtils.isNotBlank(urlDocsExtra)){
-					/**
-					 * Para documento Sanas Practicas
-					 */
-					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",2";
-					logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
-					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Sanas Pr\u00e1cticas</a>";
-					
-					mesaControlDAO.guardarDocumento(
-							cdunieco
-							,cdramo
-							,"M"
-							,nmpolizaEmitida
-							,nmsuplemEmitida
-							,new Date()
-							,urlDocsExtra + parametros
-							,"Sanas Pr\u00e1cticas"
-							,nmpoliza
-							,ntramite
-							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
-							,Constantes.SI
-							,null
-							,"1"
-							,"0"
-							,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
-							);
-					
-					/**
-					 * Para documento Constancia de Recepcion
-					 */
-					parametros = "?"+sucursalGS+","+cdRamoGS+","+nmpolAlt+",1";
-					logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
-					mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>";
-					
-					mesaControlDAO.guardarDocumento(
-							cdunieco
-							,cdramo
-							,"M"
-							,nmpolizaEmitida
-							,nmsuplemEmitida
-							,new Date()
-							,urlDocsExtra + parametros
-							,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
-							,nmpoliza
-							,ntramite
-							,String.valueOf(TipoEndoso.EMISION_POLIZA.getCdTipSup())
-							,Constantes.SI
-							,null
-							,"1"
-							,"0"
-							,Documento.EXTERNO_DOCUMENTO_EXTRA, null, null, false
-							);
-				}
-				
-				// JTEZVA 2016 09 08 Se complementan las ligas con los documentos ice
-				mensajeEmail += emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite);
 				
 				mensajeEmail += "<br/><br/><br/>Agradecemos su preferencia.<br/>"+
 									 "General de Seguros<br/>"+
 									 "</span>";
 				
-				flujoMesaControlDAO.guardarMensajeCorreoEmision(
-						ntramite,
-						Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail)
-				);
-				
-				mensajeEmail = Utils.cambiaGuionesBajosPorAcentosHtml(Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail));
-				
 			}
 			
 			////// detalle emision
-			paso = "Insertando detalle de emisi�n";
+			paso = "Insertando detalle de emisi\u00f3n";
 			logger.debug("se inserta detalle nuevo para emision");
 	        	
-			RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-                    cdusuari,
-                    cdsisrol,
-                    ntramite,
-                    EstatusTramite.CONFIRMADO.getCodigo(),
-                    "El tr\u00e1mite se emiti\u00f3",
-                    null,  // cdrazrecha
-                    null,  // cdusuariDes
-                    null,  // cdsisrolDes
-                    true,  // permiso agente
-                    false, // porEscalamiento
-                    fechaHoy,
-                    false  // sinGrabarDetalle
-                    );
+	        mesaControlDAO.movimientoDetalleTramite(ntramite,new Date(),null,
+	        		"El tr\u00e1mite se emiti\u00f3",cdusuari,null,cdsisrol,"S", null, null);
 			
 		} catch(Exception ex) {
 			Utils.generaExcepcion(ex, paso);

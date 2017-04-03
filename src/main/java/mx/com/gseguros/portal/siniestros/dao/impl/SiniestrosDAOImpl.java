@@ -20,7 +20,6 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
 
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
@@ -690,7 +689,6 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	AutorizacionServicioVO consulta = new AutorizacionServicioVO();
         	consulta.setNmautser(rs.getString("nmautser"));
-        	consulta.setNtramite(rs.getString("ntramite"));
             return consulta;
         }
     }
@@ -927,7 +925,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setDsTipsit(rs.getString("DESCTIPSIT"));
         	consulta.setGenero(rs.getString("GENERO")); // (EGS)
         	consulta.setFenacimi(Utils.formateaFecha(rs.getString("FENACIMI"))); // (EGS)
-        	consulta.setCirHosp(rs.getString("CIRHOSP"));
             return consulta;
         }
     }
@@ -1649,9 +1646,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
 	@Override
-	public Map<String,String> obtenerTramiteCompletoXNmsolici(Map<String, String> params) throws Exception
+	public Map<String,String> obtenerTramiteCompletoXNmpoliza(Map<String, String> params) throws Exception
 	{
-		Map<String, Object> mapResult = ejecutaSP(new obtenerTramiteCompletoXNmsolici(this.getDataSource()), params);
+		Map<String, Object> mapResult = ejecutaSP(new obtenerTramiteCompletoXNmpoliza(this.getDataSource()), params);
 		
 		List<Map<String,String>> listaTramites = (List<Map<String,String>>) mapResult.get("pv_registro_o");
 		if(listaTramites==null||listaTramites.size()==0)
@@ -1663,12 +1660,12 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		return listaTramites.get(0);
 	}
 	
-	protected class obtenerTramiteCompletoXNmsolici extends StoredProcedure
+	protected class obtenerTramiteCompletoXNmpoliza extends StoredProcedure
 	{
-		protected obtenerTramiteCompletoXNmsolici(DataSource dataSource)
+		protected obtenerTramiteCompletoXNmpoliza(DataSource dataSource)
 		{
 			super(dataSource, "PKG_SATELITES2.P_GET_TRAMITE_X_NMPOLIZA");
-			declareParameter(new SqlParameter("pv_nmsolici_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -3262,7 +3259,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setOtvalor48mc(rs.getString("OTVALOR48"));
         	consulta.setOtvalor49mc(rs.getString("OTVALOR49"));
         	consulta.setOtvalor50mc(rs.getString("OTVALOR50"));
-        	consulta.setCdtipsup(rs.getString("CDTIPSUP"));
         	return consulta;
         }
     }
@@ -3860,7 +3856,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public String obtieneMesesTiempoEspera(String valorICDCPT, String nomTabla)
+	public String obtieneMesesTiempoEsperaICDCPT(String valorICDCPT, String nomTabla)
 			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdtabla_i", nomTabla);
@@ -5803,8 +5799,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
             declareParameter(new SqlParameter("pv_copago_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_nmautser_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_swautori_i" , OracleTypes.VARCHAR));            
-            declareParameter(new SqlParameter("pv_feingreso_i" , OracleTypes.DATE));	//(EGS)
-            declareParameter(new SqlParameter("pv_feegreso_i" , OracleTypes.DATE));	//(EGS)
+            declareParameter(new SqlParameter("pv_feingreso_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_feegreso_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cveEvento_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cveAlta_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_accion_i" , OracleTypes.VARCHAR));
@@ -6266,328 +6262,5 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 		
 	}
-	
-	@Override
-	public List<Map<String, String>> obtieneListaDatosRenovaSiniestralidad(String pv_CdUniEco_i 
-			,String pv_CdRamo_i  
-			,String pv_nmpoliza_i
-			,String pv_cdperson  
-			,String pv_nmsinies
-			,String pv_fecdesde  
-			,String pv_fechasta  
-			,String pv_start_i
-			,String pv_limit_i 
-			,String pv_ntramite_i) throws Exception {
-		Map<String,Object> params = new LinkedHashMap<String,Object>();
-		
-		logger.debug("params: {} "+params);
-  
-		params.put("pv_CdUniEco_i" , pv_CdUniEco_i);
-		params.put("pv_CdRamo_i"   , pv_CdRamo_i  );
-		params.put("pv_nmpoliza_i" , pv_nmpoliza_i);
-		params.put("pv_cdperson"   , pv_cdperson  );
-		params.put("pv_nmsinies"   , pv_nmsinies);
-		params.put("pv_fecdesde"   , Utils.parse(pv_fecdesde));
-		params.put("pv_fechasta"   , Utils.parse(pv_fechasta));
-		params.put("pv_start_i"    , pv_start_i);
-		params.put("pv_limit_i"    , pv_limit_i); 
-		params.put("pv_ntramite_i" , pv_ntramite_i);
-        logger.debug("params:"+params);
-        
-		
-		Map<String, Object> result = ejecutaSP(new ListaRenovaSiniestralidad(this.getDataSource()), params);
-		logger.debug("result: {}"+result);
-
-		return (List<Map<String,String>>)result.get("pv_registro_o");
-	}
-	
-	protected class ListaRenovaSiniestralidad extends StoredProcedure {
-		protected ListaRenovaSiniestralidad(DataSource dataSource) {
-			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_RESERVAS_SINI.P_SHOW_DETALLE_RESERVAS");
-			declareParameter(new SqlParameter("pv_CdUniEco_i",   	 OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_CdRamo_i",   	 OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdperson",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsinies",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_fecdesde",   OracleTypes.DATE));
-			declareParameter(new SqlParameter("pv_fechasta",   OracleTypes.DATE));
-			declareParameter(new SqlParameter("pv_start_i",   OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_limit_i",   OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_ntramite_i",   OracleTypes.VARCHAR));
-			String[] cols = new String[]{
-					"CDUNIECO"	        	
-					,"CDRAMO"	        
-					,"ESTADO"		    
-					,"NMPOLIZA"	        
-					,"NTRAMITE"		    
-					,"TIPO_PAGO"        
-					,"POLIZA"           
-					,"NMSINIES"   	    
-					,"DSUNIECO"         
-					,"FECINIVIG"  	    
-					,"FECFINVIG"        
-					,"AAAPERTU" 	     
-					,"FECHA_OCURRENCIA" 
-					,"CDICD" 	         
-					,"DESC_ICD" 	     
-					,"CDPERSON" 		 
-					,"NOMBRE_ASEGURADO" 
-					,"EDAD" 		     
-					,"SEXO" 		     
-					,"MONTO_RESERVADO"  
-					,"MONTO_APROBADO" 	 
-					,"MONTO_PAGADO"     
-					,"DSRAMO"           
-					,"CDCAUSA"          
-					,"FENACIMI"  
-			};
-			//declareParameter(new SqlOutParameter("pv_cant_regis"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
-	public List<Map<String, String>> obtieneListaTopIcd(String pv_CdUniEco_i 
-			,String pv_CdRamo_i  
-			,String pv_nmpoliza_i
-			,String pv_cdperson  
-			,String pv_nmsinies
-			,String pv_fecdesde  
-			,String pv_fechasta  
-			,String pv_top) throws Exception {
-		Map<String,Object> params = new LinkedHashMap<String,Object>();
-		
-		
-		params.put("pv_CdUniEco_i" , pv_CdUniEco_i);
-		params.put("pv_CdRamo_i"   , pv_CdRamo_i  );
-		params.put("pv_nmpoliza_i" , pv_nmpoliza_i);
-		params.put("pv_cdperson"   , pv_cdperson  );
-		params.put("pv_nmsinies"   , pv_nmsinies);
-		params.put("pv_fecdesde"   , Utils.parse(pv_fecdesde));
-		params.put("pv_fechasta"   , Utils.parse(pv_fechasta));
-		params.put("pv_top"    , "5"); 
-        logger.debug("params:"+params);
-        
-		
-		Map<String, Object> result = ejecutaSP(new ObtieneListaTopIcd(this.getDataSource()), params);
-		logger.debug("result: {}"+result);
-
-		return (List<Map<String,String>>)result.get("pv_registro_o");
-	}
-	
-	protected class ObtieneListaTopIcd extends StoredProcedure {
-		protected ObtieneListaTopIcd(DataSource dataSource) {
-			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_RESERVAS_SINI.P_TOPS_ICDS");
-			declareParameter(new SqlParameter("pv_CdUniEco_i",   	 OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_CdRamo_i",   	 OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdperson",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsinies",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_fecdesde",   OracleTypes.DATE));
-			declareParameter(new SqlParameter("pv_fechasta",   OracleTypes.DATE));
-			declareParameter(new SqlParameter("pv_top",   OracleTypes.VARCHAR));
-			
-			String[] cols = new String[]{
-					"CDICD"	        	
-					,"DESC_ICD"	        
-					,"MONTO_RESERVADO"		    
-					,"MONTO_APROBADO"	        
-					,"MONTO_PAGADO"		    
-					
-			};
-			//declareParameter(new SqlOutParameter("pv_cant_regis"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
     
-	@Override
-	public List<Map<String, String>> obtieneListaReservas(String pv_CdUniEco_i 
-			,String pv_CdRamo_i  
-			,String pv_nmpoliza_i
-			,String pv_cdperson  
-			,String pv_nmsinies
-			,String pv_fecdesde  
-			,String pv_fechasta) throws Exception {
-		Map<String,Object> params = new LinkedHashMap<String,Object>();
-		
-		
-		params.put("pv_CdUniEco_i" , pv_CdUniEco_i);
-		params.put("pv_CdRamo_i"   , pv_CdRamo_i  );
-		params.put("pv_nmpoliza_i" , pv_nmpoliza_i);
-		params.put("pv_cdperson"   , pv_cdperson  );
-		params.put("pv_nmsinies"   , pv_nmsinies);
-		params.put("pv_fecdesde"   , Utils.parse(pv_fecdesde));
-		params.put("pv_fechasta"   , Utils.parse(pv_fechasta));
-        logger.debug("params:"+params);
-        
-		
-		Map<String, Object> result = ejecutaSP(new ObtieneListaReservas(this.getDataSource()), params);
-		logger.debug("result: {}"+result);
-
-		return (List<Map<String,String>>)result.get("pv_registro_o");
-	}
-	
-	protected class ObtieneListaReservas extends StoredProcedure {
-		protected ObtieneListaReservas(DataSource dataSource) {
-			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_RESERVAS_SINI.P_SHOW_RESERVAS_TIPPAG");
-			declareParameter(new SqlParameter("pv_CdUniEco_i",   	 OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_CdRamo_i",   	 OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdperson",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsinies",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_fecdesde",   OracleTypes.DATE));
-			declareParameter(new SqlParameter("pv_fechasta",   OracleTypes.DATE));
-			String[] cols = new String[]{
-					"TIPO_PAGO"	        
-					,"MONTO_RESERVADO"		    
-					,"MONTO_APROBADO"	        
-					,"MONTO_PAGADO"		    
-					
-			};
-			//declareParameter(new SqlOutParameter("pv_cant_regis"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
-	public List<Map<String, String>> obtieneListaReservasSolo(String pv_CdUniEco_i 
-			,String pv_CdRamo_i  
-			,String pv_nmpoliza_i
-			,String pv_cdperson  
-			,String pv_nmsinies
-			,String pv_fecdesde  
-			,String pv_fechasta) throws Exception {
-		Map<String,Object> params = new LinkedHashMap<String,Object>();
-		
-		
-		params.put("pv_CdUniEco_i" , pv_CdUniEco_i);
-		params.put("pv_CdRamo_i"   , pv_CdRamo_i  );
-		params.put("pv_nmpoliza_i" , pv_nmpoliza_i);
-		params.put("pv_cdperson"   , pv_cdperson  );
-		params.put("pv_nmsinies"   , pv_nmsinies);
-		params.put("pv_fecdesde"   , Utils.parse(pv_fecdesde));
-		params.put("pv_fechasta"   , Utils.parse(pv_fechasta));
-        logger.debug("params:"+params);
-        
-		
-		Map<String, Object> result = ejecutaSP(new ObtieneListaReservasSolo(this.getDataSource()), params);
-		logger.debug("result: {}"+result);
-		List<Map<String,String>> ret=(List<Map<String,String>>)result.get("pv_registro_o");
-		
-		if(ret.size()<=0){
-			throw new ApplicationException("No hay datos");
-		}
-		List<Map<String,String>> dat=new ArrayList<Map<String,String>>();
-		Map<String, String> map = ret.get(0);
-		Map<String, String> map2= new HashMap<String, String>();
-		map2.put("TITULO", "Monto Reservado");
-		map2.put("DAT1", map.get("MONTO_RESERVADO"));
-		
-		dat.add(map2);
-		map2=new HashMap<String, String>();
-		
-		map2.put("TITULO", "Monto Aprobado");
-		map2.put("DAT1", map.get("MONTO_APROBADO"));
-		dat.add(map2);
-		map2=new HashMap<String, String>();
-		
-		map2.put("TITULO", "Monto Pagado");
-		map2.put("DAT1", map.get("MONTO_PAGADO"));
-		dat.add(map2);
-		return dat;
-	}
-	
-	protected class ObtieneListaReservasSolo extends StoredProcedure {
-		protected ObtieneListaReservasSolo(DataSource dataSource) {
-			// TODO: Terminar cuando este listo el SP
-			super(dataSource, "PKG_RESERVAS_SINI.P_SHOW_RESERVAS");
-			declareParameter(new SqlParameter("pv_CdUniEco_i",   	 OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_CdRamo_i",   	 OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdperson",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsinies",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_fecdesde",   OracleTypes.DATE));
-			declareParameter(new SqlParameter("pv_fechasta",   OracleTypes.DATE));
-			String[] cols = new String[]{
-					"MONTO_RESERVADO"		    
-					,"MONTO_APROBADO"	        
-					,"MONTO_PAGADO"		    
-					
-			};
-			//declareParameter(new SqlOutParameter("pv_cant_regis"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-    public List<GenericVO> obtieneListadoCPTUnico(String cdicd)
-			throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdicd_i", cdicd);
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoCPTUnico(getDataSource()), params);
-		return (List<GenericVO>) mapResult.get("pv_registro_o");
-	}
-	
-	protected class ObtieneListadoCPTUnico extends StoredProcedure
-	{
-		protected ObtieneListadoCPTUnico(DataSource dataSource)
-		{
-			super(dataSource, "PKG_PRESINIESTRO.P_CATALOGO_ICDXCPT"); // Nuevo PL a invocar (EGS)
-			declareParameter(new SqlParameter("pv_cdicd_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosGenericos()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	protected class DatosGenericos  implements RowMapper {
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	GenericVO consulta = new GenericVO();
-        	consulta.setKey(rs.getString("OTCLAVE1"));
-        	consulta.setValue(rs.getString("OTVALOR01"));
-            return consulta;
-        }
-    }
-	
-	@Override
-	public String obtieneMesesTiempoEsperaICDCPT(String cdramo, String cdtipsit, String cdicd, String dsplan)
-			throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_cdtipsit_i", cdtipsit);
-		params.put("pv_cdicd_i", cdicd);
-		params.put("pv_dsplan_i", dsplan);
-		Map<String, Object> resultado = ejecutaSP(new ObtieneMesesTiempoEsperaICDCPT(getDataSource()), params);
-		return (String) resultado.get("pv_registro_o");
-	}
-	
-    protected class ObtieneMesesTiempoEsperaICDCPT extends StoredProcedure {
-    	
-    	protected ObtieneMesesTiempoEsperaICDCPT(DataSource dataSource) {
-    		super(dataSource, "PKG_PRESINIESTRO.P_OBTIENE_MESES_TESPERAICD");
-    		declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_cdicd_i",    OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_dsplan_i",   OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
-    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		compile();
-    	}
-    }
 }
