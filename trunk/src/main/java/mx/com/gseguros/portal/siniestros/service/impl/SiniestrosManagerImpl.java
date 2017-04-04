@@ -2894,6 +2894,18 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
+	public List<Map<String, String>> obtieneListaProveedores(String pv_cdpresta_i 
+																,String pv_idespecialidad_i  
+																,String pv_tipoProveedor_i
+																,String pv_idZonaHosp_i  ) throws Exception {
+		
+		
+		return siniestrosDAO.obtieneListaProveedores( pv_cdpresta_i, 
+				 pv_idespecialidad_i, 
+				 pv_tipoProveedor_i,
+				 pv_idZonaHosp_i);
+	}
+	@Override
 	public List<GenericVO> getConsultaListaCPTUnico(String cdicd) // (EGS)
 			throws Exception {
 		try {

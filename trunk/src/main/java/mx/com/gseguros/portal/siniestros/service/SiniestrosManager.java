@@ -798,4 +798,7 @@ public interface SiniestrosManager {
 			,String pv_fecdesde  
 			,String pv_fechasta ) throws Exception;
 
+	public List<Map<String, String>> obtieneListaProveedores(String pv_cdpresta_i, String pv_idespecialidad_i,
+			String pv_tipoProveedor_i, String pv_idZonaHosp_i) throws Exception;
+
 }

@@ -676,6 +676,9 @@ public interface SiniestrosDAO {
 	public String obtieneImporteArancelGNP(String cdpresta,String cpt) throws Exception;
 	
 	public List<GenericVO> obtieneListadoTiposProveedores() throws Exception;
+
+	public List<Map<String, String>> obtieneListaProveedores(String pv_cdpresta_i, String pv_idespecialidad_i, String pv_tipoProveedor_i,
+			String pv_idZonaHosp_i) throws Exception;
 	
 	public List<Map<String, String>> obtieneListadoDetalleSiniestro(   String pv_CdUniEco_i
 			,String pv_CdRamo_i  

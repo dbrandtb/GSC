@@ -6274,6 +6274,25 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String listaProveedores(){
+		logger.debug("Entra a listaProveedores params de entrada :{} ",params);
+		try {
+			String pv_cdpresta_i = params.get("pv_cdpresta_i")
+                  ,pv_idespecialidad_i   = params.get("pv_idespecialidad_i")
+                  ,pv_tipoProveedor_i = params.get("pv_tipoProveedor_i")
+                  ,pv_idZonaHosp_i   = params.get("pv_idZonaHosp_i")
+                  ;
+			slist1 = siniestrosManager.obtieneListaProveedores(pv_cdpresta_i, pv_idespecialidad_i, pv_tipoProveedor_i, pv_idZonaHosp_i);
+			
+			logger.debug("Respuesta listaProveedores : {}",datosValidacion);
+		}catch( Exception e){
+			logger.error("Error al obtener listaProveedores : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		setSuccess(true);
+		return SUCCESS;
+	}
+	
 	public String topIcd(){
 		
 		logger.debug("Entra a topIcd params de entrada :{} ",params);
