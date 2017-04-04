@@ -788,5 +788,14 @@ public interface SiniestrosManager {
 	public String obtieneImporteArancelGNP(String cdpresta,String cpt)throws Exception;
 	
 	public List<GenericVO> getConsultaListaTiposProveedores() throws Exception;
+	
+	public List<Map<String, String>> getConsultaListaDetalleSiniestro( String pv_CdUniEco_i
+			,String pv_CdRamo_i  
+			,String pv_nmpoliza_i
+			,String pv_cdperson  
+			,String pv_ntramite_i
+			,String pv_nmsinies  
+			,String pv_fecdesde  
+			,String pv_fechasta ) throws Exception;
 
 }

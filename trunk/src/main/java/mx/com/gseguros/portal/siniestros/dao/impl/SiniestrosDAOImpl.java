@@ -6653,4 +6653,66 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListadoDetalleSiniestro(String pv_CdUniEco_i
+																,String pv_CdRamo_i  
+																,String pv_nmpoliza_i
+																,String pv_cdperson  
+																,String pv_ntramite_i
+																,String pv_nmsinies  
+																,String pv_fecdesde  
+																,String pv_fechasta ) throws Exception {
+		
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		
+		params.put("pv_CdUniEco_i" , pv_CdUniEco_i);
+		params.put("pv_CdRamo_i"   , pv_CdRamo_i);
+		params.put("pv_nmpoliza_i" , pv_nmpoliza_i);
+		params.put("pv_cdperson"   , pv_cdperson);
+		params.put("pv_ntramite_i" , pv_ntramite_i);
+		params.put("pv_nmsinies"   , pv_nmsinies);
+		params.put("pv_fecdesde"   , Utils.parse(pv_fecdesde));
+		params.put("pv_fechasta"   , Utils.parse(pv_fechasta));
+		
+		Map<String, Object> result = ejecutaSP(new obtieneListadoDetalleSiniestros(this.getDataSource()), params);
+		logger.debug("result: {}"+result);
+
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	protected class obtieneListadoDetalleSiniestros extends StoredProcedure {
+
+		protected obtieneListadoDetalleSiniestros(DataSource dataSource) {
+			super(dataSource, "PKG_RESERVAS_SINI.P_SHOW_DETALLE_PAGO");
+			declareParameter(new SqlParameter("pv_CdUniEco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_CdRamo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_CdRamo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fecdesde", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_fechasta", OracleTypes.DATE));
+			String[] cols = new String[]{
+					"NTRAMITE"
+					,"CDPERSON"
+					,"ASEGURADO"
+					,"CDPRESTA"
+					,"PROVEEDOR"
+					,"NFACTURA"
+					,"CDGARANT"
+					,"DSGARANT"
+					,"CDCONVAL"
+					,"DSCONVAL "
+					,"MONTO_FACTURA"
+					,"IVA"
+					,"IVA_RETENIDO" 
+					,"ISLR" 
+					,"ICED"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

@@ -6379,6 +6379,35 @@ public String reservasTipPag(){
 		return SUCCESS;
 		
 	}
+
+    public String consultaListaDetalleSiniestro(){
+	logger.debug("Entra a consultaListaDetalleSiniestro params de entrada :{}",params);
+	try {
+		String   pv_CdUniEco_i= params.get("pv_CdUniEco_i")
+				,pv_CdRamo_i  = params.get("pv_CdRamo_i")
+				,pv_nmpoliza_i= params.get("pv_nmpoliza_i")
+				,pv_cdperson  = params.get("pv_cdperson")
+				,pv_ntramite_i= params.get("pv_ntramite_i")
+				,pv_nmsinies  = params.get("pv_nmsinies")
+				,pv_fecdesde  = params.get("pv_fecdesde")
+				,pv_fechasta = params.get("pv_fechasta");
+		
+		datosValidacion  = siniestrosManager.getConsultaListaDetalleSiniestro(   pv_CdUniEco_i
+																				,pv_CdRamo_i  
+																				,pv_nmpoliza_i
+																				,pv_cdperson  
+																				,pv_ntramite_i
+																				,pv_nmsinies  
+																				,pv_fecdesde  
+																				,pv_fechasta );
+		if(datosValidacion!=null && !datosValidacion.isEmpty())	datosValidacion = datosValidacion;
+	}catch( Exception e){
+		logger.error("Error al obtener la lista Detalle Siniestro : {}", e.getMessage(), e);
+		return SUCCESS;
+	}
+	success = true;
+	return SUCCESS;
+}	
 		
     
 	/****************************GETTER Y SETTER *****************************************/
