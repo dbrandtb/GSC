@@ -670,4 +670,10 @@ public interface SiniestrosDAO {
 			String pv_cdperson, String pv_nmsinies, String pv_fecdesde, String pv_fechasta) throws Exception;
 	
 	public List<GenericVO> obtieneListadoCPTUnico(String cdicd) throws Exception;
+	
+	public List<GenericVO> obtieneListadoTipoMedicos(String cdicd, String cpts) throws Exception;
+	
+	public String obtieneImporteArancelGNP(String cdpresta,String cpt) throws Exception;
+	
+	public List<GenericVO> obtieneListadoTiposProveedores() throws Exception;
 }

@@ -782,5 +782,11 @@ public interface SiniestrosManager {
 			String pv_cdperson, String pv_nmsinies, String pv_fecdesde, String pv_fechasta) throws Exception;
 	
 	public List<GenericVO> getConsultaListaCPTUnico(String cdicd) throws Exception;
+	
+	public List<GenericVO> getConsultaListaTipoMedicos(String cdicd, String cpts) throws Exception;
+	
+	public String obtieneImporteArancelGNP(String cdpresta,String cpt)throws Exception;
+	
+	public List<GenericVO> getConsultaListaTiposProveedores() throws Exception;
 
 }

@@ -6,7 +6,7 @@
 	<package name="siniestros" namespace="/siniestros" extends="default">
 		<!-- AUTORIZACION DE SERVICIO -->
 		<action name="autorizacionServicios" class="autorizacionServiciosAction"  method="autorizacionServicios">
-			<result>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</result>
+			<result>/jsp-script/proceso/siniestros/autorizacionServiciosGNP.jsp</result>
 		</action>
 		
 		<action name="includes/verAutorizacionServicio" class="autorizacionServiciosAction" method="verAutorizacionServicio">
@@ -597,6 +597,16 @@
 		</action>
 		
 		<action name="consultaListaCPTUnico" class="siniestrosAction" method="consultaListaCPTUnico"> 
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosValidacionGral.*,
+                    success
+                </param>
+            </result>
+        </action>
+        
+        <action name="consultaListaTipoMedico" class="siniestrosAction" method="consultaListaTipoMedico"> 
             <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
@@ -1463,6 +1473,15 @@
 				</param>
 			</result>
 		</action>
+        <action name="obtieneImporteArancelGNP" class="autorizacionServiciosAction" method="obtieneImporteArancelGNP">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success,
+                    msgResult
+                </param>
+            </result>
+        </action>
     </package>
 
 </struts>

@@ -2902,5 +2902,43 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public List<GenericVO> getConsultaListaTipoMedicos(String cdicd, String cpts)
+			throws Exception {
+		String paso = "";
+		try {
+			paso = "cdicd,cpts ==> "+cdicd+""+cpts;
+			logger.debug("Valor de respuesta ==> "+paso);
+			return siniestrosDAO.obtieneListadoTipoMedicos(cdicd,cpts);			
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	//String tipoConcepto, String idProveedor, String idConceptoTipo
+	public String obtieneImporteArancelGNP(String cdpresta,String cpt) throws Exception {
+		try {
+			return siniestrosDAO.obtieneImporteArancelGNP(cdpresta,cpt);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<GenericVO> getConsultaListaTiposProveedores() throws Exception {
+		try {
+			List<GenericVO> lista = siniestrosDAO.obtieneListadoTiposProveedores();
+			if(lista==null)
+			{
+				lista= new ArrayList<GenericVO>();
+			}
+			log.debug("getConsultaListaSubcoberturaTotales lista size: "+lista.size());
+			return lista;
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
     
 }
