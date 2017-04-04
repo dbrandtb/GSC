@@ -953,6 +953,20 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	public String obtieneImporteArancelGNP(){
+		logger.debug("Entra a obtieneImporteArancelGNP params de entrada :{}",params);
+		try {
+			msgResult = siniestrosManager.obtieneImporteArancelGNP(params.get("cdpresta"),params.get("cpt"));
+			logger.debug("VALOR DE RESPUESTA ===>: {}", msgResult);
+			
+		}catch( Exception e){
+			logger.error("Error al obtieneImporteArancelGNP el monto del arancel : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
 	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
 		this.ice2sigsService = ice2sigsService;
 	}

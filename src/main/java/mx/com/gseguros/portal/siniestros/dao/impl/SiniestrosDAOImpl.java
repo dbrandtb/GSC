@@ -6577,7 +6577,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
     protected class ObtieneMesesTiempoEsperaICDCPT extends StoredProcedure {
-    	
     	protected ObtieneMesesTiempoEsperaICDCPT(DataSource dataSource) {
     		super(dataSource, "PKG_PRESINIESTRO.P_OBTIENE_MESES_TESPERAICD");
     		declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
@@ -6590,4 +6589,68 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		compile();
     	}
     }
+    
+    public List<GenericVO> obtieneListadoTipoMedicos(String cdicd, String cpts)
+			throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdicd_i", cdicd);
+		params.put("pv_cpts_i", cpts);
+		
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTipoMedicos(getDataSource()), params);
+		return (List<GenericVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListadoTipoMedicos extends StoredProcedure{
+		protected ObtieneListadoTipoMedicos(DataSource dataSource)
+		{
+			super(dataSource, "P_GET_EQUIPO_MEDICO");
+			declareParameter(new SqlParameter("pv_cdicd_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cpts_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosGenericos()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String obtieneImporteArancelGNP(String cdpresta,String cpt) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdpresta_i", cdpresta);
+		params.put("pv_cpt_i", cpt);
+		Map<String, Object> resultado = ejecutaSP(new ObtieneImporteArancelGNP(getDataSource()), params);
+		logger.debug( resultado.get("pv_registro_o"));
+		return (String) resultado.get("pv_registro_o");
+	}
+	
+    protected class ObtieneImporteArancelGNP extends StoredProcedure {
+    	protected ObtieneImporteArancelGNP(DataSource dataSource) {
+    		super(dataSource, "PKG_SINIESTRO.P_GET_ARANCELGNP");
+    		declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cpt_i",        OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+	@Override
+	public List<GenericVO> obtieneListadoTiposProveedores() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTiposProveedores(getDataSource()), params);
+		return (List<GenericVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListadoTiposProveedores extends StoredProcedure
+	{
+		protected ObtieneListadoTiposProveedores(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_GET_TIPOPROVEEDOR");
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaSubcobertura()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

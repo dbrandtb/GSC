@@ -1064,6 +1064,19 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		success = true;
 		return SUCCESS;
 	}
+	
+	public String consultaListaTipoMedico(){
+		logger.debug("Entra a consultaListaTipoMedico params de entrada :{}",params);
+		try {
+			datosValidacionGral = siniestrosManager.getConsultaListaTipoMedicos(params.get("cdicd"),params.get("cdpts"));
+			logger.debug("Valor de respuesta del procedure ==> :{}",datosValidacionGral);
+		}catch( Exception e){
+			logger.error("Error al consultaListaTipoMedico la Lista de ICD's : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
 	/**
 	* Funcion que nos muestra la informacion de las pantalla principal de facturas y afiliados
 	* @param params

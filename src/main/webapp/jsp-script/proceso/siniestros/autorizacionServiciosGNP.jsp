@@ -45,6 +45,7 @@
             var _URL_LISTA_CPTICD					= '<s:url namespace="/siniestros"  action="consultaListaCPTICD" />';
             var _URL_LISTA_ICD						= '<s:url namespace="/siniestros"  action="consultaListaICD" />'; // (EGS)
             var _URL_LISTA_CDPUNIECO                = '<s:url namespace="/siniestros"  action="consultaListaCPTUnico" />'; // (EGS)
+            _URL_LISTA_TIPOMEDICO                   = '<s:url namespace="/siniestros"  action="consultaListaTipoMedico" />'; 
             var _URL_CONSULTA_DEDUCIBLE_COPAGO		= '<s:url namespace="/siniestros"  action="consultaListaDatSubGeneral" />';
             var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros"  action="consultaListaPoliza" />';
             var _URL_LISTA_TABULADOR				= '<s:url namespace="/siniestros"  action="consultaListaPorcentaje" />';
@@ -88,7 +89,7 @@
             
             debug("valor d_SALUD_VITAL --->",_SALUD_VITAL);
         </script>
-        <script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionServicios.js?${now}"></script>
+        <script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionServiciosGNP.js?${now}"></script>
         <!-- <script type="text/javascript" src="${ctx}/js/proceso/siniestros/verAutorizacionServicios.js"></script> -->
         
     </head>
@@ -97,7 +98,7 @@
             <div id="div_clau"></div>
    </div>-->
     	<!-- <div style="height:1500px;">-->
-    	<div style="height:2000px;">
+    	<div style="height:2500px;">
             <div id="div_clau"></div>
             <!-- <div id="divResultados" style="margin-top:10px;"></div>-->
         </div> 
