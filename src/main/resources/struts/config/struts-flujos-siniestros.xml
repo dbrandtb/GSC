@@ -1430,7 +1430,23 @@
             <result name="success">/jsp-script/proceso/siniestros/reservaSiniestralidad.jsp</result>
         </action>
         
+        <action name="pantallaProveedores" class="siniestrosAction" >
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/siniestros/pantallaProvedores.jsp</result>
+        </action>
+        
         <action name="consultaRenovaSiniestros" class="siniestrosAction" method="consultaRenovaSiniestralidad">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosValidacion.*,
+					slist1.*,
+					graficas.*,
+					success
+				</param>
+			</result>
+		</action>
+		<action name="listaProveedores" class="siniestrosAction" method="listaProveedores">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">

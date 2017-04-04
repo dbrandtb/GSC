@@ -6635,6 +6635,37 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	}
     }
     
+    @Override
+	public List<Map<String, String>> obtieneListaProveedores(String pv_cdpresta_i,String pv_idespecialidad_i,String pv_tipoProveedor_i,String pv_idZonaHosp_i) throws Exception {
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("pv_cdpresta_i", StringUtils.isBlank( pv_cdpresta_i)?null:pv_cdpresta_i);
+		params.put("pv_idespecialidad_i", StringUtils.isBlank( pv_idespecialidad_i)?null:pv_idespecialidad_i);
+		params.put("pv_tipoProveedor_i", StringUtils.isBlank(pv_tipoProveedor_i)?null:pv_tipoProveedor_i);
+		params.put("pv_idZonaHosp_i", StringUtils.isBlank(pv_idZonaHosp_i)?null:pv_idZonaHosp_i);
+		logger.debug("---"+params);
+		Map<String, Object> resultado = ejecutaSP(new ObtieneListaProveedores(getDataSource()), params);
+		logger.debug( resultado.get("pv_registro_o"));
+		return (List<Map<String, String>>) resultado.get("pv_registro_o");
+	}
+	
+    protected class ObtieneListaProveedores extends StoredProcedure {
+    	protected ObtieneListaProveedores(DataSource dataSource) {
+    		super(dataSource, "PKG_SINIESTRO.P_LISTA_PROVEEDORES");
+    		declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_idespecialidad_i",        OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_tipoProveedor_i",        OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_idZonaHosp_i",        OracleTypes.VARCHAR));
+    		
+    		String[] cols = new String[]{
+					"CDPRESTA" , "CDPERSON","PROVEEDOR","ESPECIALIDAD","TIPO","ZONA"
+			};
+    		declareParameter(new SqlOutParameter("pv_registro_o",OracleTypes.CURSOR , new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
 	@Override
 	public List<GenericVO> obtieneListadoTiposProveedores() throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
