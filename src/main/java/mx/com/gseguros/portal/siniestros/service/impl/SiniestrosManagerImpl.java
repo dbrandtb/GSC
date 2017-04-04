@@ -2940,5 +2940,28 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public List<Map<String, String>> getConsultaListaDetalleSiniestro( String pv_CdUniEco_i
+																	,String pv_CdRamo_i  
+																	,String pv_nmpoliza_i
+																	,String pv_cdperson  
+																	,String pv_ntramite_i
+																	,String pv_nmsinies  
+																	,String pv_fecdesde  
+																	,String pv_fechasta ) throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoDetalleSiniestro( pv_CdUniEco_i
+																, pv_CdRamo_i  
+																, pv_nmpoliza_i
+																, pv_cdperson  
+																, pv_ntramite_i
+																, pv_nmsinies  
+																,Utils.formateaFecha(pv_fecdesde)  
+																,Utils.formateaFecha(pv_fechasta) );
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
     
 }

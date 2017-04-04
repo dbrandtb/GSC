@@ -8,6 +8,7 @@
 var _CONTEXT = '${ctx}';
 
 var _URL_RENOVA_SINIESTRALIDAD  =	'<s:url namespace="/siniestros" action="consultaRenovaSiniestros" />';
+var _URL_LISTA_DETALLE       	=   '<s:url namespace="/siniestros" action="includes/consultaListaDetalle" />';
 
 var _url_topicd = '<s:url namespace="/siniestros" action="topIcd" />';
 var _url_reservas = '<s:url namespace="/siniestros" action="reservas" />';
@@ -38,6 +39,58 @@ Ext.onReady(function()
     
     
      ////// modelos //////
+    Ext.define('modeloAutEspecial',{
+		extend:'Ext.data.Model',
+		fields:[
+			{type:'string',		name:'CDUNIECO'	        },	
+			{type:'string',		name:'CDRAMO'	        },
+			{type:'string',		name:'ESTADO'		    },
+			{type:'string',		name:'NMPOLIZA'	        },
+			{type:'string',		name:'NTRAMITE'		    },
+			{type:'string',		name:'TIPO_PAGO'        },
+			{type:'string',		name:'POLIZA'           },
+			{type:'string',		name:'NMSINIES'   	    },
+			{type:'string',		name:'DSUNIECO'         },
+			{type:'string',		name:'FECINIVIG'  	    },
+			{type:'string',		name:'FECFINVIG'        },
+			{type:'string',		name:'AAAPERTU' 	    }, 
+			{type:'string',		name:'FECHA_OCURRENCIA' },
+			{type:'string',		name:'CDICD' 	        }, 
+			{type:'string',		name:'DESC_ICD' 	    }, 
+			{type:'string',		name:'CDPERSON' 		}, 
+		    {type:'string',		name:'NOMBRE_ASEGURADO' },
+            {type:'string',		name:'EDAD' 		    }, 
+            {type:'string',		name:'SEXO' 		    }, 
+            {type:'string',		name:'TIPO_PAGO' 		}, 
+            {type:'string',		name:'MONTO_RESERVADO'  },
+            {type:'string',		name:'MONTO_APROBADO' 	}, 
+            {type:'string',		name:'MONTO_PAGADO'     },
+            {type:'string',		name:'DSRAMO'           },
+            {type:'string',		name:'CDCAUSA'          },
+			{type:'string',     name:'FENACIMI'        }
+        ]
+	});
+	
+	    Ext.define('modeloAutDetalle',{
+		extend:'Ext.data.Model',
+		fields:[
+			{type:'string',		name:'NTRAMITE'},
+			{type:'string',		name:'CDPERSON'},
+			{type:'string',		name:'ASEGURADO'},
+			{type:'string',		name:'CDPRESTA'},
+			{type:'string',		name:'PROVEEDOR'},
+			{type:'string',		name:'NFACTURA'},
+			{type:'string',		name:'CDGARANT'},
+			{type:'string',		name:'DSGARANT'},
+			{type:'string',		name:'CDCONVAL'},
+			{type:'string',		name:'DSCONVAL '},
+			{type:'string',		name:'MONTO_FACTURA'}, 
+			{type:'string',		name:'IVA'},
+			{type:'string',		name:'IVA_RETENIDO'}, 
+			{type:'string',		name:'ISLR'}, 
+			{type:'string',		name:'ICED'}
+        ]
+	});
     Ext.define('icdModel', {
 	    extend: 'Ext.data.Model',
 	    fields: [
@@ -69,7 +122,31 @@ Ext.onReady(function()
     ////// modelos //////
     
     ////// stores //////
-    
+    	var storeGridAutEspecial = new Ext.data.Store({
+		pageSize	: 50
+		,model		: 'modeloAutEspecial'
+		,autoLoad	: false
+		,proxy		: {
+			enablePaging	:	true,
+			reader			:	'json',
+			type			:	'memory',
+			data			:	[]
+		}
+	});
+	
+	var storeGridAutDetalle = Ext.create('Ext.data.Store', {
+		model:'modeloAutDetalle',
+		autoLoad:false,
+		proxy: {
+			type: 'ajax',
+			url : _URL_LISTA_DETALLE,
+			reader: {
+				type: 'json',
+				root: 'datosValidacion'
+			}
+		}
+	});
+	
     var store = Ext.create('Ext.data.Store', {
 	    model: 'icdModel',
 	    autoLoad:true,
@@ -152,6 +229,54 @@ Ext.onReady(function()
     ////// componentes //////
     
     ////// contenido //////
+	var detalleRenovaSiniestro = Ext.create('Ext.window.Window', {
+		title		: 'Detalle Factura'
+		,modal	   : true
+		,resizable   : true
+		//,buttonAlign : 'center'
+		,closable	: true
+		,closeAction: 'hide'
+		,defaults 	:
+		{
+			style : 'margin:5px;'
+		}
+		,items	   : 
+		[
+		Ext.create('Ext.grid.Panel',{
+				id             : 'clausulasGridIdDetalle'
+				//,title         : 'Detalle Reserva Siniestros'
+				,store         :  storeGridAutDetalle
+				,titleCollapse : true
+				,style         : 'margin:5px'
+				,height: 350
+                ,width: 750
+				,columns       : [
+					{   header : 'Tramite',		          dataIndex : 'NTRAMITE' 		,flex : 1},
+					{   header : 'clave Persona',		  dataIndex : 'CDPERSON' 		,flex : 1},
+					{   header : 'Asegurado',		      dataIndex : 'ASEGURADO'		,flex : 1},
+					{   header : 'cdpresta',			  dataIndex : 'CDPRESTA'	    ,flex : 1},
+					{   header : 'Proveedor',			  dataIndex : 'PROVEEDOR'		,flex : 1},
+					{   header : 'No. Factura',		      dataIndex : 'NFACTURA'		,flex : 1},
+					{   header : 'Clave Cobertura',		  dataIndex : 'CDGARANT'		,flex : 1},
+					{   header : 'Descripcion Cobertura', dataIndex : 'DSGARANT'		,flex : 1},
+					{   header : 'CDCONVAL',		      dataIndex : 'CDCONVAL'		,flex : 1},
+					{   header : 'DSCONVAL',		      dataIndex : 'DSCONVAL'		,flex : 1},
+					{   header : 'MONTO FACTURA',		  dataIndex : 'MONTO_FACTURA'	,flex : 1},
+					{   header : 'IVA',		              dataIndex : 'IVA'			    ,flex : 1},
+					{   header : 'IVA RETENIDO',          dataIndex : 'IVA_RETENIDO'	,flex : 1},
+					{	header : 'ISLR',		          dataIndex : 'ISLR'			,flex : 1},
+					{	header : 'ICED',		          dataIndex : 'ICED'			,flex : 1}
+					
+				],
+				bbar     :{
+				displayInfo : true,
+					store		: storeGridAutDetalle,
+					xtype		: 'pagingtoolbar'
+				}
+			})
+		
+		]
+	});
     var chart=Ext.create('Ext.chart.Chart', {
     	   
     	   width:900,
@@ -313,51 +438,11 @@ Ext.onReady(function()
     
     ///////////////////////////////////////////////////////////
     ////// modelos //////
-    Ext.define('modeloAutEspecial',{
-		extend:'Ext.data.Model',
-		fields:[
-			{type:'string',		name:'CDUNIECO'	        },	
-			{type:'string',		name:'CDRAMO'	        },
-			{type:'string',		name:'ESTADO'		    },
-			{type:'string',		name:'NMPOLIZA'	        },
-			{type:'string',		name:'NTRAMITE'		    },
-			{type:'string',		name:'TIPO_PAGO'        },
-			{type:'string',		name:'POLIZA'           },
-			{type:'string',		name:'NMSINIES'   	    },
-			{type:'string',		name:'DSUNIECO'         },
-			{type:'string',		name:'FECINIVIG'  	    },
-			{type:'string',		name:'FECFINVIG'        },
-			{type:'string',		name:'AAAPERTU' 	    }, 
-			{type:'string',		name:'FECHA_OCURRENCIA' },
-			{type:'string',		name:'CDICD' 	        }, 
-			{type:'string',		name:'DESC_ICD' 	    }, 
-			{type:'string',		name:'CDPERSON' 		}, 
-		    {type:'string',		name:'NOMBRE_ASEGURADO' },
-            {type:'string',		name:'EDAD' 		    }, 
-            {type:'string',		name:'SEXO' 		    }, 
-            {type:'string',		name:'TIPO_PAGO' 		}, 
-            {type:'string',		name:'MONTO_RESERVADO'  },
-            {type:'string',		name:'MONTO_APROBADO' 	}, 
-            {type:'string',		name:'MONTO_PAGADO'     },
-            {type:'string',		name:'DSRAMO'           },
-            {type:'string',		name:'CDCAUSA'          },
-			{type:'string',     name:'FENACIMI'        }
-        ]
-	});
+    
     ////// modelos //////
     
     ////// stores //////
-	var storeGridAutEspecial = new Ext.data.Store({
-		pageSize	: 25
-		,model		: 'modeloAutEspecial'
-		,autoLoad	: false
-		,proxy		: {
-			enablePaging	:	true,
-			reader			:	'json',
-			type			:	'memory',
-			data			:	[]
-		}
-	});
+
     ////// stores //////
     
     ////// componentes //////
@@ -434,6 +519,7 @@ Ext.onReady(function()
 									centrarVentanaInterna(showMessage('Error', 'Error al obtener los datos',Ext.Msg.OK, Ext.Msg.ERROR));
 								}
 							})}
+                    
                     },
                     {
                         text     : 'Limpiar'
@@ -482,9 +568,33 @@ Ext.onReady(function()
 					{   xtype: 'actioncolumn',      width: 40,          sortable: false,            menuDisabled: true,
 	                    items: [{
 	                        icon: _CONTEXT+'/resources/fam3icons/icons/application_edit.png',
-	                        tooltip: 'Generar Autorizaci\u00F3n Especial',	//(EGS)
+	                        tooltip: 'Detalle Siniestro',	//(EGS)
 	                        scope: this,
-	                        handler: function(){}
+	                        handler: function(grid,rowindex){
+	                        	 
+	                        	// Todo COdigo
+	                        	_11_recordActivo = grid.getStore().getAt(rowindex);
+	                        	//detalleRenovaSiniestro.close();
+	                        	storeGridAutDetalle.load({
+									params:{
+										'params.pv_CdUniEco_i': _11_recordActivo.get('CDUNIECO'),
+										'params.pv_CdRamo_i'  : _11_recordActivo.get('CDRAMO'),
+										'params.pv_nmpoliza_i': _11_recordActivo.get('NMPOLIZA'),
+										'params.pv_cdperson'  : _11_recordActivo.get('CDPERSON'),
+										'params.pv_ntramite_i': _11_recordActivo.get('NTRAMITE'),
+										'params.pv_nmsinies'  : _11_recordActivo.get('NMSINIES'),
+										'params.pv_fecdesde'  : _fieldByName('fecini').getValue(),//_11_recordActivo.get('FECINIVIG'),
+								        'params.pv_fechasta'  : _fieldByName('fecfin').getValue()//_11_recordActivo.get('FECFINVIG')
+									}
+								});
+	                        	debug('detalleRenovaSiniestro',detalleRenovaSiniestro);
+	                        	detalleRenovaSiniestro.show();
+								centrarVentanaInterna(detalleRenovaSiniestro);
+	                        	
+	                        	//fin
+	                        	
+	                        	
+	                        }
 	                    }]
 	                 },
 					{	header     : 'Cdunieco'       ,	dataIndex : 'CDUNIECO',		flex : 1, 	hidden   : true	},
@@ -583,70 +693,6 @@ Ext.onReady(function()
 
 ////// funciones //////
 
-function _p25_limpiarFiltros(button,e)
-{
-    debug('>_p25_limpiarFiltros');
-    var form = button.up('form');
-    _fieldByName('tipo', form).enable();
-    _fieldByName('anio', form).enable();
-    _fieldByName('mes',  form).enable();
-    var cdperson = _fieldByName('cdperson',form);
-  	cdperson.store.proxy.extraParams['params.cdunieco'] = '';
-  	cdperson.store.proxy.extraParams['params.cdramo']   = ''; 
-    _fieldByName('fecini',form).setValue('');
-  	_fieldByName('fecfin',form).setValue('');
-  	_fieldByName('status',form).setValue('');
-  	_fieldByName('cdunieco',form).setValue('');
-  	_fieldByName('cdramo',form).setValue('');
-  	_fieldByName('nmpoliza',form).setValue('');
-  	_fieldByName('cdtipsit',form).setValue('');
-  	_fieldByName('administradora',form).setValue('');
-  	_fieldByName('retenedora',form).setValue('');
-  	_fieldByName('cdperson',form).setValue('');
-  	_fieldByName('anio',form).setValue('');
-  	//_fieldByName('mes',form).setValue('');
-    debug('<_p25_limpiarFiltros');
-}
-
- function limpiarValoresCalendario(form){
-    debug('>limpiarValoresCalendario', form);    
-    _fieldByName('cdunieco',form).setValue('');
-    _fieldByName('cdramo',  form).setValue('');
-    _fieldByName('feaplica',form).setValue('');
-    _fieldByName('feinicio',form).setValue('');
-    _fieldByName('fefinal', form).setValue('');
-    debug('<limpiarValoresCalendario');
- }
-
- function daydiff(first, second) {
-     return Math.round((second-first)/(1000*60*60*24));
- }
- 
- function isValidDate(date){
-     debug('>isValidDate',date);
-     var isDate = false;
-     var dateArr = date.split('/');
-     if(dateArr.length === 3){
-        isDate = Ext.Date.isValid(dateArr[2],dateArr[1],dateArr[0]);
-     }
-     debug('<isValidDate',isDate);
-     return isDate;
- }
-
- function toDate(year, month, day){
-     debug('>toDate');
-     var fecha;
-     try{
-        var mes = Number(month)-1;
-        fecha = new Date(year, mes, day);
-     }
-     catch(err){
-        debug('error al convertir fecha',err);
-        return null;
-     } 
-     return fecha;
-     debug('<toDate');
- }
 
 
 ////// funciones //////
