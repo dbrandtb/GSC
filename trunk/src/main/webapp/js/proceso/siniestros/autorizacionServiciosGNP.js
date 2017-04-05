@@ -1168,14 +1168,62 @@ Ext.onReady(function() {
     cptConAutorizado = Ext.create('Ext.form.field.ComboBox',{
         fieldLabel  : 'CPT',       allowBlank : false,             displayField    : 'value',               id         : 'cptConAutorizado',
         width       :450,          valueField :'key',              forceSelection  : true,                  editable   : false,
-        queryMode   :'local',      store : storeTiposCPTUnico,     name            :'cptConAutorizado'
+        queryMode   :'local',      store : storeTiposCPTUnico,     name            :'cptConAutorizado',
+        listeners : {
+            'select' : function(combo, record) {
+            	Ext.Ajax.request({
+                    url     : _URL_OBTIENE_IMPORTEARANCEL
+                    ,params : {
+                        'params.cdpresta': Ext.getCmp('idmedicoConAutorizado').getValue(),
+                        'params.cpt'     : Ext.getCmp('cptConAutorizado').getValue()
+                    }
+                    ,success : function (response){
+                        var datosExtras = Ext.decode(response.responseText).msgResult;
+                        Ext.getCmp('precioConAutorizado').setValue(datosExtras);
+                    },
+                    failure : function (){
+                        me.up().up().setLoading(false);
+                        centrarVentanaInterna(Ext.Msg.show({
+                            title:'Error',
+                            msg: 'Error de comunicaci&oacute;n',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        }));
+                    }
+                });
+            }
+        }
         
     });
     
     cptQuirBase    = Ext.create('Ext.form.field.ComboBox',{
         fieldLabel  : 'CPT',       allowBlank : false,             displayField    : 'value',               id         : 'cptQuirBase',
         width       :450,          valueField :'key',              forceSelection  : true,                  editable   : false,
-        queryMode   :'local',      store : storeTiposCPTUnico,     name            :'cptQuirBase'
+        queryMode   :'local',      store : storeTiposCPTUnico,     name            :'cptQuirBase',
+        listeners : {
+            'select' : function(combo, record) {
+            	Ext.Ajax.request({
+                    url     : _URL_OBTIENE_IMPORTEARANCEL
+                    ,params : {
+                        'params.cdpresta': Ext.getCmp('idProveedor').getValue(),
+                        'params.cpt'     : Ext.getCmp('cptQuirBase').getValue()
+                    }
+                    ,success : function (response){
+                        var datosExtras = Ext.decode(response.responseText).msgResult;
+                        Ext.getCmp('precioQuirurgico').setValue(datosExtras);
+                    },
+                    failure : function (){
+                        me.up().up().setLoading(false);
+                        centrarVentanaInterna(Ext.Msg.show({
+                            title:'Error',
+                            msg: 'Error de comunicaci&oacute;n',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        }));
+                    }
+                });
+            }
+        }
         
     });
 
@@ -1247,22 +1295,8 @@ Ext.onReady(function() {
 			},
 			cptConAutorizado,
 			{	id		: 'precioConAutorizado',		xtype  : 'textfield',			fieldLabel 	: 'Precio',					labelWidth: 100,
-				width	:350,							name   :'precioConAutorizado',  allowBlank	: false,					allowDecimals :true,		decimalSeparator :'.',
-				listeners:{
-					change:function(field,value){
-						try{
-							storeTiposCPTUnico.removeAll();
-                            storeTiposCPTUnico.load({
-                                params:{
-                                    'params.cdtipsit'   : Ext.getCmp('idComboICD').getValue()
-                                }
-                            
-                            });
-							//var importeTotal= Ext.getCmp('precioConAutorizado').getValue() * Ext.getCmp('cantidadConAutorizado').getValue();
-							//Ext.getCmp('importeConAutorizado').setValue(importeTotal);
-						}catch(e){}
-					}
-				}
+				width	:350,							name   :'precioConAutorizado',  allowBlank	: false,					allowDecimals :true,//-->
+				decimalSeparator :'.',                  readOnly   : true
 			},
 			{	id		: 'cantidadConAutorizado',		xtype      	: 'numberfield',	fieldLabel 	: 'Cantidad',		labelWidth: 100,
 				name    : 'cantidadConAutorizado',		allowBlank	: false,			width:350,		
@@ -1900,25 +1934,25 @@ Ext.onReady(function() {
 				labelWidth: 170,					hidden:true
 			},
 			{	 xtype       : 'textfield',			fieldLabel : 'zonaContratadaPoliza'	,id       : 'idZonaContratadaPoliza',name       : 'zonaContratadaPoliza',
-				labelWidth: 170//,					hidden:true
+				labelWidth: 170,					hidden:true
 			},
             {    xtype       : 'textfield',         fieldLabel : 'dsplanPoliza'     ,id       : 'iddsplanAsegurado',
-                labelWidth: 170//,                  hidden:true
+                labelWidth: 170,                  hidden:true
             },
             {     xtype       : 'textfield',         fieldLabel : 'dsCirculohosPoliza'     ,id       : 'idcirculohosPoliza',
-                labelWidth: 170//,                  hidden:true
+                labelWidth: 170,                  hidden:true
             },
 			{	 xtype       : 'textfield',			fieldLabel : 'circuloHospProve'		,id       : 'idCirculoHospProv',
-				labelWidth: 170//,					hidden:true
+				labelWidth: 170,					hidden:true
 			},
 			{	 xtype       : 'textfield',			fieldLabel : 'codigoPostalProve'		,id       : 'codPostalProv',
-				labelWidth: 170//,					hidden:true
+				labelWidth: 170,					hidden:true
 			},
 			{	 xtype       : 'textfield',			fieldLabel : 'zonaHospProv'		,id       : 'idzonaHospProv',
-				labelWidth: 170//,					hidden:true
+				labelWidth: 170,					hidden:true
 			},
             {    xtype       : 'textfield',         fieldLabel : 'zonaTafiProv'     ,id       : 'idzonaTafiProv',
-                labelWidth: 170//,                  hidden:true
+                labelWidth: 170,                  hidden:true
             },
 			{	 xtype       : 'textfield',			fieldLabel : 'Exclusion'		,id       : 'idExclusionPenalizacion',
 				labelWidth: 170,					hidden:true
@@ -2375,7 +2409,7 @@ Ext.onReady(function() {
 			comboICD,					//19.- ICD
 			causaSiniestro,				//20.- Causa Siniestro
 			//21.- Suma Disponible
-			{	colspan:2,			xtype : 'numberfield',              id:'sumDisponible',           fieldLabel: 'Suma disponible proveedor',
+			{	colspan:2,			xtype : 'numberfield',              id:'sumDisponible',           fieldLabel: 'Suma disponible proveedor',    readOnly   : true,
 				labelWidth: 170,    allowBlank: false,	                allowDecimals :true,          decimalSeparator :'.',                 allowBlank:false,
 				name:'mtsumadp',	minValue: 0
 			},
@@ -2544,7 +2578,7 @@ Ext.onReady(function() {
                             debug(numRand);
                             var windowVerDocu = Ext.create('Ext.window.Window',
                             {
-                                title          : 'Cotizaci&oacute;n'
+                                title          : 'Vista Previa'
                                 ,width         : 700
                                 ,height        : 500
                                 ,collapsible   : true
@@ -3510,9 +3544,10 @@ Ext.onReady(function() {
 		
 		Ext.getCmp('idValorBase').setValue(valorBase);
 		Ext.getCmp('idcptGeneral').setValue(cptCompletos);
+		Ext.getCmp('sumDisponible').setValue(valorBase);
 		debug("Valor de la respuesta cptCompletos ==> ",cptCompletos);
 		//Realizamos el llamado para la actualizacion de los campos 
-        if(Ext.getCmp('idComboICD').getValue() ==null){
+        if(Ext.getCmp('idComboICD').getValue() != null){
             storeTiposMedicos.removeAll();
             storeTiposMedicos.load({
                 params:{
@@ -3629,6 +3664,8 @@ Ext.onReady(function() {
 					// si el estatus es igual a 2 se va a autorizar
 					if(Ext.getCmp('idstatus').getValue() == "2"){
 						mensaje= 'Se gener&oacute; la carta para la autorizaci&oacute;n con el n&uacute;mero ';
+                        _mask();
+                        location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEntrada;
 					}else{
 						if(Ext.getCmp('claveTipoAutoriza').getValue() == "1"){
 							mensaje = 'Se guard&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
@@ -3648,7 +3685,6 @@ Ext.onReady(function() {
 					
 					if(valor=="N"){
 						mensajeCorrecto('Datos guardados',mensaje,function(){
-                        /*
                         Ext.create('Ext.form.Panel').submit({
                             url             : _p12_urlMesaControl
                             ,standardSubmit : true
@@ -3657,9 +3693,9 @@ Ext.onReady(function() {
                                 ,'smap2.pv_cdtiptra_i' : _AUTORIZACION_SERVICIO
                             }
                         });
-                        */
-                        _mask();
-                        location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEntrada;
+                        
+                        //_mask();
+                        //location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEntrada;
                     });
 					}else{
                         Ext.create('Ext.form.Panel').submit({

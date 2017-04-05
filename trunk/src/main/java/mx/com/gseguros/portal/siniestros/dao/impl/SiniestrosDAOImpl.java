@@ -6658,7 +6658,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		declareParameter(new SqlParameter("pv_idZonaHosp_i",        OracleTypes.VARCHAR));
     		
     		String[] cols = new String[]{
-					"CDPRESTA" , "CDPERSON","PROVEEDOR","ESPECIALIDAD","TIPO","ZONA"
+					"CDPRESTA" , "CDPERSON","PROVEEDOR","CVEESPECIALIDAD",
+					"ESPECIALIDAD","CVETIPO","TIPO","CVEZONA","ZONA","CIRCULO"
 			};
     		declareParameter(new SqlOutParameter("pv_registro_o",OracleTypes.CURSOR , new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));

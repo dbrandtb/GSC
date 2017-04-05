@@ -495,7 +495,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.GMMI");
 			}
 			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
-				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.GMMI");
+				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.GNP");
 			}
 			
 			String urlAutorizacionServicio = ""
