@@ -7068,17 +7068,22 @@ public class CotizacionManagerImpl implements CotizacionManager
 						resp.getSmap().put("nmpoliza" , nmpoliza);
 						if(nmpoliex != null && !nmpoliex.isEmpty() && ("|5|6|16|").lastIndexOf("|"+cdramo+"|")!=-1 && fromSigs.equals("S"))
 						{
-							flujoMesaControlManager.actualizaTramiteMC(
-							         ntramite 
-									,cdunieco
-									,cdramo
-									,"W"//estado
-									,nmpoliza
-									,"21"//cdtiptra 
-									,cduniext
-									,renramo
-									,nmpoliex
-									);
+							try{
+								flujoMesaControlManager.actualizaTramiteMC(
+								         ntramite 
+										,cdunieco
+										,cdramo
+										,"W"//estado
+										,nmpoliza
+										,"21"//cdtiptra 
+										,cduniext
+										,renramo
+										,nmpoliex
+										);
+							}
+							catch (Exception e) {
+								logger.error("error al actualizar el valor otvalor01 en tmesacontrol ",e);
+							}
 						}
 					}
 					catch(Exception ex)
@@ -7685,7 +7690,7 @@ public class CotizacionManagerImpl implements CotizacionManager
       	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
       	            	//{"XXXX@XXX.com.mx","YYYYY@YYYY.com.mx"};";
       	            	String [] adjuntos = new String[0];
-      	            	boolean mailSend = mailService.enviaCorreo(listamails, null, null, "Reporte de Tarifa incompleta - SICAPS", mensajeACorreo, adjuntos, false);
+      	            	boolean mailSend = mailService.enviaCorreo(listamails, null, null, "Reporte de Tarifa incompleta - SICAPS", mensajeACorreo, adjuntos, true);
       	        		if(!mailSend)
       	        		{
       	        			throw new ApplicationException("4");
