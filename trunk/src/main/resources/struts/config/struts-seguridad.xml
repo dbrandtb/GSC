@@ -242,6 +242,7 @@
             <result name="RstnAltaTramitePrevio" type="redirectAction">
                 <param name="namespace">/siniestros</param>
                 <param name="actionName">altaTramitePrevio</param>
+                <param name="params.caseIdRstn">${params.caseId}</param>
             </result>
             <result name="RstnAltaTramiteComplemento" type="redirectAction">
                 <param name="namespace">/siniestros</param>

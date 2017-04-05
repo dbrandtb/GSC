@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,15 +89,18 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			String cdUnieco = usuario.getCdUnieco();
 			String rolUsuario = usuario.getRolActivo().getClave();
+			String caseIdRstn = null;
 			cdunieco = usuario.getCdUnieco().toString();
 			if(params != null){
 				cdunieco  = params.get("cdunieco");
 				ntramite  = params.get("ntramite");
+				caseIdRstn = params.get("caseIdRstn");
 			}
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("cdunieco",cdunieco);
 			params.put("ntramite",ntramite);
 			params.put("RolSiniestro", rolUsuario);
+			params.put("caseIdRstn", caseIdRstn);
 			setParamsJson(params);
 			logger.debug("Params : {}", params);
 		}catch( Exception e){
@@ -134,6 +138,12 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			// 1.- Guardar en TMESACONTROL 
 			this.session=ActionContext.getContext().getSession();
 			UserVO usuario=(UserVO) session.get("USUARIO");
+			
+			String caseIdRstn = null;
+			if (params != null && params.containsKey("caseIdRstn") && StringUtils.isNotBlank(params.get("caseIdRstn"))) {
+			    caseIdRstn = params.get("caseIdRstn");
+			}
+			
 			//Si el tr\u00e1mite es nuevo
 			if(params.get("idNumTramite").toString().length() <= 0){
 				

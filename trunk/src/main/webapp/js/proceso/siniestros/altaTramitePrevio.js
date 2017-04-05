@@ -1725,6 +1725,7 @@ Ext.onReady(function() {
                             }
                             submitValues['datosTablas']=datosTablas;
                             panelInicialPral.setLoading(true);
+                            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
                             debug("VALORES A ENVIAR A GUARDAR --->");
                             debug(submitValues);
                             Ext.Ajax.request(
