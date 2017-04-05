@@ -80,6 +80,7 @@
             var _URL_LISTA_TIPOEVENTO               = '<s:url namespace="/siniestros"      action="consultaListaTipoEventoSiniestro" />';
             var _urlViewDoc                         = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
             var _URL_CONSULTA_DOCUMENTOS            = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
+            var _URL_OBTIENE_IMPORTEARANCEL         = '<s:url namespace="/siniestros"      action="obtieneImporteArancelGNP" />';
             var _URL_CONSULTA_CLAUSULAS_POLIZA      = '<s:url namespace="/consultasPoliza" action="consultaClausulasPoliza" />';
             var _URL_cargaHistorialSinies           = '<s:url namespace="/siniestros" action="cargaICDExcluidosAsegurado" />';
             var _0_reporteVistaPreviaGral           = '<s:text name="rdf.siniestro.autorizacion.servicio.nombre.GNP" />';
