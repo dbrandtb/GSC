@@ -1445,7 +1445,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	            if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(comprarCdramo)) {
 	                HttpUtil.enviarArchivoRSTN(
 	                        HttpUtil.RSTN_DEFAULT_PATH + caseIdRstn, 
-	                        nombreArchivoCotizacion, pathArchivoCotizacion, Utils.join("COTIZACION (", comprarNmpoliza, ")"),
+	                        pathArchivoCotizacion, 
+	                        Utils.join("COTIZACION (", comprarNmpoliza, ")"),
 	                        HttpUtil.RSTN_DOC_CLASS_COTIZACION);
 	            }
             }

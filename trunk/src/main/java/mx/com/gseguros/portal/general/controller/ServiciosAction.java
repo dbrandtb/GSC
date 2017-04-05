@@ -512,7 +512,6 @@ public class ServiciosAction extends PrincipalCoreAction
 	    try {
 	        HttpUtil.enviarArchivoRSTN(
 	                HttpUtil.RSTN_DEFAULT_PATH + params.get("caseIdRstn"),
-	                params.get("fileName"),
 	                params.get("fullPath"),
 	                params.get("fileDesc"),
 	                "Cotizacion".equals(params.get("docClass"))

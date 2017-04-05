@@ -243,12 +243,19 @@ public class HttpUtil {
 		
 	}
     
-    public static void enviarArchivoRSTN (String folder, String nombreArchivo, String nombreArchivoCompleto, String descripcion,
+	
+	/**
+	 * Envia un documento al servidor CMIS
+	 * @param folder Ruta del servidor CMIS donde se alojara el documento
+	 * @param nombreArchivoCompleto Ruta de origen del documento y su nombre
+	 * @param descripcion Descripcion del documento
+	 * @param CLASE_DOC_RSTN
+	 */
+    public static void enviarArchivoRSTN (String folder, String nombreArchivoCompleto, String descripcion,
             int CLASE_DOC_RSTN) {
         String params = Utils.join(
                 "repositoryId=ObjectStore",
                 "&folder=", folder,
-                "&idName=", nombreArchivo,
                 "&fullFileName=", nombreArchivoCompleto,
                 "&contentType=application/pdf",
                 "&description=", descripcion,
