@@ -11364,7 +11364,8 @@ public class CotizacionAction extends PrincipalCoreAction
                 if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(cdramo)) {
                     HttpUtil.enviarArchivoRSTN(
                             HttpUtil.RSTN_DEFAULT_PATH + caseIdRstn, 
-                            nombreArchivoCotizacion, pathArchivoCotizacion, Utils.join("COTIZACION EN RESUMEN (",nmpoliza,")"),
+                            pathArchivoCotizacion, 
+                            Utils.join("COTIZACION EN RESUMEN (",nmpoliza,")"),
                             HttpUtil.RSTN_DOC_CLASS_COTIZACION);
                 }
 				
@@ -11421,7 +11422,8 @@ public class CotizacionAction extends PrincipalCoreAction
 				if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(cdramo)) {
 				    HttpUtil.enviarArchivoRSTN(
 				            HttpUtil.RSTN_DEFAULT_PATH + caseIdRstn, 
-				            nombreArchivoCotizacion2, pathArchivoCotizacion2, Utils.join("COTIZACION A DETALLE (",nmpoliza,")"),
+				            pathArchivoCotizacion2, 
+				            Utils.join("COTIZACION A DETALLE (",nmpoliza,")"),
                             HttpUtil.RSTN_DOC_CLASS_COTIZACION);
 				}
 				
