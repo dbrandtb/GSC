@@ -533,7 +533,14 @@ Ext.onReady(function()
 							panelInicialPral.down('[name=CDPERSON]').setValue('');
 							panelInicialPral.down('[name=NTRAMITE]').setValue('');
 							panelInicialPral.down('[name=NMSINIES]').setValue('');*/
-                        	debug('panelInicialPral: {}'+panelInicialPral);
+                        	_fieldByName('cdunieco').setValue('');
+							_fieldByName('cdramo').setValue('');
+							_fieldByName('nmpoliza').setValue('');
+							_fieldByName('fecini').setValue(new Date());
+							_fieldByName('fecfin').setValue(new Date());
+							_fieldByName('cdperson').setValue('');
+							_fieldByName('siniestro').setValue('');
+							_fieldByName('tramite').setValue('');
 							storeGridAutEspecial.removeAll();
                         }
                     }
