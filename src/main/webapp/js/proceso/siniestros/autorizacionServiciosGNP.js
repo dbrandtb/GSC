@@ -3648,6 +3648,7 @@ Ext.onReady(function() {
 					
 					if(valor=="N"){
 						mensajeCorrecto('Datos guardados',mensaje,function(){
+                        /*
                         Ext.create('Ext.form.Panel').submit({
                             url             : _p12_urlMesaControl
                             ,standardSubmit : true
@@ -3656,6 +3657,9 @@ Ext.onReady(function() {
                                 ,'smap2.pv_cdtiptra_i' : _AUTORIZACION_SERVICIO
                             }
                         });
+                        */
+                        _mask();
+                        location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEntrada;
                     });
 					}else{
                         Ext.create('Ext.form.Panel').submit({
