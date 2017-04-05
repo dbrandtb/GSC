@@ -7201,7 +7201,6 @@
 	// Se hace función para re-utilizarlo
 	function _11_clickAplicarCambiosFactura(){
 		debug("_11_clickAplicarCambiosFactura");
-		
 		var valido = panelInicialPral.isValid();
 		if(!valido) {
 			datosIncompletos();

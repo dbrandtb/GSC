@@ -14,7 +14,6 @@ import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -86,16 +85,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
-
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-    
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-    
-    @Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-    
+	
 	public String autorizacionServicios() {
 		logger.debug("Entra a autorizacionServicios Params: {}", params);
 		try {
@@ -470,7 +460,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	private String generarAutoriServicio(Map<String, Object> paramsO){
 		logger.debug("Entra a generarAutoriServicio Valores para generarAutoriServicio: {}", paramsO);
 		try {
-			File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
+			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
 			if(!carpeta.exists()){
 				logger.debug("no existe la carpeta:::  {}", paramsO.get("pv_ntramite_i"));
 				carpeta.mkdir();
@@ -494,12 +484,9 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.GMMI");
 			}
-			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
-				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.GMMI");
-			}
 			
 			String urlAutorizacionServicio = ""
-				+ rutaServidorReports
+				+ getText("ruta.servidor.reports")
 				+ "?p_unieco=" +  paramsO.get("pv_cdunieco_i")
 				+ "&p_ramo=" + paramsO.get("pv_cdramo_i")
 				+ "&p_estado=" + paramsO.get("pv_estado_i")
@@ -508,7 +495,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 				+ "&P_CDPERSON=" + paramsO.get("pv_cdperson_i")
 				+ "&destype=cache"
 				+ "&desformat=PDF"
-				+ "&userid="+passServidorReports
+				+ "&userid="+getText("pass.servidor.reports")
 				+ "&ACCESSIBLE=YES"
 				+ "&report="+reporteSeleccion
 				+ "&paramform=no"
@@ -519,7 +506,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			
 			String nombreArchivoModificado = nombreArchivo.substring(nombreArchivo.indexOf(".")+1)+System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+".pdf";
 			String pathArchivo=""
-				+ rutaDocumentosPoliza
+				+ getText("ruta.documentos.poliza")
 				+ "/" + paramsO.get("pv_ntramite_i")
 				+ "/" + nombreArchivoModificado
 				;
@@ -709,14 +696,8 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	public String obtieneMesesTiempoEspera(){
 		logger.debug("Entra a obtieneMesesTiempoEspera Params: {}", params);
 		try {
-			if(params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
-				mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEsperaICD(params.get("cdramo"),params.get("cdtipsit"),params.get("cdicd"),params.get("dsplan"));
-				mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
-			}else{
-				mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor01"),params.get("cdtabla"));
-				mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
-			}
-
+			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor01"),params.get("cdtabla"));
+			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" a�os";
 			logger.debug("mesesTiempoEspera: {} mensaje de respuesta : {}", mesesTiempoEspera,mensaje);
 		}catch( Exception e){
 			logger.error("Error obtieneMesesTiempoEspera : {}", e.getMessage(), e);
@@ -855,9 +836,9 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		String estado      = map1.get("estado");
 		String nmpoliza    = map1.get("nmpoliza");
 		String nmsuplem    = map1.get("nmsuplem");
-		String rutaCarpeta = this.rutaDocumentosPoliza+"/"+ntramite;
+		String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
 
-		File carpeta=new File(this.rutaDocumentosPoliza+"/"+ntramite);
+		File carpeta=new File(this.getText("ruta.documentos.poliza")+"/"+ntramite);
 		if(!carpeta.exists()){
 			logger.debug("no existe la carpeta: {}", ntramite);
 			carpeta.mkdir();
@@ -869,10 +850,10 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		} else {
 			logger.debug("existe la carpeta: {}", ntramite);
 		}
-		String url         = this.rutaServidorReports
+		String url         = this.getText("ruta.servidor.reports")
 						+ "?destype=cache"
 						+ "&desformat=PDF"
-						+ "&userid="+this.passServidorReports
+						+ "&userid="+this.getText("pass.servidor.reports")
 						+ "&report="+(cdsisrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())?
 						this.getText("rdf.emision.rechazo.medico.nombre"):
 						this.getText("rdf.emision.rechazo.admin.nombre"))
@@ -947,20 +928,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.debug("Total datosInformacionAdicional: {}", datosInformacionAdicional.size());
 		}catch( Exception e){
 			logger.error("Error consultaInfCausaSiniestroProducto : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
-	
-	public String obtieneImporteArancelGNP(){
-		logger.debug("Entra a obtieneImporteArancelGNP params de entrada :{}",params);
-		try {
-			msgResult = siniestrosManager.obtieneImporteArancelGNP(params.get("cdpresta"),params.get("cpt"));
-			logger.debug("VALOR DE RESPUESTA ===>: {}", msgResult);
-			
-		}catch( Exception e){
-			logger.error("Error al obtieneImporteArancelGNP el monto del arancel : {}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		success = true;
@@ -1203,17 +1170,5 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
-	}
-	
-    public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
 	}
 }

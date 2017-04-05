@@ -176,8 +176,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ZONAS_SUCURSALES:
 				case NIVELES_SUCURSALES:
 				case TAPOYO:
-				case TESPECIALIDADES:
-				case ZONASHOSPITALARIA:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case CVECOLUMNA:
@@ -1055,9 +1053,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				        lista = catalogosManager.recuperarTiposEndosoPorTramite(params.get("ntramite"));
 				    }
 				    break;
-				case TIPOPROVEEDOR:
-					lista = siniestrosManager.getConsultaListaTiposProveedores();
-					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
