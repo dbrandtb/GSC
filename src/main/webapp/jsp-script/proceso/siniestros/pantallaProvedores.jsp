@@ -326,6 +326,6 @@ Ext.onReady(function()
 </script>
 </head>
 <body>
-<div id="divpri" style="height:400px;border:1px solid #CCCCCC"></div>
+<div id="divpri" style="height:800px;border:1px solid #CCCCCC"></div>
 </body>
 </html>
