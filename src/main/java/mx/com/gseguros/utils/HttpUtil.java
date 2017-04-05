@@ -23,8 +23,11 @@ public class HttpUtil {
 	public static final String GET = "GET";
 	public static final String POST = "POST";
 	public static final int CODIGO_RESPUESTA_OK = 200;
+	
 	public static final int RSTN_DOC_CLASS_COTIZACION = 1;
 	public static final int RSTN_DOC_CLASS_EMISION = 2;
+	public static final int RSTN_DOC_CLASS_SINIESTROS = 3;
+	public static final String RSTN_DEFAULT_PATH = "/Cases/UW/";
 	
 	
 	/**
@@ -240,11 +243,11 @@ public class HttpUtil {
 		
 	}
     
-    public static void enviarArchivoRSTN (String caseIdRstn, String nombreArchivo, String nombreArchivoCompleto, String descripcion,
+    public static void enviarArchivoRSTN (String folder, String nombreArchivo, String nombreArchivoCompleto, String descripcion,
             int CLASE_DOC_RSTN) {
         String params = Utils.join(
                 "repositoryId=ObjectStore",
-                "&folder=", caseIdRstn,
+                "&folder=", folder,
                 "&idName=", nombreArchivo,
                 "&fullFileName=", nombreArchivoCompleto,
                 "&contentType=application/pdf",
