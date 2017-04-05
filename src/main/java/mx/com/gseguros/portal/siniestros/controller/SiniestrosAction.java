@@ -6419,7 +6419,7 @@ public String reservasTipPag(){
 																				,pv_nmsinies  
 																				,pv_fecdesde  
 																				,pv_fechasta );
-		if(datosValidacion!=null && !datosValidacion.isEmpty())	datosValidacion = datosValidacion;
+		//if(datosValidacion!=null && !datosValidacion.isEmpty())	datosValidacion = datosValidacion;
 	}catch( Exception e){
 		logger.error("Error al obtener la lista Detalle Siniestro : {}", e.getMessage(), e);
 		return SUCCESS;

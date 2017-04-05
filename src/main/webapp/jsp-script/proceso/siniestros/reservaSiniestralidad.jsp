@@ -53,7 +53,8 @@ Ext.onReady(function()
 			{type:'string',		name:'DSUNIECO'         },
 			{type:'string',		name:'FECINIVIG'  	    },
 			{type:'string',		name:'FECFINVIG'        },
-			{type:'string',		name:'AAAPERTU' 	    }, 
+			{type:'string',		name:'AAAPERTU' 	    },
+			{type:'string',		name:'NMAUTSER' 	    },
 			{type:'string',		name:'FECHA_OCURRENCIA' },
 			{type:'string',		name:'CDICD' 	        }, 
 			{type:'string',		name:'DESC_ICD' 	    }, 
@@ -123,7 +124,7 @@ Ext.onReady(function()
     
     ////// stores //////
     	var storeGridAutEspecial = new Ext.data.Store({
-		pageSize	: 50
+		pageSize	: 25
 		,model		: 'modeloAutEspecial'
 		,autoLoad	: false
 		,proxy		: {
@@ -251,28 +252,28 @@ Ext.onReady(function()
 				,height: 350
                 ,width: 750
 				,columns       : [
-					{   header : 'Tramite',		          dataIndex : 'NTRAMITE' 		,flex : 1},
-					{   header : 'clave Persona',		  dataIndex : 'CDPERSON' 		,flex : 1},
-					{   header : 'Asegurado',		      dataIndex : 'ASEGURADO'		,flex : 1},
-					{   header : 'cdpresta',			  dataIndex : 'CDPRESTA'	    ,flex : 1},
-					{   header : 'Proveedor',			  dataIndex : 'PROVEEDOR'		,flex : 1},
-					{   header : 'No. Factura',		      dataIndex : 'NFACTURA'		,flex : 1},
-					{   header : 'Clave Cobertura',		  dataIndex : 'CDGARANT'		,flex : 1},
-					{   header : 'Descripcion Cobertura', dataIndex : 'DSGARANT'		,flex : 1},
-					{   header : 'CDCONVAL',		      dataIndex : 'CDCONVAL'		,flex : 1},
-					{   header : 'DSCONVAL',		      dataIndex : 'DSCONVAL'		,flex : 1},
-					{   header : 'MONTO FACTURA',		  dataIndex : 'MONTO_FACTURA'	,flex : 1},
-					{   header : 'IVA',		              dataIndex : 'IVA'			    ,flex : 1},
-					{   header : 'IVA RETENIDO',          dataIndex : 'IVA_RETENIDO'	,flex : 1},
-					{	header : 'ISLR',		          dataIndex : 'ISLR'			,flex : 1},
-					{	header : 'ICED',		          dataIndex : 'ICED'			,flex : 1}
+					{   header : 'Tramite',		          dataIndex : 'NTRAMITE' 		,autoSizeColumn: true},
+					{   header : 'clave Persona',		  dataIndex : 'CDPERSON' 		,autoSizeColumn: true},
+					{   header : 'Asegurado',		      dataIndex : 'ASEGURADO'		,autoSizeColumn: true},
+					{   header : 'cdpresta',			  dataIndex : 'CDPRESTA'	    ,autoSizeColumn: true},
+					{   header : 'Proveedor',			  dataIndex : 'PROVEEDOR'		,autoSizeColumn: true},
+					{   header : 'No. Factura',		      dataIndex : 'NFACTURA'		,autoSizeColumn: true},
+					{   header : 'Clave Cobertura',		  dataIndex : 'CDGARANT'		,autoSizeColumn: true},
+					{   header : 'Descripcion Cobertura', dataIndex : 'DSGARANT'		,autoSizeColumn: true},
+					{   header : 'CDCONVAL',		      dataIndex : 'CDCONVAL'		,autoSizeColumn: true},
+					{   header : 'DSCONVAL',		      dataIndex : 'DSCONVAL'		,autoSizeColumn: true},
+					{   header : 'MONTO FACTURA',		  dataIndex : 'MONTO_FACTURA'	,autoSizeColumn: true},
+					{   header : 'IVA',		              dataIndex : 'IVA'			    ,autoSizeColumn: true},
+					{   header : 'IVA RETENIDO',          dataIndex : 'IVA_RETENIDO'	,autoSizeColumn: true},
+					{	header : 'ISLR',		          dataIndex : 'ISLR'			,autoSizeColumn: true},
+					{	header : 'ICED',		          dataIndex : 'ICED'			,autoSizeColumn: true}
 					
-				],
+				]/*,
 				bbar     :{
 				displayInfo : true,
 					store		: storeGridAutDetalle,
 					xtype		: 'pagingtoolbar'
-				}
+				}*/
 			})
 		
 		]
@@ -449,7 +450,7 @@ Ext.onReady(function()
     
     ////// contenido //////
     
-    Ext.create('Ext.panel.Panel',
+    var panelInicialPral= Ext.create('Ext.panel.Panel',
     {
         renderTo    : '_p25_divpri'
         ,autoScroll : true
@@ -477,7 +478,7 @@ Ext.onReady(function()
                         ,handler : function(){
                         	_mask("Cargando...");
                         	
-                        	storeGridAutEspecial.removeAll();
+                        	//storeGridAutEspecial.removeAll();
 							var params = {
 								'params.pv_CdUniEco_i'   : _fieldByName('cdunieco').getValue()
 								,'params.pv_CdRamo_i'    : _fieldByName('cdramo').getValue()
@@ -524,7 +525,17 @@ Ext.onReady(function()
                     {
                         text     : 'Limpiar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat.png'
-                        ,handler : function (){}
+                        ,handler : function (){
+                        	//Todo Codigo
+                        	/*panelInicialPral.down('combo[name=CDUNIECO]').reset();
+							panelInicialPral.down('combo[name=CDRAMO]').reset();
+							panelInicialPral.down('[name=NMPOLIZA]').setValue('');
+							panelInicialPral.down('[name=CDPERSON]').setValue('');
+							panelInicialPral.down('[name=NTRAMITE]').setValue('');
+							panelInicialPral.down('[name=NMSINIES]').setValue('');*/
+                        	debug('panelInicialPral: {}'+panelInicialPral);
+							storeGridAutEspecial.removeAll();
+                        }
                     }
                 ]
                 ,listeners	:	{
@@ -575,6 +586,7 @@ Ext.onReady(function()
 	                        	// Todo COdigo
 	                        	_11_recordActivo = grid.getStore().getAt(rowindex);
 	                        	//detalleRenovaSiniestro.close();
+	                        	
 	                        	storeGridAutDetalle.load({
 									params:{
 										'params.pv_CdUniEco_i': _11_recordActivo.get('CDUNIECO'),
@@ -608,7 +620,7 @@ Ext.onReady(function()
 					{	header     : 'Sucursal'       ,	dataIndex : 'DSUNIECO' ,	width : 150				},
 					{	header     : 'Fecha Inicio'   ,	dataIndex : 'FECINIVIG'   ,	width : 80				},
 					{	header     : 'Fecha Fin'      ,	dataIndex : 'FECFINVIG'   ,	width : 100				},
-					{	header     : 'Autorizaci&oacute;n<br/> (Pre-Siniestro)' , dataIndex : 'AAAPERTU',	      width : 200},
+					{	header     : 'Autorizaci&oacute;n<br/> (Pre-Siniestro)' , dataIndex : 'NMAUTSER',	      width : 200},
 					{	header     : 'Fecha <br/>Ocurrencia'                    , dataIndex : 'FECHA_OCURRENCIA', width : 80 },
 					{	header     : 'ICD Principal'                            , dataIndex : 'CDICD',	          width : 80 },
 					{	header     : 'Des. ICD <br/>Principal'                  , dataIndex : 'DESC_ICD',	      width : 150 },
@@ -623,8 +635,7 @@ Ext.onReady(function()
 					{	header     : 'Causa Siniestro'                          , dataIndex : 'CDCAUSA',          width : 200},
 					{	header     : 'Fecha Nacimiento'                         , dataIndex : 'FENACIMI',         width : 200}
 					
-				],
-				bbar     :{
+				],bbar     :{
 				displayInfo : true,
 					store		: storeGridAutEspecial,
 					xtype		: 'pagingtoolbar'
