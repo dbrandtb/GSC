@@ -625,6 +625,29 @@ Ext.onReady(function()
     ////// contenido //////
     
     ////// custom //////
+    try{
+    	var feini=_fieldByName("feini",null,true);
+    	var fefin=_fieldByName("fefin",null,true);
+    	var vigen = _fieldByLabel('VIGENCIA');
+    	
+	    feini.on(
+	    {
+	        change : function(me,val)
+	        {
+	            try
+	            {
+	                fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,vigen.getValue()))
+	            }
+	            catch(e)
+	            {
+	                debug(e);
+	            }
+	        }
+	    });
+	    fefin.setReadOnly(true);
+    }catch(e){
+    	debugError(e)
+    }
     /*_fieldByLabel('AGENTE').hide();*/
     _fieldByName('porparti').setMaxValue(99);
     
@@ -1669,7 +1692,7 @@ function _p31_feiniChange(comp,val)
 {
     debug('_p31_feiniChange:',val);
     var fefin = _fieldByName('fefin');
-    fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
+   // fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
     fefin.isValid();
 }
 
