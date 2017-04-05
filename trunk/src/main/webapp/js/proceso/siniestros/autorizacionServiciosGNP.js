@@ -3664,8 +3664,8 @@ Ext.onReady(function() {
 					// si el estatus es igual a 2 se va a autorizar
 					if(Ext.getCmp('idstatus').getValue() == "2"){
 						mensaje= 'Se gener&oacute; la carta para la autorizaci&oacute;n con el n&uacute;mero ';
-                        _mask();
-                        location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEntrada;
+                        //_mask();
+                        //location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEntrada;
 					}else{
 						if(Ext.getCmp('claveTipoAutoriza').getValue() == "1"){
 							mensaje = 'Se guard&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
