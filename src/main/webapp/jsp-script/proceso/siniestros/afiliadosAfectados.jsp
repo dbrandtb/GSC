@@ -2066,14 +2066,12 @@
 									,icon	 : '${ctx}/resources/fam3icons/icons/user_add.png'
 									,handler : _p21_agregarAsegurado
 									,hidden  : (_tipoPago != _TIPO_PAGO_DIRECTO)
-									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 								},
 								{
 									text	: 'Generar Calculo'
 									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
 									,handler : _p21_generarCalculo
 									,hidden  : (_cdtipoProceso  == "1")
-									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 								}
 							],							
 						listeners: {
@@ -3956,19 +3954,17 @@
                     ,columns    : 2
                     ,width      : 250
                     ,style      : 'margin:5px;'
-                    ,hidden     : _GLOBAL_CDSISROL===RolSistema
                     ,items      : [
                         {
                             boxLabel    : 'Si'
                             ,itemId     : 'SWAGENTE2'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'S'
-                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                         },{
                             boxLabel    : 'No'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'N'
-                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                            ,checked    : true
                         }
                     ]
                 }
@@ -4111,19 +4107,17 @@
 	                    ,columns    : 2
 	                    ,width      : 250
 	                    ,style      : 'margin:5px;'
-	                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 	                    ,items      : [
 	                        {
 	                            boxLabel    : 'Si'
 	                            ,itemId     : 'SWAGENTE3'
 	                            ,name       : 'SWAGENTE3'
 	                            ,inputValue : 'S'
-	                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 	                        },{
 	                            boxLabel    : 'No'
 	                            ,name       : 'SWAGENTE3'
 	                            ,inputValue : 'N'
-	                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+	                            ,checked    : true
 	                        }
 	                    ]
 	                }],
@@ -4706,20 +4700,18 @@
                                             ,columns    : 2
                                             ,width      : 250
                                             ,style      : 'margin:5px;'
-                                            ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                                             ,items      : [
                                                 {
                                                     boxLabel    : 'Si'
                                                     ,itemId     : 'SWAGENTE5'
                                                     ,name       : 'SWAGENTE5'
                                                     ,inputValue : 'S'
-                                                    ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                                                 }
                                                 ,{
                                                     boxLabel    : 'No'
                                                     ,name       : 'SWAGENTE5'
                                                     ,inputValue : 'N'
-                                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                    ,checked    : true
                                                 }
                                             ]
                                         }],
@@ -4950,20 +4942,18 @@
                         ,columns    : 2
                         ,width      : 250
                         ,style      : 'margin:5px;'
-                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                         ,items      : [
                             {
                                 boxLabel    : 'Si'
                                 ,itemId     : 'SWAGENTE4'
                                 ,name       : 'SWAGENTE4'
                                 ,inputValue : 'S'
-                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                             }
                             ,{
                                 boxLabel    : 'No'
                                 ,name       : 'SWAGENTE4'
                                 ,inputValue : 'N'
-                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                ,checked    : true
                             }
                         ]
                     }],
@@ -5068,7 +5058,6 @@
 											,columns    : 2
 											,width      : 250
 											,style      : 'margin:5px;'
-											,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 											,items      :
 											[
 												{
@@ -5076,13 +5065,12 @@
 													,itemId     : 'SWAGENTE2'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'S'
-													,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 												}
 												,{
 													boxLabel    : 'No'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'N'
-													,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+													,checked    : true
 												}
 											]
 										}],
@@ -7201,7 +7189,6 @@
 	// Se hace función para re-utilizarlo
 	function _11_clickAplicarCambiosFactura(){
 		debug("_11_clickAplicarCambiosFactura");
-		
 		var valido = panelInicialPral.isValid();
 		if(!valido) {
 			datosIncompletos();
