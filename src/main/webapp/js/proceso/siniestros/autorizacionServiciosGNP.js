@@ -3664,8 +3664,6 @@ Ext.onReady(function() {
 					// si el estatus es igual a 2 se va a autorizar
 					if(Ext.getCmp('idstatus').getValue() == "2"){
 						mensaje= 'Se gener&oacute; la carta para la autorizaci&oacute;n con el n&uacute;mero ';
-                        //_mask();
-                        //location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEntrada;
 					}else{
 						if(Ext.getCmp('claveTipoAutoriza').getValue() == "1"){
 							mensaje = 'Se guard&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
@@ -3685,17 +3683,16 @@ Ext.onReady(function() {
 					
 					if(valor=="N"){
 						mensajeCorrecto('Datos guardados',mensaje,function(){
-                        Ext.create('Ext.form.Panel').submit({
+                        /*Ext.create('Ext.form.Panel').submit({
                             url             : _p12_urlMesaControl
                             ,standardSubmit : true
                             ,params         : {
                                 'smap1.gridTitle'      : 'Autorizaci\u00F3n de servicio'
                                 ,'smap2.pv_cdtiptra_i' : _AUTORIZACION_SERVICIO
                             }
-                        });
-                        
-                        //_mask();
-                        //location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEntrada;
+                        });*/
+                        _mask();
+                        location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEntrada;
                     });
 					}else{
                         Ext.create('Ext.form.Panel').submit({

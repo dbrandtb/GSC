@@ -7,7 +7,7 @@ Ext.onReady(function() {
     var retornaMC = "0";
     var facturaTemporal =null;
     var _11_aseguradoSeleccionado = null;
-    var origProd = null;	// para guardar el producto original, x validación de que no se modifique (EGS)
+    var origProd = null;	// para guardar el producto original, x validaciï¿½n de que no se modifique (EGS)
     Ext.selection.CheckboxModel.override( {
         mode: 'SINGLE',
         allowDeselect: true
@@ -2949,6 +2949,7 @@ Ext.onReady(function() {
             });
             
             submitValues['datosTablas']=datosTablas;
+            submitValues.params['caseIdRstn'] = _NVL(panelInicialPral.down('[name=idNumTramite]').getValue());
             panelInicialPral.setLoading(true);
             procesaGuardaAltaTramite(submitValues,retornaMC);
         }
@@ -3041,6 +3042,7 @@ Ext.onReady(function() {
             }
             
             submitValues['datosTablas']=datosTablas;
+            submitValues.params['caseIdRstn'] = _NVL(panelInicialPral.down('[name=idNumTramite]').getValue());
             panelInicialPral.setLoading(true);
             procesaGuardaAltaTramite(submitValues,retornaMC);
         }
@@ -3192,6 +3194,7 @@ Ext.onReady(function() {
                 });
             });
             submitValues['datosTablas']=datosTablas;
+            submitValues.params['caseIdRstn'] = _NVL(panelInicialPral.down('[name=idNumTramite]').getValue());
             panelInicialPral.setLoading(true);
             Ext.Ajax.request(
             {
@@ -3274,6 +3277,7 @@ Ext.onReady(function() {
                 });
             });
             submitValues['datosTablas']=datosTablas;
+            submitValues.params['caseIdRstn'] = _NVL(panelInicialPral.down('[name=idNumTramite]').getValue());->
             panelInicialPral.setLoading(true);
             Ext.Ajax.request(
             {
@@ -3542,7 +3546,7 @@ Ext.onReady(function() {
                                                  + "&paramform=no",
                                     nombreArchivo : 'Contrarecibo_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf',
                                     asunto:'Contra-Recibo',
-                                    mensaje :'Estimado(a) cliente,anexamos a este e-mail el contrarecibo de su(s) factura(s)  y nos ponemos a sus apreciables órdenes.'
+                                    mensaje :'Estimado(a) cliente,anexamos a este e-mail el contrarecibo de su(s) factura(s)  y nos ponemos a sus apreciables ï¿½rdenes.'
                                 },
                                 callback : function(options,success,response)
                                 {
