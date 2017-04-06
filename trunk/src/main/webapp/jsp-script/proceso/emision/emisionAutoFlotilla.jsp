@@ -628,15 +628,20 @@ Ext.onReady(function()
     try{
     	var feini=_fieldByName("feini",null,true);
     	var fefin=_fieldByName("fefin",null,true);
-    	var vigen = _fieldByLabel('VIGENCIA');
     	
 	    feini.on(
 	    {
-	        change : function(me,val)
+	        change : function(me,val,oldVal)
 	        {
 	            try
 	            {
-	                fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,vigen.getValue()))
+	            	
+	            	
+	            	var date1 = oldVal;
+	            	var date2 = fefin.getValue();
+	            	var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+	            	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+	                fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,diffDays))
 	            }
 	            catch(e)
 	            {
@@ -754,7 +759,7 @@ Ext.onReady(function()
 	                    'smap1.cargaFenacMax' : _aplicaCobVida?_FechaMaxEdad:'',
 	                    'smap1.tomarUnDomicilio' : 'S',
 	                    'smap1.cargaOrdDomicilio' : json.smap1.nmorddom,
-	                    'smap1.muestraBusqueda' : _p31_smap1.cdtipsit2 == "TL"?'S':'N' 
+	                    'smap1.muestraBusqueda' : _p31_smap1.cdtipsit2 == "TL" || _p31_smap1.tipoflot=="F"?'S':'N' 
                     }
                 });
                 
