@@ -3608,6 +3608,7 @@ Ext.onReady(function() {
 		
 		var formulario=panelInicialPrincipal.form.getValues();
 		submitValues['params']=formulario;
+		submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
 
 		var datosTablas = [];
 		storeConceptoAutorizados.each(function(record,index){
@@ -3649,6 +3650,7 @@ Ext.onReady(function() {
 
 		var valorIdEstatus= Ext.getCmp('idstatus').getValue();
 		submitValues['datosTablas']=datosTablas;
+		submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
 		panelInicialPrincipal.setLoading(true);
 		Ext.Ajax.request( {
 			url: _URL_GUARDA_AUTORIZACION,

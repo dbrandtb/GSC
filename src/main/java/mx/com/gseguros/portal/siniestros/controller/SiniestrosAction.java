@@ -1300,7 +1300,10 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					String nombreRdf = null;
 					if(siniestro.getCdramo().equalsIgnoreCase(Ramo.RECUPERA.getCdramo())){
 						nombreRdf = getText("rdf.siniestro.cartafiniquitoRecupera.nombre");
-					}else{
+					}else if(siniestro.getCdramo().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+						nombreRdf = getText("rdf.siniestro.cartafiniquito.nombreGNP");
+					}
+					else{
 						nombreRdf = getText("rdf.siniestro.cartafiniquito.nombre");
 					}
 					
