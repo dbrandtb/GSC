@@ -47,6 +47,7 @@ var _p30_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
 var _p30_reportsServerUser = '<s:property value="passServidorReports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
+var _p30_descuento = false;
 
 var cargarXpoliza = false;
 ////// urls //////
@@ -416,7 +417,7 @@ var _p30_panel6ItemsConf =
 ];
 
 var _p30_paneles  = [];
-<s:iterator value="imap">
+<s:iterator value="imap"> 
     <s:if test='%{key.substring(0,"paneldin_".length()).equals("paneldin_")}'>
         _p30_paneles['<s:property value='%{key.substring("paneldin_".length())}' />']=Ext.create('Ext.window.Window',
         {
@@ -4804,6 +4805,7 @@ function _p30_cotizar(sinTarificar)
                         [
                             {
                                 xtype  : 'fieldset'
+                                ,itemId:"descuentoAgente"
                                 ,title : '<span style="font:bold 14px Calibri;">DESCUENTO DE AGENTE</span>'
                                 ,items : itemsDescuento
                             }
@@ -4821,6 +4823,7 @@ function _p30_cotizar(sinTarificar)
                                 itemId   : '_p30_botonAplicarDescuento'
                                 ,text    : 'Aplicar'
                                 ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                ,disabled:_p30_descuento
                                 ,handler : function(me)
                                 {
                                     if(me.up('form').getForm().isValid())
@@ -4836,6 +4839,19 @@ function _p30_cotizar(sinTarificar)
                                     {
                                         mensajeWarning('Favor de verificar los datos');
                                     }
+                                    _p30_descuento=true;
+                                    
+                                }
+                                ,listeners: {
+                                	afterrender:function(me){
+                                		try{
+                                		if(_fieldById("descuentoAgente",null,true).down("[xtype=numberfield]").getValue()!=0 && _fieldById("descuentoAgente",null,true).down("[xtype=numberfield]").getValue()!=null){
+                                			me.setDisabled(true);
+                                		}
+                                		}catch(e){
+                                			debugError(e)
+                                		}
+                                	}
                                 }
                             }
                         ]
@@ -5648,7 +5664,7 @@ function _p30_detalles()
                                     sorterFn: function(o1, o2){
                                     	debug(o1," # ",o2)
                                     	try{
-                                        	if(_p30_smap1.turistas=='S'){
+                                        	
                                         		var a=o1.get('TITULO'),
                                         	 	b=o2.get('TITULO')
                                         	 	
@@ -5665,7 +5681,7 @@ function _p30_detalles()
                                             		return -1
                                             		
                                             	
-                                        	}
+                                        	
                                         }catch(e){
                                         	debugError(e)
                                         }
