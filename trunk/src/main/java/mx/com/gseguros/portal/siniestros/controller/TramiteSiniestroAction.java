@@ -858,6 +858,14 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			}
 			UserVO usuario=(UserVO)session.get("USUARIO");
 	
+			String nombreArchivoReporte= null;
+			if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals((String)paramsO.get("pv_cdramo_i"))) {
+				nombreArchivoReporte = getText("rdf.siniestro.contrarecibo.nombreGNP");
+			}else{
+				nombreArchivoReporte= getText("rdf.siniestro.contrarecibo.nombre");
+			}
+			
+			logger.debug("Alberto ==> "+nombreArchivoReporte);
 			String urlContrareciboSiniestro = ""
 					+ rutaServidorReports
 					+ "?p_usuario=" + usuario.getUser() 
@@ -866,7 +874,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					+ "&desformat=PDF"
 					+ "&userid="+passServidorReports
 					+ "&ACCESSIBLE=YES"
-					+ "&report="+getText("rdf.siniestro.contrarecibo.nombre")
+					+ "&report="+nombreArchivoReporte
 					+ "&paramform=no"
 					;
 					String nombreArchivo = getText("siniestro.contrarecibo.nombre");
@@ -905,6 +913,14 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					,null
 					,null, false
 					);
+			
+			if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals((String)paramsO.get("pv_cdramo_i"))) {
+                HttpUtil.enviarArchivoRSTN(
+                        HttpUtil.RSTN_SINIESTROS_PATH + (String)paramsO.get("caseIdRstn"),
+                        pathArchivo, 
+                        "Contra Recibo",
+                        HttpUtil.RSTN_DOC_CLASS_SINIESTROS);
+            }
 			
 		}catch( Exception e){
 			logger.error("Error en generarContrarecibo : {}", e.getMessage(), e);

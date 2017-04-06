@@ -28,6 +28,8 @@ public class HttpUtil {
 	public static final int RSTN_DOC_CLASS_EMISION = 2;
 	public static final int RSTN_DOC_CLASS_SINIESTROS = 3;
 	public static final String RSTN_DEFAULT_PATH = "/Cases/UW/";
+	public static final String RSTN_AUTORIZACION_PATH = "/Accounts/MAVA/Aprobación Previa/";
+	public static final String RSTN_SINIESTROS_PATH = "/Accounts/MAVA/Siniestros/";
 	
 	
 	/**

@@ -238,6 +238,7 @@
             <result name="RstnAutorizacionServ" type="redirectAction">
                 <param name="namespace">/siniestros</param>
                 <param name="actionName">autorizacionServicios</param>
+                <param name="params.caseIdRstn">${params.caseId}</param>
             </result>
             <result name="RstnAltaTramitePrevio" type="redirectAction">
                 <param name="namespace">/siniestros</param>
@@ -248,6 +249,7 @@
                 <param name="namespace">/siniestros</param>
                 <param name="actionName">complementoAltaTramite</param>
                 <param name="params.ntramite">${params.ntramite}</param>
+                <param name="params.caseIdRstn">${params.caseId}</param>
             </result>
             <result name="RstnConsutaSiniestros" type="redirectAction">
                 <param name="namespace">/consultasSiniestro</param>

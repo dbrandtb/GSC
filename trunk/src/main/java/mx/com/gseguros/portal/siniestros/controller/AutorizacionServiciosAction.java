@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
@@ -115,16 +116,19 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			imap.put("panelbuttons",gc.getButtons());
 			String numero_aut = null;
 			String ntramite = null;
+			String caseIdRstn = null;
 
 			if(params != null){
 				numero_aut  = params.get("nmAutSer");
 				ntramite  =  params.get("ntramite");
+				caseIdRstn = params.get("caseIdRstn");
 			}
 
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("nmAutSer",numero_aut);
 			params.put("ntramite",ntramite);
 			params.put("cdrol",cdrol);
+			params.put("caseIdRstn",caseIdRstn);
 			setParamsJson(params);
 		} catch (Exception e) {
 			logger.error("Error en la autorizacion de Servicio : {}", e.getMessage(), e);
@@ -470,6 +474,11 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	private String generarAutoriServicio(Map<String, Object> paramsO){
 		logger.debug("Entra a generarAutoriServicio Valores para generarAutoriServicio: {}", paramsO);
 		try {
+			String caseIdRstn = null;
+			if (params != null && params.containsKey("caseIdRstn") && StringUtils.isNotBlank(params.get("caseIdRstn"))) {
+			    caseIdRstn = params.get("caseIdRstn");
+			}
+			
 			File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
 			if(!carpeta.exists()){
 				logger.debug("no existe la carpeta:::  {}", paramsO.get("pv_ntramite_i"));
@@ -557,6 +566,13 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					,null, false
 					);
 			
+					if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals((String)paramsO.get("pv_cdramo_i"))) {
+		                HttpUtil.enviarArchivoRSTN(
+		                        HttpUtil.RSTN_AUTORIZACION_PATH + caseIdRstn,
+		                        pathArchivo, 
+		                        "Autorizacion Servicio "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()),
+		                        HttpUtil.RSTN_DOC_CLASS_SINIESTROS);
+		            }			
 		}catch( Exception e){
 			logger.error("Error generarAutoriServicio {}", e.getMessage(), e);
 			success =  false;
