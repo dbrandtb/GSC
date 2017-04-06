@@ -8,6 +8,7 @@
 var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 var _CONTEXT = '${ctx}';
 var _url_lista_provedores  =	'<s:url namespace="/siniestros" action="listaProveedores" />';
+var _p31_urlPantallaCliente                = '<s:url namespace="/catalogos"  action="includes/personasLoader"            />';
 
 ////// urls //////
 
@@ -258,14 +259,38 @@ Ext.onReady(function()
 				,style         : 'margin:5px'
 				,height        : 400
 				,columns       : [
-					/*{   xtype: 'actioncolumn',      width: 40,          sortable: false,            menuDisabled: true,
+					{   xtype: 'actioncolumn',      width: 40,          sortable: false,            menuDisabled: true,
 	                    items: [{
 	                        icon: _CONTEXT+'/resources/fam3icons/icons/application_edit.png',
 	                        tooltip: 'Generar Autorizaci\u00F3n Especial',	//(EGS)
 	                        scope: this,
-	                        handler: function(){}
+	                        handler: function(view,rI,cI,item,e,record){
+	                        	debug(record);
+	                        	windowLoader = Ext.create('Ext.window.Window',
+	                                    {
+	                                        title        : 'CLIENTE'
+	                                        ,modal       : true
+	                                        ,buttonAlign : 'center'
+	                                        ,width       : 900
+	                                        ,height      : 480
+	                                        ,autoScroll  : true
+	                                        ,loader      :
+	                                        {
+	                                            url       : _p31_urlPantallaCliente
+	                                            ,scripts  : true
+	                                            ,autoLoad : true
+	                                            ,loadMask : true
+	                                            ,ajaxOptions: {
+	                                                method   : 'POST'
+	                                            },
+	                                            params: {
+	                                            	'smap1.cdperson' :record.get("CDPERSON")
+	                                            }
+	                                        }
+	                                    }).show();
+	                        }
 	                    }]
-	                 },*/
+	                 },
 					{	header     : 'ID PROVEDOR'       ,	dataIndex : 'CDPRESTA',		 width : 200  	},
 					{	header     : 'CDPERSON'         ,	dataIndex : 'CDPERSON',		flex : 1, 	hidden   : true	},
 					{	header     : 'NOMBRE PROVEEDOR'      , dataIndex : 'PROVEEDOR',    width : 200             },
