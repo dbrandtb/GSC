@@ -1272,9 +1272,11 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		logger.debug("Entra a solicitarPago Datos de Entrada :{}",params);
 		try {
 			UserVO usuario  = (UserVO)session.get("USUARIO");
-			RespuestaVO res = ice2sigsService.ejecutaWSreclamosTramite(params.get("pv_ntramite_i"), Operacion.INSERTA, false, usuario);
-			success = res.isSuccess();
-			mensaje = res.getMensaje();
+			//RespuestaVO res = ice2sigsService.ejecutaWSreclamosTramite(params.get("pv_ntramite_i"), Operacion.INSERTA, false, usuario);
+			//success = res.isSuccess();
+			success = true;
+			//mensaje = res.getMensaje();
+			mensaje = "Se omite temporalmente";
 			
 			logger.debug("Valor de success ==>: {}",success);
 			logger.debug("Valor de mensaje ==>: {}",mensaje);
