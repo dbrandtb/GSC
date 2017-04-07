@@ -7,10 +7,10 @@ Ext.onReady(function() {
     var retornaMC = "0";
     var facturaTemporal =null;
     var _11_aseguradoSeleccionado = null;
-    var origProd = null;	// para guardar el producto original, x validaciï¿½n de que no se modifique (EGS)
+    var origProd = null;	// para guardar el producto original, x validación de que no se modifique (EGS)
     Ext.selection.CheckboxModel.override( {
         mode: 'SINGLE',
-        allowDeselect: true  
+        allowDeselect: true
     });
 
 /*******    MODELOS     *******/
@@ -1523,7 +1523,7 @@ Ext.onReady(function() {
                 tbar: [
                     {
                         text     : 'Agregar Documento'
-                        ,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+                        ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
                         ,handler : _p21_agregarFactura
                     }
                 ]
@@ -1671,7 +1671,7 @@ Ext.onReady(function() {
                 tbar: [
                     {
                         text     : 'Agregar Documento'
-                        ,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+                        ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
                         ,handler : _p21_agregarFactura
                     }
                 ]
@@ -2146,8 +2146,7 @@ Ext.onReady(function() {
                                     'paramsO.pv_cdtippag_i' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
                                     'paramsO.pv_cdtipate_i' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
                                     'paramsO.pv_tipmov_i'   : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
-                                    'paramsO.pv_pagoAut_i'  : "0" ,//pago Normal 
-                                    'paramsO.caseIdRstn'    : _NVL(valorAction.caseIdRstn) //pago Normal 
+                                    'paramsO.pv_pagoAut_i'  : "0" //pago Normal 
                                 },
                                 success: function(response, opt) {
                                     var jsonRes=Ext.decode(response.responseText);
@@ -2951,7 +2950,6 @@ Ext.onReady(function() {
             
             submitValues['datosTablas']=datosTablas;
             panelInicialPral.setLoading(true);
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             procesaGuardaAltaTramite(submitValues,retornaMC);
         }
         else{ //PAGO POR INMEDIZACION
@@ -3044,7 +3042,6 @@ Ext.onReady(function() {
             
             submitValues['datosTablas']=datosTablas;
             panelInicialPral.setLoading(true);
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             procesaGuardaAltaTramite(submitValues,retornaMC);
         }
     }
@@ -3195,7 +3192,6 @@ Ext.onReady(function() {
                 });
             });
             submitValues['datosTablas']=datosTablas;
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             panelInicialPral.setLoading(true);
             Ext.Ajax.request(
             {
@@ -3279,7 +3275,6 @@ Ext.onReady(function() {
             });
             submitValues['datosTablas']=datosTablas;
             panelInicialPral.setLoading(true);
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             Ext.Ajax.request(
             {
                 url: _URL_GUARDA_FACTURA_TRAMITE,
@@ -3547,7 +3542,7 @@ Ext.onReady(function() {
                                                  + "&paramform=no",
                                     nombreArchivo : 'Contrarecibo_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf',
                                     asunto:'Contra-Recibo',
-                                    mensaje :'Estimado(a) cliente,anexamos a este e-mail el contrarecibo de su(s) factura(s)  y nos ponemos a sus apreciables ï¿½rdenes.'
+                                    mensaje :'Estimado(a) cliente,anexamos a este e-mail el contrarecibo de su(s) factura(s)  y nos ponemos a sus apreciables órdenes.'
                                 },
                                 callback : function(options,success,response)
                                 {

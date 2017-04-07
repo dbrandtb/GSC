@@ -1580,10 +1580,10 @@ function _p31_emitirFinal(me)
                 }
                 Ext.Msg.show(
                 {
-                    title    :'Error'
+                    title    :'Aviso'
                     ,msg     : json.mensajeRespuesta
                     ,buttons : Ext.Msg.OK
-                    ,icon    : Ext.Msg.ERROR
+                    ,icon    : Ext.Msg.WARNING
                     ,fn      : function()
                     {
                         if(json.retryWS)

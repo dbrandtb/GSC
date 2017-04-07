@@ -438,7 +438,7 @@ Ext.Ajax.request(
         {
             _fieldByName('fecha_endoso').setMinValue(json.smap1.FECHA_MINIMA);
             _fieldByName('fecha_endoso').setMaxValue(json.smap1.FECHA_MAXIMA);
-            _fieldByName('fecha_endoso').setReadOnly(json.smap1.EDITABLE=='N');
+            _fieldByName('fecha_endoso').setReadOnly(json.smap1.EDITABLE=='S');
             _fieldByName('fecha_endoso').isValid();
         }
         else
