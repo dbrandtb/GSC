@@ -7684,8 +7684,7 @@ public class CotizacionManagerImpl implements CotizacionManager
       	            {
       	            	String mensajeAPantalla = "Por el momento no es posible cotizar para esta unidad, el paquete de cobertura Prestigio, Amplio  y Limitado, le pedimos por favor ponerse en contacto con su ejecutivo de ventas.";
       	            	resp.getSmap().put("msnPantalla" , mensajeAPantalla);
-      	            	String mensajeACorreo= "Se le notif\u00EDca que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de autom\u00F3viles en el paquete de cobertura prestigio, amplia  y limitada:\n" + 
-      	            			planValido;
+      	            	String mensajeACorreo= "Se le notifica que no ha sido posible cotizar la solicitud "+nmpoliza+" del producto de autom&oacute;viles en el paquete de cobertura prestigio, amplia y limitada:\n" + planValido;
       	            	
       	            	String [] listamails = cotizacionDAO.obtenerCorreosReportarIncidenciasPorTipoSituacion(cdramo);
       	            	//{"XXXX@XXX.com.mx","YYYYY@YYYY.com.mx"};";
