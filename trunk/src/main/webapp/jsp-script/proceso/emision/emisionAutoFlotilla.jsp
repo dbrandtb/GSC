@@ -1581,7 +1581,7 @@ function _p31_emitirFinal(me)
                 Ext.Msg.show(
                 {
                     title    :'Error'
-                    ,msg     : json.mensajeRespuesta
+                    ,msg     : Ext.isEmpty(json.mensajeRespuesta)?"Error al emitir":json.mensajeRespuesta
                     ,buttons : Ext.Msg.OK
                     ,icon    : Ext.Msg.ERROR
                     ,fn      : function()
