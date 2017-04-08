@@ -87,8 +87,7 @@ var Ramo = {
     Multisalud          : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo"/>',
     Recupera            : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo"/>',
     SaludVital          : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo"/>',
-    ServicioPublico     : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SERVICIO_PUBLICO.cdramo"/>',
-    GastosMedicosMayoresPrueba : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES_PRUEBA.cdramo"/>'
+    ServicioPublico     : '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SERVICIO_PUBLICO.cdramo"/>'
 };
 
 
@@ -118,9 +117,7 @@ var TipoSituacion = {
     ServicioPublicoMicro  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SERVICIO_PUBLICO_MICRO.cdtipsit" />',
     ServicioPublicoAuto   : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@SERVICIO_PUBLICO_AUTO.cdtipsit" />',
     TuristaLicencia		  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TURISTA_LICENCIA.cdtipsit" />',
-    TuristaVehiculo 	  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TURISTA_VEHICULO.cdtipsit" />' ,
-    GastosMedicosMayoresPruebaInd : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@GASTOS_MEDICOS_MAYORES_PRUEBA_IND.cdtipsit" />',
-    GastosMedicosMayoresPruebaCol : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@GASTOS_MEDICOS_MAYORES_PRUEBA_COL.cdtipsit" />'
+    TuristaVehiculo 	  : '<s:property value="@mx.com.gseguros.portal.general.util.TipoSituacion@TURISTA_VEHICULO.cdtipsit" />' 
  };
  
  //Catalogo de formas de pago
@@ -137,7 +134,6 @@ var TipoSituacion = {
 	DXNSEMANAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNSEMANAL.codigo" />',
 	DXNANUAL            :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNANUAL.codigo" />',
 	DXNDOCENAL          :    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@DXNDOCENAL.codigo" />',
-	CONTADO				:    '<s:property value="@mx.com.gseguros.portal.general.util.TipoFormaPago@CONTADO.codigo" />',
 	esDxN				:    function(formaPago){
 		
 		var dxn=[
@@ -287,12 +283,5 @@ var TipoEndoso = {
         EndosoCambioTipoCarga                      : '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@ENDOSO_CAMBIO_TIPO_CARGA.cdTipSup"         />'
         
 }
-// catalogo de banderas ECD
-var FlagsECD = {
-	    PerfilCero  : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_0.perfil" />',
-	    PerfilUno   : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_1.perfil" />',
-	    PerfilDos   : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_2.perfil" />',
-	    PerfilTres  : '<s:property value="@mx.com.gseguros.portal.general.util.EcdFlags@PERFIL_3.perfil" />'
-};
 
 </script>
