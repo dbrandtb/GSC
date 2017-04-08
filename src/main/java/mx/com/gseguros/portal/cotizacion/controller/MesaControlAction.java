@@ -441,17 +441,16 @@ public class MesaControlAction extends PrincipalCoreAction
 			String rolDestino     = smap1.get("rol_destino");
 			String usuarioDestino = smap1.get("usuario_destino");
 			//boolean paraUsuario = StringUtils.isNotBlank(rolDestino);
-			
-			String cdusuariSesion = usu.getUser();
-			String cdsisrolSesion = usu.getRolActivo().getClave();
+			String cdusuariSesion = StringUtils.isNotBlank(smap1.get("usuario_inicial"))?smap1.get("usuario_inicial"):usu.getUser();
+			String cdsisrolSesion = StringUtils.isNotBlank(smap1.get("rol_inicial"))?smap1.get("rol_inicial"):usu.getRolActivo().getClave();
 			String cdclausu       = null;
 			
 			Map<String,Object> res = siniestrosManager.moverTramite(
 					ntramite
 					,statusNuevo
 					,comments
-					,cdusuariSesion
-					,cdsisrolSesion
+						,cdusuariSesion
+						,cdsisrolSesion
 					,usuarioDestino
 					,rolDestino
 					,cdmotivo

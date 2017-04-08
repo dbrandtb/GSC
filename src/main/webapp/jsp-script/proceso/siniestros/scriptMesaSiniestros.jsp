@@ -639,10 +639,71 @@ var msgWindow;
 																				    	            }
 																				    	            ,success : function (response)
 																				    	            {
-																				    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-																				    	                mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
-														        	            						loadMcdinStore();
-														        	            						windowLoader.close();
+																				    	                if(record.get('cdramo') =="11"){
+    																				    	                var usuarioTurnadoSiniestro1 = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+    																				    	                ///mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+    														        	            						debug("Usuario turnado1 ==>"+usuarioTurnadoSiniestro1);
+    																				    	                var fields = usuarioTurnadoSiniestro1.split('|');
+                                                                                                            var Nombre = fields[0];
+                                                                                                            var usuario = fields[1];
+    																				    	                
+                                                                                                            Ext.Ajax.request(
+                                                                                                            {
+                                                                                                                url: _URL_ActualizaStatusTramite,
+                                                                                                                params: {
+                                                                                                                        'smap1.ntramite' : record.get('ntramite'), 
+                                                                                                                        'smap1.status'   : _STATUS_TRAMITE_EN_REVISION_MEDICA
+                                                                                                                        ,'smap1.rol_destino'     : 'medajustador'
+                                                                                                                        ,'smap1.usuario_destino' : ''
+                                                                                                                        ,'smap1.rol_inicial'     : 'OPERADORSINI'
+                                                                                                                        ,'smap1.usuario_inicial' :  usuario 
+                                                                                                                },
+                                                                                                                success:function(response,opts){
+                                                                                                                    Ext.Ajax.request(
+                                                                                                                    {
+                                                                                                                        url     : _URL_NOMBRE_TURNADO
+                                                                                                                        ,params : 
+                                                                                                                        {           
+                                                                                                                            'params.ntramite': record.get('ntramite'),
+                                                                                                                            'params.rolDestino': 'medajustador'
+                                                                                                                        }
+                                                                                                                        ,success : function (response)
+                                                                                                                        {
+                                                                                                                            var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+                                                                                                                            debug("Usuario turnado2 ==>"+usuarioTurnadoSiniestro);
+                                                                                                                            mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+                                                                                                                            loadMcdinStore();
+                                                                                                                            windowLoader.close();
+                                                                                                                            
+                                                                                                                        },
+                                                                                                                        failure : function ()
+                                                                                                                        {
+                                                                                                                            me.up().up().setLoading(false);
+                                                                                                                            centrarVentanaInterna(Ext.Msg.show({
+                                                                                                                                title:'Error',
+                                                                                                                                msg: 'Error de comunicaci&oacute;n',
+                                                                                                                                buttons: Ext.Msg.OK,
+                                                                                                                                icon: Ext.Msg.ERROR
+                                                                                                                            }));
+                                                                                                                        }
+                                                                                                                    });
+                                                                                                                },
+                                                                                                                failure:function(response,opts)
+                                                                                                                {
+                                                                                                                    Ext.Msg.show({
+                                                                                                                        title:'Error',
+                                                                                                                        msg: 'Error de comunicaci&oacute;n',
+                                                                                                                        buttons: Ext.Msg.OK,
+                                                                                                                        icon: Ext.Msg.ERROR
+                                                                                                                    });
+                                                                                                                }
+                                                                                                            });
+																				    	                }else{
+																				    	                	var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																				    	                	mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+														        	            							loadMcdinStore();
+														        	            							windowLoader.close();
+																				    	                }
 																				    	            },
 																				    	            failure : function ()
 																				    	            {

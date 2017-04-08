@@ -3720,21 +3720,91 @@ Ext.onReady(function() {
                                                                                         }
                                                                                         ,success : function (response)
                                                                                         {
-                                                                                            var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-                                                                                            debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
-                                                                                            mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
-                                                                                                windowLoader.close();
-                                                                                                Ext.create('Ext.form.Panel').submit(
+                                                                                            if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="2"){
+                                                                                                var usuarioTurnadoSiniestro1 = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+                                                                                                ///mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+                                                                                                debug("Usuario turnado1 ==>"+usuarioTurnadoSiniestro1);
+                                                                                                var fields = usuarioTurnadoSiniestro1.split('|');
+                                                                                                var Nombre = fields[0];
+                                                                                                var usuario = fields[1];
+                                                                                                
+                                                                                                Ext.Ajax.request(
                                                                                                 {
-                                                                                                    url     : _p12_urlMesaControl
-                                                                                                    ,standardSubmit : true
-                                                                                                    ,params         :
+                                                                                                    url: _URL_ActualizaStatusTramite,
+                                                                                                    params: {
+                                                                                                            'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(), 
+                                                                                                            'smap1.status'   : _STATUS_TRAMITE_EN_REVISION_MEDICA
+                                                                                                            ,'smap1.rol_destino'     : 'medajustador'
+                                                                                                            ,'smap1.usuario_destino' : ''
+                                                                                                            ,'smap1.rol_inicial'     : 'OPERADORSINI'
+                                                                                                            ,'smap1.usuario_inicial' :  usuario 
+                                                                                                    },
+                                                                                                    success:function(response,opts){
+                                                                                                        Ext.Ajax.request(
+                                                                                                        {
+                                                                                                            url     : _URL_NOMBRE_TURNADO
+                                                                                                            ,params : 
+                                                                                                            {           
+                                                                                                                'params.ntramite': panelInicialPral.down('[name=idNumTramite]').getValue(),
+                                                                                                                'params.rolDestino': 'medajustador'
+                                                                                                            }
+                                                                                                            ,success : function (response)
+                                                                                                            {
+                                                                                                                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+                                                                                                                debug("Usuario turnado2 ==>"+usuarioTurnadoSiniestro);
+                                                                                                                mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
+                                                                                                                    windowLoader.close();
+                                                                                                                    Ext.create('Ext.form.Panel').submit(
+                                                                                                                    {
+                                                                                                                        url     : _p12_urlMesaControl
+                                                                                                                        ,standardSubmit : true
+                                                                                                                        ,params         :
+                                                                                                                        {
+                                                                                                                            'smap1.gridTitle'      : 'Siniestros en espera'
+                                                                                                                            ,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
+                                                                                                                        }
+                                                                                                                    });
+                                                                                                                });
+                                                                                                            },
+                                                                                                            failure : function ()
+                                                                                                            {
+                                                                                                                me.up().up().setLoading(false);
+                                                                                                                centrarVentanaInterna(Ext.Msg.show({
+                                                                                                                    title:'Error',
+                                                                                                                    msg: 'Error de comunicaci&oacute;n',
+                                                                                                                    buttons: Ext.Msg.OK,
+                                                                                                                    icon: Ext.Msg.ERROR
+                                                                                                                }));
+                                                                                                            }
+                                                                                                        });
+                                                                                                    },
+                                                                                                    failure:function(response,opts)
                                                                                                     {
-                                                                                                        'smap1.gridTitle'      : 'Siniestros en espera'
-                                                                                                        ,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
+                                                                                                        Ext.Msg.show({
+                                                                                                            title:'Error',
+                                                                                                            msg: 'Error de comunicaci&oacute;n',
+                                                                                                            buttons: Ext.Msg.OK,
+                                                                                                            icon: Ext.Msg.ERROR
+                                                                                                        });
                                                                                                     }
                                                                                                 });
-                                                                                            });
+                                                                                            }else{
+                                                                                                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+                                                                                                debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
+                                                                                                mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
+                                                                                                    windowLoader.close();
+                                                                                                    Ext.create('Ext.form.Panel').submit(
+                                                                                                    {
+                                                                                                        url     : _p12_urlMesaControl
+                                                                                                        ,standardSubmit : true
+                                                                                                        ,params         :
+                                                                                                        {
+                                                                                                            'smap1.gridTitle'      : 'Siniestros en espera'
+                                                                                                            ,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
+                                                                                                        }
+                                                                                                    });
+                                                                                                });
+                                                                                            }
                                                                                         },
                                                                                         failure : function ()
                                                                                         {

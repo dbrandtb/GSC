@@ -6748,4 +6748,24 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public String obtieneMedicoEquipoQuirurgico(String numAutorizacion) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmautser_i", numAutorizacion);
+		Map<String, Object> resultado = ejecutaSP(new ObtieneMedicoEquipoQuirurgico(getDataSource()), params);
+		logger.debug( resultado.get("pv_registro_o"));
+		return (String) resultado.get("pv_registro_o");
+	}
+	
+    protected class ObtieneMedicoEquipoQuirurgico extends StoredProcedure {
+    	protected ObtieneMedicoEquipoQuirurgico(DataSource dataSource) {
+    		super(dataSource, "PKG_SINIESTRO.P_GET_EQUIPOQUIRUR");
+    		declareParameter(new SqlParameter("pv_nmautser_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

@@ -1700,13 +1700,13 @@
 									{
 										icon	 : '${ctx}/resources/fam3icons/icons/accept.png'
 										,tooltip : 'Guardar'
-										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA|| _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 										,handler : guardarDatosComplementarios
 									},
 									{
 										icon	 : '${ctx}/resources/fam3icons/icons/user_delete.png'
 										,tooltip : 'Eliminar Asegurado'
-										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA|| _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 										,handler : eliminarAsegurado
 										
 									}
@@ -2150,7 +2150,7 @@
 									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
 									,handler : _p21_generarCalculo
 									,hidden  : (_cdtipoProceso  == "1")
-									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA|| _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 								}
 							],							
 						listeners: {
@@ -2443,7 +2443,7 @@
 									,{
 										icon	 : '${ctx}/resources/fam3icons/icons/page_edit.png'
 										,tooltip : 'Ajuste'
-										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 										,handler : _mostrarVentanaAjustes
 									}
 								]
@@ -2677,14 +2677,14 @@
 								{
 									text	: 'Agregar Concepto'
 									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
-									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 									,handler : _p21_agregarConcepto
 									//, hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
 								},
 								{
 									text	: 'Guardar Concepto'
 									,icon:_CONTEXT+'/resources/fam3icons/icons/disk.png'
-									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
 									,handler : function() {
 										_guardarConceptosxFactura();
 									}
@@ -3280,7 +3280,7 @@
 					,buttons: [ {
 							text:'Aplicar Cambios Factura',
 							icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
-							disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true, //(EGS)  
+							disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA ||_11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA|| _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true, //(EGS)  
 							handler:function() {
 								debug("Aplicar Cambios Factura");
 								_11_clickAplicarCambiosFactura(); // (EGS) codigo original se convierte en funcion para re-utilizarlo
