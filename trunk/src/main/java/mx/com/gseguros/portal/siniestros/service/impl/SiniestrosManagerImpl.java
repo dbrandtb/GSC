@@ -2975,5 +2975,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	//String tipoConcepto, String idProveedor, String idConceptoTipo
+	public String obtieneMedicoEquipoQuirurgico(String numAutorizacion) throws Exception {
+		try {
+			return siniestrosDAO.obtieneMedicoEquipoQuirurgico(numAutorizacion);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
     
 }

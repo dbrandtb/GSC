@@ -688,4 +688,6 @@ public interface SiniestrosDAO {
 			,String pv_nmsinies  
 			,String pv_fecdesde  
 			,String pv_fechasta) throws Exception;
+	
+	public String obtieneMedicoEquipoQuirurgico(String numAutorizacion) throws Exception;
 }

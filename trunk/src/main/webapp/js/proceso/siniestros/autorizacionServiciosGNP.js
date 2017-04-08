@@ -2448,7 +2448,7 @@ Ext.onReady(function() {
 			id:'botonGuardar',
 			handler: function() {
 				if (panelInicialPrincipal.form.isValid()) {
-					guardadoAutorizacionServicio(_Existe);
+					guardadoAutorizacionServicio(_Existe,'1');
 				} else {
 					centrarVentanaInterna(Ext.Msg.show({
 						title: 'Aviso',
@@ -2467,7 +2467,7 @@ Ext.onReady(function() {
 					//validamos que exista valor del registro
 					if(valorAction == null ){
 						//Solo se guarda y no realiza la validacion del monto
-						guardadoAutorizacionServicio(_NExiste);//---2
+						guardadoAutorizacionServicio(_NExiste,'0');//---2
 						
 					}else{
 						Ext.Ajax.request( {
@@ -2477,7 +2477,7 @@ Ext.onReady(function() {
 							}
 							,success : function (response){
 								if(Ext.decode(response.responseText).existeDocAutServicio =="N"){
-									guardadoAutorizacionServicio(_NExiste);//---3
+									guardadoAutorizacionServicio(_NExiste,'0');//---3
 								}else{
 									Ext.Ajax.request( {
 										url     : _URL_MONTO_MAXIMO
@@ -2492,7 +2492,7 @@ Ext.onReady(function() {
 													
 													if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue()!=null ){
 														Ext.getCmp('idstatus').setValue("2");
-														guardadoAutorizacionServicio(_Existe);//---4
+														guardadoAutorizacionServicio(_Existe,'0');//---4
 													}
 													else {
 														centrarVentanaInterna(Ext.Msg.show({
@@ -2510,14 +2510,14 @@ Ext.onReady(function() {
 														icon: Ext.Msg.QUESTION,
 														fn: function(buttonId, text, opt){
 															if(buttonId == 'yes'){
-																guardadoAutorizacionServicio(_Existe);//---5
+																guardadoAutorizacionServicio(_Existe,'0');//---5
 															}
 														}
 													}));
 												}
 											}else{
 												Ext.getCmp('idstatus').setValue("2");
-												guardadoAutorizacionServicio(_Existe);//----6
+												guardadoAutorizacionServicio(_Existe,'0');//----6
 											}
 										},
 										failure : function (){
@@ -3602,7 +3602,7 @@ Ext.onReady(function() {
 		return true;
 	}
 
-	function  guardadoAutorizacionServicio(valor){
+	function  guardadoAutorizacionServicio(valor,guardado){//1.-
 		var respuesta=true;
 		var submitValues={};
 		
@@ -3685,26 +3685,39 @@ Ext.onReady(function() {
 					
 					if(valor=="N"){
 						mensajeCorrecto('Datos guardados',mensaje,function(){
-                        /*Ext.create('Ext.form.Panel').submit({
-                            url             : _p12_urlMesaControl
-                            ,standardSubmit : true
-                            ,params         : {
-                                'smap1.gridTitle'      : 'Autorizaci\u00F3n de servicio'
-                                ,'smap2.pv_cdtiptra_i' : _AUTORIZACION_SERVICIO
-                            }
-                        });*/
-                        _mask();
-                        location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEntrada;
-                    });
-					}else{
-                        Ext.create('Ext.form.Panel').submit({
-                            standardSubmit : true
-                            ,params        : {
-                                'params.nmAutSer':numeroAutorizacion
-                                ,'params.ntramite':ntramiteEntrada
-                                ,'params.cdrol':valorAction.cdrol
-                            }
+                            Ext.create('Ext.form.Panel').submit({
+                                url             : _p12_urlMesaControl
+                                ,standardSubmit : true
+                                ,params         : {
+                                    'smap1.gridTitle'      : 'Autorizaci\u00F3n de servicio'
+                                    ,'smap2.pv_cdtiptra_i' : _AUTORIZACION_SERVICIO
+                                }
+                            });
                         });
+					}else{
+						if(guardado =='1'){
+                        	Ext.create('Ext.form.Panel').submit({
+                                standardSubmit : true
+                                ,params        : {
+                                    'params.nmAutSer':numeroAutorizacion
+                                    ,'params.ntramite':ntramiteEntrada
+                                    ,'params.cdrol':valorAction.cdrol
+                                }
+                            });
+                        }else{
+                        	//_mask();
+                            //location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEntrada;
+                            mensajeCorrecto('Datos guardados',mensaje,function(){
+                                Ext.create('Ext.form.Panel').submit({
+                                    url             : _p12_urlMesaControl
+                                    ,standardSubmit : true
+                                    ,params         : {
+                                        'smap1.gridTitle'      : 'Autorizaci\u00F3n de servicio'
+                                        ,'smap2.pv_cdtiptra_i' : _AUTORIZACION_SERVICIO
+                                    }
+                                });
+                            });
+                        }
 					}
 				}
 				else{

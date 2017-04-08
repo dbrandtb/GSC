@@ -566,13 +566,63 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					,null, false
 					);
 			
-					if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals((String)paramsO.get("pv_cdramo_i"))) {
-		                HttpUtil.enviarArchivoRSTN(
-		                        HttpUtil.RSTN_AUTORIZACION_PATH + caseIdRstn,
-		                        pathArchivo, 
-		                        "Autorizacion Servicio "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()),
-		                        HttpUtil.RSTN_DOC_CLASS_SINIESTROS);
-		            }			
+			String totalConcepto = siniestrosManager.obtieneMedicoEquipoQuirurgico((String) paramsO.get("pv_nmAutSer_i"));
+			if(Integer.parseInt(totalConcepto)> 0 && paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+				String urlAutorizacionServicioMed = ""
+						+ rutaServidorReports
+						+ "?p_unieco=" +  paramsO.get("pv_cdunieco_i")
+						+ "&p_ramo=" + paramsO.get("pv_cdramo_i")
+						+ "&p_estado=" + paramsO.get("pv_estado_i")
+						+ "&p_poliza=" + paramsO.get("pv_nmpoliza_i")
+						+ "&P_AUTSER=" + paramsO.get("pv_nmAutSer_i")
+						+ "&P_CDPERSON=" + paramsO.get("pv_cdperson_i")
+						+ "&destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+passServidorReports
+						+ "&ACCESSIBLE=YES"
+						+ "&report="+getText("rdf.siniestro.autorizacion.servicio.nombre.GNPEXP")
+						+ "&paramform=no"
+						;
+					logger.debug("urlAutorizacionServicio: {}", urlAutorizacionServicioMed);
+					//logger.debug(getText("siniestro.autorizacionServicio.nombre").substring(beginIndex));
+					String nombreArchivoMed = getText("siniestro.autorizacionServicio.nombreMed");
+					
+					String nombreArchivoModificadoMed = nombreArchivoMed.substring(nombreArchivoMed.indexOf(".")+1)+System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+".pdf";
+					String pathArchivoMed=""
+						+ rutaDocumentosPoliza
+						+ "/" + paramsO.get("pv_ntramite_i")
+						+ "/" + nombreArchivoModificadoMed
+						;
+					HttpUtil.generaArchivo(urlAutorizacionServicioMed, pathArchivoMed);
+					
+					documentosManager.guardarDocumento(
+						(String)paramsO.get("pv_cdunieco_i")
+						,(String)paramsO.get("pv_cdramo_i")
+						,(String)paramsO.get("pv_estado_i")
+						,(String)paramsO.get("pv_nmpoliza_i")
+						,(String)paramsO.get("pv_nmsuplem_i")
+						,new Date()
+						,nombreArchivoModificadoMed
+						,"Autorizacion Servicio Medico "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
+						,null
+						,(String)paramsO.get("pv_ntramite_i")
+						,TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra()
+						,null
+						,null
+						,TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra()
+						,null
+						,null
+						,null
+						,null, false
+					);
+			}
+			if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals((String)paramsO.get("pv_cdramo_i"))) {
+                HttpUtil.enviarArchivoRSTN(
+                        HttpUtil.RSTN_AUTORIZACION_PATH + caseIdRstn,
+                        pathArchivo, 
+                        "Autorizacion Servicio "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()),
+                        HttpUtil.RSTN_DOC_CLASS_SINIESTROS);
+            }
 		}catch( Exception e){
 			logger.error("Error generarAutoriServicio {}", e.getMessage(), e);
 			success =  false;
