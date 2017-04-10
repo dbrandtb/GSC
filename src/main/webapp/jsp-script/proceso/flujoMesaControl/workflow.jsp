@@ -6,10 +6,9 @@
 <style>
 #canvasdiv
 {
-    width            : 5000px;
-    height           : 5000px;
-    position         : absolute;
-    background-image : url('${flujoimg}fondoModelador.png');
+    width    : 2000px;
+    height   : 2000px;
+    position : absolute;
 }
 .catEntidad
 {
@@ -21,23 +20,7 @@
     height           : 50px;
     background-image : url('${flujoimg}estado.png');
 }
-.sucursal .image
-{
-    width            : 50px;
-    height           : 50px;
-    background-image : url('${flujoimg}estado.png');
-}
 .estado .CDESTADOMC, .labelE
-{
-    position    : absolute;
-    left        : 50%;
-    margin-left : -100px;
-    border      : 0px solid red;
-    top         : 20px;
-    width       : 200px;
-    text-align  : center;
-}
-.sucursal .CDUNIECO, .labelS
 {
     position    : absolute;
     left        : 50%;
@@ -101,12 +84,6 @@
     height           : 50px;
     background-image : url('${flujoimg}validacion.png');
 }
-.correo .image
-{
-    width            : 60px;
-    height           : 50px;
-    background-image : url('${flujoimg}correo.png');
-}
 .labelV
 {
     position    : absolute;
@@ -133,44 +110,11 @@
     width       : 200px;
     text-align  : center;
 }
-.titulo .image
-{
-    width            : 50px;
-    height           : 20px;
-    background-image : url('${flujoimg}titulo.png');
-}
-.labelT
-{
-    position       : absolute;
-    left           : 0%;
-    margin-left    : 10px;
-    border         : 0px solid red;
-    top            : 3px;
-    text-align     : left;
-    text-transform : uppercase;
-    font-weight    : bold;
-}
-.labelT0
-{
-    width : 500px;
-}
-.labelT1
-{
-    width : 1000px;
-}
 .entidad:hover
 {
     border : 0px solid blue;
 }
 .entidadE
-{
-    position         : absolute;
-    width            : 50px;
-    height           : 50px;
-    border           : 0px solid red;
-    background-image : url('${flujoimg}estado.png');
-}
-.entidadS
 {
     position         : absolute;
     width            : 50px;
@@ -210,14 +154,6 @@
     border           : 0px solid red;
     background-image : url('${flujoimg}validacion.png');
 }
-.entidadM
-{
-    position         : absolute;
-    width            : 60px;
-    height           : 50px;
-    border           : 0px solid red;
-    background-image : url('${flujoimg}correo.png');
-}
 .entidadR
 {
     position         : absolute;
@@ -226,118 +162,47 @@
     border           : 0px solid red;
     background-image : url('${flujoimg}revision.png');
 }
-.entidadT0
-{
-    position         : absolute;
-    width            : 500px;
-    height           : 20px;
-    border           : 0px solid red;
-    background-image : url('${flujoimg}titulo0.png');
-}
-.entidadT1
-{
-    position         : absolute;
-    width            : 1000px;
-    height           : 20px;
-    border           : 0px solid red;
-    background-image : url('${flujoimg}titulo1.png');
-}
 .plus
 {
     position         : absolute;
-    top              : 50%;
-    left             : 50%;
-    margin-top       : -8px;
-    margin-left      : -24px;
+    top              : 0;
+    left             : 0;
+    margin-top       : -32px;
+    margin-left      : -16px;
     width            : 16px;
     height           : 16px;
     border           : 0px solid green;
-    background-image : url('${icons}add.png');
-    visibility       : hidden;
-}
-.entidad:hover .plus
-{
-    visibility : visible;
+    background-image : url('${icons}add.png')
 }
 .edit
 {
     position         : absolute;
-    top              : 50%;
+    top              : 0;
     left             : 50%;
-    margin-top       : -8px;
+    margin-top       : -32px;
     margin-left      : -8px;
     width            : 16px;
     height           : 16px;
     border           : 0px solid green;
-    background-image : url('${icons}pencil.png');
-    visibility       : hidden;
-}
-.entidad:hover .edit
-{
-    visibility : visible;
+    background-image : url('${icons}pencil.png')
 }
 .remove
 {
     position         : absolute;
-    top              : 50%;
-    left             : 50%;
-    margin-top       : -8px;
-    margin-left      : 8px;
+    top              : 0;
+    right            : 0;
+    margin-top       : -32px;
+    margin-right     : -16px;
     width            : 16px;
     height           : 16px;
     border           : 0px solid green;
-    background-image : url('${icons}delete.png');
-    visibility       : hidden;
-}
-.entidad:hover .remove
-{
-    visibility : visible;
+    background-image : url('${icons}delete.png')
 }
 .catedit
 {
     position : absolute;
     top      : 0;
     left     : 0;
-}
-.entidad:hover .labelE
-{
-    top : -15px;
-    font-weight: bold;
-}
-.entidad:hover .labelS
-{
-    top : -15px;
-    font-weight: bold;
-}
-.entidad:hover .labelP
-{
-    top : -15px;
-    font-weight: bold;
-}
-.entidad:hover .labelC
-{
-    top : -15px;
-    font-weight: bold;
-}
-.entidad:hover .labelO
-{
-    top : -15px;
-    font-weight: bold;
-}
-.entidad:hover .labelV
-{
-    top : -15px;
-    font-weight: bold;
-}
-.entidad:hover .labelR
-{
-    top : -15px;
-    font-weight: bold;
-}
-.entidad:hover .labelT
-{
-    top : -15px;
-    font-weight: bold;
 }
 </style>
 <script type="text/javascript" src="${ctx}/resources/jsPlumb/jsPlumb-2.0.4.js?${now}"></script>
@@ -373,30 +238,21 @@ var _p52_urlCargarModelado         = '<s:url namespace="/flujomesacontrol" actio
 var _p52_urlCargarDatosEstado      = '<s:url namespace="/flujomesacontrol" action="cargarDatosEstado"      />';
 var _p52_urlGuardarDatosStatus     = '<s:url namespace="/flujomesacontrol" action="guardarDatosEstado"     />';
 var _p52_urlCargarDatosValidacion  = '<s:url namespace="/flujomesacontrol" action="cargarDatosValidacion"  />';
-var _p52_urlCargarDatosCorreo      = '<s:url namespace="/flujomesacontrol" action="cargarDatosCorreo"      />';
 var _p52_urlGuardarDatosValidacion = '<s:url namespace="/flujomesacontrol" action="guardarDatosValidacion" />';
-var _p52_urlGuardarDatosCorreo     = '<s:url namespace="/flujomesacontrol" action="guardarDatosCorreo"     />';
 var _p52_urlCargarDatosRevision    = '<s:url namespace="/flujomesacontrol" action="cargarDatosRevision"    />';
 var _p52_urlGuardarDatosRevision   = '<s:url namespace="/flujomesacontrol" action="guardarDatosRevision"   />';
 var _p52_urlMovimientoTdocume      = '<s:url namespace="/flujomesacontrol" action="movimientoTdocume"      />';
-var _p52_urlMovimientoTrequisi     = '<s:url namespace="/flujomesacontrol" action="movimientoTrequisi"     />';
 var _p52_urlCargarDatosAccion      = '<s:url namespace="/flujomesacontrol" action="cargarDatosAccion"      />';
 var _p52_urlGuardarDatosAccion     = '<s:url namespace="/flujomesacontrol" action="guardarDatosAccion"     />';
-var _p52_urlGuardarTtipflurol      = '<s:url namespace="/flujomesacontrol" action="guardarTtipflurol"      />';
-var _p52_urlGuardarTflujorol       = '<s:url namespace="/flujomesacontrol" action="guardarTflujorol"       />';
-var _p52_urlCargarDatosTitulo      = '<s:url namespace="/flujomesacontrol" action="cargarDatosTitulo"      />';
-var _p52_urlGuardarDatosTitulo     = '<s:url namespace="/flujomesacontrol" action="guardarDatosTitulo"     />';
 ////// urls //////
 
 ////// variables //////
 var estadoTpl;
-var sucursalTpl;
 var pantallaTpl;
 var componenteTpl;
 var procesoTpl;
 var validacionTpl;
 var revisionTpl;
-var correoTpl;
 
 var _p52_panelGrids;
 var _p52_gridTramites;
@@ -404,18 +260,14 @@ var _p52_gridProcesos;
 var _p52_panelDibujo;
 var _p52_panelCanvas;
 var _p52_catalogoEstados;
-var _p52_catalogoSucursales;
 var _p52_panelEstado;
 var _p52_catalogoPantallas;
 var _p52_catalogoComponentes;
 var _p52_catalogoProcesos;
 var _p52_catalogoValidaciones;
-var _p52_catalogoCorreos;
 var _p52_catalogoRevisiones;
 var _p52_formValidacion;
-var _p52_formCorreos;
 var _p52_panelRevision;
-var _p52_panelTitulo;
 var _p52_panelAccion;
 var _p52_catalogoIconos;
 
@@ -431,18 +283,10 @@ var _p52_formComponente;
 var _p52_formPantalla;
 var _p52_formProceso;
 var _p52_formTdocume;
-var _p52_formTrequisi;
-var _p52_formCorreos;
-var _p52_winVarsCorreo;
 
 var _p52_cargando = false;
 
 var _p52_debug = false;
-
-var _p52_params = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
-debug('_p52_params:', _p52_params, '.');
-
-var _p52_tituloPrincipal;
 ////// variables //////
 
 ////// overrides //////
@@ -490,14 +334,6 @@ Ext.onReady(function()
         return;
     }
     ////// requires //////
-    Ext.Loader.setConfig({enabled: true});
-    Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES+'SelectorMultiple');
-	/* Ext.require(['Ext.form.Panel',
-				 'Ext.ux.form.MultiSelect',
-				 'Ext.ux.form.ItemSelector',
-				 'Ext.tip.QuickTipManager',
-				 'Ext.ux.ajax.JsonSimlet',
-				 'Ext.ux.ajax.SimManager']); */
     ////// requires //////
     
     ////// modelos //////
@@ -516,20 +352,6 @@ Ext.onReady(function()
         ,'        </tr>'
         ,'        <tr>'
         ,'            <td align="center"><a class="catedit" href="#" onclick="_p52_editCatClic(\'E\',\'E{CDESTADOMC}\'); return false;" ><img src="${icons}pencil.png" /></a>{DSESTADOMC}</td>'
-        ,'        </tr>'
-        ,'    </table>'
-        ,'</div>'
-    ]);
-    
-    sucursalTpl = new Ext.Template(
-    [
-         '<div id="S{CDUNIECO}" class="catEntidad sucursal" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{DSUNIECO}">'
-        ,'    <table width="90" border="0">'
-        ,'        <tr>'
-        ,'            <td align="center"><div class="image"></div><div class="CDUNIECO">{CDUNIECO}</div></td>'
-        ,'        </tr>'
-        ,'        <tr>'
-        ,'            <td align="center">{DSUNIECO}</td>'
         ,'        </tr>'
         ,'    </table>'
         ,'</div>'
@@ -605,34 +427,6 @@ Ext.onReady(function()
         ,'</div>'
     ]);
     
-    correoTpl = new Ext.Template(
-    	    [
-    	         '<div id="M0" class="catEntidad correo" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dsmail}">'
-    	        ,'    <table width="90" border="0">'
-    	        ,'        <tr>'
-    	        ,'            <td align="center"><div class="image"></div></td>'
-    	        ,'        </tr>'
-    	        ,'        <tr>'
-    	        ,'            <td align="center">{dsmail}</td>'
-    	        ,'        </tr>'
-    	        ,'    </table>'
-    	        ,'</div>'
-    	    ]);
-    
-    tituloTpl = new Ext.Template(
-    [
-         '<div id="T{cdtitulo}" class="catEntidad titulo" draggable="true" ondragstart="_p52_dragstart(event);" descrip="{dstitulo}">'
-        ,'    <table width="90" border="0">'
-        ,'        <tr>'
-        ,'            <td align="center"><div class="image"></div></td>'
-        ,'        </tr>'
-        ,'        <tr>'
-        ,'            <td align="center">{dstitulo}</td>'
-        ,'        </tr>'
-        ,'    </table>'
-        ,'</div>'
-    ]);
-    
     iconoTpl = new Ext.Template(
     [
          '<div class="radioicono">'
@@ -648,13 +442,6 @@ Ext.onReady(function()
     ]);
     
     epProps['E'] =
-    {
-        anchor     : [ 'Perimeter' , { shape : 'Circle' } ]
-        ,isSource  : true
-        ,isTarget  : true
-    };
-    
-    epProps['S'] =
     {
         anchor     : [ 'Perimeter' , { shape : 'Circle' } ]
         ,isSource  : true
@@ -696,20 +483,6 @@ Ext.onReady(function()
         ,isTarget  : true
     };
     
-    epProps['T'] =
-    {
-        anchor     : [ 'Perimeter' , { shape : 'Rectangle' } ]
-        ,isSource  : false
-        ,isTarget  : false
-    };
-    
-    epProps['M'] =
-    {
-        anchor     : [ 'Perimeter' , { shape : 'Rectangle' } ]
-        ,isSource  : true
-        ,isTarget  : true
-    };    
-   
     _p52_formTtipflumc = Ext.create('Ext.window.Window',
     {
         title        : 'TR\u00C1MITE'
@@ -742,60 +515,70 @@ Ext.onReady(function()
                                 ,inputValue : 'S'
                                 ,align      : 'right'
                             }
-                            ,{
-                                xtype       : 'checkbox'
-                                ,boxLabel   : 'EXTERNO'
-                                ,name       : 'SWEXTERNO'
-                                ,inputValue : 'S'
-                                ,align      : 'right'
-                            }
                         ]
                     }
                 ]
-            })//zxc
-            ,Ext.create('Ext.grid.Panel',
-            {
-                title        : 'Permisos'
-                ,hideHeaders : true
-                ,width       : 300
-                ,height      : 200
-                ,border      : 0
-                ,columns     :
+                ,buttonAlign : 'center'
+                ,buttons     :
                 [
                     {
-                        dataIndex : 'DSSISROL'
-                        ,flex     : 1
-                    }
-                    ,{
-                        xtype      : 'checkcolumn'
-                        ,dataIndex : 'SWACTIVO'
-                        ,width     : 30
+                        text     : 'Guardar'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                            var ck = 'Guardando';
+                            try
+                            {
+                                var win  = me.up('window');
+                                var form = me.up('form').getForm();
+                                if(!form.isValid())
+                                {
+                                    throw 'Favor de revisar los datos';
+                                }
+                                
+                                _setLoading(true,win);
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p52_urlMovimientoTtipflumc
+                                    ,params  : _formValuesToParams(form.getValues())
+                                    ,success : function(response)
+                                    {
+                                        _setLoading(false,win);
+                                        var ck = 'Decodificando respuesta al guardar tr\u00E1mite';
+                                        try
+                                        {
+                                            var json = Ext.decode(response.responseText);
+                                            debug('### mov ttipflumc:',json);
+                                            if(json.success==true)
+                                            {
+                                                win.hide();
+                                                _p52_gridTramites.store.reload();
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.message);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _setLoading(false,win);
+                                        errorComunicacion(null,'Error guardando tr\u00E1mite');
+                                    }
+                                });
+                            }
+                            catch(e)
+                            {
+                                _setLoading(false,win);
+                                manejaException(e,ck);
+                            }
+                        }
                     }
                 ]
-                ,store : Ext.create('Ext.data.Store',
-                {
-                    autoLoad : true
-                    ,fields  :
-                    [
-                        'CDSISROL'
-                        ,'DSSISROL'
-                        ,{ name : 'SWACTIVO' , type : 'boolean' }
-                    ]
-                    ,proxy   :
-                    {
-                        type         : 'ajax'
-                        ,url         : _p52_urlRecuperacion
-                        ,extraParams :
-                        {
-                            'params.consulta' : 'RECUPERAR_ROLES'
-                        }
-                        ,reader      :
-                        {
-                            type  : 'json'
-                            ,root : 'list'
-                        }
-                    }
-                })
             })
         ]
         ,showNew : function()
@@ -803,14 +586,6 @@ Ext.onReady(function()
             var me = this;
             me.down('form').getForm().reset();
             me.down('[name=ACCION]').setValue('I');
-            me.down('[name=CDTIPMOD]').setValue(_p52_params.cdtipmod);
-            me.down('grid').getStore().each(function(r)
-            {
-                r.set('SWACTIVO',false);
-            });
-            
-            me.down('grid').getStore().commitChanges();
-            
             centrarVentanaInterna(me.show());
         }
         ,showEdit : function(record)
@@ -818,195 +593,10 @@ Ext.onReady(function()
             var me = this;
             me.down('form').getForm().loadRecord(record);
             me.down('[name=ACCION]').setValue('U');
-            
-            var store = me.down('grid').getStore();
-            
-            store.each(function(r)
-            {
-                r.set('SWACTIVO',false);
-            });
-            
-            store.commitChanges();
-            
-            var ck = 'Recuperando permisos por tr\u00e1mite';
-            try
-            {
-                _mask(ck);
-                Ext.Ajax.request(
-                {
-                    url      : _p52_urlRecuperacion
-                    ,params  :
-                    {
-                        'params.consulta'  : 'RECUPERAR_TTIPFLUROL'
-                        ,'params.cdtipflu' : record.get('CDTIPFLU')
-                    }
-                    ,success : function(response)
-                    {
-                        _unmask();
-                        var ck = 'Decodificando respuesta al recuperar permisos por tr\u00e1mite';
-                        try
-                        {
-                            var json = Ext.decode(response.responseText);
-                            debug('### ttipflurol:',json,'.');
-                            if(json.success === true)
-                            {
-                                ck = 'Iterando permisos';
-                                
-                                for(var i = 0 ; i < json.list.length ; i++)
-                                {
-                                    store.getAt(store.find('CDSISROL',json.list[i].CDSISROL)).set('SWACTIVO',json.list[i].SWACTIVO === 'S');
-                                }
-                                
-                                store.commitChanges();
-                                
-                                centrarVentanaInterna(me.show());
-                            }
-                            else
-                            {
-                                mensajeError(json.message);
-                            }
-                        }
-                        catch(e)
-                        {
-                            manejaException(e,ck);
-                        }
-                    }
-                    ,failure : function()
-                    {
-                        _unmask();
-                        errorComunicacion(null,'Error al recuperar permisos por tr\u00e1mite');
-                    }
-                });
-            }
-            catch(e)
-            {
-                _unmask();
-                manejaException(e,ck);
-            }
+            centrarVentanaInterna(me.show());
         }
-        ,buttonAlign : 'center'
-        ,buttons     :
-        [
-            {
-                text     : 'Guardar'
-                ,icon    : '${icons}disk.png'
-                ,handler : function(me)
-                {
-                    var ck = 'Guardando';
-                    try
-                    {
-                        var win    = me.up('window')
-                            ,form  = win.down('form').getForm()
-                            ,store = win.down('grid').getStore();
-                        
-                        if(!form.isValid())
-                        {
-                            throw 'Favor de revisar los datos';
-                        }
-                        
-                        _setLoading(true,win);
-                        Ext.Ajax.request(
-                        {
-                            url      : _p52_urlMovimientoTtipflumc
-                            ,params  : _formValuesToParams(form.getValues())
-                            ,success : function(response)
-                            {
-                                _setLoading(false,win);
-                                var ck = 'Decodificando respuesta al guardar tr\u00E1mite';
-                                try
-                                {
-                                    var json = Ext.decode(response.responseText);
-                                    debug('### mov ttipflumc:',json);
-                                    if(json.success==true)
-                                    {
-                                        ck = 'Guardando permisos';
-                                        
-                                        var jsonPerm =
-                                        {
-                                            params :
-                                            {
-                                                cdtipflu : json.params.CDTIPFLU
-                                            }
-                                            ,list : []
-                                        };
-                                        
-                                        store.each(function(r)
-                                        {
-                                            if(r.get('SWACTIVO') === true)
-                                            {
-                                                jsonPerm.list.push(
-                                                {
-                                                    CDTIPFLU  : json.params.CDTIPFLU
-                                                    ,CDSISROL : r.get('CDSISROL')
-                                                    ,SWACTIVO : 'S'
-                                                });
-                                            }
-                                        });
-                                        
-                                        debug('jsonPerm:',jsonPerm,'.');
-                                        
-                                        _mask(ck);
-                                        Ext.Ajax.request(
-                                        {
-                                            url       : _p52_urlGuardarTtipflurol
-                                            ,jsonData : jsonPerm
-                                            ,success  : function(response)
-                                            {
-                                                _unmask();
-                                                var ck = 'Decodificando respuesta al guardar permisos de rol';
-                                                try
-                                                {
-                                                    var jsonRespPerm = Ext.decode(response.responseText);
-                                                    debug('### guardar ttipflurol:',jsonRespPerm,'.');
-                                                    if(jsonRespPerm.success === true)
-                                                    {
-                                                        win.hide();
-                                                        _p52_gridTramites.store.reload();
-                                                    }
-                                                    else
-                                                    {
-                                                        mensajeError(jsonRespPerm.message);
-                                                    }
-                                                }
-                                                catch(e)
-                                                {
-                                                    manejaException(e,ck);
-                                                }
-                                            }
-                                            ,failure  : function()
-                                            {
-                                                _unmask();
-                                                errorComunicacion(null,'Error al guardar permisos de tr\u00e1mite');
-                                            }
-                                        });
-                                    }
-                                    else
-                                    {
-                                        mensajeError(json.message);
-                                    }
-                                }
-                                catch(e)
-                                {
-                                    manejaException(e,ck);
-                                }
-                            }
-                            ,failure : function()
-                            {
-                                _setLoading(false,win);
-                                errorComunicacion(null,'Error guardando tr\u00E1mite');
-                            }
-                        });
-                    }
-                    catch(e)
-                    {
-                        _setLoading(false,win);
-                        manejaException(e,ck);
-                    }
-                }
-            }
-        ]
     });
-       
+    
     _p52_formTflujomc = Ext.create('Ext.window.Window',
     {
         title        : 'PROCESO'
@@ -1047,86 +637,84 @@ Ext.onReady(function()
                         ,allowBlank : false
                     }
                     ,{
-                        xtype       : 'fieldcontainer'
+                        xtype       : 'checkbox'
+                        ,boxLabel   : 'VISIBLE'
                         ,fieldLabel : 'PROPIEDADES'
-                        ,items      :
-                        [
-                            {
-                                xtype       : 'checkbox'
-                                ,boxLabel   : 'VISIBLE'
-                                ,name       : 'SWFINAL'
-                                ,inputValue : 'S'
-                            }
-                            ,{
-                                xtype       : 'radio'
-                                ,boxLabel   : 'INDIVIDUAL'
-                                ,name       : 'SWGRUPO'
-                                ,inputValue : 'I'
-                                ,align      : 'right'
-                            }
-                            ,{
-                                xtype       : 'radio'
-                                ,boxLabel   : 'COLECTIVO/GRUPO'
-                                ,name       : 'SWGRUPO'
-                                ,inputValue : 'C'
-                                ,align      : 'right'
-                            }
-                            ,{
-                                xtype       : 'radio'
-                                ,boxLabel   : 'AMBOS'
-                                ,name       : 'SWGRUPO'
-                                ,inputValue : ''
-                                ,align      : 'right'
-                                ,itemId     : 'swgrupoInd'
-                            }
-                        ]
+                        ,name       : 'SWFINAL'
+                        ,inputValue : 'S'
                     }
-                    ,<s:property value="items.comboCdtipram" escapeHtml="false" />
                 ]
-            })
-            ,Ext.create('Ext.grid.Panel',
-            {
-                title        : 'Permisos'
-                ,hideHeaders : true
-                ,width       : 300
-                ,height      : 200
-                ,border      : 0
-                ,columns     :
+                ,buttonAlign : 'center'
+                ,buttons     :
                 [
                     {
-                        dataIndex : 'DSSISROL'
-                        ,flex     : 1
-                    }
-                    ,{
-                        xtype      : 'checkcolumn'
-                        ,dataIndex : 'SWACTIVO'
-                        ,width     : 30
+                        text     : 'Guardar'
+                        ,icon    : '${icons}disk.png'
+                        ,handler : function(me)
+                        {
+                            var ck = 'Guardando';
+                            try
+                            {
+                                var win     = me.up('window');
+                                var formCmp = me.up('form');
+                                var form    = me.up('form').getForm();
+                                if(!form.isValid())
+                                {
+                                    throw 'Favor de revisar los datos';
+                                }
+                                
+                                var formValues = form.getValues();
+                                
+                                _setLoading(true,win);
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p52_urlMovimientoTflujomc
+                                    ,params  : _formValuesToParams(formValues)
+                                    ,success : function(response)
+                                    {
+                                        _setLoading(false,win);
+                                        var ck = 'Decodificando respuesta al guardar proceso';
+                                        try
+                                        {
+                                            var json = Ext.decode(response.responseText);
+                                            debug('### mov tflujomc:',json);
+                                            if(json.success==true)
+                                            {
+                                                win.hide();
+                                                _p52_gridProcesos.store.reload();
+                                                
+                                                if(!_p52_panelDibujo.isHidden())
+                                                {
+                                                    _p52_panelDibujo.setTitle(json.params.DSFLUJOMC);
+                                                    _p52_selectedFlujo.set('DSFLUJOMC' , json.params.DSFLUJOMC);
+                                                    _p52_selectedFlujo.set('SWFINAL'   , json.params.SWFINAL);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                mensajeError(json.message);
+                                            }
+                                        }
+                                        catch(e)
+                                        {
+                                            manejaException(e,ck);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _setLoading(false,win);
+                                        errorComunicacion(null,'Error guardando proceso');
+                                    }
+                                });
+                            }
+                            catch(e)
+                            {
+                                _setLoading(false,win);
+                                manejaException(e,ck);
+                            }
+                        }
                     }
                 ]
-                ,store : Ext.create('Ext.data.Store',
-                {
-                    autoLoad : true
-                    ,fields  :
-                    [
-                        'CDSISROL'
-                        ,'DSSISROL'
-                        ,{ name : 'SWACTIVO' , type : 'boolean' }
-                    ]
-                    ,proxy   :
-                    {
-                        type         : 'ajax'
-                        ,url         : _p52_urlRecuperacion
-                        ,extraParams :
-                        {
-                            'params.consulta' : 'RECUPERAR_ROLES'
-                        }
-                        ,reader      :
-                        {
-                            type  : 'json'
-                            ,root : 'list'
-                        }
-                    }
-                })
             })
         ]
         ,showNew : function()
@@ -1144,15 +732,6 @@ Ext.onReady(function()
                 me.down('form').getForm().reset();
                 me.down('[name=ACCION]').setValue('I');
                 me.down('[name=CDTIPFLU]').setValue(sel[0].get('CDTIPFLU'));
-                me.down('#swgrupoInd').setValue(true);
-                
-                me.down('grid').getStore().each(function(r)
-                {
-                    r.set('SWACTIVO',false);
-                });
-                
-                me.down('grid').getStore().commitChanges();
-                
                 centrarVentanaInterna(me.show());
             }
             catch(e)
@@ -1163,217 +742,10 @@ Ext.onReady(function()
         ,showEdit : function(record)
         {
             var me = this;
-            debug('record:',record);
             me.down('form').getForm().loadRecord(record);
             me.down('[name=ACCION]').setValue('U');
-            
-            me.down('#swgrupoInd').setValue(true);
-            
-            if(!Ext.isEmpty(record.get('SWGRUPO')))
-            {
-                debug('se marcara radio:',record.get('SWGRUPO'),',');
-                me.down('[name=SWGRUPO][inputValue='+record.get('SWGRUPO')+']').setValue(true);
-            }
-            
-            var store = me.down('grid').getStore();
-            
-            store.each(function(r)
-            {
-                r.set('SWACTIVO',false);
-            });
-            
-            store.commitChanges();
-            
-            var ck = 'Recuperando permisos por proceso';
-            try
-            {
-                _mask(ck);
-                Ext.Ajax.request(
-                {
-                    url      : _p52_urlRecuperacion
-                    ,params  :
-                    {
-                        'params.consulta'   : 'RECUPERAR_TFLUJOROL'
-                        ,'params.cdtipflu'  : record.get('CDTIPFLU')
-                        ,'params.cdflujomc' : record.get('CDFLUJOMC')
-                    }
-                    ,success : function(response)
-                    {
-                        _unmask();
-                        var ck = 'Decodificando respuesta al recuperar permisos por proceso';
-                        try
-                        {
-                            var json = Ext.decode(response.responseText);
-                            debug('### tflujorol:',json,'.');
-                            if(json.success === true)
-                            {
-                                ck = 'Iterando permisos';
-                                
-                                for(var i = 0 ; i < json.list.length ; i++)
-                                {
-                                    store.getAt(store.find('CDSISROL',json.list[i].CDSISROL)).set('SWACTIVO',json.list[i].SWACTIVO === 'S');
-                                }
-                                
-                                store.commitChanges();
-                                
-                                centrarVentanaInterna(me.show());
-                            }
-                            else
-                            {
-                                mensajeError(json.message);
-                            }
-                        }
-                        catch(e)
-                        {
-                            manejaException(e,ck);
-                        }
-                    }
-                    ,failure : function()
-                    {
-                        _unmask();
-                        errorComunicacion(null,'Error al recuperar permisos por proceso');
-                    }
-                });
-            }
-            catch(e)
-            {
-                _unmask();
-                manejaException(e,ck);
-            }
+            centrarVentanaInterna(me.show());
         }
-        ,buttonAlign : 'center'
-        ,buttons     :
-        [
-            {
-                text     : 'Guardar'
-                ,icon    : '${icons}disk.png'
-                ,handler : function(me)
-                {
-                    var ck = 'Guardando';
-                    try
-                    {
-                        var win      = me.up('window')
-                            ,formCmp = win.down('form')
-                            ,form    = win.down('form').getForm()
-                            ,store   = win.down('grid').getStore();
-                        
-                        if(!form.isValid())
-                        {
-                            throw 'Favor de revisar los datos';
-                        }
-                        
-                        var formValues = form.getValues();
-                        
-                        _setLoading(true,win);
-                        Ext.Ajax.request(
-                        {
-                            url      : _p52_urlMovimientoTflujomc
-                            ,params  : _formValuesToParams(formValues)
-                            ,success : function(response)
-                            {
-                                _setLoading(false,win);
-                                var ck = 'Decodificando respuesta al guardar proceso';
-                                try
-                                {
-                                    var json = Ext.decode(response.responseText);
-                                    debug('### mov tflujomc:',json);
-                                    if(json.success==true)
-                                    {
-                                        ck = 'Guardando permisos';
-                                        
-                                        var jsonPerm =
-                                        {
-                                            params :
-                                            {
-                                                cdtipflu   : json.params.CDTIPFLU
-                                                ,cdflujomc : json.params.CDFLUJOMC
-                                            }
-                                            ,list : []
-                                        };
-                                        
-                                        store.each(function(r)
-                                        {
-                                            if(r.get('SWACTIVO') === true)
-                                            {
-                                                jsonPerm.list.push(
-                                                {
-                                                    CDTIPFLU   : json.params.CDTIPFLU
-                                                    ,CDFLUJOMC : json.params.CDFLUJOMC
-                                                    ,CDSISROL  : r.get('CDSISROL')
-                                                    ,SWACTIVO  : 'S'
-                                                });
-                                            }
-                                        });
-                                        
-                                        debug('jsonPerm:',jsonPerm,'.');
-                                        
-                                        _mask(ck);
-                                        Ext.Ajax.request(
-                                        {
-                                            url       : _p52_urlGuardarTflujorol
-                                            ,jsonData : jsonPerm
-                                            ,success  : function(response)
-                                            {
-                                                _unmask();
-                                                var ck = 'Decodificando respuesta al guardar permisos de rol';
-                                                try
-                                                {
-                                                    var jsonRespPerm = Ext.decode(response.responseText);
-                                                    debug('### guardar ttipflurol:',jsonRespPerm,'.');
-                                                    if(jsonRespPerm.success === true)
-                                                    {
-                                                        win.hide();
-                                                        _p52_gridProcesos.store.reload();
-                                                        
-                                                        if(!_p52_panelDibujo.isHidden())
-                                                        {
-                                                            _p52_panelDibujo.setTitle(json.params.DSFLUJOMC);
-                                                            _p52_selectedFlujo.set('DSFLUJOMC' , json.params.DSFLUJOMC);
-                                                            _p52_selectedFlujo.set('SWFINAL'   , json.params.SWFINAL);
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        mensajeError(jsonRespPerm.message);
-                                                    }
-                                                }
-                                                catch(e)
-                                                {
-                                                    manejaException(e,ck);
-                                                }
-                                            }
-                                            ,failure  : function()
-                                            {
-                                                _unmask();
-                                                errorComunicacion(null,'Error al guardar permisos de proceso');
-                                            }
-                                        });
-                                    }
-                                    else
-                                    {
-                                        mensajeError(json.message);
-                                    }
-                                }
-                                catch(e)
-                                {
-                                    manejaException(e,ck);
-                                }
-                            }
-                            ,failure : function()
-                            {
-                                _setLoading(false,win);
-                                errorComunicacion(null,'Error guardando proceso');
-                            }
-                        });
-                    }
-                    catch(e)
-                    {
-                        _setLoading(false,win);
-                        manejaException(e,ck);
-                    }
-                }
-            }
-        ]
     });
     
     _p52_formEstado = Ext.create('Ext.window.Window',
@@ -1790,153 +1162,6 @@ Ext.onReady(function()
             centrarVentanaInterna(me.show());
         }
     });
-    
-    _p52_formTrequisi = Ext.create('Ext.window.Window',
-    {
-        title        : 'REQUISITO'
-        ,modal       : true
-        ,closeAction : 'hide'
-        ,items       :
-        [
-            Ext.create('Ext.form.Panel',
-            {
-                defaults : { style : 'margin:5px;' }
-                ,border  : 0
-                ,items   :
-                [
-                    <s:property value="items.trequisiFormItems" escapeHtml="false" />
-                    ,{
-                        xtype       : 'fieldcontainer'
-                        ,fieldLabel : 'PROPIEDADES'
-                        ,items      :
-                        [
-                            {
-                                xtype       : 'checkbox'
-                                ,boxLabel   : 'CAPTURAR DATO'
-                                ,name       : 'SWPIDEDATO'
-                                ,inputValue : 'S'
-                            }
-                        ]
-                    }
-                ]
-                ,buttonAlign : 'center'
-                ,buttons     :
-                [
-                    {
-                        text     : 'Guardar'
-                        ,icon    : '${icons}disk.png'
-                        ,handler : function(me)
-                        {
-                            var ck = 'Guardando';
-                            try
-                            {
-                                var win  = me.up('window');
-                                var form = me.up('form').getForm();
-                                if(!form.isValid())
-                                {
-                                    throw 'Favor de revisar los datos';
-                                }
-                                
-                                _setLoading(true,win);
-                                Ext.Ajax.request(
-                                {
-                                    url      : _p52_urlMovimientoTrequisi
-                                    ,params  : _formValuesToParams(form.getValues())
-                                    ,success : function(response)
-                                    {
-                                        _setLoading(false,win);
-                                        var ck = 'Decodificando respuesta al guardar requisito';
-                                        try
-                                        {
-                                            var json = Ext.decode(response.responseText);
-                                            debug('### mov trequisi:',json);
-                                            if(json.success==true)
-                                            {
-                                                win.hide();
-                                                _p52_panelRevision.hide();
-                                                _p52_panelCanvas.enable();
-                                                _fieldById('_p52_gridRevReq').store.reload();
-                                            }
-                                            else
-                                            {
-                                                mensajeError(json.message);
-                                            }
-                                        }
-                                        catch(e)
-                                        {
-                                            manejaException(e,ck);
-                                        }
-                                    }
-                                    ,failure : function()
-                                    {
-                                        _setLoading(false,win);
-                                        errorComunicacion(null,'Error guardando requisito');
-                                    }
-                                });
-                            }
-                            catch(e)
-                            {
-                                _setLoading(false,win);
-                                manejaException(e,ck);
-                            }
-                        }
-                    }
-                ]
-            })
-        ]
-        ,showNew : function()
-        {
-            var me = this;
-            me.down('form').getForm().reset();
-            me.down('[name=ACCION]').setValue('I');
-            centrarVentanaInterna(me.show());
-        }
-        ,showEdit : function(record)
-        {
-            var me = this;
-            me.down('form').getForm().loadRecord(record);
-            me.down('[name=ACCION]').setValue('U');
-            centrarVentanaInterna(me.show());
-        }
-    });
-    
- 	_p52_winVarsCorreo = Ext.create('Ext.window.Window',{
-		title        : 'VARIABLES'
-		,modal       : true
-		,closeAction : 'hide'
-  		,items       : [
-		                new SelectorMultiple()
-		                ]
-		,buttonAlign : 'center'		                
- 		,buttons     : [
- 		                {
- 		                	text  : 'Guardar',
- 		                	icon  : _GLOBAL_DIRECTORIO_ICONOS+'disk.png',
- 		                	handler : function(me){
- 		                		var win = me.up('window');
- 		                		var nameVar   = win.nameCmpVar;
- 		                		var name      = win.nameCmp;
- 		                		var vars      = win.down('[itemId=panVars]').getValue().split(',');
- 		                		var numvars   = _p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name='+name+']').getValue());
- 		                		if (numvars != vars.length){
- 		                			mensajeError('El numero de variables seleccionadas no coinciden con las llaves del texto');
- 		                			return;
- 		                		}
- 		                		_p52_formCorreos.down('[name='+nameVar+']').setValue(win.down('[itemId=panVars]').getValue());
- 		                		win.close();
- 		                	}
- 		                }
- 		                ]
-	}); 
-	
-	if (Number(_p52_params.cdtipmod) === 1) {
-	    _p52_tituloPrincipal = 'C O N F I G U R A D O R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P R O C E S O S';
-	} else if (Number(_p52_params.cdtipmod) === 2) {
-        _p52_tituloPrincipal = 'C O N F I G U R A D O R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S U C U R S A L E S';
-    } else {
-        _p52_tituloPrincipal = '- E R R O R -';
-    }
-	
     ////// componentes //////
     
     ////// contenido //////
@@ -1944,8 +1169,8 @@ Ext.onReady(function()
     {
         renderTo : '_p52_divpri'
         ,itemId  : '_p52_panelpri'
-        ,title   : _p52_tituloPrincipal
-        ,height  : 730
+        ,title   : 'C O N F I G U R A D O R&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P R O C E S O S'
+        ,height  : 700
         ,border  : 0
         ,layout  : 'border'
         ,header  :
@@ -1964,7 +1189,7 @@ Ext.onReady(function()
                     xtype    : 'button'
                     ,text    : 'Recargar'
                     ,icon    : '${icons}control_repeat_blue.png'
-                    ,handler : function(){ _mask('Cargando...'); location.reload(); }
+                    ,handler : function(){ location.reload(); }
                 }
             ]
         }
@@ -1995,7 +1220,6 @@ Ext.onReady(function()
                                 xtype    : 'button'
                                 ,text    : 'Agregar'
                                 ,icon    : '${icons}add.png'
-                                ,hidden  : Number(_p52_params.cdtipmod) !== 1
                                 ,handler : function(){ _p52_formTtipflumc.showNew(); }
                             }]
                         }
@@ -2011,7 +1235,6 @@ Ext.onReady(function()
                                 ,width   : 30
                                 ,icon    : '${icons}pencil.png'
                                 ,tooltip : 'Editar'
-                                ,hidden  : Number(_p52_params.cdtipmod) !== 1
                                 ,handler : function(me,row,col,item,e,record)
                                 {
                                     _p52_formTtipflumc.showEdit(record);
@@ -2029,8 +1252,6 @@ Ext.onReady(function()
                                 ,'CDTIPSUP'
                                 ,'SWMULTIPOL'
                                 ,'SWREQPOL'
-                                ,'CDTIPMOD'
-                                ,'SWEXTERNO'
                             ]
                             ,proxy   :
                             {
@@ -2038,8 +1259,7 @@ Ext.onReady(function()
                                 ,type        : 'ajax'
                                 ,extraParams :
                                 {
-                                    'params.consulta' : 'RECUPERAR_TTIPFLUMC',
-                                    'params.cdtipmod' : _p52_params.cdtipmod
+                                    'params.consulta' : 'RECUPERAR_TTIPFLUMC'
                                 }
                                 ,reader      :
                                 {
@@ -2076,7 +1296,6 @@ Ext.onReady(function()
                                 xtype    : 'button'
                                 ,text    : 'Agregar'
                                 ,icon    : '${icons}add.png'
-                                ,hidden  : Number(_p52_params.cdtipmod) !== 1
                                 ,handler : function(me){ _p52_formTflujomc.showNew(); }
                             }]
                         }
@@ -2088,10 +1307,9 @@ Ext.onReady(function()
                                 ,flex     : 1
                             }
                             ,{
-                                xtype   : 'actioncolumn'
-                                ,width  : 30
-                                ,hidden : Number(_p52_params.cdtipmod) !== 1
-                                ,items  :
+                                xtype    : 'actioncolumn'
+                                ,width   : 50
+                                ,items   :
                                 [
                                     {
                                         icon    : '${icons}pencil.png'
@@ -2101,14 +1319,7 @@ Ext.onReady(function()
                                             _p52_formTflujomc.showEdit(record);
                                         }
                                     }
-                                ]
-                            }
-                            ,{
-                                xtype  : 'actioncolumn'
-                                ,width : 30
-                                ,items :
-                                [
-                                    {
+                                    ,{
                                         icon     : '${icons}chart_line.png'
                                         ,tooltip : 'Modelar'
                                         ,handler : function(view,row,col,item,e,record)
@@ -2131,8 +1342,6 @@ Ext.onReady(function()
                                 ,'CDFLUJOMC'
                                 ,'DSFLUJOMC'
                                 ,'SWFINAL'
-                                ,'CDTIPRAM'
-                                ,'SWGRUPO'
                             ]
                             ,proxy   :
                             {
@@ -2196,9 +1405,8 @@ Ext.onReady(function()
                         ,items :
                         [
                             {
-                                title       : 'ESTATUS'
+                                title       : 'STATUS'
                                 ,itemId     : '_p52_catalogoEstados'
-                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2232,7 +1440,6 @@ Ext.onReady(function()
                             ,{
                                 title       : 'PANTALLAS'
                                 ,itemId     : '_p52_catalogoPantallas'
-                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2254,7 +1461,6 @@ Ext.onReady(function()
                             ,{
                                 title       : 'COMPONENTES'
                                 ,itemId     : '_p52_catalogoComponentes'
-                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2276,7 +1482,6 @@ Ext.onReady(function()
                             ,{
                                 title       : 'PROCESOS'
                                 ,itemId     : '_p52_catalogoProcesos'
-                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2313,7 +1518,6 @@ Ext.onReady(function()
                             ,{
                                 title       : 'VALIDACIONES'
                                 ,itemId     : '_p52_catalogoValidaciones'
-                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2339,7 +1543,6 @@ Ext.onReady(function()
                             ,{
                                 title       : 'REVISIONES'
                                 ,itemId     : '_p52_catalogoRevisiones'
-                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
                                 ,defaults   : { style : 'margin : 5px;' }
                                 ,autoScroll : true
                                 ,layout     :
@@ -2363,55 +1566,6 @@ Ext.onReady(function()
                                     }
                                 }]
                             }
-                            ,{
-                                title       : 'CORREOS'
-                                ,itemId     : '_p52_catalogoCorreos'
-                                ,hidden     : Number(_p52_params.cdtipmod) !== 1
-                                ,defaults   : { style : 'margin : 5px;' }
-                                ,autoScroll : true
-                                ,layout     :
-                                {
-                                    type     : 'table'
-                                    ,columns : 2
-                                    ,tdAttrs : {valign:'top'}
-                                }
-                            }
-                            ,{
-                                title       : 'SUCURSALES'
-                                ,itemId     : '_p52_catalogoSucursales'
-                                ,hidden     : Number(_p52_params.cdtipmod) !== 2
-                                ,defaults   : { style : 'margin : 5px;' }
-                                ,autoScroll : true
-                                ,layout     :
-                                {
-                                    type     : 'table'
-                                    ,columns : 2
-                                    ,tdAttrs : { valign : 'top' }
-                                }
-                            }
-                            ,{
-                                title       : 'T\u00CDTULOS'
-                                ,itemId     : '_p52_catalogoTitulos'
-                                ,defaults   : { style : 'margin : 5px;' }
-                                ,autoScroll : true
-                                ,layout     :
-                                {
-                                    type     : 'table'
-                                    ,columns : 2
-                                    ,tdAttrs : { valign : 'top' }
-                                }
-                                ,tools :
-                                [{
-                                    type     : 'help'
-                                    ,tooltip : 'Tips'
-                                    ,handler : function()
-                                    {
-                                        _p52_ventanaTips([
-                                            'Se utilizan para dividir o seccionar el flujo'
-                                        ]);
-                                    }
-                                }]
-                            }
                         ]
                     })
                     ,Ext.create('Ext.panel.Panel',
@@ -2430,102 +1584,6 @@ Ext.onReady(function()
                                 ,hidden      : true
                                 ,border      : 0
                                 ,buttonAlign : 'center'
-                                ,tools       : [
-                                    {
-                                        type    : 'unpin',
-                                        tooltip : 'Copiar datos',
-                                        handler : function (event, toolEl, owner, tool) {
-                                            var ck = 'Copiando propiedades de estatus';
-                                            try {
-                                                var panel = tool.up('panel');
-                                                debug('panel:', panel);
-                                                var store = panel.down('grid').getStore();
-                                                var roles = {};
-                                                store.each(function (record) {
-                                                    roles[record.get('CDSISROL')] = {
-                                                        SWVER     : record.get('SWVER'),
-                                                        SWVERDEF  : record.get('SWVERDEF'),
-                                                        SWTRABAJO : record.get('SWTRABAJO'),
-                                                        SWCOMPRA  : record.get('SWCOMPRA'),
-                                                        SWREASIG  : record.get('SWREASIG')
-                                                    };
-                                                });
-                                                var props = {
-                                                    roles : roles
-                                                };
-                                                var names = [
-                                                    'TIMEWRN1H',
-                                                    'TIMEWRN1M',
-                                                    'TIMEWRN2H',
-                                                    'TIMEWRN2M',
-                                                    'TIMEMAXH',
-                                                    'TIMEMAXM',
-                                                    'CDTIPASIG',
-                                                    'STATUSOUT',
-                                                    'CDETAPA',
-                                                    'SWFINNODE'
-                                                ];
-                                                var values = panel.down('form').getValues();
-                                                debug('values:', values);
-                                                for (var i = 0; i < names.length; i++) {
-                                                    var name = names[i];
-                                                    props[name] = values[name];
-                                                }
-                                                debug('props:', props);
-                                                var encode = Ext.encode(props);
-                                                debug('encode:', encode);
-                                                executeCopy(encode);
-                                            } catch (e) {
-                                                manejaException(e, ck);
-                                            }
-                                        }
-                                    }, {
-                                        type    : 'pin',
-                                        tooltip : 'Pegar datos',
-                                        handler : function (event, toolEl, owner, tool) {
-                                            var ck = 'Pegando propiedades de estatus';
-                                            try {
-                                                var encode = window.prompt("Pegar: Ctrl+V, Enter");
-                                                if (Ext.isEmpty(encode)) {
-                                                    return;
-                                                }
-                                                debug('encode:', encode);
-                                                var decode = Ext.decode(encode);
-                                                debug('decode:', decode);
-                                                var panel = tool.up('panel');
-                                                debug('panel:', panel);
-                                                var names = [
-                                                    'TIMEWRN1H',
-                                                    'TIMEWRN1M',
-                                                    'TIMEWRN2H',
-                                                    'TIMEWRN2M',
-                                                    'TIMEMAXH',
-                                                    'TIMEMAXM',
-                                                    'STATUSOUT',
-                                                    'CDETAPA',
-                                                    'SWFINNODE'
-                                                ];
-                                                for (var i = 0; i < names.length; i++) {
-                                                    var name = names[i];
-                                                    panel.down('[name=' + name + ']').setValue(decode[name]);
-                                                }
-                                                if (!Ext.isEmpty(decode.CDTIPASIG)) {
-                                                    Ext.ComponentQuery.query('[name=CDTIPASIG][inputValue=1]')[0].setValue(decode.CDTIPASIG);
-                                                }
-                                                var store = panel.down('grid').getStore();
-                                                store.each(function (record) {
-                                                    record.set('SWVER'     , decode.roles[record.get('CDSISROL')].SWVER     || false);
-                                                    record.set('SWVERDEF'  , decode.roles[record.get('CDSISROL')].SWVERDEF  || false);
-                                                    record.set('SWTRABAJO' , decode.roles[record.get('CDSISROL')].SWTRABAJO || false);
-                                                    record.set('SWCOMPRA'  , decode.roles[record.get('CDSISROL')].SWCOMPRA  || false);
-                                                    record.set('SWREASIG'  , decode.roles[record.get('CDSISROL')].SWREASIG  || false);
-                                                });
-                                            } catch (e) {
-                                                manejaException(e, ck);
-                                            }
-                                        }
-                                    }
-                                ]
                                 ,buttons     :
                                 [
                                     {
@@ -2556,10 +1614,6 @@ Ext.onReady(function()
                                         xtype     : 'form'
                                         ,defaults : { style : 'margin:5px;' }
                                         ,border   : 0
-                                        ,layout   : {
-                                            type     : 'table'
-                                            ,columns : 2
-                                        }
                                         ,items    :
                                         [
                                             {
@@ -2612,89 +1666,63 @@ Ext.onReady(function()
                                                 ,hidden     : !_p52_debug
                                             }
                                             ,{
-                                                xtype       : 'numberfield'
-                                                ,fieldLabel : 'Alerta 1 horas'
-                                                ,minValue   : 0
-                                                ,maxValue   : 40
-                                                ,increment  : 1
-                                                ,name       : 'TIMEWRN1H'
-                                                ,allowBlank : false
-                                            }
-                                            ,{
-                                                xtype : 'image'
-                                                ,src  : '${icons}flag_yellow.png'
-                                            }
-                                            ,{
-                                                xtype       : 'numberfield'
-                                                ,fieldLabel : 'Alerta 1 minutos'
-                                                ,minValue   : 0
-                                                ,maxValue   : 55
-                                                ,increment  : 5
-                                                ,name       : 'TIMEWRN1M'
-                                                ,allowBlank : false
-                                            }
-                                            ,{
-                                                xtype : 'image'
-                                                ,src  : '${icons}flag_yellow.png'
-                                            }
-                                            ,{
-                                                xtype       : 'numberfield'
-                                                ,fieldLabel : 'Alerta 2 horas'
-                                                ,minValue   : 0
-                                                ,maxValue   : 40
-                                                ,increment  : 1
-                                                ,name       : 'TIMEWRN2H'
-                                                ,allowBlank : false
-                                            }
-                                            ,{
-                                                xtype : 'image'
-                                                ,src  : '${icons}flag_red.png'
-                                            }
-                                            ,{
-                                                xtype       : 'numberfield'
-                                                ,fieldLabel : 'Alerta 2 minutos'
-                                                ,minValue   : 00
-                                                ,maxValue   : 55
-                                                ,increment  : 5
-                                                ,name       : 'TIMEWRN2M'
-                                                ,allowBlank : false
-                                            }
-                                            ,{
-                                                xtype : 'image'
-                                                ,src  : '${icons}flag_red.png'
-                                            }
-                                            ,{
-                                                xtype       : 'numberfield'
-                                                ,fieldLabel : 'Tiempo m\u00e1ximo horas'
+                                                xtype       : 'slider'
+                                                ,fieldLabel : 'Tiempo m\u00e1ximo en horas'
                                                 ,minValue   : 0
                                                 ,maxValue   : 40
                                                 ,increment  : 1
                                                 ,name       : 'TIMEMAXH'
-                                                ,allowBlank : false
+                                                ,labelAlign : 'top'
                                             }
                                             ,{
-                                                xtype : 'image'
-                                                ,src  : '${icons}clock_red.png'
-                                            }
-                                            ,{
-                                                xtype       : 'numberfield'
-                                                ,fieldLabel : 'Tiempo m\u00e1ximo minutos'
+                                                xtype       : 'slider'
+                                                ,fieldLabel : 'Tiempo m\u00e1ximo en minutos'
                                                 ,minValue   : 0
                                                 ,maxValue   : 55
                                                 ,increment  : 5
                                                 ,name       : 'TIMEMAXM'
-                                                ,allowBlank : false
+                                                ,labelAlign : 'top'
                                             }
                                             ,{
-                                                xtype : 'image'
-                                                ,src  : '${icons}clock_red.png'
+                                                xtype       : 'slider'
+                                                ,fieldLabel : 'Tiempo primer alerta en horas'
+                                                ,minValue   : 0
+                                                ,maxValue   : 40
+                                                ,increment  : 1
+                                                ,name       : 'TIMEWRN1H'
+                                                ,labelAlign : 'top'
+                                            }
+                                            ,{
+                                                xtype       : 'slider'
+                                                ,fieldLabel : 'Tiempo primer alerta en minutos'
+                                                ,minValue   : 0
+                                                ,maxValue   : 55
+                                                ,increment  : 5
+                                                ,name       : 'TIMEWRN1M'
+                                                ,labelAlign : 'top'
+                                            }
+                                            ,{
+                                                xtype       : 'slider'
+                                                ,fieldLabel : 'Tiempo segunda alerta en horas'
+                                                ,minValue   : 0
+                                                ,maxValue   : 40
+                                                ,increment  : 1
+                                                ,name       : 'TIMEWRN2H'
+                                                ,labelAlign : 'top'
+                                            }
+                                            ,{
+                                                xtype       : 'slider'
+                                                ,fieldLabel : 'Tiempo segunda alerta en minutos'
+                                                ,minValue   : 00
+                                                ,maxValue   : 55
+                                                ,increment  : 5
+                                                ,name       : 'TIMEWRN2M'
+                                                ,labelAlign : 'top'
                                             }
                                             ,{
                                                 xtype        : 'fieldcontainer'
                                                 ,fieldLabel  : 'Tipo de asignaci\u00f3n'
                                                 ,labelAlign  : 'top'
-                                                ,colspan     : 2
-                                                ,width       : 200
                                                 ,defaultType : 'radiofield'
                                                 ,defaults    : { flex : 1 }
                                                 ,layout      : 'hbox'
@@ -2706,11 +1734,6 @@ Ext.onReady(function()
                                                         ,inputValue : 1
                                                     }
                                                     ,{
-                                                        boxLabel    : 'Propio'
-                                                        ,name       : 'CDTIPASIG'
-                                                        ,inputValue : 2
-                                                    }
-                                                    ,{
                                                         boxLabel    : 'Carrusel'
                                                         ,name       : 'CDTIPASIG'
                                                         ,inputValue : 3
@@ -2719,53 +1742,6 @@ Ext.onReady(function()
                                                         boxLabel    : 'Carga'
                                                         ,name       : 'CDTIPASIG'
                                                         ,inputValue : '4'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                xtype            : 'combo'
-                                                ,fieldLabel      : 'Estatus al vencer'
-                                                ,allowBlank      : false
-                                                ,colspan         : 2
-                                                ,valueField      : 'key'
-                                                ,name            : 'STATUSOUT'
-                                                ,displayField    : 'value'
-                                                ,matchFieldWidth : false
-                                                ,forceSelection  : true
-                                                ,listConfig      : {
-                                                    maxHeight : 150
-                                                    ,minWidth : 120
-                                                }
-                                                ,queryMode       : 'local'
-                                                ,store           : Ext.create('Ext.data.Store', {
-                                                    model : 'Generic',
-                                                    data  : [
-                                                        {
-                                                            key   : '-1',
-                                                            value : 'NINGUNO'
-                                                        }, {
-                                                            key   : '999',
-                                                            value : 'VENCIDO'
-                                                        }, {
-                                                            key   : '4',
-                                                            value : 'RECHAZADO'
-                                                        }
-                                                    ]
-                                                })
-                                            }
-                                            ,<s:property value="items.comboEtapa" escapeHtml="false" />
-                                            ,{border : 0}
-                                            ,{
-                                                xtype       : 'fieldcontainer'
-                                                ,fieldLabel : 'Propiedades'
-                                                ,colspan    : 2
-                                                ,items      :
-                                                [
-                                                    {
-                                                        xtype       : 'checkbox'
-                                                        ,boxLabel   : 'Estado final'
-                                                        ,name       : 'SWFINNODE'
-                                                        ,inputValue : 'S'
                                                     }
                                                 ]
                                             }
@@ -2787,12 +1763,6 @@ Ext.onReady(function()
                                                 text       : 'VER'
                                                 ,xtype     : 'checkcolumn'
                                                 ,dataIndex : 'SWVER'
-                                                ,width     : 55
-                                            }
-                                            ,{
-                                                text       : 'INICIO'
-                                                ,xtype     : 'checkcolumn'
-                                                ,dataIndex : 'SWVERDEF'
                                                 ,width     : 55
                                             }
                                             ,{
@@ -2823,7 +1793,6 @@ Ext.onReady(function()
                                                 ,'DSSISROL'
                                                 ,{ name : 'SWVER'     , type : 'boolean' }
                                                 ,{ name : 'SWTRABAJO' , type : 'boolean' }
-                                                ,{ name : 'SWVERDEF'  , type : 'boolean' }
                                                 ,{ name : 'SWCOMPRA'  , type : 'boolean' }
                                                 ,{ name : 'SWREASIG'  , type : 'boolean' }
                                                 ,'CDROLASIG'
@@ -2849,7 +1818,6 @@ Ext.onReady(function()
                                         itemId   : '_p52_gridEstAvi'
                                         ,title   : 'AVISOS'
                                         ,height  : 180
-                                        ,hidden  : true
                                         ,plugins :
                                         [
                                             Ext.create('Ext.grid.plugin.CellEditing',
@@ -3106,12 +2074,10 @@ Ext.onReady(function()
                                         ,maxLength     : 8
                                     }
                                     ,{
-                                        xtype       : 'textarea'
-                                        ,fieldLabel : 'VALIDACI\u00D3N CLIENTE'
-                                        ,labelAlign : 'top'
-                                        ,name       : 'JSVALIDA'
-                                        ,width      : 270
-                                        ,height     : 200
+                                        xtype          : 'textarea'
+                                        ,fieldLabel    : 'VALIDACI\u00D3N CLIENTE'
+                                        ,labelAlign    : 'top'
+                                        ,name          : 'JSVALIDA'
                                     }
                                 ]
                             })
@@ -3121,7 +2087,6 @@ Ext.onReady(function()
                                 ,title       : 'REVISI\u00D3N'
                                 ,hidden      : true
                                 ,buttonAlign : 'center'
-                                ,border      : 0
                                 ,buttons     :
                                 [
                                     {
@@ -3211,7 +2176,7 @@ Ext.onReady(function()
                                             ,{
                                                 xtype       : 'textfield'
                                                 ,fieldLabel : 'Nombre'
-                                                //,labelAlign : 'top'
+                                                ,labelAlign : 'top'
                                                 ,name       : 'DSREVISI'
                                                 ,allowBlank : false
                                             }
@@ -3219,117 +2184,9 @@ Ext.onReady(function()
                                     }
                                     ,Ext.create('Ext.grid.Panel',
                                     {
-                                        itemId    : '_p52_gridRevReq'
-                                        ,title    : 'REQUISITOS'
-                                        ,height   : 250
-                                        ,tools    :
-                                        [{
-                                            type     : 'plus'
-                                            ,tooltip : 'Agregar'
-                                            ,handler : function()
-                                            {
-                                                centrarVentanaInterna(
-                                                    Ext.MessageBox.confirm(
-                                                        'Confirmar'
-                                                        ,'Se perder\u00e1n los cambios no guardados en la revisi\u00f3n<br>¿Desea continuar?'
-                                                        ,function(btn)
-                                                        {
-                                                            if(btn === 'yes')
-                                                            {
-                                                                _p52_formTrequisi.showNew();
-                                                            }
-                                                        }
-                                                    )
-                                                );
-                                            }
-                                        }]
-                                        ,features :
-                                        [{
-                                            ftype           : 'groupingsummary'
-                                            ,startCollapsed : true
-                                            ,groupHeaderTpl :
-                                            [
-                                                '{name}'
-                                            ]
-                                        }]
-                                        ,columns :
-                                        [
-                                            {
-                                                text       : 'REQUISITO'
-                                                ,dataIndex : 'DSREQUISI'
-                                                ,flex      : 1
-                                            }
-                                            ,{
-                                                xtype    : 'actioncolumn'
-                                                ,tooltip : 'Editar'
-                                                ,icon    : '${icons}pencil.png'
-                                                ,width   : 30
-                                                ,handler : function(me,row,col,item,e,record)
-                                                {
-                                                    centrarVentanaInterna(
-                                                        Ext.MessageBox.confirm(
-                                                            'Confirmar'
-                                                            ,'Se perder\u00e1n los cambios no guardados en la revisi\u00f3n<br>¿Desea continuar?'
-                                                            ,function(btn)
-                                                            {
-                                                                if(btn === 'yes')
-                                                                {
-                                                                    _p52_formTrequisi.showEdit(record);
-                                                                }
-                                                            }
-                                                        )
-                                                    );
-                                                }
-                                            }
-                                            ,{
-                                                text       : 'INC.'
-                                                ,xtype     : 'checkcolumn'
-                                                ,dataIndex : 'SWLISTA'
-                                                ,width     : 50
-                                            }
-                                            ,{
-                                                text       : 'REQ.'
-                                                ,xtype     : 'checkcolumn'
-                                                ,dataIndex : 'SWOBLIGA'
-                                                ,width     : 50
-                                            }
-                                        ]
-                                        ,store : Ext.create('Ext.data.Store',
-                                        {
-                                            autoLoad    : true
-                                            ,groupField : 'DSTIPTRA'
-                                            ,fields     :
-                                            [
-                                                'CDREQUISI'
-                                                ,'DSREQUISI'
-                                                ,'CDTIPTRA'
-                                                ,'DSTIPTRA'
-                                                ,{ name : 'SWLISTA'   , type : 'boolean' }
-                                                ,{ name : 'SWOBLIGA'  , type : 'boolean' }
-                                                ,'SWPIDEDATO'
-                                            ]
-                                            ,proxy   :
-                                            {
-                                                type         : 'ajax'
-                                                ,url         : _p52_urlRecuperacion
-                                                ,extraParams :
-                                                {
-                                                    'params.consulta' : 'RECUPERAR_TREQUISI'
-                                                }
-                                                ,reader      :
-                                                {
-                                                    type  : 'json'
-                                                    ,root : 'list'
-                                                }
-                                            }
-                                        })
-                                    })
-                                    ,Ext.create('Ext.grid.Panel',
-                                    {
                                         itemId    : '_p52_gridRevDoc'
                                         ,title    : 'DOCUMENTOS'
-                                        ,height   : 250
-                                        ,border   : 0
+                                        ,height   : 320
                                         ,tools    :
                                         [{
                                             type     : 'plus'
@@ -3390,16 +2247,10 @@ Ext.onReady(function()
                                                 }
                                             }
                                             ,{
-                                                text       : 'INC.'
-                                                ,xtype     : 'checkcolumn'
-                                                ,dataIndex : 'SWLISTA'
-                                                ,width     : 50
-                                            }
-                                            ,{
-                                                text       : 'REQ.'
+                                                text       : 'OBLIGA.'
                                                 ,xtype     : 'checkcolumn'
                                                 ,dataIndex : 'SWOBLIGA'
-                                                ,width     : 50
+                                                ,width     : 70
                                             }
                                         ]
                                         ,store : Ext.create('Ext.data.Store',
@@ -3412,7 +2263,6 @@ Ext.onReady(function()
                                                 ,'DSDOCUME'
                                                 ,'CDTIPTRA'
                                                 ,'DSTIPTRA'
-                                                ,{ name : 'SWLISTA'   , type : 'boolean' }
                                                 ,{ name : 'SWOBLIGA'  , type : 'boolean' }
                                             ]
                                             ,proxy   :
@@ -3433,456 +2283,12 @@ Ext.onReady(function()
                                     })
                                 ]
                             })
-                            ,Ext.create('Ext.form.Panel',
-                            {
-                                itemId       : '_p52_formCorreos'
-                                ,title       : 'Correos'
-                                ,defaults    : { style : 'margin:5px;' }
-                                ,buttonAlign : 'center'
-                                ,hidden      : true
-                                ,layout		 : {
-                                	type     : 'table'
-                                	,columns : 2
-                                	,tdAttrs : {valign:'middle'}
-                                	}
-                                ,tools       :
-                                [{
-                                    type     : 'help'
-                                    ,tooltip : 'Envi\u00f3 de correos'
-                                    ,handler : function()
-                                    {
-                                        _p52_ventanaTips(
-                                        [
-                                            'La estructura de los DATOS para validaci\u00f3n cliente es:'
-                                            ,'CDFLUJOMC: "12"'
-                                            ,'CDRAMO: "2"'
-                                            ,'CDSISROL: "MESADECONTROL"'
-                                            ,'CDTIPFLU: "1"'
-                                            ,'CDUNIECO: "1000"'
-                                            ,'CDUSUARI: "A100"'
-                                            ,'CLAVEENT: "27"'
-                                            ,'ESTADO: "W"'
-                                            ,'NMPOLIZA: ""'
-                                            ,'NMSITUAC: ""'
-                                            ,'NMSUPLEM: ""'
-                                            ,'NTRAMITE: "13892"'
-                                            ,'STATUS: "2"'
-                                            ,'TIPOENT: "V"'
-                                        ]);
-                                    }
-                                }]
-                                ,buttons     :
-                                [
-                                    {
-                                        text     : 'Guardar'
-                                        ,icon    : '${icons}disk.png'
-                                        ,handler : function(me)
-                                        {
-                                            _p52_guardarDatosCorreo
-                                            (me,function(me)
-                                            {
-                                            	////////////INICIA VALIDACION VARIABLES////////////
-                                            	//var win            = me.up('window');
-                                            	//Para obtener la longitud de variables
-                                            	var vdestino    = _p52_formCorreos.down('[name=VARDESTINO]').getValue();
-                                            	var vasunto     = _p52_formCorreos.down('[name=VARASUNTO]').getValue();
-                                            	var vmensaje    = _p52_formCorreos.down('[name=VARMENSAJE]').getValue();
-                                            	
-                                            	//Se genera esta condicion para evitar que se almacene longitud 1 cuando la cadena esta vacia
-                                            	var varsdestino = 0;
-                                            	if(vdestino.indexOf(',') == -1 && vdestino.length == 0){
-                                            		varsdestino = 0;
-                                            	}else{
-                                            		varsdestino = vdestino.split(',').length;
-                                            	}
-                                            	
-                                            	var varsasunto     = 0;
-                                            	if(vasunto.indexOf(',') == -1 && vasunto.length == 0){
-                                            		varsasunto = 0;
-                                            	}else{
-                                            		varsasunto = vasunto.split(',').length;
-                                            	}
-                                            	
-                                            	var varsmensaje    = 0;
-												if(vmensaje.indexOf(',') == -1 && vmensaje.length == 0){
-                                            		varsmensaje = 0;
-                                            	}else{
-                                            		varsmensaje = vmensaje.split(',').length;
-                                            	}
-                                            	
-                                            	//Obtiene las coincidencias de {} en las variables
- 		                						var numvarsdestino = _p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSDESTINO]').getValue());
- 		                						var numvarsasunto  = _p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSASUNTO]').getValue());
- 		                						var numvarsmensaje = _p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSMENSAJE]').getValue());
- 		                						
- 		                						if(varsdestino != numvarsdestino){
- 		                							mensajeError('El numero de variables seleccionadas en el destinatario no coincide con las llaves del texto');
- 		                							return;
- 		                						}
- 		                						
- 		                						if(varsasunto != numvarsasunto){
- 		                							mensajeError('El numero de variables seleccionadas en el asunto no coincide con las llaves del texto');
- 		                							return;
- 		                						}
- 		                						
- 		                						if(varsmensaje != numvarsmensaje){
- 		                							mensajeError('El numero de variables seleccionadas en el mensaje no coincide con las llaves del texto');
- 		                							return;
- 		                						}
- 		                						////////////TERMINA VALIDACION VARIABLES////////////
-                                                _p52_panelCanvas.enable();
-                                                me.up('panel').hide();
-                                                _p52_actualizaLabel(
-                                                    'V'
-                                                    ,_p52_formCorreos.down('[name=WEBID]').getValue()
-                                                    ,_p52_formCorreos.down('[name=DSMAIL]').getValue()
-                                                );
-                                            });
-                                        }
-                                    }
-                                    ,{
-                                        text     : 'Cancelar'
-                                        ,icon    : '${icons}cancel.png'
-                                        ,handler : function(me)
-                                        {
-                                            _p52_panelCanvas.enable();
-                                            me.up('panel').hide();
-                                        }
-                                    }
-                                ]
-                                ,items :
-                                [
-                                    {
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : '_ACCION'
-                                        ,name       : 'ACCION'
-                                        ,allowBlank : false
-                                        ,hidden     : !_p52_debug
-                                    }
-                                    ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : '_CDTIPFLU'
-                                        ,name       : 'CDTIPFLU'
-                                        ,allowBlank : false
-                                        ,hidden     : !_p52_debug
-                                    }
-                                    ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : '_CDFLUJOMC'
-                                        ,name       : 'CDFLUJOMC'
-                                        ,allowBlank : false
-                                        ,hidden     : !_p52_debug
-                                    }
-                                    ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : '_CDMAIL'
-                                        ,name       : 'CDMAIL'
-                                        ,allowBlank : false
-                                        ,hidden     : !_p52_debug
-                                    }
-                                    ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : '_WEBID'
-                                        ,name       : 'WEBID'
-                                        ,allowBlank : false
-                                        ,hidden     : !_p52_debug
-                                    }
-                                    ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : '_XPOS'
-                                        ,name       : 'XPOS'
-                                        ,allowBlank : false
-                                        ,hidden     : !_p52_debug
-                                    }
-                                    ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : '_YPOS'
-                                        ,name       : 'YPOS'
-                                        ,allowBlank : false
-                                        ,hidden     : !_p52_debug
-                                    }
-                                    ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : '_VARDESTINO'
-                                        ,name       : 'VARDESTINO'
-                                        ,itemId		: 'VARDESTINO'
-                                        ,hidden     : !_p52_debug
-                                    }
-                                    ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : '_VARASUNTO'
-                                        ,name       : 'VARASUNTO'
-                                        ,hidden     : !_p52_debug
-                                    }
-                                    ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : '_VARMENSAJE'
-                                        ,name       : 'VARMENSAJE'
-                                        ,hidden     : !_p52_debug
-                                    }
-                                    ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : 'ETIQUETA'
-                                        ,labelAlign : 'top'
-                                        ,name       : 'DSMAIL'
-                                        ,allowBlank : false
-                                    }
-                                    ,{
-                                        border : 0
-                                    }
-                                    ,{
-                                        xtype       : 'textfield'
-                                        ,fieldLabel : 'PARA'
-                                        ,labelAlign : 'top'
-                                        ,name       : 'DSDESTINO'
-                                        ,allowBlank : false
-                                    }
-                                    ,{
-                                    	xtype: 'button'
-                                        ,text: 'Variables'
-                                        ,icon : '${icons}table_relationship.png'
-                                        ,handler: function() {
-                                        	if(_p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSDESTINO]').getValue()) == 0){
-                                        		mensajeError('El texto no contiene sintaxis para agregar variables');
-                                        	}else{
-                                        		_p52_mostrarVentanaVariablesCorreo('VARDESTINO','DSDESTINO');
-                                        	}
-                                        }
-                                    }
-                                    ,{
-                                        xtype          : 'textfield'
-                                        ,fieldLabel    : 'ASUNTO'
-                                        ,labelAlign    : 'top'
-                                        ,name          : 'DSASUNTO'
-                                        ,allowBlank    : false
-                                        ,minLength     : 1
-                                        ,maxLength     : 300
-                                    }
-                                    ,{
-                                    	xtype: 'button'
-                                        ,text: 'Variables'
-                                        ,icon : '${icons}table_relationship.png'
-                                        ,handler: function() {
-                                        	if(_p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSASUNTO]').getValue()) == 0){
-                                        		mensajeError('El texto no contiene sintaxis para agregar variables');
-                                        	}else{
-                                        		_p52_mostrarVentanaVariablesCorreo('VARASUNTO','DSASUNTO');
-                                        	}
-                                        }
-                                    }
-                                    ,{
-                                        xtype          : 'textarea'
-                                        ,fieldLabel    : 'MENSAJE'
-                                        ,labelAlign    : 'top'
-                                        ,name          : 'DSMENSAJE'
-                                    }
-                                    ,{
-                                    	xtype: 'button'
-                                        ,text: 'Variables'
-                                        ,icon : '${icons}table_relationship.png'
-                                        ,handler: function() {
-                                        	if(_p52_numberContainsSubstrInStr('{}',_p52_formCorreos.down('[name=DSMENSAJE]').getValue()) == 0){
-                                        		mensajeError('El texto no contiene sintaxis para agregar variables');
-                                        	}else{
-                                        		_p52_mostrarVentanaVariablesCorreo('VARMENSAJE','DSMENSAJE');
-                                        	}
-                                        }
-                                    }
-                                    /* , new SelectorMultiple() */
-                                    /*,{
-                                        xtype: 'itemselector',
-                                        name : 'variables'
-                                        ,imagePath: '../ux/images/'
-                                        ,store: 
-                                        ,displayField: 'DSVARMAIL',
-                                        ,valueField  : 'CDVARMAIL'
-                                        ,allowBlank  : false
-                                        ,msgTarget   : 'side'
-                                        ,fromTitle   : 'Disponibles'
-                                        ,toTitle     : 'Seleccionadas'
-                                    }*/
-                                ]
-                            })
-                            ,Ext.create('Ext.panel.Panel',
-                            {
-                                itemId       : '_p52_panelTitulo'
-                                ,title       : 'T\u00CDTULO'
-                                ,hidden      : true
-                                ,buttonAlign : 'center'
-                                ,buttons     :
-                                [
-                                    {
-                                        text     : 'Guardar'
-                                        ,icon    : '${icons}disk.png'
-                                        ,handler : function(me)
-                                        {
-                                            _p52_guardarDatosTitulo(me,function(me)
-                                            {
-                                                _p52_panelCanvas.enable();
-                                                me.up('panel').hide();
-                                                _p52_actualizaLabel(
-                                                    'T'
-                                                    ,_p52_panelTitulo.down('[name=WEBID]').getValue()
-                                                    ,_p52_panelTitulo.down('[name=DSTITULO]').getValue()
-                                                );
-                                            });
-                                        }
-                                    }
-                                    ,{
-                                        text     : 'Cancelar'
-                                        ,icon    : '${icons}cancel.png'
-                                        ,handler : function(me)
-                                        {
-                                            _p52_panelCanvas.enable();
-                                            me.up('panel').hide();
-                                        }
-                                    }
-                                ]
-                                ,items :
-                                [
-                                    {
-                                        xtype     : 'form'
-                                        ,border   : 0
-                                        ,defaults : { style : 'margin:5px;' }
-                                        ,items    :
-                                        [
-                                            {
-                                                xtype       : 'textfield'
-                                                ,fieldLabel : '_ACCION'
-                                                ,name       : 'ACCION'
-                                                ,allowBlank : false
-                                                ,hidden     : !_p52_debug
-                                            }
-                                            ,{
-                                                xtype       : 'textfield'
-                                                ,fieldLabel : '_CDTIPFLU'
-                                                ,name       : 'CDTIPFLU'
-                                                ,allowBlank : false
-                                                ,hidden     : !_p52_debug
-                                            }
-                                            ,{
-                                                xtype       : 'textfield'
-                                                ,fieldLabel : '_CDFLUJOMC'
-                                                ,name       : 'CDFLUJOMC'
-                                                ,allowBlank : false
-                                                ,hidden     : !_p52_debug
-                                            }
-                                            ,{
-                                                xtype       : 'textfield'
-                                                ,fieldLabel : '_CDTITULO'
-                                                ,name       : 'CDTITULO'
-                                                ,allowBlank : false
-                                                ,hidden     : !_p52_debug
-                                            }
-                                            ,{
-                                                xtype       : 'textfield'
-                                                ,fieldLabel : '_WEBID'
-                                                ,name       : 'WEBID'
-                                                ,allowBlank : false
-                                                ,hidden     : !_p52_debug
-                                            }
-                                            ,{
-                                                xtype       : 'textfield'
-                                                ,fieldLabel : '_XPOS'
-                                                ,name       : 'XPOS'
-                                                ,allowBlank : false
-                                                ,hidden     : !_p52_debug
-                                            }
-                                            ,{
-                                                xtype       : 'textfield'
-                                                ,fieldLabel : '_YPOS'
-                                                ,name       : 'YPOS'
-                                                ,allowBlank : false
-                                                ,hidden     : !_p52_debug
-                                            }
-                                            ,{
-                                                xtype       : 'textfield'
-                                                ,fieldLabel : 'Nombre'
-                                                ,labelAlign : 'top'
-                                                ,name       : 'DSTITULO'
-                                                ,allowBlank : false
-                                            }
-                                        ]
-                                    }
-                                ]
-                            })
                             ,Ext.create('Ext.panel.Panel',
                             {
                                 itemId       : '_p52_panelAccion'
                                 ,title       : 'ACCI\u00D3N'
                                 ,hidden      : true
                                 ,buttonAlign : 'center'
-                                ,tools       : [
-                                    {
-                                        type    : 'unpin',
-                                        tooltip : 'Copiar datos',
-                                        handler : function (event, toolEl, owner, tool) {
-                                            var ck = 'Copiando propiedades de conector';
-                                            try {
-                                                var panel = tool.up('panel');
-                                                debug('panel:', panel);
-                                                var iconos = $('[name=iconoaccion]:checked');
-                                                var icono = '';
-                                                if (iconos.length > 0) {
-                                                    icono = iconos[0].value;
-                                                }
-                                                var store = panel.down('grid').getStore();
-                                                var roles = {};
-                                                store.each(function (record) {
-                                                    roles[record.get('CDSISROL')] = record.get('SWPERMISO');
-                                                });
-                                                var props = {
-                                                    DSACCION : panel.down('[name=DSACCION]').getValue(),
-                                                    CDVALOR  : panel.down('[name=CDVALOR]').getValue(),
-                                                    AUX      : panel.down('[name=AUX]').getValue(),
-                                                    SWESCALA : panel.down('[name=SWESCALA]').getValue(),
-                                                    ICONO    : icono,
-                                                    roles    : roles
-                                                };
-                                                debug('props:', props);
-                                                var encode = Ext.encode(props);
-                                                debug('encode:', encode);
-                                                executeCopy(encode);
-                                            } catch (e) {
-                                                manejaException(e, ck);
-                                            }
-                                        }
-                                    }, {
-                                        type    : 'pin',
-                                        tooltip : 'Pegar datos',
-                                        handler : function (event, toolEl, owner, tool) {
-                                            var ck = 'Pegando propiedades de conector';
-                                            try {
-                                                var encode = window.prompt("Pegar: Ctrl+V, Enter");
-                                                if (Ext.isEmpty(encode)) {
-                                                    return;
-                                                }
-                                                debug('encode:', encode);
-                                                var decode = Ext.decode(encode);
-                                                debug('decode:', decode);
-                                                var panel = tool.up('panel');
-                                                debug('panel:', panel);
-                                                panel.down('[name=DSACCION]').setValue(decode.DSACCION);
-                                                panel.down('[name=CDVALOR]').setValue(decode.CDVALOR);
-                                                panel.down('[name=AUX]').setValue(decode.AUX);
-                                                panel.down('[name=SWESCALA]').setValue(decode.SWESCALA);
-                                                var store = panel.down('grid').getStore();
-                                                store.each(function (record) {
-                                                    record.set('SWPERMISO', decode.roles[record.get('CDSISROL')] || false);
-                                                });
-                                                if (!Ext.isEmpty(decode.ICONO)) {
-                                                    var iconos = $('[name=iconoaccion][value=' + decode.ICONO + ']');
-                                                    if (iconos.length > 0) {
-                                                        iconos[0].focus();
-                                                        iconos[0].checked = true;
-                                                    }
-                                                }
-                                            } catch (e) {
-                                                manejaException(e, ck);
-                                            }
-                                        }
-                                    }
-                                ]
                                 ,buttons     :
                                 [
                                     {
@@ -4066,75 +2472,6 @@ Ext.onReady(function()
                                             ,columns : 3
                                             ,tdAttrs : { valign : 'top' }
                                         }
-                                        ,header :
-                                        {
-                                            titlePosition : 0
-                                            ,items        :
-                                            [
-                                                {
-                                                    xtype    : 'button'
-                                                    ,icon    : '${icons}cancel.png'
-                                                    ,handler : function()
-                                                    {
-                                                        _fieldById('enfocadorIconos').setValue('');
-                                                        _fieldById('enfocadorIconos').focus();
-                                                    }
-                                                },
-                                                {
-                                                    xtype      : 'textfield'
-                                                    ,itemId    : 'enfocadorIconos'
-                                                    ,width     : 100
-                                                    ,indice    : 0
-                                                    ,listeners :
-                                                    {
-                                                        change : function(me,val)
-                                                        {
-                                                            me.indice = 0;
-                                                            debug('indice 0');
-                                                        }
-                                                    }
-                                                    ,buscar : function()
-                                                    {
-                                                        var me = this, val = me.getValue();
-                                                        debug('buscar indice:',me.indice,',val:',val,'.');
-                                                        if(!Ext.isEmpty(val))
-                                                        {
-                                                            var iconos = $('[name=iconoaccion][value*='+val.toLowerCase().split(' ').join('_')+']');
-                                                            debug('iconos:',iconos,'.');
-                                                            if(iconos.length>0)
-                                                            {
-                                                                iconos[me.indice%iconos.length].focus();
-                                                                iconos[me.indice%iconos.length].checked = true;
-                                                                me.indice++;
-                                                            }
-                                                        }
-                                                        me.focus();
-                                                    }
-                                                }
-                                                ,{
-                                                    xtype    : 'button'
-                                                    ,icon    : '${icons}tick.png'
-                                                    ,handler : function(me)
-                                                    {
-                                                        _fieldById('enfocadorIconos').buscar();
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                        ,tools  :
-                                        [{
-                                            type     : 'pin'
-                                            ,tooltip : 'Ir al seleccionado'
-                                            ,handler : function(me)
-                                            {
-                                                var iconos = $('[name=iconoaccion]:checked');
-                                                debug('iconos:',iconos,'.');
-                                                if(iconos.length>0)
-                                                {
-                                                    iconos[0].focus();
-                                                }
-                                            }
-                                        }]
                                     })
                                 ]
                             })
@@ -4190,80 +2527,47 @@ Ext.onReady(function()
     _p52_gridProcesos         = _fieldById('_p52_gridProcesos');
     _p52_panelDibujo          = _fieldById('_p52_panelDibujo');
     _p52_catalogoEstados      = _fieldById('_p52_catalogoEstados');
-    _p52_catalogoSucursales   = _fieldById('_p52_catalogoSucursales');
     _p52_panelCanvas          = _fieldById('_p52_panelCanvas');
     _p52_panelEstado          = _fieldById('_p52_panelEstado');
     _p52_catalogoPantallas    = _fieldById('_p52_catalogoPantallas');
     _p52_catalogoComponentes  = _fieldById('_p52_catalogoComponentes');
     _p52_catalogoProcesos     = _fieldById('_p52_catalogoProcesos');
     _p52_catalogoValidaciones = _fieldById('_p52_catalogoValidaciones');
-    _p52_catalogoCorreos      = _fieldById('_p52_catalogoCorreos');
     _p52_catalogoRevisiones   = _fieldById('_p52_catalogoRevisiones');
-    _p52_catalogoTitulos      = _fieldById('_p52_catalogoTitulos');
     _p52_formValidacion       = _fieldById('_p52_formValidacion');
-    _p52_formCorreos          = _fieldById('_p52_formCorreos');
     _p52_panelRevision        = _fieldById('_p52_panelRevision');
-    _p52_panelTitulo          = _fieldById('_p52_panelTitulo');
     _p52_panelAccion          = _fieldById('_p52_panelAccion');
     _p52_catalogoIconos       = _fieldById('_p52_catalogoIconos');
     ////// custom //////
     
     ////// loaders //////
-    if (1 === Number(_p52_params.cdtipmod)) {
-        _p52_cargarEstados();
-        _p52_cargarPantallas();
-        _p52_cargarComponentes();
-        _p52_cargarProcesos();
-        _p52_cargarValidaciones();
-        _p52_cargarRevisiones();
-        _p52_cargarCorreos();
-        _p52_cargarIconos();
-    } else if (2 === Number(_p52_params.cdtipmod)) {
-        _p52_cargarSucursales();
-    }
-    _p52_cargarTitulos();
+    _p52_cargarEstados();
+    _p52_cargarPantallas();
+    _p52_cargarComponentes();
+    _p52_cargarProcesos();
+    _p52_cargarValidaciones();
+    _p52_cargarRevisiones();
+    _p52_cargarIconos();
+    
+    //_p52_navega(2);
     
     jsPlumb.ready(function()
     {
         toolkit = jsPlumb.getInstance(
         {
-            Container           : 'canvasdiv',
-            Endpoint            : ['Dot',{radius:7}],
-            ConnectionOverlays  : [ [ 'PlainArrow' , { location : 1, width : 15, length : 15 } ] ],
-            Connector           : 'StateMachine',
-            //Connector         : 'Flowchart',
-            ReattachConnections : false,
-            PaintStyle          : {
-                strokeStyle : 'rgba(67, 85, 135, 0.4)',
-                lineWidth   : 4
-            },
-            HoverPaintStyle    : {
-                strokeStyle : 'rgba(255, 0, 0, 0.8)',
-                lineWidth   : 5
-            },
-            EndpointStyle       : {
-                fillStyle     : 'rgba(67, 85, 135, 0.4)',
-                outlineColor  : 'rgba(67, 85, 135, 0.4)'
-            },
-            EndpointHoverStyle : {
-                fillStyle    : 'rgba(255, 0, 0, 0.8)',
-                outlineColor : 'rgba(255, 0, 0, 0.8)'
-            }
+            Container            : 'canvasdiv'
+            ,Endpoint            : ['Dot',{radius:7}]
+            ,ConnectionOverlays  : [ [ 'PlainArrow' , { location : 1 } ] ]
+            ,Connector           : 'StateMachine'
+            //,Connector           : 'Flowchart'
+            ,ReattachConnections : false
+            ,HoverPaintStyle     : { strokeStyle   : 'red' , lineWidth    : 5 }
+            ,EndpointHoverStyle  : { outlineColor  : 'red' , outlineWidth : 1 }
         });
         
         toolkit.bind('click',function(con)
         {
-            debug('toolkit.bind.click con:',con);
-            if (con.type === 'Dot') {
-                return alert('Debe seleccionar la flecha, no el punto');
-            }
-            try {
-                document.getElementById('spanUltimoEditado').remove();
-            } catch (e) {}
-            con.addOverlay(['Label', {
-                label    : '<span id="spanUltimoEditado" style="background:green;color:white;font-size:8px;">EDITADO</span>',
-                location : 0.5
-            }]);
+            debug('dblclick con:',con);
             _p52_editEndpoint(con,'A',con.cdaccion);
         });
         
@@ -4295,6 +2599,16 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
+
+//funcion para revisar si estas en un iframe
+//http://stackoverflow.com/questions/326069/how-to-identify-if-a-webpage-is-being-loaded-inside-an-iframe-or-directly-into-t
+function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
 
 function _p52_navega(nivel)
 {
@@ -4376,70 +2690,6 @@ function _p52_cargarEstados()
     catch(e)
     {
         _setLoading(false,_p52_catalogoEstados);
-        manejaException(e,ck);
-    }
-}
-
-function _p52_cargarSucursales()
-{
-    debug('_p52_cargarSucursales');
-    
-    var ck = 'Cargando sucursales';
-    try
-    {
-        _setLoading(true,_p52_catalogoSucursales);
-        Ext.Ajax.request(
-        {
-            url      : _p52_urlRecuperacion
-            ,params  :
-            {
-                'params.consulta' : 'RECUPERAR_TODAS_SUCURSALES'
-            }
-            ,success : function(response)
-            {
-                _setLoading(false,_p52_catalogoSucursales);
-                var ck = 'Decodificando respuesta al cargar las sucursales';
-                try
-                {
-                    var json = Ext.decode(response.responseText);
-                    debug('### load sucursales:',json);
-                    if(json.success==true)
-                    {
-                        _p52_catalogoSucursales.removeAll();
-                        var sucursales = [];
-                        for(var i=0;i<json.list.length;i++)
-                        {
-                            sucursales.push(
-                            {
-                                xtype   : 'panel'
-                                ,tpl    : sucursalTpl
-                                ,border : 0
-                                ,itemId : 'S'+json.list[i].CDUNIECO
-                                ,data   : json.list[i]
-                            });
-                        }
-                        _p52_catalogoSucursales.add(sucursales);
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                _setLoading(false,_p52_catalogoSucursales);
-                errorComunicacion(null,'Error al cargar las sucursales');
-            }
-        });
-    }
-    catch(e)
-    {
-        _setLoading(false,_p52_catalogoSucursales);
         manejaException(e,ck);
     }
 }
@@ -4670,53 +2920,6 @@ function _p52_cargarRevisiones()
     });
 }
 
-function _p52_cargarCorreos()
-{
-    debug('_p52_cargarCorreos');
-    _p52_catalogoCorreos.removeAll();
-    _p52_catalogoCorreos.add(
-    {
-        xtype   : 'panel'
-        ,tpl    : correoTpl
-        ,border : 0
-        ,data   :
-        {
-            cdmail  : 0
-            ,dsmail : 'Nuevo correo'
-        }
-    });
-}
-
-
-function _p52_cargarTitulos()
-{
-    debug('_p52_cargarTitulos');
-    _p52_catalogoTitulos.removeAll();
-    _p52_catalogoTitulos.add(
-    [
-	    {
-	        xtype   : 'panel'
-	        ,tpl    : tituloTpl
-	        ,border : 0
-	        ,data   :
-            {
-                cdtitulo  : 0
-                ,dstitulo : 'T\u00edtulo 500'
-            }
-	    }
-	    ,{
-	        xtype   : 'panel'
-            ,tpl    : tituloTpl
-            ,border : 0
-            ,data   :
-            {
-                cdtitulo  : 1
-                ,dstitulo : 'T\u00edtulo 1000'
-            }
-        }
-    ]);
-}
-
 function _p52_cargarIconos()
 {
     debug('_p52_cargarIconos');
@@ -4808,14 +3011,6 @@ function _p52_drop(event)
             _p52_addEndpoint(id,tipo);
         });
     }
-    else if(tipo=='S')
-    {
-        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
-        {
-            _p52_addDiv(id,tipo,clave,descrip,x,y);
-            _p52_addEndpoint(id,tipo);
-        });
-    }
     else if(tipo=='P')
     {
         _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
@@ -4856,21 +3051,6 @@ function _p52_drop(event)
             _p52_addEndpoint(id,tipo);
         });
     }
-    else if(tipo=='T')
-    {
-        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
-        {
-            _p52_addDiv(id,tipo,clave,'',x,y);
-        });
-    }
-    else if(tipo=='M')
-    {
-        _p52_registrarEntidad(tipo,clave,id,x,y,function(json)
-        {
-            _p52_addDiv(id,tipo,json.params.cdentidad,'',x,y);
-            _p52_addEndpoint(id,tipo);
-        });
-    }
 }
 
 function _p52_generaId()
@@ -4894,9 +3074,8 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelEstado.show();
         _p52_formValidacion.hide();
         _p52_panelRevision.hide();
-        _p52_panelTitulo.hide();
         _p52_panelAccion.hide();
-        _p52_formCorreos.hide();
+        
         _p52_cargarDatosEstado(clave);
     }
     else if(tipo=='V')
@@ -4905,9 +3084,8 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelEstado.hide();
         _p52_formValidacion.show();
         _p52_panelRevision.hide();
-        _p52_panelTitulo.hide();
         _p52_panelAccion.hide();
-        _p52_formCorreos.hide();
+        
         _p52_cargarDatosValidacion(clave);
     }
     else if(tipo=='R')
@@ -4916,32 +3094,9 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelEstado.hide();
         _p52_formValidacion.hide();
         _p52_panelRevision.show();
-        _p52_panelTitulo.hide();
         _p52_panelAccion.hide();
-        _p52_formCorreos.hide();
+        
         _p52_cargarDatosRevision(clave);
-    }
-    else if(tipo=='T')
-    {
-        _p52_panelCanvas.disable();
-        _p52_panelEstado.hide();
-        _p52_formValidacion.hide();
-        _p52_panelRevision.hide();
-        _p52_panelTitulo.show();
-        _p52_panelAccion.hide();
-        _p52_formCorreos.hide();
-        _p52_cargarDatosTitulo(id);
-    }
-    else if(tipo=='M')
-    {
-        _p52_panelCanvas.disable();
-        _p52_panelEstado.hide();
-        _p52_formValidacion.hide();
-        _p52_panelRevision.hide();
-        _p52_panelTitulo.hide();
-        _p52_panelAccion.hide();
-        _p52_formCorreos.show();
-        _p52_cargarDatosCorreo(clave);
     }
     else if(tipo=='A')
     {
@@ -4949,9 +3104,8 @@ function _p52_editEndpoint(id,tipo,clave)
         _p52_panelEstado.hide();
         _p52_formValidacion.hide();
         _p52_panelRevision.hide();
-        _p52_panelTitulo.hide();
         _p52_panelAccion.show();
-        _p52_formCorreos.hide();
+        
         _p52_cargarDatosAccion(clave);
     }
 }
@@ -5496,18 +3650,6 @@ function _p52_cargarModelado()
                                     descrip = ite.DSREVISI;
                                     _p52_addDiv(id,tipo,clave,descrip,x,y);
                                 }
-                                else if(tipo=='T')
-                                {
-                                    clave   = ite.CDTITULO;
-                                    descrip = ite.DSTITULO;
-                                    _p52_addDiv(id,tipo,clave,descrip,x,y,0);
-                                }
-                                else if(tipo=='M')
-                                {
-                                    clave   = ite.CDMAIL;
-                                    descrip = ite.DSMAIL;
-                                    _p52_addDiv(id,tipo,clave,descrip,x,y);
-                                }
                                 else if(tipo=='A')
                                 {
                                     _p52_cargando = true;
@@ -5518,31 +3660,6 @@ function _p52_cargarModelado()
                                     });
                                     con.cdaccion = ite.CDACCION;
                                     _p52_cargando = false;
-                                    
-                                    // JTEZVA 2016 12 05
-                                    con.dsaccion = ite.DSACCION;
-                                    con.bind('mouseover', function (conn) {
-                                        debug('mouseover args:', arguments);
-                                        conn.addOverlay(['Label',
-                                            {
-                                                label    : '<span style="background:white;font-size:8px;">' + (conn.dsaccion || '(vacio)') + '</span>',
-                                                location : 0.1,
-                                                id       : "connLabel"
-                                            }
-                                        ]);
-                                        conn.addOverlay(['Label',
-                                            {
-                                                label    : '<span style="background:white;font-size:8px;">' + (conn.dsaccion || '(vacio)') + '</span>',
-                                                location : 0.9,
-                                                id       : "connLabel2"
-                                            }
-                                        ]);
-                                    });
-                                    con.bind('mouseout', function (conn) {
-                                        debug('mouseout args:', arguments);
-                                        conn.removeOverlay("connLabel");
-                                        conn.removeOverlay("connLabel2");
-                                    });
                                 }
                             }
                         }
@@ -5579,7 +3696,8 @@ function _p52_cargarModelado()
 
 function _p52_addDiv(id,tipo,clave,descrip,x,y)
 {
-    debug('_p52_addDiv arguments:',arguments,'.');
+    debug('_p52_addDiv:',id,tipo,clave,'.');
+    debug(descrip,x,y,'.');
     
     if(Ext.isEmpty(descrip))
     {
@@ -5589,10 +3707,6 @@ function _p52_addDiv(id,tipo,clave,descrip,x,y)
     if(tipo=='E')
     {
         $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelE">'+clave+' - '+descrip+'</div></div>');
-    }
-    else if(tipo=='S')
-    {
-        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelS">'+clave+' - '+descrip+'</div></div>');
     }
     else if(tipo=='P')
     {
@@ -5614,19 +3728,8 @@ function _p52_addDiv(id,tipo,clave,descrip,x,y)
     {
         $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelR">'+descrip+'</div></div>');
     }
-    else if(tipo=='T')
-    {
-        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+clave+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelT labelT'+clave+'">'+descrip+'</div></div>');
-    }
-    else if(tipo=='M')
-    {
-        $('#canvasdiv').append('<div id="'+id+'" tipo="'+tipo+'" clave="'+clave+'" class="entidad entidad'+tipo+'" style="top:'+y+'px;left:'+x+'px;" title="'+descrip+'"><a href="#" onclick="_p52_addEndpoint(\''+id+'\',\''+tipo+'\');return false;" class="plus"></a><a href="#" onclick="_p52_editEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;" class="edit"></a><a class="remove" href="#" onclick="_p52_removeEndpoint(\''+id+'\',\''+tipo+'\',\''+clave+'\');return false;"></a><div class="labelV">'+descrip+'</div></div>');
-    }
-    toolkit.draggable(id,
-    {
-        snapThreshold : 20
-        ,grid         : [20,20]
-    });
+    
+    toolkit.draggable(id);
 }
 
 function _p52_cargarDatosEstado(cdestadomc)
@@ -5641,7 +3744,6 @@ function _p52_cargarDatosEstado(cdestadomc)
         {
             record.set('SWVER'     , false);
             record.set('SWTRABAJO' , false);
-            record.set('SWVERDEF'  , false);
             record.set('SWCOMPRA'  , false);
             record.set('SWREASIG'  , false);
         });
@@ -5682,8 +3784,6 @@ function _p52_cargarDatosEstado(cdestadomc)
                         });
                         _p52_panelEstado.down('[name=ACCION]').setValue('U');
                         
-                        _p52_panelEstado.setTitle('Status '+cdestadomc);
-                        
                         var grid = _fieldById('_p52_gridEstRol');
                         grid.store.each(function(record)
                         {
@@ -5699,10 +3799,6 @@ function _p52_cargarDatosEstado(cdestadomc)
                                     if('S'==ite.SWTRABAJO)
                                     {
                                         record.set('SWTRABAJO',true);
-                                    }
-                                    if('S'==ite.SWVERDEF)
-                                    {
-                                        record.set('SWVERDEF',true);
                                     }
                                     if('S'==ite.SWCOMPRA)
                                     {
@@ -5757,18 +3853,8 @@ function _p52_cargarDatosRevision(cdrevisi)
     try
     {
         var grid = _fieldById('_p52_gridRevDoc');
-        grid.getView().features[0].collapseAll();
         grid.store.each(function(record)
         {
-            record.set('SWLISTA'  , false);
-            record.set('SWOBLIGA' , false);
-        });
-        
-        grid = _fieldById('_p52_gridRevReq');
-        grid.getView().features[0].collapseAll();
-        grid.store.each(function(record)
-        {
-            record.set('SWLISTA'  , false);
             record.set('SWOBLIGA' , false);
         });
         
@@ -5811,34 +3897,9 @@ function _p52_cargarDatosRevision(cdrevisi)
                             for(var i=0;i<json.list.length;i++)
                             {
                                 var ite = json.list[i];
-                                
-                                if (ite.TIPO === 'DOC' && ite.CDDOCUME == record.get('CDDOCUME') && 'S' == ite.SWOBLIGA)
+                                if(ite.CDDOCUME==record.get('CDDOCUME')&&'S'==ite.SWOBLIGA)
                                 {
                                     record.set('SWOBLIGA',true);
-                                }
-                                
-                                if (ite.TIPO === 'DOC' && ite.CDDOCUME == record.get('CDDOCUME') && 'S' == ite.SWLISTA)
-                                {
-                                    record.set('SWLISTA',true);
-                                }
-                            }
-                        });
-                        
-                        grid = _fieldById('_p52_gridRevReq');
-                        grid.store.each(function(record)
-                        {
-                            for(var i=0;i<json.list.length;i++)
-                            {
-                                var ite = json.list[i];
-                                
-                                if (ite.TIPO === 'REQ' && ite.CDREQUISI == record.get('CDREQUISI') && 'S' == ite.SWOBLIGA)
-                                {
-                                    record.set('SWOBLIGA',true);
-                                }
-                                
-                                if (ite.TIPO === 'REQ' && ite.CDREQUISI == record.get('CDREQUISI') && 'S' == ite.SWLISTA)
-                                {
-                                    record.set('SWLISTA',true);
                                 }
                             }
                         });
@@ -5863,69 +3924,6 @@ function _p52_cargarDatosRevision(cdrevisi)
     catch(e)
     {
         _setLoading(false,_p52_panelRevision);
-        manejaException(e,ck);
-    }
-}
-
-function _p52_cargarDatosTitulo(webid)
-{
-    debug('_p52_cargarDatosTitulo webid:',webid,'.');
-    var ck = 'Borrando datos de revisi\u00f3n';
-    try
-    {
-        _p52_panelTitulo.down('form').getForm().reset();
-    
-        ck = 'Recuperando datos de t\u00edtulo';
-    
-        _setLoading(true,_p52_panelTitulo);
-        Ext.Ajax.request(
-        {
-            url      : _p52_urlCargarDatosTitulo
-            ,params  :
-            {
-                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
-                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
-                ,'params.webid'     : webid
-            }
-            ,success : function(response)
-            {
-                _setLoading(false,_p52_panelTitulo);
-                var ck = 'Decodificando respuesta al recuperar datos de t\u00edtulo';
-                try
-                {
-                    var json = Ext.decode(response.responseText);
-                    debug('### datos titulo:',json);
-                    if(json.success==true)
-                    {
-                        _p52_panelTitulo.down('form').loadRecord(
-                        {
-                            getData : function()
-                            {
-                                return json.params;
-                            }
-                        });
-                        _p52_panelTitulo.down('[name=ACCION]').setValue('U');
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                _setLoading(false,_p52_panelTitulo);
-                errorComunicacion(null,'Error al recuperar datos de t\u00edtulo');
-            }
-        });
-    }
-    catch(e)
-    {
-        _setLoading(false,_p52_panelTitulo);
         manejaException(e,ck);
     }
 }
@@ -5989,69 +3987,6 @@ function _p52_cargarDatosValidacion(cdvalida)
     catch(e)
     {
         _setLoading(false,_p52_formValidacion);
-        manejaException(e,ck);
-    }
-}
-
-function _p52_cargarDatosCorreo(cdmail)
-{
-	debug('_p52_cargarDatosCorreo cdmail:',cdmail,'.');
-    var ck = 'Borrando datos de validaci\u00f3n';
-    try
-    {
-        _p52_formCorreos.getForm().reset();
-    
-        ck = 'Recuperando datos de validaci\u00f3n';
-    
-        _setLoading(true,_p52_formCorreos);
-        Ext.Ajax.request(
-        {
-            url      : _p52_urlCargarDatosCorreo
-            ,params  :
-            {
-                'params.cdtipflu'   : _p52_selectedFlujo.get('CDTIPFLU')
-                ,'params.cdflujomc' : _p52_selectedFlujo.get('CDFLUJOMC')
-                ,'params.cdmail'    : cdmail
-            }
-            ,success : function(response)
-            {
-                _setLoading(false,_p52_formCorreos);
-                var ck = 'Decodificando respuesta al recuperar datos de validaci\u00f3n';
-                try
-                {
-                    var json = Ext.decode(response.responseText);
-                    debug('### datos validacion:',json);
-                    if(json.success==true)
-                    {
-                        _p52_formCorreos.loadRecord(
-                        {
-                            getData : function()
-                            {
-                                return json.params;
-                            }
-                        });
-                        _p52_formCorreos.down('[name=ACCION]').setValue('U');
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                _setLoading(false,_p52_formCorreos);
-                errorComunicacion(null,'Error al recuperar datos de validaci\u00f3n');
-            }
-        });
-    }
-    catch(e)
-    {
-        _setLoading(false,_p52_formCorreos);
         manejaException(e,ck);
     }
 }
@@ -6167,7 +4102,6 @@ function _p52_guardarDatosEstado(bot,callback)
             datos.TIPO      = 'P';
             datos.SWVER     = record.get("SWVER")     ? "S" : "N";
             datos.SWTRABAJO = record.get("SWTRABAJO") ? "S" : "N";
-            datos.SWVERDEF  = record.get("SWVERDEF")  ? "S" : "N";
             datos.SWCOMPRA  = record.get("SWCOMPRA")  ? "S" : "N";
             datos.SWREASIG  = record.get("SWREASIG")  ? "S" : "N";
             jsonData.list.push(datos);
@@ -6244,20 +4178,8 @@ function _p52_guardarDatosRevision(bot,callback)
         var grid = _fieldById('_p52_gridRevDoc');
         grid.store.each(function(record)
         {
-            var datos      = record.getData();
-            datos.TIPO     = 'DOC';
-            datos.SWLISTA  = record.get("SWLISTA")  ? "S" : "N";
-            datos.SWOBLIGA = record.get("SWOBLIGA") ? "S" : "N";
-            jsonData.list.push(datos);
-        });
-        
-        grid = _fieldById('_p52_gridRevReq');
-        grid.store.each(function(record)
-        {
-            var datos      = record.getData();
-            datos.TIPO     = 'REQ';
-            datos.SWLISTA  = record.get("SWLISTA")  ? "S" : "N";
-            datos.SWOBLIGA = record.get("SWOBLIGA") ? "S" : "N";
+            var datos       = record.getData();
+            datos.SWOBLIGA  = record.get("SWOBLIGA") ? "S" : "N";
             jsonData.list.push(datos);
         });
         
@@ -6299,58 +4221,6 @@ function _p52_guardarDatosRevision(bot,callback)
     catch(e)
     {
         _setLoading(false,_p52_panelRevision);
-        manejaException(e,ck);
-    }
-}
-
-function _p52_guardarDatosTitulo(bot,callback)
-{
-    debug('_p52_guardarDatosTitulo');
-    var ck = 'Guardando datos de t\u00edtulo';
-    try
-    {
-        var form  = _p52_panelTitulo.down('form').getForm();
-        if(!form.isValid())
-        {
-            throw 'Favor de revisar los datos';
-        }
-        
-        _setLoading(true,_p52_panelTitulo);
-        Ext.Ajax.request(
-        {
-            url       : _p52_urlGuardarDatosTitulo
-            ,params   : _formValuesToParams(form.getValues())
-            ,success  : function(response)
-            {
-                _setLoading(false,_p52_panelTitulo);
-                var ck = 'Decodificando respuesta al guardar datos de t\u00edtulo';
-                try
-                {
-                    var json = Ext.decode(response.responseText);
-                    if(json.success==true)
-                    {
-                        callback(bot);
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                _setLoading(false,_p52_panelTitulo);
-                errorComunicacion(null,'Error al guardar datos de t\u00edtulo');
-            }
-        });
-    }
-    catch(e)
-    {
-        _setLoading(false,_p52_panelTitulo);
         manejaException(e,ck);
     }
 }
@@ -6477,58 +4347,6 @@ function _p52_guardarDatosValidacion(bot,callback)
     }
 }
 
-function _p52_guardarDatosCorreo(bot,callback)
-{
-    debug('_p52_guardarDatosCorreo');
-    var ck = 'Guardando datos de correo';
-    try
-    {
-        var form  = _p52_formCorreos.getForm();
-        if(!form.isValid())
-        {
-            throw 'Favor de revisar los datos';
-        }
-        
-        _setLoading(true,_p52_formCorreos);
-        Ext.Ajax.request(
-        {
-            url      : _p52_urlGuardarDatosCorreo
-            ,params  : _formValuesToParams(form.getValues())
-            ,success : function(response)
-            {
-                _setLoading(false,_p52_formCorreos);
-                var ck = 'Decodificando respuesta al guardar datos de validaci\u00f3n';
-                try
-                {
-                    var json = Ext.decode(response.responseText);
-                    if(json.success==true)
-                    {
-                        callback(bot);
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                _setLoading(false,_p52_formCorreos);
-                errorComunicacion(null,'Error al guardar datos de validaci\u00f3n');
-            }
-        });
-    }
-    catch(e)
-    {
-        _setLoading(false,_p52_formCorreos);
-        manejaException(e,ck);
-    }
-}
-
 function _p52_actualizaLabel(tipo,webid,label)
 {
     debug('_p52_actualizaLabel tipo,webid,label:',tipo,webid,label,'.');
@@ -6588,34 +4406,11 @@ function _p52_ventanaTips(tips)
         }]
     }).show());
 }
-
-function _p52_mostrarVentanaVariablesCorreo(nameVar, name){	
-	debug('_p52_mostrarVentanaVariablesCorreo',name);
-	_p52_winVarsCorreo.down('[itemId=panVars]').setValue(_p52_formCorreos.down('[name='+nameVar+']').getValue());
-	_p52_winVarsCorreo.nameCmpVar = nameVar;
-	_p52_winVarsCorreo.nameCmp    = name;
-	_p52_winVarsCorreo.show();
-	
-}
-
-function _p52_numberContainsSubstrInStr(subStr, str){
-	var lastIndex = 0,
- 		count     = 0;
- 	while(lastIndex != -1){
- 		lastIndex = str.indexOf(subStr,lastIndex);
- 		if(lastIndex != -1){
-        	count ++;
-        	lastIndex += subStr.length;
-    	}
- 	}
- 	return count;
-}
 ////// funciones //////
 
 </script>
 </head>
 <body>
-<div id="_p52_divpri" style="height:740px;border:1px solid #CCCCCC;"></div>
+<div id="_p52_divpri" style="height:710px;border:1px solid #CCCCCC;"></div>
 </body>
 </html>
-// MAXIMO DE UN PARAMETRO VARCHAR PARA UNA EXPRESION: #PL['F_CONSULTA_DINAMICA';&VNUMTRA;'12345678901234567890123456789012345678901234567890123456X']

@@ -8,17 +8,17 @@
 
 ////// variables //////
 //var _impLotUrlGenerarRemesa   = '<s:url namespace="/consultas" action="generarRemesaEmisionEndoso" />';
-//var _impLotUrlMarcarImpresion = '<s:url namespace="/consultas" action="marcarImpresionOperacion" />';
+var _impLotUrlMarcarImpresion = '<s:url namespace="/consultas" action="marcarImpresionOperacion" />';
 ////// variables //////
 
 ////// funciones //////
-/*
-function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,marcar,ntramite)
+function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,marcar)
 {
-    debug('_generarRemesaClic args:', arguments);
     var ck = 'Revisando impresi\u00f3n';
     try
     {
+        debug('required?'+required+','+cdunieco+','+cdramo+','+estado+','+nmpoliza+',callback?'+!Ext.isEmpty(callback));
+        
         var ven = centrarVentanaInterna(Ext.create('Ext.window.Window',
         {
             title     : 'Verificando impresi\u00f3n'
@@ -36,12 +36,11 @@ function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,ma
             url      : _impLotUrlMarcarImpresion
             ,params  :
             {
-                'params.cdunieco'    : cdunieco
-                ,'params.cdramo'     : cdramo
-                ,'params.estado'     : estado
-                ,'params.nmpoliza'   : nmpoliza
-                ,'params.marcar'     : marcar
-                ,'params.ntramiteIn' : _NVL(ntramite)
+                'params.cdunieco'  : cdunieco
+                ,'params.cdramo'   : cdramo
+                ,'params.estado'   : estado
+                ,'params.nmpoliza' : nmpoliza
+                ,'params.marcar'   : marcar
             }
             ,success : function(response)
             {
@@ -63,7 +62,7 @@ function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,ma
                                 {
                                     if(btn === 'yes')
                                     {
-                                        _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,'S',ntramite);
+                                        _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,'S');
                                     }
                                     else
                                     {
@@ -102,7 +101,7 @@ function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,ma
             }
         });
         
-        *
+        /*
         var _impLot_impresionClic;
         
         centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -222,24 +221,22 @@ function _generarRemesaClic(required,cdunieco,cdramo,estado,nmpoliza,callback,ma
                 }
             }));
         };
-        *
+        */
     }
     catch(e)
     {
         manejaException(e,ck);
     }
 }
-*/
-/*
-function _generarRemesaClic2(required,cdunieco,cdramo,estado,nmpoliza,callback,marcar,ntramite)
+
+function _generarRemesaClic2(required,cdunieco,cdramo,estado,nmpoliza,callback,marcar)
 {
 	callback();
 }
-script type="text/javascript" src="${defines}VentanaImpresionLote.js?n=${now}"  /script
-*/
 ////// funciones //////
 <s:if test="false">
 </script>
 </s:if>
 </script>
+<script type="text/javascript" src="${defines}VentanaImpresionLote.js?n=${now}"></script>
 <script>

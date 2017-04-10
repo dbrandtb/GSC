@@ -25,10 +25,8 @@
             var _SALUD_VITAL							= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo" />';
             var _MULTISALUD								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
             var _GMMI									= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
-            var _GMP                                   =  '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES_PRUEBA.cdramo" />';
             var _RECUPERA								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
             var _TIPO_TRAMITE_SINIESTRO 				= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra" />';
-            var _STATUS_TRAMITE_EN_REVISION_MEDICA      = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_REVISION_MEDICA.codigo" />';
             var nombreReporteRechazo					= '<s:text name="pdf.siniestro.cartarechazo.nombre"/>';
             
             debug("TIPO_PAGO");
@@ -70,8 +68,8 @@
             var _CAT_MODALIDADES 						= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT"/>';
             var _URL_VAL_CAUSASINI			        	= '<s:url namespace="/siniestros" 	   	action="consultaInfCausaSiniestroProducto" />';
             var _URL_VALIDA_STATUSASEG			        = '<s:url namespace="/siniestros" 	   	action="validaStatusAseguradoSeleccionado" />';	
-            var _0_urlRutaReporte                       = '<s:property value="rutaServidorReports" />';
-            var _0_reportsServerUser                    = '<s:property value="passServidorReports" />';
+            var _0_urlRutaReporte                       = '<s:text name="ruta.servidor.reports" />';
+            var _0_reportsServerUser                    = '<s:text name="pass.servidor.reports" />';
             var _0_reporteContraRecibo                  = '<s:text name="rdf.siniestro.contrarecibo.nombre" />';
             var _0_urlEnviarCorreo                      = '<s:url namespace="/general"         action="enviaCorreo"/>';
             

@@ -5,12 +5,9 @@
 	var paramsEntrada          = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 	var guarda_RehabilitacionDespago = '<s:url namespace="/endosos" action="guardarEndosoRehabilitacionDespago"       />';
 	
-	var _endRehDesp_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-	
 	var _URL_CONSULTA_RECIBOS_DESPAGADOS = '<s:url namespace="/endosos" action="obtieneRecibosDespagados" />';
 	
 	debug('paramsEntrada  -->:',paramsEntrada);
-	debug('_endRehDesp_flujo:',_endRehDesp_flujo);
 	
 	Ext.onReady(function() {
 		
@@ -91,11 +88,6 @@
 				        				paramsEntrada.NMIMPRES = record.get('NMIMPRES');
 				        				submitValues['smap1']= paramsEntrada;
 				        				
-				        				if(!Ext.isEmpty(_endRehDesp_flujo))
-				        				{
-				        				    submitValues['flujo'] = _endRehDesp_flujo;
-				        				}
-				        				
 				        				var panelMask = new Ext.LoadMask('mainDivDespago', {msg:"Confirmando..."});
 										panelMask.show();
 					
@@ -105,24 +97,8 @@
 				   						    success:function(response,opts){
 				   						    	 panelMask.hide();
 				   						         var jsonResp = Ext.decode(response.responseText);
-				   						         
-				   						         var callbackRemesa = function()
-				   						         {
-				   						             marendNavegacion(2);
-				   						         };
-				   						         
-				   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
-				   						      	 {
-				   						      	     _generarRemesaClic(
-				   						      	         true
-				   						      	         ,paramsEntrada.CDUNIECO
-				   						      	         ,paramsEntrada.CDRAMO
-				   						      	         ,paramsEntrada.ESTADO
-				   						      	         ,paramsEntrada.NMPOLIZA
-				   						      	         ,callbackRemesa
-				   						      	     );
-				   						      	 });
-				   						      	 
+				   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
+				   						      	 marendNavegacion(2);
 				   						    },
 				   						    failure:function(response,opts){
 				   						        panelMask.hide();
@@ -158,6 +134,5 @@
             
 
     });
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="mainDivDespago" style="height:1000px;"></div>

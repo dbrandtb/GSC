@@ -379,7 +379,7 @@ Ext.onReady(function() {
 				}
 				,tbar: [{
 					text		: 'Agregar Proveedor'
-					,icon		:_CONTEXT+'/resources/fam3icons/icons/book.png'
+					,icon		:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
 					,handler	: agregarProveedor
 				}]
 			})

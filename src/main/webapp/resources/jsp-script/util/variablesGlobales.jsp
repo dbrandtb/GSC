@@ -32,42 +32,20 @@
 	var _GLOBAL_URL_VALIDACION_MONTAR_DATOS = '<s:url namespace="/flujomesacontrol" action="recuperarDatosTramiteValidacionCliente" />';
     var _GLOBAL_URL_REVISION                = '<s:url namespace="/flujomesacontrol" action="ejecutaRevision"                        />';
     var _GLOBAL_URL_TURNAR                  = '<s:url namespace="/flujomesacontrol" action="turnarTramite"                          />';
-    var _GLOBAL_URL_ENVIAR_CORREO_FLUJO     = '<s:url namespace="/flujomesacontrol" action="enviaCorreoFlujo"						/>';
-    var _GLOBAL_URL_REGRESAR_TRAM_VENCIDO   = '<s:url namespace="/flujomesacontrol" action="regresarTramiteVencido"                 />';
-    var _GLOBAL_URL_MARCAR_REQUISITO        = '<s:url namespace="/flujomesacontrol" action="marcarRequisitoRevision"                />';
-    var _GLOBAL_URL_CONFIRMAR_REVISION      = '<s:url namespace="/flujomesacontrol" action="marcarRevisionConfirmada"               />';
-    var _GLOBAL_URL_ENVIAR_CORREO           = '<s:url namespace="/general"          action="enviaCorreo"                            />';
-    var _GLOBAL_URL_MARCAR_IMPRESION        = '<s:url namespace="/consultas"        action="marcarImpresionOperacion"               />';
-
-    var _GLOBAL_COMP_URL_VENTANA_DOCS               = '<s:url namespace="/documentos"       action="ventanaDocumentosPoliza"    />'
-        ,_GLOBAL_COMP_URL_GET_HISTORIAL             = '<s:url namespace="/mesacontrol"      action="obtenerDetallesTramite"     />'
-        ,_GLOBAL_COMP_URL_FINAL_HIST                = '<s:url namespace="/mesacontrol"      action="finalizarDetalleTramiteMC"  />'
-        ,_GLOBAL_COMP_URL_MODIF_HIST                = '<s:url namespace="/flujomesacontrol" action="modificarDetalleTramiteMC"  />'
-        ,_GLOBAL_COMP_URL_TURNAR                    = '<s:url namespace="/flujomesacontrol" action="turnarDesdeComp"            />'
-        ,_GLOBAL_COMP_URL_CONS_CLAU                 = '<s:url namespace="/catalogos"        action="consultaClausulas"          />'
-        ,_GLOBAL_COMP_URL_CONS_CLAU_DET             = '<s:url namespace="/catalogos"        action="consultaClausulaDetalle"    />'
-        ,_GLOBAL_COMP_URL_GUARDA_CARTA_RECHAZO      = '<s:url namespace="/"                 action="guardarCartaRechazo"        />'
-        ,_GLOBAL_COMP_URL_AUTORIZAR_EMISION         = '<s:url namespace="/"                 action="autorizaEmisionSinSMD"      />'
-        ,_GLOBAL_COMP_URL_RECUPERACION_SIMPLE_LISTA = '<s:url namespace="/emision"          action="recuperacionSimpleLista"    />'
-        ,_GLOBAL_COMP_URL_ACTUALIZAR_STATUS_TRAMITE = '<s:url namespace="/mesacontrol"      action="actualizarStatusTramite"    />'
-        ,_GLOBAL_URL_REASIGNAR_TRAMITE_INDV         = '<s:url namespace="/mesacontrol"      action="reasignarTramiteIndividual" />'
-        ,_GLOBAL_COMP_URL_AUTORIZAR_ENDOSO          = '<s:url namespace="/endosos"          action="autorizarEndoso"            />'
-        ,_GLOBAL_COMP_RECUPERAR_COTI_COLEC          = '<s:url namespace="/flujomesacontrol" action="recuperarCotiColec"         />'
-        ,_GLOBAL_URL_OBTENER_COMPONENTES            = '<s:url namespace="/pantallas"        action="obtenerComponentes"         />'
-        ,_GLOBAL_COMP_URL_GUARDAR_DATOS_TRAMITE     = '<s:url namespace="/flujomesacontrol" action="guardarVentanaDatosTramite" />'
-        ,_GLOBAL_COMP_URL_CAMBIAR_TIPO_ENDOSO       = '<s:url namespace="/flujomesacontrol" action="cambiarTipoEndosoTramite"   />';
     
-    <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo">
+    var _GLOBAL_COMP_URL_VENTANA_DOCS         = '<s:url namespace="/documentos"       action="ventanaDocumentosPoliza"   />';
+    var _GLOBAL_COMP_URL_GET_HISTORIAL        = '<s:url namespace="/mesacontrol"      action="obtenerDetallesTramite"    />';
+    var _GLOBAL_COMP_URL_FINAL_HIST           = '<s:url namespace="/mesacontrol"      action="finalizarDetalleTramiteMC" />';
+    var _GLOBAL_COMP_URL_TURNAR               = '<s:url namespace="/flujomesacontrol" action="turnarDesdeComp"           />';
+    var _GLOBAL_COMP_URL_CONS_CLAU            = '<s:url namespace="/catalogos"        action="consultaClausulas"         />';
+    var _GLOBAL_COMP_URL_CONS_CLAU_DET        = '<s:url namespace="/catalogos"        action="consultaClausulaDetalle"   />';
+    var _GLOBAL_COMP_URL_GUARDA_CARTA_RECHAZO = '<s:url namespace="/"                 action="guardarCartaRechazo"       />';
+    
+    <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo" includeParams="get">
         <s:param name="params.AGRUPAMC" value="%{'PRINCIPAL'}" />
     </s:url>
     
     var _GLOBAL_COMP_URL_MCFLUJO = '<s:property value="urlMesaFlujo" />';
     
     var _GLOBAL_CDSISROL = '<s:property value="%{#session['USUARIO'].rolActivo.clave}" />';
-    
-    var _GLOBAL_ES_MOVIL = false;
-    
-    <s:if test="%{#session != null && #session.containsKey('ES_MOVIL') && #session['ES_MOVIL'] == true }">
-        _GLOBAL_ES_MOVIL = true;
-    </s:if>
 </script>
