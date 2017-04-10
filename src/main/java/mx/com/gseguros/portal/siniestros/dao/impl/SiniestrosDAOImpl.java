@@ -120,6 +120,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setFenacimi(Utils.formateaFecha(rs.getString("FENACIMI"))); // (EGS)
         	consulta.setGenero(rs.getString("GENERO")); //(EGS)
         	consulta.setIdTipoEvento(rs.getString("TIPOEVENTO"));
+        	consulta.setAplicaNeg(rs.getString("SWNEGOCI"));
         	
             return consulta;
         }
@@ -6768,4 +6769,72 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		compile();
     	}
     }
+    
+	@Override
+	public List<AutorizacionServicioVO>  guardarAutorizacionServicioGNP(Map<String, Object> paramsR)
+			throws Exception {
+		
+		Map<String, Object> mapResult = ejecutaSP(new GuardaAutorizacionServicioGNPSP(getDataSource()), paramsR);
+		
+		@SuppressWarnings("unchecked")
+		List<AutorizacionServicioVO> listaDatosPoliza = (List<AutorizacionServicioVO>)mapResult.get("pv_registro_o");
+		return listaDatosPoliza;
+	}
+	
+	protected class GuardaAutorizacionServicioGNPSP extends StoredProcedure {
+
+		protected GuardaAutorizacionServicioGNPSP(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_GUARDA_MAUTSERV_N");
+			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmautant_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fesolici_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_feautori_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_fevencim_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_feingres_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cduniecs_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconval_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdprovee_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdmedico_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_mtsumadp_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_porpenal_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_copagofi_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdicd_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdcausa_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dstratam_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsobserv_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsnotas_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fesistem_i", OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cduser_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nombmedi_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_especmed_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tpautori_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_idaplicaCirHosp_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_idaplicaZona_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swnegoci_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosGuardardoAutorizacionServicioGNPMapper()));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class DatosGuardardoAutorizacionServicioGNPMapper  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	AutorizacionServicioVO consulta = new AutorizacionServicioVO();
+        	consulta.setNmautser(rs.getString("nmautser"));
+        	consulta.setNtramite(rs.getString("ntramite"));
+            return consulta;
+        }
+    }
+    
+    
 }

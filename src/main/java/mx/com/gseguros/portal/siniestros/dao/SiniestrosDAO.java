@@ -690,4 +690,6 @@ public interface SiniestrosDAO {
 			,String pv_fechasta) throws Exception;
 	
 	public String obtieneMedicoEquipoQuirurgico(String numAutorizacion) throws Exception;
+	
+	public List<AutorizacionServicioVO> guardarAutorizacionServicioGNP(Map<String, Object> paramsR) throws Exception;
 }

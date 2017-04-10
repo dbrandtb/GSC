@@ -3720,7 +3720,7 @@ Ext.onReady(function() {
                                                                                         }
                                                                                         ,success : function (response)
                                                                                         {
-                                                                                            if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="2"){
+                                                                                            if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="11"){
                                                                                                 var usuarioTurnadoSiniestro1 = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
                                                                                                 ///mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
                                                                                                 debug("Usuario turnado1 ==>"+usuarioTurnadoSiniestro1);

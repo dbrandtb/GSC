@@ -326,11 +326,13 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			paramsR.put("pv_tpautori_i",params.get("cveTipoAutorizaG"));
 			paramsR.put("pv_idaplicaCirHosp_i",params.get("idaplicaCirHosp"));
 			paramsR.put("pv_idaplicaZona_i",params.get("idaplicaZona"));
+			paramsR.put("pv_swnegoci_i",params.get("idaplicaZona"));
 			
 			//1.- Eliminacion de la tabla TDETAUTS ---> PKG_PRESINIESTRO.P_BORRA_TDETAUTS
 			siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
 			//2.- Agregar informacion PKG_PRESINIESTRO.P_GUARDA_MAUTSERV2
-			List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicio(paramsR);
+			List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicioGNP(paramsR);  
+			//List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicio(paramsR);
 			if(lista!=null && !lista.isEmpty()) {
 				numeroAutorizacion = lista.get(0);
 				for(int i=0;i<datosTablas.size();i++) {
