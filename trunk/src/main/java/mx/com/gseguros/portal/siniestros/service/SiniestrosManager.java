@@ -802,5 +802,7 @@ public interface SiniestrosManager {
 			String pv_tipoProveedor_i, String pv_idZonaHosp_i) throws Exception;
 	
 	public String obtieneMedicoEquipoQuirurgico(String numAutorizacion) throws Exception;
+	
+	public List<AutorizacionServicioVO> guardarAutorizacionServicioGNP(HashMap<String, Object> paramsR) throws Exception;
 
 }

@@ -427,6 +427,21 @@ Ext.onReady(function() {
 		}
 	});
 	storeAplZona.load();
+	
+    storeAplicaNegoc = Ext.create('Ext.data.Store', {
+        model:'Generic',
+        autoLoad:true,
+        proxy: {
+            type: 'ajax',
+            url: _URL_CATALOGOS,
+            extraParams : {catalogo:_SINO},
+            reader: {
+                type: 'json',
+                root: 'lista'
+            }
+        }
+    });
+    storeAplicaNegoc.load();
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	//1.- INCIO DEL PROCESO DEL MODO DE AUTORIZACION  							/////////////////////
 	gridDatos = Ext.create('Ext.grid.Panel',{
@@ -559,6 +574,7 @@ Ext.onReady(function() {
 						Ext.getCmp('idEstatusTramite').setValue('0');
 						Ext.getCmp('idaplicaCirHosp').setValue('S');
 						Ext.getCmp('idaplicaZona').setValue('S');
+						Ext.getCmp('idaplicaNegociacion').setValue('N');
 						Ext.getCmp('idCopagoPrevio').hide();
 						Ext.getCmp('idTipoEvento').hide();
 						
@@ -1261,7 +1277,21 @@ Ext.onReady(function() {
 		}
 	});
 	
-
+    aplicaNegociacion = Ext.create('Ext.form.field.ComboBox',{
+        colspan    :2,              fieldLabel   : 'Aplica Negociaci&oacute;n', id        : 'idaplicaNegociacion',         allowBlank      : false,//          width:350,
+        editable   : false,         displayField : 'value',             valueField:'key',                       forceSelection  : true,
+        labelWidth : 170,           queryMode    :'local',              editable  :false,                       name            :'idaplicaNegociacion',
+        store : storeAplicaNegoc,//       readOnly: (Ext.isEmpty(cdrol) || cdrol != "GERMEDMULTI"),
+        listeners : {
+            'select' : function(combo, record) {
+                if(this.getValue() =='S'){
+                    Ext.getCmp('sumDisponible').setReadOnly(false);
+                }else{
+                    Ext.getCmp('sumDisponible').setReadOnly(true);
+                }
+            }
+        }
+    });
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1552,6 +1582,7 @@ Ext.onReady(function() {
 					
 					storeQuirurgico.add(rec);
 					panelEquipoQuirurgico.getForm().reset();
+					obtenerCoaseguroHonorarios(storeQuirurgico);
 					ventanaEqQuirurgico.close();
 				} else {
 					centrarVentanaInterna(Ext.Msg.show({
@@ -1856,6 +1887,7 @@ Ext.onReady(function() {
 				Ext.getCmp('sumDisponible').setValue((+sumaDisponible) + (+importeEliminar));
 			}
 			this.getStore().removeAt(rowIndex);
+			obtenerCoaseguroHonorarios(storeQuirurgico);
 		}
 	});
 	gridIncisos3=new EditorIncisos3();
@@ -2389,11 +2421,11 @@ Ext.onReady(function() {
 				,labelWidth: 170						,readOnly   : true,  width: 670
 			},
 			//16.- Copago Final Previo
-			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago final'		,id       : 'idCopagoPrevio'
+			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago final 1'		,id       : 'idCopagoPrevio'
 				,labelWidth: 170						,readOnly   : true,					name:'copagoPrevio',  		width: 670
 			},
 			//16.- Copago Final Total
-			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago final'		,id       : 'idCopagoFin'
+			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago final 2'		,id       : 'idCopagoFin'
 				,labelWidth: 170						,readOnly   : true,					name:'copagoTotal',  		width: 670
 			},
 			aplicaCirHosp,
@@ -2408,6 +2440,7 @@ Ext.onReady(function() {
 			},
 			comboICD,					//19.- ICD
 			causaSiniestro,				//20.- Causa Siniestro
+			aplicaNegociacion,
 			//21.- Suma Disponible
 			{	colspan:2,			xtype : 'numberfield',              id:'sumDisponible',           fieldLabel: 'Suma disponible proveedor',    readOnly   : true,
 				labelWidth: 170,    allowBlank: false,	                allowDecimals :true,          decimalSeparator :'.',                 allowBlank:false,
@@ -2439,7 +2472,13 @@ Ext.onReady(function() {
 				items    : [
 					gridIncisos3
 				]
-			}
+			},
+            {   xtype       : 'textfield'               ,fieldLabel : 'Coaseguro (Honorarios)'                      ,id       : 'idCoaseguroHon'
+                ,align:'center',    readOnly   : true,                      renderer: Ext.util.Format.usMoney   
+            },
+            {   xtype       : 'textfield'               ,fieldLabel : 'Coaseguro (Gasto Hospitalario)'                      ,id       : 'idCoaseguroHos'
+                ,align:'center',    readOnly   : true,                      renderer: Ext.util.Format.usMoney   
+            }
 		],
 		buttonAlign:'center',
 		buttons: [{
@@ -2732,8 +2771,8 @@ Ext.onReady(function() {
                     Ext.getCmp('idDeducible').setValue(json.deducible);
                     Ext.getCmp('idTipoCopago').setValue(json.tipoCopago);
                     Ext.getCmp('idCopago').setValue(json.copago);
+                    //obtenerCoaseguroHonorarios(storeQuirurgico);
                     debug("VALOR idReqPenalizacion :",Ext.getCmp('idReqPenalizacion').getValue(),"cveTipoAutorizaG : ",Ext.getCmp('cveTipoAutorizaG').getValue());
-                    
                     if(Ext.getCmp('idReqPenalizacion').getValue() == "1" && Ext.getCmp('cveTipoAutorizaG').getValue() != "3"){
                         var idProv = ""+Ext.getCmp('idProveedor').getValue();
                         if(idProv !="undefined"){
@@ -2794,6 +2833,7 @@ Ext.onReady(function() {
                             Ext.getCmp('idPenalCambioZona').setValue('0');
                         }
                     }
+                    obtenerCoaseguroHonorarios(storeQuirurgico);
                 }
             },
             failure : function (){
@@ -2965,6 +3005,11 @@ Ext.onReady(function() {
         var sumatoria  = 0;
         if(Ext.getCmp('idaplicaCirHosp').getValue() =='N'){
             Ext.getCmp('idPenalCircHospitalario').setValue("0")
+        }
+        if(Ext.getCmp('idProveedor').getValue() =="512805"){
+        	Ext.getCmp('idPenalCircHospitalario').setValue("-10")
+        }else{
+        	Ext.getCmp('idPenalCircHospitalario').setValue("0")
         }
         
         if(Ext.getCmp('idaplicaZona').getValue() =='N'){
@@ -3179,6 +3224,20 @@ Ext.onReady(function() {
 				}else{
 					Ext.getCmp('idaplicaZona').setValue(json.aplicaZonaHosp);
 				}
+				
+				
+				debug("json.aplicaNeg  ====>>>"+json.aplicaNeg);
+				
+				if(json.aplicaNeg == null ||json.aplicaNeg ==''){
+                    Ext.getCmp('idaplicaNegociacion').setValue('N');
+                    Ext.getCmp('sumDisponible').setReadOnly(true);
+                }else{
+                    Ext.getCmp('idaplicaNegociacion').setValue(json.aplicaNeg);
+                    Ext.getCmp('sumDisponible').setReadOnly(false);
+                }
+				
+				
+				
 				Ext.getCmp('idModalidad').setValue(json.descTipsit);
 				Ext.getCmp('idUnieco').setValue(json.cdunieco);								// Valor de Cdunieco
 				Ext.getCmp('idEstado').setValue(json.estado);								// Valor de Estado
@@ -3361,7 +3420,6 @@ Ext.onReady(function() {
                         return;
                     }
                 });
-                
                 //Ext.getCmp('idTipoEvento').setValue(json.idTipoEvento);
 				
 				//**********************************************************************
@@ -3523,6 +3581,7 @@ Ext.onReady(function() {
 				}));
 			}
 		});
+		
 		return true;
 	}
 	
@@ -3545,6 +3604,8 @@ Ext.onReady(function() {
 		Ext.getCmp('idValorBase').setValue(valorBase);
 		Ext.getCmp('idcptGeneral').setValue(cptCompletos);
 		Ext.getCmp('sumDisponible').setValue(valorBase);
+		
+		debug("Valor de la suma Disponible ==>"+valorBase);
 		debug("Valor de la respuesta cptCompletos ==> ",cptCompletos);
 		//Realizamos el llamado para la actualizacion de los campos 
         if(Ext.getCmp('idComboICD').getValue() != null){
@@ -3556,10 +3617,42 @@ Ext.onReady(function() {
                 }                    
             });
         }
-        
-        
-		return true;
+        return true;
 	}
+	
+    function obtenerCoaseguroHonorarios(storeQuirurgico){
+        var arr = [];
+        var valorHonararios =0;
+        storeQuirurgico.each(function(record) {
+            arr.push(record.data);
+        });
+        
+        for(var i = 0; i < arr.length; i++){
+            debug("Valor de la respuesta ==> ",arr[i]);
+            valorHonararios=parseFloat(valorHonararios) + parseFloat(arr[i].ptimport);
+        }
+        
+        if(Ext.getCmp('idaplicaNegociacion').getValue() =="S"){
+        	
+        }else{
+        	Ext.getCmp('sumDisponible').setValue(+valorHonararios);
+        }
+        if(Ext.getCmp('idProveedor').getValue() =="512805" || Ext.getCmp('idProveedor').getValue() =="860360"){
+        	Ext.getCmp('idCoaseguroHon').setValue(valorHonararios * (+0/100));
+            var importe = Ext.getCmp('idDeducible').getValue();
+            var importeModificado = importe.replace(",","");
+            Ext.getCmp('idCoaseguroHos').setValue((+Ext.getCmp('sumDisponible').getValue() - +importeModificado)* (+0/100));
+        }else{
+        	Ext.getCmp('idCoaseguroHon').setValue(valorHonararios * (+10/100));
+            var importe = Ext.getCmp('idDeducible').getValue();
+            var importeModificado = importe.replace(",","");
+            Ext.getCmp('idCoaseguroHos').setValue((+Ext.getCmp('sumDisponible').getValue() - +importeModificado)* (+10/100));
+        }
+        
+        
+        
+        return true;
+    }
 	
 	function TotalRegistros(storeRecibido){
 		var arr = [];
@@ -3598,6 +3691,7 @@ Ext.onReady(function() {
 				});
 				storeQuirurgico.add(rec);
 			}
+			obtenerCoaseguroHonorarios(storeQuirurgico);
 		}
 		return true;
 	}

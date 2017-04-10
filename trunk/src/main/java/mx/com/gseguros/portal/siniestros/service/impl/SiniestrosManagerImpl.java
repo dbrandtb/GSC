@@ -2985,5 +2985,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public List<AutorizacionServicioVO> guardarAutorizacionServicioGNP(HashMap<String, Object> paramsR)throws Exception {
+		try {
+			return siniestrosDAO.guardarAutorizacionServicioGNP(paramsR);			
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
     
 }

@@ -3193,7 +3193,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						//verificamos la causa del siniestro
 						String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
 						if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
-							if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) ||siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+							if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 								//GMMI
 								if(existeCobertura == true){
 									deducibleFacturaIte = 0d;
@@ -3207,7 +3207,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						logger.debug("--->>>>>>> DIFERENTE DE HOSPITALIZACION Y AYUDA DE MATERNIDAD");
 						String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
 						if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
-							if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+							if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 								//GMMI
 								if(existeCobertura == true){
 									deducibleFacturaIte = 0d;
@@ -4882,7 +4882,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					//verificamos la causa del siniestro
 					String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
 					if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
-						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 							//GMMI
 							if(existeCobertura == true){
 								deducibleFacturaIte = 0d;
@@ -4896,7 +4896,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					logger.debug("--->>>>>>> DIFERENTE DE HOSPITALIZACION Y AYUDA DE MATERNIDAD");
 					String causadelSiniestro = informacionGral.get(0).get("CDCAUSA");
 					if(causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
-						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+						if(siniestro.get("CDRAMO").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 							//GMMI
 							if(existeCobertura == true){
 								deducibleFacturaIte = 0d;
