@@ -24,8 +24,6 @@
 			var _CATALOGO_SUBCOBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
 			var _CATALOGO_VALIDACIONESGRALES            = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@VALIDACIONESGRALES"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALESMS 		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MS"/>';
-			var _CATALOGO_SUBCOBERTURASTOTALESGMPI      = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASGMPI"/>';
-			var _CATALOGO_SUBCOBERTURASTOTALESGMPC      = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASGMPC"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALESMSC		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MSC"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALINFONAVIT	= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASINFONAVIT"/>';
 			var _CATALOGO_SUBCOBERTURASRECUPERA			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASRECUPERA"/>';
@@ -62,7 +60,6 @@
             var _MULTISALUD								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
             var _GMMI									= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
             var _RECUPERA								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
-            var _GMPRUEBA                               = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES_PRUEBA.cdramo" />';
             //cdtiptra
             var _TIPO_TRAMITE_SINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra"/>';
             var _TIPO_PAGO_AUTOMATICO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@PAGO_AUTOMATICO.cdtiptra"/>';
@@ -614,52 +611,6 @@
 					}
 				});
 				storeSubcoberturaAsegurado4MSCRender.load();
-				
-                storeSubcoberturaAseguradoGMPCRender = Ext.create('Ext.data.JsonStore', {
-                    model:'Generic',
-                    //autoLoad:true,
-                    cargado:false,
-                    proxy: {
-                        type: 'ajax',
-                        url: _URL_CATALOGOS,
-                        extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALESGMPC},
-                        reader: {
-                            type: 'json',
-                            root: 'lista'
-                        }
-                    },listeners: {
-                        load : function() {
-                            this.cargado=true;
-                            if(!Ext.isEmpty(gridFacturaDirecto)){
-                                gridFacturaDirecto.getView().refresh();
-                            }
-                        }
-                    }
-                });
-                storeSubcoberturaAseguradoGMPCRender.load();
-                
-                storeSubcoberturaAseguradoGMPIRender = Ext.create('Ext.data.JsonStore', {
-                    model:'Generic',
-                    //autoLoad:true,
-                    cargado:false,
-                    proxy: {
-                        type: 'ajax',
-                        url: _URL_CATALOGOS,
-                        extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALESGMPI},
-                        reader: {
-                            type: 'json',
-                            root: 'lista'
-                        }
-                    },listeners: {
-                        load : function() {
-                            this.cargado=true;
-                            if(!Ext.isEmpty(gridFacturaDirecto)){
-                                gridFacturaDirecto.getView().refresh();
-                            }
-                        }
-                    }
-                });
-                storeSubcoberturaAseguradoGMPIRender.load();
 				
 				storeSubcoberturaAsegurado4INFORender = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
@@ -1733,10 +1684,10 @@
 								}
 							},
 							{
-								header: 'Id<br/>Sini. Existente',   dataIndex: 'NMSINREF',          width: 90, hidden : (_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
+								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',			width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
-								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : (_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
+								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
 								header: 'Fecha<br/>Ocurrencia',		dataIndex: 'FEOCURRE'
@@ -1862,34 +1813,6 @@
 											    leyenda='Cargando...';
 											}
 										}
-										else if(_cdtipsitProducto =="GMPC"){
-                                            if(storeSubcoberturaAseguradoGMPCRender.cargado) {
-                                                debug("storeSubcoberturaAseguradoGMPCRender");
-                                                debug(storeSubcoberturaAseguradoGMPCRender);
-                                                storeSubcoberturaAseguradoGMPCRender.each(function(rec) {
-                                                    if (rec.data.key == v){
-                                                        leyenda = rec.data.value;
-                                                    }
-                                                });
-                                            }
-                                            else{
-                                                leyenda='Cargando...';
-                                            }
-                                        }
-                                        else if(_cdtipsitProducto =="GMPI"){
-                                            if(storeSubcoberturaAseguradoGMPIRender.cargado) {
-                                                debug("storeSubcoberturaAseguradoGMPIRender");
-                                                debug(storeSubcoberturaAseguradoGMPIRender);
-                                                storeSubcoberturaAseguradoGMPIRender.each(function(rec) {
-                                                    if (rec.data.key == v){
-                                                        leyenda = rec.data.value;
-                                                    }
-                                                });
-                                            }
-                                            else{
-                                                leyenda='Cargando...';
-                                            }
-                                        }
 										else{
 											if(storeSubcoberturaAseguradoRender.cargado) {
 												debug("storeSubcoberturaAseguradoRender");
@@ -1915,7 +1838,7 @@
 									return leyenda;
 								}
 							},
-                            {   header: 'Fecha ingreso',        dataIndex: 'FEINGRESO',  renderer: Ext.util.Format.dateRenderer('d/m/Y')  ,hidden : _tipoProducto == _GMPRUEBA
+                            {   header: 'Fecha ingreso',        dataIndex: 'FEINGRESO',  renderer: Ext.util.Format.dateRenderer('d/m/Y')
                                 ,editor : {
                                     xtype : 'datefield',
                                     format : 'd/m/Y',
@@ -1927,7 +1850,7 @@
                                     }
                                 }
                             }, 
-                            {   header: 'Fecha egreso',             dataIndex: 'FEEGRESO',    renderer: Ext.util.Format.dateRenderer('d/m/Y')       ,hidden : _tipoProducto == _GMPRUEBA
+                            {   header: 'Fecha egreso',             dataIndex: 'FEEGRESO',    renderer: Ext.util.Format.dateRenderer('d/m/Y')
                                 ,editor : {
                                     xtype    : 'datefield',
                                     format   : 'd/m/Y',
@@ -1939,7 +1862,7 @@
                                 }
                             },
                             {
-                                header: 'Tipo evento',              dataIndex: 'CDTIPEVE'           ,hidden : _tipoProducto == _GMPRUEBA
+                                header: 'Tipo evento',              dataIndex: 'CDTIPEVE'
                                 ,editor : comboTipoEventos
                                 ,renderer : function(v) {
                                     var leyenda = '';
@@ -1967,7 +1890,7 @@
                                 }
                             },
                              {
-                                header: 'Alta',                     dataIndex: 'CDTIPALT'           ,hidden : _tipoProducto == _GMPRUEBA
+                                header: 'Alta',                     dataIndex: 'CDTIPALT'
                                 ,editor : comboAltaHospital
                                 ,renderer : function(v) {
                                     var leyenda = '';
@@ -4033,19 +3956,17 @@
                     ,columns    : 2
                     ,width      : 250
                     ,style      : 'margin:5px;'
-                    ,hidden     : _GLOBAL_CDSISROL===RolSistema
                     ,items      : [
                         {
                             boxLabel    : 'Si'
                             ,itemId     : 'SWAGENTE2'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'S'
-                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                         },{
                             boxLabel    : 'No'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'N'
-                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                            ,checked    : true
                         }
                     ]
                 }
@@ -4188,19 +4109,17 @@
 	                    ,columns    : 2
 	                    ,width      : 250
 	                    ,style      : 'margin:5px;'
-	                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 	                    ,items      : [
 	                        {
 	                            boxLabel    : 'Si'
 	                            ,itemId     : 'SWAGENTE3'
 	                            ,name       : 'SWAGENTE3'
 	                            ,inputValue : 'S'
-	                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 	                        },{
 	                            boxLabel    : 'No'
 	                            ,name       : 'SWAGENTE3'
 	                            ,inputValue : 'N'
-	                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+	                            ,checked    : true
 	                        }
 	                    ]
 	                }],
@@ -4783,20 +4702,18 @@
                                             ,columns    : 2
                                             ,width      : 250
                                             ,style      : 'margin:5px;'
-                                            ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                                             ,items      : [
                                                 {
                                                     boxLabel    : 'Si'
                                                     ,itemId     : 'SWAGENTE5'
                                                     ,name       : 'SWAGENTE5'
                                                     ,inputValue : 'S'
-                                                    ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                                                 }
                                                 ,{
                                                     boxLabel    : 'No'
                                                     ,name       : 'SWAGENTE5'
                                                     ,inputValue : 'N'
-                                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                    ,checked    : true
                                                 }
                                             ]
                                         }],
@@ -5027,20 +4944,18 @@
                         ,columns    : 2
                         ,width      : 250
                         ,style      : 'margin:5px;'
-                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                         ,items      : [
                             {
                                 boxLabel    : 'Si'
                                 ,itemId     : 'SWAGENTE4'
                                 ,name       : 'SWAGENTE4'
                                 ,inputValue : 'S'
-                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                             }
                             ,{
                                 boxLabel    : 'No'
                                 ,name       : 'SWAGENTE4'
                                 ,inputValue : 'N'
-                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                ,checked    : true
                             }
                         ]
                     }],
@@ -5145,7 +5060,6 @@
 											,columns    : 2
 											,width      : 250
 											,style      : 'margin:5px;'
-											,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 											,items      :
 											[
 												{
@@ -5153,13 +5067,12 @@
 													,itemId     : 'SWAGENTE2'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'S'
-													,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 												}
 												,{
 													boxLabel    : 'No'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'N'
-													,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+													,checked    : true
 												}
 											]
 										}],
@@ -6583,7 +6496,6 @@
     function obtenerSumaAseguradaMontoGastados (cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, cdgarant, cdconval, 
             cdperson, nmsinref, totalConsumido, nmsinies, valSesion, aplicaFondo){
         
-        debug("valSesion   ==========>>>>>"+valSesion+" totalConsumido==>"+totalConsumido);
         if(valSesion =="1"){
             //MULTISALUD INFONAVIT
             panelComplementos.down('[name=params.sumaAsegurada]').hide();
@@ -6657,7 +6569,6 @@
                 }
                 ,success : function (response){
                     var jsonResponse  = Ext.decode(response.responseText).datosValidacion[0];
-                    debug("Obtenemos los valores de los datos de la Suma Asegurada ==>> "+jsonResponse);
                     var sumAsegurada  = jsonResponse.SUMA_ASEGURADA;
                     var sumDisponible = jsonResponse.RESERVA_DISPONIBLE;
                     
@@ -7280,7 +7191,6 @@
 	// Se hace función para re-utilizarlo
 	function _11_clickAplicarCambiosFactura(){
 		debug("_11_clickAplicarCambiosFactura");
-		
 		var valido = panelInicialPral.isValid();
 		if(!valido) {
 			datosIncompletos();

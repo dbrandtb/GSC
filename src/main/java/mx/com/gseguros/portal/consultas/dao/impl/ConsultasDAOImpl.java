@@ -21,7 +21,6 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
@@ -31,6 +30,12 @@ import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.StoredProcedure;
 
 public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 {
@@ -124,6 +129,12 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmsuplem" , nmsuplem);
 		params.put("nmsolici" , nmsolici);
 		params.put("cdramant" , cdramant);
+		logger.debug(Utils.log(
+				 "\n*****************************************************"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLIZAS_X_PAR_VAR ******"
+				,"\n****** params=",params
+				,"\n*****************************************************"
+				));
 		Map<String,Object>procResult  = ejecutaSP(new CargarMpolizasPorParametrosVariables(getDataSource()), params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -134,7 +145,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				 "\n*****************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , lista
-				,"\n****** ...P_GET_MPOLIZAS_X_PAR_VAR ******"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLIZAS_X_PAR_VAR ******"
 				,"\n*****************************************************"
 				));
 		return lista;
@@ -162,7 +173,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             		,"NMCUADRO" , "PORREDAU" , "SWCONSOL" , "NMPOLANT" , "NMPOLNVA"
             		,"FESOLICI" , "CDRAMANT" , "CDMEJRED" , "NMPOLDOC" , "NMPOLIZA2"
             		,"NMRENOVE" , "NMSUPLEE" , "TTIPCAMC" , "TTIPCAMV" , "SWPATENT"
-            		,"NMPOLMST" , "PCPGOCTE" , "TIPOFLOT" , "RAMO"     , "CDUNIEXT"
+            		,"NMPOLMST" , "PCPGOCTE" , "TIPOFLOT"
             };
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -186,6 +197,12 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
+		logger.debug(Utils.log(
+				 "\n*********************************************"
+				,"\n****** PKG_SATELITES2.P_GET_TCONVALSIT ******"
+				,"\n****** params=",params
+				,"\n*********************************************"
+				));
 		Map<String,Object>procResult  = ejecutaSP(new CargarTconvalsit(getDataSource()), params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -196,7 +213,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				 "\n*********************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , lista
-				,"\n****** ...P_GET_TCONVALSIT ******"
+				,"\n****** PKG_SATELITES2.P_GET_TCONVALSIT ******"
 				,"\n*********************************************"
 				));
 		return lista;
@@ -254,6 +271,12 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
+		logger.debug(Utils.log(
+				 "\n*********************************************"
+				,"\n****** PKG_SATELITES2.P_GET_TBASVALSIT ******"
+				,"\n****** params=",params
+				,"\n*********************************************"
+				));
 		Map<String,Object>procResult  = ejecutaSP(new CargarTbasvalsit(getDataSource()), params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -264,7 +287,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				 "\n*********************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , lista
-				,"\n****** ...P_GET_TBASVALSIT ******"
+				,"\n****** PKG_SATELITES2.P_GET_TBASVALSIT ******"
 				,"\n*********************************************"
 				));
 		return lista;
@@ -326,6 +349,12 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("nmsituac" , nmsituac);
+		logger.debug(Utils.log(
+				 "\n**************************************************"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLIPER_SITUAC ******"
+				,"\n****** params=",params
+				,"\n**************************************************"
+				));
 		Map<String,Object>procResult  = ejecutaSP(new CargarMpoliperSituac(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		Map<String,String>mpoliper    = null;
@@ -341,7 +370,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				 "\n**************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , mpoliper
-				,"\n****** ...P_GET_MPOLIPER_SITUAC ******"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLIPER_SITUAC ******"
 				,"\n**************************************************"
 				));
 		return mpoliper;
@@ -386,6 +415,12 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("nmsituac" , nmsituac);
+		logger.debug(Utils.log(
+				 "\n**************************************************"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLISIT_SITUAC ******"
+				,"\n****** params=",params
+				,"\n**************************************************"
+				));
 		Map<String,Object>procResult  = ejecutaSP(new CargarMpolisitSituac(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		Map<String,String>mpoliper    = null;
@@ -401,7 +436,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				 "\n**************************************************"
 				,"\n****** params="   , params
 				,"\n****** registro=" , mpoliper
-				,"\n****** ...P_GET_MPOLISIT_SITUAC ******"
+				,"\n****** PKG_SATELITES2.P_GET_MPOLISIT_SITUAC ******"
 				,"\n**************************************************"
 				));
 		return mpoliper;
@@ -445,13 +480,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
 		params.put("nmsuplem" , nmsuplem);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_TVALOSIT", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargarTvalosit(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
 		{
 			lista=new ArrayList<Map<String,String>>();
 		}
-		Utils.debugProcedure(logger, "...P_GET_TVALOSIT", params,lista);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_TVALOSIT", params,lista);
 		return lista;
 	}
 	
@@ -498,13 +534,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
     	params.put("cdagente" , null);
+    	Utils.debugProcedure(logger, "PKG_SATELITES.P_OBTIENE_MPOLIAGE2", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarMpoliage(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null||lista.size()==0)
     	{
     		throw new ApplicationException("No hay agentes para la poliza");
     	}
-    	Utils.debugProcedure(logger, "...P_OBTIENE_MPOLIAGE2", params, lista);
+    	Utils.debugProcedure(logger, "PKG_SATELITES.P_OBTIENE_MPOLIAGE2", params, lista);
     	return lista;
 	}
     
@@ -541,6 +578,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdramo"   , cdramo);
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_VALIDAR_CODIGO_EXTERNO_CTE", params);
     	ejecutaSP(new ValidarDatosCliente(getDataSource()),params);
     		}
     
@@ -571,6 +609,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdramo"   , cdramo);
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
+    	Utils.debugProcedure(logger, "PKG_SATELITES.P_VALIDA_DATOS_OBLIG_PREVEX", params);
     	ejecutaSP(new ValidarDatosObligatoriosPrevex(getDataSource()),params);
 	}
     
@@ -603,6 +642,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
     	params.put("nmsuplem" , nmsuplem);
+    	Utils.debugProcedure(logger, "PKG_SATELITES.P_VALIDA_ATRIB_FP_DXN", params);
     	ejecutaSP(new ValidarAtributosDXN(getDataSource()),params);
 	}
     
@@ -635,6 +675,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdramo"   , cdramo);
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_MAX_SUPLEMENTO", params);
     	Map<String,Object>procResult = ejecutaSP(new CargarUltimoNmsuplemPoliza(getDataSource()),params);
     	Map<String,String>salida = new LinkedHashMap<String,String>();
     	salida.put("nmsuplem" , (String)procResult.get("pv_nmsuplem_o"));
@@ -675,13 +716,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("nmsuplem" , nmsuplem);
     	params.put("nmsituac" , nmsituac);
     	params.put("roles"    , rolesPipes);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_MPOLIPER_OTROS_ROLES", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarMpoliperOtrosRolesPorNmsituac(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utils.debugProcedure(logger, "...P_GET_MPOLIPER_OTROS_ROLES", params, lista);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_MPOLIPER_OTROS_ROLES", params, lista);
     	return lista;
 	}
     
@@ -734,13 +776,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdramo" , cdramo);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_OBTIENE_SITUACION", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarTiposSituacionPorRamo(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utils.debugProcedure(logger, "...P_OBTIENE_SITUACION", params, lista);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_OBTIENE_SITUACION", params, lista);
     	return lista;
     }
     
@@ -763,6 +806,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdpostal" , cdpostal);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_VERIFICA_CDPOSTAL_FRONTER", params);
     	Map<String,Object>procResult = ejecutaSP(new VerificarCodigoPostalFronterizo(getDataSource()),params);
     	boolean esFront = ((String)procResult.get("pv_fronterizo_o")).equals("S");
     	logger.debug(Utils.log("verificarCodigoPostalFronterizo=",esFront));
@@ -787,6 +831,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdtipsit" , cdtipsit);
+    	Utils.debugProcedure(logger, "PKG_SATELITES.P_OBT_ATRIBUTOS", params);
     	Map<String,Object>procResult   = ejecutaSP(new CargarAtributosBaseCotizacion(getDataSource()),params);
     	List<Map<String,String>> lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null||lista.size()==0)
@@ -797,7 +842,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		throw new ApplicationException("Atributos base de cotizacion duplicados para la modalidad");
     	}
-    	Utils.debugProcedure(logger, "...P_OBT_ATRIBUTOS", params, lista);
+    	Utils.debugProcedure(logger, "PKG_SATELITES.P_OBT_ATRIBUTOS", params, lista);
     	return lista.get(0);
     }
     
@@ -830,6 +875,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
     	params.put("cdusuari" , cdusuari);
+    	Utils.debugProcedure(logger, "PKG_SATELITES.P_GET_INFO_MPOLIZAS", params);
     	Map<String,Object>procResult  = ejecutaSP(new CargarInformacionPoliza(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null||lista.size()==0)
@@ -840,7 +886,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		throw new ApplicationException("Informacion de poliza duplicada");
     	}
-    	Utils.debugProcedure(logger, "...P_GET_INFO_MPOLIZAS", params, lista);
+    	Utils.debugProcedure(logger, "PKG_SATELITES.P_GET_INFO_MPOLIZAS", params, lista);
     	return lista.get(0);
 	}
     
@@ -860,8 +906,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             		,"fevencim" , "nmrenova" , "ferecibo" , "feultsin" , "nmnumsin" , "cdtipcoa" , "swtarifi"
             		,"swabrido" , "feemisio" , "cdperpag" , "nmpoliex" , "nmcuadro" , "porredau" , "swconsol"
             		,"nmpolant" , "nmpolnva" , "fesolici" , "cdramant" , "cdmejred" , "nmpoldoc" , "nmpoliza2"
-            		,"nmrenove" , "nmsuplee" , "ttipcamc" , "ttipcamv" , "swpatent" , "cdagente" , "ramo"
-            		,"cduniext"
+            		,"nmrenove" , "nmsuplee" , "ttipcamc" , "ttipcamv" , "swpatent" , "cdagente"
     	            };
     		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
@@ -877,6 +922,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdramo"   , cdramo);
     	params.put("cdperpag" , cdperpag);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_PORC_RECARGO", params);
     	Map<String,Object>procResult=ejecutaSP(new RecuperarPorcentajeRecargoPorProducto(getDataSource()), params);
     	double recargo;
     	try
@@ -889,7 +935,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     		throw new ApplicationException("Error al obtener recargo por forma de pago");
     	}
     	String sRecargo=String.format("%.2f", recargo);
-    	logger.debug(Utils.log("...P_GET_PORC_RECARGO result=",sRecargo));
+    	logger.debug(Utils.log("PKG_CONSULTA.P_GET_PORC_RECARGO result=",sRecargo));
     	return sRecargo;
     }
     
@@ -918,13 +964,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("pantalla" , pantalla);
     	params.put("cdramo"   , cdramo);
     	params.put("cdtipsit" , cdtipsit);
+    	Utils.debugProcedure(logger,"PKG_SATELITES2.P_GET_VALORES_PANTALLA",params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarValoresPantalla(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utils.debugProcedure(logger,"...P_GET_VALORES_PANTALLA",params,lista);
+    	Utils.debugProcedure(logger,"PKG_SATELITES2.P_GET_VALORES_PANTALLA",params,lista);
     	return lista;
 	}
     
@@ -952,13 +999,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdramo"   , cdramo);
     	params.put("cdtipsit" , cdtipsit);
+    	Utils.debugProcedure(logger,"PKG_SATELITES2.P_GET_VALORES_DEFECTO_FACTORES",params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarValoresAtributosFactores(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utils.debugProcedure(logger,"...P_GET_VALORES_DEFECTO_FACTORES",params,lista);
+    	Utils.debugProcedure(logger,"PKG_SATELITES2.P_GET_VALORES_DEFECTO_FACTORES",params,lista);
     	return lista;
 	}
     
@@ -998,13 +1046,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("nmsituac" , nmsituac);
     	params.put("cdrol"    , cdrol);
     	params.put("cdperson" , cdperson);
+    	Utils.debugProcedure(logger,"PKG_SATELITES.P_OBTIENE_MPOLIPER",params);
     	Map<String,Object>procResult  = ejecutaSP(new ObtieneContratantePoliza(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utils.debugProcedure(logger,"...P_OBTIENE_MPOLIPER",params,lista);
+    	Utils.debugProcedure(logger,"PKG_SATELITES.P_OBTIENE_MPOLIPER",params,lista);
     	return lista;
     }
     
@@ -1042,7 +1091,6 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			,String statusVig
 			,String finicio //Se agrega campo fecha de fin
 			,String ffin//Se agrega campo fecha de fin
-			,String cdsisrol
 			)throws Exception
 	{
     	Map<String,String>params=new LinkedHashMap<String,String>();
@@ -1056,15 +1104,15 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("statusVig" , statusVig); 
     	params.put("finicio"   , finicio);//Se agrega campo fecha de inicio
     	params.put("ffin"      , ffin);//Se agrega campo fecha de fin
-    	params.put("cdsisrol"  , cdsisrol);
     	
+    	Utils.debugProcedure(logger,"PKG_CONSULTA.P_GET_POLIZAS_PARA_ENDOSOS",params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarPolizasEndosables(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utils.debugProcedure(logger,"...P_GET_POLIZAS_PARA_ENDOSOS",params,lista);
+    	Utils.debugProcedure(logger,"PKG_CONSULTA.P_GET_POLIZAS_PARA_ENDOSOS",params,lista);
     	return lista;
 	}
     
@@ -1083,7 +1131,6 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlParameter("statusVig" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("finicio"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("ffin"      , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
             String[] cols=new String[]{
             		//MPOLIZAS
             		"CDUNIECO"  , "CDRAMO"   , "ESTADO"   , "NMPOLIZA"
@@ -1155,13 +1202,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdramo"   , cdramo);
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
+    	Utils.debugProcedure(logger,"PKG_CONSULTA.P_GET_HISTORICO_POLIZA",params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarHistoricoPoliza(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utils.debugProcedure(logger,"...P_GET_HISTORICO_POLIZA",params,lista);
+    	Utils.debugProcedure(logger,"PKG_CONSULTA.P_GET_HISTORICO_POLIZA",params,lista);
     	return lista;
 	}
     
@@ -1211,6 +1259,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("limit", limit);
     	params.put("dsatribu", dsatribu);
     	params.put("otvalor", otvalor);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA_PRUEBA.P_GET_DATOS_INCISOS_F", params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarIncisosPolizaGrupoFamilia(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
@@ -1221,7 +1270,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	total.put("total", (String)procResult.get("pv_num_rec_o"));
     	lista.add(total);
     	construirClavesAtributos(lista);
-    	Utils.debugProcedure(logger,"...P_GET_DATOS_INCISOS_F",params,lista);
+    	Utils.debugProcedure(logger,"PKG_CONSULTA_PRUEBA.P_GET_DATOS_INCISOS_F",params,lista);
     	return lista;
 	}
     
@@ -1316,6 +1365,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdramo"   , cdramo);
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DATOS_NIVEL_INC_Y_POLIZA", params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarDatosIncisoEnNivelPoliza(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
@@ -1323,7 +1373,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     		lista=new ArrayList<Map<String,String>>();
     	}
     	construirClavesAtributosIncisoEnPoliza(lista);
-    	Utils.debugProcedure(logger,"...P_GET_DATOS_NIVEL_INC_Y_POLIZA",params,lista);
+    	Utils.debugProcedure(logger,"PKG_CONSULTA.P_GET_DATOS_NIVEL_INC_Y_POLIZA",params,lista);
     	return lista;
     }
     
@@ -1426,13 +1476,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdtipsit" , cdtipsit);
     	params.put("cdatribu" , cdatribu);
     	params.put("otclave"  , otclave);
+    	Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_OTVALOR_CAT_TATRISIT", params);
     	Map<String,Object>procResult = ejecutaSP(new RecuperarValorAtributoUnico(getDataSource()),params);
     	String otvalor               = (String)procResult.get("pv_otvalor_o");
     	if(otvalor==null)
     	{
     		otvalor="";
     	}
-    	logger.debug(Utils.log("...P_GET_OTVALOR_CAT_TATRISIT result=",otvalor));
+    	logger.debug(Utils.log("PKG_SATELITES2.P_GET_OTVALOR_CAT_TATRISIT result=",otvalor));
     	return otvalor;
 	}
     
@@ -1464,13 +1515,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdramo"   , cdramo);
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_GRUPOS_POLIZA", params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarGruposPoliza(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utils.debugProcedure(logger,"...P_GET_GRUPOS_POLIZA",params,lista);
+    	Utils.debugProcedure(logger,"PKG_CONSULTA.P_GET_GRUPOS_POLIZA",params,lista);
     	return lista;
 	}
     
@@ -1506,13 +1558,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdramo"   , cdramo);
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_FAMILIAS_POLIZA", params);
     	Map<String,Object>procResult  = ejecutaSP(new RecuperarFamiliasPoliza(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista=new ArrayList<Map<String,String>>();
     	}
-    	Utils.debugProcedure(logger,"...P_GET_FAMILIAS_POLIZA",params,lista);
+    	Utils.debugProcedure(logger,"PKG_CONSULTA.P_GET_FAMILIAS_POLIZA",params,lista);
     	return lista;
 	}
     
@@ -1541,6 +1594,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	boolean esSalud = false;
     	Map<String,Object> params = new HashMap<String, Object>();
     	params.put("pv_cdramo_i" , cdramo);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_VALIDA_PRODUCTO_SALUD", params);
     	Map<String,Object> result = ejecutaSP(new ValidaProductoSaludSP(getDataSource()),params);
     	if(Constantes.SI.equals(result.get("pv_swprosalud_o"))) {
     		esSalud = true;
@@ -1564,6 +1618,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdramo" , cdramo);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DSATRIBUS_TATRISIT", params);
     	Map<String,Object> procResult = ejecutaSP(new RecuperarDescripcionAtributosProducto(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
@@ -1575,7 +1630,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		listaNombres.add(elem.get("ATRIBUTO"));
     	}
-    	Utils.debugProcedure(logger, "...P_GET_DSATRIBUS_TATRISIT", params, listaNombres);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DSATRIBUS_TATRISIT", params, listaNombres);
     	return listaNombres;
     }
     
@@ -1597,6 +1652,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
     	params.put("cdramo" , cdramo);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DSATRIBUS_TATRISIT", params);
     	Map<String,Object> procResult = ejecutaSP(new RecuperarDescripcionAtributosSituacionPorRamo(getDataSource()),params);
     	List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
@@ -1608,7 +1664,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	{
     		listaNombres.add(elem.get("ATRIBUTO"));
     	}
-    	Utils.debugProcedure(logger, "...P_GET_DSATRIBUS_TATRISIT", params, listaNombres);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_DSATRIBUS_TATRISIT", params, listaNombres);
     	return listaNombres;
     }
     
@@ -1644,13 +1700,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdsisrol" , cdsisrol);
     	params.put("cdusuari" , cdusuari);
     	params.put("cdtipsup" , cdtipsup);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_FECHAS_ENDOSO", params);
     	Map<String,Object> procResult = ejecutaSP(new RecuperarFechasLimiteEndoso(getDataSource()),params);
     	Map<String,String> result     = new HashMap<String,String>();
     	result.put("FECHA_MINIMA" , (String)procResult.get("pv_fechamin_o"));
     	result.put("FECHA_MAXIMA" , (String)procResult.get("pv_fechamax_o"));
     	result.put("FECHA_REFERENCIA" , (String)procResult.get("pv_fecharef_o"));
     	result.put("EDITABLE"     , (String)procResult.get("pv_editable_o"));
-    	logger.debug(Utils.log("...P_GET_FECHAS_ENDOSO mapa=",result));
+    	logger.debug(Utils.log("PKG_CONSULTA.P_GET_FECHAS_ENDOSO mapa=",result));
     	return result;
 	}
     
@@ -1689,13 +1746,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdramo"   , cdramo);
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
+    	Utils.debugProcedure(logger, "PKG_CANCELA.P_GET_ENDOSOS_X_POLIZA_A_REHAB", params);
     	Map<String,Object>       procResult = ejecutaSP(new RecuperarEndososRehabilitables(getDataSource()),params);
     	List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista = new ArrayList<Map<String,String>>();
     	}
-    	Utils.debugProcedure(logger, "...P_GET_ENDOSOS_X_POLIZA_A_REHAB", params, lista);
+    	Utils.debugProcedure(logger, "PKG_CANCELA.P_GET_ENDOSOS_X_POLIZA_A_REHAB", params, lista);
     	return lista;
 	}
     
@@ -1732,13 +1790,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdramo"   , cdramo);
     	params.put("estado"   , estado);
     	params.put("nmpoliza" , nmpoliza);
+    	Utils.debugProcedure(logger, "PKG_CANCELA.P_GET_ENDOSOS_X_POLIZA_A_CANC", params);
     	Map<String,Object>       procResult = ejecutaSP(new RecuperarEndososCancelables(getDataSource()),params);
     	List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
     	if(lista==null)
     	{
     		lista = new ArrayList<Map<String,String>>();
     	}
-    	Utils.debugProcedure(logger, "...P_GET_ENDOSOS_X_POLIZA_A_CANC", params, lista);
+    	Utils.debugProcedure(logger, "PKG_CANCELA.P_GET_ENDOSOS_X_POLIZA_A_CANC", params, lista);
     	return lista;
 	}
     
@@ -1767,8 +1826,9 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     {
     	Map<String,String> params = new LinkedHashMap<String,String>();
     	params.put("cdusuari" , cdusuari);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_PERM_DEVOL_PRI_X_USUA", params);
     	Map<String,Object> procResult = ejecutaSP(new RecuperarPermisoDevolucionPrimasUsuario(getDataSource()),params);
-    	logger.debug(Utils.log("****** ...P_GET_PERM_DEVOL_PRI_X_USUA permiso=",procResult.get("pv_permiso_o")));
+    	logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_PERM_DEVOL_PRI_X_USUA permiso=",procResult.get("pv_permiso_o")));
     	return "S".equals((String)procResult.get("pv_permiso_o"));
     }
     
@@ -1791,13 +1851,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	Map<String,String> params = new LinkedHashMap<String,String>();
     	params.put("cdtipsit" , cdtipsit);
     	params.put("cdsisrol" , cdsisrol);
+    	Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_VALMAX_X_ROL", params);
     	Map<String,Object> procResult = ejecutaSP(new RecuperarValorMaximoSituacionPorRol(getDataSource()),params);
     	String valor = (String)procResult.get("pv_valor_o");
     	if(valor==null)
     	{
     		valor = "9999999";
     	}
-    	logger.debug(Utils.log("\n****** ...P_GET_VALMAX_X_ROL valor=",valor));
+    	logger.debug(Utils.log("\n****** PKG_CONSULTA.P_GET_VALMAX_X_ROL valor=",valor));
     	return valor;
     }
     
@@ -1821,9 +1882,10 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	Map<String,String> params = new LinkedHashMap<String,String>();
     	params.put("pv_cdramo_i" , cdramo);
     	params.put("pv_cdtipsit_i" , cdtipsit);
+    	Utils.debugProcedure(logger, "Pkg_Consulta.P_OBTIENE_SUBRAMO_X_CDTIPSIT", params);
     	Map<String,Object> procResult = ejecutaSP(new ObtieneSubramoGS(getDataSource()),params);
     	String valor = (String)procResult.get("pv_cdsubram_o");
-    	logger.debug(Utils.log("\n****** ...P_OBTIENE_SUBRAMO_X_CDTIPSIT=",valor));
+    	logger.debug(Utils.log("\n****** Pkg_Consulta.P_OBTIENE_SUBRAMO_X_CDTIPSIT=",valor));
     	return valor;
 	}
     
@@ -1859,16 +1921,9 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	String valor = (String) procResult.get("pv_cdtipsit_o");
     	if(StringUtils.isBlank(valor))
     	{
-//    		
-//    	}
-//    	else if(){
-//    	    
-//    	}
-//    	else
-//    	{
-    	    throw new ApplicationException(
-                    Utils.join("No se encuentra tipo de situacion con ",param1,", ",param2," y ",param3," en la fila ",fila)
-                    );
+    		throw new ApplicationException(
+    				Utils.join("No se encuentra tipo de situacion con ",param1,", ",param2," y ",param3," en la fila ",fila)
+    				);
     	}
     	return valor;
     }
@@ -1906,7 +1961,6 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	result.put("fesolici"       , (String)procResult.get("pv_fesolici_o"));
     	result.put("feini"          , (String)procResult.get("pv_feini_o"));
     	result.put("fefin"          , (String)procResult.get("pv_fefin_o"));
-    	result.put("ntramiteLigado" , (String)procResult.get("pv_ntramite_ligado_o"));
     	logger.debug(Utils.log("\npoliza=",result));
     	return result;
     }
@@ -1928,7 +1982,6 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             declareParameter(new SqlOutParameter("pv_fesolici_o"        , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_feini_o"           , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_fefin_o"           , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_ntramite_ligado_o" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"          , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o"           , OracleTypes.VARCHAR));
             compile();
@@ -1952,6 +2005,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdramo"   , cdramo);
     	params.put("cdagente" , cdagente);
     	params.put("cdusuari" , cdusuari);
+    	Utils.debugProcedure(logger, "pkg_estadistica.pr_estadistica_4", params);
     	Map<String,Object> procResult = ejecutaSP(new RecuperarEstadisticasCotizacionEmision(getDataSource()),params);
     	
     	Map<String,List<Map<String,String>>> mapa = new HashMap<String,List<Map<String,String>>>();
@@ -2038,6 +2092,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
     	params.put("cdramo"   , cdramo);
     	params.put("cdsisrol" , cdsisrol);
     	params.put("cdusuari" , cdusuari);
+    	Utils.debugProcedure(logger, "pkg_estadistica.P_GET_ESTADISTICA_TAREAS", params);
     	Map<String,Object> procResult = ejecutaSP(new RecuperarEstadisticasTareas(getDataSource()),params);
     	
     	Map<String,List<Map<String,String>>> mapa = new HashMap<String,List<Map<String,String>>>();
@@ -2135,6 +2190,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmsuplem" , nmsuplem);
 		params.put("cdtipsit" , cdtipsit);
 		params.put("cdatribu" , cdatribu);
+		Utils.debugProcedure(logger, "PKG_CONSULTA.P_GET_TATRISIT_AMPARADO", params);
 		Map<String,Object> procResult = ejecutaSP(new ObtieneAtributosSituacionCoberturaAmparada(getDataSource()),params);
 		String             conteo     = (String)procResult.get("pv_conteo_o");
 		if(StringUtils.isBlank(conteo))
@@ -2143,7 +2199,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		}
 		logger.debug(Utils.log(
 				 "\n**************************************************"
-				,"\n****** ...P_GET_TATRISIT_AMPARADO ******"
+				,"\n****** PKG_CONSULTA.P_GET_TATRISIT_AMPARADO ******"
 				,"\n****** params=" , params
 				,"\n****** conteo=" , conteo
 				,"\n**************************************************"
@@ -2190,13 +2246,14 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmsituac" , nmsituac);
 		params.put("nmsuplem" , nmsuplem);
 		params.put("cdtipsup" , cdtipsup);
+		Utils.debugProcedure(logger, "PKG_SATELITES2.P_VALIDA_SUPLEMENTO", params);
 		Map<String,Object> procResult = ejecutaSP(new ValidacionesSuplemento(getDataSource()),params);
 		String             error      = (String)procResult.get("pv_error_o");
 		logger.debug(Utils.log(
 				 "\n************************************************"
 				,"\n****** params=" , params
 				,"\n****** error="  , error
-				,"\n****** ...P_VALIDA_SUPLEMENTO ******"
+				,"\n****** PKG_SATELITES2.P_VALIDA_SUPLEMENTO ******"
 				,"\n************************************************"
 				));
 		return error;
@@ -2428,7 +2485,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmpoliza" , nmpoliza);
 		Map<String,Object> procRes = ejecutaSP(new ValidaPagoPolizaRepartido(getDataSource()),params);
 		boolean pagoRepartido = "S".equals((String)procRes.get("pv_repartido_o"));
-		logger2.debug("\n ...P_GET_SWCONTRIBUTORIO pagoRepartido: {}",pagoRepartido);
+		logger2.debug("\nPKG_CONSULTA.P_GET_SWCONTRIBUTORIO pagoRepartido: {}",pagoRepartido);
 		return pagoRepartido;
 	}
 	
@@ -2493,7 +2550,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("nmpoliza" , nmpoliza);
 		Map<String,Object> procRes = ejecutaSP(new ValidaClientePideNumeroEmpleado(getDataSource()),params);
 		boolean pide = "S".equals((String)procRes.get("pv_swempleado_o"));
-		logger2.debug("\n ...P_VALIDA_CLIENTE_NEMP pide= {}",pide);
+		logger2.debug("\nPKG_CONSULTA.P_VALIDA_CLIENTE_NEMP pide= {}",pide);
 		return pide;
 	}
 	
@@ -2514,30 +2571,15 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	}
 	
 	@Override
-	public List<Map<String,String>>recuperarUsuariosReasignacionTramite(String ntramite, String cdusuari, String cdsisrol) throws Exception
+	public List<Map<String,String>>recuperarUsuariosReasignacionTramite(String ntramite) throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
-		params.put("pv_ntramite_i" , ntramite);
-		params.put("pv_cdusuari_i" , cdusuari);
-		params.put("pv_cdsisrol_i" , cdsisrol);
+		params.put("ntramite" , ntramite);
 		Map<String,Object> procRes = ejecutaSP(new RecuperarUsuariosReasignacionTramite(getDataSource()),params);
 		List<Map<String,String>> lista = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{
 			throw new ApplicationException("No se encontraron usuarios");
-		}
-		for (Map<String, String> user : lista) {
-		    new ContarTramitesUsuarioRol(user).start(); // Mando N hilos
-		}
-		int respuestas = 0;
-		while (respuestas < lista.size()) { // Mientras tenga hilos pendientes
-		    Thread.sleep(100);
-		    respuestas = 0;
-		    for (Map<String, String> user : lista) { // Cuento los hilos que han respondido
-	            if (user.containsKey("TOTAL")) {
-	                respuestas = respuestas + 1;
-	            }
-	        }
 		}
 		return lista;
 	}
@@ -2546,15 +2588,10 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		protected RecuperarUsuariosReasignacionTramite(DataSource dataSource)
 		{
-			super(dataSource,"P_MC_GET_USUARIOS_REASIGNA");
-			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
-			String[] cols = new String[]{
-			        "NTRAMITE", "CDUSUARI_ACTUAL", "STATUS_ACTUAL", "CDSISROL_ACTUAL",
-			        "CDUSUARI", "CDSISROL", "DSUSUARI", "STATUS", "DSSISROL"
-			};
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			super(dataSource,"PKG_CONSULTA.P_GET_USUARIOS_REASIGNA");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR
+					,new GenericMapper(new String[]{"CDUSUARI","NOMBRE","CDSISROL","TOTAL"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"     , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"      , OracleTypes.VARCHAR));
 			compile();
@@ -2706,45 +2743,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 					map.put("DES_"+dsatribu, map.get("DSVALOR"+StringUtils.leftPad(String.valueOf(i), 2, "0")));
 				}
 			}
-			if(map.get("DES_MODELO")==null && map.get("DES_MODELO__FRONTERIZO_")!=null){
-			    String modelo=map.get("DES_MODELO__FRONTERIZO_");
-	            map.put("DES_MODELO", modelo);
-	            map.put("CLV_MODELO", modelo);
-	            String key =getKeyByValue(map, "MODELO").substring(8);
-	            logger.debug("key: -> "+key);
-                map.put("OTVALOR"+key,modelo);
-                map.put("DSVALOR"+key,modelo);
-	        }
-			if(map.get("DES_MARCA")==null && map.get("DES_MARCA__FRONTERIZO_")!=null){
-			    String marca = map.get("DES_MARCA__FRONTERIZO_");
-                map.put("DES_MARCA", marca );
-                map.put("CLV_MARCA", marca);
-                String keyMarca =getKeyByValue(map, "MARCA").substring(8);
-                map.put("OTVALOR"+keyMarca,marca);
-                map.put("DSVALOR"+keyMarca,marca);
-            }
-			if(map.get("DES_VERSION")==null && map.get("DES_VERSION__FRONTERIZO_")!=null){
-			    String version = map.get("DES_VERSION__FRONTERIZO_");
-                map.put("DES_VERSION", version);
-                map.put("CLV_VERSION", version);
-                String key =getKeyByValue(map, "VERSION").substring(8);
-                map.put("OTVALOR"+key,version);
-                map.put("DSVALOR"+key,version);
-            }
-			
 		}
-		logger.debug("lista--> "+lista);
-		
-		
-	}
-	
-	private <T, E> T getKeyByValue(Map<T, E> map, E value) {
-	    for (Entry<T, E> entry : map.entrySet()) {
-	        if (value.equals(entry.getValue())) {
-	            return entry.getKey();
-	        }
-	    }
-	    return null;
 	}
 	
 	@Override
@@ -2870,7 +2869,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			throw new ApplicationException(Utils.join("Parametro general ",paragen.toString()," repetido"));
 		}
 		String val = lista.get(0).get("VALPARAM");
-		logger.debug(Utils.join("\n****** ...P_OBTIENE_TPARAGEN ",paragen.getNomparam()," = ",val," ******"));
+		logger.debug(Utils.join("\n****** PKG_CONSULTA.P_OBTIENE_TPARAGEN ",paragen.getNomparam()," = ",val," ******"));
 		return val;
 	}
 	
@@ -3005,7 +3004,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.log("\n****** ...P_GET_POLIZAS_PARA_IMPRIMIR lista: ",lista.size()," ******"));
+		logger.debug(Utils.log("\n****** PKG_CONSULTA.P_GET_POLIZAS_PARA_IMPRIMIR lista: ",lista.size()," ******"));
 		return lista;
 	}
 	
@@ -3170,7 +3169,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		Map<String,String> result = new HashMap<String,String>();
 		result.put("requeridas" , requeridas);
 		result.put("ejecutadas" , ejecutadas);
-		logger2.debug("****** ...P_GET_DET_IMP_LOTE salida: {}",result);
+		logger2.debug("****** PKG_CONSULTA.P_GET_DET_IMP_LOTE salida: {}",result);
 		return result;
 	}
 	
@@ -3206,7 +3205,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.log("****** ...P_GET_IMPRESORAS lista=",lista));
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_IMPRESORAS lista=",lista));
 		return lista;
 	}
 	
@@ -3283,7 +3282,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.log("****** ...P_GET_TCNFIMPINCEXCSUC lista=",lista));
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_TCNFIMPINCEXCSUC lista=",lista));
 		return lista;
 	}
 	
@@ -3325,7 +3324,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.log("****** ...P_GET_TCNFIMPINCEXCAGT lista=",lista));
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_TCNFIMPINCEXCAGT lista=",lista));
 		return lista;
 	}
 	
@@ -3452,7 +3451,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.log("****** ...P_GET_RECIBOS_PARA_HABILITAR lista=",lista));
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_RECIBOS_PARA_HABILITAR lista=",lista));
 		return lista;
 	}
 	
@@ -3511,7 +3510,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.log("****** ...P_GET_DETALLE_REMESAS lista=",lista));
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_DETALLE_REMESAS lista=",lista));
 		return lista;
 	}
 	
@@ -3565,7 +3564,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.log("****** ...P_GET_DOCUMENTOS_X_LOTE lista=",lista));
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_DOCUMENTOS_X_LOTE lista=",lista));
 		return lista;
 	}
 	
@@ -3627,7 +3626,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		}
 		result.put("ntramite" , ntramite);
 		result.put("nmsolici" , nmsolici);
-		logger.debug(Utils.log("****** ...P_RECUPERA_DATOS_EMI result=",result));
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_RECUPERA_DATOS_EMI result=",result));
 		return result;
 	}
 	
@@ -3659,7 +3658,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			throw new ApplicationException(Utils.join("Error al recuperar el tipo de ramo para el ramo ",cdramo));
 		}
-		logger.debug(Utils.log("\n****** ...P_GET_CDTIPRAM_X_CDRAMO cdtipram=",cdtipram," ******"));
+		logger.debug(Utils.log("\n****** PKG_CONSULTA.P_GET_CDTIPRAM_X_CDRAMO cdtipram=",cdtipram," ******"));
 		return cdtipram;
 	}
 	
@@ -3697,7 +3696,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			throw new ApplicationException("No se puedo recuperar el tr\u00e1mite");
 		}
-		logger.debug(Utils.log("\n****** ...P_GET_TRAMITE_X_NMSUPLEM ntramite=",ntramite," ******"));
+		logger.debug(Utils.log("\n****** PKG_CONSULTA.P_GET_TRAMITE_X_NMSUPLEM ntramite=",ntramite," ******"));
 		return ntramite;
 	}
 	
@@ -3747,7 +3746,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			datos.put("remesa"   , remesa);
 			datos.put("cdtipimp" , cdtipimp);
 		}
-		logger.debug(Utils.log("\n****** ...P_GET_DATOS_REMESA_UNICA datos=",datos));
+		logger.debug(Utils.log("\n****** PKG_CONSULTA.P_GET_DATOS_REMESA_UNICA datos=",datos));
 		return datos;
 	}
 	
@@ -3848,7 +3847,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		logger.debug(Utils.log("****** ...P_GET_TCNFIMPINCEXCAGT lista=",lista));
+		logger.debug(Utils.log("****** PKG_CONSULTA.P_GET_TCNFIMPINCEXCAGT lista=",lista));
 		return lista;
 	}
 	
@@ -4408,7 +4407,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		
 		List<Map<String,String>> list = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		
-		logger.debug(Utils.log("...P_GET_FORMA_PAGO list=",list));
+		logger.debug(Utils.log("PKG_LISTAS.P_GET_FORMA_PAGO list=",list));
 		
 		return list;
 	}
@@ -4440,7 +4439,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		
 		List<Map<String,String>> list = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		
-		logger.debug(Utils.log("...P_GET_CLIENTES_X_NOMBRE_APE list=",list));
+		logger.debug(Utils.log("PKG_CONSULTA.P_GET_CLIENTES_X_NOMBRE_APE list=",list));
 		
 		return list;
 	}
@@ -4465,6 +4464,16 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	@Override
 	public List<Map<String,String>> recuperarConveniosPorPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String cdcontra) throws Exception
 	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ buscarPorPolizaDAO @@@@@@"
+				,"\n@@@@@@ cdunieco=",cdunieco
+				,"\n@@@@@@ cdramo=",cdramo
+				,"\n@@@@@@ cdtipsit=",cdtipsit
+				,"\n@@@@@@ estado=",estado
+				,"\n@@@@@@ nmpoliza=",nmpoliza
+				,"\n@@@@@@ cdcontra=",cdcontra
+				));	
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("pv_cdunieco_i" , cdunieco);
 		params.put("pv_cdramo_i" , cdramo);
@@ -4479,6 +4488,10 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				,"\n@@@@@@ regresa ",listaMapas.size()
 				,"\n@@@@@@"
 				));
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ termina buscarPorPolizaDAO @@@@@@"
+				));	
 		return listaMapas;
 	}
 	
@@ -4503,6 +4516,25 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	@Override
 	public void insertarConvenioPoliza(String cdunieco, String cdramo, String estado, String cdtipsit, String nmpoliza, String diasgrac, String cdconven, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception
 	{
+		
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ insertarConvenioPolizaDAO @@@@@@"
+				,"\n@@@@@@ cdunieco= ",cdunieco
+				,"\n@@@@@@ pv_cdunieco_i", cdunieco
+				,"\n@@@@@@ pv_cdramo_i", cdramo	
+				,"\n@@@@@@ pv_estado_i", estado
+				,"\n@@@@@@ pv_nmpoliza_i", nmpoliza
+				,"\n@@@@@@ pv_diasgrac_i", diasgrac
+				,"\n@@@@@@ pv_cdconven_i", cdconven
+				,"\n@@@@@@ pv_status_i", status	
+				,"\n@@@@@@ pv_fecregis_i", fecregis
+				,"\n@@@@@@ pv_cdusureg_i", cdusureg
+				,"\n@@@@@@ pv_fecmodif_i", fecmodif
+				,"\n@@@@@@ pv_cdusumod_i", cdusumod
+				,"\n@@@@@@ pv_accion_i", operacion
+				,"\n@@@@@@ pv_cdtipsit_i", cdtipsit
+				));
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
 		params.put("pv_cdunieco_i", cdunieco);
 		params.put("pv_cdramo_i", cdramo);
@@ -4518,6 +4550,10 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("pv_cdtipsit_i", cdtipsit);
 		params.put("pv_accion_i", operacion);		
 		Map<String,Object>  procRes    = ejecutaSP(new InsertarConvenioPoliza(getDataSource()),params);
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ termina insertarConvenioPolizaDAO @@@@@@"
+				));	
 	}
 	
 	protected class InsertarConvenioPoliza extends StoredProcedure
@@ -4546,6 +4582,15 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 
 	public List<Map<String,String>> recuperarCancelacionesConveniosPorPoliza(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza) throws Exception
 	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ buscarPorPolizaDAO @@@@@@"
+				,"\n@@@@@@ cdunieco=",cdunieco
+				,"\n@@@@@@ cdramo=",cdramo
+				,"\n@@@@@@ cdtipsit=",cdtipsit
+				,"\n@@@@@@ estado=",estado
+				,"\n@@@@@@ nmpoliza=",nmpoliza
+				));	
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("pv_cdunieco_i" , cdunieco);
 		params.put("pv_cdramo_i" , cdramo);
@@ -4564,6 +4609,10 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 				,"\n@@@@@@ regresa ",listaMapas.size()
 				,"\n@@@@@@"
 				));
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ termina buscarPorPolizaDAO @@@@@@"
+				));	
 		return listaMapas;
 	}
 	
@@ -4588,6 +4637,21 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	public void insertarCancelacionesConvenioPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String status, Date fecregis, String cdusureg, Date fecmodif, String cdusumod, String operacion) throws Exception
 	{
 		
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ insertarConvenioPolizaDAO @@@@@@"
+				,"\n@@@@@@ cdunieco= ",cdunieco
+				,"\n@@@@@@ pv_cdunieco_i", cdunieco
+				,"\n@@@@@@ pv_cdramo_i", cdramo	
+				,"\n@@@@@@ pv_estado_i", estado
+				,"\n@@@@@@ pv_nmpoliza_i", nmpoliza
+				,"\n@@@@@@ pv_status_i", status	
+				,"\n@@@@@@ pv_fecregis_i", fecregis
+				,"\n@@@@@@ pv_cdusureg_i", cdusureg
+				,"\n@@@@@@ pv_fecmodif_i", fecmodif
+				,"\n@@@@@@ pv_cdusumod_i", cdusumod
+				,"\n@@@@@@ pv_accion_i", operacion
+				));
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
 		params.put("pv_cdunieco_i", cdunieco);
 		params.put("pv_cdramo_i", cdramo);
@@ -4600,6 +4664,10 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("pv_cdusumod_i", cdusumod);		
 		params.put("pv_accion_i", operacion);		
 		Map<String,Object>  procRes    = ejecutaSP(new InsertarCancelacionesConvenioPoliza(getDataSource()),params);
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ termina insertarConvenioPolizaDAO @@@@@@"
+				));	
 	}
 	
 	protected class InsertarCancelacionesConvenioPoliza extends StoredProcedure
@@ -4971,6 +5039,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("pv_cdunieco_i", cdunieco);
 		params.put("pv_cdramo_i"  , cdramo);
 		params.put("pv_cadena_i"  , cadena);
+		Utils.debugProcedure(logger, "P_OBTENER_CONTRATANTES", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtenerContratantes(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -5004,6 +5073,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("pv_cadena_i"  , cadena);
+		Utils.debugProcedure(logger, "P_OBTENER_CONTRATANTES_RFC", params);
 		Map<String,Object>procResult  = ejecutaSP(new ObtenerContratantesRfc(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -5040,6 +5110,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("pv_cdtipimp_i"  , tipoimp);
 		params.put("pv_cdusuari_i"  , cdusuario);
 		
+		Utils.debugProcedure(logger, "P_OBTENER_CONTRATANTES_RFC", params);
 		Map<String,Object>procResult  = ejecutaSP(new CargaLayoutImpresion(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -5086,6 +5157,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("pv_idproceso_i"  , pv_idproceso_i);
 		
+		Utils.debugProcedure(logger, "PKG_IMPRESION.P_ELIMINA_ZWIMPXLAYOUT", params);
 		Map<String,Object>procResult  = ejecutaSP(new EliminaZwimpxlayout(getDataSource()),params);
 		return (String) procResult.get("pv_title_o");
 	}
@@ -5118,6 +5190,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		params.put("pv_cdusuari_i"  , pv_cdusuari_i);
 		params.put("pv_cdsisrol_i"  , pv_cdsisrol_i);
 		
+		Utils.debugProcedure(logger, "PKG_IMPRESION.P_GET_DOCUMENTOS_LAYOUT", params);
 		Map<String,Object>procResult  = ejecutaSP(new GetDocumentosLayout(getDataSource()),params);
 		return (List<Map<String, String>>) procResult.get("pv_registro_o");
 	}
@@ -5413,641 +5486,4 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
         }
     }
-    
-    @Override
-    public String recuperaAgentePoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String cdusuari) throws Exception{
-        Map<String,String>params = new LinkedHashMap<String,String>();
-        params.put("cdunieco" , cdunieco);
-        params.put("cdramo"   , cdramo);
-        params.put("estado"   , estado);
-        params.put("nmpoliza" , nmpoliza);
-        params.put("cdusuari" , cdusuari);
-        Map<String,Object> procResult = ejecutaSP(new RecuperaAgentePoliza(getDataSource()),params);        
-        Map<String,String> salida     = new LinkedHashMap<String,String>();
-        String cdagente = (String)procResult.get("pv_cdagente_o");
-        return cdagente;
-    }
-        
-    protected class RecuperaAgentePoliza extends StoredProcedure
-    {
-        protected RecuperaAgentePoliza(DataSource dataSource)
-        {
-            super(dataSource,"P_GET_AGENTE_POLIZA");
-            declareParameter(new SqlParameter("cdunieco" ,        OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdramo"   ,        OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("estado"   ,        OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("nmpoliza" ,        OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdusuari" ,        OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_cdagente_o", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_msg_id_o" ,  OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"  ,  OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    
-    @Override
-    public String verificaFusFamilia(String pv_cdunieco_i,
-                                      String pv_cdramo_i,
-                                      String pv_estado_i,
-                                      String pv_nmpoliza_i, 
-                                      String pv_nmsuplem_i,
-                                      String pv_cdusuari) throws Exception {
-        
-        Map<String, String> params = new LinkedHashMap<String, String>();
-        params.put("pv_cdunieco_i",  pv_cdunieco_i);
-        params.put("pv_cdramo_i",    pv_cdramo_i);
-        params.put("pv_estado_i",    pv_estado_i);
-        params.put("pv_nmpoliza_i",  pv_nmpoliza_i);
-        params.put("pv_nmsuplem_i",  pv_nmsuplem_i);
-        params.put("pv_cdusuari",    pv_cdusuari);
-        Map<String, Object> procRes = ejecutaSP(new VerificaFusFamilia(getDataSource()), params);
-        String resp = (String) procRes.get("pv_title_o");
-        
-        return resp;
-    }
-
-    protected class VerificaFusFamilia extends StoredProcedure {
-        protected VerificaFusFamilia(DataSource dataSource) {
-            super(dataSource, "pkg_db_report.val_tlockfus");
-            declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmpoliza_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsuplem_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdusuari",    OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    
-    @Override
-    public List<Map<String,String>> titularesFus(       String pv_cdunieco_i,
-                                      String pv_cdramo_i,
-                                      String pv_estado_i,
-                                      String pv_nmpoliza_i, 
-                                      String pv_nmsuplem_i) throws Exception {
-        
-        Map<String, String> params = new LinkedHashMap<String, String>();
-        params.put("pv_cdunieco_i",  pv_cdunieco_i);
-        params.put("pv_cdramo_i",    pv_cdramo_i);
-        params.put("pv_estado_i",    pv_estado_i);
-        params.put("pv_nmpoliza_i",  pv_nmpoliza_i);
-        params.put("pv_nmsuplem_i",  pv_nmsuplem_i);
-        
-        Map<String, Object> respuestaProcedure = ejecutaSP(new TitularesFus(getDataSource()), params);
-        List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
-        if(lista.isEmpty()){
-            throw new ApplicationException("No hay titulares");
-        }
-        
-        return lista;
-        
-    }
-
-    protected class TitularesFus extends StoredProcedure {
-        protected TitularesFus(DataSource dataSource) {
-            super(dataSource, "pkg_db_report.get_tit_fus");
-            declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmpoliza_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsuplem_i",  OracleTypes.VARCHAR));
-            String[] cols = new String[]{
-                    "cdunieco",
-                    "cdramo",
-                    "estado",
-                    "nmpoliza",
-                    "cdperson",
-                    "nombre",
-                    "nmsitaux"
-                   
-            };
-            
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public void actualizaEstadoTFusLock(String pv_cdunieco_i,
-                                                            String pv_cdramo_i,
-                                                            String pv_estado_i,
-                                                            String pv_nmpoliza_i, 
-                                                            String pv_nmsuplem_i,
-                                                            String pv_swestado_i) throws Exception {
-        
-        if(pv_estado_i.equalsIgnoreCase("W") && pv_estado_i.equalsIgnoreCase("F") ){
-            throw new ApplicationException("swestado no v\u00E1lido");
-        }
-        Map<String, String> params = new LinkedHashMap<String, String>();
-        params.put("pv_cdunieco_i",  pv_cdunieco_i);
-        params.put("pv_cdramo_i",    pv_cdramo_i);
-        params.put("pv_estado_i",    pv_estado_i);
-        params.put("pv_nmpoliza_i",  pv_nmpoliza_i);
-        params.put("pv_nmsuplem_i",  pv_nmsuplem_i);
-        params.put("pv_swestado_i",  pv_swestado_i);
-        
-        Map<String, Object> respuestaProcedure = ejecutaSP(new ActualizaEstadoTFusLock(getDataSource()), params);
-        
-        
-        
-        
-    }
-
-    protected class ActualizaEstadoTFusLock extends StoredProcedure {
-        protected ActualizaEstadoTFusLock(DataSource dataSource) {
-            super(dataSource, "pkg_db_report.set_estado_tlockfus");
-            declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmpoliza_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsuplem_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_swestado_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public List<Map<String,String>> docsXTitular(String pv_cdunieco_i,
-                                                 String pv_cdramo_i  ,
-                                                 String pv_estado_i  ,
-                                                 String pv_nmpoliza_i, 
-                                                 String pv_nmsuplem_i,
-                                                 String pv_nmsitaux_i) throws Exception {
-        
-        Map<String, String> params = new LinkedHashMap<String, String>();
-        params.put("pv_cdunieco_i",  pv_cdunieco_i);
-        params.put("pv_cdramo_i"  ,  pv_cdramo_i  );
-        params.put("pv_estado_i"  ,  pv_estado_i  );
-        params.put("pv_nmpoliza_i",  pv_nmpoliza_i);
-        params.put("pv_nmsuplem_i",  pv_nmsuplem_i);
-        params.put("pv_nmsitaux_i",  pv_nmsitaux_i);
-        
-        Map<String, Object> respuestaProcedure = ejecutaSP(new DocsXTitular(getDataSource()), params);
-        List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
-        
-        
-        return lista;
-        
-    }
-
-    protected class DocsXTitular extends StoredProcedure {
-        protected DocsXTitular(DataSource dataSource) {
-            super(dataSource, "pkg_db_report.get_doc_fus");
-            declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmpoliza_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsuplem_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsitaux_i",  OracleTypes.VARCHAR));
-            String[] cols = new String[]{
-                    "cdunieco",
-                    "cdramo",
-                    "estado",
-                    "nmpoliza",
-                    "nmsolici",
-                    "ntramite",
-                    "feinici",
-                    "cddocume",
-                    "dsdocume",
-                    "tipmov",
-                    "swvisible",
-                    "cdtiptra",
-                    "codidocu",
-                    "fefecha",
-                    "cdorddoc",
-                    "cdmoddoc",
-                    "nmcertif",
-                    "nmsituac",
-                    "cdusuari",
-                    "cdsisrol"
-
-                   
-            };
-            
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public void movTdocupolFus(String pv_cdunieco_i,
-                                                 String pv_cdramo_i  ,
-                                                 String pv_estado_i  ,
-                                                 String pv_nmpoliza_i, 
-                                                 String pv_nmsuplem_i,
-                                                 String pv_nmsolici_i,
-                                                 String pv_ntramite_i,
-                                                 Date pv_feinici_i,
-                                                 String pv_cddocume_i    ,
-                                                 String pv_dsdocume_i    ,
-                                                 String  pv_tipmov_i      ,
-                                                 String pv_swvisible_i   ,
-                                                 String pv_cdtiptra_i    ,
-                                                 String pv_codidocu_i    ,
-                                                 Date pv_fefecha_i     ,
-                                                 String pv_cdorddoc_i    ,
-                                                 String pv_cdmoddoc_i    ,
-                                                 String pv_nmcertif_i    ,
-                                                 String pv_nmsituac_i    ,
-                                                 String pv_cdusuari_i    ,
-                                                 String pv_cdsisrol_i    ) throws Exception {
-        
-        Map<String, Object> params = new LinkedHashMap<String, Object>();
-        params.put("pv_cdunieco_i",  pv_cdunieco_i);
-        params.put("pv_cdramo_i"  ,  pv_cdramo_i  );
-        params.put("pv_estado_i"  ,  pv_estado_i  );
-        params.put("pv_nmpoliza_i",  pv_nmpoliza_i);
-        params.put("pv_nmsuplem_i",  pv_nmsuplem_i);
-        params.put("pv_nmsolici_i",  pv_nmsolici_i);
-        params.put("pv_ntramite_i",  pv_ntramite_i);
-        params.put("pv_feinici_i",   pv_feinici_i);
-        params.put("pv_cddocume_i",  pv_cddocume_i);
-        params.put("pv_dsdocume_i",  pv_dsdocume_i);
-        params.put("pv_tipmov_i",    pv_tipmov_i);
-        params.put("pv_swvisible_i", pv_swvisible_i);
-        params.put("pv_cdtiptra_i",  pv_cdtiptra_i);
-        params.put("pv_codidocu_i",  pv_codidocu_i);
-        params.put("pv_fefecha_i",   pv_fefecha_i);
-        params.put("pv_cdorddoc_i",  pv_cdorddoc_i);
-        params.put("pv_cdmoddoc_i",  pv_cdmoddoc_i);
-        params.put("pv_nmcertif_i",  pv_nmcertif_i);
-        params.put("pv_nmsituac_i",  pv_nmsituac_i);
-        params.put("pv_cdusuari_i",  pv_cdusuari_i);
-        params.put("pv_cdsisrol_i",  pv_cdsisrol_i);
-        
-        Map<String, Object> respuestaProcedure = ejecutaSP(new MovTdocupolFus(getDataSource()), params);
-        
-        
-    }
-
-    protected class MovTdocupolFus extends StoredProcedure {
-        protected MovTdocupolFus(DataSource dataSource) {
-            super(dataSource, "pkg_db_report.p_mov_tdocupolfus ");
-            declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmpoliza_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsuplem_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsolici_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_ntramite_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_feinici_i",  OracleTypes.DATE));
-            declareParameter(new SqlParameter("pv_cddocume_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_dsdocume_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_tipmov_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_swvisible_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdtiptra_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_codidocu_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_fefecha_i",  OracleTypes.DATE));
-            declareParameter(new SqlParameter("pv_cdorddoc_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdmoddoc_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmcertif_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsituac_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdusuari_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdsisrol_i",  OracleTypes.VARCHAR));
-            
-            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
-            compile();
-        }
-        
-        
-    }
-    
-    @Override
-    public String obtieneNmsituaext(String pv_cdunieco_i,
-                                                 String pv_cdramo_i  ,
-                                                 String pv_estado_i  ,
-                                                 String pv_nmpoliza_i, 
-                                                 String pv_nmsuplem_i,
-                                                 String pv_nmsitaux_i) throws Exception {
-        
-        Map<String, String> params = new LinkedHashMap<String, String>();
-        params.put("pv_cdunieco_i",  pv_cdunieco_i);
-        params.put("pv_cdramo_i"  ,  pv_cdramo_i  );
-        params.put("pv_estado_i"  ,  pv_estado_i  );
-        params.put("pv_nmpoliza_i",  pv_nmpoliza_i);
-        params.put("pv_nmsuplem_i",  pv_nmsuplem_i);
-        params.put("pv_nmsitaux_i",  pv_nmsitaux_i);
-        
-        Map<String, Object> mapResult = ejecutaSP(new ObtieneNmsituaext(getDataSource()), params);
-        String resp = (String) mapResult.get("pv_nmsituaext_o");
-        
-        return resp;
-        
-    }
-
-    protected class ObtieneNmsituaext extends StoredProcedure {
-        protected ObtieneNmsituaext(DataSource dataSource) {
-            super(dataSource, "PKG_CONSULTA2.P_GET_NRO_EMPLEADO");
-            declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmpoliza_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsuplem_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsitaux_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_nmsituaext_o"    , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public boolean isServicioCargaFederal(
-            String clvgs
-            ) throws Exception
-    {
-        Map<String,String> params = new LinkedHashMap<String,String>();
-        params.put("PV_AMIS" , clvgs);
-        Map<String,Object> procRes = ejecutaSP(new isServicioCargaFederal(getDataSource()),params);
-        String             servicioCarga  = (String)procRes.get("PV_SALIDA_O");
-        if(!StringUtils.isBlank(servicioCarga))
-        {
-            if(servicioCarga.equals("22") || servicioCarga.equals("23"))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    protected class isServicioCargaFederal extends StoredProcedure
-    {
-        protected isServicioCargaFederal(DataSource dataSource)
-        {
-            super(dataSource,"P_GET_SERVICIO_CARGA");
-            declareParameter(new SqlParameter("PV_AMIS" , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("PV_SALIDA_O" , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public List<GenericVO> obtieneComentariosNegocio(
-                                                 String pv_cdramo_i  ,
-                                                 String pv_cdtipsit_i  ,
-                                                 String pv_negocio_i) throws Exception {
-        
-        Map<String, String> params = new LinkedHashMap<String, String>();
-        params.put("pv_cdramo_i"    ,  pv_cdramo_i);
-        params.put("pv_cdtipsit_i"  ,  pv_cdtipsit_i  );
-        params.put("pv_negocio_i"   ,  pv_negocio_i  );
-     
-        
-        Map<String, Object> resultado = ejecutaSP(new ObtieneComentariosNegocio(getDataSource()), params);
-        return (List<GenericVO>) resultado.get("pv_registro_o");
-        
-    }
-
-    protected class ObtieneComentariosNegocio extends StoredProcedure {
-        protected ObtieneComentariosNegocio(DataSource dataSource) {
-            super(dataSource, "PKG_CONSULTA2.P_OBTIENE_COMENTARIOS_NEGOCIO");
-            declareParameter(new SqlParameter("pv_cdramo_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdtipsit_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_negocio_i",    OracleTypes.VARCHAR));
-          
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new ObtieneComentariosMapper()));
-            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    protected class ObtieneComentariosMapper implements RowMapper {
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new GenericVO(rs.getString("COMENTARIO"),rs.getString("COMENTARIO"));
-        }
-    }
-    
-    
-    @Override
-    public List<Map<String,String>> obtieneRangoPeriodoGracia(
-                                      String pv_cdramo_i,
-                                      String pv_cdtipsit_i,
-                                      String pv_cdagente_i) throws Exception {
-        
-        Map<String, String> params = new LinkedHashMap<String, String>();
-        params.put("pv_cdramo_i",  pv_cdramo_i);
-        params.put("pv_cdtipsit_i",pv_cdtipsit_i);
-        params.put("pv_cdagente_i",pv_cdagente_i);
-        
-        Map<String, Object> respuestaProcedure = ejecutaSP(new ObtieneRangoPeriodoGracia(getDataSource()), params);
-        List<Map<String,String>>lista=(List<Map<String,String>>)respuestaProcedure.get("pv_registro_o");
-        
-        return lista;
-        
-    }
-
-    protected class ObtieneRangoPeriodoGracia extends StoredProcedure {
-        protected ObtieneRangoPeriodoGracia(DataSource dataSource) {
-            super(dataSource, "PKG_CONSULTA2.P_OBTIENE_PGRACIA_AGENTE");
-            declareParameter(new SqlParameter("pv_cdramo_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdtipsit_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdagente_i",    OracleTypes.VARCHAR));
-            String[] cols = new String[]{
-                    "MINIMO",
-                    "MAXIMO"
-                   
-            };
-            
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public List<Map<String,String>> recuperarEndososSiniestralidad(
-            String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            )throws Exception
-    {
-        Map<String,String> params = new LinkedHashMap<String,String>();
-        params.put("cdunieco" , cdunieco);
-        params.put("cdramo"   , cdramo);
-        params.put("estado"   , estado);
-        params.put("nmpoliza" , nmpoliza);
-        Map<String,Object>       procResult = ejecutaSP(new RecuperarEndososSiniestralidad(getDataSource()),params);
-        List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
-        if(lista==null)
-        {
-            lista = new ArrayList<Map<String,String>>();
-        }
-        return lista;
-    }
-    
-    protected class RecuperarEndososSiniestralidad extends StoredProcedure
-    {
-        protected RecuperarEndososSiniestralidad(DataSource dataSource)
-        {
-            super(dataSource , "PKG_CANCELA.P_GET_ENDOSOS_X_POLIZA_SINIES");
-            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
-            String[] cols = new String[]{
-                    "NSUPLOGI"  , "CDDEVCIA" , "CDGESTOR" , "FEEMISIO" , "FEINIVAL" , "FEFINVAL"
-                    ,"FEEFECTO" , "FEPROREN" , "CDMONEDA" , "NMSUPLEM" , "FEINICIO"
-            };
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public List<Map<String,String>> recuperarEndososRehabilitablesSiniestralidad(
-            String cdunieco
-            ,String cdramo
-            ,String estado
-            ,String nmpoliza
-            )throws Exception
-    {
-        Map<String,String> params = new LinkedHashMap<String,String>();
-        params.put("cdunieco" , cdunieco);
-        params.put("cdramo"   , cdramo);
-        params.put("estado"   , estado);
-        params.put("nmpoliza" , nmpoliza);
-        Map<String,Object>       procResult = ejecutaSP(new RecuperarEndosoSiniestralidad(getDataSource()),params);
-        List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
-        if(lista==null)
-        {
-            lista = new ArrayList<Map<String,String>>();
-        }
-        return lista;
-    }
-    
-    protected class RecuperarEndosoSiniestralidad extends StoredProcedure
-    {
-        protected RecuperarEndosoSiniestralidad(DataSource dataSource)
-        {
-            super(dataSource , "PKG_CANCELA.P_GET_ENDOSOS_REHAB_SINI");
-            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
-            String[] cols = new String[]{
-                    "NSUPLOGI"  , "CDDEVCIA" , "CDGESTOR" , "FEEMISIO" , "FEINIVAL" , "FEFINVAL"
-                    ,"FEEFECTO" , "FEPROREN" , "CDMONEDA" , "NMSUPLEM"
-            };
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public List<Map<String,String>> recuperarDatosValorDefectoLayout(
-            String cdsisrol
-            ,String campo
-            ,String renovacionGral
-            )throws Exception
-    {
-        Map<String,String> params = new LinkedHashMap<String,String>();
-        params.put("pv_rol_i" 		, cdsisrol);
-        params.put("pv_campo_i"   	, campo);
-        params.put("pv_proceso_i"   , renovacionGral);
-        Map<String,Object>       procResult = ejecutaSP(new RecuperarDatosValorDefectoLayout(getDataSource()),params);
-        List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
-        if(lista==null)
-        {
-            lista = new ArrayList<Map<String,String>>();
-        }
-        return lista;
-    }
-    
-    protected class RecuperarDatosValorDefectoLayout extends StoredProcedure
-    {
-        protected RecuperarDatosValorDefectoLayout(DataSource dataSource)
-        {
-            super(dataSource , "PKG_CONSULTA2.P_GET_CARGA_LAYOUT");
-            declareParameter(new SqlParameter("pv_rol_i" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_campo_i"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_proceso_i"   , OracleTypes.VARCHAR));
-            String[] cols = new String[]{
-                    "CAMPO"  , "OBLIGATORIO"
-            };
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public String esDXN(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception{
-        Map<String,String> params = new LinkedHashMap<String,String>();
-        params.put("pv_cdunieco_i", cdunieco);
-        params.put("pv_cdramo_i"  , cdramo);
-        params.put("pv_estado_i"  , estado);
-        params.put("pv_nmpoliza_i", nmpoliza);
-        params.put("pv_nmsuplem_i", nmsuplem);
-        Map<String,Object> procRes = ejecutaSP(new EsDXN(getDataSource()),params);
-        String esDxn  = (String)procRes.get("pv_esDXN_o");
-        return esDxn;
-    }
-    
-    protected class EsDXN extends StoredProcedure{
-        protected EsDXN(DataSource dataSource){
-            super(dataSource,"P_ES_DXN");
-            declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmpoliza_i"  , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsuplem_i"  , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_esDXN_o"  , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    private class ContarTramitesUsuarioRol extends Thread {
-        private Map<String, String> usuario;
-        public ContarTramitesUsuarioRol (Map<String, String> usuario) {
-            this.usuario = usuario;
-            this.usuario.put("pv_cdusuari_i", this.usuario.get("CDUSUARI"));
-            this.usuario.put("pv_cdsisrol_i", this.usuario.get("CDSISROL"));
-        }
-        @Override
-        public void run () {
-            try {
-                usuario.put("TOTAL", (String) ejecutaSP(new ContarTramitesUsuarioRolSP(getDataSource()), usuario).get("pv_count_o"));
-            } catch (Exception ex) {
-                logger.debug(Utils.join("Error al contar tramites de ", this.usuario), ex);
-                usuario.put("TOTAL", "ERROR");
-            }
-        }
-    }
-    
-    protected class ContarTramitesUsuarioRolSP extends StoredProcedure {
-        protected ContarTramitesUsuarioRolSP (DataSource dataSource) {
-            super(dataSource,"P_MC_GET_CONTEO_TRAMITES_USER");
-            declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_count_o"  , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
 }

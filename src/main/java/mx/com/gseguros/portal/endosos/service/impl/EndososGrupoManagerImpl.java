@@ -86,7 +86,7 @@ public class EndososGrupoManagerImpl implements EndososGrupoManager
 	}
 	
 	@Override
-	public ManagerRespuestaSlistVO buscarHistoricoPolizas(String nmpoliex,String rfc,String cdperson,String nombre,String cdsisrol)
+	public ManagerRespuestaSlistVO buscarHistoricoPolizas(String nmpoliex,String rfc,String cdperson,String nombre)
 	{
 		logger.info(
 				new StringBuilder()
@@ -103,7 +103,7 @@ public class EndososGrupoManagerImpl implements EndososGrupoManager
 		
 		try
 		{
-			resp.setSlist(endososGrupoDAO.buscarHistoricoPolizas(nmpoliex,rfc,cdperson,nombre,cdsisrol));
+			resp.setSlist(endososGrupoDAO.buscarHistoricoPolizas(nmpoliex,rfc,cdperson,nombre));
 		}
 		catch(Exception ex)
 		{
