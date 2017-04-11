@@ -180,6 +180,10 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ZONASHOSPITALARIA:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
+				case TIPOEVENTOGNP:
+					lista = catalogosManager.getTmanteni(cat);
+					logger.debug("Valor de la lista TIPOEVENTOGNP :"+lista);
+	                break;
 				case CVECOLUMNA:
 					lista = catalogosManager.obtieneAtributosExcel(cat);
 	                break;

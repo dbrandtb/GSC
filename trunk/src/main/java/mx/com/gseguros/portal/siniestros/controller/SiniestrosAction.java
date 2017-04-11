@@ -1788,8 +1788,14 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String consultaDatosSumaAsegurada(){
 		logger.debug("Entra a consultaDatosSumaAsegurada params de entrada :{}",params);
 		try {
-			datosValidacion = siniestrosManager.getConsultaDatosSumaAsegurada(params.get("cdunieco"),		params.get("cdramo"),		params.get("estado"),
-																			  params.get("nmpoliza"),		params.get("cdperson"),		params.get("nmsinref"));
+			if(params.get("cdramo").equalsIgnoreCase("11")){
+				datosValidacion = siniestrosManager.getConsultaDatosSumaAseguradaGNP(params.get("cdunieco"),		params.get("cdramo"),		params.get("estado"),
+						  params.get("nmpoliza"),		params.get("cdperson"),		params.get("nmsinref"));
+			}else{
+				datosValidacion = siniestrosManager.getConsultaDatosSumaAsegurada(params.get("cdunieco"),		params.get("cdramo"),		params.get("estado"),
+						  params.get("nmpoliza"),		params.get("cdperson"),		params.get("nmsinref"));
+			}
+			
 			logger.debug("Respuesta datosValidacion : {}", datosValidacion);
 		}catch( Exception e){
 			logger.error("Error al obtener las autorizaciones : {}", e.getMessage(), e);
@@ -3760,8 +3766,13 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						mensaje = "";
 						success = true;
 					}else{
-						mensaje = "Proveedor pendiente o la clave del proveedor es 0 - Favor de configurar la informaci\u00f3n.";
-						success = false;
+						if(TipoPago.REEMBOLSO.getCodigo().equalsIgnoreCase(tipoPago)){
+							mensaje = "";
+							success = true;
+						}else{
+							mensaje = "Proveedor pendiente o la clave del proveedor es 0 - Favor de configurar la informaci\u00f3n.";
+							success = false;
+						}
 					}
 				}else{
 					mensaje = "Verifica los C\u00e1lculos - El importe total de las facturas es menor al total a pagar.";

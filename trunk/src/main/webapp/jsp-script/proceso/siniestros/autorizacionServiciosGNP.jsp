@@ -11,6 +11,7 @@
             var _CAT_AUTORIZACION				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
             var _CAT_CAUSASINIESTRO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
             var _CAT_TRATAMIENTO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TRATAMIENTOS"/>';
+            var _CAT_TIPOEVENTOGNP                  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOEVENTOGNP"/>';
             var _CAT_TPENALIZACIONES				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PENALIZACIONES"/>';
             var _CAT_MEDICOS                        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MEDICOS"/>';
             var _CAT_MEDICOS_ESPECIFICO             = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MEDICOESPECIFICO"/>';
@@ -86,6 +87,7 @@
             var _0_reporteVistaPreviaGral           = '<s:text name="rdf.siniestro.autorizacion.servicio.nombre.GNP" />';
             var _0_reporteVistaPreviaProv           = '<s:text name="rdf.siniestro.autorizacion.servicio.nombre.GNPEXP" />';
             var _reporteEdoCtaSin                   = '<s:text name="rdf.siniestro.estadocuenta.nombre" />';
+            var _URL_DATOS_COMPLEMENTO_ICD          = '<s:url namespace="/siniestros"  action="obtieneDatosGeneralesICD" />';
             var valorAction                         = <s:property value='paramsJson' escapeHtml='false'/>;
             
             debug("valor d_SALUD_VITAL --->",_SALUD_VITAL);

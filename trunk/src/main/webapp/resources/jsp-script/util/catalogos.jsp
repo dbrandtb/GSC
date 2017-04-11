@@ -57,7 +57,8 @@ var Cat = {
     TiposPoliza               : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_POLIZA" />',
     TipSit                    : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT" />',
     Tratamientos              : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TRATAMIENTOS" />',
-    TipoMoneda                : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA" />'
+    TipoMoneda                : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA" />',
+    tipoEventoGNP             : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOEVENTOGNP" />'
 };
 
 

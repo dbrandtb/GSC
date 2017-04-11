@@ -804,5 +804,8 @@ public interface SiniestrosManager {
 	public String obtieneMedicoEquipoQuirurgico(String numAutorizacion) throws Exception;
 	
 	public List<AutorizacionServicioVO> guardarAutorizacionServicioGNP(HashMap<String, Object> paramsR) throws Exception;
+	
+	public String obtieneDatosGeneralesICD(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson)throws Exception;
 
+	public List<Map<String, String>> getConsultaDatosSumaAseguradaGNP(String cdunieco, String cdramo,String estado,String nmpoliza, String cdperson, String nmsinref) throws Exception;
 }
