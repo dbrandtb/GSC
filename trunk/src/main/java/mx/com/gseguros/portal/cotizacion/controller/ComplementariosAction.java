@@ -222,6 +222,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	@Value("${caratula.impresion.autos.serviciopublico.url}")
     private String caratulaImpresionAutosServiciopublicoUrl;
 	
+	@Value("${caratula.impresion.autos.flotillas.url}")
+    private String caratulaImpresionAutosFlotillasUrl;
+	
 	@Value("${manual.agente.txtinfocobredgs}")
     private String manualAgenteTxtinfocobredgs;
 	
@@ -2711,7 +2714,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					}
 					
 					if("C".equalsIgnoreCase(tipoGrupoInciso)){
-						urlCaratula = this.caratulaImpresionAutosServiciopublicoUrl;
+						urlCaratula = this.caratulaImpresionAutosFlotillasUrl;
 					}
 					
 					String urlRecibo = this.reciboImpresionAutosUrl;
