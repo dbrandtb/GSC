@@ -692,4 +692,8 @@ public interface SiniestrosDAO {
 	public String obtieneMedicoEquipoQuirurgico(String numAutorizacion) throws Exception;
 	
 	public List<AutorizacionServicioVO> guardarAutorizacionServicioGNP(Map<String, Object> paramsR) throws Exception;
+	
+	public String obtieneDatosGeneralesICD(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson)throws Exception;
+	
+	public List<Map<String, String>> obtieneListaDatosSumaAseguradaGNP(HashMap<String, Object> params) throws Exception;
 }

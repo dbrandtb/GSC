@@ -59,6 +59,8 @@ public class AutorizacionServicioVO implements Serializable{
 	private String idTipoEvento;
 	private String ntramite;
 	private String aplicaNeg;
+	private String tipoServ;
+	private String numrecla;
 	
 	
 	public String getCopagofi() {
@@ -441,6 +443,22 @@ public class AutorizacionServicioVO implements Serializable{
 
 	public void setAplicaNeg(String aplicaNeg) {
 		this.aplicaNeg = aplicaNeg;
+	}
+
+	public String getTipoServ() {
+		return tipoServ;
+	}
+
+	public void setTipoServ(String tipoServ) {
+		this.tipoServ = tipoServ;
+	}
+
+	public String getNumrecla() {
+		return numrecla;
+	}
+
+	public void setNumrecla(String numrecla) {
+		this.numrecla = numrecla;
 	}
 
 }

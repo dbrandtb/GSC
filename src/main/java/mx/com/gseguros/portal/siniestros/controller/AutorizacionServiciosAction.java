@@ -327,6 +327,8 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			paramsR.put("pv_idaplicaCirHosp_i",params.get("idaplicaCirHosp"));
 			paramsR.put("pv_idaplicaZona_i",params.get("idaplicaZona"));
 			paramsR.put("pv_swnegoci_i",params.get("idaplicaZona"));
+			paramsR.put("pv_tiposerv_i",params.get("idTipoEventoGNP"));
+			paramsR.put("pv_numrecla_i",params.get("idNumSubsecuente"));
 			
 			//1.- Eliminacion de la tabla TDETAUTS ---> PKG_PRESINIESTRO.P_BORRA_TDETAUTS
 			siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
@@ -1029,6 +1031,20 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			
 		}catch( Exception e){
 			logger.error("Error al obtieneImporteArancelGNP el monto del arancel : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	public String obtieneDatosGeneralesICD(){
+		logger.debug("Entra a consultaPorcentajeQuirurgico Params: {}", params);
+		try {
+			msgResult = siniestrosManager.obtieneDatosGeneralesICD(params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"),params.get("nmpoliza"),params.get("cdicd"),params.get("cdperson"));
+			logger.debug("msgResult : {}", msgResult);
+		}catch( Exception e){
+			logger.error("Error consultaPorcentajeQuirurgico :{}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		success = true;
