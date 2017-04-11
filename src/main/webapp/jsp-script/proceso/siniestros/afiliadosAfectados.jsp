@@ -57,6 +57,7 @@
           	var _STATUS_TRAMITE_EN_REVISION_MEDICA  	= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_REVISION_MEDICA.codigo" />';
             var _STATUS_TRAMITE_CONFIRMADO              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@CONFIRMADO.codigo" />';
             var _STATUS_TRAMITE_EN_CAPTURA              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_CAPTURA.codigo" />';
+            var _STATUS_TRAMITE_PENDIENTE				= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@PENDIENTE.codigo" />'; // (EGS)
 			//Ramos
             var _SALUD_VITAL							= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo" />';
             var _MULTISALUD								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
@@ -1701,13 +1702,13 @@
 									{
 										icon	 : '${ctx}/resources/fam3icons/icons/accept.png'
 										,tooltip : 'Guardar'
-										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA|| _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+										,disabled: _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && !(_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? true : false  // (EGS)
 										,handler : guardarDatosComplementarios
 									},
 									{
 										icon	 : '${ctx}/resources/fam3icons/icons/user_delete.png'
 										,tooltip : 'Eliminar Asegurado'
-										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA|| _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+										,disabled: _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && !(_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? true : false  // (EGS)  
 										,handler : eliminarAsegurado
 										
 									}
@@ -2147,14 +2148,14 @@
 									,icon	 : '${ctx}/resources/fam3icons/icons/user_add.png'
 									,handler : _p21_agregarAsegurado
 									,hidden  : (_tipoPago != _TIPO_PAGO_DIRECTO)
-									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+									,disabled: _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && !(_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? true : false  // (EGS)  
 								},
 								{
 									text	: 'Generar Calculo'
 									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
 									,handler : _p21_generarCalculo
 									,hidden  : (_cdtipoProceso  == "1")
-									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA|| _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+									,disabled: _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && !(_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? true : false  // (EGS)  
 								}
 							],							
 						listeners: {
@@ -2447,7 +2448,7 @@
 									,{
 										icon	 : '${ctx}/resources/fam3icons/icons/page_edit.png'
 										,tooltip : 'Ajuste'
-										,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+										,disabled: _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && !(_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? true : false  // (EGS)  
 										,handler : _mostrarVentanaAjustes
 									}
 								]
@@ -2681,14 +2682,14 @@
 								{
 									text	: 'Agregar Concepto'
 									,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
-									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+									,disabled: _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && !(_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? true : false  // (EGS)  
 									,handler : _p21_agregarConcepto
 									//, hidden : (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO)
 								},
 								{
 									text	: 'Guardar Concepto'
 									,icon:_CONTEXT+'/resources/fam3icons/icons/disk.png'
-									,disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA || _11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA || _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true //(EGS)  
+									,disabled: _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && !(_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? true : false  // (EGS)  
 									,handler : function() {
 										_guardarConceptosxFactura();
 									}
@@ -3284,8 +3285,8 @@
 					,buttons: [ {
 							text:'Aplicar Cambios Factura',
 							icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
-							disabled: _11_params.STATUS == _STATUS_TRAMITE_EN_CAPTURA ||_11_params.STATUS == _STATUS_TRAMITE_EN_REVISION_MEDICA|| _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && (_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? false : true, //(EGS)  
-							handler:function() {
+							disabled: _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && !(_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? true : false  // (EGS)  
+							,handler:function() {
 								debug("Aplicar Cambios Factura");
 								_11_clickAplicarCambiosFactura(); // (EGS) codigo original se convierte en funcion para re-utilizarlo
 /*
