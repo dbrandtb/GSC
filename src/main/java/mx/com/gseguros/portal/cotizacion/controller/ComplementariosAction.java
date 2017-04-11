@@ -2324,6 +2324,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 		{
 			try
 			{
+				Map<String, String> respTvalopol= new HashMap<String, String>();
+				respTvalopol= consultasPolizaManager.obtieneTvalopol(cdunieco, cdramo, estado, nmpoliza);//Rescatamos RPF
 				Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
 				paramEmi.put("pv_cdusuari"  , cdusuari);
 				paramEmi.put("pv_cdunieco"  , cdunieco);
@@ -2340,6 +2342,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramEmi.put("pv_fecha"     , new Date());
 				paramEmi.put("pv_ntramite"  , ntramite);
 				mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
+				
+				//Parche para no perder RPF hasta modificar SP
+				try {
+					Map<String, String> respTvalopolEmitidoSinRPF= new HashMap<String, String>();
+					respTvalopolEmitidoSinRPF= consultasPolizaManager.obtieneTvalopol(cdunieco, cdramo, "M", wr.getItemMap().get("nmpoliza")+"");//Rescatamos RPF
+					respTvalopolEmitidoSinRPF.put("parametros.pv_otvalor17", StringUtils.isBlank(respTvalopol.get("parametros.pv_otvalor17"))?respTvalopolEmitidoSinRPF.get("parametros.pv_otvalor17"):respTvalopol.get("parametros.pv_otvalor17"));
+					kernelManager.pMovTvalopol(respTvalopolEmitidoSinRPF);
+				} catch (Exception e) {
+					logger.error("Error al grabar tavolopol con valor RPF");
+				}
+				
 				logger.debug("emision obtenida "+wr.getItemMap());
 				
 				nmpolizaEmitida = (String)wr.getItemMap().get("nmpoliza");
