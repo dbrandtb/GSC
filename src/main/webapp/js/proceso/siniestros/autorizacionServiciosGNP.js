@@ -592,7 +592,11 @@ Ext.onReady(function() {
 						Ext.getCmp('idTipoEventoGNP').setValue('CP');
 						Ext.getCmp('idCopagoPrevio').hide();
 						Ext.getCmp('idTipoEvento').hide();
-						
+						Ext.getCmp('idSucursal').setValue('13');
+                        Ext.getCmp('idCausaSiniestro').setValue('1');
+                        Ext.getCmp('tratamiento').setValue('1');
+                        Ext.getCmp('sumDisponible').setValue('0');
+                        						
 						if(closedStatusSelectedID !=1){
 							Ext.getCmp('panelbusqueda').show();
 							Ext.getCmp('clausulasGridId').show();
@@ -783,6 +787,8 @@ Ext.onReady(function() {
                 });
 				storeClausulasPoliza.load({
                     callback: function(records, operation, success) {
+                    	debug("Valor storeClausulasPoliza de respuesta 1.- ==> ",records);
+                        debug("Valor storeClausulasPoliza de respuesta 2.- ==> ",records.length);
                         if (!success) {
                             return;
                         }
@@ -816,13 +822,17 @@ Ext.onReady(function() {
                 });
                 storeHistorialICD.load({
                     callback: function(records, operation, success) {
+                    	
+                    	debug("Valor de respuesta 1.- ==> ",records);
+                    	debug("Valor de respuesta 2.- ==> ",records.length);
+                    	
                         if (!success) {
                             return;
                         }
                         if(records.length == 0){
-                            Ext.getCmp('btnExclusionPoliza').setDisabled(true);
+                            Ext.getCmp('btnExclusionICD').setDisabled(true);
                         }else{
-                            Ext.getCmp('btnExclusionPoliza').setDisabled(false);
+                            Ext.getCmp('btnExclusionICD').setDisabled(false);
                         }
                         return;
                     }
@@ -1051,8 +1061,109 @@ Ext.onReady(function() {
                     }                    
                  });
 				 
-				 if(Ext.getCmp('idcdRamo').getValue() == _GMMPRUEBA){
-                    Ext.Ajax.request({
+				 if(Ext.getCmp('idcdRamo').getValue() == _GMMPRUEBA || Ext.getCmp('idcdRamo').getValue() == _GMMI){
+				 	//Validamos Exclusiones
+				 	Ext.Ajax.request({
+                        url     : _URL_VALIDA_EXCLUSION
+                        ,params : {
+                            'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
+                            'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
+                            'params.estado'    : Ext.getCmp('idEstado').getValue(),
+                            'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
+                            'params.nmsuplem'  : Ext.getCmp('idNmsuplem').getValue(),
+                            'params.nmsituac'  : Ext.getCmp('idNmSituac').getValue(),
+                            'params.cdicd'     : Ext.getCmp('idComboICD').getValue()
+                        }
+                        ,success : function (response){
+                            var resEspera = Ext.decode(response.responseText).msgResult;
+                            debug("Valor de respuesta ==> ",resEspera);
+                            if(resEspera =="S"){
+                            	mensajeCorrecto('Atenci&oacute;n','El Diagn&oacutestico no procede por exclusi&oacute;n',function(){
+                                    guardadoAutorizacionServicio(_Existe,'1');
+                                });
+                            }else{
+                            	Ext.Ajax.request({
+                                    url     : _URL_NUM_MESES_TIEMPO_ESPERA
+                                    ,params : {
+                                        'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+                                        'params.cdtipsit': Ext.getCmp('idcdtipsit').getValue(),
+                                        'params.cdicd'   : Ext.getCmp('idComboICD').getValue(),
+                                        'params.dsplan'  : Ext.getCmp('iddsplanAsegurado').getValue()
+                                    }
+                                    ,success : function (response){
+                                        var resEspera = Ext.decode(response.responseText);
+                                        var tiempoEsperaICD = resEspera.mesesTiempoEspera;
+                                        if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
+                                            if(Ext.getCmp('idCausaSiniestro').getValue()!= _CODIGO_CAUSA_ACCIDENTE){
+                                                notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + resEspera.mensaje;
+                                                mensajeCorrecto('Atenci&oacute;n',resEspera.mensaje,function(){
+                                                    guardadoAutorizacionServicio(_Existe,'1');
+                                                });
+                                            }
+                                        }else{
+                                        	Ext.getCmp('Autorizar').show();
+                                            Ext.Ajax.request({
+                                                url     : _URL_DATOS_COMPLEMENTO_ICD
+                                                ,params : {
+                                                    'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
+                                                    'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
+                                                    'params.estado'    : Ext.getCmp('idEstado').getValue(),
+                                                    'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
+                                                    'params.cdicd'     : Ext.getCmp('idComboICD').getValue(),
+                                                    'params.cdperson'  : Ext.getCmp('idAsegurado').getValue()
+                                                }
+                                                ,success : function (response){
+                                                    var resEspera = Ext.decode(response.responseText).msgResult;
+                                                    debug("Valor de respuesta ==> ",resEspera);
+                                                    var fields = resEspera.split('|');
+                                                    var subsecuente = fields[0];
+                                                    var noReclamo   = fields[1];
+                                                    
+                                                    if(subsecuente =="N"){
+                                                         Ext.getCmp('idTipo').setValue("NUEVO");
+                                                    }else{
+                                                         Ext.getCmp('idTipo').setValue("SUBSECUENTE");
+                                                    }
+                                                    Ext.getCmp('idNumSubsecuente').setValue(noReclamo);
+                                                },
+                                                failure : function (){
+                                                    me.up().up().setLoading(false);
+                                                    centrarVentanaInterna(Ext.Msg.show({
+                                                        title:'Error',
+                                                        msg: 'Error de comunicaci&oacute;n',
+                                                        buttons: Ext.Msg.OK,
+                                                        icon: Ext.Msg.ERROR
+                                                    }));
+                                                }
+                                            });
+                                        }
+                                    },
+                                    failure : function (){
+                                        me.up().up().setLoading(false);
+                                        centrarVentanaInterna(Ext.Msg.show({
+                                            title:'Error',
+                                            msg: 'Error de comunicaci&oacute;n',
+                                            buttons: Ext.Msg.OK,
+                                            icon: Ext.Msg.ERROR
+                                        }));
+                                    }
+                                });
+                            }
+                        },
+                        failure : function (){
+                            me.up().up().setLoading(false);
+                            centrarVentanaInterna(Ext.Msg.show({
+                                title:'Error',
+                                msg: 'Error de comunicaci&oacute;n',
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.Msg.ERROR
+                            }));
+                        }
+                    });
+				 	
+				 	
+				 	
+                    /*Ext.Ajax.request({
                         url     : _URL_NUM_MESES_TIEMPO_ESPERA
                         ,params : {
                             'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
@@ -1074,6 +1185,7 @@ Ext.onReady(function() {
                                         buttons: Ext.Msg.OK,
                                         icon: Ext.Msg.WARNING
                                     }));
+                                    
                                 }
                             }else{
                                 Ext.Ajax.request({
@@ -1099,22 +1211,6 @@ Ext.onReady(function() {
                                         	 Ext.getCmp('idTipo').setValue("SUBSECUENTE");
                                         }
                                         Ext.getCmp('idNumSubsecuente').setValue(noReclamo);
-                                        /*var tiempoEsperaICD = resEspera.mesesTiempoEspera;
-                                        if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
-                                            if(Ext.getCmp('idCausaSiniestro').getValue()!= _CODIGO_CAUSA_ACCIDENTE){
-                                                Ext.getCmp('idComboICD').setValue('');
-                                                notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + resEspera.mensaje;
-                                                //Ext.getCmp('notaInterna').setValue(notasInternas);
-                                                centrarVentanaInterna(Ext.Msg.show({
-                                                    title: 'Error',
-                                                    msg: resEspera.mensaje,
-                                                    buttons: Ext.Msg.OK,
-                                                    icon: Ext.Msg.WARNING
-                                                }));
-                                            }
-                                        }else{
-                                            
-                                        }*/
                                     },
                                     failure : function (){
                                         me.up().up().setLoading(false);
@@ -1137,7 +1233,7 @@ Ext.onReady(function() {
                                 icon: Ext.Msg.ERROR
                             }));
                         }
-                    });
+                    });*/
 				 }else{
                     Ext.Ajax.request({
                         url     : _URL_NUM_MESES_TIEMPO_ESPERA
@@ -2597,8 +2693,10 @@ Ext.onReady(function() {
 			}
 		},
 		{	text:'Autorizar',
+		    xtype   : 'button',
 			icon:_CONTEXT+'/resources/fam3icons/icons/key.png',
 			id:'Autorizar',
+			disabled: false,
 			handler:function() {
 				if (panelInicialPrincipal.form.isValid()) {
 					//validamos que exista valor del registro
@@ -3466,7 +3564,10 @@ Ext.onReady(function() {
                 Ext.getCmp('btnDetallePoliza').setDisabled(false);
                 
                 
-                Ext.Ajax.request({
+                
+
+                    
+                /*Ext.Ajax.request({
                                     url     : _URL_DATOS_COMPLEMENTO_ICD
                                     ,params : {
                                         'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
@@ -3500,7 +3601,7 @@ Ext.onReady(function() {
                                             icon: Ext.Msg.ERROR
                                         }));
                                     }
-                                });
+                                });*/
                 
                 
                 
@@ -3564,9 +3665,9 @@ Ext.onReady(function() {
                             return;
                         }
                         if(records.length == 0){
-                            Ext.getCmp('btnExclusionPoliza').setDisabled(true);
+                            Ext.getCmp('btnExclusionICD').setDisabled(true);
                         }else{
-                            Ext.getCmp('btnExclusionPoliza').setDisabled(false);
+                            Ext.getCmp('btnExclusionICD').setDisabled(false);
                         }
                         return;
                     }
@@ -3651,6 +3752,105 @@ Ext.onReady(function() {
 							Ext.getCmp('fechaAutorizacion').setValue(dateFechaAutorizacion);		// Valor de Fecha de autorizacion
 							Ext.getCmp('idcirculohosPoliza').setValue(json.cirHosp);
 						}
+						
+		                //-->
+                        Ext.Ajax.request({
+                            url     : _URL_VALIDA_EXCLUSION
+                            ,params : {
+                                'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
+                                'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
+                                'params.estado'    : Ext.getCmp('idEstado').getValue(),
+                                'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
+                                'params.nmsuplem'  : Ext.getCmp('idNmsuplem').getValue(),
+                                'params.nmsituac'  : Ext.getCmp('idNmSituac').getValue(),
+                                'params.cdicd'     : Ext.getCmp('idComboICD').getValue()
+                            }
+                            ,success : function (response){
+                                var resEspera = Ext.decode(response.responseText).msgResult;
+                                debug("Valor de respuesta ==> ",resEspera);
+                                if(resEspera =="S"){
+                                    //Ext.getCmp('autorizar').setDisabled(false);
+                                    Ext.getCmp('Autorizar').hide();
+                                    rechazoAutorizacionServicio();
+                                }else{
+                                    //Ext.getCmp('Autorizar').show();
+                                    //Validamos tiempo de Espera
+                                    Ext.Ajax.request({
+                                        url     : _URL_NUM_MESES_TIEMPO_ESPERA
+                                        ,params : {
+                                            'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+                                            'params.cdtipsit': Ext.getCmp('idcdtipsit').getValue(),
+                                            'params.cdicd'   : Ext.getCmp('idComboICD').getValue(),
+                                            'params.dsplan'  : Ext.getCmp('iddsplanAsegurado').getValue()
+                                        }
+                                        ,success : function (response){
+                                            var resEspera = Ext.decode(response.responseText);
+                                            var tiempoEsperaICD = resEspera.mesesTiempoEspera;
+                                            if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
+                                                if(Ext.getCmp('idCausaSiniestro').getValue()!= _CODIGO_CAUSA_ACCIDENTE){
+                                                    Ext.getCmp('Autorizar').hide();
+                                                    rechazoAutorizacionServicio();
+                                                }
+                                            }else{
+                                                Ext.getCmp('Autorizar').show();
+                                                Ext.Ajax.request({
+                                                    url     : _URL_DATOS_COMPLEMENTO_ICD
+                                                    ,params : {
+                                                        'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
+                                                        'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
+                                                        'params.estado'    : Ext.getCmp('idEstado').getValue(),
+                                                        'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
+                                                        'params.cdicd'     : Ext.getCmp('idComboICD').getValue(),
+                                                        'params.cdperson'  : Ext.getCmp('idAsegurado').getValue()
+                                                    }
+                                                    ,success : function (response){
+                                                        var resEspera = Ext.decode(response.responseText).msgResult;
+                                                        debug("Valor de respuesta ==> ",resEspera);
+                                                        var fields = resEspera.split('|');
+                                                        var subsecuente = fields[0];
+                                                        var noReclamo   = fields[1];
+                                                        
+                                                        if(subsecuente =="N"){
+                                                             Ext.getCmp('idTipo').setValue("NUEVO");
+                                                        }else{
+                                                             Ext.getCmp('idTipo').setValue("SUBSECUENTE");
+                                                        }
+                                                        Ext.getCmp('idNumSubsecuente').setValue(noReclamo);
+                                                    },
+                                                    failure : function (){
+                                                        me.up().up().setLoading(false);
+                                                        centrarVentanaInterna(Ext.Msg.show({
+                                                            title:'Error',
+                                                            msg: 'Error de comunicaci&oacute;n',
+                                                            buttons: Ext.Msg.OK,
+                                                            icon: Ext.Msg.ERROR
+                                                        }));
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        failure : function (){
+                                            me.up().up().setLoading(false);
+                                            centrarVentanaInterna(Ext.Msg.show({
+                                                title:'Error',
+                                                msg: 'Error de comunicaci&oacute;n',
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.ERROR
+                                            }));
+                                        }
+                                    });
+                                }
+                            },
+                            failure : function (){
+                                me.up().up().setLoading(false);
+                                centrarVentanaInterna(Ext.Msg.show({
+                                    title:'Error',
+                                    msg: 'Error de comunicaci&oacute;n',
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.Msg.ERROR
+                                }));
+                            }
+                        });
 					},
 					failure : function (){
 						me.up().up().setLoading(false);
@@ -3663,6 +3863,10 @@ Ext.onReady(function() {
 					}
 				});
 
+				
+
+                
+                
 				//Se llena la informacion de la Cobertura y se realiza la asignacion
 				storeCobertura.load({
 					params:{
@@ -3988,4 +4192,191 @@ Ext.onReady(function() {
 		});
 		return respuesta;
 	}
+	
+    function rechazoAutorizacionServicio(){
+    	Ext.Ajax.request({
+            url     : _URL_CONSULTA_CLAUSU
+            ,params : {
+                'params.cdclausu' : null,
+                'params.dsclausu' : 'CARTA RECHAZO AUT SERV'
+            }
+            ,success : function (response){
+                var json=Ext.decode(response.responseText);
+                var claveClausula = json.listaGenerica[0].key;
+                Ext.Ajax.request({
+                    url     : _URL_CONSULTA_CLAUSU_DETALLE
+                    ,params : {
+                        'params.cdclausu'  : claveClausula
+                    }
+                    ,success : function (response){
+                        var json=Ext.decode(response.responseText);
+                        txtContenido =json.msgResult;
+                        windowLoader = Ext.create('Ext.window.Window',{
+                            modal       : true,
+                            buttonAlign : 'center',
+                            width       : 663,
+                            height      : 460,
+                            autoScroll  : true,
+                            items       : [
+                                Ext.create('Ext.form.Panel', {
+                                    title: 'Rechazar autorizaci&oacute;n de servicio',
+                                    width: 650,
+                                    url: _URL_ActualizaStatusTramite,
+                                    bodyPadding: 5,
+                                    items: [
+                                        Ext.create('Ext.form.field.TextArea', {
+                                            id        : 'inputTextareaCommentsToRechazo'
+                                            ,width  : 570
+                                            ,height : 200
+                                            ,value  : txtContenido
+                                        }),
+                                        Ext.create('Ext.form.field.TextArea', {
+                                            id        : 'inputTextareaComments'
+                                            ,width  : 570
+                                            ,height : 100
+                                        })
+                                        ,{
+                                            xtype       : 'radiogroup'
+                                            ,fieldLabel : 'Mostrar al agente'
+                                            ,columns    : 2
+                                            ,width      : 250
+                                            ,style      : 'margin:5px;'
+                                            ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
+                                            ,items      :
+                                            [
+                                                {
+                                                    boxLabel    : 'Si'
+                                                    ,itemId     : 'SWAGENTE2'
+                                                    ,name       : 'SWAGENTE2'
+                                                    ,inputValue : 'S'
+                                                    ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
+                                                }
+                                                ,{
+                                                    boxLabel    : 'No'
+                                                    ,name       : 'SWAGENTE2'
+                                                    ,inputValue : 'N'
+                                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                }
+                                            ]
+                                        }
+                                        ],
+                                    buttonAlign:'center',
+                                    buttons: [{
+                                        text: 'Rechazar',
+                                        icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+                                        buttonAlign : 'center',
+                                        handler: function() {
+                                            if (this.up().up().form.isValid()) {
+                                                this.up().up().form.submit({
+                                                    waitMsg:'Procesando...',
+                                                    params: {
+                                                        'smap1.ntramite' : valorAction.ntramite,
+                                                        'smap1.status'   : _STATUS_TRAMITE_RECHAZADO,
+                                                        'smap1.comments' : Ext.getCmp('inputTextareaComments').getValue(),
+                                                        'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
+                                                    },
+                                                    failure: function(form, action) {
+                                                        mensajeError('No se pudo rechazar.');
+                                                    },
+                                                    success: function(form, action) {
+                                                        Ext.Ajax.request({
+                                                            url     : compleUrlGuardarCartoRechazo
+                                                            ,method:'GET'
+                                                            ,params :{
+                                                                'map1.ntramite'  : valorAction.ntramite
+                                                                ,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+                                                                ,'map1.cdsisrol' : 'MEDICO'
+                                                                ,'map1.cdunieco' : Ext.getCmp('idUnieco').getValue()
+                                                                ,'map1.cdramo'   : Ext.getCmp('idcdRamo').getValue()
+                                                                ,'map1.estado'   : Ext.getCmp('idEstado').getValue()
+                                                                ,'map1.nmpoliza' : Ext.getCmp('polizaAfectada').getValue()
+                                                                ,'map1.nmsuplem' : Ext.getCmp('idNmsuplem').getValue()
+                                                            }
+                                                            ,success : function(response){
+                                                                // YA NO REALIZA NADA PORQUE YA SE GENERO EL ARCHIVO
+                                                            }
+                                                            ,failure : function(){
+                                                                Ext.Msg.show({
+                                                                    title:'Error',
+                                                                    msg: 'Error de comunicaci&oacute;n',
+                                                                    buttons: Ext.Msg.OK,
+                                                                    icon: Ext.Msg.ERROR
+                                                                });
+                                                            }
+                                                        });
+                                                        Ext.Ajax.request({
+                                                            url     : _URL_ActualizaStatusMAUTSERV
+                                                            ,params:{
+                                                                'params.nmautser' :  valorAction.nmAutSer,
+                                                                'params.status'   : _STATUS_TRAMITE_RECHAZADO
+                                                            }
+                                                            ,success : function (response){
+                                                                mensajeCorrecto('Aviso','Se ha rechazado con &eacute;xito.',function(){
+                                                                Ext.create('Ext.form.Panel').submit({
+                                                                    url             : _p12_urlMesaControl
+                                                                    ,standardSubmit : true
+                                                                    ,params         : {
+                                                                        'smap1.gridTitle'      : 'Autorizaci\u00F3n de servicio'
+                                                                        ,'smap2.pv_cdtiptra_i' : _AUTORIZACION_SERVICIO
+                                                                    }
+                                                                });
+                                                            });
+                                                            },
+                                                            failure : function (){
+                                                                me.up().up().setLoading(false);
+                                                                Ext.Msg.show({
+                                                                    title:'Error',
+                                                                    msg: 'Error de comunicaci&oacute;n',
+                                                                    buttons: Ext.Msg.OK,
+                                                                    icon: Ext.Msg.ERROR
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            } else {
+                                                Ext.Msg.show({
+                                                    title: 'Aviso',
+                                                    msg: 'Complete la informaci&oacute;n requerida',
+                                                    buttons: Ext.Msg.OK,
+                                                    icon: Ext.Msg.WARNING
+                                                });
+                                            }
+                                        }
+                                    },{
+                                        text: 'Cancelar',
+                                        icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+                                        buttonAlign : 'center',
+                                        handler: function() {
+                                            windowLoader.close();
+                                            Ext.getCmp('Autorizar').hide();
+                                            //Ext.getCmp('autorizar').setDisabled(false);
+                                        }
+                                    }
+                                ]
+                            })  
+                        ]
+                        }).show();
+                        centrarVentana(windowLoader);
+                    },
+                    failure : function (){
+                        Ext.Msg.show({
+                            title:'Error',
+                            msg: 'Error de comunicaci&oacute;n',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        });
+                    }
+                });
+            },
+            failure : function (){
+                Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                });
+            }
+        });
+    }
 });

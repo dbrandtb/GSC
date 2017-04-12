@@ -88,6 +88,15 @@
             var _0_reporteVistaPreviaProv           = '<s:text name="rdf.siniestro.autorizacion.servicio.nombre.GNPEXP" />';
             var _reporteEdoCtaSin                   = '<s:text name="rdf.siniestro.estadocuenta.nombre" />';
             var _URL_DATOS_COMPLEMENTO_ICD          = '<s:url namespace="/siniestros"  action="obtieneDatosGeneralesICD" />';
+            var _URL_VALIDA_EXCLUSION               = '<s:url namespace="/siniestros"  action="obtenerValidacionExclusionICD" />';
+            var _UrlRechazarTramiteWindwow          = '<s:url namespace="/siniestros"   action="includes/rechazoReclamaciones" />';
+            var _URL_CONSULTA_CLAUSU_DETALLE        = '<s:url namespace="/catalogos"    action="consultaClausulaDetalle" />';
+            var _URL_CONSULTA_CLAUSU                = '<s:url namespace="/catalogos"    action="consultaClausulas" />';
+            var _URL_ActualizaStatusTramite         = '<s:url namespace="/mesacontrol"  action="actualizarStatusTramite" />';
+            var mesConUrlFinDetalleMC               = '<s:url namespace="/mesacontrol"  action="finalizarDetalleTramiteMC" />';
+            var compleUrlGuardarCartoRechazo        = '<s:url namespace="/siniestros"   action="guardarCartaRechazoAutServ" />';
+            var _STATUS_TRAMITE_RECHAZADO           = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@RECHAZADO.codigo" />';
+            var _URL_ActualizaStatusMAUTSERV        = '<s:url namespace="/siniestros"   action="cambiarEstatusMAUTSERV" />';
             var valorAction                         = <s:property value='paramsJson' escapeHtml='false'/>;
             
             debug("valor d_SALUD_VITAL --->",_SALUD_VITAL);

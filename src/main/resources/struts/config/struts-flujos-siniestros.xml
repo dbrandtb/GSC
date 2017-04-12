@@ -1516,7 +1516,15 @@
                 </param>
             </result>
         </action>
-		
+        <action name="obtenerValidacionExclusionICD" class="autorizacionServiciosAction" method="obtenerValidacionExclusionICD">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success,
+                    msgResult
+                </param>
+            </result>
+        </action>
     </package>
 
 </struts>

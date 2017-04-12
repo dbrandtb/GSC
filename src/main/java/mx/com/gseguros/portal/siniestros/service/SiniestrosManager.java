@@ -808,4 +808,6 @@ public interface SiniestrosManager {
 	public String obtieneDatosGeneralesICD(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson)throws Exception;
 
 	public List<Map<String, String>> getConsultaDatosSumaAseguradaGNP(String cdunieco, String cdramo,String estado,String nmpoliza, String cdperson, String nmsinref) throws Exception;
+	
+	public String obtenerValidacionExclusionICD(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String cdicd )throws Exception;
 }
