@@ -5768,6 +5768,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				}
 				
 			}
+			ejecutaCaratulaEndosoTarifaSigs(cdunieco, cdramo, estado, nmpoliza, nmsuplemGen, ntramite, cdtipsup, tipoGrupoInciso, aux, null);
 		}
 		catch(Exception ex)
 		{
