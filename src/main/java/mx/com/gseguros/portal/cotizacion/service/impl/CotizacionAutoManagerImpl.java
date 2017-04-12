@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
@@ -25,6 +26,7 @@ import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.catalogos.service.PersonasManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.dao.ValidacionesCotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -101,6 +103,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	private MesaControlDAO mesaControlDAO;
 
 	private EndososDAO     endososDAO;
+
+	private KernelManagerSustituto kernelManager;
 	
 	@Autowired
 	private transient CatalogosManager catalogosManager;
@@ -137,6 +141,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	
 	@Autowired
     private PersonasManager personasManager;
+	
+	@Autowired
+	private ConsultasPolizaManager consultasPolizaManager;
 	
 	@Override
 	public Map<String,Object> cotizacionAutoIndividual(
@@ -4183,6 +4190,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		String paso = null;
 		
+		Map<String, String> respTvalopol= new HashMap<String, String>();
+		respTvalopol= consultasPolizaManager.obtieneTvalopol(cdunieco, cdramo, estado, nmpoliza);//Rescatamos RPF
+		
 		try
 		{
 			paso = "Actualizando poliza";
@@ -4335,6 +4345,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			Utils.generaExcepcion(ex, paso);
 		}
 		
+		//Parche para no perder RPF hasta modificar SP
+		try {
+			Map<String, String> respTvalopolEmitidoSinRPF= new HashMap<String, String>();
+			respTvalopolEmitidoSinRPF= consultasPolizaManager.obtieneTvalopol(cdunieco,cdramo,estado,nmpoliza);//Rescatamos RPF
+			respTvalopolEmitidoSinRPF.put("parametros.pv_otvalor17", respTvalopol.get("parametros.pv_otvalor17"));
+			kernelManager.pMovTvalopol(respTvalopolEmitidoSinRPF);
+		} catch (Exception e) {
+			logger.error("Error al grabar tavolopol con valor RPF");
+		}
+		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ " , resp
 				,"\n@@@@@@ guardarComplementariosAutoIndividual @@@@@@"
@@ -4375,6 +4395,9 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
 		
 		String paso = null;
+		
+		Map<String, String> respTvalopol= new HashMap<String, String>();
+		respTvalopol= consultasPolizaManager.obtieneTvalopol(cdunieco, cdramo, estado, nmpoliza);//Rescatamos RPF
 		
 		try
 		{
@@ -4425,6 +4448,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		catch(Exception ex)
 		{
 			Utils.generaExcepcion(ex, paso);
+		}
+		
+		//Parche para no perder RPF hasta modificar SP
+		try {
+			Map<String, String> respTvalopolEmitidoSinRPF= new HashMap<String, String>();
+			respTvalopolEmitidoSinRPF= consultasPolizaManager.obtieneTvalopol(cdunieco,cdramo,estado,nmpoliza);//Rescatamos RPF
+			respTvalopolEmitidoSinRPF.put("parametros.pv_otvalor17", respTvalopol.get("parametros.pv_otvalor17"));
+			kernelManager.pMovTvalopol(respTvalopolEmitidoSinRPF);
+		} catch (Exception e) {
+			logger.error("Error al grabar tavolopol con valor RPF");
 		}
 		
 		logger.debug(Utils.log(
