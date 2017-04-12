@@ -1054,7 +1054,8 @@ public interface CotizacionManager
 	 * @param params
 	 * @throws Exception
 	 */
-	public void insertaRegistroInfoCenso (List<Map<String,String>> lista) throws Exception;
+	public void insertaRegistroInfoCenso(Map<String, String> params)
+			throws Exception;
 	
 	/**
 	 * 
@@ -1220,7 +1221,7 @@ public interface CotizacionManager
 	 */
 	public HashMap<String, String> obtieneCodigosPostalesProductos()throws Exception;
 
-    public String aplicaDescAutos(String cdunieco, String cdramo, String nmpoliza,
+	public String aplicaDescAutos(String cdunieco, String cdramo, String nmpoliza,
             String modPrim, String cdtipsit)
             throws Exception;
     
@@ -1233,7 +1234,7 @@ public interface CotizacionManager
     public List<Map<String, String>> cargarResultadosCotizacionAutoFlotilla(
             String cdunieco, String cdramo, String estado, String nmpoliza)
             throws Exception;
-
+    
     /**
      * Metodo que elimina todos los documentos predefinidos de Cotizacion
      * @param cdunieco
@@ -1300,7 +1301,8 @@ public interface CotizacionManager
 	 * @param flotilla
 	 */
 	public String aplicaRecargoPagoFraccionado(String cdunieco, String cdramo, String nmpoliza, String recargoPF, String flotilla) throws Exception;
-
+	
 	public List<Map<String, String>> cargarResultadosCotizacionLicenciaFlotilla(String cdunieco, String cdramo, String estado,
 			String nmpoliza) throws Exception;
+	
 }

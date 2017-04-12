@@ -16,14 +16,7 @@
             var _URL_CONSULTA_DATOS_SUPLEMENTO    = '<s:url namespace="/consultasPoliza" action="consultaDatosSuplemento" />';
             var _URL_CONSULTA_DATOS_MENSAJES      = '<s:url namespace="/consultasPoliza" action="consultaAvisos" />';
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
-            
-            //perfil medico
-            //var _URL_CONSULTA_DATOS_ASEGURADO   = '<s:url namespace="/consultasPoliza" action="consultaDatosAsegurados"/>';
-            var _URL_CONSULTA_DATOS_ASEGURADO     = '<s:url namespace="/consultasPoliza" action="consultaPerfiles"/>';
-            var _URL_CONSULTA_ICDS 				  = '<s:url namespace="/consultasAsegurado" action="includes/consultaECD"/>';
-            var _URL_CONSULTA_PERFIL 			  = '<s:url namespace="/perfilMedico" action="consultarPerfil"/>';
-            //perfil medico
-            
+            var _URL_CONSULTA_DATOS_ASEGURADO     = '<s:url namespace="/consultasPoliza" action="consultaDatosAsegurados" />';
             var _URL_CONSULTA_POLIZAS_ASEGURADO   = '<s:url namespace="/consultasPoliza" action="consultaPolizasAsegurado" />';
             var _URL_CONSULTA_AGENTES_POLIZA      = '<s:url namespace="/consultasPoliza" action="consultaAgentesPoliza" />';
             var _URL_CONSULTA_RECIBOS_AGENTE      = '<s:url namespace="/consultasPoliza" action="consultaRecibosAgente" />';
@@ -55,9 +48,9 @@
             
             
             //Variables para la generacion de Reportes
-            var _urlViewReport      = '<s:property value="rutaServidorReports" />';
-            var _reportsServerUser  = '<s:property value="passServidorReports" />';
-            var _reporteEdoCtaSin   = '<s:text name="rdf.siniestro.estadocuenta.nombre" />';
+            var _urlViewReport      = '<s:text name="ruta.servidor.reports" />';
+            var _reportsServerUser  = '<s:text name="pass.servidor.reports" />';
+            var _reporteEdoCtaSin   = '<s:text name="rdf.siniestro.estadocuenta.nombreMod" />';
             var _urlViewDoc         = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
             
             var _botonesGrid = [

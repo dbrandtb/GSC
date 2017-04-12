@@ -43,8 +43,8 @@ var _p29_urlObtieneValNumeroSerie           = '<s:url namespace="/emision"      
 var MontoMaximo = 0;
 var MontoMinimo = 0;
 
-var _p30_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p30_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 var _p30_descuento = false;
@@ -417,7 +417,7 @@ var _p30_panel6ItemsConf =
 ];
 
 var _p30_paneles  = [];
-<s:iterator value="imap"> 
+<s:iterator value="imap">
     <s:if test='%{key.substring(0,"paneldin_".length()).equals("paneldin_")}'>
         _p30_paneles['<s:property value='%{key.substring("paneldin_".length())}' />']=Ext.create('Ext.window.Window',
         {
@@ -4228,7 +4228,8 @@ function _p30_cotizar(sinTarificar)
     	   !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
 //     	   (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
     	   )
-    	{	
+    	{
+    		
     		var ncamiones = 0;
             var ntractocamiones = 0;
             var nsemiremolques = 0;
@@ -4279,7 +4280,7 @@ function _p30_cotizar(sinTarificar)
             }
     	}
     	
-   	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
+   	     /*var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
    	     try 
    	     {
    	         _p30_store.each
@@ -4305,7 +4306,7 @@ function _p30_cotizar(sinTarificar)
    	     }catch (e) 
    	     {
    	        debug(e);//debugError , ck
-   	     }
+   	     }*/
     }
     
     if(valido)
@@ -4375,21 +4376,17 @@ function _p30_cotizar(sinTarificar)
             var cdtipsitPanel  = _p30_smap1['destino_'+cdtipsit];
             var recordBase     = recordsCdtipsit[cdtipsitPanel];
             var recordTvalosit = new _p30_modelo(record.data);
-
+            
+            //---
             if(cdtipsitPanel==cdtipsit)
             {
                 for(var prop in recordTvalosit.getData())
                 {
-                	var propReal= !Ext.isEmpty(record.cdtipsit_panel)
-          				    && prop.slice(0,prop.length-2)=='parametros.pv_otvalor'
-          				    &&!Ext.isEmpty(recordBase.raw[prop])
-          				    ? prop.slice(0,prop.length-2)+valorOtCorrespondiente(prop.slice(prop.length-2,prop.length),cdtipsit,recordBase)
-          				    : prop;
-          			var valor = recordTvalosit.get(propReal);
+                    var valor = recordTvalosit.get(prop);
                     var base  = recordBase.get(prop);
-                    if(Ext.isEmpty(valor)&&!Ext.isEmpty(base)&& propReal!='parametros.pv_otvalorX')
+                    if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
                     {
-                    	recordTvalosit.set(propReal,base);
+                        recordTvalosit.set(prop,base);
                     }
                 }
             }
@@ -4413,6 +4410,7 @@ function _p30_cotizar(sinTarificar)
                         )
                         {
                             debug('set normal, porque es adicional');
+                            //alert('ADIC!-'+fieldLabel+'-'+prop);
                             recordTvalosit.set(prop,base);
                         }
                         else
@@ -4434,6 +4432,55 @@ function _p30_cotizar(sinTarificar)
                     }
                 }
             }
+            //---
+            
+            /*
+            for(var prop in recordTvalosit.data)
+            {
+                var valor = recordTvalosit.get(prop);
+                var base  = recordBase.get(prop);
+                if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
+                {
+                    if(cdtipsitPanel==cdtipsit)
+                    {
+                        recordTvalosit.set(prop,base);
+                    }
+                    else
+                    {
+                        var cmpOriginal = _p30_paneles[cdtipsitPanel].down('[name='+prop+']');
+                        debug('cmpOriginal:',cmpOriginal);
+                        if(!Ext.isEmpty(cmpOriginal))
+                        {
+	                        debug('cmpOriginal.auxiliar:',cmpOriginal.auxiliar,'.');
+	                        var fieldLabel = cmpOriginal.fieldLabel;
+	                        debug('fieldLabel:',fieldLabel);
+	                        if(cmpOriginal.auxiliar=='adicional')
+	                        {
+	                            debug('set normal, porque es adicional');
+	                            //alert('ADIC!-'+fieldLabel+'-'+prop);
+	                            recordTvalosit.set(prop,base);
+	                        }
+	                        else
+	                        {
+	                            var cmpByLabel  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*='+_substringComa(fieldLabel)+']');
+	                            if(!Ext.isEmpty(cmpByLabel))
+	                            {
+	                                var nameByLabel = cmpByLabel.name;
+	                                debug('set en nameByLabel para cdtipsit:',nameByLabel,cdtipsit,'.');
+	                                recordTvalosit.set(nameByLabel,base);
+	                                //alert('SI!-'+fieldLabel+'-'+nameByLabel);
+	                            }
+	                            else
+	                            {
+	                                //alert('NO!-'+fieldLabel+'-'+cdtipsit);
+	                                debug('No existe el dsatribu en el cdtipsit:',fieldLabel,cdtipsit,'.');
+	                            }
+	                        }
+                        }
+                    }
+                }
+            }
+            */
             
             if(_p30_smap1.mapeo=='DIRECTO')
             {
@@ -4828,7 +4875,7 @@ function _p30_cotizar(sinTarificar)
                                 {
                                     if(me.up('form').getForm().isValid())
                                     {
-                                        var modPrim = false;
+                                       var modPrim = false;
                                         if(_p30_smap1.tipoflot == TipoFlotilla.Flotilla)
                                         {
                                           modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formDescuento'))[0].lastValue;
@@ -5594,8 +5641,8 @@ function _p30_detalles()
 			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
 			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
 			                }
-			               	
-			                nuevoElementoTotal = {
+			                
+				                nuevoElementoTotal = {
 			                        COBERTURA: 'Total por Inciso'
 			                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
 			                       ,ORDEN      :  '999'
@@ -5609,7 +5656,8 @@ function _p30_detalles()
 			               	
 			               	json.slist1.push(nuevoElementoCoberturas);
 			                json.slist1.push(nuevoElementoGlobales);
-			                json.slist1.push(nuevoElementoTotal);
+			                
+			                	json.slist1.push(nuevoElementoTotal);
 			               	
 			               	totalCoberturas = 0;
 			                totalGlobales = 0;
@@ -7772,47 +7820,6 @@ function _p30_recuperarCotizacionDeTramite()
 }
 
 
-
-function valorOtCorrespondiente(valorOtUtil,tipsitfake,recordBase){
-	try{
-        if(tipsitfake == 'RQ')
-        {           //OTVALORRQ        //OTVALORCR
-        	     if(valorOtUtil=='28'){valorOtUtil='55';}
-        	else if(valorOtUtil=='29'){valorOtUtil='35';}
-        	else if(valorOtUtil=='30'){valorOtUtil='27';}
-        	else if(valorOtUtil=='33'){valorOtUtil='28';}
-        	else if(valorOtUtil=='34'){valorOtUtil='29';}
-        	else if(valorOtUtil=='35'){valorOtUtil='30';}
-        	else if(valorOtUtil=='36'){valorOtUtil='62';}
-        	else if(valorOtUtil=='37'){valorOtUtil='63';}
-        	else if(valorOtUtil=='38'){valorOtUtil='64';}
-        	else if(valorOtUtil=='39'){valorOtUtil='65';}
-        }else if(tipsitfake == 'TC'){
-          	     if(valorOtUtil=='29'){valorOtUtil='52';}
-          	else if(valorOtUtil=='30'){valorOtUtil='27';}
-          	else if(valorOtUtil=='33'){valorOtUtil='28';}
-          	else if(valorOtUtil=='34'){valorOtUtil='29';}
-          	else if(valorOtUtil=='35'){valorOtUtil='30';}
-          	else if(valorOtUtil=='36'){valorOtUtil='41';}
-          	else if(valorOtUtil=='41'){valorOtUtil='53';}
-          	else if(valorOtUtil=='44'){valorOtUtil='42';}
-          	else if(valorOtUtil=='45'){valorOtUtil='44';}
-          	else if(valorOtUtil=='46'){valorOtUtil='33';}
-          	else if(valorOtUtil=='47'){valorOtUtil='35';}
-          	else if(valorOtUtil=='48'){valorOtUtil='47';}
-          	else if(valorOtUtil=='53'){valorOtUtil='55';}
-          	else if(valorOtUtil=='54'){valorOtUtil='X';}//DEDUCIBLE DE LA COBERTURA RC ECOLOGÍCA
-          	else if(valorOtUtil=='55'){valorOtUtil='62';}
-          	else if(valorOtUtil=='56'){valorOtUtil='63';}
-          	else if(valorOtUtil=='57'){valorOtUtil='64';}
-          	else if(valorOtUtil=='58'){valorOtUtil='65';}
-        }
-		return valorOtUtil;
-	}catch(e){
-		debugError(e);
-	}
-	return listFP;
-}
 ////// funciones //////
 <%-- include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" --%>
 </script>
