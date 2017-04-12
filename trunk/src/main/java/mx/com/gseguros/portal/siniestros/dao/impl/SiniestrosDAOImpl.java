@@ -6894,4 +6894,36 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public String obtenerValidacionExclusionICD(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String cdicd) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i"  , cdramo);
+		params.put("pv_estado_i"  , estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_nmsituac_i", nmsituac);
+		params.put("pv_cdicd_i"     , cdicd);
+		Map<String, Object> resultado = ejecutaSP(new ObtenerValidacionExclusionICD(getDataSource()), params);
+		logger.debug( resultado.get("pv_respuesta_o"));
+		return (String) resultado.get("pv_respuesta_o");
+	}
+	
+    protected class ObtenerValidacionExclusionICD extends StoredProcedure {
+    	protected ObtenerValidacionExclusionICD(DataSource dataSource) {
+    		super(dataSource, "p_get_excl_icd");
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdicd_i",      OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_respuesta_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

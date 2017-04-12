@@ -696,4 +696,6 @@ public interface SiniestrosDAO {
 	public String obtieneDatosGeneralesICD(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson)throws Exception;
 	
 	public List<Map<String, String>> obtieneListaDatosSumaAseguradaGNP(HashMap<String, Object> params) throws Exception;
+	
+	public String obtenerValidacionExclusionICD(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String cdicd)throws Exception;
 }

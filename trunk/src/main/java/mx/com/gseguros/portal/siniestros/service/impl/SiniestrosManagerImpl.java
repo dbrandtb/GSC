@@ -3017,4 +3017,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
 		return siniestrosDAO.obtieneListaDatosSumaAseguradaGNP(params);
 	}
+	
+	@Override
+	//String tipoConcepto, String idProveedor, String idConceptoTipo
+	public String obtenerValidacionExclusionICD(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,  String nmsituac,String cdicd) throws Exception {
+		try {
+			return siniestrosDAO.obtenerValidacionExclusionICD(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, cdicd);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 }

@@ -779,7 +779,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	public String obtieneMesesTiempoEspera(){
 		logger.debug("Entra a obtieneMesesTiempoEspera Params: {}", params);
 		try {
-			if(params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+			if(params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo()) || params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 				mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEsperaICD(params.get("cdramo"),params.get("cdtipsit"),params.get("cdicd"),params.get("dsplan"));
 				mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
 			}else{
@@ -1045,6 +1045,20 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.debug("msgResult : {}", msgResult);
 		}catch( Exception e){
 			logger.error("Error consultaPorcentajeQuirurgico :{}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	public String obtenerValidacionExclusionICD(){
+		logger.debug("Entra a obtenerValidacionExclusionICD Params: {}", params);
+		try {
+			msgResult = siniestrosManager.obtenerValidacionExclusionICD(params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"),params.get("nmpoliza"),params.get("nmsuplem"),params.get("nmsituac"),params.get("cdicd"));
+			logger.debug("msgResult : {}", msgResult);
+		}catch( Exception e){
+			logger.error("Error obtenerValidacionExclusionICD :{}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		success = true;
