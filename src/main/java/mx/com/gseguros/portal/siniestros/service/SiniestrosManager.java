@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.portal.consultas.model.AseguradoVO;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -264,7 +262,7 @@ public interface SiniestrosManager {
 	 */
 	public Map<String,String> obtenerTramiteCompleto(String ntramite) throws Exception;
 	
-	Map<String, String> obtenerTramiteCompletoXNmsolici(String nmpoliza, String cdunico, String cdramo) throws Exception;
+	Map<String, String> obtenerTramiteCompletoXNmpoliza(String nmpoliza, String cdunico, String cdramo) throws Exception;
 	
 	/**
 	 * PKG_SATELITES.P_OBT_TFACMESCTRL
@@ -548,7 +546,7 @@ public interface SiniestrosManager {
 			,String cdmotivo
 			,String cdclausu
 			,String swagente
-			,Long stamp, boolean enviarCorreos
+			,Long stamp
 			) throws Exception;
 	
 	public void turnarAutServicio(
@@ -570,8 +568,6 @@ public interface SiniestrosManager {
 	public void eliminaDocumentosxTramite(String ntramite) throws Exception;
 
 	public String obtieneMesesTiempoEspera(String valorICDCPT, String nomTabla) throws Exception;
-	
-	public String obtieneMesesTiempoEsperaICD(String cdramo, String cdtipsit, String cdicd, String dsplan) throws Exception;
 	
 	public String obtieneUsuarioTurnadoSiniestro(String ntramite, String rolDestino) throws Exception;
 	//public String requiereAutorizacionServ(String cobertura, String subcobertura)throws Exception;
@@ -752,62 +748,9 @@ public interface SiniestrosManager {
     public List<GenericVO> getConsultaListaValidacionesGenerales() throws Exception;
     
 	public String validaProveedorPD(String ntramite) throws Exception; // (EGS)
-	
-	public String actualizarReqautes(String reqautes, String ntramite, String nfactura, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String aaapertu, String status, String nmsinies) throws Exception;	// (EGS)
     
-	public String validaAutEspLimMedi(String nmautesp, String ntramite, String nfactura, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String nmsinies) throws Exception; //(EGS) 
+    public String actualizarReqautes(String reqautes, String ntramite, String nfactura, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String aaapertu, String status, String nmsinies) throws Exception;    // (EGS)
+    
+    public String validaAutEspLimMedi(String nmautesp, String ntramite, String nfactura, String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String nmsinies) throws Exception; //(EGS) 
 
-	public List<AseguradoVO> obtenerTramiteCompletoAsegurados(String ntramite, long start, long limit) throws Exception;
-	
-	public ManagerRespuestaImapVO pantallaReservaSiniestralidad(String cdsisrol) throws Exception;
-	
-	public List<Map<String, String>> getDatosRenovaSiniestralidad(String pv_CdUniEco_i 
-																,String pv_CdRamo_i  
-																,String pv_nmpoliza_i
-																,String pv_cdperson  
-																,String pv_nmsinies
-																,String pv_fecdesde  
-																,String pv_fechasta  
-																,String pv_start_i
-																,String pv_limit_i 
-																,String pv_ntramite_i)throws Exception;
-
-	public List<Map<String, String>> obtieneListaTopIcd(String pv_CdUniEco_i, String pv_CdRamo_i, String pv_nmpoliza_i,
-			String pv_cdperson, String pv_nmsinies, String pv_fecdesde, String pv_fechasta, String pv_top) throws Exception;
-
-	public List<Map<String, String>> obtieneListaReservas(String pv_CdUniEco_i, String pv_CdRamo_i, String pv_nmpoliza_i,
-			String pv_cdperson, String pv_nmsinies, String pv_fecdesde, String pv_fechasta) throws Exception;
-
-	public List<Map<String, String>> obtieneListaReservasSolo(String pv_CdUniEco_i, String pv_CdRamo_i, String pv_nmpoliza_i,
-			String pv_cdperson, String pv_nmsinies, String pv_fecdesde, String pv_fechasta) throws Exception;
-	
-	public List<GenericVO> getConsultaListaCPTUnico(String cdicd) throws Exception;
-	
-	public List<GenericVO> getConsultaListaTipoMedicos(String cdicd, String cpts) throws Exception;
-	
-	public String obtieneImporteArancelGNP(String cdpresta,String cpt)throws Exception;
-	
-	public List<GenericVO> getConsultaListaTiposProveedores() throws Exception;
-	
-	public List<Map<String, String>> getConsultaListaDetalleSiniestro( String pv_CdUniEco_i
-			,String pv_CdRamo_i  
-			,String pv_nmpoliza_i
-			,String pv_cdperson  
-			,String pv_ntramite_i
-			,String pv_nmsinies  
-			,String pv_fecdesde  
-			,String pv_fechasta ) throws Exception;
-
-	public List<Map<String, String>> obtieneListaProveedores(String pv_cdpresta_i, String pv_idespecialidad_i,
-			String pv_tipoProveedor_i, String pv_idZonaHosp_i) throws Exception;
-	
-	public String obtieneMedicoEquipoQuirurgico(String numAutorizacion) throws Exception;
-	
-	public List<AutorizacionServicioVO> guardarAutorizacionServicioGNP(HashMap<String, Object> paramsR) throws Exception;
-	
-	public String obtieneDatosGeneralesICD(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson)throws Exception;
-
-	public List<Map<String, String>> getConsultaDatosSumaAseguradaGNP(String cdunieco, String cdramo,String estado,String nmpoliza, String cdperson, String nmsinref) throws Exception;
-	
-	public String obtenerValidacionExclusionICD(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String cdicd )throws Exception;
 }

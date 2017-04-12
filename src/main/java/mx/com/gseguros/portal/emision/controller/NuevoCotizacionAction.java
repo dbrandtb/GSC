@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.utils.Utils;
@@ -89,133 +88,19 @@ public class NuevoCotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	@Action(value   = "actualizarOtvalorTramitePorDsatribu",
-			results = { @Result(name="success", type="json") }
-			)
-	public String actualizarOtvalorTramitePorDsatribu()
-	{
-		logger.debug(Utils.log(
-				 "\n#################################################"
-				,"\n###### actualizarOtvalorTramitePorDsatribu ######"
-				,"\n###### params=",params
-				));
-		
-		try
-		{
-			Utils.validateSession(session);
-			
-			Utils.validate(params, "No se recibieron datos");
-			
-			String ntramite  = params.get("ntramite")
-			       ,dsatribu = params.get("dsatribu")
-			       ,otvalor  = params.get("otvalor")
-			       ,accion   = params.get("accion");
-			
-			Utils.validate(
-					ntramite  , "Falta ntramite"
-					,dsatribu , "Falta dsatribu"
-					,accion   , "Falta accion"
-					);
-			
-			if(!"I".equals(accion)
-					&&!"U".equals(accion)
-					&&!"D".equals(accion))
-			{
-				throw new ApplicationException("Acci\u00f3n no v\u00e1lida");
-			}
-			
-			if("I".equals(accion)||"U".equals(accion))
-			{
-				Utils.validate(otvalor, "Falta otvalor");
-			}
-			
-			cotizacionManager.actualizarOtvalorTramitePorDsatribu(
-					ntramite
-					,dsatribu
-					,otvalor
-					,accion
-					);
-			
-			success = true;
-		}
-		catch(Exception ex)
-		{
-			message = Utils.manejaExcepcion(ex);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n###### success=", success
-				,"\n###### message=", message
-				,"\n###### actualizarOtvalorTramitePorDsatribu ######"
-				,"\n#################################################"
-				));
-		return SUCCESS;
-	}
-	
-	@Action(value   = "recuperarOtvalorTramitePorDsatribu",
-			results = { @Result(name="success", type="json") }
-			)
-	public String recuperarOtvalorTramitePorDsatribu()
-	{
-		logger.debug(Utils.log(
-				 "\n################################################"
-				,"\n###### recuperarOtvalorTramitePorDsatribu ######"
-				,"\n###### params=",params
-				));
-		
-		try
-		{
-			Utils.validateSession(session);
-			
-			Utils.validate(params, "No se recibieron datos");
-			
-			String ntramite  = params.get("ntramite")
-			       ,dsatribu = params.get("dsatribu");
-			
-			Utils.validate(
-					ntramite  , "Falta ntramite"
-					,dsatribu , "Falta dsatribu"
-					);
-			
-			params.put(
-					"otvalor"
-					,cotizacionManager.recuperarOtvalorTramitePorDsatribu(
-							ntramite
-							,dsatribu
-					)
-			);
-			
-			success = true;
-		}
-		catch(Exception ex)
-		{
-			message = Utils.manejaExcepcion(ex);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n###### success=" , success
-				,"\n###### message=" , message
-				,"\n###### params="  , params
-				,"\n###### recuperarOtvalorTramitePorDsatribu ######"
-				,"\n################################################"
-				));
-		return SUCCESS;
-	}
-	
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	////////////////  GETTERS Y SETTERS  ////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * GETTERS Y SETTERS
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
 	public boolean isSuccess() {
 		return success;
 	}

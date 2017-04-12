@@ -41,7 +41,6 @@ Ext.onReady(function()
     Ext.create('Ext.window.Window',{
         title        : 'Agregar a Excluidos'
         ,modal       : true
-        ,width       : 350
         ,buttonAlign : 'center'
         ,resizable   : false
         ,closeAction : 'hide'
@@ -108,39 +107,15 @@ Ext.onReady(function()
                 	  store      :  _p83_store
                      ,itemId     : '_p83_grid'
                      ,title      : 'Usuarios Excluidos'
-                     ,height     : 470
                    	 ,tbar     :
-                            [{
-                                xtype : 'textfield',
-                                fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Nombre:</span>',
-                                labelWidth : 100,
-                                width: 260,
-                                maxLength : 50,
-                                listeners:{
-                                	change: function(elem,newValue,oldValue){
-                                		newValue = Ext.util.Format.uppercase(newValue);
-                                		
-                	            		//Validacion de valor anterior ya que la pantalla hace lowercase en automatico y manda doble change
-                						if( newValue == Ext.util.Format.uppercase(oldValue)){
-                							return false;
-                						}
-                						
-                						try{
-                							_p83_store.removeFilter('filtroUsuari');
-                							_p83_store.filter(Ext.create('Ext.util.Filter', {property: 'dsusuari', anyMatch: true, value: newValue, root: 'data', id:'filtroUsuari'}));
-                						}catch(e){
-                							error('Error al filtrar por usuario',e);
-                						}
-                                	}
+                            [
+                                '->',//Espaciador
+                                {
+                                	 itemId        : '_p83_botonEditar'
+                                    ,text          : 'Agregar'
+                                    ,icon          : '${ctx}/resources/fam3icons/icons/add.png'
+                                    ,handler       : _p83_ventanaAgregar
                                 }
-                            },
-                            '->',//Espaciador
-                            {
-                            	 itemId        : '_p83_botonEditar'
-                                ,text          : 'Agregar'
-                                ,icon          : '${ctx}/resources/fam3icons/icons/add.png'
-                                ,handler       : _p83_ventanaAgregar
-                            }
                            ]
                    	 ,columns: 
                    		 [
@@ -230,19 +205,7 @@ function _p83_gridBotonEliminarClic(view,row,col,item,e,record)
 {
 	var usuario = record.get('cdusuari');
     debug('>_p83_gridBotonEliminarClic:',usuario);
-       
-    Ext.Msg.show({
-        title: 'Confirmar acci&oacute;n',
-        msg: '&iquest;Est\u00e1 seguro que desea eliminar este usuario del turnado?',
-        buttons: Ext.Msg.YESNO,
-        fn: function(buttonId, text, opt) {
-            if(buttonId == 'yes') {
-            	_p83_UsuarioExcluido(usuario,'D');
-            }
-        },
-        icon: Ext.Msg.QUESTION
-    });
-    
+       _p83_UsuarioExcluido(usuario,'D');
     debug('<_p83_gridBotonEliminarClic');
 }
 
@@ -304,6 +267,6 @@ function _p83_ventanaAgregar()
 </script>
 </head>
 <body>
-<div id="_p83_divpri" style="height:500px;border:1px solid #CCCCCC"></div>
+<div id="_p83_divpri" style="height:400px;border:1px solid #CCCCCC"></div>
 </body>
 </html>
