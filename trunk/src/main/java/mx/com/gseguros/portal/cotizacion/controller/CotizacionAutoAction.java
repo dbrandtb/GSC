@@ -20,11 +20,13 @@ import org.springframework.beans.factory.annotation.Value;
 import com.opensymphony.xwork2.ActionContext;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
+import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
@@ -45,6 +47,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     private static final Logger logger           = LoggerFactory.getLogger(CotizacionAutoAction.class);
     
     private CotizacionAutoManager cotizacionAutoManager;
+    private KernelManagerSustituto kernelManager;
     
     private Map<String,String>       smap1            = null;
     private Map<String,String>       smap2            = null;
@@ -70,6 +73,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     
     @Autowired
     private CotizacionManager cotizacionManager;
+    
+    @Autowired
+	private ConsultasPolizaManager consultasPolizaManager;
     
 	@Value("${sigs.facultaDatosPolizaSicaps.url}")
     private String sigsFacultaDatosPolizaSicapsUrl;	
@@ -538,6 +544,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         
         try
         {
+        	
             logger.debug(Utils.log("","Validando datos de entrada"));
             
             Utils.validate(smap1, "No se recibieron datos de entrada");
@@ -571,6 +578,9 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,swexiper , "No se recibi\u00f3 el estado de persona existente"
                     );
             
+            Map<String, String> respTvalopol= new HashMap<String, String>();
+    		respTvalopol= consultasPolizaManager.obtieneTvalopol(cdunieco, cdramo, estado, nmpoliza);//Rescatamos RPF
+            
             ManagerRespuestaVoidVO resp = cotizacionAutoManager.movimientoMpoliper(
                     cdunieco
                     ,cdramo
@@ -592,6 +602,16 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             {
                 throw new ApplicationException(resp.getRespuesta());
             }
+            
+          //Parche para no perder RPF hasta modificar SP
+    		try {
+    			Map<String, String> respTvalopolEmitidoSinRPF= new HashMap<String, String>();
+    			respTvalopolEmitidoSinRPF= consultasPolizaManager.obtieneTvalopol(cdunieco,cdramo,estado,nmpoliza);//Rescatamos RPF
+    			respTvalopolEmitidoSinRPF.put("parametros.pv_otvalor17", respTvalopol.get("parametros.pv_otvalor17"));
+    			kernelManager.pMovTvalopol(respTvalopolEmitidoSinRPF);
+    		} catch (Exception e) {
+    			logger.error("Error al grabar tavolopol con valor RPF");
+    		}
         }
         catch(Exception ex)
         {
