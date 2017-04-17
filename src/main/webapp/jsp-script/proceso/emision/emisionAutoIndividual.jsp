@@ -30,8 +30,6 @@ var url_buscar_empleado                     = '<s:url namespace="/emision"      
 var urlCargar                               = '<s:url namespace="/"                     action="cargarDatosComplementarios"  />';
 var url_guarda_empleado                     = '<s:url namespace="/emision"                action="guardaEmpleados"  />';
 var url_admin_ret                           = '<s:url namespace="/emision"                action="obtieneAdminRet"  />';
-var _p29_urlRangoPeriodogracia              = '<s:url namespace="/emision"   action="obtieneRangoPeriodoGraciaAgente"              />';
-
 
     
 
@@ -71,7 +69,7 @@ var poliza;
 var _p29_habilitarBotonEmitir  = "S";
 
 var _url_domiciliacion = '<s:text name="portal.agentes.domiciliacion.url" />';
-var _URL_IDUSULOGIN = '<s:property value="sigsObtenerDatosPorSucRamPolUrl" />';
+var _URL_IDUSULOGIN = '<s:text name="sigs.obtenerDatosPorSucRamPol.url" />';
 
 var panelDxnItems=[<s:property value="imap.panelDxnItems" />];
 
@@ -160,9 +158,6 @@ Ext.onReady(function()
         }
         _p29_polizaAdicionalesItems = aux;
     </s:if>
-    <s:if test='%{getImap().get("customRamo6")!=null}'>
-	    _p29_polizaAdicionalesItems.push(<s:property value="imap.customRamo6" />);
-    </s:if>
     for(var i=0;i<_p29_polizaAdicionalesItems.length;i++)
     {
         _p29_polizaAdicionalesItems[i].labelWidth=295;
@@ -174,7 +169,6 @@ Ext.onReady(function()
     </s:if>
     
     var _p29_datosGeneralesItems = [<s:property value="imap.polizaItems" />];
-    	
     for(var i=0;i<_p29_datosGeneralesItems.length;i++)
     {
         _p29_datosGeneralesItems[i].labelWidth=295;
@@ -228,7 +222,6 @@ Ext.onReady(function()
     {
         itemId    : '_p29_panelpri'
         ,renderTo : '_p29_divpri'
-        ,title    : _p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto?'Emisi&oacute;n Servicio P&uacute;blico Auto':_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoMicro?'Emisi&oacute;n Servicio P&uacute;blico Microbus':null
         ,border   : 0
         ,defaults : { style : 'margin:5px;' }
         ,items    :
@@ -399,7 +392,6 @@ Ext.onReady(function()
                                                            json.parametros.pv_otvalor08!=null 
                                                         && (json.parametros.pv_otvalor08+'').trim()!=''
                                                         && json.parametros.pv_otvalor08!='-1'
-                                                        && _p29_smap1.cdramo!=Ramo.ServicioPublico
                                                   ){
                                                     
                                                         esDXN=true;
@@ -608,20 +600,8 @@ Ext.onReady(function()
     _fieldByLabel('AGENTE').hide();
     _fieldByName('porparti').setMaxValue(99);
     
-    if(_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
-	  //PERMITIMOS EDICION IGUAL QUE EN AF
-	    Ext.ComponentQuery
-	    .query('[fieldLabel="NUMERO DE SERIE"]')
-	    .forEach(function(it,idx){
-	        if(_fieldByLabel('TIPO DE UNIDAD').getValue()==TipoUnidad.Fronterizo)
-	            it.setReadOnly(!RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol));
-	            it.fireEvent('blur');
-	    });
-    }
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
-    
-    
     ////// custom //////
     
     ////// loaders //////
@@ -738,13 +718,6 @@ Ext.onReady(function()
                 }
 
                 _p29_loadCallback();
-                
-                if(_p29_smap1.cdramo==Ramo.ServicioPublico)
-                {
-                	cargaComentariosRamo6();
-                }
-              //RANGO PERIODO DE GRACIA
-        	    rangoPeriodoGracia()
             }
             else
             {
@@ -754,7 +727,6 @@ Ext.onReady(function()
         ,failure : errorComunicacion
     });
     ////// loaders //////
-   
     
     if(_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
         var folio  = _fieldByName('parametros.pv_otvalor35');
@@ -763,53 +735,54 @@ Ext.onReady(function()
     }else{
         var folio  = _fieldByName('parametros.pv_otvalor37',null,true);
     }
-        
-	   
-	    debug("Valor del Folio --->",folio);
-	    if(_p29_smap1.cdtipsit!='TL')
-		    folio.on(
-		    {
-		        'change' : function(comp,val)
-		        {
-		            debug('folio change val:',val,'dummy');
-		        }
-		        ,'blur' : function()
-		        {
-		            debug("Valor 1 -->",!Ext.isEmpty(folio.getValue()));
-		            if(!Ext.isEmpty(folio.getValue())){
-		                Ext.Ajax.request(
-		                {
-		                    url     : _p29_urlObtieneValNumeroSerie
-		                    ,params :
-		                    {
-		                        'smap1.numSerie'  : folio.getValue()
-		                        ,'smap1.feini'   : _fieldByName('feini').getValue()
-		                    }
-		                    ,success : function(response)
-		                    {
-		                        var json=Ext.decode(response.responseText);
-		                        if(json.exito!=true)
-		                        {
-		                            if(!RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol))
-		                            {
-		                                mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
-		                                _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
-		                            }else{
-		                                mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
-		                                _fieldById('_p29_botonEmitir').setDisabled(false);
-		                            }
-		                        }else{
-		                            _fieldById('_p29_botonEmitir').setDisabled(false);
-		                        }
-		                    }
-		                    ,failure : errorComunicacion
-		                }); 
-		            }else{
-		                mensajeError("No se recibio el número de serie");
-		            }
-		        }
-		    });
-  
+    
+    
+    
+    debug("Valor del Folio --->",folio);
+    if(_p29_smap1.cdtipsit!='TL')
+    folio.on(
+    {
+        'change' : function(comp,val)
+        {
+            debug('folio change val:',val,'dummy');
+        }
+        ,'blur' : function()
+        {
+            debug("Valor 1 -->",!Ext.isEmpty(folio.getValue()));
+            if(!Ext.isEmpty(folio.getValue())){
+                Ext.Ajax.request(
+                {
+                    url     : _p29_urlObtieneValNumeroSerie
+                    ,params :
+                    {
+                        'smap1.numSerie'  : folio.getValue()
+                        ,'smap1.feini'   : _fieldByName('feini').getValue()
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        if(json.exito!=true)
+                        {
+                            if(!RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol))
+                            {
+                                mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
+                                _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
+                            }else{
+                                mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
+                                _fieldById('_p29_botonEmitir').setDisabled(false);
+                            }
+                        }else{
+                            _fieldById('_p29_botonEmitir').setDisabled(false);
+                        }
+                    }
+                    ,failure : errorComunicacion
+                }); 
+            }else{
+                mensajeError("No se recibio el número de serie");
+            }
+        }
+    });
+
 });
 
 ////// funciones //////
@@ -913,7 +886,7 @@ function _p29_loadCallback()
         ,failure : errorComunicacion
     });
     
-    if(_p29_smap1.cdramo==Ramo.ServicioPublico || _p29_smap1.cdramo==Ramo.AutosResidentes)
+    if(_p29_smap1.cdramo+'x'=='5x')
     {
         Ext.Ajax.request(
         {
@@ -2213,72 +2186,6 @@ function buscarEmpleado(administradora,retenedora,ce,rfc,ap,am,nom){
                 }
             });
     
-}
-
-function cargaComentariosRamo6(){
-	try{
-		Ext.ComponentQuery.query('[name=aux.otvalor08]').forEach(function(it){
-			it.store.proxy.extraParams['params.negocio']=_fieldByLabel('NEGOCIO',null,true).getValue();
-			it.store.load();
-			it.store.on({
-                load      : function(store){
-                               store.insert(0,{"aux":null,"aux2":null,"aux3":null,"key":null,"value":"(NINGUNO)"})
-                            }
-});
-		});
-	}catch(e){
-		debugError(e);
-	}
-}
-
-function rangoPeriodoGracia(){
-	
-	try{
-		Ext.Ajax.request(
-			    {
-			        url     : _p29_urlRangoPeriodogracia
-			        ,params :
-			        {
-			            
-			             'smap1.cdramo'   : _p29_smap1.cdramo
-			            ,'smap1.cdtipsit' : _p29_smap1.cdtipsit
-			            ,'smap1.cdagente' : _fieldByLabel('AGENTE',null,true).getValue()
-			           
-			        }
-			        ,success : function(response)
-			        {
-			            var json=Ext.decode(response.responseText);
-			            debug('### respuesta periodo gracia:',json);
-			            if(json.exito)
-			            {
-			                if(!Ext.isEmpty(json.slist1)){
-			                	json.slist1.forEach(function(it){
-			                		_fieldByLabel('PERIODO GRACIA',null,true).getStore().filter(
-			                				[
-			                					{
-			                						filterFn: function(item) {
-			                							var val=parseInt(item.get("key"));
-			                							it.MINIMO=parseInt(it.MINIMO);
-			                							it.MAXIMO=parseInt(it.MAXIMO);
-			                							debug("test: ",item.get("key")," - ",it.MINIMO," ",it.MAXIMO," ",item.get("key") >= it.MINIMO," ",item.get("key") <= it.MAXIMO)
-			                							return val >= it.MINIMO && val <= it.MAXIMO ; 
-			                						}
-			                					}
-			                				]
-			                				);
-			                	});
-			                }
-			            }
-			            else
-			            {
-			                mensajeError(json.respuesta);
-			            }
-			        }
-			        ,failure : errorComunicacion
-			    });
-	}catch(e){
-		debugError(e)
-	}
 }
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
