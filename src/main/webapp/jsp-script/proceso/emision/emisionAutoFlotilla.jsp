@@ -640,7 +640,7 @@ Ext.onReady(function()
 	            	var date1 = oldVal;
 	            	var date2 = fefin.getValue();
 	            	var timeDiff = Math.abs(date2.getTime() - date1.getTime());
-	            	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+	            	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));  	            
 	                fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,diffDays))
 	            }
 	            catch(e)

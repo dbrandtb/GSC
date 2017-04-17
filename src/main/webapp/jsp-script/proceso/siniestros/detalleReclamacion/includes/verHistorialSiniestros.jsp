@@ -57,19 +57,9 @@
 						if(jsonResponse.loadList == null || jsonResponse.loadList.length == 0) {
 							var respuesta ="";
 							if(_proceso =='1'){
-								centrarVentanaInterna(Ext.Msg.show({
-                                    title:'Aviso',
-                                    msg: "La p&oacute;liza no tiene siniestralidad.",
-                                    buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.INFO
-                                }));
+								showMessage("Aviso", "La p&oacute;liza no tiene siniestralidad.", Ext.Msg.OK, Ext.Msg.INFO);
 							}else{
-								centrarVentanaInterna(Ext.Msg.show({
-                                    title:'Aviso',
-                                    msg: "Este asegurado no cuenta con siniestralidad.",
-                                    buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.INFO
-                                }));
+								showMessage("Aviso", "Este asegurado no cuenta con siniestralidad.", Ext.Msg.OK, Ext.Msg.INFO);
 							}
 							
 						}
