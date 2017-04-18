@@ -6,7 +6,7 @@
 	<package name="siniestros" namespace="/siniestros" extends="default">
 		<!-- AUTORIZACION DE SERVICIO -->
 		<action name="autorizacionServicios" class="autorizacionServiciosAction"  method="autorizacionServicios">
-			<result>/jsp-script/proceso/siniestros/autorizacionServiciosGNP.jsp</result>
+			<result>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</result>
 		</action>
 		
 		<action name="includes/verAutorizacionServicio" class="autorizacionServiciosAction" method="verAutorizacionServicio">
