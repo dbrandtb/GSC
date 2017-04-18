@@ -1070,7 +1070,8 @@ Ext.onReady(function()
                                         ,itemId     : 'fechaFinVigencia'
                                         ,name       : 'fefin'
                                         ,allowBlank : false
-                                        ,readOnly   : true
+                                        //,readOnly   : true
+                                        ,readOnly   : false
                                         ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
                                     })
                                     ,<s:property value="imap.comboFormaPago" />
