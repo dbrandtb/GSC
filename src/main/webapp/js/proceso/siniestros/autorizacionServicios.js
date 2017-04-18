@@ -6,6 +6,7 @@ var storeQuirugico;
 var extraParams='';
 var cdrol;
 var notasInternas ='';
+var selCPT = '';	// (EGS)
 //var mensajeInicial = ' Movimiento no procede por padecimiento de periodo de espera de ';
 var _Existe = "S";
 var _NExiste = "N";
@@ -1492,7 +1493,7 @@ Ext.onReady(function() {
 					storeQuirugicoBase.add(rec);
 					panelEquipoQuirurgicoBase.getForm().reset();
 					// aqui tenemos que recorrer el vector y obtener el VALOR BASE
-					obtenerValorBase(storeQuirugicoBase);
+					//obtenerValorBase(storeQuirugicoBase); (EGS)
 					ModificarEquipoQuirurguico(storeQuirurgico);
 					ventanaEqQuirurgicoBase.close();
 				} else {
@@ -1536,6 +1537,7 @@ Ext.onReady(function() {
 					var rec = new modelListadoTablas({
 						cdmedico: datos.idmedicoEqQuirurg,
 						nombreMedico:nombreProveedor,
+						cdcpt: selCPT,	// (EGS) datos.cptConAutorizado,
 						cantporc: datos.porcentajeEqQuirurg,
 						ptimport: datos.importeEqQuirurg,
 						cdtipmed:datos.idTipoMedico,
@@ -1702,14 +1704,22 @@ Ext.onReady(function() {
 					}
 				],
 				selModel: {
-					selType: 'cellmodel'
+					selType: 'rowmodel'	//'cellmodel' (EGS)
 				},
 				tbar: [{
 					icon:_CONTEXT+'/resources/fam3icons/icons/add.png',
 					text: 'Agregar base equipo quir&uacute;gico',
 					scope: this,
 					handler: this.onAddClick
-				}]
+				}],
+				listeners: {	//(EGS)
+					select: function(grid, record, index, opts){
+						debug("Seleccionamos registro",record.get("ptimport"));
+						Ext.getCmp('idValorBase').setValue(record.get("ptimport"));
+						selCPT = record.get("cdcpt");
+						debug("selCPT",selCPT);
+					}
+				}	// fin (EGS)
 			});
 			this.callParent();
 		},
@@ -1720,7 +1730,7 @@ Ext.onReady(function() {
 		onRemoveClick: function(grid, rowIndex){
 			var record=this.getStore().getAt(rowIndex);
 			this.getStore().removeAt(rowIndex);
-			obtenerValorBase(storeQuirugicoBase);
+			//obtenerValorBase(storeQuirugicoBase); (EGS)
 			ModificarEquipoQuirurguico(storeQuirurgico);
 		}
 	});
@@ -1842,6 +1852,10 @@ Ext.onReady(function() {
 			this.callParent();
 		},
 		onAddClick: function(btn, e){
+			if(Ext.getCmp('idValorBase').getValue() == ""){	//(EGS)
+				centrarVentanaInterna(Ext.Msg.show({title: 'No puede agregar equipo quir&uacute;rgico', msg: 'Es necesario seleccionar una base para agregar equipo quir&uacute;rgico', buttons: Ext.Msg.OK, icon: Ext.Msg.WARNING}));		
+				return false;
+			}	//(EGS) fin
 			Ext.getCmp('medicoExtEqQ').hide();
 			ventanaEqQuirurgico.animateTarget=btn;
 			ventanaEqQuirurgico.showAt(150,1550);
@@ -3125,7 +3139,7 @@ Ext.onReady(function() {
 
 							if(json.listaConsultaTablas[i].cdtipaut == 2){
 								storeQuirugicoBase.add(rec);
-								obtenerValorBase(storeQuirugicoBase);
+								//obtenerValorBase(storeQuirugicoBase); (EGS)
 							}
 
 							if(json.listaConsultaTablas[i].cdtipaut == 3){
