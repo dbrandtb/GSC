@@ -5928,7 +5928,7 @@ function _p30_comprar()
         ,'smap1.cdagenteExt'   : _p30_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue() : ''
         ,'smap1.flotilla'      : 'si'
         ,'smap1.tipoflot'      : _p30_smap1.tipoflot
-        ,'smap1.recargoPF'     : Ext.isEmpty(_fieldByName('otvalor.recargoPF',_fieldById('_p30_formRecargoPF')).getValue())?'0':_fieldByName('otvalor.recargoPF',_fieldById('_p30_formRecargoPF')).getValue()
+        ,'smap1.recargoPF'     : Ext.isEmpty(_fieldByName('otvalor.recargoPF',_fieldById('_p30_formRecargoPF')).getValue())? null:_fieldByName('otvalor.recargoPF',_fieldById('_p30_formRecargoPF')).getValue()
     };
     
     if(!Ext.isEmpty(_p30_flujo))
