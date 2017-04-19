@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.documentos.service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.documentos.model.Documento;
@@ -54,11 +53,6 @@ public interface DocumentosManager
 			,String cdorddoc
 			,Documento documento
 			,String cdusuari
-			,String cdsisrol, boolean sustituir
+			,String cdsisrol
 			)throws Exception;
-
-	public List<Map<String, String>> obtenerValorDefectoParametrizados(
-			String cdsisrol
-			,String campo
-			,String renovacionGral) throws Exception;
 }

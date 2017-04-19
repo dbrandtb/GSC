@@ -18,11 +18,6 @@
 	var pantallaPrincipal = clienteSeleccionado.tipoPantalla;
 	var primerCarga = 0;
 	var recordCargaDomi;
-	
-	var endDomNoSicapsFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-    debug('endDomNoSicapsFlujo:',endDomNoSicapsFlujo);
-	
-	
 	Ext.onReady(function() {
 		
 		Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
@@ -460,13 +455,6 @@
 								'telefono3'     	: datosContratante.down('[name=smap1.TELEFONO3]').getValue()
 							}
 							submitValues['smap1']= params;
-							
-							
-							if(!Ext.isEmpty(endDomNoSicapsFlujo))
-                            {
-							    submitValues['flujo'] = endDomNoSicapsFlujo;
-                            }
-							
 							debug("Valor a enviar ==>",submitValues);
 							Ext.Ajax.request( {
 								url: _35_urlGuardar,

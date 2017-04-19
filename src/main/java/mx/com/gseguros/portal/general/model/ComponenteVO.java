@@ -20,7 +20,6 @@ public class ComponenteVO
 	public final static String TIPOCAMPO_FECHA        = "F";
 	public final static String TIPOCAMPO_TEXTAREA     = "T";
 	public final static String TIPOCAMPO_PORCENTAJE   = "P";
-	public final static String TIPOCAMPO_FECHA_HORA   = "H";
 	
 	public final static String RENDERER_MONEY = "MONEY";
 	public final static String RENDERER_MONEY_EXT = "Ext.util.Format.usMoney";

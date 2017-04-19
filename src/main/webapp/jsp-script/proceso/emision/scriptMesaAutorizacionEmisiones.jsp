@@ -232,7 +232,6 @@ function _4_onFolderClick(grid,rowIndex)
         ,width       : 600
         ,height      : 400
         ,autoScroll  : true
-        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
         ,loader      :
         {
             url       : _4_urlVerDocumentos
@@ -326,7 +325,6 @@ function rechazarTramiteWindow(grid,rowIndex,colIndex){
             ,columns    : 2
             ,width      : 250
             ,style      : 'margin:5px;'
-            ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
             ,items      :
             [
                 {
@@ -334,13 +332,12 @@ function rechazarTramiteWindow(grid,rowIndex,colIndex){
                     ,itemId     : 'SWAGENTE2'
                     ,name       : 'SWAGENTE2'
                     ,inputValue : 'S'
-                    ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                 }
                 ,{
                     boxLabel    : 'No'
                     ,name       : 'SWAGENTE2'
                     ,inputValue : 'N'
-                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                    ,checked    : true
                 }
             ]
         }],

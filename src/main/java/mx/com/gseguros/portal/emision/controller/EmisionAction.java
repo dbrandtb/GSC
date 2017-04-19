@@ -8,17 +8,12 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.emision.service.EmisionManager;
-import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionContext;
 
-import org.springframework.beans.factory.annotation.Value;
-
-
-@SuppressWarnings("serial")
 public class EmisionAction extends PrincipalCoreAction
 {
 	private static Logger logger = Logger.getLogger(EmisionAction.class);
@@ -31,9 +26,6 @@ public class EmisionAction extends PrincipalCoreAction
 	private Map<String,String>       smap1     = null;
 	private Map<String,Item>         imap      = null;
 	private List<Map<String,String>> slist1    = null;
-
-	@Value("${sigs.obtenerDatosPorSucRamPol.url}")
-    private String sigsObtenerDatosPorSucRamPolUrl;
 	
 	public EmisionAction()
 	{
@@ -113,65 +105,6 @@ public class EmisionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String obtieneIdUsu(){
-		logger.debug(Utils.log(
-				 "\n >>> guardarClausulasPoliza"
-				,"\n >>> smap1=",smap1
-				));
-		
-		try {//CHECAR PARA CAMBIOS FUTUROS
-			String login  = smap1.get("cdusuari"),
-			       params = Utils.join("login=",login),
-			       idUsu  = HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl, params);
-			
-			smap1.put("idUsu", idUsu);
-			
-			success = true;
-		} catch (Exception e) {
-			respuesta = Utils.manejaExcepcion(e);
-		}
-		return SUCCESS;
-	}
-	
-	
-	public String cargarPoliza()
-	{
-		logger.debug(Utils.log(
-				 "\n###############################"
-				,"\n###### cargar por Poliza ######"
-				,"\n###### smap1 = " , smap1
-				));
-		
-		String cdunieco   = smap1.get("cdsucursal")
-				,cdramo   = smap1.get("cdramo")
-				,cdpoliza = smap1.get("cdpoliza")
-				,tipoflot = smap1.get("tipoflot")
-				,cdtipsit = smap1.get("cdtipsit")
-				,cargaCot = smap1.get("cargaCotiza");
-		if(cargaCot == null)
-		{
-			cargaCot="N";
-		}
-
-		try
-		{
-			String params        = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-		          ,valoresCampos = HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl,params);
-			
-			logger.debug(Utils.log("\n Parametros Regresados\nValores de Campos: ",valoresCampos));
-			
-			smap1.put("valoresCampos", valoresCampos);
-			
-			success = true;
-			
-		}
-		catch (Exception ex)
-		{
-			respuesta = Utils.manejaExcepcion(ex);
-		}
-		return SUCCESS;
-	}
-	
 	/**
 	 * Getters y setters
 	 */
@@ -229,7 +162,4 @@ public class EmisionAction extends PrincipalCoreAction
 		this.imap = imap;
 	}
 	
-	public String getSigsObtenerDatosPorSucRamPolUrl() {
-		return sigsObtenerDatosPorSucRamPolUrl;
-	}
 }
