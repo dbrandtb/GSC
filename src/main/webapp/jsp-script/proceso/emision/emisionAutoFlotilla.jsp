@@ -698,6 +698,35 @@ Ext.onReady(function()
         }
         // y o
         
+        //RPF
+        var campoRPF = _fieldByName("parametros.pv_otvalor17",_p31_polizaAdicionalesItems,true);
+        if (!Ext.isEmpty(campoRPF))
+    	{
+    	   campoRPF.hide();
+    	   campoRPF.setMinValue(1);
+    	   if(campoRPF.getValue() == 0);
+    	    {
+    	    	campoRPF.setValue(null);
+    	    }
+    	    campoRPF.on(
+    	    	    {
+    	    	        change : function(me,val,oldVal)
+    	    	        {
+    	    	            try
+    	    	            {
+    	    	            	if(val == 0)
+    	    	            		{
+    	    	            		 me.setValue(null);
+    	    	            		}
+    	    	            }
+    	    	            catch(e)
+    	    	            {
+    	    	                debug(e);
+    	    	            }
+    	    	        }
+    	    	    });
+    	}//RPF
+    	
     }//ramo 5
     
     //codigo dinamico recuperado de la base de datos
