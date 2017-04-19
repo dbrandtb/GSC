@@ -1494,7 +1494,7 @@ Ext.onReady(function() {
 					panelEquipoQuirurgicoBase.getForm().reset();
 					// aqui tenemos que recorrer el vector y obtener el VALOR BASE
 					//obtenerValorBase(storeQuirugicoBase); (EGS)
-					ModificarEquipoQuirurguico(storeQuirurgico);
+					//ModificarEquipoQuirurguico(storeQuirurgico);	(EGS)
 					ventanaEqQuirurgicoBase.close();
 				} else {
 					centrarVentanaInterna(Ext.Msg.show({
@@ -1731,7 +1731,7 @@ Ext.onReady(function() {
 			var record=this.getStore().getAt(rowIndex);
 			this.getStore().removeAt(rowIndex);
 			//obtenerValorBase(storeQuirugicoBase); (EGS)
-			ModificarEquipoQuirurguico(storeQuirurgico);
+			//ModificarEquipoQuirurguico(storeQuirurgico);	(EGS)
 		}
 	});
 	gridIncisos2=new EditorIncisos2();
