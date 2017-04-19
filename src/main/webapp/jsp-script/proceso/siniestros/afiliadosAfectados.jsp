@@ -24,8 +24,6 @@
 			var _CATALOGO_SUBCOBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
 			var _CATALOGO_VALIDACIONESGRALES            = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@VALIDACIONESGRALES"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALESMS 		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MS"/>';
-			var _CATALOGO_SUBCOBERTURASTOTALESGMPI      = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASGMPI"/>';
-			var _CATALOGO_SUBCOBERTURASTOTALESGMPC      = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASGMPC"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALESMSC		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MSC"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALINFONAVIT	= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASINFONAVIT"/>';
 			var _CATALOGO_SUBCOBERTURASRECUPERA			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASRECUPERA"/>';
@@ -63,7 +61,6 @@
             var _MULTISALUD								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
             var _GMMI									= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
             var _RECUPERA								= '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
-            var _GMPRUEBA                               = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES_PRUEBA.cdramo" />';
             //cdtiptra
             var _TIPO_TRAMITE_SINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra"/>';
             var _TIPO_PAGO_AUTOMATICO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@PAGO_AUTOMATICO.cdtiptra"/>';
@@ -292,8 +289,7 @@
 						{type:'date',   name:'FEINGRESO',  dateFormat : 'd/m/Y'},
 						{type:'date',   name:'FEEGRESO',   dateFormat : 'd/m/Y'},
 						{type:'string', name:'CDTIPEVE'},       {type:'string', name:'CDTIPALT'},
-						{type:'string', name:'FLAGTIPEVE'},     {type:'string', name:'FLAGTIPALT'},
-						{type:'string', name:'NUMRECLA'}
+						{type:'string', name:'FLAGTIPEVE'},     {type:'string', name:'FLAGTIPALT'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -616,52 +612,6 @@
 					}
 				});
 				storeSubcoberturaAsegurado4MSCRender.load();
-				
-                storeSubcoberturaAseguradoGMPCRender = Ext.create('Ext.data.JsonStore', {
-                    model:'Generic',
-                    //autoLoad:true,
-                    cargado:false,
-                    proxy: {
-                        type: 'ajax',
-                        url: _URL_CATALOGOS,
-                        extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALESGMPC},
-                        reader: {
-                            type: 'json',
-                            root: 'lista'
-                        }
-                    },listeners: {
-                        load : function() {
-                            this.cargado=true;
-                            if(!Ext.isEmpty(gridFacturaDirecto)){
-                                gridFacturaDirecto.getView().refresh();
-                            }
-                        }
-                    }
-                });
-                storeSubcoberturaAseguradoGMPCRender.load();
-                
-                storeSubcoberturaAseguradoGMPIRender = Ext.create('Ext.data.JsonStore', {
-                    model:'Generic',
-                    //autoLoad:true,
-                    cargado:false,
-                    proxy: {
-                        type: 'ajax',
-                        url: _URL_CATALOGOS,
-                        extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALESGMPI},
-                        reader: {
-                            type: 'json',
-                            root: 'lista'
-                        }
-                    },listeners: {
-                        load : function() {
-                            this.cargado=true;
-                            if(!Ext.isEmpty(gridFacturaDirecto)){
-                                gridFacturaDirecto.getView().refresh();
-                            }
-                        }
-                    }
-                });
-                storeSubcoberturaAseguradoGMPIRender.load();
 				
 				storeSubcoberturaAsegurado4INFORender = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
@@ -1734,14 +1684,11 @@
 									}
 								}
 							},
-                            {
-                                header: 'Reclamo',   dataIndex: 'NUMRECLA'//,          width: 90, hidden : (_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
-                            },
 							{
-								header: 'Id<br/>Sini. Existente',   dataIndex: 'NMSINREF',          width: 90, hidden : true//(_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
+								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',			width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
-								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : true//(_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
+								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
 								header: 'Fecha<br/>Ocurrencia',		dataIndex: 'FEOCURRE'
@@ -1867,34 +1814,6 @@
 											    leyenda='Cargando...';
 											}
 										}
-										else if(_cdtipsitProducto =="GMPC"){
-                                            if(storeSubcoberturaAseguradoGMPCRender.cargado) {
-                                                debug("storeSubcoberturaAseguradoGMPCRender");
-                                                debug(storeSubcoberturaAseguradoGMPCRender);
-                                                storeSubcoberturaAseguradoGMPCRender.each(function(rec) {
-                                                    if (rec.data.key == v){
-                                                        leyenda = rec.data.value;
-                                                    }
-                                                });
-                                            }
-                                            else{
-                                                leyenda='Cargando...';
-                                            }
-                                        }
-                                        else if(_cdtipsitProducto =="GMPI"){
-                                            if(storeSubcoberturaAseguradoGMPIRender.cargado) {
-                                                debug("storeSubcoberturaAseguradoGMPIRender");
-                                                debug(storeSubcoberturaAseguradoGMPIRender);
-                                                storeSubcoberturaAseguradoGMPIRender.each(function(rec) {
-                                                    if (rec.data.key == v){
-                                                        leyenda = rec.data.value;
-                                                    }
-                                                });
-                                            }
-                                            else{
-                                                leyenda='Cargando...';
-                                            }
-                                        }
 										else{
 											if(storeSubcoberturaAseguradoRender.cargado) {
 												debug("storeSubcoberturaAseguradoRender");
@@ -1920,7 +1839,7 @@
 									return leyenda;
 								}
 							},
-                            {   header: 'Fecha ingreso',        dataIndex: 'FEINGRESO',  renderer: Ext.util.Format.dateRenderer('d/m/Y')  ,hidden : _tipoProducto == _GMPRUEBA
+                            {   header: 'Fecha ingreso',        dataIndex: 'FEINGRESO',  renderer: Ext.util.Format.dateRenderer('d/m/Y')
                                 ,editor : {
                                     xtype : 'datefield',
                                     format : 'd/m/Y',
@@ -1932,7 +1851,7 @@
                                     }
                                 }
                             }, 
-                            {   header: 'Fecha egreso',             dataIndex: 'FEEGRESO',    renderer: Ext.util.Format.dateRenderer('d/m/Y')       //,hidden : _tipoProducto == _GMPRUEBA
+                            {   header: 'Fecha egreso',             dataIndex: 'FEEGRESO',    renderer: Ext.util.Format.dateRenderer('d/m/Y')
                                 ,editor : {
                                     xtype    : 'datefield',
                                     format   : 'd/m/Y',
@@ -1944,7 +1863,7 @@
                                 }
                             },
                             {
-                                header: 'Tipo evento',              dataIndex: 'CDTIPEVE'           ,hidden : _tipoProducto == _GMPRUEBA
+                                header: 'Tipo evento',              dataIndex: 'CDTIPEVE'
                                 ,editor : comboTipoEventos
                                 ,renderer : function(v) {
                                     var leyenda = '';
@@ -1972,7 +1891,7 @@
                                 }
                             },
                              {
-                                header: 'Alta',                     dataIndex: 'CDTIPALT'           ,hidden : _tipoProducto == _GMPRUEBA
+                                header: 'Alta',                     dataIndex: 'CDTIPALT'
                                 ,editor : comboAltaHospital
                                 ,renderer : function(v) {
                                     var leyenda = '';
@@ -2363,7 +2282,7 @@
 														record.get('CDUNIECO'), record.get('CDRAMO'),record.get('ESTADO'),record.get('NMPOLIZA'), 
 														record.get('NMSUPLEM'), record.get('NMSITUAC'), record.get('CDGARANT'), record.get('CDCONVAL'),
 														record.get('CDPERSON'), record.get('NMSINREF'), totalConsumido, record.get('NMSINIES'), 
-														record.get('VALTOTALCOB'), record.get('SWFONSIN'), record.get('NUMRECLA'));
+														record.get('VALTOTALCOB'), record.get('SWFONSIN'));
 												},
 												failure : function () {
 													Ext.Msg.show({
@@ -4038,19 +3957,17 @@
                     ,columns    : 2
                     ,width      : 250
                     ,style      : 'margin:5px;'
-                    ,hidden     : _GLOBAL_CDSISROL===RolSistema
                     ,items      : [
                         {
                             boxLabel    : 'Si'
                             ,itemId     : 'SWAGENTE2'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'S'
-                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                         },{
                             boxLabel    : 'No'
                             ,name       : 'SWAGENTE2'
                             ,inputValue : 'N'
-                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                            ,checked    : true
                         }
                     ]
                 }
@@ -4193,19 +4110,17 @@
 	                    ,columns    : 2
 	                    ,width      : 250
 	                    ,style      : 'margin:5px;'
-	                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 	                    ,items      : [
 	                        {
 	                            boxLabel    : 'Si'
 	                            ,itemId     : 'SWAGENTE3'
 	                            ,name       : 'SWAGENTE3'
 	                            ,inputValue : 'S'
-	                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 	                        },{
 	                            boxLabel    : 'No'
 	                            ,name       : 'SWAGENTE3'
 	                            ,inputValue : 'N'
-	                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+	                            ,checked    : true
 	                        }
 	                    ]
 	                }],
@@ -4490,277 +4405,250 @@
 				icon: Ext.Msg.QUESTION,
 				fn: function(buttonId, text, opt){
 					if(buttonId == 'yes'){
+						storeConceptoPago.load({
+							params : {
+								'params.cdramo': _tipoProducto
+							}
+						});
+						debug("Valor del Asegurado ===> ",_11_params);
+						storeAsegurados2.load({
+							params:{
+								'params.cdunieco': _11_params.CDUNIECO,
+								'params.cdramo': _tipoProducto,
+								'params.estado': _11_params.ESTADO,
+								'params.nmpoliza': _11_params.NMPOLIZA
+							}
+						});
 						
-						if(_tipoProducto =="11"){
-                            Ext.Ajax.request({
-                                url: _URL_SOLICITARPAGO,
-                                params: {
-                                    'params.pv_ntramite_i' : _11_params.NTRAMITE,
-                                    'params.pv_tipmov_i'   : _11_params.OTVALOR02
-                                },
-                                success: function(response, opts) {
-                                    var respuesta = Ext.decode(response.responseText);
-                                    if(respuesta.success){
-                                        myMask.hide();
-                                        centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','El pago se ha solicitado con &eacute;xito.',function(){
-                                            _11_regresarMC();
-                                        }));
-                                    }else {
-                                        myMask.hide();
-                                        centrarVentanaInterna(mensajeError(respuesta.mensaje));
-                                    }
-                                },
-                                failure: function(){
-                                    myMask.hide();
-                                    centrarVentanaInterna(mensajeError('No se pudo solicitar el pago.'));
-                                }
-                            });
-						}else{
-                            storeConceptoPago.load({
-                                params : {
-                                    'params.cdramo': _tipoProducto
-                                }
-                            });
-                            debug("Valor del Asegurado ===> ",_11_params);
-                            storeAsegurados2.load({
-                                params:{
-                                    'params.cdunieco': _11_params.CDUNIECO,
-                                    'params.cdramo': _tipoProducto,
-                                    'params.estado': _11_params.ESTADO,
-                                    'params.nmpoliza': _11_params.NMPOLIZA
-                                }
-                            });
-                            
-                            var pagocheque = Ext.create('Ext.form.field.ComboBox', {
-                                colspan    :2,              fieldLabel      : 'Destino Pago',   name            :'destinoPago',
-                                allowBlank : false,         editable        : true,         displayField    : 'value',
-                                valueField:'key',           forceSelection  : true,         width           :350,
-                                queryMode    :'local',      store           : storeDestinoPago
-                            });
-    
-                            var concepPago = Ext.create('Ext.form.field.ComboBox', {
-                                colspan    :2,              fieldLabel      : 'Concepto Pago',  name            :'concepPago',
-                                allowBlank : false,         editable        : true,             displayField    : 'value',
-                                valueField:'key',           forceSelection  : true,             width           :350,
-                                queryMode    :'local',      store           : storeConceptoPago
-                            });
-                            
-                            var idCveBeneficiario = Ext.create('Ext.form.field.Number', {
-                                colspan    :2,              fieldLabel      : 'Id. Beneficiario',   name            :'idCveBeneficiario',
-                                allowBlank : false,         editable        : true,             width           :350
-                            });
-                            
-                            var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
-                                name:'cmbBeneficiario',         fieldLabel: 'Beneficiario',         queryMode: 'local'/*'remote'*/,         displayField: 'value',
-                                valueField: 'key',              editable:true,                      forceSelection : true,      matchFieldWidth: false,
-                                queryParam: 'params.cdperson',  minChars  : 2,                      store : storeAsegurados2,   triggerAction: 'all',
-                                width        : 350,
-                                allowBlank  : _tipoPago == _TIPO_PAGO_DIRECTO,
-                                hidden      : _tipoPago == _TIPO_PAGO_DIRECTO,
-                                listeners : {
-                                    'select' : function(e) {
-                                        Ext.Ajax.request({
-                                            url     : _URL_CONSULTA_BENEFICIARIO
-                                            ,params:{
-                                                'params.cdunieco'  : _11_params.CDUNIECO,
-                                                'params.cdramo'    : _11_params.CDRAMO,
-                                                'params.estado'    : _11_params.ESTADO,
-                                                'params.nmpoliza'  : _11_params.NMPOLIZA,
-                                                'params.cdperson'  : e.getValue()
-                                            }
-                                            ,success : function (response) {
-                                                json = Ext.decode(response.responseText);
-                                                if(json.success==false){
-                                                    Ext.Msg.show({
-                                                        title:'Beneficiario',
-                                                        msg: json.mensaje,
-                                                        buttons: Ext.Msg.OK,
-                                                        icon: Ext.Msg.WARNING
-                                                    });
-                                                    panelModificacion.query('combo[name=cmbBeneficiario]')[0].setValue('')
-                                                }
-                                            },
-                                            failure : function (){
-                                                //me.up().up().setLoading(false);
-                                                centrarVentanaInterna(Ext.Msg.show({
-                                                    title:'Error',
-                                                    msg: 'Error de comunicaci&oacute;n',
-                                                    buttons: Ext.Msg.OK,
-                                                    icon: Ext.Msg.ERROR
-                                                }));
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                            
-                            Ext.Ajax.request({
-                                url     : _URL_VAL_CAUSASINI
-                                ,params : {
-                                    'params.cdramo'   : _11_params.CDRAMO,
-                                    'params.cdtipsit' : _cdtipsitProducto,
-                                    'params.causaSini': 'IDBENEFI',
-                                    'params.cveCausa' : _tipoPago
-                                }
-                                ,success : function (response){
-                                    var datosExtras = Ext.decode(response.responseText);
-                                    if(Ext.decode(response.responseText).datosInformacionAdicional != null){
-                                        var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
-                                        debug("Valor de Respuesta ==> ",_11_params.CDRAMO,_cdtipsitProducto,_tipoPago,cveCauSini);
-                                        if(cveCauSini.REQVALIDACION =="S"){
-                                            //Visualizamos el campo
-                                            panelModificacion.down('[name=idCveBeneficiario]').show();
-                                        }else{
-                                            //ocultamos el campo
-                                            panelModificacion.down('[name=idCveBeneficiario]').setValue('0');
-                                            panelModificacion.down('[name=idCveBeneficiario]').hide();
-                                        }
-                                    }
-                                },
-                                failure : function (){
-                                    me.up().up().setLoading(false);
-                                    centrarVentanaInterna(Ext.Msg.show({
-                                        title:'Error',
-                                        msg: 'Error de comunicaci&oacute;n',
-                                        buttons: Ext.Msg.OK,
-                                        icon: Ext.Msg.ERROR
-                                    }));
-                                }
-                            });
-                            
-                            var cdramoTramite="";
-                            var cdtipsitTramite ="";
-                            //3.- Obtenemos los valores de TMESACONTROL  el destino y concepto de pago si es que existen
-                            
-                            Ext.Ajax.request({
-                                url     : _URL_CONSULTA_TRAMITE
-                                ,params:{
-                                    'params.ntramite': _11_params.NTRAMITE
-                                }
-                                ,success : function (response) {
-                                    if(Ext.decode(response.responseText).listaMesaControl != null) {
-                                        var json=Ext.decode(response.responseText).listaMesaControl[0];
-                                        cdramoTramite = json.cdramomc;
-                                        cdtipsitTramite = json.cdtipsitmc;
-                                        panelModificacion.query('combo[name=cmbBeneficiario]')[0].setValue(json.otvalor04mc);
-                                        if(json.otvalor18mc !=null) {
-                                            panelModificacion.query('combo[name=destinoPago]')[0].setValue(json.otvalor18mc);
-                                        }
-                                        if(json.otvalor19mc !=null) {
-                                            panelModificacion.query('combo[name=concepPago]')[0].setValue(json.otvalor19mc);
-                                        }
-                                        if(json.otvalor27mc !=null) {
-                                            panelModificacion.query('[name=idCveBeneficiario]')[0].setValue(json.otvalor27mc);
-                                        }
-                                    }
-                                },
-                                failure : function () {
-                                    //me.up().up().setLoading(false);
-                                    Ext.Msg.show({
-                                        title:'Error',
-                                        msg: 'Error de comunicaci&oacute;n',
-                                        buttons: Ext.Msg.OK,
-                                        icon: Ext.Msg.ERROR
-                                    });
-                                }
-                            });
-                            
-                            windowCvePago = Ext.create('Ext.window.Window',{
-                                modal       : true,
-                                buttonAlign : 'center',
-                                width       : 550,
-                                autoScroll  : true,
-                                items       : [
-                                    panelModificacion = Ext.create('Ext.form.Panel', {
-                                        title: 'Destino de Pago',
-                                        bodyPadding: 5,
-                                        items: [pagocheque,
-                                                concepPago,
-                                                cmbBeneficiario,
-                                                idCveBeneficiario],
-                                        buttonAlign:'center',
-                                        buttons: [ {
-                                            text: 'Solicitar'
-                                            ,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
-                                            ,buttonAlign : 'center'
-                                            ,handler: function() { 
-                                                if (panelModificacion.form.isValid()) {
-                                                    var datos=panelModificacion.form.getValues();
-                                                    myMask.show();
-                                                    //4.- Guardamos la informacion del destino y el tipo de concepto
-                                                    Ext.Ajax.request({
-                                                        url     : _URL_CONCEPTODESTINO
-                                                        ,jsonData: {
-                                                            params:{
-                                                                ntramite:_11_params.NTRAMITE,
-                                                                cdtipsit:cdtipsitTramite,
-                                                                destinoPago:datos.destinoPago,
-                                                                concepPago:datos.concepPago,
-                                                                beneficiario : datos.cmbBeneficiario,
-                                                                cvebeneficiario : datos.idCveBeneficiario,
-                                                                tipoPago : _11_params.OTVALOR02
-                                                            }
-                                                        }
-                                                        ,success : function (response) {
-                                                            windowCvePago.close();
-                                                            //5.- Solicitamos el pago le mandamos el tramite y el tipo de pago
-                                                            Ext.Ajax.request({
-                                                                url: _URL_SOLICITARPAGO,
-                                                                params: {
-                                                                    'params.pv_ntramite_i' : _11_params.NTRAMITE,
-                                                                    'params.pv_tipmov_i'   : _11_params.OTVALOR02
-                                                                },
-                                                                success: function(response, opts) {
-                                                                    var respuesta = Ext.decode(response.responseText);
-                                                                    if(respuesta.success){
-                                                                        myMask.hide();
-                                                                        centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','El pago se ha solicitado con &eacute;xito.',function(){
-                                                                            _11_regresarMC();
-                                                                        }));
-                                                                    }else {
-                                                                        myMask.hide();
-                                                                        centrarVentanaInterna(mensajeError(respuesta.mensaje));
-                                                                    }
-                                                                },
-                                                                failure: function(){
-                                                                    myMask.hide();
-                                                                    centrarVentanaInterna(mensajeError('No se pudo solicitar el pago.'));
-                                                                }
-                                                            });
-                                                        },
-                                                        failure : function () {
-                                                            Ext.Msg.show({
-                                                                title:'Error',
-                                                                msg: 'Error de comunicaci&oacute;n',
-                                                                buttons: Ext.Msg.OK,
-                                                                icon: Ext.Msg.ERROR
-                                                            });
-                                                        }
-                                                    });
-                                                }else {
-                                                    Ext.Msg.show({
-                                                        title: 'Aviso',
-                                                        msg: 'Complete la informaci&oacute;n requerida',
-                                                        buttons: Ext.Msg.OK,
-                                                        icon: Ext.Msg.WARNING
-                                                    });
-                                                }
-                                            }
-                                        },
-                                        {
-                                            text: 'Cancelar',
-                                            icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-                                            buttonAlign : 'center',
-                                            handler: function() {
-                                                windowCvePago.close();
-                                            }
-                                        }
-                                        ]
-                                    })  
-                                ]
-                            }).show();
-                            centrarVentana(windowCvePago);
-						}
+						var pagocheque = Ext.create('Ext.form.field.ComboBox', {
+							colspan	   :2,				fieldLabel   	: 'Destino Pago', 	name			:'destinoPago',
+							allowBlank : false,			editable     	: true,			displayField    : 'value',
+							valueField:'key',			forceSelection  : true,			width			:350,
+							queryMode    :'local',		store 			: storeDestinoPago
+						});
+
+						var concepPago = Ext.create('Ext.form.field.ComboBox', {
+							colspan	   :2,				fieldLabel   	: 'Concepto Pago', 	name			:'concepPago',
+							allowBlank : false,			editable     	: true,				displayField    : 'value',
+							valueField:'key',			forceSelection  : true,				width			:350,
+							queryMode    :'local',		store 			: storeConceptoPago
+						});
+						
+						var idCveBeneficiario = Ext.create('Ext.form.field.Number', {
+							colspan	   :2,				fieldLabel   	: 'Id. Beneficiario', 	name			:'idCveBeneficiario',
+							allowBlank : false,			editable     	: true,				width			:350
+						});
+						
+						var cmbBeneficiario= Ext.create('Ext.form.ComboBox',{
+							name:'cmbBeneficiario',			fieldLabel: 'Beneficiario',			queryMode: 'local'/*'remote'*/,			displayField: 'value',
+							valueField: 'key',				editable:true,						forceSelection : true,		matchFieldWidth: false,
+							queryParam: 'params.cdperson',	minChars  : 2, 						store : storeAsegurados2,	triggerAction: 'all',
+							width		 : 350,
+							allowBlank	: _tipoPago == _TIPO_PAGO_DIRECTO,
+							hidden 		: _tipoPago == _TIPO_PAGO_DIRECTO,
+							listeners : {
+								'select' : function(e) {
+									Ext.Ajax.request({
+										url     : _URL_CONSULTA_BENEFICIARIO
+										,params:{
+											'params.cdunieco'  : _11_params.CDUNIECO,
+											'params.cdramo'    : _11_params.CDRAMO,
+											'params.estado'    : _11_params.ESTADO,
+											'params.nmpoliza'  : _11_params.NMPOLIZA,
+											'params.cdperson'  : e.getValue()
+										}
+										,success : function (response) {
+											json = Ext.decode(response.responseText);
+											if(json.success==false){
+												Ext.Msg.show({
+													title:'Beneficiario',
+													msg: json.mensaje,
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.WARNING
+												});
+												panelModificacion.query('combo[name=cmbBeneficiario]')[0].setValue('')
+											}
+										},
+										failure : function (){
+											//me.up().up().setLoading(false);
+											centrarVentanaInterna(Ext.Msg.show({
+												title:'Error',
+												msg: 'Error de comunicaci&oacute;n',
+												buttons: Ext.Msg.OK,
+												icon: Ext.Msg.ERROR
+											}));
+										}
+									});
+								}
+							}
+						});
+						
+						Ext.Ajax.request({
+							url     : _URL_VAL_CAUSASINI
+							,params : {
+								'params.cdramo'   : _11_params.CDRAMO,
+								'params.cdtipsit' : _cdtipsitProducto,
+								'params.causaSini': 'IDBENEFI',
+								'params.cveCausa' : _tipoPago
+							}
+							,success : function (response){
+								var datosExtras = Ext.decode(response.responseText);
+								if(Ext.decode(response.responseText).datosInformacionAdicional != null){
+									var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
+									debug("Valor de Respuesta ==> ",_11_params.CDRAMO,_cdtipsitProducto,_tipoPago,cveCauSini);
+									if(cveCauSini.REQVALIDACION =="S"){
+										//Visualizamos el campo
+										panelModificacion.down('[name=idCveBeneficiario]').show();
+									}else{
+										//ocultamos el campo
+										panelModificacion.down('[name=idCveBeneficiario]').setValue('0');
+										panelModificacion.down('[name=idCveBeneficiario]').hide();
+									}
+								}
+							},
+							failure : function (){
+								me.up().up().setLoading(false);
+								centrarVentanaInterna(Ext.Msg.show({
+									title:'Error',
+									msg: 'Error de comunicaci&oacute;n',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								}));
+							}
+						});
+						
+						var cdramoTramite="";
+						var cdtipsitTramite ="";
+						//3.- Obtenemos los valores de TMESACONTROL  el destino y concepto de pago si es que existen
+						
+						Ext.Ajax.request({
+							url     : _URL_CONSULTA_TRAMITE
+							,params:{
+								'params.ntramite': _11_params.NTRAMITE
+							}
+							,success : function (response) {
+								if(Ext.decode(response.responseText).listaMesaControl != null) {
+									var json=Ext.decode(response.responseText).listaMesaControl[0];
+									cdramoTramite = json.cdramomc;
+									cdtipsitTramite = json.cdtipsitmc;
+									panelModificacion.query('combo[name=cmbBeneficiario]')[0].setValue(json.otvalor04mc);
+									if(json.otvalor18mc !=null) {
+										panelModificacion.query('combo[name=destinoPago]')[0].setValue(json.otvalor18mc);
+									}
+									if(json.otvalor19mc !=null) {
+										panelModificacion.query('combo[name=concepPago]')[0].setValue(json.otvalor19mc);
+									}
+									if(json.otvalor27mc !=null) {
+										panelModificacion.query('[name=idCveBeneficiario]')[0].setValue(json.otvalor27mc);
+									}
+								}
+							},
+							failure : function () {
+								//me.up().up().setLoading(false);
+								Ext.Msg.show({
+									title:'Error',
+									msg: 'Error de comunicaci&oacute;n',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								});
+							}
+						});
+						
+						windowCvePago = Ext.create('Ext.window.Window',{
+							modal       : true,
+							buttonAlign : 'center',
+							width       : 550,
+							autoScroll  : true,
+							items       : [
+								panelModificacion = Ext.create('Ext.form.Panel', {
+									title: 'Destino de Pago',
+									bodyPadding: 5,
+									items: [pagocheque,
+											concepPago,
+											cmbBeneficiario,
+											idCveBeneficiario],
+									buttonAlign:'center',
+									buttons: [ {
+										text: 'Solicitar'
+										,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+										,buttonAlign : 'center'
+										,handler: function() { 
+											if (panelModificacion.form.isValid()) {
+												var datos=panelModificacion.form.getValues();
+												myMask.show();
+												//4.- Guardamos la informacion del destino y el tipo de concepto
+												Ext.Ajax.request({
+													url     : _URL_CONCEPTODESTINO
+													,jsonData: {
+														params:{
+															ntramite:_11_params.NTRAMITE,
+															cdtipsit:cdtipsitTramite,
+															destinoPago:datos.destinoPago,
+															concepPago:datos.concepPago,
+															beneficiario : datos.cmbBeneficiario,
+															cvebeneficiario : datos.idCveBeneficiario,
+															tipoPago : _11_params.OTVALOR02
+														}
+													}
+													,success : function (response) {
+														windowCvePago.close();
+														//5.- Solicitamos el pago le mandamos el tramite y el tipo de pago
+														Ext.Ajax.request({
+															url: _URL_SOLICITARPAGO,
+															params: {
+																'params.pv_ntramite_i' : _11_params.NTRAMITE,
+																'params.pv_tipmov_i'   : _11_params.OTVALOR02
+															},
+															success: function(response, opts) {
+																var respuesta = Ext.decode(response.responseText);
+																if(respuesta.success){
+																	myMask.hide();
+																	centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','El pago se ha solicitado con &eacute;xito.',function(){
+																		_11_regresarMC();
+																	}));
+																}else {
+																	myMask.hide();
+																	centrarVentanaInterna(mensajeError(respuesta.mensaje));
+																}
+															},
+															failure: function(){
+																myMask.hide();
+																centrarVentanaInterna(mensajeError('No se pudo solicitar el pago.'));
+															}
+														});
+													},
+													failure : function () {
+														Ext.Msg.show({
+															title:'Error',
+															msg: 'Error de comunicaci&oacute;n',
+															buttons: Ext.Msg.OK,
+															icon: Ext.Msg.ERROR
+														});
+													}
+												});
+											}else {
+												Ext.Msg.show({
+													title: 'Aviso',
+													msg: 'Complete la informaci&oacute;n requerida',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.WARNING
+												});
+											}
+										}
+									},
+									{
+										text: 'Cancelar',
+										icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+										buttonAlign : 'center',
+										handler: function() {
+											windowCvePago.close();
+										}
+									}
+									]
+								})  
+							]
+						}).show();
+						centrarVentana(windowCvePago);
 					}
 				}
 		});
@@ -4815,20 +4703,18 @@
                                             ,columns    : 2
                                             ,width      : 250
                                             ,style      : 'margin:5px;'
-                                            ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                                             ,items      : [
                                                 {
                                                     boxLabel    : 'Si'
                                                     ,itemId     : 'SWAGENTE5'
                                                     ,name       : 'SWAGENTE5'
                                                     ,inputValue : 'S'
-                                                    ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                                                 }
                                                 ,{
                                                     boxLabel    : 'No'
                                                     ,name       : 'SWAGENTE5'
                                                     ,inputValue : 'N'
-                                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                    ,checked    : true
                                                 }
                                             ]
                                         }],
@@ -5059,20 +4945,18 @@
                         ,columns    : 2
                         ,width      : 250
                         ,style      : 'margin:5px;'
-                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                         ,items      : [
                             {
                                 boxLabel    : 'Si'
                                 ,itemId     : 'SWAGENTE4'
                                 ,name       : 'SWAGENTE4'
                                 ,inputValue : 'S'
-                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                             }
                             ,{
                                 boxLabel    : 'No'
                                 ,name       : 'SWAGENTE4'
                                 ,inputValue : 'N'
-                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                ,checked    : true
                             }
                         ]
                     }],
@@ -5177,7 +5061,6 @@
 											,columns    : 2
 											,width      : 250
 											,style      : 'margin:5px;'
-											,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 											,items      :
 											[
 												{
@@ -5185,13 +5068,12 @@
 													,itemId     : 'SWAGENTE2'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'S'
-													,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 												}
 												,{
 													boxLabel    : 'No'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'N'
-													,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+													,checked    : true
 												}
 											]
 										}],
@@ -6613,9 +6495,8 @@
     
     //26.- Obtenemos la Suma Asegurada para Gastos Medicos Mayores
     function obtenerSumaAseguradaMontoGastados (cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, cdgarant, cdconval, 
-            cdperson, nmsinref, totalConsumido, nmsinies, valSesion, aplicaFondo, reclamo){
+            cdperson, nmsinref, totalConsumido, nmsinies, valSesion, aplicaFondo){
         
-        debug("valSesion   ==========>>>>>"+valSesion+" totalConsumido==>"+totalConsumido);
         if(valSesion =="1"){
             //MULTISALUD INFONAVIT
             panelComplementos.down('[name=params.sumaAsegurada]').hide();
@@ -6671,85 +6552,41 @@
             
         }else if(valSesion =="2"){
             // GASTOS MEDICOS MAYORES
-        	if(cdramo =="11"){
-                debug("Entra al caso 2.1");
-                panelComplementos.down('[name=params.sumaAsegurada]').show();
-                panelComplementos.down('[name=params.sumaGastada]').show();
-                panelComplementos.down('[name=params.sublimite]').hide();
-                panelComplementos.down('[name=params.pagado]').hide();
-                panelComplementos.down('[name=params.disponibleCob]').hide();
-                
-                Ext.Ajax.request( {
-                    url  : _URL_OBTENER_SUMAASEGURADA
-                    ,params:{
-                        'params.cdunieco'   : cdunieco
-                        ,'params.cdramo'    : cdramo
-                        ,'params.estado'    : estado
-                        ,'params.nmpoliza'  : nmpoliza
-                        ,'params.cdperson'  : cdperson
-                        ,'params.nmsinref'  : reclamo
-                    }
-                    ,success : function (response){
-                        var jsonResponse  = Ext.decode(response.responseText).datosValidacion[0];
-                        debug("Obtenemos los valores de los datos de la Suma Asegurada ==>> "+jsonResponse);
-                        var sumAsegurada  = jsonResponse.SUMA_ASEGURADA;
-                        var sumDisponible = jsonResponse.RESERVA_DISPONIBLE;
-                        
-                        var sumaConceptos = (+sumDisponible) - (+ totalConsumido);
-                        
-                        panelComplementos.down('[name=params.sumaAsegurada]').setValue(sumAsegurada);
-                        panelComplementos.down('[name=params.sumaGastada]').setValue(sumaConceptos);
-                    },
-                    failure : function () {
-                        Ext.Msg.show({
-                            title:'Error',
-                            msg: 'Error de comunicaci&oacute;n',
-                            buttons: Ext.Msg.OK,
-                            icon: Ext.Msg.ERROR
-                        });
-                    }
-                });
-        	}else{
-                debug("Entra al caso 2.2 ");
-                panelComplementos.down('[name=params.sumaAsegurada]').show();
-                panelComplementos.down('[name=params.sumaGastada]').show();
-                panelComplementos.down('[name=params.sublimite]').hide();
-                panelComplementos.down('[name=params.pagado]').hide();
-                panelComplementos.down('[name=params.disponibleCob]').hide();
-                
-                Ext.Ajax.request( {
-                    url  : _URL_OBTENER_SUMAASEGURADA
-                    ,params:{
-                        'params.cdunieco'   : cdunieco
-                        ,'params.cdramo'    : cdramo
-                        ,'params.estado'    : estado
-                        ,'params.nmpoliza'  : nmpoliza
-                        ,'params.cdperson'  : cdperson
-                        ,'params.nmsinref'  : nmsinref
-                    }
-                    ,success : function (response){
-                        var jsonResponse  = Ext.decode(response.responseText).datosValidacion[0];
-                        debug("Obtenemos los valores de los datos de la Suma Asegurada ==>> "+jsonResponse);
-                        var sumAsegurada  = jsonResponse.SUMA_ASEGURADA;
-                        var sumDisponible = jsonResponse.RESERVA_DISPONIBLE;
-                        
-                        var sumaConceptos = (+sumDisponible) - (+ totalConsumido);
-                        
-                        panelComplementos.down('[name=params.sumaAsegurada]').setValue(sumAsegurada);
-                        panelComplementos.down('[name=params.sumaGastada]').setValue(sumaConceptos);
-                    },
-                    failure : function () {
-                        Ext.Msg.show({
-                            title:'Error',
-                            msg: 'Error de comunicaci&oacute;n',
-                            buttons: Ext.Msg.OK,
-                            icon: Ext.Msg.ERROR
-                        });
-                    }
-                });
-        	}
-        	
-
+            panelComplementos.down('[name=params.sumaAsegurada]').show();
+            panelComplementos.down('[name=params.sumaGastada]').show();
+            panelComplementos.down('[name=params.sublimite]').hide();
+            panelComplementos.down('[name=params.pagado]').hide();
+            panelComplementos.down('[name=params.disponibleCob]').hide();
+            
+            Ext.Ajax.request( {
+                url  : _URL_OBTENER_SUMAASEGURADA
+                ,params:{
+                    'params.cdunieco'   : cdunieco
+                    ,'params.cdramo'    : cdramo
+                    ,'params.estado'    : estado
+                    ,'params.nmpoliza'  : nmpoliza
+                    ,'params.cdperson'  : cdperson
+                    ,'params.nmsinref'  : nmsinref
+                }
+                ,success : function (response){
+                    var jsonResponse  = Ext.decode(response.responseText).datosValidacion[0];
+                    var sumAsegurada  = jsonResponse.SUMA_ASEGURADA;
+                    var sumDisponible = jsonResponse.RESERVA_DISPONIBLE;
+                    
+                    var sumaConceptos = (+sumDisponible) - (+ totalConsumido);
+                    
+                    panelComplementos.down('[name=params.sumaAsegurada]').setValue(sumAsegurada);
+                    panelComplementos.down('[name=params.sumaGastada]').setValue(sumaConceptos);
+                },
+                failure : function () {
+                    Ext.Msg.show({
+                        title:'Error',
+                        msg: 'Error de comunicaci&oacute;n',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    });
+                }
+            });
         }else{
             //TODOS DIFERENTES
             panelComplementos.down('[name=params.sumaAsegurada]').hide();
@@ -7355,7 +7192,6 @@
 	// Se hace función para re-utilizarlo
 	function _11_clickAplicarCambiosFactura(){
 		debug("_11_clickAplicarCambiosFactura");
-		
 		var valido = panelInicialPral.isValid();
 		if(!valido) {
 			datosIncompletos();

@@ -10,7 +10,7 @@ public enum ObjetoBD {
 	CARGAR_CENSO                            ("PKG_SATELITES2.P_LAYOUT_CENSO_MS_COLECTIVO"        , "SP"),
 	CARGAR_CENSO_AGRUPADO                   ("PKG_SATELITES.P_LAYOUT_CENSO_MS_COLEC_AGRUP"       , "SP"),
 	GENERAR_CDPERSON                        ("PKG_COTIZA.P_GET_CDPERSON"                         , "SP"),
-	MOV_MPERSONA                            ("PKG_SATELITES2.P_MOV_MPERSONA"                      , "SP"),
+	MOV_MPERSONA                            ("PKG_SATELITES.P_MOV_MPERSONA"                      , "SP"),
 	MOV_MPOLIPER                            ("PKG_SATELITES.P_MOV_MPOLIPER"                      , "SP"),
 	OBTIENE_MPOLIPER                        ("PKG_SATELITES.P_OBTIENE_MPOLIPER"                  , "SP"),
 	OBTIENE_COBERTURAS_X_PLAN               ("PKG_LISTAS.P_GET_COBERTURAS"                       , "SP"),
