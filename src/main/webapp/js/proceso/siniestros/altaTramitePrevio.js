@@ -338,7 +338,7 @@ Ext.onReady(function() {
                             var datosExtras = Ext.decode(response.responseText);
                             if(Ext.decode(response.responseText).datosInformacionAdicional != null){
                                 var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
-
+                                
                                 if(cveCauSini.REQVALIDACION =="S"){
                                     //Visualizamos el campo
                                     panelInicialPral.down('[name=idCveBeneficiario]').show();
@@ -348,7 +348,7 @@ Ext.onReady(function() {
                                     panelInicialPral.down('[name=idCveBeneficiario]').setValue('0');
                                     panelInicialPral.down('[name=idCveBeneficiario]').hide();
                                 }
-
+                                
                                 limpiarRegistrosTipoPago(e.getValue());
                                 if(panelInicialPral.down('combo[name=cmbOficReceptora]').getValue() == "1104"){
                                     panelInicialPral.down('combo[name=cmbOficEmisora]').setValue("1104");
@@ -1725,7 +1725,6 @@ Ext.onReady(function() {
                             }
                             submitValues['datosTablas']=datosTablas;
                             panelInicialPral.setLoading(true);
-                            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
                             debug("VALORES A ENVIAR A GUARDAR --->");
                             debug(submitValues);
                             Ext.Ajax.request(
@@ -1746,12 +1745,7 @@ Ext.onReady(function() {
                                             etiqueta = "Modificaci&oacute;n";
                                             mensaje = "Se modific&oacute; el n&uacute;mero de tr&aacute;mite "+ valorAction.ntramite;
                                         }
-                                        var ntramiteEnviarRstn = valorAction.ntramite;
-                                        if (Ext.isEmpty(ntramiteEnviarRstn)) {
-                                            ntramiteEnviarRstn = Ext.decode(response.responseText).msgResult;
-                                        }
                                         mensajeCorrecto(etiqueta,mensaje,function() {
-                                            /*
                                             Ext.create('Ext.form.Panel').submit( {
                                                 url             : _p12_urlMesaControl
                                                 ,standardSubmit : true
@@ -1760,9 +1754,6 @@ Ext.onReady(function() {
                                                     ,'smap2.pv_cdtiptra_i' : 16
                                                 }
                                             });
-                                            */
-                                            _mask();
-                                            location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEnviarRstn;
                                         });
                                         panelInicialPral.getForm().reset();
                                         storeFacturaDirecto.removeAll();
