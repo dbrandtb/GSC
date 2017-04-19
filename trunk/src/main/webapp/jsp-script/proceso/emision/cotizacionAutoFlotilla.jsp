@@ -1689,6 +1689,10 @@ Ext.onReady(function()
     //ramo 5
     if(_p30_smap1.cdramo+'x'=='5x')
     {
+    	
+    	//RPF
+    	_fieldByName("aux.otvalor17",null,true).hide();
+    	
         //fechas
         _fieldByName('feini').on(
         {
