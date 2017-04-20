@@ -4122,7 +4122,7 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
       	    if (Ext.isEmpty(campoNumContrato.getValue())) {
       		    campoNumContrato.setValue('0');
             }
-            if (_p21_smap1.cdunieco == 1403 && campoNumContrato.getValue() == 0) {
+            if (_p25_smap1.cdunieco == 1403 && campoNumContrato.getValue() == 0) {
 	        	valido=false;
 	        	mensajeWarning('Verificar los datos del numero de contrato', _p25_setActiveConcepto);
         	}
