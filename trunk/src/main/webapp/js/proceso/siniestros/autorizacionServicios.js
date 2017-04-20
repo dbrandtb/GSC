@@ -1495,6 +1495,8 @@ Ext.onReady(function() {
 					// aqui tenemos que recorrer el vector y obtener el VALOR BASE
 					//obtenerValorBase(storeQuirugicoBase); (EGS)
 					//ModificarEquipoQuirurguico(storeQuirurgico);	(EGS)
+					Ext.getCmp('idValorBase').setValue("");	//(EGS)
+					selCPT = "";		//(EGS)
 					ventanaEqQuirurgicoBase.close();
 				} else {
 					centrarVentanaInterna(Ext.Msg.show({
@@ -1713,11 +1715,12 @@ Ext.onReady(function() {
 					handler: this.onAddClick
 				}],
 				listeners: {	//(EGS)
-					select: function(grid, record, index, opts){
-						debug("Seleccionamos registro",record.get("ptimport"));
-						Ext.getCmp('idValorBase').setValue(record.get("ptimport"));
-						selCPT = record.get("cdcpt");
-						debug("selCPT",selCPT);
+					cellclick: function(grid, td,cellIndex, record, tr, rowIndex, e, eOpts){
+						debug("cellclick",cellIndex,rowIndex);
+						if(cellIndex < 4){
+							Ext.getCmp('idValorBase').setValue(record.get("ptimport"));
+							selCPT = record.get("cdcpt");
+						}
 					}
 				}	// fin (EGS)
 			});
@@ -1732,6 +1735,8 @@ Ext.onReady(function() {
 			this.getStore().removeAt(rowIndex);
 			//obtenerValorBase(storeQuirugicoBase); (EGS)
 			//ModificarEquipoQuirurguico(storeQuirurgico);	(EGS)
+			Ext.getCmp('idValorBase').setValue("");	//(EGS)
+			selCPT = "";		//(EGS)
 		}
 	});
 	gridIncisos2=new EditorIncisos2();
