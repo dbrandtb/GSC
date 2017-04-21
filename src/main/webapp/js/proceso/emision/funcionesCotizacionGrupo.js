@@ -2191,17 +2191,6 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                             }
                             else
                             {
-                                if (!Ext.isEmpty(_cotcol_flujo) && _cotcol_flujo.aux === 'RSTN') {
-                                    mensajeCorrecto(
-                                        'Censo cargado',
-                                        'Se est\u00e1 procesando el censo de asegurados',
-                                        function () {
-                                            _mask();
-                                            location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?empty';
-                                        }
-                                    );
-                                    return;
-                                }
                                 callback();
                             }
                         }

@@ -26,9 +26,6 @@ public interface EndososAutoManager
 			,String cancelada
 			,String cdusuari
 			,String cdtipsit
-			,String cdunieco
-			,String estado
-			,String nmpoliza
 			)throws Exception;
 	
 	/**
@@ -585,8 +582,7 @@ public interface EndososAutoManager
 			String nsuplogi,
 			String fesolici,
 			String feendoso,
-			Map<String, String> valosit,
-			String usuarioCaptura
+			Map<String, String> valosit
 			) throws Exception;
 	
 	public List<Map<String, String>> tarificarEndosoAltaAsegurados (String cdusuari, String cdelemen, String cdunieco,
@@ -665,5 +661,6 @@ public interface EndososAutoManager
            ,FlujoVO flujo
            ,String nmtramite
            )throws Exception;
+   
    
 }
