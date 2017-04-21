@@ -6,12 +6,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.EmpresaVO;
@@ -25,6 +19,12 @@ import mx.com.aon.portal.service.principal.PrincipalManager;
 import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.utils.Constantes;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -58,15 +58,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 	public static final String MENU_PRINCIPAL          = "menuPrincipal";
 	public static final String MESA_CONTROL_AGENTES    = "mesaControlAgentes";
 	public static final String REDIRECT_SIMPLE         = "redirectSimple";
-	public static final String ACCESO_RSTN_COTIZACION_SALUD_IND = "RstnCotiSalInd";
-	public static final String ACCESO_RSTN_COMPLEMENTARIOS_SALUD_IND = "RstnCompSalInd";
-	public static final String ACCESO_RSTN_COTIZAR_SALUD_COLECTIVO = "RstnCotiSalCol";
-	public static final String ACCESO_RSTN_COMPLEMENTARIOS_SALUD_COL = "RstnCompSalCol";
-	public static final String ACCESO_RSTN_CONSULTA_ASEGURADOS = "RstnConsAseg";
-	public static final String ACCESO_RSTN_AUTORIZACION_SERVICIO = "RstnAutorizacionServ";
-	public static final String ACCESO_RSTN_ALTA_PREVIO= "RstnAltaTramitePrevio";
-	public static final String ACCESO_RSTN_ALTA_COMPLEMENTO = "RstnAltaTramiteComplemento";
-	public static final String ACCESO_RSTN_CONSULTA_SINIESTROS = "RstnConsutaSiniestros";
+	
 	/**
 	 * Success property
 	 */
@@ -168,16 +160,7 @@ public class AccesoDirectoAction extends PrincipalCoreAction {
 				|| IMPRESION_DOCUMENTOS.equals(acceso)
 				|| IMPRESION_RECIBOS.equals(acceso)
 				|| REDIRECT_SIMPLE.equals(acceso)
-                || ACCESO_RSTN_COTIZACION_SALUD_IND.equals(acceso)
-				|| ACCESO_RSTN_COMPLEMENTARIOS_SALUD_IND.equals(acceso)
-				|| ACCESO_RSTN_COTIZAR_SALUD_COLECTIVO.equals(acceso)
-				|| ACCESO_RSTN_COMPLEMENTARIOS_SALUD_COL.equals(acceso)
-				|| ACCESO_RSTN_CONSULTA_ASEGURADOS.equals(acceso)
-				|| ACCESO_RSTN_AUTORIZACION_SERVICIO.equals(acceso)
-				|| ACCESO_RSTN_ALTA_PREVIO.equals(acceso)
-				|| ACCESO_RSTN_ALTA_COMPLEMENTO.equals(acceso)
-				|| ACCESO_RSTN_CONSULTA_SINIESTROS.equals(acceso)
-		        ) {
+				) {
 			
 			// Patch para traducir el rol, ya que el portal manda un codigo: 
 			if (ACCESO_CONSULTA_POLIZAS.equals(acceso)) {

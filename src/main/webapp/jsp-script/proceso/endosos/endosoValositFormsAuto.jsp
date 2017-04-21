@@ -362,7 +362,7 @@ Ext.onReady(function()
     ////// custom //////
     ////// custom //////
     
-    ////// loaders //////
+//////loaders //////
     if(_p44_smap1.cdtipsup==TipoEndoso.EndosoCambioModelo 
      ||_p44_smap1.cdtipsup==TipoEndoso.EndosoCambioDescripcion){
      	//codigo cuando es un endoso de Cambio de Modelo o Endoso de Camdio de Descripcion
