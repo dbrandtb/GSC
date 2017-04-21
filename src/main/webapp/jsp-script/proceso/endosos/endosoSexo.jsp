@@ -14,13 +14,11 @@ var _1_store;
 var _1_grid;
 var _1_form;
 
+
 debug('_1_smap1',_1_smap1);
 debug('_1_slist1',_1_slist1);
 debug('_1_storeFeeder',_1_storeFeeder);
 
-var _p1_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_p1_flujo:',_p1_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -61,12 +59,6 @@ function _1_confirmar()
                 ,cdgrupo  : _1_slist1[0].CDGRUPO
             });
         });
-        
-        if(!Ext.isEmpty(_p1_flujo))
-        {
-            json.flujo = _p1_flujo;
-        }
-        
         debug(json);
         _setLoading(true,_1_form);
         Ext.Ajax.request(

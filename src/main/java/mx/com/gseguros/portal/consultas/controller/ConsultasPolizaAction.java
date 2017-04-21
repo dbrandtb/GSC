@@ -1,34 +1,14 @@
 package mx.com.gseguros.portal.consultas.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.beans.factory.annotation.Value;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.ValidationDataException;
-import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.CoberturaBasicaVO;
@@ -46,11 +26,9 @@ import mx.com.gseguros.portal.consultas.model.ReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.SituacionVO;
 import mx.com.gseguros.portal.consultas.model.SuplementoVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
-import mx.com.gseguros.portal.consultas.service.ConsultasPerfilMedicoManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
@@ -58,12 +36,19 @@ import mx.com.gseguros.portal.general.service.ConveniosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
-import mx.com.gseguros.portal.general.util.TipoArchivo;
-import mx.com.gseguros.portal.general.util.TipoTramite;
-import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
-import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.DocumentosUtils;
 import mx.com.gseguros.utils.Utils;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
 /**
  * 
@@ -93,8 +78,6 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	private long limit;
 	
 	private long totalCount;
-	
-	private List<Map<String, String>> list;
 
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
@@ -104,13 +87,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private KernelManagerSustituto kernelManager;
-	
-	@Autowired
-	private ConveniosManager conveniosManager;
 
-	@Autowired
-    private ConsultasPerfilMedicoManager perfilMedicoManager;
-	
 	private HashMap<String, String> params;
 
 	private PolizaDTO datosPoliza;
@@ -160,38 +137,13 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	private List<Map<String, String>> loadList;
 	
 	@Autowired
-    private DocumentosManager documentosManager;
+	ConveniosManager conveniosManager;
+	
 	/**
 	 * Indica si el usuario es de CallCenter
 	 */
 	private boolean usuarioCallCenter;
-	
-	
-	/**
-	 * Nombre del archivo a exportar
-	 */
-	private String fileName;
-	 
-	/**
-	 * Nombre del objeto a exportar
-	 */
-	private InputStream inputStream;
-	
-	@Autowired
-	private SiniestrosManager siniestrosManager;
-	
-	@Autowired
-	private FlujoMesaControlManager flujoMesaControlManager;
 
-	@Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-	
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-	
-	@Value("${pass.servidor.reports}")
-    private String passServidorReports;
-	
 	/**
 	 * Metodo de entrada a consulta de polizas
 	 * 
@@ -201,7 +153,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		// Obtenemos el rol de sistema del usuario en sesion:
 		UserVO usuario = (UserVO) session.get("USUARIO");
 		String cdRolSistema = usuario.getRolActivo().getClave();
-		// Si es consulta de informaci�n, no tendra permiso de ver todo:
+		// Si es consulta de informacion, no tendra permiso de ver todo:
 		if (cdRolSistema.equals(RolSistema.CONSULTA_INFORMACION.getCdsisrol())) {
 			usuarioCallCenter = true;
 		}
@@ -389,12 +341,12 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	/**
-	 * Obtiene los datos del hist�rico de una p�liza
+	 * Obtiene los datos del historico de una poliza
 	 * 
 	 * @return String result
 	 */
 	public String consultaDatosHistorico() {
-		logger.debug(" **** Entrando a consultaDatosHist�rico ****");
+		logger.debug(" **** Entrando a consultaDatosHistorico ****");
 		mensajeRes = "";
 		try {
 			PolizaAseguradoVO poliza = new PolizaAseguradoVO();
@@ -471,7 +423,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 					poliza, asegurado);
 			success = true;
 		} catch (Exception e) {
-			logger.error("Error al obtener las cl�usulas de la p�liza", e);
+			logger.error("Error al obtener las clausulas de la poliza", e);
 			return SUCCESS;
 		}
 		success = true;
@@ -479,7 +431,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	/**
-	 * Obtiene el hist�rico de farmacia
+	 * Obtiene el historico de farmacia
 	 * 
 	 * @return String result
 	 */
@@ -504,7 +456,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 					.obtieneHistoricoFarmacia(poliza, asegurado);
 			success = true;
 		} catch (Exception e) {
-			logger.error("Error al obtener el hist�rico de farmacia", e);
+			logger.error("Error al obtener el historico de farmacia", e);
 			return SUCCESS;
 		}
 		success = true;
@@ -809,7 +761,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	/**
-	 * Obtiene las coberturas b�sicas
+	 * Obtiene las coberturas basicas
 	 * 
 	 * @return String result
 	 */
@@ -900,7 +852,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	/**
-	 * Entrada a la pantalla hist�rico de farmacia <br/>
+	 * Entrada a la pantalla historico de farmacia <br/>
 	 * Sirve para propagar los parametros del atributo params a la pantalla
 	 * 
 	 * @return
@@ -922,7 +874,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	}
 
 	/**
-	 * Entrada a la pantalla Aviso Hospitalizaci�n <br/>
+	 * Entrada a la pantalla Aviso Hospitalizacion <br/>
 	 * Sirve para propagar los parametros del atributo params a la pantalla
 	 * 
 	 * @return
@@ -1108,84 +1060,6 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 
 	}
 	
-	/**
-	 * Actualiza estatus de tramite en BD sigs
-	 * 
-	 * @return string
-	 * @throws Exception 
-	 */
-	@SuppressWarnings("deprecation")
-	@Action(
-			value   = "actualizaEstatusTramiteMCsigs",
-			results = { @Result(name="success", type="json") }
-			)
-	public String actualizaEstatusTramiteMCsigs(){
-		
-		logger.debug(Utils.log(
-				 "\n###########################################"
-				,"\n###### actualizaEstatusTramiteMCsigs ######"
-				,"\n###### params=",params
-				));
-		
-		mensajeRes = "";
-		try {	
-				Utils.validate(params,"No se recibieron datos");
-	
-				String cdunieco = params.get("cdunieco")
-				      ,cdramo   = params.get("cdramo")
-				      ,nmpoliza = params.get("nmpoliza")
-				      ,ntramite = params.get("numtra");
-					
-				Utils.validate(ntramite, "No se recibi\u00f3 el numero de tramite");
-				
-				boolean externo = false;
-				String paso = null;
-				try {
-				    paso = "Recuperando tr\u00e1mite";
-				    logger.debug(paso);
-				    Map<String, String> tramite = siniestrosManager.obtenerTramiteCompleto(ntramite);
-				    
-				    String cdtipflu  = tramite.get("CDTIPFLU"),
-				           cdflujomc = tramite.get("CDFLUJOMC");
-				    
-				    paso = "Recuperando propiedades de tipo de tr\u00e1mite";
-				    logger.debug(paso);
-				    List<Map<String, String>> tiposFlujo = flujoMesaControlManager.recuperaTtipflumc("PRINCIPAL", "1");
-				    Map<String, String> ttipflumc = null;
-				    for(Map<String, String> tipoFlujo : tiposFlujo) {
-				        if (cdtipflu.equals(tipoFlujo.get("CDTIPFLU"))) {
-				            ttipflumc = tipoFlujo;
-				            break;
-				        }
-				    }
-				    if (ttipflumc == null) {
-				        throw new ApplicationException("No hay tipo de tr\u00e1mite");
-				    }
-				    externo = "S".equals(ttipflumc.get("SWEXTERNO"));
-				} catch (Exception ex) {
-				    Utils.generaExcepcion(ex, paso);
-				}
-				
-				if (externo == false) {
-				    Utils.validate(cdunieco , "No se recibi\u00f3 la sucursal",
-                                   cdramo   , "No se recibi\u00f3 el ramo",
-                                   nmpoliza , "No se recibi\u00f3 la poliza");
-				    
-    				consultasPolizaManager.actualizaTramiteMC(new PolizaVO(cdunieco, cdramo, null, nmpoliza, ntramite), "1");//En proceso
-				}
-				logger.debug(Utils.log(
-						 "\n###### actualizaEstatusTramiteMCsigs ######"
-						,"\n###########################################"
-						));
-				success = true;
-		    }
-	  catch (Exception e) 
-	       {
-			logger.error("Error al actulizar estatus de tramite Mc", datosSuplemento, e);
-			mensajeRes = Utils.manejaExcepcion(e);
-		  }
-		return SUCCESS;
-	}
 	
 	
 	public String obtenerPantallaOperacionBD()
@@ -1209,7 +1083,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	public String ejecutaQuery(){
+public String ejecutaQuery(){
 		
 		logger.debug(Utils.log(
 				 "\n###########################################"
@@ -1253,129 +1127,13 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 		  }
 		return SUCCESS;
 	}
-
 	
-    /**
-     * Consulta los incisos de una poliza
-     * @return Nombre del result del action 
-     * @throws Exception
-     */
-    public String consultaIncisosPoliza() throws Exception {
-        
-        String result = SUCCESS;
-        
-        if(params == null){
-            params = new HashMap<String,String>();
-        }
-        
-        loadList = consultasPolizaManager.consultaIncisosPoliza(params.get("cdunieco"),params.get("cdramo"), params.get("estado"), params.get("nmpoliza"));
-        logger.debug("loadList={}", loadList);
-        if(params.get("exportar") != null && "true".equals(params.get("exportar"))){
-            
-            File carpeta=new File(rutaDocumentosPoliza + "/" + params.get("ntramite"));
-            if(!carpeta.exists()){
-                logger.debug("no existe la carpeta : {}",params.get("ntramite"));
-                carpeta.mkdir();
-                if(carpeta.exists()){
-                    logger.debug("carpeta creada");
-                } else {
-                    logger.debug("carpeta NO creada");
-                }
-            } else {
-                logger.debug("existe la carpeta :{}",params.get("ntramite"));
-            }
-            
-            // Generar archivo en Excel en ruta temporal:
-            String valorFecha= System.currentTimeMillis()+"";
-            String nombreArchivo = "Censo_" + valorFecha+ TipoArchivo.XLSX.getExtension();
-            String fullFileName = rutaDocumentosPoliza + Constantes.SEPARADOR_ARCHIVO
-                    + params.get("ntramite") + Constantes.SEPARADOR_ARCHIVO + nombreArchivo;
-            fileName = nombreArchivo;
-            boolean exito = DocumentosUtils.generaExcel(loadList, fullFileName, true);
-            if(exito) {
-                // Se asigna el inputstream con el contenido del archivo a exportar:
-                inputStream = new FileInputStream(new File(fullFileName));
-                    
-                documentosManager.guardarDocumento(
-                        params.get("cdunieco")
-                        ,params.get("cdramo")
-                        ,params.get("estado")
-                        ,params.get("nmpoliza")
-                        ,"0"
-                        ,new Date()
-                        ,fileName
-                        ,"Censo Poliza Anterior "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
-                        ,params.get("nmpoliza")
-                        ,params.get("ntramite")
-                        ,"1"
-                        ,null
-                        ,null
-                        ,TipoTramite.RENOVACION.getCdtiptra()
-                        ,null
-                        ,null
-                        ,null
-                        ,null
-                        ,false
-                    );
-                
-                result = "excel";
-            } else {
-                result = "filenotfound";
-            }
-        }
-        return result;
-    }
-    
-    
-    //consulta informacion del asegurado y le concatena la informacion del perfil medico de cada uno de ellos
-    public String consultarPerfiles () {
-           String result = ERROR;
-   		try {
-   			//recibe y valida parametros
-   			String cdunieco 		= params.get("cdunieco"),
-   					cdramo 			= params.get("cdramo"),
-   					estado 			= params.get("estado"),
-   					nmpoliza 		= params.get("nmpoliza"),
-   					suplemento 		= params.get("suplemento"),
-   					icodpoliza 		= params.get("icodpoliza"),
-   					cdperson		= params.get("cdperson"),
-   	    			nmsitaux		= params.get("nmsitaux"),
-   	    			familia			= params.get("familia"),
-   	    			nombre			= params.get("nombre");
-   			
-   			//seteo los parametros
-   			PolizaVO poliza = new PolizaVO();
-   			poliza.setCdunieco(cdunieco);
-   			poliza.setCdramo(cdramo);
-   			poliza.setEstado(estado);
-   			poliza.setNmpoliza(nmpoliza);
-   			poliza.setNmsuplem(suplemento);
-   			poliza.setIcodpoliza(icodpoliza);
-   			poliza.setCdperson(cdperson);
-   			poliza.setNmsitaux(nmsitaux);
-   			poliza.setFamilia(familia);
-   			poliza.setNombre(nombre);
-   			//totalCount=0;
-   			datosAsegurados = perfilMedicoManager.obtienePerfilAsegurados(poliza,start,limit);	
-   			if(datosAsegurados != null && datosAsegurados.size() > 0) {
-				totalCount = datosAsegurados.get(0).getTotal();
-   			}
-   			
-   			success= true;
-   			result = SUCCESS;
-               
-   		} catch (Exception e) {
-   			logger.error("Error al obtener los datos del Asegurado ", e);
-   			//return SUCCESS;
-   		}
-           return result;
-       }
-    
-    // Getters and setters:
+	
+	// Getters and setters:
 
-    public List<AseguradoVO> getDatosAsegurados() {
-        return datosAsegurados;
-    }
+	public List<AseguradoVO> getDatosAsegurados() {
+		return datosAsegurados;
+	}
 
 	public void setDatosAsegurados(List<AseguradoVO> datosAsegurados) {
 		this.datosAsegurados = datosAsegurados;
@@ -1632,33 +1390,4 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	public void setTotalCount(long totalcount){
 		this.totalCount=totalcount;
 	}
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public InputStream getInputStream() {
-        return inputStream;
-    }
-
-    public void setInputStream(InputStream inputStream) {
-        this.inputStream = inputStream;
-    }
-    
-    public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
-	}
-
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-	
 }

@@ -10,13 +10,10 @@ import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
-import mx.com.gseguros.portal.consultas.dao.impl.ConsultasDAOImpl;
-import mx.com.gseguros.portal.consultas.dao.impl.ConsultasPolizaDAOImpl;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
@@ -86,18 +83,18 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	@Autowired
 	private AutosSIGSDAO autosSIGSDAO;
 	
-	@Autowired
-	private ConsultasDAO consultasDAO;
-	
-	@Autowired
+    @Autowired
+    private ConsultasDAO consultasDAO;
+    
+    @Autowired
     private CotizacionDAO cotizacionDAO;
-	
-	@Autowired
-	@Qualifier("consultasDAOICEImpl")
+    
+    @Autowired
+    @Qualifier("consultasDAOICEImpl")
     private ConsultasPolizaDAO consultasPolizaDAO;
 	
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO) throws Exception{
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO){
 		
 		logger.debug(">>>>> Entrando a metodo WS Cotiza y Emite para Auto");
 		
@@ -155,6 +152,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						lista = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_SRV_PUBLICO.getNombre(), params, null);
 					}else if(cdramo.equalsIgnoreCase(Ramo.AUTOS_RESIDENTES.getCdramo())){
 						
+						params.put("param6" , endosoIt.get("TIPOEND"));//tipoend
+						params.put("param7" , endosoIt.get("NUMEND"));//numend
 						lista = storedProceduresManager.procedureListCall(
 								ObjetoBD.OBTIENE_DATOS_WS_COTIZACION_RESIDENTES.getNombre(), params, null);
 						
@@ -489,10 +488,6 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 								tipoVehiculo=TipoVehiculo.SEMI_INDISTINTO;
 							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("TRACTOCAMION_ARMADO")){
 								tipoVehiculo=TipoVehiculo.TRACTOCAMION_ARMADO;
-							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("AUTO_TURISTA")){
-								tipoVehiculo=TipoVehiculo.AUTO_TURISTA;
-							}else if(StringUtils.isNotBlank(row.get("TIPOVEHICULO")) && row.get("TIPOVEHICULO").equalsIgnoreCase("LICENCIA_TURISTA")){
-								tipoVehiculo=TipoVehiculo.LICENCIA_TURISTA;
 							}
 							
 							incisoIterado.setTipoVehiculo(tipoVehiculo);
@@ -623,7 +618,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						
 					}
 				} catch (Exception e1) {
-					logger.error("Error en obtencion y mapeo de datos para envio de Emision WS Autos",e1);
+					logger.error("Error en PL de obtencion de datos para envio de Emision WS Autos",e1);
 					return null;
 				}	
 				
@@ -940,7 +935,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	
 	
 	public Integer enviaRecibosAutosSigs(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal) throws Exception{
+			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal){
 		
 		logger.debug(">>>>> Entrando a metodo WS Envia Recibos para Auto");
 		
@@ -1070,8 +1065,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				
 			} catch (Exception e){
 				logger.error("Error en validacion de Emision Exitosa y VidaPorRecibo! " + e.getMessage(),e);
-				throw e;
-//				return errorEjec;
+				return errorEjec;
 			}
 		}else{
 			logger.warn("Aviso, No se tienen datos de Recibos Autos");
@@ -1135,8 +1129,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	    try {
             respuesta=autosSIGSDAO.integraDxnAutos(datosEnviar);
         } catch (Exception e) {
-            logger.error("Error al enviar datos dxn {}",e);
-            
+            logger.error("Error al enviar datos dxn");
+            logger.error(e);
             return null;
             
         }
@@ -1386,7 +1380,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	
 	
 	public int endosoCambioDomicil(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion){
+			String estado, String nmpoliza, String nmsuplem){
 		
 		logger.debug(">>>>> Entrando a metodo Cambio Domicilio contratante Auto Sin Modificacion de Codigo Postal");
 		
@@ -1415,17 +1409,6 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			Map<String,String> datosEnd = datos.get(0);
 			try{
 				
-				String usuarioCaptura =  null;
-				
-				if(usuarioSesion!=null){
-					if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
-						usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
-					}else{
-						usuarioCaptura = usuarioSesion.getCodigoPersona();
-					}
-					
-				}
-				
 				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
 				paramsEnd.put("vSucursal"  , datosEnd.get("SUCURSAL"));
 				paramsEnd.put("vRamo"      , datosEnd.get("RAMO"));
@@ -1437,15 +1420,12 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vNumero"    , datosEnd.get("NUMERO"));
 
 				paramsEnd.put("vNumInt"    , datosEnd.get("NUMINT"));
-				paramsEnd.put("vNumDir"   , datosEnd.get("NUMDIR"));
 			
 				paramsEnd.put("vColonia"   , datosEnd.get("COLONIA"));
 				paramsEnd.put("vTelefono1" , datosEnd.get("TELEFONO1"));
 				paramsEnd.put("vTelefono2" , datosEnd.get("TELEFONO2"));
 				paramsEnd.put("vTelefono3" , datosEnd.get("TELEFONO3"));
 				paramsEnd.put("vFEndoso"   , datosEnd.get("FENDOSO"));
-
-				paramsEnd.put("vUSER"   , usuarioCaptura);
 				
 				Integer res = autosSIGSDAO.endosoDomicilio(paramsEnd);
 				
@@ -1488,7 +1468,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	}
 
 	public int actualizaDatosCambioDomicilCP(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion){
+			String estado, String nmpoliza, String nmsuplem){
 		
 		logger.debug(">>>>> Entrando a metodo actualizaDatosCambioDomicil Codigo Postal");
 		
@@ -1515,16 +1495,6 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		
 		if(datos != null && !datos.isEmpty()){
 			
-			String usuarioCaptura =  null;
-			
-			if(usuarioSesion!=null){
-				if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
-					usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
-				}else{
-					usuarioCaptura = usuarioSesion.getCodigoPersona();
-				}
-				
-			}
 			
 			Map<String,String> datosEnd = datos.get(0);
 			try{
@@ -1543,9 +1513,6 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vTelefono"  , datosEnd.get("TELEFONO1"));
 				paramsEnd.put("vCalle"     , datosEnd.get("CALLE"));
 				paramsEnd.put("vNumero"    , datosEnd.get("NUMERO"));
-				paramsEnd.put("vNumInt"    , datosEnd.get("NUMINT"));
-				paramsEnd.put("vNumDir"    , datosEnd.get("NUMDIR"));
-				paramsEnd.put("vUSER"      , usuarioCaptura);
 				
 				Integer res = autosSIGSDAO.cambioDomicilioCP(paramsEnd);
 				
@@ -1570,7 +1537,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	}
 
 	public int actualizaDatosCambioDomicilSinCP(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion){
+			String estado, String nmpoliza, String nmsuplem){
 		
 		logger.debug(">>>>> Entrando a metodo Cambio Domicilio Sin Codigo Postal y cambio de Colonia");
 		
@@ -1599,16 +1566,6 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			Map<String,String> datosEnd = datos.get(0);
 			try{
 				
-				String usuarioCaptura =  null;
-				
-				if(usuarioSesion!=null){
-					if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
-						usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
-					}else{
-						usuarioCaptura = usuarioSesion.getCodigoPersona();
-					}
-					
-				}
 				
 				HashMap<String, Object> paramsEnd = new HashMap<String, Object>();
 				paramsEnd.put("vSucursal"  , datosEnd.get("SUCURSAL"));
@@ -1628,10 +1585,8 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				paramsEnd.put("vCveEdo" , datosEnd.get("CVEEDO"));
 				paramsEnd.put("vMpioSPM", datosEnd.get("MPIOSPM"));
 				paramsEnd.put("vNumInt" , datosEnd.get("NUMINT"));
-				paramsEnd.put("vNumDir" , datosEnd.get("NUMDIR"));
 				
 				paramsEnd.put("vFEndoso", datosEnd.get("FENDOSO"));
-				paramsEnd.put("vUSER"   , usuarioCaptura);
 				
 				Integer res = autosSIGSDAO.cambioDomicilioSinCPColonia(paramsEnd);
 				

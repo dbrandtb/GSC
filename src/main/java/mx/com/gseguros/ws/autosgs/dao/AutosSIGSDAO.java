@@ -48,7 +48,7 @@ public interface AutosSIGSDAO {
 	
 	public void revierteEndosoBFallidoSigs(Map<String, Object> params) throws Exception;
 	
-	public String CambioClientenombreRFCfechaNacimiento(Map<String, Object> params) throws Exception;
+	public Integer CambioClientenombreRFCfechaNacimiento(Map<String, Object> params) throws Exception;
 
 	public Integer obtieneTipoCliWS(String codigoExterno, String compania) throws Exception;
 	
@@ -67,8 +67,4 @@ public interface AutosSIGSDAO {
 	public Integer integraDxnAutos(Map<String, String> params) throws Exception;
     
     public Integer EndoBeneficiarioVidaAuto(Map<String, Object> params) throws Exception;
-    
-    public Integer endosoCambioModeloDescripcion(Map<String, Object> params) throws Exception;
-    
-    public Integer endosoTipoCarga(Map<String, Object> params) throws Exception;
 }

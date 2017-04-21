@@ -95,14 +95,6 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
             setLocale(request);
             processUpload(request, saveDir);
         } catch (FileUploadBase.SizeLimitExceededException e) {
-        	
-        	log.error("Error al subir archivo=", e);
-        	String errorKey = "SK_ERROR";
-        	request.getSession(true).setAttribute(errorKey, new StringBuilder()
-        			.append("El tama\u00F1o m\u00E1ximo del archivo es de ")
-        			.append(maxSize/1024/1024)
-        			.append(" MB.").toString());
-        	
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Request exceeded size limit!", e);
             }
@@ -200,10 +192,8 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
         upload.setSizeMax(maxSize);
         //jtezva agregado para monitorear el progreso al subir archivo
         String uploadKey="SK_PROGRESS_LISTENER";
-        String errorKey = "SK_ERROR";
         log.debug("llave de sesion para subir archivo: "+uploadKey);
         servletRequest.getSession(true).setAttribute(uploadKey, new CustomProgressListener());
-        servletRequest.getSession(true).setAttribute(errorKey, null);
         CustomProgressListener pl=(CustomProgressListener) servletRequest.getSession(true).getAttribute(uploadKey);
         upload.setProgressListener(pl);
         pl.setEstado(CustomProgressListener.SUBIENDO);

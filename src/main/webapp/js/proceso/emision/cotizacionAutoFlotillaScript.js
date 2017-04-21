@@ -6,8 +6,8 @@ function transformaSigsEnIce (sigs) {
             CDPERSON: sigs.smap1.cdperson,
             CDUNIECO: sigs.smap1.CDUNIECO,
             ESTADO: 'W',
-            FEINI: !Ext.isEmpty(sigs.slist1[0].feini) ? sigs.slist1[0].feini : sigs.smap1.feini,
-            FEFIN: !Ext.isEmpty(sigs.slist1[0].fefin) ? sigs.slist1[0].fefin : sigs.smap1.fefin,
+            FEFIN: sigs.smap1.fefin,
+            FEINI: sigs.smap1.feini,
             FESOLICI: sigs.smap1.fesolici,
             NMPOLIZA: '',
             TRAMITE: _p30_flujo.ntramite,
@@ -37,45 +37,29 @@ function transformaSigsEnIce (sigs) {
             'parametros.pv_nmsuplem': '0',
             //parametros.pv_otvalorXY
             'parametros.pv_status': 'V',
-            'parametros.pv_swreduci': null,
-            'cambio': sigs.smap1.tvalopol_4,
-            'moneda': sigs.smap1.tvalopol_5
+            'parametros.pv_swreduci': null
         },
         slist2: [],
         success: true,
         exito: true
     };
     
-    if(sigs.slist1[0].CDRAMO!=null && sigs.slist1[0].CDRAMO == Ramo.AutosFronterizos)
-	{
-    	 for (var att in sigs.smap1) {
-    	    	// a u x . ...
-    	    	//0 1 2 3 4
-    	    	if (att.slice(0, 11) === 'aux.otvalor') {
-    	    		ice.smap1['parametros.pv_otvalor'+att.slice(att.length-2,att.length)] = sigs.smap1[att];
-    	    		delete sigs.smap1[att];
-    	    	}
-    	    }
-	}
-    else
-    {
-        //ice.smap1.parametros.pv_otvalor...
-        for (var att in sigs.slist1[0]) {
-            // p a r a m e t r o s . p v _ o t v a l o r ...
-            //0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-            if (att.slice(0, 21) === 'parametros.pv_otvalor') {
-                ice.smap1[att] = sigs.slist1[0][att];
-            }
+    //ice.smap1.aux...
+    for (var att in sigs.smap1) {
+        // a u x . ...
+        //0 1 2 3 4
+        if (att.slice(0, 4) === 'aux.') {
+            ice.smap1[att] = sigs.smap1[att];
         }
     }
     
-    //ice.smap1.aux...
-    for (var att in sigs.smap1) {
-    	// a u x . ...
-    	//0 1 2 3 4
-    	if (att.slice(0, 4) === 'aux.') {
-    		ice.smap1[att] = sigs.smap1[att];
-    	}
+    //ice.smap1.parametros.pv_otvalor...
+    for (var att in sigs.slist1[0]) {
+        // p a r a m e t r o s . p v _ o t v a l o r ...
+        //0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+        if (att.slice(0, 21) === 'parametros.pv_otvalor') {
+            ice.smap1[att] = sigs.slist1[0][att];
+        }
     }
     
     for (var i = 0; i < sigs.slist1.length; i++) {
@@ -290,9 +274,7 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
         _p30_smap1.cdunieco=json.smap1.CDUNIECO;
         
         var maestra=json.smap1.ESTADO=='M';
-
-        _p30_limpiar();
-
+        
         var fesolici    = Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');
         var fechaHoy    = Ext.Date.clearTime(new Date());
         var fechaLimite = Ext.Date.add(fechaHoy,Ext.Date.DAY,-1*(json.smap1.diasValidos-0));
@@ -302,21 +284,19 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
         debug('fechaLimite=' , fechaLimite);
         debug('vencida='     , vencida , '.');
         
-        if(!Ext.isEmpty(json.smap1.FEINI) && !Ext.isEmpty(json.smap1.FEFIN))
-        {
-            var iniVig = Ext.Date.parse(json.smap1.FEINI,'d/m/Y');
-            var finVig = Ext.Date.parse(json.smap1.FEFIN,'d/m/Y');
-            _fieldByName('feini').setValue(iniVig);
-            _fieldByName('fefin').setValue(finVig);
-        }
-        else
-        {
-            _fieldByName('feini').setValue(new Date());
-        }
-
+        _p30_limpiar();
+        
+        var iniVig = Ext.Date.parse(json.smap1.FEINI,'d/m/Y').getTime();
+        var finVig = Ext.Date.parse(json.smap1.FEFIN,'d/m/Y').getTime();
         var milDif = finVig-iniVig;
         var diaDif = milDif/(1000*60*60*24);
         debug('diaDif:',diaDif);
+        
+        /*if(!maestra&&!vencida)
+        {
+            _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEINI,'d/m/Y'));
+        }*/
+        _fieldByName('feini').setValue(new Date());
         _fieldByName('fefin').setValue
         (
             Ext.Date.add
@@ -326,7 +306,7 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
                 ,diaDif
             )
         );
-                
+        
         if(maestra)
         {
             _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
@@ -348,37 +328,10 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
         
         ck='Recuperando incisos base';
         var recordsAux = [];
-    	if(_p30_smap1.cdramo=='5')
+        for(var i in json.slist2)
         {
-           var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
-           try{
-   	        if(_p30_smap1.turistas=='S'){
-   	        	itemsTatripol.push(_fieldByName('aux.otvalor18',null,true));
-   	    	}
-           }catch(e){
-           	debugError(e);
-           }
-           if(itemsTatripol[1].fieldLabel == "MONEDA")
-           {
-        	  
-        	  
-        	   if(_p30_smap1.turistas=='S'){
-        		   json.smap1.moneda=json.smap1['aux.otvalor05']
-        	   }
-           	  if(json.smap1.moneda == '2')
-           	  {
-              itemsTatripol[1].setValue('DOLARES');
-              itemsTatripol[0].setValue(json.smap1.cambio)
-           	  }
-              else
-              {
-              itemsTatripol[1].setValue('PESOS');
-              itemsTatripol[0].setValue(json.smap1.cambio)
-              }
-           }
-           
-           for(var i in json.slist2)
-           {
+        	if(_p30_smap1.cdramo=='5')
+            {
                if('|AF|PU|'.lastIndexOf('|'+json.slist2[i].CDTIPSIT+'|')!=-1)
                 {
                     if(json.slist2[i]['parametros.pv_otvalor02'] == '1')
@@ -405,8 +358,8 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
                           }
                     }
                 }
-            recordsAux.push(new _p30_modelo(json.slist2[i]));
             }
+            recordsAux.push(new _p30_modelo(json.slist2[i]));
         }
         _p30_store.add(recordsAux);
         
@@ -470,211 +423,4 @@ function llenandoCampos (json, nmpoliza, renovacionSIGS) {
     } catch (e) {
         manejaException(e, ck);
     }
-}
-
-function _p30_actualizarCotizacionTramite(callback)
-{
-    var ck = 'Registrando cotizaci\u00f3n de tr\u00e1mite';
-    try
-    {
-        _mask(ck);
-        Ext.Ajax.request(
-        {
-            url      : _p30_urlActualizarOtvalorTramiteXDsatribu
-            ,params  :
-            {
-                'params.ntramite'  : _p30_flujo.ntramite
-                ,'params.dsatribu' : 'COTIZACI%N%TR%MITE%'
-                ,'params.otvalor'  : _fieldByName('nmpoliza').getValue()
-                ,'params.accion'   : 'U'
-            }
-            ,success : function(response)
-            {
-                _unmask();
-                var ck = 'Decodificando respuesta al guardar estatus de tr\u00e1mite';
-                try
-                {
-                    var json = Ext.decode(response.responseText);
-                    debug('### guardar estatus de tramite:',json);
-                    if(json.success===true)
-                    {
-                        var ck = 'Guardando detalle de cotiazci\u00f3n de tr\u00e1mite';
-                        try
-                        {
-                            _mask(ck);
-                            Ext.Ajax.request(
-                            {
-                                url      : _p30_urlDetalleTramite
-                                ,params  :
-                                {
-                                    'smap1.ntramite'  : _p30_flujo.ntramite
-                                    ,'smap1.status'   : _p30_flujo.status
-                                    ,'smap1.dscoment' : 'Se guard\u00f3 la cotizaci\u00f3n '+_fieldByName('nmpoliza').getValue()
-                                    ,'smap1.swagente' : 'S'
-                                }
-                                ,success : function(response)
-                                {
-                                    _unmask();
-                                    var ck = 'Decodificando respuesta al guardar detalle de cotizaci\u00f3n de tr\u00e1mite';
-                                    try
-                                    {
-                                        var jsonDetalle = Ext.decode(response.responseText);
-                                        debug('### guardar detalle cotizacion tramite:',jsonDetalle);
-                                        if(!Ext.isEmpty(callback))
-                                        {
-                                            callback();
-                                        }
-                                    }
-                                    catch(e)
-                                    {
-                                        manejaException(e,ck);
-                                    }
-                                }
-                                ,failure : function()
-                                {
-                                    _unmask();
-                                    errorComunicacion(null,'Error al guardar detalle de cotizaci\u00f3n de tr\u00e1mite');
-                                }
-                            });
-                        }
-                        catch(e)
-                        {
-                            _unmask();
-                            manejaException(e,ck);
-                        }
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                _unmask();
-                errorComunicacion(null,'Error al guardar estatus de tr\u00e1mite');
-            }
-        });
-    }
-    catch(e)
-    {
-        _unmask();
-        manejaException(e,ck);
-    }
-}
-
-function _p30_actualizarSwexiperTramite(callback)
-{
-    var ck = 'Registrando estado de cliente de tr\u00e1mite';
-    try
-    {
-        var swExiper =
-        (
-            !Ext.isEmpty(_p30_recordClienteRecuperado)
-            && Ext.isEmpty(_p30_recordClienteRecuperado.raw.CLAVECLI)
-            && !Ext.isEmpty(_p30_recordClienteRecuperado.raw.CDIDEPER)
-        ) ? 'N' : 'S' ;
-    
-        _mask(ck);
-        Ext.Ajax.request(
-        {
-            url      : _p30_urlActualizarOtvalorTramiteXDsatribu
-            ,params  :
-            {
-                'params.ntramite'  : _p30_flujo.ntramite
-                ,'params.dsatribu' : 'SWEXIPER'
-                ,'params.otvalor'  : swExiper
-                ,'params.accion'   : 'U'
-            }
-            ,success : function(response)
-            {
-                _unmask();
-                var ck = 'Decodificando respuesta al guardar estado de cliente de tr\u00e1mite';
-                try
-                {
-                    var json = Ext.decode(response.responseText);
-                    debug('### guardar estatus de cliente de tramite:',json);
-                    if(json.success===true)
-                    {
-                        if(!Ext.isEmpty(callback))
-                        {
-                            callback();
-                        }
-                    }
-                    else
-                    {
-                        mensajeError(json.message);
-                    }
-                }
-                catch(e)
-                {
-                    manejaException(e,ck);
-                }
-            }
-            ,failure : function()
-            {
-                _unmask();
-                errorComunicacion(null,'Error al guardar estado de cliente de tr\u00e1mite');
-            }
-        });
-    }
-    catch(e)
-    {
-        _unmask();
-        manejaException(e,ck);
-    }
-}
-
-function _p30_botonOnCotizarClic (me) {
-    debug('_p30_botonOnCotizarClic args:', arguments);
-    var ck = 'Enviando datos de cotizaci\u00f3n';
-    try {
-        Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTurnado');
-        new VentanaTurnado({
-            cdtipflu  : _p30_flujo.cdtipflu,
-            cdflujomc : _p30_flujo.cdflujomc,
-            tipoent   : _p30_flujo.tipoent,
-            claveent  : 0,//_p28_flujo.claveent,
-            webid     : 0,//_p28_flujo.webid,
-            aux       : _p30_flujoAux.onCotizar,
-            ntramite  : _p30_flujo.ntramite,
-            status    : _p30_flujo.status,
-            cdunieco  : _p30_flujo.cdunieco,
-            cdramo    : _p30_flujo.cdramo,
-            estado    : _p30_flujo.estado,
-            nmpoliza  : _p30_flujo.nmpoliza,
-            nmsituac  : _p30_flujo.nmsituac,
-            nmsuplem  : _p30_flujo.nmsuplem,
-            cdusuari  : _p30_smap1.cdusuari,
-            cdsisrol  : _GLOBAL_CDSISROL
-        }).mostrar();
-    } catch (e) {
-        manejaException(e, ck);
-    }
-}
-
-function turistasFormaPago(feini,fefin,listFP){
-	try{
-		var date1 = feini;
-		var date2 = fefin;
-		var timeDiff = Math.abs(date2.getTime() - date1.getTime());
-		var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-		var fp=[];
-		if(diffDays<365){
-			listFP.forEach(function(it){
-				if(it.CDPERPAG==FormaPago.ANUAL || it.CDPERPAG==FormaPago.CONTADO){
-					fp.push(it)
-					return;
-				}
-			})
-			return fp;
-		}
-	}catch(e){
-		debugError(e);
-	}
-	return listFP;
 }
