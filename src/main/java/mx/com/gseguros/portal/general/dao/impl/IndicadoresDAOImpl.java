@@ -266,6 +266,7 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
             		,"DS_SUCURSAL"
             		,"CD_TIPO_TRAMITE"
             		,"TIPO_TRAMITE"
+            		,"DESC_TIPO_TRAMITE"
             		,"CD_LINEA_NEGOCIO"
             		,"DS_LINEA_NEGOCIO"
             		,"STATUS_TRAMITE"
