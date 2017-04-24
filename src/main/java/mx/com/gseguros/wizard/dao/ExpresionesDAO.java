@@ -65,9 +65,9 @@ public class ExpresionesDAO extends AbstractDAO{
 	protected class BuscarValoresTablas extends CustomStoredProcedure {
 		
 		protected BuscarValoresTablas(DataSource dataSource) {
-			super(dataSource, "PKG_LISTAS.P_TABLAS");
+			super(dataSource, "PKG_LISTAS_PRE.P_TABLAS");
 			
-			logger.debug("%%% Entro a m�todo BuscarValoresTablas sin par�metros para ejecutar PKG_LISTAS.P_TABLAS %%%");
+			logger.debug("%%% Entro a m�todo BuscarValoresTablas sin par�metros para ejecutar PKG_LISTAS_PRE.P_TABLAS %%%");
 		
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ValoresTablaMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
@@ -170,7 +170,7 @@ public class ExpresionesDAO extends AbstractDAO{
     protected class ListaColumna extends CustomStoredProcedure {
     	
     	protected ListaColumna(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_COLUMNAS");
+    		super(dataSource, "PKG_LISTAS_PRE.P_COLUMNAS");
     		
     		declareParameter(new SqlParameter("PV_CDTABLA_I", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ListaColumnaMapper()));
@@ -205,7 +205,7 @@ public class ExpresionesDAO extends AbstractDAO{
     protected class ListaClave extends CustomStoredProcedure {
     	
     	protected ListaClave(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_LLAVES");
+    		super(dataSource, "PKG_LISTAS_PRE.P_LLAVES");
     		
     		declareParameter(new SqlParameter("PV_CDTABLA_I", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ListaClaveMapper()));
@@ -406,7 +406,7 @@ public class ExpresionesDAO extends AbstractDAO{
     	protected ObtieneSecuenciaExpresion(DataSource dataSource) {
     		super(dataSource, "PKG_WIZARD.P_OBTIENE_CDEXPRES");
     		
-    		logger.debug("%%% Entro a m�todo BuscarValoresTablas sin par�metros para ejecutar PKG_LISTAS.P_TABLAS %%%");
+    		logger.debug("%%% Entro a m�todo BuscarValoresTablas sin par�metros para ejecutar PKG_LISTAS_PRE.P_TABLAS %%%");
     		
     		declareParameter(new SqlOutParameter("PV_SEC_CDEXPRES", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
