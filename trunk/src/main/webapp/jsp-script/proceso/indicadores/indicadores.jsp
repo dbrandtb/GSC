@@ -250,6 +250,7 @@
 		            {type:'string', name:'CLIENTE'},
 		            {type:'string', name:'DSRAMO'},
 		            {type:'string', name:'TIPO_TRAMITE'},
+		            {type:'string', name: 'DESC_TIPO_TRAMITE'},
 		            {type:'string', name:'DSUNIECO'},
 		            {type:'string', name:'STATUS_TRAMITE'},
 		            {type:'string', name:'DS_STATUS_TRAMITE'},
@@ -1331,6 +1332,7 @@
 							{text: 'L\u00EDnea de negocio',   dataIndex: 'DS_LINEA_NEGOCIO'},
 							//{text: 'C\u00F3digo', dataIndex: 'CD_TIPO_TRAMITE'},
 							{text: 'Tipo de tr\u00E1mite',    dataIndex: 'TIPO_TRAMITE'},
+							{text: 'Descripci\u00F3n tipo tr\u00E1mite',    dataIndex: 'DESC_TIPO_TRAMITE'},
 							//{text: 'Es', dataIndex: 'STATUS_TRAMITE'},
 							{text: 'Estatus tr\u00E1mite',    dataIndex: 'DS_STATUS_TRAMITE'},
 							{text: 'Etapa',             dataIndex: 'ETAPA'},
@@ -1342,7 +1344,7 @@
 							{text: 'Usuario Ant.', dataIndex: 'DSUSUARI_ANT'},
 							{text: 'CD Sucursal Usr. Ant.', dataIndex: 'OFICINA_USR_ANT'},
 							{text: 'Sucursal Usr. Ant.', dataIndex: 'DS_OFICINA_USR_ANT'},
-							{text: 'CDPERSON', dataIndex: 'CDPERSON'},
+							{text: 'CDPERSON', dataIndex: 'CDPERSON'}
 							
 						],
                         dockedItems: [{
