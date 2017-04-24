@@ -58,8 +58,14 @@ public class AutenticacionAction extends PrincipalCoreAction {
 	 */
 	public String existeUsuarioLDAP() throws Exception {
 		try {
-		    params = new HashMap<String, String>();
-            boolean existeUsuarioLDAP = loginManager.validaUsuarioLDAP(true, user, password);
+		    boolean existeUsuarioLDAP;
+		    logger.debug("loginAuthLdapActiva={}", loginAuthLdapActiva);
+            if(new Boolean(loginAuthLdapActiva)) {
+                existeUsuarioLDAP = loginManager.validaUsuarioLDAP(true, user, password);
+            } else {
+                existeUsuarioLDAP = true;
+            }
+            params = new HashMap<String, String>();
             params.put("existeUsuarioLDAP", String.valueOf(existeUsuarioLDAP));
             params.put("modoAutenticacionLDAP", loginAuthLdapActiva);
             params.put("modoAgregarUsuariosLDAP", loginModoAgregarUsuariosLdap);
