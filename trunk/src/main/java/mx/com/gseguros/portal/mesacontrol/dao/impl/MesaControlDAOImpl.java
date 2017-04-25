@@ -1468,4 +1468,51 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
             declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
         }
     }
+    
+    @Override
+	public List<Map<String,String>> obtieneOtValorCorrespondienteSubtipoCR()throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		Map<String,Object> procRes = ejecutaSP(new obtieneOtValorCorrespondienteSubtipoCR(getDataSource()),params);
+		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		String   error  = (String)procRes.get("pv_error_o");
+		if(StringUtils.isNotBlank(error))
+		{
+			throw new ApplicationException(error);
+		}
+		if(lista==null)
+		{
+			return new ArrayList<Map<String,String>>();
+		}
+		else
+		{
+			logger.debug(Utils.log(
+					"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+					,"\n@@@@@@ obtieneOtValorCorrespondienteSubtipoCR @@@@@@"
+					));
+			logger.debug(Utils.log(
+					"\n@@@@@@ otvalor correspondientes=", lista.toString()
+					,"\n@@@@@@ recuperarOtvalorTramitePorDsatribu @@@@@@"
+					,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+					));
+			return lista;
+		}
+	}
+	
+	protected class obtieneOtValorCorrespondienteSubtipoCR extends StoredProcedure
+	{
+		protected obtieneOtValorCorrespondienteSubtipoCR(DataSource dataSource)
+		{
+			super(dataSource,"P_GET_VALOR_SUBTIPO_CR");
+			String[] cols = new String[]{
+					"tipstitFake"
+					,"otFake"
+            };
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

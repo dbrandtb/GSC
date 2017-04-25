@@ -11790,6 +11790,27 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return this.cotizacionDAO.aplicaRecargoPagoFraccionado( cdunieco,  cdramo,  nmpoliza,  recargoPF,  flotilla);
 	}
 	
+	@Override
+	public Map<String,String> obtieneOtValorCorrespondienteSubtipoCR()throws Exception
+	{
+		String paso     = "Obteniedo OtValor Correspondientes a Subtipo CR";
+		List<Map<String, String>> listaSubCr = null;
+		Map<String,String> listaSubTipCR = new HashMap<String,String>();
+		try
+		{
+			listaSubCr = mesaControlDAO.obtieneOtValorCorrespondienteSubtipoCR();
+			for(Map<String, String> elemento :listaSubCr)
+			{
+				listaSubTipCR.put(elemento.get("tipstitFake"), elemento.get("otFake"));
+			}
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+		return listaSubTipCR;
+	}
+	
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////
