@@ -1303,4 +1303,7 @@ public interface CotizacionManager
 
 	public List<Map<String, String>> cargarResultadosCotizacionLicenciaFlotilla(String cdunieco, String cdramo, String estado,
 			String nmpoliza) throws Exception;
+	
+	public Map<String, String> obtieneOtValorCorrespondienteSubtipoCR()throws Exception;
+	
 }

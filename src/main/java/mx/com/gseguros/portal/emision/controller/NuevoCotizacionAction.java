@@ -202,6 +202,23 @@ public class NuevoCotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	@Action(value   = "obtieneOtValorCorrespondienteSubtipoCR",
+			results = { @Result(name="success", type="json") }
+			)
+	public String obtieneOtValorCorrespondienteSubtipoCR()
+	{
+		try
+		{
+			Utils.validateSession(session);			
+			params = (cotizacionManager.obtieneOtValorCorrespondienteSubtipoCR());
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
