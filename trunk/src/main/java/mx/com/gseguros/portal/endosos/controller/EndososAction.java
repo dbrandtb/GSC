@@ -1099,10 +1099,10 @@ public class EndososAction extends PrincipalCoreAction
 			String nmpoliza = smap1.get("nmpoliza");
 			
 			// Validacion de endoso simple:
-			boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
+			/*boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
 			if(!permitido) {
 				throw new ApplicationException(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
-			}
+			}*/
 			
 			// Valida si hay un endoso anterior pendiente, sino lanzamos una excepcion con el mensaje de error:
 			RespuestaVO resp = endososManager.validaEndosoAnterior(
