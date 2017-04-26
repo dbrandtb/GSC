@@ -7505,8 +7505,12 @@ function _p30_cotizacionFinal(sinTarificar,json,form)
                                 ,listeners: {
                                     afterrender:function(me){
                                         try{
-                                        if(_fieldById("descuentoAgente",null,true).down("[xtype=numberfield]").getValue()!=0 && _fieldById("descuentoAgente",null,true).down("[xtype=numberfield]").getValue()!=null){
-                                            me.setDisabled(_p30_smap1.tipoflot!='F');
+                                        if(_fieldById("descuentoAgente",null,true).down("[xtype=numberfield]").getValue()!=null)
+                                        {
+	                                        if(_p30_smap1.tipoflot=='F')
+	                                        {me.setDisabled(false);}
+	                                        else if(_fieldById("descuentoAgente",null,true).down("[xtype=numberfield]").getValue()!=0)
+                                        	{me.setDisabled(true);}
                                         }
                                         }catch(e){
                                             debugError(e)
