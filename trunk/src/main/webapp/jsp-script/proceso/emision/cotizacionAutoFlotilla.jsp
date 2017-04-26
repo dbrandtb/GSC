@@ -6958,11 +6958,17 @@ function  _p30_seteoSubCR(sinTarificar,recordsCdtipsit,valoresOtUtil)
 						prop= cdtipsit + entry.slice(entry.length-2);
 						if(valoresOtUtil[prop])
 						{
+							debug('Encontrado subtipo CR en el inciso #',(d+1),' para otvalor ',valoresOtUtil[prop],' a colocar del tipo ',cdtipsit,' su ',entry);
 							var valor = recordTvalosit.get('parametros.pv_otvalor'+valoresOtUtil[prop]);//Valor CR
 		                    var base  = recordBase.get(entry);//Valor subtipoCR 
-		                    if(Ext.isEmpty(valor)&&!Ext.isEmpty(base)&& valoresOtUtil[prop]!='999')
+		                    if(Ext.isEmpty(valor)&&!Ext.isEmpty(base)&&valoresOtUtil[prop]!='999')
 		                    {
 		                    	_p30_store.data.items[d].data['parametros.pv_otvalor'+valoresOtUtil[prop]]=base;
+		                    	debug('Se ha seteado correctamente el valor:', base ,'en el inciso', 'parametros.pv_otvalor',valoresOtUtil[prop]);
+		                    }
+		                    else
+		                    {
+		                    	debug('No ha cambiado el valor del inciso CR',_p30_store.data.items[d].data['parametros.pv_otvalor'+valoresOtUtil[prop]]);
 		                    }
 						}
 	 				});
