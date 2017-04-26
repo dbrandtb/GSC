@@ -7506,7 +7506,7 @@ function _p30_cotizacionFinal(sinTarificar,json,form)
                                     afterrender:function(me){
                                         try{
                                         if(_fieldById("descuentoAgente",null,true).down("[xtype=numberfield]").getValue()!=0 && _fieldById("descuentoAgente",null,true).down("[xtype=numberfield]").getValue()!=null){
-                                            me.setDisabled(true);
+                                            me.setDisabled(_p30_smap1.tipoflot!='F');
                                         }
                                         }catch(e){
                                             debugError(e)
