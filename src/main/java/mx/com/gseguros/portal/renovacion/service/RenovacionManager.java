@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.portal.consultas.model.RecuperacionSimple;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
@@ -130,15 +129,4 @@ public interface RenovacionManager
 			String operacion) throws Exception;
 	
 	public String validaValorExclusion(String criterio, String valor) throws Exception;
-	/*
-	 * 
-	 */
-	public String renovacionColectivo(
-			String cdusuari,
-			String cdunieco,
-			String cdramo,
-			String nmpoliza,
-			String fecdesde,
-			String fechasta,
-			String procedimiento)throws Exception;
 }
