@@ -3858,6 +3858,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				
 				paso = "Recuperando tramite";
+				logger.debug("Recuperando tramite cargarTramitesPorParametrosVariables");
 				List<Map<String,String>>tramites = mesaControlDAO.cargarTramitesPorParametrosVariables(
 						TipoTramite.POLIZA_NUEVA.getCdtiptra()
 						,null     //ntramite
@@ -3876,6 +3877,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				{
 					ntramite     = tramites.get(0).get("NTRAMITE");
 					sworigenmesa = tramites.get(0).get("SWORIGENMESA");
+					logger.debug("un solo tramite "+ntramite + sworigenmesa);
 				}
 				
 			}
@@ -3925,15 +3927,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			 */
 			if ("M".equals(estado)) { // Emitidas para clonar
 				// Estas pasan bien
-			} else if (StringUtils.isBlank(ntramite)) { // Normales sin tramite
+			} 
+			else if (StringUtils.isBlank(ntramite)) 
+			{// Normales sin tramite
 				if (
 					StringUtils.isNotBlank(ntramiteLigado) &&
 					!"0".equals(ntramiteLigado) &&
-					(
-						StringUtils.isBlank(ntramiteIn) ||
-						!ntramiteIn.equals(ntramiteLigado)
-					)
-				) { // Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual
+					(StringUtils.isBlank(ntramiteIn) || !ntramiteIn.equals(ntramiteLigado))
+				) 
+				{ // Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual
+					logger.debug("Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual");
 					String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ",ntramiteLigado);
 					
 					Map<String, String> tramite = siniestrosDAO.obtenerTramiteCompleto(ntramiteLigado);
@@ -3984,13 +3987,15 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ", ntramiteCot,
 								" (estatus: '", dsstatusTramiteCot, "')");
 						
+						//req0033 utilizar cotizaciones OVA
+						
 						if (EstatusTramite.RECHAZADO.getCodigo().equals(statusTramiteCot)) {
 							error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite"); // de otro que esta cancelado
 						} else {
 							error = Utils.join(error, ", favor de acceder desde mesa de control"); // de otro activo
 						}
 						
-						throw new ApplicationException(error);
+						//throw new ApplicationException(error);
 					}
 				}
 			}
