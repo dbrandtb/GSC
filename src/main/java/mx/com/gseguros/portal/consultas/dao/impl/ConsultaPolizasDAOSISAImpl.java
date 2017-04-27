@@ -3,7 +3,6 @@ package mx.com.gseguros.portal.consultas.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -944,13 +943,6 @@ public HistoricoVO mapRow(ResultSet rs, int rowNum)
 
 	@Override
 	public List<Map<String, String>> consultaIncisosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String insertaBitacora(Date fecha, String nombre, int polizas, String rango, String usuario)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
