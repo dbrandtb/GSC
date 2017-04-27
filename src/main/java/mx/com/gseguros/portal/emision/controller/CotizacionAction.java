@@ -2751,6 +2751,21 @@ public class CotizacionAction extends PrincipalCoreAction
 				paramsValidaCargarCotizacion.put("param3" , nmpoliza);
 				Map<String,String>datosParaComplementar=storedProceduresManager.procedureMapCall(ObjetoBD.VALIDA_CARGAR_COTIZACION.getNombre(), paramsValidaCargarCotizacion, null);
 				
+				//req0033 utilizar cotizaciones de la OVA
+				logger.debug("**** imprimiendo datos de tramite recuperado para poder aplicar o eliminar validaciones ****");
+				logger.debug("NTRAMITE " + datosParaComplementar.get("NTRAMITE"));
+				logger.debug("CDUNIECO " + datosParaComplementar.get("CDUNIECO"));
+				logger.debug("SWORIGENMESA " + datosParaComplementar.get("SWORIGENMESA"));
+				logger.debug("CDUNIECO_RECUPERADO " + datosParaComplementar.get("CDUNIECO_RECUPERADO"));
+				logger.debug("LIGADA");
+				logger.debug(datosParaComplementar.get("LIGADA"));
+				logger.debug("NTRAMITE_LIGADO " + datosParaComplementar.get("NTRAMITE_LIGADO"));
+				logger.debug("CDUNIECO " + datosParaComplementar.get("CDUNIECO"));
+				logger.debug("CDRAMO " + datosParaComplementar.get("CDRAMO"));
+				logger.debug("ESTADO " + datosParaComplementar.get("ESTADO"));
+				logger.debug("NMPOLIZA " + datosParaComplementar.get("NMPOLIZA"));
+				logger.debug("**** ****************************************************************** ****");
+				
 				/*
 				 * cuando se encuentra cdunieco y ntramite para esa cotizacion y no es auto:
 				 */
@@ -2775,9 +2790,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					 * 
 					 * 
 					 */
-					if(datosParaComplementar.containsKey("ESTADO")
-							&&datosParaComplementar.containsKey("NMPOLIZA")
-							)//para clonar emitidas
+					if(datosParaComplementar.containsKey("ESTADO") &&datosParaComplementar.containsKey("NMPOLIZA"))//para clonar emitidas
 					{
 						cdunieco = datosParaComplementar.get("CDUNIECO");
 						estado   = datosParaComplementar.get("ESTADO");
@@ -2785,13 +2798,14 @@ public class CotizacionAction extends PrincipalCoreAction
 					}
 					else if(datosParaComplementar.containsKey("CDUNIECO_RECUPERADO"))//para normales
 					{
+						
 						if (
 							"S".equals(datosParaComplementar.get("LIGADA")) &&
-							(
-								StringUtils.isBlank(ntramiteIn) ||
-								!ntramiteIn.equals(datosParaComplementar.get("NTRAMITE_LIGADO"))
-							)
-						) { // Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual
+							(StringUtils.isBlank(ntramiteIn) || !ntramiteIn.equals(datosParaComplementar.get("NTRAMITE_LIGADO")))
+						   ) 
+						{ 
+							logger.debug("********** Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual");
+							// Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual
 							String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ",
 									datosParaComplementar.get("NTRAMITE_LIGADO"));
 							
@@ -2801,8 +2815,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							String dsstatus = cotizacionManager.recuperarDescripcionEstatusTramite(status);
 							error = Utils.join(error, " (estatus: '", dsstatus, "')");
 							
-							logger.debug(Utils.log("cotizacion ligada al tramite ", datosParaComplementar.get("NTRAMITE_LIGADO"),
-									", status ", status, "."));
+							logger.debug(Utils.log("cotizacion ligada al tramite " + datosParaComplementar.get("NTRAMITE_LIGADO") + ", status " + status +  "."));
 							
 							if (EstatusTramite.RECHAZADO.getCodigo().equals(status)) {
 								error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite");
@@ -2819,6 +2832,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							&&datosParaComplementar.containsKey("CDUNIECO")
 							)//para complementar/clonar tramite
 					{
+						logger.debug("****************** para complementar/clonar tramite");
 						String ntramiteCot = datosParaComplementar.get("NTRAMITE");
 						Map<String, String> tramiteCot = siniestrosManager.obtenerTramiteCompleto(ntramiteCot);
 						String statusTramiteCot = tramiteCot.get("STATUS");
@@ -2827,6 +2841,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						
 						if (StringUtils.isBlank(ntramiteIn)) { // entran desde cotizacion abierta
 							if ("S".equals(datosParaComplementar.get("SWORIGENMESA"))) { // intentar recuperar uno de tramite creado en mesa
+								logger.debug("*********************** intentar recuperar uno de tramite creado en mesa");
 								String error = Utils.join(
 										"Esta cotizaci\u00f3n pertenece al tr\u00e1mite ",
 										ntramiteCot,
@@ -2841,21 +2856,33 @@ public class CotizacionAction extends PrincipalCoreAction
 							}
 						} else { // entran desde un tramite
 							if (ntramiteIn.equals(ntramiteCot)) { // es del mismo tramite
+								logger.debug("*********************** es del mismo tramite");
 								String error = Utils.join("Esta cotizaci\u00f3n se encuentra confirmada para este tr\u00e1mite (", ntramiteCot
 										,", estatus: '", dsstatusTramiteCot,"'), favor de acceder desde mesa de control para complementarla");
 								throw new ApplicationException(error);
-							} else { // intentan recuperar de otro tramite
-								String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ", ntramiteCot,
+							} 
+							//req0033 utilizar cotizaciones de la OVA
+							else { // intentan recuperar de otro tramite
+								logger.debug("*********************** intentan recuperar de otro tramite");
+								
+								//REQ0033 verifico que si el tramite fue generado en la mesa, no puedan duplicar el trámite
+								if ("S".equals(tramiteCot.get("SWORIGENMESA"))){
+									logger.debug("*********************** verifico que si el tramite fue generado en la mesa, no puedan duplicar el trámite");
+									String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ", ntramiteCot,
 										" (estatus: '", dsstatusTramiteCot, "')");
 								
-								if (EstatusTramite.RECHAZADO.getCodigo().equals(statusTramiteCot)) {
-									error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite"); // de otro que esta cancelado
-								} else {
-									error = Utils.join(error, ", favor de acceder desde mesa de control"); // de otro activo
+									if (EstatusTramite.RECHAZADO.getCodigo().equals(statusTramiteCot)) {
+										error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite"); // de otro que esta cancelado
+									} else {
+										error = Utils.join(error, ", favor de acceder desde mesa de control"); // de otro activo
+									}
+									
+									throw new ApplicationException(error);
 								}
 								
-								throw new ApplicationException(error);
+								
 							}
+							
 						}
 						cdunieco = datosParaComplementar.get("CDUNIECO");
 					}
