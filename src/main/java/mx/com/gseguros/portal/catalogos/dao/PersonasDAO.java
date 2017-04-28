@@ -10,10 +10,9 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 public interface PersonasDAO
 {
 	/**
-	 * Obtiene personas por RFC de PKG_CONSULTA.P_GET_MPERSONA
+	 * Obtiene personas por RFC de PKG_CONSULTA_PRE.P_GET_MPERSONA
 	 */
-	public List<Map<String,String>>obtenerPersonasPorRFC(String rfc, String nombre, String nombre2, String apat, String amat,
-	        String validaTienePoliza) throws Exception;
+	public List<Map<String,String>>obtenerPersonasPorRFC(Map<String,String>params) throws Exception;
 	
 	@Deprecated
 	public Map<String,String>obtenerPersonaPorCdperson(Map<String,String>params) throws Exception;
@@ -43,7 +42,7 @@ public interface PersonasDAO
 	 * @param cdideext
 	 * @param cdestcivil
 	 * @param cdsucemi
-	 * @param usuarioExternoInterno Numero Entero
+	 * @param cdusuario
 	 * @param accion
 	 * @throws Exception
 	 */
@@ -70,7 +69,7 @@ public interface PersonasDAO
 			,String cdideext
 			,String cdestcivil
 			,String cdsucemi
-			,String usuarioExternoInterno
+			,String cdusuario
 			,String accion) throws Exception;
 
 	/**
@@ -88,7 +87,7 @@ public interface PersonasDAO
 	public Map<String,String> obtenerDomicilioContratante(Map<String, String> params) throws Exception;
 	
 	/**
-	 * obtener domicilio por cdperson desde PKG_CONSULTA.P_GET_MDOMICIL
+	 * obtener domicilio por cdperson desde PKG_CONSULTA_PRE.P_GET_MDOMICIL
 	 */
 	public Map<String,String> obtenerDomicilioPorCdperson(String cdperson, String nmorddom) throws Exception;
 
@@ -114,7 +113,7 @@ public interface PersonasDAO
 	 * @param nmnumero
 	 * @param nmnumint
 	 * @param cdtipdom
-	 * @param usuarioExternoInterno Numero Entero
+	 * @param cdusuario
 	 * @param swactivo
 	 * @param accion
 	 * @throws Exception
@@ -130,21 +129,21 @@ public interface PersonasDAO
 			,String nmnumero
 			,String nmnumint
 			,String cdtipdom
-			,String usuarioExternoInterno
+			,String cdusuario
 			,String swactivo
 			,String accion) throws Exception;
 
 
 	/**
-	 * Obtener los componentes de tatriper por cdrol y cdperson de PKG_LISTAS.P_GET_ATRI_PER
+	 * Obtener los componentes de tatriper por cdrol y cdperson de PKG_LISTAS_PRE.P_GET_ATRI_PER
 	 */
 	public List<ComponenteVO> obtenerAtributosPersona(String cdperson, String cdrol) throws Exception;
 	/**
-	 * Obtiene los valores de tvaloper para un cdperson y un cdrol de PKG_CONSULTA.P_GET_TVALOPER
+	 * Obtiene los valores de tvaloper para un cdperson y un cdrol de PKG_CONSULTA_PRE.P_GET_TVALOPER
 	 */
 	public Map<String,String> obtenerTvaloper(String cdrol,String cdperson) throws Exception;
 	/**
-	 * Movimientos de tvaloper por cdperson de PKG_SATELITES.P_MOV_TVALOPER_NUEVO
+	 * Movimientos de tvaloper por cdperson de PKG_SATELITES_PRE.P_MOV_TVALOPER_NUEVO
 	 */
 	public void movimientosTvaloper(String cdrol,String cdperson
 			,String otvalor01,String otvalor02,String otvalor03,String otvalor04,String otvalor05
@@ -161,7 +160,7 @@ public interface PersonasDAO
 			)throws Exception;
 	
 	/**
-	 * Movimientos de tvaloper por cdperson de PKG_SATELITES.P_MOV_TVALOPER
+	 * Movimientos de tvaloper por cdperson de PKG_SATELITES_PRE.P_MOV_TVALOPER
 	 */
 	public void insertaTvaloper(
 			String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac,

@@ -218,10 +218,7 @@ public class PersonasAction extends PrincipalCoreAction
 				    	}
 				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli());
 				    	
-				    	agregar.put("NOMBRE_COMPLETO", cli.getRfcCli()+" - "+ ((cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc()) + " - " + agregar.get("DIRECCIONCLI")
-				    				+""+	(StringUtils.isNotBlank(agregar.get("CDIDEPER"))?	" - "+agregar.get("CDIDEPER")		:"")
-				    				+""+	(StringUtils.isNotBlank(agregar.get("CDIDEEXT"))?	" - "+agregar.get("CDIDEEXT")		:"")
-				    			);
+				    	agregar.put("NOMBRE_COMPLETO", cli.getRfcCli()+" - "+ ((cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc()) + " - " + agregar.get("DIRECCIONCLI"));
 				    	
 				    	agregar.put("CODPOSTAL", cli.getCodposCli());
 				    	String edoAdosPos = Integer.toString(cli.getEstadoCli());
@@ -1244,7 +1241,7 @@ public class PersonasAction extends PrincipalCoreAction
 		    		 }
 		    		 
 		    	}
-		    	clientesRes.setCodigo(0);
+		    	
 		    	if(clientesRes != null && (Estatus.EXITO.getCodigo() == clientesRes.getCodigo())){
 		    	
 		    		exito = true;
@@ -1284,7 +1281,7 @@ public class PersonasAction extends PrincipalCoreAction
 		    		 */
 	    			 ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("cdperson"), (saludDanios.equalsIgnoreCase("S"))?"D":"S", saveList, updateList, !tieneSegundaCompania, usuario);
 	    		 }
-		    	exitoDomicilios=true;
+		    	
 		    	if(!exitoDomicilios){
 		    		logger.debug("Error al enviar domiciliosWS, exito false");
 		    		exito           = false;
