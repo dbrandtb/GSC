@@ -538,11 +538,11 @@ var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarVal
 					            displayField  : 'NOMBRE_COMPLETO',
 					            autoSelect    : false,
 					            hideTrigger   : true,
-					            tpl: Ext.create('Ext.XTemplate',
-					                    '<tpl for=".">',
-					                        '<div class="x-boundlist-item">{CDRFC} - {DSNOMBRE} {DSNOMBRE1} {DSAPELLIDO} {DSAPELLIDO1} - {DIRECCIONCLI}</div>',
-					                    '</tpl>'
-					            ),
+// 					            tpl: Ext.create('Ext.XTemplate',
+// 					                    '<tpl for=".">',
+// 					                        '<div class="x-boundlist-item">{CDRFC} - {DSNOMBRE} {DSNOMBRE1} {DSAPELLIDO} {DSAPELLIDO1} - {DIRECCIONCLI}</div>',
+// 					                    '</tpl>'
+// 					            ),
 					            enableKeyEvents: true,
 					            listeners: {
 					            	select: function(comb, records){
@@ -672,11 +672,11 @@ var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarVal
 	                            typeAhead     : false,
 					            anyMatch      : false,
 					            hideTrigger   : true,
-					            tpl: Ext.create('Ext.XTemplate',
-					                    '<tpl for=".">',
-					                        '<div class="x-boundlist-item">{CDRFC} - {DSNOMBRE} {DSNOMBRE1} {DSAPELLIDO} {DSAPELLIDO1} - {DIRECCIONCLI}</div>',
-					                    '</tpl>'
-					            ),
+// 					            tpl: Ext.create('Ext.XTemplate',
+// 					                    '<tpl for=".">',
+// 					                        '<div class="x-boundlist-item">{CDRFC} - {DSNOMBRE} {DSNOMBRE1} {DSAPELLIDO} {DSAPELLIDO1} - {DIRECCIONCLI}</div>',
+// 					                    '</tpl>'
+// 					            ),
 					            enableKeyEvents: true,
 					            listeners: {
 					            	select: function(comb, records){
