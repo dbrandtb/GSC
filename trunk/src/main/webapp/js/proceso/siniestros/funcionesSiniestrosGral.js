@@ -1560,6 +1560,69 @@ function _p21_agregarAsegurado(){
     centrarVentanaInterna(ventanaAgregarAsegurado.show());
 }
 
+//14.- Generar Calculos
+function _p21_generarCalculo(){
+    gridFacturaDirecto.setLoading(true);
+    Ext.Ajax.request( {
+        url  : _URL_GENERAR_CALCULO
+        ,params:{
+            'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue()
+        }
+        ,success : function (response) {
+            
+            Ext.Ajax.request({
+                url  : _URL_VALIDA_IMP_ASEGSINIESTRO
+                ,params:{
+                    'params.tipopago'  : _tipoPago,
+                    'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
+                    'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue()
+                }
+                ,success : function (response) {
+                    var validacionMensaje = Ext.decode(response.responseText).datosValidacion;
+                    var resultMsj= "";
+                    var banderaresultMsj = 0;
+                    if(validacionMensaje.length > 0){
+                        for(var i = 0; i < validacionMensaje.length; i++){
+                            banderaresultMsj = "1";
+                            resultMsj = resultMsj + 'El siniestro '+ validacionMensaje[i].SINIESTRO+' de la Factura '+validacionMensaje[i].FACTURA+ ' el importe es negativo. <br/>';
+                        }
+                        resultMsj = resultMsj+'Favor de corregir el importe para poder continuar.<br/>';
+                        
+                        if(banderaresultMsj == "1"){
+                            centrarVentanaInterna(mensajeWarning(resultMsj));
+                        }
+                    }                       
+                    gridFacturaDirecto.setLoading(false);
+                    cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                    
+                    panelComplementos.down('[name=params.sumaAsegurada]').setValue("0.00");
+                    panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
+                    obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
+                },
+                failure : function () {
+                    gridFacturaDirecto.setLoading(false);
+                    Ext.Msg.show({
+                        title:'Error',
+                        msg: 'Error de comunicaci&oacute;n',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    });
+                }
+            });
+        },
+        failure : function () {
+            gridFacturaDirecto.setLoading(false);
+            Ext.Msg.show({
+                title:'Error',
+                msg: 'Error de comunicaci&oacute;n',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            });
+        }
+    });     
+}
+
+
 //15.- Eliminar asegurado seleccionado
 function eliminarAsegurado(grid,rowIndex){
     var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
@@ -1868,7 +1931,6 @@ function _guardarConceptosxFactura(){
     }
 }
 
-
 //18.- Ventana para la visualizacion de los ajestes medicos
 function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
     var record = grid.getStore().getAt(rowIndex);
@@ -2158,6 +2220,425 @@ function _11_asociarAutorizacion() {
             }
         });
     }
+}
+
+//22.- Llamado para asociar una autorizacion o modificacion
+function _11_modificarAutorizacion(record){
+    _11_recordActivo = record;
+    debug('_11_modificarAutorizacion :=: _11_recordActivo :',_11_recordActivo.data);
+    
+    _11_textfieldAseguradoMod.setValue(_11_recordActivo.get('NOMBRE'));
+    var params = {
+            'params.cdperson'   :   _11_recordActivo.get('CDPERSON')
+    };
+    cargaStorePaginadoLocal(storeListadoAutorizacion, _URL_LISTA_AUTSERVICIO, 'datosInformacionAdicional', params, function(options, success, response){
+        if(success){
+            var jsonResponse = Ext.decode(response.responseText);
+            if(jsonResponse.datosInformacionAdicional.length <= 0) {
+                storeConceptos.removeAll();
+                storeAseguradoFactura.removeAll();
+                banderaConcepto = 0;
+                banderaAsegurado = 0;
+                cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                centrarVentanaInterna(Ext.Msg.show({ 
+                    title: 'Aviso',
+                    msg: 'No existen autorizaci&oacute;n para el asegurado elegido.',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.WARNING
+                }));
+            }else{
+                _11_windowModificarAut.show();
+                _11_textfieldNmautservMod.setValue('');
+                centrarVentanaInterna(_11_windowModificarAut);
+            }
+        }else{
+            Ext.Msg.show({
+                title: 'Aviso',
+                msg: 'Error al obtener los datos.',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            });
+        }
+    });
+}
+    
+//23.- Asociar autorizacion Nueva
+function _11_asociarAutorizacionNueva(){
+    var valido = _11_formModificarAuto.isValid();
+    if(!valido) {
+        datosIncompletos();
+    }else{
+        _11_windowModificarAut.close();
+        guardaCambiosAutorizacionServ(_11_aseguradoSeleccionado, _11_textfieldNmautservMod.getValue(),"0","1");
+    }
+}
+
+//23.1.-Guardar cambios autorizacion nueva
+function guardaCambiosAutorizacionServ(record, numeroAutorizacion, tipoProceso, actMisiniper){
+    debug("Valores de entrada para el guardado ",record);
+    debug("Numero de Autorizacion : ",numeroAutorizacion);
+    debug("Actualiza  actMisiniper : ",actMisiniper);
+    gridFacturaDirecto.setLoading(true);
+    Ext.Ajax.request({
+        url     : _URL_CONSULTA_AUTORIZACION_ESP
+        ,params : {
+            'params.nmautser'  : numeroAutorizacion
+        }
+        ,success : function (response) {
+            var jsonAutServ = Ext.decode(response.responseText).datosAutorizacionEsp;
+            debug("jsonAutServ.feingres ==> "+jsonAutServ.feingres);
+            debug("jsonAutServ.idTipoEvento ==> "+jsonAutServ.idTipoEvento);
+            
+            debug("VALOR DE RESPUESTA :: ",jsonAutServ);
+            //4.- 
+            _11_guardarDatosComplementario(
+                record.data.CDUNIECO,
+                record.data.CDRAMO,
+                record.data.ESTADO,
+                record.data.NMPOLIZA,
+                record.data.NMSUPLEM,
+                record.data.AAAPERTU,
+                record.data.NMSINIES,
+                record.data.FEOCURRE,
+                record.data.NMSINREF,
+                jsonAutServ.cdicd,
+                record.data.CDICD2,
+                jsonAutServ.cdcausa,
+                jsonAutServ.cdgarant,
+                jsonAutServ.cdconval,
+                jsonAutServ.nmautser,
+                record.data.CDPERSON,
+                tipoProceso,
+                record.data.COMPLEMENTO,
+                record.data.NMSITUAC,
+                null,
+                null,
+                record.data.NMCALLCENTER,
+                actMisiniper,
+                jsonAutServ.feingres,
+                null,
+                jsonAutServ.idTipoEvento,
+                null,
+                record.data.APLICFONDO
+            );
+            gridFacturaDirecto.setLoading(false);
+        },
+        failure : function (){
+            gridFacturaDirecto.setLoading(false);
+            centrarVentanaInterna(Ext.Msg.show({
+                title:'Error',
+                msg: 'Error de comunicaci&oacute;n',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            }));
+        }
+    });
+}
+
+//24.- Require autorizacion especial
+function reqAutorizacionEspecial(ntramite, tipoPago, nfactura, cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, nmsinies, cdperson, cdtipsit){
+    setTimeout(function(){
+        windowAutEsp = Ext.create('Ext.window.Window',{
+            modal       : true,
+            buttonAlign : 'center',
+            title: 'Autorizaci&oacute;n Especial',
+            autoScroll  : true,
+            items       : [
+                panelModificacion = Ext.create('Ext.form.Panel', {
+                    bodyPadding: 5,
+                    items: [
+                        {   xtype: 'numberfield'
+                            ,fieldLabel: 'N&uacute;mero de autorizaci&oacute;n'
+                            ,name       : 'txtAutEspecial'
+                            ,allowBlank : false
+                        }
+                    ],
+                    buttonAlign:'center',
+                    buttons: [
+                        {
+                            text: 'Aceptar'
+                            ,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+                            ,buttonAlign : 'center',
+                            handler: function() {
+                                if (panelModificacion.form.isValid()) {
+                                    var datos=panelModificacion.form.getValues();
+                                    Ext.Ajax.request({
+                                        url     : _URL_VALIDA_AUTESPECIFICA
+                                        ,params:{
+                                            'params.ntramite'  : ntramite,
+                                            'params.tipoPago'  : tipoPago,
+                                            'params.nfactura'  : nfactura,
+                                            'params.cdunieco'  : cdunieco,
+                                            'params.cdramo'    : cdramo,
+                                            'params.estado'    : estado,
+                                            'params.nmpoliza'  : nmpoliza,
+                                            'params.nmsuplem'  : nmsuplem,
+                                            'params.nmsituac'  : nmsituac,
+                                            'params.nmautesp'  : datos.txtAutEspecial,
+                                            'params.nmsinies'  : nmsinies
+                                        }
+                                        ,success : function (response){
+                                            if(Ext.decode(response.responseText).validacionGeneral =="1"){
+                                                //Exito y debe de dejar  pasar                                                  
+                                                mensajeCorrecto('&Eacute;XITO','Se ha asociado correctamente.',function(){
+                                                    windowAutEsp.close();
+                                                    cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                                                });
+                                            }else{
+                                                mensajeError("Autorizaci&oacute;n especial no valida para este tr&aacute;mite.");
+                                            }
+                                        },
+                                        failure : function (){
+                                            me.up().up().setLoading(false);
+                                            centrarVentanaInterna(Ext.Msg.show({
+                                                title:'Error',
+                                                msg: 'Error de comunicaci&oacute;n',
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.ERROR
+                                            }));
+                                        }
+                                    });
+                                }else {
+                                    Ext.Msg.show({
+                                        title: 'Aviso',
+                                        msg: 'Complete la informaci&oacute;n requerida',
+                                        buttons: Ext.Msg.OK,
+                                        icon: Ext.Msg.WARNING
+                                    });
+                                }
+                            }
+                        },{
+                            text: 'Cancelar',
+                            icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+                            buttonAlign : 'center',
+                            handler: function() {
+                                windowAutEsp.close();
+                                cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                            }
+                        }
+                    ]
+                })  
+            ],
+            listeners:{
+                 close:function(){
+                     if(true){
+                         cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                     }
+                 }
+            }
+        });
+        centrarVentana(windowAutEsp.show());
+    },100);
+}
+
+//25.1.- LLenamos el formulario de los detalles de la factura
+function _11_llenaFormulario(){
+    var valorRequerido = true;
+    Ext.getCmp('historialCPT').disable();
+    obtenerTotalPagos(_11_recordActivo.get('ntramite'), _11_recordActivo.get('factura'));
+
+    if(_tipoPago ==_TIPO_PAGO_INDEMNIZACION){
+        gridEditorConceptos.hide();                                         // Grid De los conceptos  Ocultos
+        gridEditorCoberturaRecupera.hide();                                 // Grid De los conceptos  Recupera Ocultos
+        panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();   // Aplica IVA oculto
+        panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();   // Sec. de IVA oculto
+        panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();   // Aplica IVA Retenido oculto
+        panelInicialPral.down('combo[name=params.swAplicaisr]').hide();
+        panelInicialPral.down('combo[name=params.swAplicaice]').hide();
+        if(_11_params.CDRAMO == _RECUPERA){
+            gridEditorCoberturaRecupera.show();                             // Grid De los conceptos  Recupera visibles
+            panelInicialPral.down('[name=params.diasdedu]').hide();         // Dias deducible oculto
+            valorRequerido = true;
+        }else{
+            panelInicialPral.down('[name=params.diasdedu]').show();         // Dias deducible visible
+            valorRequerido = false;
+        }
+        
+    }else if(_tipoPago ==_TIPO_PAGO_REEMBOLSO){
+        gridEditorConceptos.show();                                         // Grid De los conceptos  visible
+        gridEditorCoberturaRecupera.hide();                                 // Grid De los conceptos  Recupera Ocultos
+        panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();   // Aplica IVA oculto
+        panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();   // Sec. de IVA oculto
+        panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();   // Aplica IVA Retenido oculto
+        panelInicialPral.down('[name=params.diasdedu]').hide();             // Dias deducible oculto
+        panelInicialPral.down('combo[name=params.swAplicaisr]').hide();
+        panelInicialPral.down('combo[name=params.swAplicaice]').hide();
+        valorRequerido = true;
+    }else{
+        gridEditorConceptos.show();                                         // Grid De los conceptos  visible
+        gridEditorCoberturaRecupera.hide();                                 // Grid De los conceptos  Recupera Ocultos
+        panelInicialPral.down('[name="parametros.pv_otvalor01"]').show();   // Aplica IVA
+        panelInicialPral.down('[name="parametros.pv_otvalor02"]').show();   // Sec. de IVA
+        panelInicialPral.down('[name="parametros.pv_otvalor03"]').show();   // Aplica IVA Retenido
+        panelInicialPral.down('[name=params.diasdedu]').hide();             // Dias deducible oculto
+        panelInicialPral.down('combo[name=params.swAplicaisr]').show();
+        panelInicialPral.down('combo[name=params.swAplicaice]').show();
+        valorRequerido = true;
+    }
+    
+    panelInicialPral.down('[name=params.contrarecibo]').setValue(_11_recordActivo.get('contraRecibo'));     // ContraRecibo
+    panelInicialPral.down('[name=params.ntramite]').setValue(_11_recordActivo.get('ntramite'));             // Tramite
+    panelInicialPral.down('[name=params.nfactura]').setValue(_11_recordActivo.get('factura'));              // No. Factura
+    panelInicialPral.down('[name=params.fefactura]').setValue(_11_recordActivo.get('fechaFactura'));        // Fecha de Factura
+    panelInicialPral.down('[name=params.feegreso]').setValue(_11_recordActivo.get('fechaFactura'));         // Fecha Egreso
+    panelInicialPral.down('[name=params.diasdedu]').setValue(_11_recordActivo.get('diasdedu'));             // Dias Deducible
+    //De acuerdo al tipo de producto se valida si es o no requerido los dias de deducible
+    panelInicialPral.down('[name=params.diasdedu]').allowBlank = valorRequerido;
+    //Proveedor
+    storeProveedor.load();
+    panelInicialPral.down('combo[name=params.cdpresta]').setValue(_11_recordActivo.get('cdpresta'));
+    
+    panelInicialPral.down('combo[name=params.swAplicaisr]').setValue(_11_recordActivo.get('swisr'));
+    panelInicialPral.down('combo[name=params.swAplicaice]').setValue(_11_recordActivo.get('swice'));
+    
+    storeTipoAtencion.load({
+        params:{
+            'params.cdramo':_11_params.CDRAMO,
+            'params.cdtipsit':_cdtipAtencion,
+            'params.tipoPago':_tipoPago
+        }
+    });
+    panelInicialPral.down('combo[name=params.cdtipser]').setValue(_11_recordActivo.get('cdtipser'));        // Tipo de servicio u atencion
+    panelInicialPral.down('[name=params.nfacturaOrig]').setValue(_11_recordActivo.get('factura'));          // No.de Factura original
+    //Valores de los descuentos Numerico y Porcentaje
+    if(_11_recordActivo.get('desctoNum').length == 0){
+        panelInicialPral.down('[name=params.descnume]').setValue("0.00");
+    }else{
+        panelInicialPral.down('[name=params.descnume]').setValue(_11_recordActivo.get('desctoNum'));
+    }
+    if(_11_recordActivo.get('desctoPorc').length == 0){
+        panelInicialPral.down('[name=params.descporc]').setValue("0.00");
+    }else{
+        panelInicialPral.down('[name=params.descporc]').setValue(_11_recordActivo.get('desctoPorc'));
+    }
+    
+    panelInicialPral.down('combo[name=params.tipoMoneda]').setValue(_11_recordActivo.get('cdmoneda'));      // Tipo de moneda
+    
+    // Validamos si el tipo de moneda es pesos o diferente de ello
+    if(_11_recordActivo.get('cdmoneda') =="001"){
+        panelInicialPral.down('[name=params.ptimport]').setValue(_11_recordActivo.get('ptimport'));
+        panelInicialPral.down('[name=params.tasacamb]').setValue("0.00");
+        panelInicialPral.down('[name=params.ptimporta]').setValue("0.00");
+        panelInicialPral.down('[name=params.tasacamb]').hide();
+        panelInicialPral.down('[name=params.ptimporta]').hide();
+        
+    }else{
+        panelInicialPral.down('[name=params.ptimport]').setValue(_11_recordActivo.get('ptimport'));
+        panelInicialPral.down('[name=params.tasacamb]').setValue(_11_recordActivo.get('tasaCambio'));
+        panelInicialPral.down('[name=params.ptimporta]').setValue(_11_recordActivo.get('ptimporta'));
+        panelInicialPral.down('[name=params.tasacamb]').show();
+        panelInicialPral.down('[name=params.ptimporta]').show();
+    }
+    
+    storeAseguradoFactura.removeAll();
+    cargarPaginacion(_11_recordActivo.get('ntramite'),_11_recordActivo.get('factura'));
+    
+    //Realizamos la consulta para validar la aplicacion de los IVA, Sec. del IVA y Aplicacion del IVA Retenido
+    Ext.Ajax.request({
+        url  : _URL_DATOS_VALIDACION
+        ,params:{
+            'params.ntramite'  : _11_recordActivo.get('ntramite')
+            ,'params.nfactura' : _11_recordActivo.get('factura')
+            ,'params.tipoPago' : _tipoPago
+        }
+        ,success : function (response) {
+            if(Ext.decode(response.responseText).datosValidacion != null){
+                var aplicaIVA       = null;
+                var ivaRetenido     = null;
+                var ivaAntesDespues = null;
+                var autAR           = null;
+                var autAM           = null;
+                var commAR          = null;
+                var commAM          = null;
+                var json=Ext.decode(response.responseText).datosValidacion;
+                if(json.length > 0){
+                    aplicaIVA = json[0].OTVALOR01;
+                    ivaAntesDespues = json[0].OTVALOR02;
+                    ivaRetenido = json[0].OTVALOR03;
+                    
+                    for(var i = 0; i < json.length; i++){
+                        if(json[i].AREAAUTO =="ME"){
+                            autAM = json[i].SWAUTORI;
+                            commAM = json[i].COMENTARIOS;
+                        }
+                        if(json[i].AREAAUTO =="RE"){
+                            autAR = json[i].SWAUTORI;
+                            commAR = json[i].COMENTARIOS;
+                        }
+                    }
+                }
+                /*REALIZAMOS LA ASIGNACIÓN DE LAS VARIABLES*/
+                panelInicialPral.down('[name="params.autrecla"]').setValue("S");
+                panelInicialPral.down('[name="params.autrecla"]').hide();
+                if(aplicaIVA == null){
+                    if(_tipoPago ==_TIPO_PAGO_INDEMNIZACION || _tipoPago == _TIPO_PAGO_REEMBOLSO){
+                        panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue("N");
+                    }else{
+                        panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue("S");
+                    }
+                }else{
+                    panelInicialPral.down('[name="parametros.pv_otvalor01"]').setValue(aplicaIVA);
+                }
+                if(ivaAntesDespues == null){
+                    panelInicialPral.down('[name="parametros.pv_otvalor02"]').setValue("D");
+                }else{
+                    panelInicialPral.down('[name="parametros.pv_otvalor02"]').setValue(ivaAntesDespues);
+                }
+                if(ivaRetenido == null){
+                    panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue("N");
+                }else{
+                    panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue(ivaRetenido);
+                }
+                
+                if(commAR == null){
+                    panelInicialPral.down('[name="params.commenar"]').setValue(null);
+                }else{
+                    panelInicialPral.down('[name="params.commenar"]').setValue(commAR);
+                }
+                if(autAM == null){
+                    panelInicialPral.down('[name="params.autmedic"]').setValue(null);
+                }else{
+                    panelInicialPral.down('[name="params.autmedic"]').setValue(autAM);
+                }
+                if(commAM == null){
+                    panelInicialPral.down('[name="params.commenme"]').setValue(null);
+                }else{
+                    panelInicialPral.down('[name="params.commenme"]').setValue(commAM);
+                }
+            }
+        },
+        failure : function (){
+            //me.up().up().setLoading(false);
+            Ext.Msg.show({
+                title:'Error',
+                msg: 'Error de comunicaci&oacute;n',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            });
+        }
+    });
+    
+    storeCobertura.proxy.extraParams= {
+        'params.ntramite':_11_recordActivo.get('ntramite')
+        ,'params.tipopago':_tipoPago
+        ,catalogo       : _CATALOGO_COB_X_VALORES
+    };
+    
+    storeCobertura.load({
+        params:{
+            'params.ntramite':_11_recordActivo.get('ntramite'),
+            'params.tipopago':_tipoPago
+        }
+    });
+    
+    panelInicialPral.down('[name=params.cdgarant]').setValue(_11_recordActivo.get('cdgarant'));
+    
+    storeSubcobertura.load({
+        params:{
+            'params.cdgarant' :_11_recordActivo.get('params.cdgarant')
+        }
+    });
+    panelInicialPral.down('combo[name=params.cdconval]').setValue(_11_recordActivo.get('cdconval'));
 }
     
 //26.- Obtenemos la Suma Asegurada para Gastos Medicos Mayores
