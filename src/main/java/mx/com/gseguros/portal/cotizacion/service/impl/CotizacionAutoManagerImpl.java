@@ -288,7 +288,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				if("AT".equals(cdtipsit) && tatri.getNameCdatribu().equals("34")){
 				    
 				    ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
-                    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
+				    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
                     {
                         tatri.setOculto(true);
                         tatri.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
@@ -2395,7 +2395,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				if (StringUtils.isBlank(cdpersonCli) && StringUtils.isNotBlank(cdideperCli)) {
 					logger.debug("Persona proveniente de WS, Se importar�, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
 					
-					
 					logger.debug("<<<>>> Verificando que no se haya insertado el cliente anteriormente... ");
 	    			boolean personaNueva =  true;
 	    			String  newCdPerson   = null;
@@ -2561,14 +2560,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				    				null, null, null, null, null, 
 				    				null, null, null, null, null,
 				    				cli.getFaxCli(), cli.getCelularCli());
-				    			
+	
 							}
 						}
-	    			}
-	    			cdpersonCli = newCdPerson;
-	    			nmorddomCli = "1";
+					
+					}
+		    		cdpersonCli = newCdPerson;
+		    		nmorddomCli = "1";
 				}
-				
 				
 				if(!StringUtils.isBlank(cdpersonCli))
 				{
@@ -3858,7 +3857,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				
 				paso = "Recuperando tramite";
-				logger.debug("Recuperando tramite cargarTramitesPorParametrosVariables");
 				List<Map<String,String>>tramites = mesaControlDAO.cargarTramitesPorParametrosVariables(
 						TipoTramite.POLIZA_NUEVA.getCdtiptra()
 						,null     //ntramite
@@ -3877,7 +3875,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				{
 					ntramite     = tramites.get(0).get("NTRAMITE");
 					sworigenmesa = tramites.get(0).get("SWORIGENMESA");
-					logger.debug("un solo tramite "+ntramite + sworigenmesa);
 				}
 				
 			}
@@ -3927,16 +3924,15 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			 */
 			if ("M".equals(estado)) { // Emitidas para clonar
 				// Estas pasan bien
-			} 
-			else if (StringUtils.isBlank(ntramite)) 
-			{// Normales sin tramite
+			} else if (StringUtils.isBlank(ntramite)) { // Normales sin tramite
 				if (
 					StringUtils.isNotBlank(ntramiteLigado) &&
 					!"0".equals(ntramiteLigado) &&
-					(StringUtils.isBlank(ntramiteIn) || !ntramiteIn.equals(ntramiteLigado))
-				) 
-				{ // Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual
-					logger.debug("Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual");
+					(
+						StringUtils.isBlank(ntramiteIn) ||
+						!ntramiteIn.equals(ntramiteLigado)
+					)
+				) { // Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual
 					String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ",ntramiteLigado);
 					
 					Map<String, String> tramite = siniestrosDAO.obtenerTramiteCompleto(ntramiteLigado);

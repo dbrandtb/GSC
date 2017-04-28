@@ -44,8 +44,8 @@ var _p30_urlOtValorSubtiposCr = '<s:url namespace="/emision"         action="obt
 var MontoMaximo = 0;
 var MontoMinimo = 0;
 
-var _p30_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p30_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
 var _p30_descuento = false;
@@ -4143,7 +4143,7 @@ function _p30_cotizar(sinTarificar)
         datosIncompletos();
     }
 	_p30_defBoton(valido, sinTarificar);
-    
+	
     debug('<_p30_cotizar');
 }
 
@@ -4516,21 +4516,23 @@ function _p30_detalles()
 			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
 			                }
 			               	
-			                nuevoElementoTotal = {
-			                        COBERTURA: 'Total por Inciso'
-			                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
-			                       ,ORDEN      :  '999'
-			                       ,TITULO     :  json.slist1[j].TITULO
-			                       ,CDRAMO     :  json.slist1[j].CDRAMO
-			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
-			                       ,ESTADO     :  json.slist1[j].ESTADO
-			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
-			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
-			                       }
+			               	
+				                nuevoElementoTotal = {
+				                        COBERTURA: 'Total por Inciso'
+				                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
+				                       ,ORDEN      :  '999'
+				                       ,TITULO     :  json.slist1[j].TITULO
+				                       ,CDRAMO     :  json.slist1[j].CDRAMO
+				                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
+				                       ,ESTADO     :  json.slist1[j].ESTADO
+				                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
+				                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
+				                       }
 			               	
 			               	json.slist1.push(nuevoElementoCoberturas);
 			                json.slist1.push(nuevoElementoGlobales);
-			                json.slist1.push(nuevoElementoTotal);
+			                
+			                	json.slist1.push(nuevoElementoTotal);
 			               	
 			               	totalCoberturas = 0;
 			                totalGlobales = 0;
@@ -6902,7 +6904,6 @@ function _p30_manejoDatosPaneles(sinTarificar)
     debug('recordsCdtipsit:',recordsCdtipsit);
     _p30_obtieneSubCR(sinTarificar,recordsCdtipsit);
 }
-
 function _p30_obtieneSubCR(sinTarificar,recordsCdtipsit)
 {
 	try
@@ -6931,14 +6932,12 @@ function _p30_obtieneSubCR(sinTarificar,recordsCdtipsit)
         _p30_cotizarBody(sinTarificar,recordsCdtipsit,valoresOtUtil);
    }
 }
-
 function  _p30_seteoSubCR(sinTarificar,recordsCdtipsit,valoresOtUtil)
 {
 	if(Ext.isEmpty(valoresOtUtil))
 	{
 		_p30_cotizarBody(sinTarificar,recordsCdtipsit);
     }
-	
 	try
 	{
 		var d=0;var a=0;
@@ -6961,7 +6960,7 @@ function  _p30_seteoSubCR(sinTarificar,recordsCdtipsit,valoresOtUtil)
 							debug('Encontrado subtipo CR en el inciso #',(d+1),' para otvalor ',valoresOtUtil[prop],' a colocar del tipo ',cdtipsit,' su ',entry);
 							var valor = recordTvalosit.get('parametros.pv_otvalor'+valoresOtUtil[prop]);//Valor CR
 		                    var base  = recordBase.get(entry);//Valor subtipoCR 
-		                    if(Ext.isEmpty(valor)&&!Ext.isEmpty(base)&&valoresOtUtil[prop]!='999')
+		                    if(Ext.isEmpty(valor)&&!Ext.isEmpty(base)&& valoresOtUtil[prop]!='999')
 		                    {
 		                    	_p30_store.data.items[d].data['parametros.pv_otvalor'+valoresOtUtil[prop]]=base;
 		                    	debug('Se ha seteado correctamente el valor:', base ,'en el inciso', 'parametros.pv_otvalor',valoresOtUtil[prop]);
@@ -6988,307 +6987,307 @@ function  _p30_seteoSubCR(sinTarificar,recordsCdtipsit,valoresOtUtil)
         debugError(e);
    }
 }
-
 function _p30_cotizarBody(sinTarificar,recordsCdtipsit)
 {
 	var form = _fieldById('_p30_form');
-    //copiar paneles a oculto
-    var arr = Ext.ComponentQuery.query('#_p30_gridTarifas');
-    if(arr.length>0)
-    {
-        var formDescuentoActual = _fieldById('_p30_formDescuento');
-        var formCesion          = _fieldById('_p30_formCesion');
-        var recordPaneles       = new _p30_modelo(formDescuentoActual.getValues());
-        var itemsCesion         = Ext.ComponentQuery.query('[fieldLabel]',formCesion);
-        for(var i=0;i<itemsCesion.length;i++)
+        
+        //copiar paneles a oculto
+        var arr = Ext.ComponentQuery.query('#_p30_gridTarifas');
+        if(arr.length>0)
         {
-            recordPaneles.set(itemsCesion[i].getName(),itemsCesion[i].getValue());
+            var formDescuentoActual = _fieldById('_p30_formDescuento');
+            var formCesion          = _fieldById('_p30_formCesion');
+            var recordPaneles       = new _p30_modelo(formDescuentoActual.getValues());
+            var itemsCesion         = Ext.ComponentQuery.query('[fieldLabel]',formCesion);
+            for(var i=0;i<itemsCesion.length;i++)
+            {
+                recordPaneles.set(itemsCesion[i].getName(),itemsCesion[i].getValue());
+            }
+            form.formOculto.loadRecord(recordPaneles);
+            debug('form.formOculto.getValues():',form.formOculto.getValues());
         }
-        form.formOculto.loadRecord(recordPaneles);
-        debug('form.formOculto.getValues():',form.formOculto.getValues());
-    }
-    debug('length:',_p30_paneles.length,'type:',typeof _p30_paneles);
     
-    var storeTvalosit = Ext.create('Ext.data.Store',
-    {
-        model : '_p30_modelo'
-    });
-    
- 	var formValuesAux = form.getValues();
- 	var formValues    = {};
- 	for(var prop in formValuesAux)
- 	{
-        if(prop+'x'!='x' &&prop.slice(0,5)=='param')
-       {
-            formValues[prop]=formValuesAux[prop];
-       }
- 	}
- 	debug('formValues:',formValues);
- 	var valuesFormOculto = form.formOculto.getValues();
- 	debug('valuesFormOculto:',valuesFormOculto);
-	
-    _p30_store.each(function(record)
-    {
-        var cdtipsit       = record.cdtipsit_panel || record.get('cdtipsit');
-        var cdtipsitPanel  = _p30_smap1['destino_'+cdtipsit];
-        var recordBase     = recordsCdtipsit[cdtipsitPanel];
-        var recordTvalosit = new _p30_modelo(record.data);
-
-        if(cdtipsitPanel==cdtipsit)
+        debug('length:',_p30_paneles.length,'type:',typeof _p30_paneles);
+        
+        var storeTvalosit = Ext.create('Ext.data.Store',
         {
+            model : '_p30_modelo'
+        });
+        var formValuesAux = form.getValues();
+        var formValues    = {};
+        for(var prop in formValuesAux)
+        {
+        if(prop+'x'!='x' &&prop.slice(0,5)=='param')
+            {
+                formValues[prop]=formValuesAux[prop];
+            }
+        }
+        debug('formValues:',formValues);
+        var valuesFormOculto = form.formOculto.getValues();
+        debug('valuesFormOculto:',valuesFormOculto);
+        _p30_store.each(function(record)
+        {
+            var cdtipsit       = record.cdtipsit_panel || record.get('cdtipsit');
+            var cdtipsitPanel  = _p30_smap1['destino_'+cdtipsit];
+            var recordBase     = recordsCdtipsit[cdtipsitPanel];
+            var recordTvalosit = new _p30_modelo(record.data);
+
+            if(cdtipsitPanel==cdtipsit)
+            {
         	if(Ext.isEmpty(record.cdtipsit_panel))
         	{
-	           for(var prop in recordTvalosit.getData())
-	           {
+                for(var prop in recordTvalosit.getData())
+                {
 	     		   var valor = recordTvalosit.get(prop);
-	               var base  = recordBase.get(prop);
+                    var base  = recordBase.get(prop);
 	               if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
-	               {
+                    {
 	               	recordTvalosit.set(prop,base);
-	               }
-	           }
+                    }
+                }
+
         	}	
-        }
-        else
-        {
-            for(var prop in recordTvalosit.getData())
-            {
-                var base = recordBase.get(prop);
-                debug('base:',base);
-                
-                var valorValosit = recordTvalosit.get(prop);
-                debug('valorValosit:',valorValosit);
-                
-                var cmpPanel = _p30_paneles[cdtipsitPanel].down('[name='+prop+']');
-                debug('cmpPanel:',cmpPanel,'.');
-                if(!Ext.isEmpty(cmpPanel))
-                {
-                    if(cmpPanel.auxiliar=='adicional'
-                        &&Ext.isEmpty(valorValosit)
-                        &&!Ext.isEmpty(base)
-                    )
-                    {
-                        debug('set normal, porque es adicional');
-                        recordTvalosit.set(prop,base);
-                    }
-                    else
-                    {
-                        var cmpPanelLabel = cmpPanel.fieldLabel;
-                        debug('cmpPanelLabel:',cmpPanelLabel,'.');
-                        var cmpByLabel = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*='+_substringComa(cmpPanelLabel)+']');
-                        if(!Ext.isEmpty(cmpByLabel))
-                        {
-                            var nameByLabel = cmpByLabel.name;
-                            var valor       = recordTvalosit.get(nameByLabel);
-                            debug('valor:',valor);
-                            if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
-                            {
-                                recordTvalosit.set(nameByLabel,base);
-                            }
-                        }
-                    }
-                }
             }
-        }
-        
-        if(_p30_smap1.mapeo=='DIRECTO')
-        {
-            for(var prop in formValues)
+            else
             {
-                recordTvalosit.set(prop,formValues[prop]);
-            }
-            for(var att in valuesFormOculto)
-            {
-                var valorOculto  = valuesFormOculto[att];
-                var valorValosit = recordTvalosit.get(att);
-                if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                for(var prop in recordTvalosit.getData())
                 {
-                    recordTvalosit.set(att,valorOculto);
-                }
-            }
-        }
-        else
-        {
-            var mapeos = _p30_smap1.mapeo.split('#');
-            debug('mapeos:',mapeos);
-            for(var i in mapeos)
-            {
-                var cdtipsitsMapeo = mapeos[i].split('|')[0];
-                var mapeo          = mapeos[i].split('|')[1];
-                debug('cdtipsit:',cdtipsit,'cdtipsitsMapeo:',cdtipsitsMapeo);
-                if((','+cdtipsitsMapeo+',').lastIndexOf(','+cdtipsit+',')!=-1)
-                {
-                    debug('coincidente:',cdtipsitsMapeo,'cdtipsit:',cdtipsit)
-                    debug('mapeo:',mapeo);
-                    if(mapeo=='DIRECTO')
+                    var base = recordBase.get(prop);
+                    debug('base:',base);
+                    
+                    var valorValosit = recordTvalosit.get(prop);
+                    debug('valorValosit:',valorValosit);
+                    
+                    var cmpPanel = _p30_paneles[cdtipsitPanel].down('[name='+prop+']');
+                    debug('cmpPanel:',cmpPanel,'.');
+                    if(!Ext.isEmpty(cmpPanel))
                     {
-                        debug('directo');
-                        for(var prop in formValues)
+                        if(cmpPanel.auxiliar=='adicional'
+                            &&Ext.isEmpty(valorValosit)
+                            &&!Ext.isEmpty(base)
+                        )
                         {
-                            recordTvalosit.set(prop,formValues[prop]);
+                            debug('set normal, porque es adicional');
+                            recordTvalosit.set(prop,base);
                         }
-                        for(var att in valuesFormOculto)
+                        else
                         {
-                            var valorOculto  = valuesFormOculto[att];
-                            var valorValosit = recordTvalosit.get(att);
-                            if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                            var cmpPanelLabel = cmpPanel.fieldLabel;
+                            debug('cmpPanelLabel:',cmpPanelLabel,'.');
+                            var cmpByLabel = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*='+_substringComa(cmpPanelLabel)+']');
+                            if(!Ext.isEmpty(cmpByLabel))
                             {
-                                recordTvalosit.set(att,valorOculto);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var atributos = mapeo.split('@');
-                        debug('atributos:',atributos);
-                        for(var i in atributos)
-                        {
-                            var atributoIte = atributos[i];
-                            var modelo      = atributoIte.split(',')[0];
-                            var origen      = atributoIte.split(',')[1];
-                            var pantalla    = atributoIte.split(',')[2];
-                            
-                            modelo   = 'parametros.pv_otvalor'+(('x00'+modelo)  .slice(-2));
-                            pantalla = 'parametros.pv_otvalor'+(('x00'+pantalla).slice(-2));
-                            
-                            debug('modelo:'   , modelo   , '.');
-                            debug('origen:'   , origen   , '.');
-                            debug('pantalla:' , pantalla , '.');
-                            
-                            if(origen=='F')
-                            {
-                                recordTvalosit.set(modelo,formValues[pantalla]);
-                            }
-                            else if(origen=='O')
-                            {
-                                var valorOculto  = valuesFormOculto[pantalla];
-                                var valorValosit = recordTvalosit.get(modelo);
-                                if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                                var nameByLabel = cmpByLabel.name;
+                                var valor       = recordTvalosit.get(nameByLabel);
+                                debug('valor:',valor);
+                                if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
                                 {
-                                    recordTvalosit.set(modelo,valorOculto);
+                                    recordTvalosit.set(nameByLabel,base);
                                 }
                             }
                         }
                     }
                 }
             }
-        }
+            
+            if(_p30_smap1.mapeo=='DIRECTO')
+            {
+                for(var prop in formValues)
+                {
+                    recordTvalosit.set(prop,formValues[prop]);
+                }
+                for(var att in valuesFormOculto)
+                {
+                    var valorOculto  = valuesFormOculto[att];
+                    var valorValosit = recordTvalosit.get(att);
+                    if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                    {
+                        recordTvalosit.set(att,valorOculto);
+                    }
+                }
+            }
+            else
+            {
+                var mapeos = _p30_smap1.mapeo.split('#');
+                debug('mapeos:',mapeos);
+                for(var i in mapeos)
+                {
+                    var cdtipsitsMapeo = mapeos[i].split('|')[0];
+                    var mapeo          = mapeos[i].split('|')[1];
+                    debug('cdtipsit:',cdtipsit,'cdtipsitsMapeo:',cdtipsitsMapeo);
+                    if((','+cdtipsitsMapeo+',').lastIndexOf(','+cdtipsit+',')!=-1)
+                    {
+                        debug('coincidente:',cdtipsitsMapeo,'cdtipsit:',cdtipsit)
+                        debug('mapeo:',mapeo);
+                        if(mapeo=='DIRECTO')
+                        {
+                            debug('directo');
+                            for(var prop in formValues)
+                            {
+                                recordTvalosit.set(prop,formValues[prop]);
+                            }
+                            for(var att in valuesFormOculto)
+                            {
+                                var valorOculto  = valuesFormOculto[att];
+                                var valorValosit = recordTvalosit.get(att);
+                                if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                                {
+                                    recordTvalosit.set(att,valorOculto);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var atributos = mapeo.split('@');
+                            debug('atributos:',atributos);
+                            for(var i in atributos)
+                            {
+                                var atributoIte = atributos[i];
+                                var modelo      = atributoIte.split(',')[0];
+                                var origen      = atributoIte.split(',')[1];
+                                var pantalla    = atributoIte.split(',')[2];
+                                
+                                modelo   = 'parametros.pv_otvalor'+(('x00'+modelo)  .slice(-2));
+                                pantalla = 'parametros.pv_otvalor'+(('x00'+pantalla).slice(-2));
+                                
+                                debug('modelo:'   , modelo   , '.');
+                                debug('origen:'   , origen   , '.');
+                                debug('pantalla:' , pantalla , '.');
+                                
+                                if(origen=='F')
+                                {
+                                    recordTvalosit.set(modelo,formValues[pantalla]);
+                                }
+                                else if(origen=='O')
+                                {
+                                    var valorOculto  = valuesFormOculto[pantalla];
+                                    var valorValosit = recordTvalosit.get(modelo);
+                                    if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                                    {
+                                        recordTvalosit.set(modelo,valorOculto);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            storeTvalosit.add(recordTvalosit);
+            debug('record:',record.data,'tvalosit:',recordTvalosit.data);
+        });
+        debug('_p30_store:',_p30_store);
+        debug('storeTvalosit:',storeTvalosit);
         
-        storeTvalosit.add(recordTvalosit);
-        debug('record:',record.data,'tvalosit:',recordTvalosit.data);
-    });
-    debug('_p30_store:',_p30_store);
-    debug('storeTvalosit:',storeTvalosit);
-    
-    var json =
-    {
-        smap1 :
+        var json =
         {
-            cdunieco     : _p30_smap1.cdunieco
-            ,cdramo      : _p30_smap1.cdramo
-            ,estado      : 'W'
-            ,nmpoliza    : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
-            ,cdtipsit    : _p30_smap1.cdtipsit
-            ,cdpersonCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
-            ,nmorddomCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.NMORDDOM
-            ,cdideperCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
-            ,feini       : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
-            ,fefin       : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
-            ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
-            ,notarificar : !Ext.isEmpty(sinTarificar)&&sinTarificar==true? 'si':'no'
-            ,tipoflot    : _p30_smap1.tipoflot
-            ,modPrim     : sinTarificar == false || sinTarificar== true ? "" : sinTarificar
-            ,licencias   : _p30_smap1.cdtipsit2 ? 'S':'N'
-        }
-        ,slist1 : []
-        ,slist2 : []
-        ,slist3 : []
-        ,flujo  : !Ext.isEmpty(_p30_flujo) ?_p30_flujo :null
-    };
-    
-    for(var cdtipsitPanel in recordsCdtipsit)
-    {
-        try{
-            if(_p30_smap1.turistas=='S'){
-                if(recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25'] instanceof Array ){
-                    recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25']=recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25'][0]
-                }
+            smap1 :
+            {
+                cdunieco     : _p30_smap1.cdunieco
+                ,cdramo      : _p30_smap1.cdramo
+                ,estado      : 'W'
+                ,nmpoliza    : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+                ,cdtipsit    : _p30_smap1.cdtipsit
+                ,cdpersonCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
+                ,nmorddomCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.NMORDDOM
+                ,cdideperCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
+                ,feini       : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
+                ,fefin       : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
+                ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
+                ,notarificar : !Ext.isEmpty(sinTarificar)&&sinTarificar==true? 'si':'no'
+                ,tipoflot    : _p30_smap1.tipoflot
+                ,modPrim     : sinTarificar == false || sinTarificar== true ? "" : sinTarificar
+                ,licencias   : _p30_smap1.cdtipsit2 ? 'S':'N'
             }
-        }catch(e){
-            debugError(e)
-        }
-        json.slist3.push(recordsCdtipsit[cdtipsitPanel].data);
-    }
-    
-    var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
-    try{
-        if(_p30_smap1.turistas=='S'){
-            itemsTatripol.push(_fieldByName('aux.otvalor18',null,true));
-        }
-    }catch(e){
-        debugError(e);
-    }
-    debug('itemsTatripol:',itemsTatripol);
-    for(var i in itemsTatripol)
-    {
-        var tatri=itemsTatripol[i];
-        json.smap1['tvalopol_'+tatri.cdatribu]=tatri.getValue();
-    }
-    
-    _p30_store.each(function(record)
-    {
-        try{
-            if(_p30_smap1.turistas=='S'){
-                if(record.data['parametros.pv_otvalor25'] instanceof Array ){
-                    record.data['parametros.pv_otvalor25']=record.data['parametros.pv_otvalor25'][0]
+            ,slist1 : []
+            ,slist2 : []
+            ,slist3 : []
+            ,flujo  : !Ext.isEmpty(_p30_flujo) ?_p30_flujo :null
+        };
+        
+        for(var cdtipsitPanel in recordsCdtipsit)
+        {
+            try{
+                if(_p30_smap1.turistas=='S'){
+                    if(recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25'] instanceof Array ){
+                        recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25']=recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25'][0]
+                    }
                 }
+            }catch(e){
+                debugError(e)
             }
-        }catch(e){
-            debugError(e)
+            json.slist3.push(recordsCdtipsit[cdtipsitPanel].data);
         }
         
-        json.slist2.push(record.data);
-    });
-    
-    storeTvalosit.each(function(record)
-    {
+        var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
         try{
             if(_p30_smap1.turistas=='S'){
-                if(record.data['parametros.pv_otvalor25'] instanceof Array ){
-                    record.data['parametros.pv_otvalor25']=record.data['parametros.pv_otvalor25'][0]
-                }
+                itemsTatripol.push(_fieldByName('aux.otvalor18',null,true));
             }
         }catch(e){
-            debugError(e)
+            debugError(e);
         }
-        json.slist1.push(record.data);
-    });
-    
-    //crear record con los valores del formulario y el formulario oculto
-    debug('storeTvalosit.getAt(0).data:',storeTvalosit.getAt(0).data);
-    var recordTvalositPoliza=new _p30_modelo(storeTvalosit.getAt(0).data);
-    debug('recordTvalositPoliza:',recordTvalositPoliza.data);
-    recordTvalositPoliza.set('cdtipsit','XPOLX');
-    recordTvalositPoliza.set('nmsituac',-1);
-    for(var prop in formValues)
-    {
-        recordTvalositPoliza.set(prop,formValues[prop]);
-    }
-    for(var att in valuesFormOculto)
-    {
-        recordTvalositPoliza.set(att,valuesFormOculto[att]);
-    }
-    debug('recordTvalositPoliza final:',recordTvalositPoliza.data);
-    json.slist2.push(recordTvalositPoliza.data);
-    //crear record con los valores del formulario y el formulario oculto
-    
-    debug('>>> json a enviar:',json);
+        debug('itemsTatripol:',itemsTatripol);
+        for(var i in itemsTatripol)
+        {
+            var tatri=itemsTatripol[i];
+            json.smap1['tvalopol_'+tatri.cdatribu]=tatri.getValue();
+        }
+        
+        _p30_store.each(function(record)
+        {
+            try{
+                if(_p30_smap1.turistas=='S'){
+                    if(record.data['parametros.pv_otvalor25'] instanceof Array ){
+                        record.data['parametros.pv_otvalor25']=record.data['parametros.pv_otvalor25'][0]
+                    }
+                }
+            }catch(e){
+                debugError(e)
+            }
+            
+            json.slist2.push(record.data);
+        });
+        
+        storeTvalosit.each(function(record)
+        {
+            try{
+                if(_p30_smap1.turistas=='S'){
+                    if(record.data['parametros.pv_otvalor25'] instanceof Array ){
+                        record.data['parametros.pv_otvalor25']=record.data['parametros.pv_otvalor25'][0]
+                    }
+                }
+            }catch(e){
+                debugError(e)
+            }
+            json.slist1.push(record.data);
+        });
+        
+        //crear record con los valores del formulario y el formulario oculto
+        debug('storeTvalosit.getAt(0).data:',storeTvalosit.getAt(0).data);
+        var recordTvalositPoliza=new _p30_modelo(storeTvalosit.getAt(0).data);
+        debug('recordTvalositPoliza:',recordTvalositPoliza.data);
+        recordTvalositPoliza.set('cdtipsit','XPOLX');
+        recordTvalositPoliza.set('nmsituac',-1);
+        for(var prop in formValues)
+        {
+            recordTvalositPoliza.set(prop,formValues[prop]);
+        }
+        for(var att in valuesFormOculto)
+        {
+            recordTvalositPoliza.set(att,valuesFormOculto[att]);
+        }
+        debug('recordTvalositPoliza final:',recordTvalositPoliza.data);
+        json.slist2.push(recordTvalositPoliza.data);
+        //crear record con los valores del formulario y el formulario oculto
+        
+        debug('>>> json a enviar:',json);
     _p30_cotizacionFinal(sinTarificar,json,form);
 }
 
 function _p30_cotizacionFinal(sinTarificar,json,form)
 {
-	var panelpri = _fieldById('_p30_panelpri');
+        var panelpri = _fieldById('_p30_panelpri');
         panelpri.setLoading(true);
         Ext.Ajax.request(
         {
