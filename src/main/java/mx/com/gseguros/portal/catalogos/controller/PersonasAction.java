@@ -218,7 +218,10 @@ public class PersonasAction extends PrincipalCoreAction
 				    	}
 				    	agregar.put("DIRECCIONCLI", cli.getCalleCli()+" "+(StringUtils.isNotBlank(cli.getNumeroCli())?cli.getNumeroCli():"")+(StringUtils.isNotBlank(cli.getCodposCli())?" C.P. "+cli.getCodposCli():"")+" "+cli.getColoniaCli()+" "+cli.getMunicipioCli());
 				    	
-				    	agregar.put("NOMBRE_COMPLETO", cli.getRfcCli()+" - "+ ((cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc()) + " - " + agregar.get("DIRECCIONCLI"));
+				    	agregar.put("NOMBRE_COMPLETO", cli.getRfcCli()+" - "+ ((cli.getFismorCli() == 1) ? (cli.getNombreCli()+" "+cli.getApellidopCli()+" "+cli.getApellidomCli()) : cli.getRazSoc()) + " - " + agregar.get("DIRECCIONCLI")
+				    				+""+	(StringUtils.isNotBlank(agregar.get("CDIDEPER"))?	" - "+agregar.get("CDIDEPER")		:"")
+				    				+""+	(StringUtils.isNotBlank(agregar.get("CDIDEEXT"))?	" - "+agregar.get("CDIDEEXT")		:"")
+				    			);
 				    	
 				    	agregar.put("CODPOSTAL", cli.getCodposCli());
 				    	String edoAdosPos = Integer.toString(cli.getEstadoCli());
