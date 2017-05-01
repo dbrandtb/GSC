@@ -1024,4 +1024,6 @@ public interface CotizacionDAO {
 
 	public List<Map<String, String>> cargarResultadosCotizacionLicenciaFlotilla(String cdunieco, String cdramo, String estado,
 			String nmpoliza) throws Exception;
+	
+	public void actualizaTramiteOVA(String ntramite	,String nmsolici)throws Exception;
 }

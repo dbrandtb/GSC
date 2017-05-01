@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,6 +37,8 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
+import mx.com.gseguros.externo.service.StoredProceduresManager;
+import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.HttpUtil;
@@ -62,6 +65,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     private String                   excelFileName    = null;
     private String                   excelContentType = null;
     private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+    //private StoredProceduresManager           storedProceduresManager;
+    
+    
+    @Autowired
+    private StoredProceduresManager storedProceduresManager;
+    
     
     @Autowired
     private ConsultasManager consultasManager;
@@ -365,6 +374,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 smap1.put("cdunieco", flujo.getCdunieco());
                 logger.debug("Nuevo valor de smap1.cdunieco: {}", smap1.get("cdunieco"));
             }
+			
             String cdunieco = smap1.get("cdunieco")
                    ,cdramo   = smap1.get("cdramo")
                    ,cdtipsit = smap1.get("cdtipsit")
@@ -381,6 +391,38 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                     ,ntramite , "No se recibi\u00f3 el numero de tramite"
                     );
             
+            //REQ0033 antes de este punto debo consultar nuevamente la cotizacion para saber si fue generada por la OVA o por la mesa
+            //si la cotizacion es consultada desde la mesa, debo asociarla al numero de tramite generado en la mesa
+			logger.debug("**** mostrando datos de tramite recuperado para poder aplicar o eliminar validaciones ****");
+			logger.debug("NTRAMITE ORIGINAL" + ntramite);
+			logger.debug("NMPOLIZA " + nmpoliza);
+            
+            LinkedHashMap<String,Object>paramsValidaCargarCotizacion=new LinkedHashMap<String,Object>();
+			paramsValidaCargarCotizacion.put("param1" , cdramo);
+			paramsValidaCargarCotizacion.put("param2" , cdtipsit);
+			paramsValidaCargarCotizacion.put("param3" , nmpoliza);
+			Map<String,String>datosParaComplementar=storedProceduresManager.procedureMapCall(ObjetoBD.VALIDA_CARGAR_COTIZACION.getNombre(), paramsValidaCargarCotizacion, null);
+			
+			//req0033 utilizar cotizaciones de la OVA
+			logger.debug("**** imprimiendo2 datos de tramite de la cotizacion recuperado para poder aplicar o eliminar validaciones ****");
+			String tramiteCot = datosParaComplementar.get("NTRAMITE");
+			logger.debug("NTRAMITE " + tramiteCot);
+			logger.debug("SWORIGENMESA " + datosParaComplementar.get("SWORIGENMESA"));
+			logger.debug(datosParaComplementar.get("LIGADA"));
+			logger.debug("NTRAMITE_LIGADO " + datosParaComplementar.get("NTRAMITE_LIGADO"));
+			logger.debug("CDUNIECO " + datosParaComplementar.get("CDUNIECO"));
+			logger.debug("CDRAMO " + datosParaComplementar.get("CDRAMO"));
+			logger.debug("ESTADO " + datosParaComplementar.get("ESTADO"));
+			logger.debug("NMPOLIZA " + datosParaComplementar.get("NMPOLIZA"));
+            
+			if (!ntramite.equals(tramiteCot)){
+				//ntramite = tramiteCot;
+				//actualizo en BD el numero de tramite a la cotizacion OVA
+				logger.debug("actualizo en BD el numero de tramite a la cotizacion OVA y coloco:"+ntramite);
+				cotizacionManager.actualizaTramiteOVA(ntramite, nmpoliza);
+			}
+			
+            //continua flujo normal
             String cdusuari  = usuario.getUser()
                    ,cdsisrol = usuario.getRolActivo().getClave();
             
