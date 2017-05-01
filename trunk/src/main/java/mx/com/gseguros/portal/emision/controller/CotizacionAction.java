@@ -2790,7 +2790,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					 * 
 					 * 
 					 */
-					if(datosParaComplementar.containsKey("ESTADO") &&datosParaComplementar.containsKey("NMPOLIZA"))//para clonar emitidas
+					if(datosParaComplementar.containsKey("ESTADO") && datosParaComplementar.containsKey("NMPOLIZA"))//para clonar emitidas
 					{
 						cdunieco = datosParaComplementar.get("CDUNIECO");
 						estado   = datosParaComplementar.get("ESTADO");
@@ -2880,7 +2880,10 @@ public class CotizacionAction extends PrincipalCoreAction
 									throw new ApplicationException(error);
 								}
 								
-								
+								//seteo el nmtramiteIn de la mesa al nmtramiteCot
+								ntramiteCot=ntramiteIn; //para que al complementar quede asociado el tramite de la mesa
+								datosParaComplementar.put("NTRAMITE", ntramiteCot);
+								//verificar si puedo indicar que la cot viene de OVA y el tramite de la mesa para no tener que repetir la consulta en CotizacionAutoAction
 							}
 							
 						}

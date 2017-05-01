@@ -9352,4 +9352,38 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
             compile();
     	}
     }
+    
+    @Override
+	public void actualizaTramiteOVA(
+			String ntramite
+			,String nmsolici
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("nmsolici" , nmsolici);
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n************************************************")
+				.append("\n****** PKG_COTIZA.P_ACTUALIZA_TRAMITE_OVA ******")
+				.append("\n****** params=").append(params)
+				.append("\n************************************************")
+				.toString()
+				);
+		ejecutaSP(new ActualizaTramiteOVA(getDataSource()), params);
+	}
+	
+	protected class ActualizaTramiteOVA extends StoredProcedure
+	{
+		protected ActualizaTramiteOVA(DataSource dataSource)
+		{
+			super(dataSource,"PKG_COTIZA.P_ACTUALIZA_TRAMITE_OVA");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsolici" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

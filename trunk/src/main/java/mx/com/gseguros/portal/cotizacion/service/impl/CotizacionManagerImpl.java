@@ -11811,6 +11811,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 		return listaSubTipCR;
 	}
 	
+	@Override
+	public void actualizaTramiteOVA(String ntramite	,String nmsolici)throws Exception{
+		this.cotizacionDAO.actualizaTramiteOVA(ntramite, nmsolici);
+	}
+	
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////
