@@ -64,13 +64,10 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     private File                     excel            = null;
     private String                   excelFileName    = null;
     private String                   excelContentType = null;
-    private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
-    //private StoredProceduresManager           storedProceduresManager;
-    
+    private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");    
     
     @Autowired
     private StoredProceduresManager storedProceduresManager;
-    
     
     @Autowired
     private ConsultasManager consultasManager;

@@ -2769,8 +2769,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				/*
 				 * cuando se encuentra cdunieco y ntramite para esa cotizacion y no es auto:
 				 */
-				if(tipoSituacion.get("SITUACION").equals("PERSONA")
-						&&datosParaComplementar.containsKey("NTRAMITE"))
+				if(tipoSituacion.get("SITUACION").equals("PERSONA") && datosParaComplementar.containsKey("NTRAMITE"))
 				{
 					throw new ApplicationException("La cotizaci\u00f3n ya se encuentra en tr\u00e1mite de emisi\u00f3n");
 				}
@@ -2828,9 +2827,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						cdunieco = datosParaComplementar.get("CDUNIECO_RECUPERADO");
 						smap1.put("CDUNIECO" , cdunieco);
 					}
-					else if(datosParaComplementar.containsKey("NTRAMITE")
-							&&datosParaComplementar.containsKey("CDUNIECO")
-							)//para complementar/clonar tramite
+					else if(datosParaComplementar.containsKey("NTRAMITE") && datosParaComplementar.containsKey("CDUNIECO"))//para complementar/clonar tramite
 					{
 						logger.debug("****************** para complementar/clonar tramite");
 						String ntramiteCot = datosParaComplementar.get("NTRAMITE");
