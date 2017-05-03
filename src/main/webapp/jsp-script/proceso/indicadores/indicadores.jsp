@@ -71,6 +71,11 @@
 		
 		Ext.onReady(function() {
 			
+			//Contingencia para aumentar timeot de consultas por error en produccion
+			Ext.Ajax.timeout = 3*60*60*1000; // 1 hora
+	    	Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+	    	Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
+	    	Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
 			
 		    ////// modelos //////
 		    
