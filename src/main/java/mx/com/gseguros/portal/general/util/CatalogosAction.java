@@ -176,13 +176,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ZONAS_SUCURSALES:
 				case NIVELES_SUCURSALES:
 				case TAPOYO:
-				case TESPECIALIDADES:
-				case ZONASHOSPITALARIA:
 					lista = catalogosManager.getTmanteni(cat);
-	                break;
-				case TIPOEVENTOGNP:
-					lista = catalogosManager.getTmanteni(cat);
-					logger.debug("Valor de la lista TIPOEVENTOGNP :"+lista);
 	                break;
 				case CVECOLUMNA:
 					lista = catalogosManager.obtieneAtributosExcel(cat);
@@ -400,16 +394,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case SUBCOBERTURAS4MSC:
 					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("MSC");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
-				case SUBCOBERTURASGMPI:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPI");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
-				case SUBCOBERTURASGMPC:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPC");
 					logger.debug("Valor de lista==>"+lista.size());
 					logger.debug(lista);
 					break;
@@ -1069,9 +1053,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				        lista = catalogosManager.recuperarTiposEndosoPorTramite(params.get("ntramite"));
 				    }
 				    break;
-				case TIPOPROVEEDOR:
-					lista = siniestrosManager.getConsultaListaTiposProveedores();
-					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
