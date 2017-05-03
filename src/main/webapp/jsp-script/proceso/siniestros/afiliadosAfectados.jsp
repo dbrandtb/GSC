@@ -87,7 +87,7 @@
 			var _URL_GENERAR_CALCULO					= '<s:url namespace="/siniestros" 		action="generarCalculoSiniestros" />';
 			var _URL_CONCEPTOSASEG						= '<s:url namespace="/siniestros" 		action="obtenerMsinival" />';
 			var _URL_LISTADO_ASEGURADO          		= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
-			var _URL_CONSULTA_LISTADO_POLIZA			= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
+			var _URL_CONSULTA_LISTADO_POLIZA			= '<s:url namespace="/siniestros" 		action="consultaListaPolizaFeOcu" />';//(EGS) cambiamos consultaListaPoliza
 			var _URL_ASOCIA_MSINEST_REFERENCIADO    	= '<s:url namespace="/siniestros"      	action="asociaMsiniestroReferenciado" />';
 			var _URL_ACTUALIZA_INFO_GRAL_SIN       		= '<s:url namespace="/siniestros"      	action="actualizaDatosGeneralesSiniestro" />';
 			var _URL_GUARDA_CONCEPTO_TRAMITE			= '<s:url namespace="/siniestros"  		action="guardarMsinival"/>';
@@ -3622,15 +3622,17 @@
 								
 								'select' : function(combo, record) {
 									var params = {'params.cdperson' : this.getValue(),
-												  'params.cdramo' : _11_params.CDRAMO };
-									
+												  'params.cdramo' : _11_params.CDRAMO,
+												  'params.fe_ocurre' : panelListadoAsegurado.form.getValues().dtfechaOcurrencias	//(EGS)
+												  };
 									cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
 										if(success){
 											var jsonResponse = Ext.decode(response.responseText);
 											if(jsonResponse.listaPoliza == null) {
 												Ext.Msg.show({
 													title: 'Aviso',
-													msg: 'No existen p&oacute;lizas para el asegurado elegido.',
+					                                //msg: 'No existen p&oacute;lizas para el asegurado elegido.', (EGS)
+					                                msg: 'La fecha de ocurrencia del siniestro, no coincide con alguna p&oacute;liza del asegurado',	// (EGS)
 													buttons: Ext.Msg.OK,
 													icon: Ext.Msg.WARNING
 												});

@@ -446,6 +446,16 @@
 			</result>
 		</action>
 		
+		<action name="consultaListaPolizaFeOcu" class="siniestrosAction" method="consultaListaPolizaFeOcu">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaPoliza.*,
+					success
+				</param>
+			</result>
+		</action>
+
 		<action name="consultaListaAsegurado" class="siniestrosAction" method="consultaListaAsegurado">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
@@ -1525,6 +1535,7 @@
                 </param>
             </result>
         </action>
+
     </package>
 
 </struts>

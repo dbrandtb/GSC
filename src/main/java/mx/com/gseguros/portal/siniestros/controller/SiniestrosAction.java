@@ -667,6 +667,29 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	}
 	
 	/**
+	 * Método obtiene lista de pólizas del afiliado, tomando en cuenta la fecha de ocurrencia
+	 * @return PolizaVigenteVO
+	 * (EGS) - agregamos método por requerimiento mostrar sólo la(s) poliza(s) que vigencia coincida con fecha de ocurrencia
+	 */
+	public String consultaListaPolizaFeOcu(){
+		logger.debug("Entra a consultaListaPolizaFeOcu params de entrada : {}" , params);
+		try{
+			String feOcurre = params.get("fe_ocurre").length() == 10 ? params.get("fe_ocurre") : params.get("fe_ocurre").substring(8,10) + "/" + params.get("fe_ocurre").substring(5,7) + "/" + params.get("fe_ocurre").substring(0,4);
+			logger.debug("feOcurre", feOcurre);
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"), params.get("cdramo"), usuario.getRolActivo().getClave(), feOcurre);	//(EGS) se agrega parametro feOcurre
+			if(lista!= null && !lista.isEmpty())
+					listaPoliza = lista;
+			logger.debug("listaPoliza" + listaPoliza);
+		}catch(Exception e){
+			logger.error("Error al obtener listado de poliza : {}", e.getMessage(),e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	/**
 	* Funcion que obtiene la lista del asegurado
 	* @param void sin parametros de entrada
 	* @return Lista GenericVO con la informacion de los asegurados

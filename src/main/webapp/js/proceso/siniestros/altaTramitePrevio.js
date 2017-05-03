@@ -436,8 +436,9 @@ Ext.onReady(function() {
                     panelInicialPral.down('[name=idnombreAsegurado]').setValue(aseguradoAfectado.rawValue);
                    
                     var params = {
-                            'params.cdperson' : obtieneCDPerson,
-                            'params.cdramo' : panelInicialPral.down('combo[name=cmbRamos]').getValue()
+                            'params.cdperson' 	: obtieneCDPerson,
+                            'params.cdramo' 	: panelInicialPral.down('combo[name=cmbRamos]').getValue(),
+	                        'params.fe_ocurre'	: panelInicialPral.down('[name=dtFechaOcurrencia]').getValue()	//(EGS)
                     };
                     
                     cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
@@ -446,7 +447,8 @@ Ext.onReady(function() {
                             if(jsonResponse.listaPoliza == null) {
                                 Ext.Msg.show({
                                     title: 'Aviso',
-                                    msg: 'No existen p&oacute;lizas para el asegurado elegido.',
+	                                //msg: 'No existen p&oacute;lizas para el asegurado elegido.', (EGS)
+	                                msg: 'La fecha de ocurrencia del siniestro, no coincide con alguna p&oacute;liza del asegurado',	// (EGS)
                                     buttons: Ext.Msg.OK,
                                     icon: Ext.Msg.WARNING
                                 });
