@@ -404,6 +404,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
+	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo, String rolUsuario, String feOcurre) throws Exception {//(EGS) se agrega parametro feOcurre
+		try {
+			return siniestrosDAO.obtieneListadoPoliza(cdperson,cdramo,rolUsuario,feOcurre); //(EGS) se agrega parámetro feOcurre
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
 	public List<GenericVO> getConsultaListaPlaza() throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoPlaza();

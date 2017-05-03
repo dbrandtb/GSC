@@ -41,7 +41,7 @@
             var _URL_TurnarAOperadorReclamacion			= '<s:url namespace="/mesacontrol"		action="turnarAOperadorReclamacion" />';
             var _UrlRevisionDocsSiniestro   			= '<s:url namespace="/siniestros" 		action="includes/revisionDocumentos"        />';
             var _UR_TIPO_ATENCION						= '<s:url namespace="/siniestros"  		action="consultaListaTipoAtencion"/>';
-            var _URL_CONSULTA_LISTADO_POLIZA			= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
+			var _URL_CONSULTA_LISTADO_POLIZA			= '<s:url namespace="/siniestros" 		action="consultaListaPolizaFeOcu" />';//(EGS) cambiamos consultaListaPoliza
             var _URL_LISTADO_ASEGURADO          		= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
             //var _URL_LISTADO_ALTATRAMITE          		= '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';
             var _URL_GUARDA_ALTA_TRAMITE     			= '<s:url namespace="/siniestros"       action="guardaAltaTramite" />';

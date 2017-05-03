@@ -80,6 +80,8 @@ public interface SiniestrosDAO {
 	public String guardarListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws Exception;
 	
 	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson,String cdramo, String rolUsuario) throws Exception;
+
+	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson,String cdramo, String rolUsuario, String feOcurre) throws Exception;	//(EGS) sobrecarga: se agrega parametro feOcurre
 	
 	/* ############################################################################## 
 	 * ##################################### VERIFICAR ##############################*/

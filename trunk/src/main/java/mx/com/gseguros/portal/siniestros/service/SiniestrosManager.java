@@ -96,6 +96,8 @@ public interface SiniestrosManager {
 	public String guardaListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws Exception;
 	
 	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo, String rolUsuario) throws Exception;
+
+	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo, String rolUsuario, String feOcurre) throws Exception;	//(EGS) sobrecarga: se agrega parametro feOcurre
 	
 	public void getEliminacionRegistros(String nmautser) throws Exception;
 	

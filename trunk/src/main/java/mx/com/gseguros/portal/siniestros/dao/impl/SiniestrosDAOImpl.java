@@ -887,6 +887,34 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 	
+	@Override
+	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson,String cdramo,String rolUsuario, String feOcurre)	//(EGS) sobrecarga: se agrega parametro feOcurre
+			throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdperson_i", cdperson);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_cdsisrol_i", rolUsuario);
+		params.put("pv_feocurre_i", feOcurre);	//(EGS) se agrega parámetro feOcurre
+		
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerListadoPolizaFeOcurre(this.getDataSource()), params);
+		return (List<PolizaVigenteVO>) resultadoMap.get("pv_registro_o");
+	}
+	protected class ObtenerListadoPolizaFeOcurre extends StoredProcedure
+	{
+		protected ObtenerListadoPolizaFeOcurre(DataSource dataSource)
+		{
+			super(dataSource, "P_LISTA_POLIZAS");
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feocurre_i",OracleTypes.VARCHAR));	//(EGS) se agrega parámetro
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaPoliza()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
 	protected class DatosListaPoliza  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	logger.debug("Valor de RS "+rs);
