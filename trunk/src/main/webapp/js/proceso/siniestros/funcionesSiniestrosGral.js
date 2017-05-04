@@ -1698,43 +1698,51 @@ function eliminarAsegurado(grid,rowIndex){
 function _p21_agregarConcepto() {
     if(gridFacturaDirecto.getSelectionModel().hasSelection()){
         var recordFactura = gridFacturaDirecto.getSelectionModel().getSelection()[0];
+        debug("recordFactura ===> ",recordFactura);
+        
         if(_11_params.CDRAMO != _RECUPERA){
-            var idReclamacion = recordFactura.get('NMSINIES');
-            valido = idReclamacion && idReclamacion>0;
-            if(valido){
-                var idCobertura         = recordFactura.get('CDGARANT');
-                var idSubcobertura      = recordFactura.get('CDCONVAL');
-                var idcausaSiniestro    = recordFactura.get('CDCAUSA');
-                var idICDP              = recordFactura.get('CDICD');
-                
-                if(recordFactura.get('CDGARANT').length > 0 && recordFactura.get('CDCONVAL').length > 0 && 
-                   recordFactura.get('CDCAUSA').length > 0 && recordFactura.get('CDICD').length > 0){
-                        banderaConcepto = "1";
-                        storeConceptos.add(new modelConceptos( {
-                            PTPRECIO : '0.00',
-                            DESTOPOR : '0.00',
-                            DESTOIMP : '0.00',
-                            CDUNIECO : recordFactura.get('CDUNIECO'),
-                            CDRAMO   : recordFactura.get('CDRAMO'),
-                            ESTADO   : recordFactura.get('ESTADO'),
-                            NMPOLIZA : recordFactura.get('NMPOLIZA'),
-                            NMSUPLEM : recordFactura.get('NMSUPLEM'),
-                            NMSITUAC : recordFactura.get('NMSITUAC'),
-                            AAAPERTU : recordFactura.get('AAAPERTU'),
-                            STATUS   : recordFactura.get('STATUS'),
-                            NMSINIES : recordFactura.get('NMSINIES'),
-                            PTPCIOEX : '0.00',
-                            DCTOIMEX : '0.00',
-                            PTIMPOEX : '0.00',
-                            CDGARANT : recordFactura.get('CDGARANT'),
-                            CDCONVAL : recordFactura.get('CDCONVAL')
-                        }));
-                        
-                }else{
-                    mensajeWarning('Complemente la informaci&oacute;n del Asegurado');
-                }
+        	
+        	if(recordFactura.get('FLAGREQAUT') == "SI" &&  (  recordFactura.get('NMAUTSER') =="N/A" || +recordFactura.get('NMAUTSER') <= '0' || recordFactura.get('NMAUTSER')== "")){
+                debug("Entra a la configuración");
+                 _11_obtieneDatosOpcionalesValor(recordFactura.get('CDRAMO'),recordFactura.get('CDTIPSIT'),recordFactura.get('CDGARANT'),recordFactura.get('CDCONVAL'),recordFactura,"0"); 
             }else{
-                mensajeWarning('Debes generar una autorizaci&oacute;n para el asegurado');
+                var idReclamacion = recordFactura.get('NMSINIES');
+                valido = idReclamacion && idReclamacion>0;
+                if(valido){
+                    var idCobertura         = recordFactura.get('CDGARANT');
+                    var idSubcobertura      = recordFactura.get('CDCONVAL');
+                    var idcausaSiniestro    = recordFactura.get('CDCAUSA');
+                    var idICDP              = recordFactura.get('CDICD');
+                    
+                    if(recordFactura.get('CDGARANT').length > 0 && recordFactura.get('CDCONVAL').length > 0 && 
+                       recordFactura.get('CDCAUSA').length > 0 && recordFactura.get('CDICD').length > 0){
+                            banderaConcepto = "1";
+                            storeConceptos.add(new modelConceptos( {
+                                PTPRECIO : '0.00',
+                                DESTOPOR : '0.00',
+                                DESTOIMP : '0.00',
+                                CDUNIECO : recordFactura.get('CDUNIECO'),
+                                CDRAMO   : recordFactura.get('CDRAMO'),
+                                ESTADO   : recordFactura.get('ESTADO'),
+                                NMPOLIZA : recordFactura.get('NMPOLIZA'),
+                                NMSUPLEM : recordFactura.get('NMSUPLEM'),
+                                NMSITUAC : recordFactura.get('NMSITUAC'),
+                                AAAPERTU : recordFactura.get('AAAPERTU'),
+                                STATUS   : recordFactura.get('STATUS'),
+                                NMSINIES : recordFactura.get('NMSINIES'),
+                                PTPCIOEX : '0.00',
+                                DCTOIMEX : '0.00',
+                                PTIMPOEX : '0.00',
+                                CDGARANT : recordFactura.get('CDGARANT'),
+                                CDCONVAL : recordFactura.get('CDCONVAL')
+                            }));
+                            
+                    }else{
+                        mensajeWarning('Complemente la informaci&oacute;n del Asegurado');
+                    }
+                }else{
+                    mensajeWarning('Debes generar una autorizaci&oacute;n para el asegurado');
+                }
             }
         }else{
             storeRecupera.add(new modelRecupera( {
@@ -3305,4 +3313,53 @@ function _11_clickAplicarCambiosFactura(){
             });
         }
     }
+}
+
+function _11_obtieneDatosOpcionalesValor(cdramo,cdtipsit,cdgarant,cdconval,record,tipo){
+    Ext.Ajax.request({
+        url  : _URL_ALTA_EVENTO 
+        ,params:{
+            'params.cdramo'    : cdramo,
+            'params.cdtipsit'  : cdtipsit,
+            'params.cdgarant'  : cdgarant,
+            'params.cdconval'  : cdconval
+        }
+        ,success : function (response) {
+            //Obtenemos los datos
+            if(Ext.decode(response.responseText).datosValidacion != null){
+                var jsonValidacionCober =Ext.decode(response.responseText).datosValidacion;
+                debug("Valor de los datos de Respuesta para validaciones de alta =>",jsonValidacionCober[0]);
+                if(jsonValidacionCober[0].FLAGREQAUT == "SI" &&  (  record.get('NMAUTSER') =="N/A" || +record.get('NMAUTSER') <= '0' || record.get('NMAUTSER')== "")){
+                    msgWindow = Ext.Msg.show({
+                        title: 'Aviso',
+                        msg: 'Se requiere una autorizaci&oacute;n de Servicio. <br/> &iquest;Desea realizar la asociaci&oacute;n ?',
+                        buttons: Ext.Msg.YESNO,
+                        icon: Ext.Msg.QUESTION,
+                        fn: function(buttonId, text, opt){
+                            if(buttonId == 'no'){
+                                // actualizamos la información
+                                if(tipo =="0"){
+                                    banderaAsegurado = 0;
+                                    storeConceptos.removeAll();
+                                    cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                                }                                
+                            }
+                            if(buttonId == 'yes'){
+                                _11_modificarAutorizacion(record);
+                            }
+                        }
+                    });
+                    centrarVentanaInterna(msgWindow);
+                }
+            }
+        },
+        failure : function () {
+            Ext.Msg.show({
+                title:'Error',
+                msg: 'Error de comunicaci&oacute;n',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            });
+        }
+    });
 }
