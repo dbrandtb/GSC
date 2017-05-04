@@ -293,7 +293,7 @@
 						{type:'date',   name:'FEEGRESO',   dateFormat : 'd/m/Y'},
 						{type:'string', name:'CDTIPEVE'},       {type:'string', name:'CDTIPALT'},
 						{type:'string', name:'FLAGTIPEVE'},     {type:'string', name:'FLAGTIPALT'},
-						{type:'string', name:'NUMRECLA'}
+						{type:'string', name:'NUMRECLA'},       {type:'string', name:'FLAGREQAUT'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -1457,6 +1457,27 @@
                                                 }
                                             });
                                         }
+                                        
+                                        if(jsonValidacionCober[0].FLAGREQAUT == "SI" &&  (  _11_aseguradoSeleccionado.get('NMAUTSER') =="N/A" || +_11_aseguradoSeleccionado.get('NMAUTSER') <= '0' || _11_aseguradoSeleccionado.get('NMAUTSER')== "")){
+                                	        msgWindow = Ext.Msg.show({
+                                                title: 'Aviso',
+                                                msg: 'Se requiere una autorizaci&oacute;n de Servicio. <br/> &iquest;Desea realizar la asociaci&oacute;n ?',
+                                                buttons: Ext.Msg.YESNO,
+                                                icon: Ext.Msg.QUESTION,
+                                                fn: function(buttonId, text, opt){
+                                                    if(buttonId == 'no'){
+                                                        // actualizamos la información
+                                                        banderaAsegurado = 0;
+                                                        storeConceptos.removeAll();
+                                                        cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                                                    }
+                                                    if(buttonId == 'yes'){
+                                                        _11_modificarAutorizacion(_11_aseguradoSeleccionado);
+                                                    }
+                                                }
+                                            });
+                                            centrarVentanaInterna(msgWindow);
+                                        }
                                     }
                                 },
                                 failure : function () {
@@ -1735,7 +1756,7 @@
 								}
 							},
                             {
-                                header: 'Reclamo',   dataIndex: 'NUMRECLA'//,          width: 90, hidden : (_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
+                                header: 'Reclamo',   dataIndex: 'NUMRECLA',          width: 90, hidden : (_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
                             },
 							{
 								header: 'Id<br/>Sini. Existente',   dataIndex: 'NMSINREF',          width: 90, hidden : true//(_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
@@ -2132,6 +2153,9 @@
                             },
                             {
                                 header: 'TipoAlta',                 dataIndex: 'FLAGTIPALT',       width: 50,        hidden : true
+                            },
+                            {
+                                header: 'Req.Aut.Serv',             dataIndex: 'FLAGREQAUT',       width: 50//,        hidden : true
                             }
                             
 							
@@ -2374,6 +2398,11 @@
 													});
 												}
 											});
+											
+											if(record.get('FLAGREQAUT') == "SI" &&  (  record.get('NMAUTSER') =="N/A" || +record.get('NMAUTSER') <= '0' || record.get('NMAUTSER')== "")){
+												debug("Entra a la configuración");
+											     _11_obtieneDatosOpcionalesValor(record.get('CDRAMO'),record.get('CDTIPSIT'),record.get('CDGARANT'),record.get('CDCONVAL'),record, "1");	
+											}
 										}
 									}
 								}else{
@@ -2727,7 +2756,7 @@
 												handler: function() {windowHistSinies.close();}
 											}]
 										}).show();
-											centrarVentana(windowHistSinies);
+										centrarVentanaInterna(windowHistSinies);
 										
 									}
 								}
@@ -3804,7 +3833,16 @@
 									,icon	: '${ctx}/resources/fam3icons/icons/disk.png'
 									,handler : _11_asociarAutorizacionNueva
 								}
-							]
+							],
+                            listeners:{
+                                 close:function(){
+                                     if(true){
+                                     	banderaAsegurado = 0;
+                                        storeConceptos.removeAll();
+                                        cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
+                                     }
+                                 }
+                            }
 						});
 						this.callParent();
 					}
@@ -4176,7 +4214,7 @@
 						}
 					}
 				});
-				centrarVentana(msgWindow);
+				centrarVentanaInterna(msgWindow);
 			}
 		//}
 	}
