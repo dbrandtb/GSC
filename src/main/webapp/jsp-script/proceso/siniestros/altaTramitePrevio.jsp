@@ -26,7 +26,7 @@
 			debug(_TIPO_PAGO_DIRECTO);
 			var _URL_CATALOGOS 						= '<s:url namespace="/catalogos" 		action="obtieneCatalogo" />';
 			var _UR_TIPO_ATENCION					= '<s:url namespace="/siniestros"  		action="consultaListaTipoAtencion"/>';
-			var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPolizaFeOcu" />';//(EGS) cambiamos consultaListaPoliza
+			var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
 			var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
 			var _URL_LISTADO_ASEGURADO_POLIZA		= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
 			//var _URL_LISTADO_ALTATRAMITE          	= '<s:url namespace="/siniestros"       action="consultaListadoAltaTramite" />';

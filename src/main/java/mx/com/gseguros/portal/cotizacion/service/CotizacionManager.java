@@ -1306,6 +1306,4 @@ public interface CotizacionManager
 	
 	public Map<String, String> obtieneOtValorCorrespondienteSubtipoCR()throws Exception;
 	
-	public void actualizaTramiteOVA(String ntramite	,String nmsolici)throws Exception;
-	
 }
