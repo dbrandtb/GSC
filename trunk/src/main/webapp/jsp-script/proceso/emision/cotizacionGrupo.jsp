@@ -1057,7 +1057,9 @@ Ext.onReady(function()
                                              {
                                                  try
                                                  {
-                                                     Ext.ComponentQuery.query('#fechaFinVigencia')[0].setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
+                                                 	if(Ext.ComponentQuery.query('#fechaFinVigencia')[0].getValue()==""){
+                                                 		Ext.ComponentQuery.query('#fechaFinVigencia')[0].setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
+                                                 	}
                                                  }
                                                  catch (e) {}
                                              }
