@@ -29,6 +29,7 @@ var _p30_urlEnviarCorreo                      = '<s:url namespace="/general"    
 var _p30_urlCargarDatosEndoso                 = '<s:url namespace="/emision"         action="recuperarDatosEndosoAltaIncisoAuto"  />';
 var _p30_urlObtencionReporteExcel             = '<s:url namespace="/reportes"        action="procesoObtencionReporte"             />';
 var _p30_urlObtencionReporteExcel2            = '<s:url namespace="/reportes"        action="procesoObtencionReporte2"            />';
+var _p30_urlObtencionReporteExcel3            = '<s:url namespace="/reportes"        action="procesoObtencionReporte3"            />';
 var _p30_urlDetalleTramite                    = '<s:url namespace="/mesacontrol"     action="movimientoDetalleTramite"            />';
 var _p30_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"         action="actualizarOtvalorTramitePorDsatribu" />';
 var _p30_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"         action="recuperarOtvalorTramitePorDsatribu"  />';
@@ -5484,7 +5485,7 @@ function _p30_inicializarTatripol(itemsTatripol)
 
 function _p30_imprimir()
 {
-    debug('>_p30_imprimir');
+    debug('>_p30_imprimir ', _p30_smap1.tipoflot);
     
     if(_p30_smap1.tipoflot+'x'=='Px')
     {
@@ -5539,23 +5540,8 @@ function _p30_imprimir()
     }
     else
     {
-        Ext.create('Ext.form.Panel').submit(
-        {
-            url             : _p30_urlObtencionReporteExcel2
-            ,standardSubmit : true
-            ,target         : '_blank'
-            ,params         :
-            {
-                'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
-                ,'params.pv_cdramo_i'   : _p30_smap1.cdramo
-                ,'params.pv_estado_i'   : 'W'
-                ,'params.pv_nmpoliza_i' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
-                ,'params.pv_nmsuplem_i' : '0'
-                ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
-                ,'params.pv_cdusuari_i' : _p30_smap1.cdusuari
-                ,cdreporte              : 'REPCOT002'
-            }
-        });
+        debug('<_p30_imprimir REPCOT001');
+        Ext.Function.defer(function(){  
         Ext.create('Ext.form.Panel').submit(
         {
             url             : _p30_urlObtencionReporteExcel
@@ -5573,6 +5559,50 @@ function _p30_imprimir()
                 ,cdreporte              : 'REPCOT001'
             }
         });
+        }, 200);
+        
+        debug('<_p30_imprimir REPCOT002');
+        Ext.Function.defer(function(){     
+        Ext.create('Ext.form.Panel').submit(
+        {
+            url             : _p30_urlObtencionReporteExcel2
+            ,standardSubmit : true
+            ,target         : '_blank'
+            ,params         :
+            {
+                'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
+                ,'params.pv_cdramo_i'   : _p30_smap1.cdramo
+                ,'params.pv_estado_i'   : 'W'
+                ,'params.pv_nmpoliza_i' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+                ,'params.pv_nmsuplem_i' : '0'
+                ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
+                ,'params.pv_cdusuari_i' : _p30_smap1.cdusuari
+                ,cdreporte              : 'REPCOT002'
+            }
+        });
+        }, 400);
+        
+        debug('<_p30_imprimir REPCOT003');
+        
+        Ext.Function.defer(function(){ 
+        Ext.create('Ext.form.Panel').submit(
+        {
+            url             : _p30_urlObtencionReporteExcel3
+            ,standardSubmit : true
+            ,target         : '_blank'
+            ,params         :
+            {
+                'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
+                ,'params.pv_cdramo_i'   : _p30_smap1.cdramo
+                ,'params.pv_estado_i'   : 'W'
+                ,'params.pv_nmpoliza_i' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+                ,'params.pv_nmsuplem_i' : '0'
+                ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
+                ,'params.pv_cdusuari_i' : _p30_smap1.cdusuari
+                ,cdreporte              : 'REPCOT003'
+            }
+        });
+        }, 600);
     }
     debug('<_p30_imprimir');
 }
