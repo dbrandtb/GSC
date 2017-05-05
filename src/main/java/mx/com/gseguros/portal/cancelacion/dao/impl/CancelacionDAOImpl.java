@@ -57,7 +57,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 
 		protected BuscarPolizas(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_CONSUL_POLIZA");
+			super(dataSource, "PKG_CONSULTA_PRE.P_CONSUL_POLIZA");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
@@ -95,7 +95,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 
 		protected ObtenerDetalleCancelacion(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_DETALLE_CANC");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_DETALLE_CANC");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
@@ -137,14 +137,14 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		params.put("pv_dsramo_i"    , cdramo);
 		params.put("pv_nmpoliza_i"  , nmpoliza);
 		params.put("pv_nmsituac_i"  , nmsituac);
-		Utils.debugProcedure(logger, "pkg_cancela.p_obtiene_poliza_a_cancelar", params);
+		Utils.debugProcedure(logger, "PKG_CANCELA_PRE.p_obtiene_poliza_a_cancelar", params);
 		Map<String,Object> procResult  = ejecutaSP(new ObtenerPolizasCandidatas(this.getDataSource()), params);
 		List<Map<String,String>> lista = (List<Map<String, String>>)procResult.get("pv_registro_o");
 		if(lista==null)
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		Utils.debugProcedure(logger, "pkg_cancela.p_obtiene_poliza_a_cancelar", params, lista);
+		Utils.debugProcedure(logger, "PKG_CANCELA_PRE.p_obtiene_poliza_a_cancelar", params, lista);
 		return lista;
 	}
 	
@@ -153,7 +153,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 
 		protected ObtenerPolizasCandidatas(DataSource dataSource)
 		{
-			super(dataSource, "pkg_cancela.p_obtiene_poliza_a_cancelar");
+			super(dataSource, "PKG_CANCELA_PRE.p_obtiene_poliza_a_cancelar");
 			declareParameter(new SqlParameter("pv_asegurado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsuniage_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsramo_i"      , OracleTypes.VARCHAR));
@@ -187,7 +187,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	{
 		public SeleccionaPolizas(DataSource dataSource)
 		{
-			super(dataSource, "pkg_cancela.p_selecciona_polizas");
+			super(dataSource, "PKG_CANCELA_PRE.p_selecciona_polizas");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_agencia_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_fechapro_i" , OracleTypes.DATE));
@@ -244,7 +244,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		params.put("pv_usuario_i"  , cdusuari);
 		params.put("pv_cdtipsup_i" , cdtipsup);
 		params.put("pv_cdsisrol_i" , cdsisrol);
-		Utils.debugProcedure(logger, "pkg_cancela.p_cancela_poliza", params);
+		Utils.debugProcedure(logger, "PKG_CANCELA_PRE.p_cancela_poliza", params);
 		Map<String,Object> resParams = ejecutaSP(new CancelaPoliza(getDataSource()),params);
 		
 		return resParams;
@@ -254,7 +254,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	{
 		public CancelaPoliza(DataSource dataSource)
 		{
-			super(dataSource, "pkg_cancela.p_cancela_poliza");
+			super(dataSource, "PKG_CANCELA_PRE.p_cancela_poliza");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cduniage_i" , OracleTypes.VARCHAR));
@@ -309,7 +309,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		params.put("pv_nmpoliza_i" , nmpoliza);
 		params.put("pv_agencia_i"  , agencia);
 		params.put("pv_fechapro_i" , fechapro);
-		Utils.debugProcedure(logger, "pkg_cancela.p_selecciona_poliza_unica", params);
+		Utils.debugProcedure(logger, "PKG_CANCELA_PRE.p_selecciona_poliza_unica", params);
 		ejecutaSP(new SeleccionaPolizaUnica(this.getDataSource()), params);
 	}
 	
@@ -317,7 +317,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	{
 		public SeleccionaPolizaUnica(DataSource dataSource)
 		{
-			super(dataSource, "pkg_cancela.p_selecciona_poliza_unica");
+			super(dataSource, "PKG_CANCELA_PRE.p_selecciona_poliza_unica");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
@@ -345,7 +345,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	{
 		public ActualizarTagrucan(DataSource dataSource)
 		{
-			super(dataSource, "pkg_cancela.p_actualiza_tagrucan");
+			super(dataSource, "PKG_CANCELA_PRE.p_actualiza_tagrucan");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
@@ -374,7 +374,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	{
 		public CancelacionMasiva(DataSource dataSource)
 		{
-			super(dataSource, "pkg_cancela.p_cancelacion_masiva");
+			super(dataSource, "PKG_CANCELA_PRE.p_cancelacion_masiva");
 			declareParameter(new SqlParameter("pv_id_proceso_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_fecha_carga_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_usuario_i"     , OracleTypes.VARCHAR));
@@ -391,7 +391,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	//////////////////////////////////////////
 	
 	/**
-	 * PKG_CONSULTA.P_IMP_DOC_CANCELACION
+	 * PKG_CONSULTA_PRE.P_IMP_DOC_CANCELACION
 	 * @return nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
 	 */
 	@Override
@@ -413,7 +413,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		};
 		protected ReimprimeDocumentos(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_IMP_DOC_CANCELACION");
+			super(dataSource,"PKG_CONSULTA_PRE.P_IMP_DOC_CANCELACION");
 			declareParameter(new SqlParameter("PV_CDUNIECO_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
@@ -441,7 +441,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	
 	protected class PolizasCanceladas extends StoredProcedure {
     	protected PolizasCanceladas(DataSource dataSource) {
-            super(dataSource,"PKG_CONSULTA.P_CONS_POL_CANCELADAS");
+            super(dataSource,"PKG_CONSULTA_PRE.P_CONS_POL_CANCELADAS");
             declareParameter(new SqlParameter("pv_feproces_i",       OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new PolizasCanceladasMapper()));
             declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
@@ -475,7 +475,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		params.put("cdramo"   , cdramo);
 		params.put("estado"   , estado);
 		params.put("nmpoliza" , nmpoliza);
-		Utils.debugProcedure(logger, "PKG_SATELITES.P_VALIDA_CANC_A_PRORRATA", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES_PRE.P_VALIDA_CANC_A_PRORRATA", params);
 		ejecutaSP(new ValidaCancelacionAProrrata(getDataSource()),params);
 	}
 
@@ -483,7 +483,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	{
     	protected ValidaCancelacionAProrrata(DataSource dataSource)
     	{
-            super(dataSource , "PKG_SATELITES.P_VALIDA_CANC_A_PRORRATA");
+            super(dataSource , "PKG_SATELITES_PRE.P_VALIDA_CANC_A_PRORRATA");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -510,7 +510,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 		params.put("pv_estado_i"   , estado);
 		params.put("pv_nmpoliza_i" , nmpoliza);
 		params.put("pv_cdrazon_i"  , cdrazon);
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_VALIDA_RAZON_CANCELACION", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2_PRE.P_VALIDA_RAZON_CANCELACION", params);
 		ejecutaSP(new ValidaRazonCancelacion(getDataSource()),params);
 		
 		return true;
@@ -520,7 +520,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	{
 		protected ValidaRazonCancelacion(DataSource dataSource)
 		{
-			super(dataSource , "PKG_SATELITES2.P_VALIDA_RAZON_CANCELACION");
+			super(dataSource , "PKG_SATELITES2_PRE.P_VALIDA_RAZON_CANCELACION");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
