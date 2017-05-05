@@ -44,7 +44,6 @@ import mx.com.gseguros.portal.cotizacion.model.PMovTvalositDTO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
-import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
@@ -53,7 +52,6 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
-import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
@@ -146,9 +144,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
-	
-	@Autowired
-    private StoredProceduresManager storedProceduresManager;
 	
 	@Override
 	public Map<String,Object> cotizacionAutoIndividual(
@@ -293,7 +288,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				if("AT".equals(cdtipsit) && tatri.getNameCdatribu().equals("34")){
 				    
 				    ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
-                    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
+				    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
                     {
                         tatri.setOculto(true);
                         tatri.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
@@ -2400,7 +2395,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				if (StringUtils.isBlank(cdpersonCli) && StringUtils.isNotBlank(cdideperCli)) {
 					logger.debug("Persona proveniente de WS, Se importar�, Valor de cdperson en blanco, valor de cdIdeper: " + cdideperCli);
 					
-					
 					logger.debug("<<<>>> Verificando que no se haya insertado el cliente anteriormente... ");
 	    			boolean personaNueva =  true;
 	    			String  newCdPerson   = null;
@@ -2566,14 +2560,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				    				null, null, null, null, null, 
 				    				null, null, null, null, null,
 				    				cli.getFaxCli(), cli.getCelularCli());
-				    			
+	
 							}
 						}
-	    			}
-	    			cdpersonCli = newCdPerson;
-	    			nmorddomCli = "1";
+					
+					}
+		    		cdpersonCli = newCdPerson;
+		    		nmorddomCli = "1";
 				}
-				
 				
 				if(!StringUtils.isBlank(cdpersonCli))
 				{
@@ -3863,7 +3857,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				}
 				
 				paso = "Recuperando tramite";
-				logger.debug("Recuperando tramite cargarTramitesPorParametrosVariables");
 				List<Map<String,String>>tramites = mesaControlDAO.cargarTramitesPorParametrosVariables(
 						TipoTramite.POLIZA_NUEVA.getCdtiptra()
 						,null     //ntramite
@@ -3874,7 +3867,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						,nmsuplem
 						,nmpoliza //nmsolici
 						);
-				
 				if(tramites.size()>1)
 				{
 					throw new ApplicationException("Tramites duplicados para la cotizacion");
@@ -3883,20 +3875,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				{
 					ntramite     = tramites.get(0).get("NTRAMITE");
 					sworigenmesa = tramites.get(0).get("SWORIGENMESA");
-					logger.debug("un solo tramite "+ntramite + sworigenmesa);
-					
-					
-					//REQ0033: Utilizar cotizaciones de la OVA
-					//req0033 utilizar cotizaciones de la OVA
-					logger.debug("**** imprimiendo datos de tramite pyme recuperado para poder aplicar o eliminar validaciones ****");
-					logger.debug("NTRAMITEIN "+ntramiteIn);
-					logger.debug("NTRAMITE " + tramites.get(0).get("NTRAMITE"));
-					logger.debug("CDUNIECO " + tramites.get(0).get("CDUNIECO"));
-					logger.debug("SWORIGENMESA " + tramites.get(0).get("SWORIGENMESA"));
-					logger.debug("CDRAMO " + tramites.get(0).get("CDRAMO"));
-					logger.debug("ESTADO " + tramites.get(0).get("ESTADO"));
-					logger.debug("NMPOLIZA " + tramites.get(0).get("NMPOLIZA"));
-					logger.debug("**** ****************************************************************** ****");
 				}
 				
 			}
@@ -3946,12 +3924,15 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			 */
 			if ("M".equals(estado)) { // Emitidas para clonar
 				// Estas pasan bien
-			} 
-			else if (StringUtils.isBlank(ntramite)) 
-			{// Normales sin tramite
-				if (StringUtils.isNotBlank(ntramiteLigado) && !"0".equals(ntramiteLigado) && (StringUtils.isBlank(ntramiteIn) || !ntramiteIn.equals(ntramiteLigado))) 
-				{ // Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual
-					logger.debug("Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual");
+			} else if (StringUtils.isBlank(ntramite)) { // Normales sin tramite
+				if (
+					StringUtils.isNotBlank(ntramiteLigado) &&
+					!"0".equals(ntramiteLigado) &&
+					(
+						StringUtils.isBlank(ntramiteIn) ||
+						!ntramiteIn.equals(ntramiteLigado)
+					)
+				) { // Esa cotizacion es la ultima hecha para un tramite, y no es el tramite actual
 					String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ",ntramiteLigado);
 					
 					Map<String, String> tramite = siniestrosDAO.obtenerTramiteCompleto(ntramiteLigado);
@@ -3972,7 +3953,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					throw new ApplicationException(error);
 				}
 			} else { // Ya en emision para complementar o clonar (ntramite)
-				logger.debug("Ya en emision para complementar o clonar ");
 				String ntramiteCot = ntramite;
 				Map<String, String> tramiteCot = siniestrosDAO.obtenerTramiteCompleto(ntramiteCot);
 				String statusTramiteCot = tramiteCot.get("STATUS");
@@ -3995,7 +3975,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						throw new ApplicationException(error);
 					}
 				} else { // entran desde un tramite
-					logger.debug("entran desde un tramite con ntramiteCot: "+ntramiteCot);
 					if (ntramiteIn.equals(ntramiteCot)) { // es del mismo tramite
 						String error = Utils.join("Esta cotizaci\u00f3n se encuentra confirmada para este tr\u00e1mite (", ntramiteCot
 								,", estatus: '", dsstatusTramiteCot,"'), favor de acceder desde mesa de control para complementarla");
@@ -4003,23 +3982,16 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					} else { // intentan recuperar de otro tramite
 						String error = Utils.join("Esta cotizaci\u00f3n pertenece al tr\u00e1mite ", ntramiteCot,
 								" (estatus: '", dsstatusTramiteCot, "')");
-						logger.debug(error);
+						
 						//req0033 utilizar cotizaciones OVA
-						if ("S".equals(tramiteCot.get("SWORIGENMESA"))){
-							if (EstatusTramite.RECHAZADO.getCodigo().equals(statusTramiteCot)) {
-								error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite"); // de otro que esta cancelado
-							} else {
-								error = Utils.join(error, ", favor de acceder desde mesa de control"); // de otro activo
-							}
-							
-							throw new ApplicationException(error);
+						
+						if (EstatusTramite.RECHAZADO.getCodigo().equals(statusTramiteCot)) {
+							error = Utils.join(error, ", por favor generar un nuevo tr\u00e1mite"); // de otro que esta cancelado
+						} else {
+							error = Utils.join(error, ", favor de acceder desde mesa de control"); // de otro activo
 						}
 						
-						//seteo el nmtramiteIn de la mesa al nmtramiteCot
-						ntramite=ntramiteIn; //para que al complementar quede asociado el tramite de la mesa
-						logger.debug("seteo el nmtramiteIn de la mesa al nmtramiteCot: " + ntramite);
-						resp.getSmap().put("NTRAMITE" , ntramite);
-						//verificar si puedo indicar que la cot viene de OVA y el tramite de la mesa para no tener que repetir la consulta en CotizacionAutoAction
+						//throw new ApplicationException(error);
 					}
 				}
 			}
@@ -4061,22 +4033,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				,"\n@@@@@@ cdusuari=" , cdusuari
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				));
-		
-		//REQ0033 antes de este punto debo consultar nuevamente la cotizacion para saber si fue generada por la OVA o por la mesa
-        //si la cotizacion es consultada desde la mesa, debo asociarla al numero de tramite generado en la mesa
-		logger.debug("**** mostrando datos de tramite pyme recuperado para poder aplicar o eliminar validaciones ****");
-		logger.debug("NTRAMITE ACTUALIZADO" + ntramite);
-		logger.debug("NMPOLIZA " + nmpoliza);
-        
-		// se debe consultar la poliza y ver si SWORIGENMESA=N antes de actualizar el tramite
-		//if (!ntramite.equals(tramiteCot)){
-			//ntramite = tramiteCot;
-			//actualizo en BD el numero de tramite a la cotizacion OVA
-			logger.debug("actualizo en BD el numero de tramite a la cotizacion OVA y coloco:"+ntramite);
-			cotizacionManager.actualizaTramiteOVA(ntramite, nmpoliza);
-		//}
-		
-        //continua flujo normal
 		
 		ManagerRespuestaImapSmapVO resp=new ManagerRespuestaImapSmapVO(true);
 		resp.setImap(new HashMap<String,Item>());

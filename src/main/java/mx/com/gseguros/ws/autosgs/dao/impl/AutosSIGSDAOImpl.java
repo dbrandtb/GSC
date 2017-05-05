@@ -914,7 +914,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class ObtieneTipoCliWS extends StoredProcedure{
 		protected ObtieneTipoCliWS(DataSource dataSource){
-			super(dataSource, "sp_PolizasXCliente");
+			super(dataSource, "sp_PolizasXCliente2");
 			
 			declareParameter(new SqlParameter("vNumCliente", Types.INTEGER));
 			declareParameter(new SqlParameter("vTipoCliente", Types.SMALLINT));
@@ -940,11 +940,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	 */
 	@Override
 	public void validarAgenteParaNuevoTramite(String cdagente, String ramo, String cdtipend) throws Exception {
-		
-	    logger.warn("****** spvalidaagente COMENTADO   TODO: DESCOMENTAR ****");
-	    
-	    /*
-	    logger.debug(Utils.log(
+		logger.debug(Utils.log(
 				"\n*******************************************",
 				"\n****** validarAgenteParaNuevoTramite ******",
 				"\n****** cdagente = ", cdagente,
@@ -990,8 +986,6 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 				"\n****** validarAgenteParaNuevoTramite ******",
 				"\n*******************************************"
 				));
-				
-		*/
 	}
 	
 	public class ValidarAgenteParaNuevoTramiteSP extends StoredProcedure {
@@ -1202,7 +1196,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
             compile();
         }
     }
-    
+
     @Override
     public Integer endosoCambioModeloDescripcion(Map<String, Object> params) throws Exception {
         Integer resp = null;
@@ -1280,5 +1274,5 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
             
             compile();
         }
-    }
+    }    
 }
