@@ -13,9 +13,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style></style>
 
-<!-- Libreria EXTJS4 -->
 <link href="../../../resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css" rel="stylesheet" type="text/css" />
+		
+<!-- Libreria EXTJS4 -->
 <script type="text/javascript" src="../../../resources/extjs4/ext-all.js"></script>
+<!-- Mensajes  -->
 <script type="text/javascript" src="../../../resources/extjs4/locale/ext-lang-es.js"></script>
         
 <script>
@@ -25,15 +27,8 @@
 
 ////// variables //////
 var _CONTEXT = '${ctx}';
-
 var _p21_urlListarDirectorio            = '<s:url namespace="/seguridad"         action="listarDirectorio"            />';
-var _p21_urlDescargaDoc                 ='../../../documentos/descargaDoc.action?';
-var _p21_pathListarDirectorio           ='/RES/logs/gseguros';
-
-var _p21_pathDescargarDirectorio        ='/RES/logs';
-var _p21_subfolderDescargarDirectorio   ='gseguros';
-var _p21_nombreArchDescargar            ='';
-
+console.log('entrando a la pagina');
 
 ////// onReady //////
 
@@ -46,7 +41,7 @@ Ext.onReady(function()
         ,fields :
         [
             {type:'string', name:'nombreDoc'},
-            {type:'string', name:'tamDoc'},
+            {type:'string', name:'tamañoDoc'},
             {type:'string', name:'modificado'},
             {type:'string', name:'permisos'},
             {type:'string', name:'propietario'}
@@ -56,110 +51,111 @@ Ext.onReady(function()
    
     ////// stores //////
     var storeDocumentos = Ext.create('Ext.data.Store', {
-		model             : 'modeloDocumentos',
-		proxy             : {
-			type          : 'ajax'
-			,url          : _p21_urlListarDirectorio
-		    ,extraParams  :  {path:_p21_pathListarDirectorio} 
-		    ,reader       :
+		model     : 'modeloDocumentos',
+		proxy     : {
+			type        : 'ajax'
+			,url        : _p21_urlListarDirectorio
+		    ,extraParams: {path:'/RES/logs/gseguros'}
+		    ,reader     :
 		    {
-		    	type      : 'json'
-		      	,root     : 'slist1'
+		    	type  : 'json'
+		      	,root : 'slist1'
 		    }
 		    	,autoLoad : true
-		},
-		sorters           :[
-	    	{
-	    		sorterFn  : function(o1,o2){
-	            	//console.log(o1.get('tamDoc'), "-------", o2.get('tamDoc'));
-	            	//console.log('sorting:',o1,o2);
-	                if (o1.get('tamDoc') === o2.get('tamDoc')){
-	                	return 0;
-	                }
-	                return o1.get('tamDoc')-0 < o2.get('tamDoc')-0 ? -1 : 1;
-	            }
-	    	}
-		]
+		}	    
 	});
     
+  
+	var storeDocumentos2 = Ext.create('Ext.data.Store', {
+        storeId:'storeDocumentos2',
+        fields:['nombreDoc', 
+        		'tamañoDoc', 
+        		'modificado', 
+        		'permisos', 
+        		'propietario'],
+        data:{'items':[ //deben venir del formulario anterior
+            { 'nombreDoc':'Dafna',  'tamañoDoc':'Brandt',  'modificado':'xxx', 'permisos':'Borges', 'propietario':'23'},
+            { 'nombreDoc':'XXXX',  'tamañoDoc':'YYYYY',  'modificado':'xxx','permisos':'BoZZZZZrges', 'propietario':'11'}
+        ]},
+        proxy: {
+            type: 'memory',
+            reader: {
+                type: 'json',
+                root: 'items'
+            }
+        }
+        ,autoload: true
+    });
+
+    ////// stores //////
     
     ////// componentes //////
 	var gridDocumentos = Ext.create('Ext.grid.Panel', {
 	    title: 'Documentos del Servidor',
+	    //store: Ext.data.StoreManager.lookup('storeDocumentos'),
 	    itemId: 'gridDocumentos',
-	    //layout: 'fit',
-	    flex  : 1,
-		selType: 'cellmodel',
-	    store: storeDocumentos,
+	    store: storeDocumentos2,
 	    columns: [
-	        { text: 'nombreDoc', dataIndex:'nombreDoc'},
-	        { text: 'tamDoc', dataIndex:'tamDoc'},
-	        { text: 'modificado', dataIndex:'modificado'},
-	        { text: 'permisos', dataIndex:'permisos'},
-	        { text: 'propietario', dataIndex:'propietario'},
+	        { text: 'NombreDoc',  dataIndex: 'nombreDoc', editor: 'textfield' },
+	        { text: 'TamañoDoc', dataIndex: 'tamañoDoc', flex: 1, editor: {xtype: 'textfield', allowBlank: false} },
+	        { text: 'Modificado', dataIndex: 'modificado', flex: 1, editor: {xtype: 'textfield', allowBlank: false} },
+	        { text: 'Permisos', dataIndex: 'permisos', flex: 1, editor: {xtype: 'textfield', allowBlank: false} },
+	        { text: 'Propietario', dataIndex: 'propietario', flex: 1, editor: {xtype: 'textfield', allowBlank: false} },
 	        { xtype    :'actioncolumn',
 	            text     : 'Descargar',
-	            flex     : 1,
+	            flex     : 2,
 	            items: [{
 	                tooltip : 'Descargar Documento',
-	                icon    : '${ctx}/resources/fam3icons/icons/disk.png',
-	                handler : function(gridDocumentos, rowIndex, colIndex) {
-	                	var record = gridDocumentos.getStore().getAt(rowIndex);
-	                	_p21_nombreArchDescargar = record.data.nombreDoc;
-	                	console.log("record.nombreDoc ", _p21_nombreArchDescargar);
-	                	descargar(_p21_nombreArchDescargar);
+	                icon    : '${ctx}/resources/fam3icons/icons/color_swatch.png',
+	                handler : function(grid, rowIndex, colIndex, item, e, record, row) {
+	                						                	
+	                	/*var par = Ext.ComponentQuery.query('form')[0].getForm().getValues();
+						par['params.consulta'] = 'RECUPERAR_TRAMITES_LINEANEGOCIO_POR_RAMO';
+						par['params.lineanegocio'] = record.get('CD_LINEA_NEGOCIO');
+						par['params.cdetapa'] = Ext.ComponentQuery.query('[name=params.cdetapa]')[0].getValue();
+						
+						storeDetalleLineaNegocioPorRamo.getProxy().extraParams = par;
+						storeDetalleLineaNegocioPorRamo.load();
+						*/
+						
+						//descargar documento
 	                }
 	            }]
 	        }
-	    	],
+	    ],
+	    selType: 'cellmodel',
 	    width: '100%',
-	    forceFit: true,
-	    //selType: 'cellmodel',
 	    listeners: {
-			boxready: function (sm, selectedRecord) {
+			selectionchange : function(sm, selectedRecord) {
+				console.log("en el selection change");
 				storeDocumentos.load()
-			} 
+			}
 	    }
 	});
 	
     ////// contenido //////
     Ext.create('Ext.Panel', {
 	    bodyPadding: 5,  
-	    width: '50%',
+	    width: '100%',
 	    title: '',
 	    itemId: 'panelPpal',
-	    allign: 'center',
 	    items: [
 	    	{
 	    		xtype: gridDocumentos
 	    	}
 	    ],
+	    //renderTo: Ext.getBody()
 	    renderTo: 'divDocumentos'
 	});
     ////// custom //////
 	
 	////// funciones //////
-	
-	function descargar(_p21_nombreArchDescargar){
-    	Ext.create('Ext.form.Panel').submit(
-        {
-            url              : _p21_urlDescargaDoc
-            , standardSubmit : true
-            , target         : '_blank'
-            , params         :
-            {
-            	path:_p21_pathDescargarDirectorio
-		    	,subfolder:_p21_subfolderDescargarDirectorio
-		    	,filename:_p21_nombreArchDescargar
-            }
-        });
-    }
 
 });
 </script>
 
 </head>
 <body>
-	<div id="divDocumentos" style="height:700px;" allign="right"></div>
+	<div id="divDocumentos" style="height:500px;"></div>
 </body>
 </html>
