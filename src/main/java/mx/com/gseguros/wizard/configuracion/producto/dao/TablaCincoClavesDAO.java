@@ -48,7 +48,7 @@ public class TablaCincoClavesDAO extends AbstractDAO {
 	protected class ObtenerValoresClave extends CustomStoredProcedure {
 
 		protected ObtenerValoresClave(DataSource dataSource) {
-			super(dataSource, "PKG_TABAPOYO.P_OBTIENE_VALORES_CLAVES");
+			super(dataSource, "PKG_TABAPOYO_PRE.P_OBTIENE_VALORES_CLAVES");
 
 			declareParameter(new SqlParameter("PV_NMTABLA_I",
 					OracleTypes.VARCHAR));
@@ -72,7 +72,7 @@ public class TablaCincoClavesDAO extends AbstractDAO {
 	protected class BorraValoresClave extends CustomStoredProcedure {
 
 		protected BorraValoresClave(DataSource dataSource) {
-			super(dataSource, "PKG_TABAPOYO.P_BORRA_VALORATT");
+			super(dataSource, "PKG_TABAPOYO_PRE.P_BORRA_VALORATT");
 
 			declareParameter(new SqlParameter("pi_tabla", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_clave01", OracleTypes.VARCHAR));
@@ -119,7 +119,7 @@ public class TablaCincoClavesDAO extends AbstractDAO {
     protected class ListaCincoClaves extends CustomStoredProcedure {
     	
     	protected ListaCincoClaves(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_OBTIENE_CLAVES");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_OBTIENE_CLAVES");
     		
     		declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ClaveMapper()));
@@ -155,7 +155,7 @@ public class TablaCincoClavesDAO extends AbstractDAO {
     protected class DescripcionesClaves extends CustomStoredProcedure {
     	
     	protected DescripcionesClaves(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_OBTIENE_ATRIBUTOS");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_OBTIENE_ATRIBUTOS");
     		
     		declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DesClaveMapper()));
@@ -192,7 +192,7 @@ public class TablaCincoClavesDAO extends AbstractDAO {
 protected class DescripAtrCincoClaves extends CustomStoredProcedure {
     	
     	protected DescripAtrCincoClaves(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_OBTIENE_DESC_ATR");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_OBTIENE_DESC_ATR");
     		declareParameter(new SqlParameter("PI_NMTABLA",OracleTypes.VARCHAR));
  
     		declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new Desc5ClvMapper()));
@@ -222,7 +222,7 @@ protected class DescripAtrCincoClaves extends CustomStoredProcedure {
     protected class ValoresAtrCincoClaves extends CustomStoredProcedure {
     	
     	protected ValoresAtrCincoClaves(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_OBTIENE_VALORES_ATRIBUTOS");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_OBTIENE_VALORES_ATRIBUTOS");
     		declareParameter(new SqlParameter("PV_NMTABLA_I",OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("PV_OTCLAVE1_I",OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("PV_OTCLAVE2_I",OracleTypes.VARCHAR));
@@ -282,7 +282,7 @@ protected class DescripAtrCincoClaves extends CustomStoredProcedure {
     protected class InsertaValoresCincoClaves extends CustomStoredProcedure {
 
 		protected InsertaValoresCincoClaves(DataSource dataSource) {
-			super(dataSource, "PKG_TABAPOYO.P_GUARDA_VALORES");
+			super(dataSource, "PKG_TABAPOYO_PRE.P_GUARDA_VALORES");
 
 			  declareParameter(new SqlParameter("PI_TIP_TRAN", OracleTypes.VARCHAR));
 			  declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
