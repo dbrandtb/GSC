@@ -139,6 +139,14 @@
 			var _URL_ALTA_EVENTO                        = '<s:url namespace="/siniestros"       action="consultaDatosTipoEventoAlta" />';
 			var _URL_REQAUTES							= '<s:url namespace="/siniestros"		action="actualizarReqautes" />'; // (EGS) para marcar afiliados que excedan limite de medicamentos
 			var _URL_REVISIONDOCSINIESTRO               = '<s:url namespace="/siniestros"       action="includes/revisionDocumentos" />';
+			
+			var _UrlConsultaDatosEstudiosCobAsegurado = '<s:url namespace="/siniestros"    action="obtieneDatosEstCobAseg" />';
+			var _UrlCatTiposResultado = '<s:url namespace="/siniestros"    action="obtieneTiposResultadoEstudio" />';
+			var _UrlCatTiposResultadoTodos = '<s:url namespace="/siniestros"    action="obtieneTiposResultadoTodos" />';
+			var _UrlValidaCapturaEstudiosCobertura = '<s:url namespace="/siniestros"    action="validaRequiereCapturaResEstudios" />';
+			var _UrlActualizaEliminaEstudiosCobertura = '<s:url namespace="/siniestros"    action="actualizaEliminaEstudiosCobAseg" />';
+			var _UrlValidaDatosEstudiosReclamacion = '<s:url namespace="/siniestros"    action="validaDatosEstudiosReclamacion" />';
+			
 			var _11_itemsForm	= [
 				<s:property value="imap.itemsForm" />
 				,{
@@ -1410,7 +1418,30 @@
 			    	labelWidth: 170,				valueField   : 'key',			forceSelection : true,			matchFieldWidth: false,
 			    	queryMode :'local',			store : storeSubcoberturaAsegurado,		triggerAction: 'all',			editable:true,
 			    	listeners : {
-						'select' : function(combo, record) {
+						'select' : function(combo, recordsSel) {
+							
+							var valorCobertura = _11_aseguradoSeleccionado.get('CDGARANT');
+							var valorSubCobertura = this.getValue();
+							
+							var recordRecAseg = gridFacturaDirecto.getSelectionModel().getLastSelected();
+							
+							var paramsResEstudios = {
+                     			cdunieco  : recordRecAseg.get('CDUNIECO'),
+                     			cdramo    : recordRecAseg.get('CDRAMO'),
+                     			aaapertu  : recordRecAseg.get('AAAPERTU'),
+                     			status    : recordRecAseg.get('STATUS'),
+                     			nmsinies : recordRecAseg.get('NMSINIES'),
+                     			nmsituac  : recordRecAseg.get('NMSITUAC'),
+                     			cdtipsit  : recordRecAseg.get('CDTIPSIT'),
+                     			cdgarant  : valorCobertura,
+                     			cdconval  : valorSubCobertura,
+                     			dsconval  : recordsSel[0].get('value'),
+                     			dsasegurado: recordRecAseg.get('NOMBRE'),
+                     			accionBoton: false
+                     		};
+							
+                           	validaCapturaResultadoEstudiosAsegurado(paramsResEstudios);
+                            	
 							_11_aseguradoSeleccionado.set('CDCONVAL',this.getValue());
 							//banderaAsegurado = 1;
 							debug("VALOR DE LA BANDERA ASEURADO -->",banderaAsegurado);
@@ -1423,6 +1454,7 @@
                                     'params.cdconval'  : this.getValue()
                                 }
                                 ,success : function (response) {
+                                	
                                     //Obtenemos los datos
                                     if(Ext.decode(response.responseText).datosValidacion != null){
                                         var jsonValidacionCober =Ext.decode(response.responseText).datosValidacion;
@@ -1731,6 +1763,37 @@
 										,tooltip : 'Eliminar Asegurado'
 										,disabled: _11_params.STATUS == _STATUS_TRAMITE_CONFIRMADO && !(_GLOBAL_CDSISROL == _COORDINADOR_REC || _GLOBAL_CDSISROL == _GERENTE_REC) ? true : false  // (EGS)  
 										,handler : eliminarAsegurado
+										
+									},
+									{
+										icon	 : '${ctx}/resources/fam3icons/icons/page_edit.png'
+										,tooltip : 'Datos Informativos de estudios m&eacute;dicos por asegurado.'
+										,handler : function(view, rowIndex, colIndex, item, e, recordRecAseg, row ){
+											
+											var valorCobertura = recordRecAseg.get('CDGARANT');
+											var valorSubCobertura = recordRecAseg.get('CDCONVAL');
+											if(Ext.isEmpty(valorCobertura) || Ext.isEmpty(valorSubCobertura)){
+												mensajeWarning('Aun no hay datos capturados de Cobertura y Subcobertura para esta acci&oacute;n');
+											}else{
+												var paramsResEstudios = {
+						                     			cdunieco  : recordRecAseg.get('CDUNIECO'),
+						                     			cdramo    : recordRecAseg.get('CDRAMO'),
+						                     			aaapertu  : recordRecAseg.get('AAAPERTU'),
+						                     			status    : recordRecAseg.get('STATUS'),
+						                     			nmsinies : recordRecAseg.get('NMSINIES'),
+						                     			nmsituac  : recordRecAseg.get('NMSITUAC'),
+						                     			cdtipsit  : recordRecAseg.get('CDTIPSIT'),
+						                     			cdgarant  : valorCobertura,
+						                     			cdconval  : valorSubCobertura,
+						                     			dsconval  : 'Sin DESCRIPCION',
+						                     			dsasegurado: recordRecAseg.get('NOMBRE'),
+						                     			accionBoton: true
+						                     		};
+													
+						                           	validaCapturaResultadoEstudiosAsegurado(paramsResEstudios);
+											}
+											
+										}
 										
 									}
 								]

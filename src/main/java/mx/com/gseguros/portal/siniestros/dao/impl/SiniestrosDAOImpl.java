@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.siniestros.dao.impl;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -6954,4 +6955,202 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		compile();
     	}
     }
+
+
+	@Override
+	public List<Map<String, String>> obtieneEstudiosCobAseg(HashMap<String, String> params) throws Exception {
+		
+		Map<String, Object> result = ejecutaSP(new ObtieneEstudiosCobAseg(this.getDataSource()), params);
+
+		List<Map<String, String>> lista = (List<Map<String,String>>)result.get("pv_registro_o");
+		
+		if(lista!=null && !lista.isEmpty()){
+			for(Map<String, String> elemento :lista){
+				if(StringUtils.isBlank(elemento.get("CDRESEST"))){
+					elemento.put("CDRESEST","");
+				}
+				if(StringUtils.isBlank(elemento.get("VALOR"))){
+					elemento.put("VALOR","");
+				}
+				if(StringUtils.isBlank(elemento.get("OBSERV"))){
+					elemento.put("OBSERV","");
+				}
+			}
+		}
+		
+		return lista;
+	}
+	
+	 protected class ObtieneEstudiosCobAseg extends StoredProcedure {
+	    	protected ObtieneEstudiosCobAseg(DataSource dataSource) {
+	    		super(dataSource, "PKG_PROESTDETOP.P_OBTIENE_DATOS");
+	    		
+				declareParameter(new SqlParameter("cdunieco", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("cdramo", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("aaapertu", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("status", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("nmsiniest", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("nmsituac", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("cdtipsit", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("cdgarant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("cdconval", OracleTypes.VARCHAR));
+				
+				String[] cols = new String[]{
+						 "CDCONCEP"
+						,"DSCONCEP"
+						,"CDEST"
+						,"DSEST"
+						,"CDRESEST"
+						,"VALOR"
+						,"OBSERV"
+				};
+				declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+	    	}
+	    }
+
+	 @Override
+	 public List<GenericVO> obtieneTiposResultadoEstudio(String cdestudio) throws Exception {
+		 Map<String, Object> params = new HashMap<String, Object>();
+		 params.put("pi_cdest", cdestudio);
+		 Map<String, Object> result = ejecutaSP(new ObtieneTiposResultadoEstudio(this.getDataSource()), params);
+		 
+		 List<GenericVO> lista = (List<GenericVO>) result.get("pv_registro_o");
+			
+		 return lista;
+	 }
+	 
+	 protected class ObtieneTiposResultadoEstudio extends StoredProcedure {
+		 protected ObtieneTiposResultadoEstudio(DataSource dataSource) {
+			 super(dataSource, "PKG_PROESTDETOP.P_OBTIENE_RESULTADOS");
+			 
+			 declareParameter(new SqlParameter("pi_cdest", OracleTypes.VARCHAR));
+			 
+			 String[] cols = new String[]{
+					 "CDRESEST"
+					 ,"DSRESEST"
+			 };
+			 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ResEstMapper()));
+			 declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			 declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			 compile();
+		 }
+	 }
+	 
+	 protected class ResEstMapper  implements RowMapper {
+	        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	GenericVO consulta = new GenericVO();
+	        	consulta.setKey(rs.getString("CDRESEST"));
+	        	consulta.setValue(rs.getString("DSRESEST"));
+	            return consulta;
+	        }
+    }
+	 
+	 @Override
+	 public List<GenericVO> obtieneTiposResultadoTodos() throws Exception {
+		 Map<String, Object> params = new HashMap<String, Object>();
+		 Map<String, Object> result = ejecutaSP(new obtieneTiposResultadoTodos(this.getDataSource()), params);
+		 return (List<GenericVO>)result.get("pv_registro_o");
+	 }
+	 
+	 protected class obtieneTiposResultadoTodos extends StoredProcedure {
+		 protected obtieneTiposResultadoTodos(DataSource dataSource) {
+			 super(dataSource, "PKG_PROESTDETOP.P_OBTIENE_CATRESULTADOS");
+			 
+			 String[] cols = new String[]{
+					 "CDRESEST"
+					 ,"DSRESEST"
+			 };
+			 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ResEstMapper()));
+			 declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			 declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			 compile();
+		 }
+	 }
+	 
+	@Override
+	public boolean validaRequiereCapturaResEstudios(HashMap<String, String> params) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new ValidaRequiereCapturaResEstudios(getDataSource()), params);
+		BigDecimal registros = (BigDecimal) mapResult.get("pv_swreg");
+		logger.debug(">>>>>> Resultado para validar si se capturan resultados de estudios, registros de configuracion P_VALIDA_INGDATOS <<<<<<: "+registros);
+		return (registros.intValue() > 0) ?  true : false;
+	}
+	
+	protected class ValidaRequiereCapturaResEstudios extends StoredProcedure {
+	
+		protected ValidaRequiereCapturaResEstudios(DataSource dataSource) {
+			super(dataSource, "PKG_PROESTDETOP.P_VALIDA_INGDATOS");
+			declareParameter(new SqlParameter("pi_cdramo", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdtipsit", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdgarant", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdconval", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_swreg", OracleTypes.NUMBER));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public boolean actualizaEliminaEstudiosCobAseg(HashMap<String, String> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ActualizaEliminaEstudiosCobAseg(this.getDataSource()), params);
+		return true;
+	}
+	
+	 protected class ActualizaEliminaEstudiosCobAseg extends StoredProcedure {
+	    	protected ActualizaEliminaEstudiosCobAseg(DataSource dataSource) {
+	    		super(dataSource, "PKG_PROESTDETOP.P_GUARDA_DATOS");
+	    		
+				declareParameter(new SqlParameter("pi_cdunieco", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdramo", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_aaapertu", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_status", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_nmsiniest", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_nmsituac", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdtipsit", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdgarant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdconval", OracleTypes.VARCHAR));
+				
+				declareParameter(new SqlParameter("pi_cdconcep", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdest", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdresest", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_valor", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_observ", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
+				
+		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+	    	}
+	    }
+	 
+	 @Override
+		public boolean validaDatosEstudiosReclamacion(HashMap<String, String> params) throws Exception {
+			Map<String, Object> mapResult = ejecutaSP(new ValidaDatosEstudiosReclamacion(getDataSource()), params);
+			BigDecimal registros = (BigDecimal) mapResult.get("pv_swreg");
+			logger.debug(">>>>>> Resultado para validar si hay registros de resultados de estudios, registros de configuracion P_VALIDA_REGDATOS <<<<<<: "+registros);
+			return (registros.intValue() > 0) ?  true : false;
+		}
+		
+		protected class ValidaDatosEstudiosReclamacion extends StoredProcedure {
+		
+			protected ValidaDatosEstudiosReclamacion(DataSource dataSource) {
+				super(dataSource, "PKG_PROESTDETOP.P_VALIDA_REGDATOS");
+				declareParameter(new SqlParameter("pi_cdunieco", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdramo", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_aaapertu", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_status", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_nmsiniest", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_nmsituac", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdtipsit", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdgarant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdconval", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_swreg", OracleTypes.NUMBER));
+		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
 }

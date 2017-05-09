@@ -812,4 +812,16 @@ public interface SiniestrosManager {
 	public List<Map<String, String>> getConsultaDatosSumaAseguradaGNP(String cdunieco, String cdramo,String estado,String nmpoliza, String cdperson, String nmsinref) throws Exception;
 	
 	public String obtenerValidacionExclusionICD(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String cdicd )throws Exception;
+
+	public List<Map<String, String>> obtieneEstudiosCobAseg(HashMap<String, String> params)throws Exception;
+
+	public List<GenericVO> obtieneTiposResultadoEstudio(String cdestudio) throws Exception;
+
+	public List<GenericVO> obtieneTiposResultadoTodos() throws Exception;
+	
+	public boolean validaRequiereCapturaResEstudios(HashMap<String, String> params) throws Exception;
+
+	public boolean actualizaEliminaEstudiosCobAseg(HashMap<String, String> params) throws Exception;
+	
+	public boolean validaDatosEstudiosReclamacion(HashMap<String, String> params) throws Exception;
 }
