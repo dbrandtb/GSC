@@ -3036,4 +3036,35 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
 	}
+
+	@Override
+	public List<Map<String, String>> obtieneEstudiosCobAseg(HashMap<String, String> params) throws Exception {
+		return siniestrosDAO.obtieneEstudiosCobAseg(params);
+	}
+	
+	@Override
+	public List<GenericVO> obtieneTiposResultadoEstudio(String cdestudio) throws Exception{
+		return siniestrosDAO.obtieneTiposResultadoEstudio(cdestudio);
+	}
+
+	@Override
+	public List<GenericVO> obtieneTiposResultadoTodos() throws Exception{
+		return siniestrosDAO.obtieneTiposResultadoTodos();
+	}
+	
+	@Override
+	public boolean validaRequiereCapturaResEstudios(HashMap<String, String> params) throws Exception{
+		return siniestrosDAO.validaRequiereCapturaResEstudios(params);
+	}
+	
+	@Override
+	public boolean actualizaEliminaEstudiosCobAseg(HashMap<String, String> params) throws Exception{
+		return siniestrosDAO.actualizaEliminaEstudiosCobAseg(params);
+	}
+
+	@Override
+	public boolean validaDatosEstudiosReclamacion(HashMap<String, String> params) throws Exception{
+		return siniestrosDAO.validaDatosEstudiosReclamacion(params);
+	}
+	
 }
