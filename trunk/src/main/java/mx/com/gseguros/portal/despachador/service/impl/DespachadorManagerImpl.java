@@ -725,7 +725,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 }
                 
                 try {
-                    paso = "Enviando correos configurados";
+                    paso = "Enviando correos configurados 1";
                     logger.debug(paso);
                     flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
                             correosRecibidos);
@@ -907,7 +907,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                         }
                         
                         try {
-                            paso = "Enviando correos configurados";
+                            paso = "Enviando correos configurados 2";
                             logger.debug(paso);
                             flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
                                     correosRecibidos);
@@ -975,7 +975,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                         }
                         
                         try {
-                            paso = "Enviando correos configurados";
+                            paso = "Enviando correos configurados 3";
                             logger.debug(paso);
                             flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
                                     correosRecibidos);
@@ -1179,7 +1179,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                     );
             
             try {
-                paso = "Enviando correos configurados";
+                paso = "Enviando correos configurados 4";
                 logger.debug(paso);
                 flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, false);
             } catch (Exception ex) {
