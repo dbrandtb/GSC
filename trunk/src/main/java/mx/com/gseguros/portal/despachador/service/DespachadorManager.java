@@ -123,4 +123,19 @@ public interface DespachadorManager {
      * @throws Exception
      */
     public void guardaConfPermisos(Map<String, String> permiso) throws Exception;
+    
+    /**
+     * Recupera, Autos Capturados para Rol Tecnico Autos
+     * @param ntramite
+     * @throws Exception
+     */
+    public List<Map<String, String>> claveAutoFlujo(String ntramite) throws Exception;
+    
+    /**
+     * Guarda, Autos Capturados
+     * @param ntramite
+     * @param slist1
+     * @throws Exception
+     */
+    public void guardaClaveAutoFlujo(String ntramite, List<Map<String,String>>  slist1) throws Exception;
 }

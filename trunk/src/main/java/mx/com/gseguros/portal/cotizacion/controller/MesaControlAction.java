@@ -1453,6 +1453,87 @@ public class MesaControlAction extends PrincipalCoreAction
         return SUCCESS;
     }
 	
+	public String recuperacionClaveAutosFlujo(){
+        logger.debug(Utils.log(
+                "\n############################################",
+                "\n############################################",
+                "\n######   recuperacionClaveAutosFlujo  ######",
+                "\n######                            ##########"
+                ));
+        logger.debug("smap1:  "+smap1);
+        //logger.debug("slist1: "+slist1);
+        try
+        {
+            this.session = ActionContext.getContext().getSession();
+            UserVO usuario = Utils.validateSession(session);
+            
+            Utils.validate(smap1, "No hay datos para reasignar tramite");
+            Utils.validate(smap1, "No hay lista de tramites para reasignar");
+            
+            String ntramite = smap1.get("ntramite");
+
+           
+            slist1 = despachadorManager.claveAutoFlujo(ntramite);
+            logger.debug("slist1{}"+slist1);
+            
+            success=true;
+            
+        } catch(Exception ex) {
+            success=false;
+            logger.error("error",ex);
+            mensaje = Utils.manejaExcepcion(ex);
+        }
+        logger.debug(Utils.log(
+                "\n######                            ###########",
+                "\n######   recuperacionClaveAutosFlujo  #######",
+                "\n#############################################",
+                "\n#############################################"
+                ));
+        return SUCCESS;
+    }
+	
+	/**
+	 * @return
+	 */
+	public String guardaClaveAutosFlujo(){
+        logger.debug(Utils.log(
+                "\n######################################",
+                "\n######################################",
+                "\n######   guardaClaveAutosFlujo  ######",
+                "\n######                          ######"
+                ));
+        logger.debug("smap1:  "+smap1);
+        logger.debug("slist1: "+slist1);
+        try
+        {
+            this.session = ActionContext.getContext().getSession();
+            UserVO usuario = Utils.validateSession(session);
+            
+          //  Utils.validate(smap1, "No hay datos para reasignar tramite");
+            //Utils.validate(smap1, "No hay lista de tramites para reasignar");
+            
+            String ntramite = smap1.get("ntramite");
+
+           
+            despachadorManager.guardaClaveAutoFlujo(ntramite, slist1);
+            logger.debug("slist1{}"+slist1);
+            
+            success=true;
+            
+        } catch(Exception ex) {
+            success=false;
+            logger.error("error",ex);
+            mensaje = Utils.manejaExcepcion(ex);
+        }
+        logger.debug(Utils.log(
+                "\n######                          #############",
+                "\n######   guardaClaveAutosFlujo  #############",
+                "\n#############################################",
+                "\n#############################################"
+                ));
+        return SUCCESS;
+    }
+	
 	/////////////////////////////////
 	////// getters ans setters //////
 	/*/////////////////////////////*/
