@@ -1316,4 +1316,33 @@ K                   ENCOLAR CON DATOS ORIGINALES
     public void guardaConfPermisos(Map<String, String> permiso) throws Exception {
     	despachadorDAO.guardaConfPermisos(permiso);
     }
+    
+    @Override
+    public List<Map<String, String>> claveAutoFlujo(String ntramite) throws Exception {
+    	String paso = null;
+    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
+    	
+    	try {
+    		lista = despachadorDAO.recuperarClaveAutoFlujo(ntramite);
+    	} catch (Exception ex) {
+    		Utils.generaExcepcion(ex, paso);
+    	}
+    	return lista;
+    }
+    
+    @Override
+    public void guardaClaveAutoFlujo(String ntramite, List<Map<String,String>> slist1) throws Exception {
+    	String paso = null;
+    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
+    	
+    	try {
+    		
+    		for(Map<String,String>inciso:slist1)
+			{
+    			despachadorDAO.guardaClaveAutosFlujo(ntramite, slist1);
+			}
+    	} catch (Exception ex) {
+    		Utils.generaExcepcion(ex, paso);
+    	}
+    }
 }
