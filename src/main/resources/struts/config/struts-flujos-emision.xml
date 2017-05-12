@@ -373,6 +373,11 @@
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp-script/proceso/emision/cotizacionAutoFlotilla.jsp</result>
         </action>
+          <!--         vils -->
+         <action name="cotizacionMasivaIndividuales" class="cotizacionAutoAction" method="cotizacionMasivaIndividuales">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/emision/cotizacionMasivaIndividuales.jsp</result>
+        </action>
         
         <action name="cotizarAutosFlotilla" class="cotizacionAutoAction" method="cotizarAutosFlotilla">
             <interceptor-ref name="json">
@@ -487,7 +492,7 @@
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp-script/proceso/emision/cotizacionAutoFlotilla.jsp</result>
         </action>
-        
+
         <action name="recuperarDatosEndosoAltaIncisoAuto" class="endososAutoAction" method="recuperarDatosEndosoAltaIncisoAuto">
             <result type="json" />
         </action>
@@ -577,7 +582,7 @@
         <action name="obtieneRangoPeriodoGraciaAgente" class="cotizacionAutoAction" method="obtieneRangoPeriodoGraciaAgente">
             <result name="success" type="json" />
         </action>       
-        
+      
        <action name="cargaMasivaFlotillaEmision" class="cotizacionAutoAction" method="cargaMasivaFlotillaEmision">
             <result name="success" type="json" />
         </action>
