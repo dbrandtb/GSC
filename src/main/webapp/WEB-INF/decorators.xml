@@ -132,6 +132,7 @@
 		<pattern>/jsp-script/proceso/emision/cotizacionAutoFlotilla.jsp</pattern>
         
         <pattern>/jsp-script/proceso/emision/cotizacionMasivaIndividuales.jsp</pattern>
+        <pattern>/jsp-script/proceso/emision/cargaMasivaClientes.jsp</pattern>
         
 		<pattern>/jsp-script/proceso/emision/cargarExcel.jsp</pattern>
         
@@ -145,6 +146,7 @@
         
 		<pattern>/emision/cotizacionAutoFlotilla.action</pattern>
 		<pattern>/emision/cotizacionMasivaIndividuales.action</pattern>
+		<pattern>/emision/cargaMasivaClientes.action</pattern>
         
 		<pattern>/emision/emisionAutoIndividual.action</pattern>
 		<pattern>/emision/emisionAutoFlotilla.action</pattern>
