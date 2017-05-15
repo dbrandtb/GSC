@@ -1431,7 +1431,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 if(modPrim.isEmpty() && facultar && !emergency)
                 {  
                 	String str = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmsolici==null?resp.getSmap().get("nmpoliza"):nmsolici , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-                    resp.setRespuesta(str.substring(1,(str.length()-1)));
+                    resp.setRespuesta(StringUtils.isBlank(str)?"":str.substring(1,(str.length()-1)));
                 }
                 logger.debug(Utils.log(resp.getRespuesta()));
             }
