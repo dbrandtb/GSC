@@ -1029,8 +1029,8 @@ function _p59_confirmar (button, autorizar) {
                     debug('AJAX jsonConfirmar:', jsonConfirmar);
                     if (jsonConfirmar.success !== true) {
                         throw jsonConfirmar.message;
-                    }
-                    mensajeCorrecto(
+                    }else if(jsonConfirmar.params.autoriza!='N'){
+                    	mensajeCorrecto(
                         'Endoso confirmado',
                         jsonConfirmar.params.message,
                         function () {
@@ -1059,6 +1059,24 @@ function _p59_confirmar (button, autorizar) {
                             }
                         }
                     );
+                    }else{
+                    	mensajeCorrecto(
+                        'Endoso confirmado',
+                        jsonConfirmar.params.message,
+                        function () {
+                                    try {
+                                        //////////////////////////////////
+                                        ////// usa codigo del padre //////
+                                        /*// ////////////////////////////*/
+                                        marendNavegacion(2);
+                                        /*//////////////////////////////*/
+                                        ////// usa codigo del padre //////
+                                        //////////////////////////////////
+                                    } catch (e) {}
+                                }
+                     );
+                    }
+                    
                 } catch (e) {
                     manejaException(e, ck);
                 }
