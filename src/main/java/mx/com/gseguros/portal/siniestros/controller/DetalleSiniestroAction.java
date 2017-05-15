@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.siniestros.controller;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Map.Entry;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -26,7 +24,6 @@ import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
@@ -56,13 +53,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	private List<Map<String, String>> siniestro;
 	private List<HistorialSiniestroVO> historialSiniestro;
 	
-	private List<GenericVO> cargaLista = new ArrayList<GenericVO>(0);
 	
-	
-	public List<GenericVO> getCargaLista() {
-		return cargaLista;
-	}
-
 	public String execute() throws Exception{
 		success = true;
 		return SUCCESS;
@@ -666,146 +657,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
         success = true;
         return SUCCESS;
     }
-    
-    
-    public String obtieneDatosEstudiosCoberturaAsegurado() throws Exception {
-		logger.debug("Entra a obtieneDatosEstudiosCoberturaAsegurado Params: {}", params);
-		try {
-			Utils.validate(params, "No se recibieron datos para cargar estudios.");
-			
-			String cdunieco  = params.get("cdunieco");
-			String cdramo    = params.get("cdramo");
-			String aaapertu  = params.get("aaapertu");
-			String status    = params.get("status");
-			String nmsiniest = params.get("nmsiniest");
-			String nmsituac  = params.get("nmsituac");
-			String cdtipsit  = params.get("cdtipsit");
-			String cdgarant  = params.get("cdgarant");
-			String cdconval  = params.get("cdconval");
-			
-			Utils.validate(cdunieco, "No se recibi\u00f3 la unidad economica");
-			Utils.validate(cdramo, "No se recibi\u00f3 el ramo");
-			Utils.validate(aaapertu, "No se recibi\u00f3 apertu");
-			Utils.validate(status, "No se recibi\u00f3 el status");
-			Utils.validate(nmsiniest, "No se recibi\u00f3 el numero de siniestro");
-			Utils.validate(nmsituac, "No se recibi\u00f3 la situacion");
-			Utils.validate(cdtipsit, "No se recibi\u00f3 el subramo");
-			Utils.validate(cdgarant, "No se recibi\u00f3 la cobertura");
-			Utils.validate(cdconval, "No se recibi\u00f3 la subcobertura");
-			
-			
-			loadList = siniestrosManager.obtieneEstudiosCobAseg(params); 
-			
-			success = true;
-			
-		}catch(Exception e){
-			mensaje = Utils.manejaExcepcion(e);	//(EGS)
-			logger.error("Error en obtieneDatosEstudiosCoberturaAsegurado {}", e.getMessage(), e);
-		}
-		return SUCCESS;
-	}
-    
-    public String obtieneTiposResultadoEstudio() throws Exception {
-		logger.debug("Entra a obtieneTiposResultadoEstudio Params: {}", params);
-		try {
-			Utils.validate(params, "No se recibieron datos para cargar estudios.");
-			
-			String cdest  = params.get("cdest");
-			
-			Utils.validate(cdest, "No se recibi\u00f3 el c\u00f3digo de estudio");
-			
-			cargaLista = siniestrosManager.obtieneTiposResultadoEstudio(cdest); 
-			
-			success = true;
-			
-		}catch(Exception e){
-			mensaje = Utils.manejaExcepcion(e);	//(EGS)
-			logger.error("Error en obtieneTiposResultadoEstudio {}", e.getMessage(), e);
-		}
-		return SUCCESS;
-	}
-
-    public String obtieneTiposResultadoTodos() throws Exception {
-    	logger.debug("Entra a obtieneTiposResultadoTodos");
-    	try {
-    		cargaLista = siniestrosManager.obtieneTiposResultadoTodos(); 
-    		success = true;
-    		
-    	}catch(Exception e){
-    		mensaje = Utils.manejaExcepcion(e);	//(EGS)
-    		logger.error("Error en obtieneTiposResultadoTodos {}", e.getMessage(), e);
-    	}
-    	return SUCCESS;
-    }
-
-    public String validaRequiereCapturaResEstudios() throws Exception {
-    	logger.debug("Entra a validaRequiereCapturaResEstudios");
-    	try {
-    		boolean validar = siniestrosManager.validaRequiereCapturaResEstudios(params); 
-    		Utils.validate(params, "No se recibieron datos para validar captura resultados estudios.");
-    		
-    		params.put("CAPTURA_RESULTADOS", validar? Constantes.SI : Constantes.NO);
-    		success = true;
-    		
-    	}catch(Exception e){
-    		mensaje = Utils.manejaExcepcion(e);	//(EGS)
-    		logger.error("Error en validaRequiereCapturaResEstudios {}", e.getMessage(), e);
-    	}
-    	return SUCCESS;
-    }
-    
-    public String actualizaEliminaEstudiosCobAseg() throws Exception {
-		logger.debug("Entra a actualizaEliminaEstudiosCobAseg Params: {}", saveList);
-		try {
-			//Utils.validate(saveList, "No se recibieron datos para guardar/eliminar estudios.");
-			
-			boolean correcto =  true;
-			for(Map<String, String> resultadoEst : saveList){
-				
-				if( StringUtils.isNotBlank( resultadoEst.get("pi_cdresest") ) ){
-					resultadoEst.put("pi_swop", Constantes.UPDATE_MODE);
-				}else{
-					resultadoEst.put("pi_swop", Constantes.DELETE_MODE);
-				}
-				if(correcto){
-					HashMap<String, String> paramsResEstudio = new HashMap<String, String>();
-					paramsResEstudio.putAll(resultadoEst);
-					correcto = siniestrosManager.actualizaEliminaEstudiosCobAseg(paramsResEstudio);
-				}else{
-					break;
-				}
-			}
-			
-			if(!correcto){
-				success = false;
-				throw new ApplicationException("No se han guardado correctamente todos los resultados de estudios m&eacute;dico.");
-			}
-			
-		}catch(Exception e){
-			mensaje = Utils.manejaExcepcion(e);	//(EGS)
-			logger.error("Error en actualizaEliminaEstudiosCobAseg {}", e.getMessage(), e);
-		}
-		
-		success =  true;
-		return SUCCESS;
-	}
-    
-    public String validaDatosEstudiosReclamacion() throws Exception {
-    	logger.debug("Entra a validaDatosEstudiosReclamacion");
-    	try {
-    		boolean valida = siniestrosManager.validaDatosEstudiosReclamacion(params); 
-    		Utils.validate(params, "No se recibieron datos para validar captura resultados estudios.");
-    		
-    		params.put("VALIDA_RES_RECL", valida? Constantes.SI : Constantes.NO);
-    		success = true;
-    		
-    	}catch(Exception e){
-    		mensaje = Utils.manejaExcepcion(e);	//(EGS)
-    		logger.error("Error en validaDatosEstudiosReclamacion {}", e.getMessage(), e);
-    	}
-    	return SUCCESS;
-    }
-    
 	
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
 		this.siniestrosManager = siniestrosManager;

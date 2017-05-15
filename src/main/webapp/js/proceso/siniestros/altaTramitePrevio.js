@@ -436,9 +436,8 @@ Ext.onReady(function() {
                     panelInicialPral.down('[name=idnombreAsegurado]').setValue(aseguradoAfectado.rawValue);
                    
                     var params = {
-                            'params.cdperson' 	: obtieneCDPerson,
-                            'params.cdramo' 	: panelInicialPral.down('combo[name=cmbRamos]').getValue(),
-	                        'params.fe_ocurre'	: panelInicialPral.down('[name=dtFechaOcurrencia]').getValue()	//(EGS)
+                            'params.cdperson' : obtieneCDPerson,
+                            'params.cdramo' : panelInicialPral.down('combo[name=cmbRamos]').getValue()
                     };
                     
                     cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
@@ -447,8 +446,7 @@ Ext.onReady(function() {
                             if(jsonResponse.listaPoliza == null) {
                                 Ext.Msg.show({
                                     title: 'Aviso',
-	                                //msg: 'No existen p&oacute;lizas para el asegurado elegido.', (EGS)
-	                                msg: 'La fecha de ocurrencia del siniestro, no coincide con alguna p&oacute;liza del asegurado',	// (EGS)
+                                    msg: 'No existen p&oacute;lizas para el asegurado elegido.',
                                     buttons: Ext.Msg.OK,
                                     icon: Ext.Msg.WARNING
                                 });
@@ -1727,7 +1725,6 @@ Ext.onReady(function() {
                             }
                             submitValues['datosTablas']=datosTablas;
                             panelInicialPral.setLoading(true);
-                            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
                             debug("VALORES A ENVIAR A GUARDAR --->");
                             debug(submitValues);
                             Ext.Ajax.request(
@@ -1748,12 +1745,7 @@ Ext.onReady(function() {
                                             etiqueta = "Modificaci&oacute;n";
                                             mensaje = "Se modific&oacute; el n&uacute;mero de tr&aacute;mite "+ valorAction.ntramite;
                                         }
-                                        var ntramiteEnviarRstn = valorAction.ntramite;
-                                        if (Ext.isEmpty(ntramiteEnviarRstn)) {
-                                            ntramiteEnviarRstn = Ext.decode(response.responseText).msgResult;
-                                        }
                                         mensajeCorrecto(etiqueta,mensaje,function() {
-                                            /*
                                             Ext.create('Ext.form.Panel').submit( {
                                                 url             : _p12_urlMesaControl
                                                 ,standardSubmit : true
@@ -1762,9 +1754,6 @@ Ext.onReady(function() {
                                                     ,'smap2.pv_cdtiptra_i' : 16
                                                 }
                                             });
-                                            */
-                                            _mask();
-                                            location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + ntramiteEnviarRstn;
                                         });
                                         panelInicialPral.getForm().reset();
                                         storeFacturaDirecto.removeAll();

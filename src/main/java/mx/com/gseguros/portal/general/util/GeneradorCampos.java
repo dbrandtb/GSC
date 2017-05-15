@@ -6,13 +6,12 @@ package mx.com.gseguros.portal.general.util;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utils;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -24,14 +23,12 @@ public class GeneradorCampos
 	private static       Logger log                   = Logger.getLogger(GeneradorCampos.class);
     public static final  String namePrefix            = "parametros.pv_otvalor";
     public static final  String namePrefixAux         = "aux.otvalor";
-    public static final  String namePrefixSimple      = "otvalor";
     private static final String formatoFecha          = "d/m/Y";
     private static final String xtypeDatecolumn       = "datecolumn";
     private static final int    staticFlex            = 1;
     private static final String descExcTipoCampoVacio = "El campo no tiene tipo campo (A,N,T,F,P)";
 	private static final String descExcTipoCampoOtro  = "El campo tiene tipo campo incorrecto (A,N,T,F,P)";
 	private static final String prefijoRutaIconos     = "/resources/fam3icons/icons/";
-    private static final String formatoFechaHora      = "d/m/Y H:i";
     
     public  String idPrefix;
     private Item   items;
@@ -54,21 +51,11 @@ public class GeneradorCampos
     private boolean esMovil   = false;
     private boolean auxiliar  = false; 
     
-    private boolean prefixSimple = false;
-    
     public GeneradorCampos(String context)
     {
     	this.context="/"+context;
     	this.rutaIconos = this.context+GeneradorCampos.prefijoRutaIconos;
     	log.debug("contexto para el generador de campos: "+this.context);
-    }
-    
-    public GeneradorCampos(String context, boolean prefixSimple)
-    {
-    	this.context="/"+context;
-    	this.rutaIconos = this.context+GeneradorCampos.prefijoRutaIconos;
-    	log.debug("contexto para el generador de campos: "+this.context);
-    	this.prefixSimple = prefixSimple;
     }
     
     /**
@@ -292,7 +279,7 @@ public class GeneradorCampos
         		item.setComposedName("Ext.create('Ext.field.Number',{");
         	}
         }
-        else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA)||tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA_HORA))
+        else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA))
         {
         	if(!esMovil)
         	{
@@ -345,12 +332,7 @@ public class GeneradorCampos
     			size=3;
     		}
         	name = StringUtils.leftPad(name,size,"0");
-        	name = (prefixSimple
-        			? GeneradorCampos.namePrefixSimple
-        			: auxiliar
-        				? GeneradorCampos.namePrefixAux
-        				: GeneradorCampos.namePrefix
-        	) + name;
+        	name = (auxiliar?GeneradorCampos.namePrefixAux:GeneradorCampos.namePrefix) + name;
         }
         
         String value=comp.getValue();
@@ -389,10 +371,6 @@ public class GeneradorCampos
         if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA))
         {
         	item.add("format",GeneradorCampos.formatoFecha);
-        }
-        else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA_HORA))
-        {
-        	item.add("format",GeneradorCampos.formatoFechaHora);
         }
         ////// format //////
         
@@ -806,11 +784,10 @@ public class GeneradorCampos
      */
     private Item generaField(List<ComponenteVO> listcomp, ComponenteVO comp, Integer idx) throws Exception
     {
-    	String tipoAlfanum   = "string";
-    	String tipoFecha     = "date";
-    	String tipoEntero    = "int";
-    	String tipoFlotante  = "float";
-    	String tipoFechaHora = "date2Aux";
+    	String tipoAlfanum  = "string";
+    	String tipoFecha    = "date";
+    	String tipoEntero   = "int";
+    	String tipoFlotante = "float";
     	
     	String name = comp.getNameCdatribu();
     	if(comp.isFlagEsAtribu())
@@ -840,10 +817,6 @@ public class GeneradorCampos
         		{
         			type = tipoFecha;
         		}
-        		else if(tipo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_FECHA_HORA))
-        		{
-        			type = tipoFechaHora;
-        		}
         		else if(tipo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_NUMERICO))
         		{
         			type = tipoEntero;
@@ -856,35 +829,23 @@ public class GeneradorCampos
         		{}
         		else
         		{
-        			throw new Exception(Utils.join(descExcTipoCampoOtro, ". Campo: ", comp.getLabel(), ", tipo: ", tipo));
+        			throw new Exception(descExcTipoCampoOtro);
         		}
         	}
         	else
         	{
-        		throw new Exception(Utils.join(descExcTipoCampoVacio, ". Campo: ", comp.getLabel()));
+        		throw new Exception(descExcTipoCampoVacio);
         	}
         }
 
         Item field=new Item();
         field.setType(Item.OBJ);
         field.add("name", name);
-        
-        if(type.equals(tipoFechaHora))
-        {
-        	field.add("type", tipoFecha);
-        }
-        else
-        {
-        	field.add("type", type);
-        }
+        field.add("type", type);
         
         if(type.equals(tipoFecha))
         {
         	field.add(Item.crear("dateFormat", GeneradorCampos.formatoFecha));
-        }
-        else if(type.equals(tipoFechaHora))
-        {
-        	field.add(Item.crear("dateFormat", GeneradorCampos.formatoFechaHora));
         }
         
         return field;
@@ -937,8 +898,7 @@ public class GeneradorCampos
 	        }
 	        
 	        String tipoCampo = comp.getTipoCampo();
-	        boolean esFecha     = StringUtils.isNotBlank(tipoCampo)&&tipoCampo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_FECHA);
-	        boolean esFechaHora = StringUtils.isNotBlank(tipoCampo)&&tipoCampo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_FECHA_HORA);
+	        boolean esFecha = StringUtils.isNotBlank(tipoCampo)&&tipoCampo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_FECHA);
 	    
 		    col=new Item();
 		    col.setType(Item.OBJ);
@@ -968,11 +928,6 @@ public class GeneradorCampos
 		    {
 		    	col.add("xtype"  , GeneradorCampos.xtypeDatecolumn);
 		    	col.add("format" , GeneradorCampos.formatoFecha);
-		    }
-		    else if(esFechaHora)
-		    {
-		    	col.add("xtype"  , GeneradorCampos.xtypeDatecolumn);
-		    	col.add("format" , GeneradorCampos.formatoFechaHora);
 		    }
     	}
     	
