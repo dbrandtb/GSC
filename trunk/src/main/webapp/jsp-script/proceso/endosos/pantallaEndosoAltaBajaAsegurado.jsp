@@ -1005,7 +1005,7 @@ Ext.onReady(function()
                                 //////////////////////////////////
                             };
                             
-                            /*mensajeCorrecto('Confirmar endoso',json.mensaje,function()
+                            mensajeCorrecto('Confirmar endoso',json.mensaje,function()
                             {
                                 _generarRemesaClic(
                                     true
@@ -1015,7 +1015,7 @@ Ext.onReady(function()
                                     ,panendabaseguInputSmap1.NMPOLIZA
                                     ,callbackRemesa
                                 );
-                            });*/
+                            });
 	    				}
 	    				else
 	    				{
