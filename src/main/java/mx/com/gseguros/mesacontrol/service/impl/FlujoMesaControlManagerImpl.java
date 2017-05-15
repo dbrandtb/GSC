@@ -13,7 +13,6 @@ import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import mx.com.gseguros.exception.ApplicationException;
@@ -84,9 +83,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
-	
-	@Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
 	
 	@Override
 	public Map<String,Item> workflow(String cdsisrol) throws Exception
@@ -3388,32 +3384,12 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			));
 			
 			if (StringUtils.isNotBlank(params.get("dsdestino")) && !params.get("dsdestino").contains("()")){
-				//req0005 Adjuntar Documento de Cotizacion (ADC) reemplazar luego por variable
-				
-				//debo obtener el numero de cotizacion de dsmensaje para poder identificar el nombre del archivo a adjuntar				
-				Map<Integer, Map<String, String>> mapFuncionesCot   = new HashMap<Integer, Map<String, String>>();
-				Map<String, String> mapCot = new HashMap <String, String>();
-				mapCot.put("CDVARMAIL", "2");
-				mapCot.put("DSVARMAIL", "NÚMERO DE COTIZACIÓN");
-				mapCot.put("BDFUNCTION", "P_MAIL_GET_NMCOTIZA");
-				mapFuncionesCot.put(2, mapCot);
-				
-				String numCot= cambiarTextoCorreo(flujo.getNtramite(), "{}", "2", mapFuncionesCot);
-				logger.debug("saliendo de cambiarTextoCorreo para numcot*** "+ numCot);
-				String archivo = rutaDocumentosPoliza + "/" + flujo.getNtramite() + "/" + "cotizacion_" + numCot + ".pdf"; 
-				logger.debug("imprimiendo nombre del archivo a adjuntar: " + archivo);
-				
-				String[] archivos = new String [1];
-				archivos[0]=archivo;
-				
-				//continua flujo normal
 				boolean enviado = mailService.enviaCorreo(StringUtils.split(params.get("dsdestino"),";"), 
 						  new String[]{}, 
 						  new String[]{}, 
 						  params.get("dsasunto"), 
 						  params.get("dsmensaje"), 
-						  //new String[]{},
-						  archivos,
+						  new String[]{}, 
 						  true);
 				if(!enviado){
 					throw new ApplicationException("No se pudo enviar el correo a "+params.get("dsdestino"));
@@ -4132,26 +4108,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	    }
         logger.debug("{}", Utils.log("\n@@@@@@ cambiarTipoEndosoTramite @@@@@@",
                                      "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-	}
-	
-	@Override
-	public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception {
-	    logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-	                           "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-	                           "\n@@@@@@ ntramite = ", ntramite,
-	                           "\n@@@@@@ cdusuari = ", cdusuari,
-	                           "\n@@@@@@ cdsisrol = ", cdsisrol));
-	    FlujoVO flujo = null;
-	    String paso = "Construyendo flujo RSTN";
-	    try {
-	        flujo = flujoMesaControlDAO.generarYRecuperarFlujoRSTN(ntramite, cdusuari, cdsisrol);
-	    } catch (Exception ex) {
-	        Utils.generaExcepcion(ex, paso);
-	    }
-        logger.debug(Utils.log("\n@@@@@@ flujo = ", flujo,
-                               "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-                               "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-        return flujo;
 	}
 	
 	@Deprecated

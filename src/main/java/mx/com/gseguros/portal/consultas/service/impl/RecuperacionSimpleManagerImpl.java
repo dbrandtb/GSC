@@ -462,11 +462,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 								}else if(llave.startsWith("OTVALOR")){
 									llave = llave.replace("OTVALOR", "OTVALOR1");
 								}
-								
-								//EVITAMOS QUE PLANCHE EL PLAN consultasDAO.recuperarDatosIncisoEnNivelPoliza REGRESA NULL ESTATICAMENTE EN DSPLAN
-								if(llave.equals("DSPLAN") && valor==null){
-									continue;
-								}
 
 								resp.getSlist().get(0).put(llave, valor);
 								
@@ -739,8 +734,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				mapa = endososDAO.recuperarPersonaEndosoAlta(params.get("cdperson"));
 			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_CORREO_AGENTE_TRAMITE)) {
 			    mapa .put("correoAgente", flujoMesaControlDAO.recuperarCorreoAgenteTramite(params.get("ntramite")));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_RANGO_DESCUENTO_RECARGO)) {
-			    mapa = cotizacionDAO.recuperarRangoDescuentoRecargo(params.get("cdramo"), params.get("cdtipsit"), cdusuari, cdsisrol);
 			}
 		}
 		catch(Exception ex)

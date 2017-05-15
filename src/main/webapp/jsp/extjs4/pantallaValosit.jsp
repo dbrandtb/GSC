@@ -312,23 +312,6 @@ Ext.onReady(function()
             }
         });
     }
-    
-    if (pantallaValositInputCdramo == Ramo.GastosMedicosMayoresPrueba
-        && pantallaValositInputCdtipsit == TipoSituacion.GastosMedicosMayoresPruebaInd) {
-        if (!Ext.isEmpty(_fieldByLabel('PLAN', pantallaValositMainContent, true))
-            && !Ext.isEmpty(_fieldByLabel('DEDUCIBLE', pantallaValositMainContent, true))) {
-            var planCmp = _fieldByLabel('PLAN', pantallaValositMainContent, true),
-                deduCmp = _fieldByLabel('DEDUCIBLE', pantallaValositMainContent, true);
-            deduCmp.anidado = true;
-            deduCmp.heredar = function () {
-                deduCmp.getStore().load({
-                    params : {
-                        'params.idPadre' : planCmp.getValue()
-                    }
-                });
-            };
-        }
-    }
     ////// custom //////
 });
 </script>

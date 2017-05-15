@@ -54,9 +54,7 @@ import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
-import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
-import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
@@ -70,8 +68,6 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGen
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.VehicleValue_Struc;
 import mx.com.gseguros.ws.nada.service.NadaService;
-import mx.com.gseguros.ws.tipocambio.client.axis2.TipoCambioWSServiceStub.ResponseTipoCambio;
-import mx.com.gseguros.ws.tipocambio.service.TipoCambioDolarGSService;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -137,9 +133,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	
 	@Autowired
 	private SiniestrosDAO siniestrosDAO;
-	
-	@Autowired
-	private TipoCambioDolarGSService tipoCambioService;
 	
 	@Autowired
     private PersonasManager personasManager;
@@ -288,24 +281,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				} else {
 					logger.debug("No se agrega = {}", tatri.getNameCdatribu());
 				}
-				
-				///Para agregar funcionalidad similar a FRONTERIZOS en SERVICIO PUBLICO 
-				if("AT".equals(cdtipsit) && tatri.getNameCdatribu().equals("34")){
-				    
-				    ResponseTipoCambio rtc=tipoCambioService.obtieneTipoCambioDolarGS(2);
-                    if(rtc!=null&&rtc.getTipoCambio()!=null&&rtc.getTipoCambio().getVenCam()!=null)
-                    {
-                        tatri.setOculto(true);
-                        tatri.setValue(rtc.getTipoCambio().getVenCam().doubleValue()+"");
-                    }
-				}
-				
-				int cdatribu=Integer.parseInt(tatri.getNameCdatribu());
-				if("AT".equals(cdtipsit) && cdatribu>34 && cdatribu<=38){
-				    tatri.setOculto(true);
-				}
-				
-				
 			}
 			
 			tatrisit = aux;
@@ -694,22 +669,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				{
 					aux.add(tatri);
 				}
-				//para poder ver el numero de serie para el cdtipsit AT en emision
-				else if(tatri.getNameCdatribu().equals("35") && cdtipsit.equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())){
-	                        
-	              aux.add(tatri);
-	              
-	           }
-				else if(tatri.getNameCdatribu().equals("1") && cdtipsit.equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit())){
-				    tatri.setOculto(true);
-				    aux.add(tatri);
-				}
-				else if(tatri.getLabel().equals("NEGOCIO") && cdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo()) ){
-					
-					resp.getSmap().put("NEGOCIO" , tatri.getDefaultValue());
-					tatri.setOculto(true);
-				    aux.add(tatri);
-				}
 			}
 			tatrisit=aux;
 			
@@ -763,21 +722,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			
 			gc.generaComponentes(tatripoldxn, true, false, true, false, false, false);
 			resp.getImap().put("panelDxnItems"  , gc.getItems());
-			
-			List<ComponenteVO>ramo6 = pantallasDAO.obtenerComponentes(
-					TipoTramite.POLIZA_NUEVA.getCdtiptra()
-					,cdunieco
-					,cdramo
-					,cdtipsit
-					,"I"
-					,cdsisrol
-					,"COTIZACION_CUSTOM"
-					,"EMISION_RAMO6"
-					,null
-					);
-			
-			gc.generaComponentes(ramo6, true, false, true, false, false, false);
-			resp.getImap().put("customRamo6"  , gc.getItems());
 			
 		}
 		catch(Exception ex)
@@ -2418,160 +2362,163 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					}
 	    			
 	    			if(personaNueva){
-						/**
-						 * TODO: EVALUAR E IMPLEMENTAR CDPERSON TEMPORAL
-						 * PARA GUARDAR CLIENTE EN BASE DE DATOS DEL WS, se traslada codigo de comprar cotizacion a cotizacion pues pierde el mpersona cuando se recuperan cotizaciones
-						 */
-	
-						String cdtipsitGS = consultasDAO.obtieneSubramoGS(cdramo, cdtipsit);
-	
-						ClienteGeneral clienteGeneral = new ClienteGeneral();
-						// clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
-						clienteGeneral.setRamoCli(Integer
-								.parseInt(cdtipsitGS));
-						clienteGeneral.setNumeroExterno(cdideperCli);
-	
-						ClienteGeneralRespuesta clientesRes = ice2sigsService
-								.ejecutaWSclienteGeneral(
-										null,
-										null,
-										null,
-										null,
-										null,
-										null,
-										null,
-										Ice2sigsService.Operacion.CONSULTA_GENERAL,
-										clienteGeneral, null, false);
-	
-						if (clientesRes != null
-								&& ArrayUtils.isNotEmpty(clientesRes
-										.getClientesGeneral())) {
-							ClienteGeneral cli = null;
-	
-							if (clientesRes.getClientesGeneral().length == 1) {
-								logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
-								cli = clientesRes.getClientesGeneral()[0];
-							} else {
-								logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
-							}
-	
-							if (cli != null) {
-	
-								/**
-								 * TODO: EVALUAR E IMPLEMENTAR CDPERSON TEMPORAL
-								 */
-								
-								// IR POR NUEVO CDPERSON:
-								newCdPerson = personasDAO.obtenerNuevoCdperson();
-	
-								logger.debug("Insertando nueva persona, cdperson generado: " +newCdPerson);
-								
-								String usuarioCaptura =  null;
-								
-								if(usuarioSesion!=null){
-									if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
-										usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
-									}else{
-										usuarioCaptura = usuarioSesion.getCodigoPersona();
-									}
-									
+					/**
+					 * TODO: EVALUAR E IMPLEMENTAR CDPERSON TEMPORAL
+					 * PARA GUARDAR CLIENTE EN BASE DE DATOS DEL WS, se traslada codigo de comprar cotizacion a cotizacion pues pierde el mpersona cuando se recuperan cotizaciones
+					 */
+
+					String cdtipsitGS = consultasDAO.obtieneSubramoGS(cdramo, cdtipsit);
+
+					ClienteGeneral clienteGeneral = new ClienteGeneral();
+					// clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
+					clienteGeneral.setRamoCli(Integer
+							.parseInt(cdtipsitGS));
+					clienteGeneral.setNumeroExterno(cdideperCli);
+
+					ClienteGeneralRespuesta clientesRes = ice2sigsService
+							.ejecutaWSclienteGeneral(
+									null,
+									null,
+									null,
+									null,
+									null,
+									null,
+									null,
+									Ice2sigsService.Operacion.CONSULTA_GENERAL,
+									clienteGeneral, null, false);
+
+					if (clientesRes != null
+							&& ArrayUtils.isNotEmpty(clientesRes
+									.getClientesGeneral())) {
+						ClienteGeneral cli = null;
+
+						if (clientesRes.getClientesGeneral().length == 1) {
+							logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
+							cli = clientesRes.getClientesGeneral()[0];
+						} else {
+							logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
+						}
+
+						if (cli != null) {
+
+							/**
+							 * TODO: EVALUAR E IMPLEMENTAR CDPERSON TEMPORAL
+							 */
+							
+							// IR POR NUEVO CDPERSON:
+							newCdPerson = personasDAO.obtenerNuevoCdperson();
+
+							logger.debug("Insertando nueva persona, cdperson generado: " +newCdPerson);
+							
+							String usuarioCaptura =  null;
+							
+							if(usuarioSesion!=null){
+								if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+									usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+								}else{
+									usuarioCaptura = usuarioSesion.getCodigoPersona();
 								}
-					    		
-					    		String apellidoPat = "";
-						    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
-						    		apellidoPat = cli.getApellidopCli();
-						    	}
-						    	
-						    	String apellidoMat = "";
-						    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
-						    		apellidoMat = cli.getApellidomCli();
-						    	}
-						    	
-					    		Calendar calendar =  Calendar.getInstance();
-					    		
-					    		String sexo = "H"; //Hombre
-						    	if(cli.getSexoCli() > 0){
-						    		if(cli.getSexoCli() == 2) sexo = "M";
-						    	}
-						    	
-						    	String tipoPersona = "F"; //Fisica
-						    	if(cli.getFismorCli() > 0){
-						    		if(cli.getFismorCli() == 2){
-						    			tipoPersona = "M";
-						    		}else if(cli.getFismorCli() == 3){
-						    			tipoPersona = "S";
-						    		}
-						    	}
-						    	
-						    	if(cli.getFecnacCli()!= null){
-						    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
-						    	}
-						    	
-						    	
-						    	Calendar calendarIngreso =  Calendar.getInstance();
-						    	if(cli.getFecaltaCli() != null){
-						    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
-						    	}
-						    	
-						    	String nacionalidad = "001";// Nacional
-						    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
-						    		nacionalidad = "002";
-						    	}
-						    	
-					    		//GUARDAR MPERSONA
-					    		
-								personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
-										, "1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(), null
-										, (cli.getFismorCli() == 1) ? apellidoPat : "", (cli.getFismorCli() == 1) ? apellidoMat : "", calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
-										, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
 								
-								String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
-				    			if(edoAdosPos2.length() ==  1){
-				    				edoAdosPos2 = "0"+edoAdosPos2;
-				    			}
-					    		
-				    			String codPosImp = cli.getCodposCli();
-	                            if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
-	                                codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
-	                            }
-				    			
-	                            HashMap<String,String> paramsMunCol = new HashMap<String, String>();
-	                            paramsMunCol.put("pv_cdpostal_i", codPosImp);
-	                            paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
-	                            paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
-	                            paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
-	                            
-	                            Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
-	                            
-					    		//GUARDAR DOMICILIO
-				    			
-				    			personasDAO.movimientosMdomicil(newCdPerson, "1", cli.getCalleCli(), cli.getTelefonoCli()
-					    				, codPosImp, codPosImp+edoAdosPos2, munycol.get("CDMUNICI"), munycol.get("CDCOLONI")
-					    				, cli.getNumeroCli(), null
-					    				,"1" // domicilio personal default
-										,usuarioCaptura
-										,Constantes.SI  //domicilio activo
-										,Constantes.INSERT_MODE);
-	
-				    			//GUARDAR TVALOPER
-				    			
-				    			personasDAO.movimientosTvaloper("1", newCdPerson, cli.getCveEle(), cli.getPasaporteCli(), null, null, null,
-				    				null, null, cli.getOrirecCli(), null, null,
-				    				cli.getNacCli(), null, null, null, null, 
-				    				null, null, null, null, (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0", 
-				    				null, null, null, null, cli.getCurpCli(), 
-				    				null, null, null, null, null, 
-				    				null, null, null, null, null, 
-				    				null, null, cli.getTelefonoCli(), cli.getMailCli(), null, 
-				    				null, null, null, null, null, 
-				    				null, null, null, null, null,
-				    				cli.getFaxCli(), cli.getCelularCli());
-				    			
+							}
+				    		
+				    		String apellidoPat = "";
+					    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
+					    		apellidoPat = cli.getApellidopCli();
+					    	}
+					    	
+					    	String apellidoMat = "";
+					    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
+					    		apellidoMat = cli.getApellidomCli();
+					    	}
+					    	
+				    		Calendar calendar =  Calendar.getInstance();
+				    		
+				    		String sexo = "H"; //Hombre
+					    	if(cli.getSexoCli() > 0){
+					    		if(cli.getSexoCli() == 2) sexo = "M";
+					    	}
+					    	
+					    	String tipoPersona = "F"; //Fisica
+					    	if(cli.getFismorCli() > 0){
+					    		if(cli.getFismorCli() == 2){
+					    			tipoPersona = "M";
+					    		}else if(cli.getFismorCli() == 3){
+					    			tipoPersona = "S";
+					    		}
+					    	}
+					    	
+					    	if(cli.getFecnacCli()!= null){
+					    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
+					    	}
+					    	
+					    	
+					    	Calendar calendarIngreso =  Calendar.getInstance();
+					    	if(cli.getFecaltaCli() != null){
+					    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
+					    	}
+					    	
+					    	String nacionalidad = "001";// Nacional
+					    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+					    		nacionalidad = "002";
+					    	}
+					    	
+				    		//GUARDAR MPERSONA
+				    		
+							personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
+									, "1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(), null
+									, (cli.getFismorCli() == 1) ? apellidoPat : "", (cli.getFismorCli() == 1) ? apellidoMat : "", calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
+									, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
+							
+							String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
+			    			if(edoAdosPos2.length() ==  1){
+			    				edoAdosPos2 = "0"+edoAdosPos2;
+			    			}
+				    		
+			    			String codPosImp = cli.getCodposCli();
+                            if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
+                                codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
+                            }
+			    			
+                            HashMap<String,String> paramsMunCol = new HashMap<String, String>();
+                            paramsMunCol.put("pv_cdpostal_i", codPosImp);
+                            paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
+                            paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
+                            paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
+                            
+                            Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
+                            
+				    		//GUARDAR DOMICILIO
+			    			
+			    			personasDAO.movimientosMdomicil(newCdPerson, "1", cli.getCalleCli(), cli.getTelefonoCli()
+				    				, codPosImp, codPosImp+edoAdosPos2, munycol.get("CDMUNICI"), munycol.get("CDCOLONI")
+				    				, cli.getNumeroCli(), null
+				    				,"1" // domicilio personal default
+									,usuarioCaptura
+									,Constantes.SI  //domicilio activo
+									,Constantes.INSERT_MODE);
+
+			    			//GUARDAR TVALOPER
+			    			
+			    			personasDAO.movimientosTvaloper("1", newCdPerson, cli.getCveEle(), cli.getPasaporteCli(), null, null, null,
+			    				null, null, cli.getOrirecCli(), null, null,
+			    				cli.getNacCli(), null, null, null, null, 
+			    				null, null, null, null, (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0", 
+			    				null, null, null, null, cli.getCurpCli(), 
+			    				null, null, null, null, null, 
+			    				null, null, null, null, null, 
+			    				null, null, cli.getTelefonoCli(), cli.getMailCli(), null, 
+			    				null, null, null, null, null, 
+			    				null, null, null, null, null,
+			    				cli.getFaxCli(), cli.getCelularCli());
 							}
 						}
 	    			}
-	    			cdpersonCli = newCdPerson;
-	    			nmorddomCli = "1";
+	    			
+			    			
+			    			cdpersonCli = newCdPerson;
+			    			nmorddomCli = "1";
+
+				
 				}
 				
 				
@@ -2762,7 +2709,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			{
 			    throw new ApplicationException(Utils.join("Para PyMES 50 son los incisos maximos permitidos."));
 			}
-
+			
 			while (rowIterator.hasNext()) 
             {
 				fila = fila + 1;
@@ -2814,15 +2761,15 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					.append("&").append(otraProp1).append("=").append(otroVal1);
 					
 					Cell cell = row.getCell(col);
-				   try 
-                   {
-				       Cell servicio = row.getCell(1);
-                       if(servicio==null || servicio.getStringCellValue().isEmpty())
-                       {
-                           row.createCell(1);//TIPO SERVICIO
-                           row.getCell(1).setCellValue(servicioCarga(row.getCell(2), String.format("%.0f",row.getCell(0).getNumericCellValue())));
-                       }
-                    } catch (Exception e) {}
+					try 
+	                   {
+					       Cell servicio = row.getCell(1);
+	                       if(servicio==null || servicio.getStringCellValue().isEmpty())
+	                       {
+	                           row.createCell(1);//TIPO SERVICIO
+	                           row.getCell(1).setCellValue(servicioCarga(row.getCell(2), String.format("%.0f",row.getCell(0).getNumericCellValue())));
+	                       }
+	                    } catch (Exception e) {}
 					
 					if(propiedad.equals("cdtipsit"))
 					{
@@ -3292,7 +3239,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				);
 		return resp;
 	}
-	
 	public String servicioCarga(Cell tipoUso, String claveVeh)
 	{
 	    String tipoServicio= "";
@@ -3342,7 +3288,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
         return tipoServicio;
 	}
 	
-	//Segun negocio valida inciso del archivo 
+	//Segun negocio valida inciso del archivo  
 	@Override
 	public List<Map<String,String>> validaExcelCdtipsitXNegocio(String tipoflot, String negocio, List<Map<String,String>> slistPYME) throws Exception
 	{
