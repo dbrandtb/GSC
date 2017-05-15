@@ -132,23 +132,26 @@ Ext.onReady(function()
 					{text:'nmtramite', dataIndex:'NTRAMITE' , hidden: true},
 					{text:'Marca', dataIndex:'MARCA',editor: {xtype: 'textfield',allowBlank: false}},
 					{text:'SubMarca', dataIndex:'SUBMARCA',editor: {xtype: 'textfield',allowBlank: false}},
-					{text:'Modelo', dataIndex:'MODELO',editor: {xtype: 'textfield',allowBlank: false}},
+					{text:'Modelo', dataIndex:'MODELO',editor: {xtype: 'numberfield',allowBlank: false}},
 					{text:'Version', dataIndex:'VERSION',editor: {xtype: 'textfield',allowBlank: false}},
-					{text:'Comentarios', dataIndex:'COMENTARIOS',editor: {xtype: 'textfield',allowBlank: false}}
+					{text:'Comentarios', dataIndex:'COMENTARIOS',editor: {xtype: 'textfield',allowBlank: true}}
 			    ],
 			    
 			    height: 350,
 			    width: 700,
+			     
 			    bbar: [
 			    	{
 			    		text: 'Agregar',
 			    		hidden : _GLOBAL_CDSISROL=='TECAUTOS',
+			    		icon    : '${ctx}/resources/fam3icons/icons/add.png',
 						handler: function() {
 							storeClaveAuto.add({'NTRAMITE':panDOcInputNtramite});
 							}
 			        },{
-			        	text: 'ELiminar',
+			        	text: 'Eliminar',
 			        	hidden : _GLOBAL_CDSISROL=='TECAUTOS',
+			        	icon    : '${ctx}/resources/fam3icons/icons/delete.png',
 			        	handler: function(){
 						      //.... keep the debug point here in browser developer tool and verify the value of grid in console. It is definitely not an instance of the grid u expected hence it wont have getView() method.
 			        		  var grid= _fieldById('gridClaveAuto');
@@ -159,9 +162,12 @@ Ext.onReady(function()
                               //storeClaveAuto.sync();
 												}
 			        },{
-			    		text: 'Guardar',
-			    		hidden : _GLOBAL_CDSISROL=='TECAUTOS',
+			        	text: 'Aceptar',
+			        	hidden : _GLOBAL_CDSISROL=='TECAUTOS',
+			        	icon    : '${icons}user_go.png',
 						handler: function() {
+							
+							debug('_p30_botonOnCotizarClic args:', arguments);
 							var json=
 						        {
 						            smap1 :
@@ -179,14 +185,10 @@ Ext.onReady(function()
 						        });
 						        
 						        debug('json:',json);
-						        _p55_agregar(json);
-							}
-			        },{
-			        	text: 'Aceptar',
-			        	hidden : _GLOBAL_CDSISROL=='TECAUTOS',
-						handler: function() {
-							debug('_p30_botonOnCotizarClic args:', arguments);
-						    var ck = 'Enviando datos de cotizaci\u00f3n';
+						        
+						        if (!Ext.isEmpty(json.slist1)) {
+							        _p55_agregar(json);
+							        var ck = 'Enviando datos de cotizaci\u00f3n';
 						    try {
 						        Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTurnado');
 						        new VentanaTurnado({
@@ -210,6 +212,9 @@ Ext.onReady(function()
 						    } catch (e) {
 						        manejaException(e, ck);
 						    }
+							    }else{
+							    	 mensajeWarning('No hay datos capturados');
+							    }
 						}
 			        
 			        }
@@ -240,7 +245,7 @@ Ext.onReady(function()
 function _p55_agregar(json){
 	//
 	debug('<<Entrando a _p55_agregar... ');
-   debug('ZZ json: ',json)
+	
 	Ext.Ajax.request(
         {
             url     : _url_GuardaClaveAuto
@@ -251,7 +256,7 @@ function _p55_agregar(json){
                 debug('### nmsuplem:',json);
                 if(json.success)
                 {
-                    mensajeCorrecto('\u00C9xito', 'Datos guard\u00F3s correctamente', Ext.Msg.OK);
+                    mensajeCorrecto('\u00C9xito', 'Datos guard\u00F3s correctamente', Ext.Msg.OK, Ext.Msg.INFO);
                 }
                 else
                 {
