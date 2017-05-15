@@ -1196,6 +1196,158 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         return result;
     }
     
+    
+////////////////////////////////
+    public String cargaMasivaClientes()
+    {
+        logger.debug(Utils.log(""
+                ,"\n####################################"
+                ,"\n###### cargaMasivaClientes ######"
+                ,"\n###### smap1=", smap1
+                ,"\n###### flujo=", flujo
+                ));
+        
+        String result = ERROR;
+        
+        try
+        {
+            UserVO usuario  = Utils.validateSession(session);
+            
+            String cdusuari  = usuario.getUser()
+                   ,cdsisrol = usuario.getRolActivo().getClave();
+            
+            boolean renovacion = false;
+            
+            if(flujo!=null
+                &&
+                (
+                    smap1==null
+                    ||!"MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen"))
+                )
+            )//si hay flujo y (o no hay mapa o hay mapa pero no vengo de endosos)
+            {
+                //EN ENDOSO NO SE BOORA PORQUE
+                //TRAE DATOS DEL MARCO
+                
+                logger.debug(Utils.log("FLUJO: se creara el mapa porque viene de flujo y no es endoso (es emision)"));
+                
+                smap1 = new HashMap<String,String>();
+                
+                smap1.put("cdunieco" , flujo.getCdunieco());
+                smap1.put("cdramo"   , flujo.getCdramo());
+                smap1.put("cdtipsit" , "AR");
+                smap1.put("ntramite" , flujo.getNtramite());
+                
+                Map<String, String> tflujomc = flujoMesaControlManager.recuperaTflujomc(flujo.getCdflujomc());
+                String tipoflot = null,
+                       dsflujomc = tflujomc.get("DSFLUJOMC").toUpperCase();
+                
+                if (dsflujomc.indexOf("PYME") != -1) {
+                    tipoflot = "P";
+                } else if (dsflujomc.indexOf("FLOT") != -1) {
+                    tipoflot = "F";
+                } else {
+                    throw new ApplicationException("El nombre del flujo (DSFLUJOMC) no contiene PyME o FLOT");
+                }
+                
+                //smap1.put("tipoflot" , flujo.getAux().split(",")[0].split(":")[1]); //primer split= tipoflot:P onComprar:16', segundo split tipoflot P
+                smap1.put("tipoflot", tipoflot);
+                
+                logger.debug(Utils.log("", "el mapa creado desde flujo es=", smap1));
+                
+                Map<String,Object> datosFlujo = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
+                
+                Map<String,String> tramite = (Map<String,String>)datosFlujo.get("TRAMITE");
+                logger.debug(Utils.log("", "tramite=", tramite));
+                
+                renovacion = TipoTramite.RENOVACION.getCdtiptra().equals(tramite.get("CDTIPTRA"));
+                logger.debug("Es renovacion = {}", renovacion);
+                
+                if(renovacion)
+                {
+                    smap1.put("renuniext" , tramite.get("RENUNIEXT"));
+                    smap1.put("renramo"   , tramite.get("RENRAMO"));
+                    smap1.put("renpoliex" , tramite.get("RENPOLIEX"));
+                }
+            }
+            else
+            {
+                logger.debug("FLUJO: No entra porque no es flujo o porque es flujo de endoso");
+            }
+            
+            Utils.validate(smap1, "No se recibieron datos");
+            
+            String endoso = "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen")) ? "S" : "N";
+            
+            smap1.put("endoso",endoso);
+            
+            if(endoso.equals("S"))
+            {
+                smap1.put("cdramo"   , smap1.get("CDRAMO"));
+                smap1.put("tipoflot" , smap1.get("TIPOFLOT"));
+                smap1.put("cdtipsit" , "AR");
+            }
+            
+            String cdunieco = smap1.get("cdunieco")
+                   ,cdramo  = smap1.get("cdramo")
+                   ,cdtipsit = smap1.get("cdtipsit")
+                   ,ntramite = smap1.get("ntramite")
+                   ,tipoflot = smap1.get("tipoflot"); 
+            
+            smap1.put("cdsisrol" , cdsisrol);
+            smap1.put("cdusuari" , cdusuari);
+            
+            Utils.validate(
+                    cdramo    , "No se recibi\u00f3 el producto"
+                    ,cdtipsit , "No se recibi\u00f3 la modalidad"
+                    ,tipoflot , "No se recibi\u00f3 el tipo de cotizacion"
+                    );
+            
+            ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.cotizacionAutoFlotilla(
+                    cdusuari
+                    ,cdsisrol
+                    ,cdunieco
+                    ,cdramo
+                    ,cdtipsit
+                    ,ntramite
+                    ,tipoflot
+                    ,"S".equals(endoso)
+                    ,flujo
+                    ,renovacion
+                    );
+            
+            if("ARTL".equals(cdtipsit)){
+            	smap1.put("cdtipsit","AR");
+            	smap1.put("cdtipsit2","TL");
+            }
+            exito     = resp.isExito();
+            respuesta = resp.getRespuesta();
+            
+            if(!exito)
+            {
+                throw new ApplicationException(respuesta);
+            }
+            
+            smap1.putAll(resp.getSmap());
+            imap=resp.getImap();
+            
+            result = SUCCESS;
+        }
+        catch(Exception ex)
+        {
+            respuesta = Utils.manejaExcepcion(ex);
+        }
+        
+        logger.debug(Utils.log(""
+                ,"\n###### result=", result
+                ,"\n###### cargaMasivaClientes ######"
+                ,"\n####################################"
+                ));
+        return result;
+    }
+    
+///////////////////////////////
+    
     public String cotizarAutosFlotilla()
     {
         logger.debug(Utils.log(""

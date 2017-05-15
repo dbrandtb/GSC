@@ -129,6 +129,14 @@
                 <param name="smap1.tipoflot">${params.tipoflot}</param>
                 <param name="smap1.turistas">${params.turistas}</param>
             </result>
+            <result name="cargaMasivaClientes" type="redirectAction">
+                <param name="namespace">/emision</param>
+                <param name="actionName">cargaMasivaClientes</param>
+                <param name="smap1.cdramo">${params.cdramo}</param>
+                <param name="smap1.cdtipsit">${params.cdtipsit}</param>
+                <param name="smap1.tipoflot">${params.tipoflot}</param>
+                <param name="smap1.turistas">${params.turistas}</param>
+            </result>
             <result name="cotizadorGrupo" type="redirectAction">
                 <param name="namespace">/emision</param>
                 <param name="actionName">cotizacionGrupo</param>

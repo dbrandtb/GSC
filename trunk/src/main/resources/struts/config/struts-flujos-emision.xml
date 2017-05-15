@@ -379,6 +379,11 @@
             <result name="success">/jsp-script/proceso/emision/cotizacionMasivaIndividuales.jsp</result>
         </action>
         
+        <action name="cargaMasivaClientes" class="cotizacionAutoAction" method="cargaMasivaClientes">
+            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
+            <result name="success">/jsp-script/proceso/emision/cargaMasivaClientes.jsp</result>
+        </action>
+        
         <action name="cotizarAutosFlotilla" class="cotizacionAutoAction" method="cotizarAutosFlotilla">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
