@@ -252,4 +252,6 @@ public interface CotizacionAutoManager
 			,FlujoVO flujo
 			,boolean renovacion
 			)throws Exception;
+	
+	public ManagerRespuestaSlistVO procesarCargaMasivaIndividual(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception;
 }

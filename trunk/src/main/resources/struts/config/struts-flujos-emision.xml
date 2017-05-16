@@ -400,7 +400,11 @@
             <result name="success" type="json" />
         </action>
         
-        <action name="cargarCotizacionAutoFlotilla" class="cotizacionAutoAction" method="cargarCotizacionAutoFlotilla">
+        <action name="procesarCargaMasivaFlotilla" class="cotizacionAutoAction" method="procesarCargaMasivaFlotilla">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="procesarCargaMasivaIndividual" class="cotizacionAutoAction" method="procesarCargaMasivaIndividual">
             <result name="success" type="json" />
         </action>
         
