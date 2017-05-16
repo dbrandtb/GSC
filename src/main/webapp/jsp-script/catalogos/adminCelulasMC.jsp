@@ -171,6 +171,7 @@ Ext.onReady(function()
     	title : 'Sucursales Configuradas. -> De Doble Clic para editar'
     	,height : 320
     	,store : confSucursalesStore
+    	,autoScroll: true
     	,columns :
     	[ { header     : 'Sucursal' , dataIndex : 'DSUNIECO', flex: 2},
     	  { header     : 'Num. Sucursal' , dataIndex : 'CDUNIECO', flex: 1},
@@ -803,6 +804,7 @@ Ext.onReady(function()
           { header     : 'Producto'   , dataIndex : 'DSRAMO', flex: 2},
           { header     : 'Subramo'    , dataIndex : 'DSTIPSIT', flex: 2},
           { header     : 'Emisor Matriz' , dataIndex : 'SWMATEMI', flex: 1,
+	    	  	tooltip: 'Emisor Matriz',
 	  			editor : {
 	                xtype         : 'checkbox',
 	                name          : 'SWMATEMI'
@@ -812,7 +814,8 @@ Ext.onReady(function()
 	            }
 	      },
           { header     : 'Suscriptor Matriz' ,dataIndex : 'SWMATSUS', flex: 1,
-	  			editor : {
+	    	  	tooltip: 'Suscriptor Matriz',
+	    	  	editor : {
 	                xtype         : 'checkbox',
 	                name          : 'SWMATSUS'
 	            },
@@ -821,6 +824,7 @@ Ext.onReady(function()
 	            }
 	      },
           { header     : 'Suscursal Primaria' ,dataIndex : 'SWSUCPRI', flex: 1,
+	    	  	tooltip: 'Suscursal Primaria',
 	  			editor : {
 	                xtype         : 'checkbox',
 	                name          : 'SWSUCPRI'
@@ -830,6 +834,7 @@ Ext.onReady(function()
 	            }
 	      },
           { header     : 'Suscursal Secundaria' ,dataIndex : 'SWSUCSEC', flex: 1,
+	    	  	tooltip: 'Suscursal Secundaria',
 	  			editor : {
 	                xtype         : 'checkbox',
 	                name          : 'SWSUCSEC'
@@ -839,6 +844,7 @@ Ext.onReady(function()
 	            }
 	      },
           { header     : 'Sucursal Oficina' ,dataIndex : 'SWSUCOFI', flex: 1,
+	    	  	tooltip: 'Sucursal Oficina',
 	  			editor : {
 	                xtype         : 'checkbox',
 	                name          : 'SWSUCOFI'
@@ -847,7 +853,7 @@ Ext.onReady(function()
 	            	return rendererColumnCheck(value);
 	            }
 	      },
-          { header     : 'Comentarios' ,dataIndex : 'COMMENTS', flex: 1,
+          { header     : 'Comentarios' ,dataIndex : 'COMMENTS', width: 200,
 	  			editor : {
 	                xtype         : 'textfield',
 	                name          : 'COMMENTS',
@@ -1418,14 +1424,18 @@ Ext.onReady(function()
 	    [panelBusqPer,permisosGrid]
 	});
 	
-	Ext.create('Ext.panel.Panel', {
+	Ext.create('Ext.tab.Panel', {
 	    defaults: {
 	        bodyStyle: 'padding:3px'
 	    },
-	    layout: {
-	        type: 'accordion'
-	    },
-	    items: [panelPrincipalSuc,panelPrincipalPer],
+	    items: [{
+	    	title: 'Administraci\u00f3n de sucursales',
+	    	items:[panelPrincipalSuc]
+	    },{
+
+	    	title: 'Administraci\u00f3n de permisos',
+	    	items:[panelPrincipalPer]
+	    }],
 	    renderTo: 'mainDivConfSucurTrabajo'
 	});
 	
