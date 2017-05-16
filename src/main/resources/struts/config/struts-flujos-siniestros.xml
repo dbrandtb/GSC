@@ -1542,7 +1542,7 @@
 				<param name="includeProperties">
 					loadList.*,
 					success,
-					msgResult
+					mensaje
 				</param>
 			</result>
 		</action>
@@ -1552,6 +1552,7 @@
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
                     cargaLista.*,
+                    mensaje,
                     success
                 </param>
             </result>
@@ -1562,6 +1563,7 @@
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
                     cargaLista.*,
+                    mensaje,
                     success
                 </param>
             </result>
@@ -1572,6 +1574,7 @@
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
                     params.*,
+                    mensaje,
                     success
                 </param>
             </result>
@@ -1590,10 +1593,107 @@
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
                     params.*,
+                    mensaje,
                     success
                 </param>
             </result>
 	   </action>
+
+        <action name="validaDatosEstudiosFacturasTramite" class="detalleSiniestroAction" method="validaDatosEstudiosFacturasTramite">
+	       <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    params.*,
+                    mensaje,
+                    success
+                </param>
+            </result>
+	   </action>
+	   
+	   <action name="configuracionEstPorCob" class="detalleSiniestroAction" >
+			<result>/jsp-script/proceso/siniestros/configuracionEstudiosCobertura.jsp</result>
+		</action>
+
+	   <action name="pruebaKendoUI" class="detalleSiniestroAction" >
+			<result>/jsp-script/proceso/siniestros/pruebaKendoUI.jsp</result>
+		</action>
+	   
+	   <action name="obtieneConceptosSubcob" class="detalleSiniestroAction" method="obtieneConceptosSubcob">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+
+	   <action name="obtieneResultadosEst" class="detalleSiniestroAction" method="obtieneResultadosEst">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+
+	   <action name="obtieneEstudiosMed" class="detalleSiniestroAction" method="obtieneEstudiosMed">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+
+	   <action name="obtieneConfEstudiosMedCob" class="detalleSiniestroAction" method="obtieneConfEstudiosMedCob">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+		
+		<action name="actualizaEliminaConceptos" class="detalleSiniestroAction" method="actualizaEliminaConceptos">
+			<interceptor-ref name="json">
+				<param name="enableSMD">true</param>
+				<param name="ignoreSMDMethodInterfaces">false</param>
+			</interceptor-ref>
+			<result name="success" type="json"/>
+		</action>
+		
+		<action name="actualizaEliminaResultadosEstudios" class="detalleSiniestroAction" method="actualizaEliminaResultadosEstudios">
+			<interceptor-ref name="json">
+				<param name="enableSMD">true</param>
+				<param name="ignoreSMDMethodInterfaces">false</param>
+			</interceptor-ref>
+			<result name="success" type="json"/>
+		</action>
+		
+		<action name="actualizaEliminaConfEstudios" class="detalleSiniestroAction" method="actualizaEliminaConfEstudios">
+			<interceptor-ref name="json">
+				<param name="enableSMD">true</param>
+				<param name="ignoreSMDMethodInterfaces">false</param>
+			</interceptor-ref>
+			<result name="success" type="json"/>
+		</action>
+		
+		<action name="actualizaEliminaConfEstudiosCobertura" class="detalleSiniestroAction" method="actualizaEliminaConfEstudiosCobertura">
+			<interceptor-ref name="json">
+				<param name="enableSMD">true</param>
+				<param name="ignoreSMDMethodInterfaces">false</param>
+			</interceptor-ref>
+			<result name="success" type="json"/>
+		</action>
+		
     </package>
 
 </struts>

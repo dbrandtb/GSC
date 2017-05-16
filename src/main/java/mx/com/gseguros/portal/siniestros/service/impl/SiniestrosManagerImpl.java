@@ -3066,5 +3066,45 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	public boolean validaDatosEstudiosReclamacion(HashMap<String, String> params) throws Exception{
 		return siniestrosDAO.validaDatosEstudiosReclamacion(params);
 	}
+
+	@Override
+	public List<Map<String, String>> obtieneConceptosSubcob() throws Exception{
+		return siniestrosDAO.obtieneConceptosSubcob();
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneResultadosEst() throws Exception{
+		return siniestrosDAO.obtieneResultadosEst();
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneEstudiosMed() throws Exception{
+		return siniestrosDAO.obtieneEstudiosMed();
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneConfEstudiosMedCob(HashMap<String, String> params) throws Exception{
+		return siniestrosDAO.obtieneConfEstudiosMedCob(params);
+	}
+	
+	@Override
+	public boolean actualizaEliminaConceptos(HashMap<String, String> params) throws Exception{
+		return siniestrosDAO.actualizaEliminaConceptos(params);
+	}
+
+	@Override
+	public boolean actualizaEliminaResultadosEstudios(HashMap<String, String> params) throws Exception {
+		return siniestrosDAO.actualizaEliminaResultadosEstudios(params);
+	}
+
+	@Override
+	public boolean actualizaEliminaConfEstudios(HashMap<String, String> params) throws Exception {
+		return siniestrosDAO.actualizaEliminaConfEstudios(params);
+	}
+
+	@Override
+	public boolean actualizaEliminaConfEstudiosCobertura(HashMap<String, String> params) throws Exception {
+		return siniestrosDAO.actualizaEliminaConfEstudiosCobertura(params);
+	}
 	
 }

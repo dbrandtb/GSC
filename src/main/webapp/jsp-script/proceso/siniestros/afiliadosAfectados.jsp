@@ -147,6 +147,8 @@
 			var _UrlActualizaEliminaEstudiosCobertura = '<s:url namespace="/siniestros"    action="actualizaEliminaEstudiosCobAseg" />';
 			var _UrlValidaDatosEstudiosReclamacion = '<s:url namespace="/siniestros"    action="validaDatosEstudiosReclamacion" />';
 			
+			var _UrlValidaDatosEstudiosFacturasTramite = '<s:url namespace="/siniestros"    action="validaDatosEstudiosFacturasTramite" />';
+			
 			var _11_itemsForm	= [
 				<s:property value="imap.itemsForm" />
 				,{

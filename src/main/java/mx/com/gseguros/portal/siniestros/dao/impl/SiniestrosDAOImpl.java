@@ -7153,4 +7153,254 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				compile();
 			}
 		}
+		
+		@Override
+		 public List<Map<String, String>> obtieneConceptosSubcob() throws Exception {
+			 Map<String, Object> params = new HashMap<String, Object>();
+			 Map<String, Object> result = ejecutaSP(new ObtieneConceptosSubcob(this.getDataSource()), params);
+			 
+			 List<Map<String, String>> lista = (List<Map<String, String>>) result.get("pv_registro_o");
+			 
+			 if(lista!=null){
+				 for(Map<String,String> concept :lista){
+					 	concept.put("CDCONCEP_ORIG",concept.get("CDCONCEP"));
+					}
+			 }
+				
+			 return lista;
+		 }
+		 
+		 protected class ObtieneConceptosSubcob extends StoredProcedure {
+			 protected ObtieneConceptosSubcob(DataSource dataSource) {
+				 super(dataSource, "PKG_PROESTDETOP.P_OBTIENE_CATCONCEPTOS");
+				 
+				 String[] cols = new String[]{
+						 "CDCONCEP"
+						 ,"DSCONCEP"
+				 };
+				 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+				 declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				 declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				 compile();
+			 }
+		 }
+
+		 @Override
+		 public List<Map<String, String>> obtieneResultadosEst() throws Exception {
+			 Map<String, Object> params = new HashMap<String, Object>();
+			 Map<String, Object> result = ejecutaSP(new ObtieneResultadosEst(this.getDataSource()), params);
+			 
+			 List<Map<String, String>> lista = (List<Map<String, String>>) result.get("pv_registro_o");
+			 
+			 if(lista!=null){
+				 for(Map<String,String> resEst :lista){
+					 resEst.put("CDTABRES_ORIG",resEst.get("CDTABRES"));
+					 resEst.put("CDRESEST_ORIG",resEst.get("CDRESEST"));
+				}
+			 }
+			 
+			 return lista;
+		 }
+		 
+		 protected class ObtieneResultadosEst extends StoredProcedure {
+			 protected ObtieneResultadosEst(DataSource dataSource) {
+				 super(dataSource, "PKG_PROESTDETOP.P_OBTIENE_CATRESULTADOS");
+				 
+				 String[] cols = new String[]{
+						 "CDRESEST"
+						 ,"DSRESEST"
+						 ,"CDTABRES"
+				 };
+				 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+				 declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				 declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				 compile();
+			 }
+		 }
+
+		 @Override
+		 public List<Map<String, String>> obtieneEstudiosMed() throws Exception {
+			 Map<String, Object> params = new HashMap<String, Object>();
+			 Map<String, Object> result = ejecutaSP(new ObtieneEstudiosMed(this.getDataSource()), params);
+			 
+			 List<Map<String, String>> lista = (List<Map<String, String>>) result.get("pv_registro_o");
+			 if(lista!=null){
+				 for(Map<String,String> resEst :lista){
+					 resEst.put("CDEST_ORIG",resEst.get("CDEST"));
+				}
+			 }
+			 return lista;
+		 }
+		 
+		 protected class ObtieneEstudiosMed extends StoredProcedure {
+			 protected ObtieneEstudiosMed(DataSource dataSource) {
+				 super(dataSource, "PKG_PROESTDETOP.P_OBTIENE_CATESTUDIOS");
+				 
+				 String[] cols = new String[]{
+						 "CDEST"
+						 ,"DSEST"
+						 ,"CDTABRES"
+				 };
+				 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+				 declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				 declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				 compile();
+			 }
+		 }
+
+		 @Override
+		 public List<Map<String, String>> obtieneConfEstudiosMedCob(HashMap<String, String> params) throws Exception {
+			 Map<String, Object> result = ejecutaSP(new ObtieneConfEstudiosMedCob(this.getDataSource()), params);
+			 
+			 List<Map<String, String>> lista = (List<Map<String, String>>) result.get("pv_registro_o");
+			 if(lista!=null){
+				 for(Map<String,String> resEst :lista){
+					 resEst.put("CDRAMO_ORIG",resEst.get("CDRAMO"));
+					 resEst.put("CDTIPSIT_ORIG",resEst.get("CDTIPSIT"));
+					 resEst.put("CDGARANT_ORIG",resEst.get("CDGARANT"));
+					 resEst.put("CDCONVAL_ORIG",resEst.get("CDCONVAL"));
+					 resEst.put("CDCONCEP_ORIG",resEst.get("CDCONCEP"));
+					 resEst.put("CDEST_ORIG",resEst.get("CDEST"));
+					 resEst.put("SWOBLVAL_ORIG",resEst.get("SWOBLVAL"));
+					 resEst.put("SWOBLOBS_ORIG",resEst.get("SWOBLOBS"));
+				}
+			 }
+			 
+			 return lista;
+		 }
+		 
+		 protected class ObtieneConfEstudiosMedCob extends StoredProcedure {
+			 protected ObtieneConfEstudiosMedCob(DataSource dataSource) {
+				 super(dataSource, "PKG_PROESTDETOP.P_OBTIENE_CONFCONEST");
+				
+				 declareParameter(new SqlParameter("cdramo", OracleTypes.VARCHAR));
+				 declareParameter(new SqlParameter("cdtipsit", OracleTypes.VARCHAR));
+				 declareParameter(new SqlParameter("cdgarant", OracleTypes.VARCHAR));
+				 declareParameter(new SqlParameter("cdconval", OracleTypes.VARCHAR));
+				 declareParameter(new SqlParameter("cdconcep", OracleTypes.VARCHAR));
+				 declareParameter(new SqlParameter("cdest", OracleTypes.VARCHAR));
+				 
+				 String[] cols = new String[]{
+						 "CDRAMO"
+						 ,"CDTIPSIT"
+						 ,"CDGARANT"
+						 ,"CDCONVAL"
+						 ,"CDCONCEP"
+						 ,"CDEST"
+						 ,"SWOBLVAL"
+						 ,"SWOBLOBS"
+						 ,"DSRAMO"
+						 ,"DSTIPSIT"
+						 ,"DSGARANT"
+						 ,"DSCONVAL"
+						 ,"DSCONCEP"
+						 ,"DSEST"
+				 };
+				 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+				 declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				 declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				 compile();
+			 }
+		 }
+		 
+		@Override
+		public boolean actualizaEliminaConceptos(HashMap<String, String> params) throws Exception {
+			Map<String, Object> result = ejecutaSP(new ActualizaEliminaConceptos(this.getDataSource()), params);
+			return true;
+		}
+		
+		protected class ActualizaEliminaConceptos extends StoredProcedure {
+			protected ActualizaEliminaConceptos(DataSource dataSource) {
+				super(dataSource, "PKG_PROESTDETOP.P_GUARDA_CATCONCEPTOS");
+				
+				declareParameter(new SqlParameter("pi_cdconcep_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdconcep", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_dsconcep", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
+				
+				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+		 
+		@Override
+		public boolean actualizaEliminaResultadosEstudios(HashMap<String, String> params) throws Exception {
+			Map<String, Object> result = ejecutaSP(new ActualizaEliminaResultadosEstudios(this.getDataSource()), params);
+			return true;
+		}
+				
+		protected class ActualizaEliminaResultadosEstudios extends StoredProcedure {
+			protected ActualizaEliminaResultadosEstudios(DataSource dataSource) {
+				super(dataSource, "PKG_PROESTDETOP.P_GUARDA_CATRESULTADOS");
+				
+				declareParameter(new SqlParameter("pi_cdtabres_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdresest_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdtabres", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdresest", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_dsresest", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
+				
+				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+		
+		@Override
+		public boolean actualizaEliminaConfEstudios(HashMap<String, String> params) throws Exception {
+			Map<String, Object> result = ejecutaSP(new ActualizaEliminaConfEstudios(this.getDataSource()), params);
+			return true;
+		}
+		
+		protected class ActualizaEliminaConfEstudios extends StoredProcedure {
+			protected ActualizaEliminaConfEstudios(DataSource dataSource) {
+				super(dataSource, "PKG_PROESTDETOP.P_GUARDA_CATESTUDIOS");
+				
+				declareParameter(new SqlParameter("pi_cdest_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdest", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_dsest", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdtabres", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
+				
+				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+
+		@Override
+		public boolean actualizaEliminaConfEstudiosCobertura(HashMap<String, String> params) throws Exception {
+			Map<String, Object> result = ejecutaSP(new ActualizaEliminaConfEstudiosCobertura(this.getDataSource()), params);
+			return true;
+		}
+		
+		protected class ActualizaEliminaConfEstudiosCobertura extends StoredProcedure {
+			protected ActualizaEliminaConfEstudiosCobertura(DataSource dataSource) {
+				super(dataSource, "PKG_PROESTDETOP.P_GUARDA_CONFCONEST");
+				
+				declareParameter(new SqlParameter("pi_cdramo_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdtipsit_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdgarant_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdconval_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdconcep_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdest_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swoblval_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swoblobs_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdramo", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdtipsit", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdgarant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdconval", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdconcep", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdest", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swoblval", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swoblobs", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
+				
+				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+		
 }
