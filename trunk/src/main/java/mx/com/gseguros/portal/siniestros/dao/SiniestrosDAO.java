@@ -712,4 +712,20 @@ public interface SiniestrosDAO {
 	public boolean actualizaEliminaEstudiosCobAseg(HashMap<String, String> params) throws Exception;
 
 	public boolean validaDatosEstudiosReclamacion(HashMap<String, String> params) throws Exception;
+
+	public List<Map<String, String>> obtieneConceptosSubcob() throws Exception;
+
+	public List<Map<String, String>> obtieneResultadosEst() throws Exception;
+
+	public List<Map<String, String>> obtieneEstudiosMed() throws Exception;
+
+	public List<Map<String, String>> obtieneConfEstudiosMedCob(HashMap<String, String> params) throws Exception;
+
+	public boolean actualizaEliminaConceptos(HashMap<String, String> params) throws Exception;
+
+	public boolean actualizaEliminaResultadosEstudios(HashMap<String, String> params) throws Exception;
+
+	public boolean actualizaEliminaConfEstudios(HashMap<String, String> params) throws Exception;
+
+	public boolean actualizaEliminaConfEstudiosCobertura(HashMap<String, String> params) throws Exception;
 }
