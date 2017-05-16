@@ -239,4 +239,17 @@ public interface CotizacionAutoManager
                              String cdsisrol, 
                              String cdusuarii,
                              String cdagente) throws Exception;
+	
+	public ManagerRespuestaImapSmapVO cotizacionMasivaIndividual(
+			String cdusuari
+			,String cdsisrol
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String ntramite
+			,String tipoflot
+			,boolean endoso
+			,FlujoVO flujo
+			,boolean renovacion
+			)throws Exception;
 }

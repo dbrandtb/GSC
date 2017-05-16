@@ -6,6 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 //////urls //////
+var _p30_urlCargaMasivaIndividual = '<s:url namespace="/emision"         action="procesarCargaMasivaFlotilla"         />';
+var _p30_urlCargarTipoCambioWS    = '<s:url namespace="/emision"         action="cargarTipoCambioWS"                  />';
 //////urls //////
 
 //////variables //////
@@ -19,6 +21,12 @@ debug('_p28_smap1:',_p28_smap1);
 //////variables //////
 
 //////dinamicos //////
+var _p30_gridColsConf =
+[
+    <s:if test='%{getImap().get("gridCols")!=null}'>
+        <s:property value="imap.gridCols" />
+    </s:if>
+];
 var _p30_gridCols =
 [
     {
@@ -42,6 +50,17 @@ var _p30_gridCols =
         }
     }
 ];
+for(var i=0;i<_p30_gridColsConf.length;i++)
+{
+    _p30_gridCols.push(_p30_gridColsConf[i]);
+}
+for(var i=0;i<_p30_gridCols.length;i++)
+{
+    if(!Ext.isEmpty(_p30_gridCols[i].editor)&&_p30_gridCols[i].editor.readOnly)
+    {
+        _p30_gridCols[i].editor='';
+    }
+}
 var _p30_panel1ItemsConf =
 [
     <s:if test='%{getImap().get("panel1Items")!=null}'>
@@ -221,15 +240,6 @@ Ext.onReady(function()
                     ,items  :
                     [
                         {
-                            xtype       : 'checkbox'
-                            ,boxLabel   : '<span style="color:white;">Tomar configuraci&oacute;n de carga masiva</span>'
-                            ,name       : 'smap1.tomarMasiva'
-                            ,inputValue : 'S'
-                            ,style      : 'background:#223772;'
-                            ,checked    : _p30_smap1.tipoflot+'x'!='Px'
-                            ,hidden     : _p30_smap1.tipoflot+'x'=='Px'
-                        }
-                        ,{
                             xtype         : 'filefield'
                             ,buttonOnly   : true
                             ,style        : 'margin:0px;'
@@ -239,7 +249,119 @@ Ext.onReady(function()
                             {
                                 text   : 'Carga masiva...'
                                 ,icon  : '${ctx}/resources/fam3icons/icons/book_next.png'
-                                ,hidden: _p30_smap1.turistas == 'S' 
+                            }
+                            ,listeners :
+                            {
+                                change : function(me)
+                                {   var descripcion ='';
+                                    var msnIncInv='';
+                                    var indexofPeriod = me.getValue().lastIndexOf("."),
+                                    uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                    debug('uploadedExtension:',uploadedExtension);
+                                    var valido=Ext.Array.contains(['xls','xlsx'], uploadedExtension);
+                                    if(!valido)
+                                    {
+                                        mensajeWarning('Solo se permiten hojas de c&aacute;lculo');
+                                        me.reset();
+                                    }
+                                    if(valido&&_p30_smap1.cdramo+'x'=='5x')
+                                    {
+                                        valido = !Ext.isEmpty(_fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue());
+                                        if(!valido)
+                                        {
+                                            mensajeWarning('Seleccione el negocio');
+                                            me.reset();
+                                        }
+                                    }
+                                    if(valido&&_p30_smap1.cdramo+'x'=='5x')
+                                    {
+                                        valido = _fieldLikeLabel('CIRCULACI',_fieldById('_p30_panel3Fieldset')).isValid();
+                                        if(!valido)
+                                        {
+                                            mensajeWarning('Seleccione el c&oacute;digo postal');
+                                            me.reset();
+                                        }
+                                    }
+                                    
+                                    if(valido)
+                                    {
+                                               Ext.Ajax.request(
+                                                 {
+                                                     url      : _p30_urlCargarTipoCambioWS
+                                                     ,success : function(response)
+                                                     {
+                                                         serieCmp.setLoading(false);
+                                                         var json=Ext.decode(response.responseText);
+                                                         debug('### dolar:',json);
+                                                         _p30_precioDolarDia=json.smap1.dolar;
+                                                    }
+                                                     ,failure : function()
+                                                     {
+                                                         errorComunicacion();
+                                                     }
+                                                 });
+                                        
+                                        var panelpri = _fieldById('_p30_panelpri');
+                                        var postalVal   = _fieldLikeLabel('CIRCULACI',_fieldById('_p30_form')).getValue();
+                                        panelpri.setLoading(true);
+                                        me.up('form').submit(
+                                        {
+                                            url     : _p30_urlCargaMasivaIndividual
+                                            ,params :
+                                            {
+                                                'smap1.cdramo'    : _p30_smap1.cdramo
+                                                ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
+                                                ,'smap1.tipoflot' : _p30_smap1.tipoflot
+                                                ,'smap1.codpos'   : postalVal
+                                                ,'smap1.cambio'   : _p30_precioDolarDia
+                                                ,'smap1.negocio'  : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
+                                            }
+                                            ,success : function(form,action)
+                                            {
+                                                panelpri.setLoading(false);
+                                                var json = Ext.decode(action.response.responseText);
+                                                debug('### excel:',json);
+                                                if(json.exito)
+                                                {
+                                                    var mrecords = [];
+                                                    var msnIncInv = json.respuestaOculta;
+                                                    
+	                                                    for(var i in json.slist1)
+	                                                    {
+	                                                        var record=new _p30_modelo(json.slist1[i]);
+	                                                        mrecords.push(record);
+	                                                        debug('record.data:',record.data);
+	                                                    }
+	                                                    
+	                                                    _p30_store.removeAll();
+	                                                    _p30_numerarIncisos(mrecords);
+	                                                    
+	                                                    if(_p30_smap1.cdramo+'x'=='5x')
+	                                                    {
+	                                                        //recuperar
+	                                                        var len = json.slist1.length;
+	                                                        panelpri.setLoading(true);
+	                                                        var errores    = [];
+	
+	                                                    }
+	                                                    else
+	                                                    {
+	                                                        _p30_store.add(mrecords);
+	                                                    }
+                                                }
+                                                else
+                                                {
+                                                    mensajeError(json.respuesta);
+                                                }
+                                            }
+                                            ,failure : function()
+                                            {
+                                                panelpri.setLoading(false);
+                                                errorComunicacion();
+                                            }
+                                        });
+                                    }
+                                }
                             }
                         }
                      ]
