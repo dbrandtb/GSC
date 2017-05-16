@@ -1244,7 +1244,7 @@ public class PersonasAction extends PrincipalCoreAction
 		    		 }
 		    		 
 		    	}
-		    	clientesRes.setCodigo(0);
+		    	
 		    	if(clientesRes != null && (Estatus.EXITO.getCodigo() == clientesRes.getCodigo())){
 		    	
 		    		exito = true;
@@ -1284,7 +1284,7 @@ public class PersonasAction extends PrincipalCoreAction
 		    		 */
 	    			 ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("cdperson"), (saludDanios.equalsIgnoreCase("S"))?"D":"S", saveList, updateList, !tieneSegundaCompania, usuario);
 	    		 }
-		    	exitoDomicilios=true;
+		    	
 		    	if(!exitoDomicilios){
 		    		logger.debug("Error al enviar domiciliosWS, exito false");
 		    		exito           = false;

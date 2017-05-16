@@ -434,8 +434,6 @@ public interface FlujoMesaControlManager
 	public void cambiarTipoEndosoTramite (String ntramite, String status, String cdtipsup, String comments, boolean swagente,
 	        String cdusuari, String cdsisrol) throws Exception;
 	
-	public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception;
-	
 	@Deprecated
 	public Map<String,String> recuperaTflujomc(String cdflujomc) throws Exception;
 	
