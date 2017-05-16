@@ -1694,6 +1694,108 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         return SUCCESS;
     }
     
+    public String procesarCargaMasivaIndividual()
+    {
+        logger.debug(Utils.log(""
+                ,"\n###########################################"
+                ,"\n###### procesarCargaMasivaIndividual ######"
+                ,"\n###### smap1="            , smap1
+                ,"\n###### excel="            , excel
+                ,"\n###### excelFileName="    , excelFileName
+                ,"\n###### excelContentType=" , excelContentType
+                ));
+        try
+        {
+            logger.debug(Utils.log("","Validando datos de entrada"));
+            
+            Utils.validate(smap1, "No se recibieron datos");
+            
+            String cdramo    = smap1.get("cdramo")
+                   ,cdtipsit = smap1.get("cdtipsit")
+                   ,tipoflot = smap1.get("tipoflot")
+                   ,cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+                   ,negocio  = smap1.get("negocio");
+            
+            logger.debug(Utils.join(
+                     "\ntipoflot=" , tipoflot
+                    ,"\ncdsisrol=" , cdsisrol
+                    ,"\nnegociol=" , negocio
+                    ));
+
+            Utils.validate(
+                     cdramo   , "No se recibi\u00f3 el producto"
+                    ,cdtipsit , "No se recibi\u00f3 la modalidad"
+                    ,negocio  , "No se recibio negocio"
+                    );
+            
+            Utils.validate(excel, "No se recibi\u00f3 el archivo");
+            
+            ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaIndividual(cdramo,cdtipsit,"",excel,tipoflot);//,tipoflot
+            
+            exito     = resp.isExito();
+            respuesta = resp.getRespuesta();
+            
+            if(!exito)
+            {
+                throw new ApplicationException(respuesta);
+            }
+
+            //Pone vacio en los valores desc/rec de la lista
+            resp.setSlist(cotizacionAutoManager.validaVacioDescRecg(resp.getSlist()));
+            
+            //Elimina incisos que no correspondan al negocio seleccionado
+            resp.setSlist(cotizacionAutoManager.validaExcelCdtipsitXNegocio(tipoflot,negocio,resp.getSlist()));
+            exito = !resp.getSlist().isEmpty();
+            if(!exito)
+            {
+                if(tipoflot.equals("P"))
+                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio seleccionado y Autos PyMES.");
+                else if(tipoflot.equals("F"))
+                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio seleccionado y Autos Flotilla.");
+                else
+                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio seleccionado.");
+            }            
+            
+            int lugarMensaje = resp.getSlist().size();
+            Map<String, String> msn = resp.getSlist().get(lugarMensaje-1);
+            
+            if(msn.get("removidos") != null) 
+            {
+                respuestaOculta =msn.get("removidos");
+                resp.getSlist().remove(lugarMensaje-1);
+            }
+            
+            if(resp.getSlist().isEmpty())
+            {   
+                respuestaOculta="No se agregar�n los incisos por no corresponder al negocio seleccionado.";
+                return SUCCESS;
+            }
+            
+            //Para modificar solo PYMES ignorando el valor de vehiculo y haciendo consulta
+            if(tipoflot.equals("P"))
+            {
+                String cdpost = smap1.get("codpos");
+                String cambio = smap1.get("cambio");
+                logger.debug(cambio);
+                resp.setSlist( cotizacionAutoManager.modificadorValorVehPYME(resp.getSlist(),cdsisrol, cdpost, cambio));
+            }
+            
+            slist1 = resp.getSlist();
+        }
+        catch(Exception ex)
+        {
+            respuesta = Utils.manejaExcepcion(ex);
+        }
+        
+        logger.debug(Utils.log(""
+                ,"\n###### exito="  , exito
+                ,"\n###### slist1=" , slist1
+                ,"\n###### procesarCargaMasivaIndividual ######"
+                ,"\n###########################################"
+                ));
+        return SUCCESS;
+    }
+    
     public String cargarCotizacionAutoFlotilla()
     {
         logger.debug(Utils.log(""

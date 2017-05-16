@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 //////urls //////
-var _p30_urlCargaMasivaIndividual = '<s:url namespace="/emision"         action="procesarCargaMasivaFlotilla"         />';
+var _p30_urlCargaMasivaIndividual = '<s:url namespace="/emision"         action="procesarCargaMasivaIndividual"         />';
 var _p30_urlCargarTipoCambioWS    = '<s:url namespace="/emision"         action="cargarTipoCambioWS"                  />';
 //////urls //////
 
@@ -18,6 +18,7 @@ var _p28_smap1 =
     cdtipsit : _p30_smap1.cdtipsit
 };
 debug('_p28_smap1:',_p28_smap1);
+var _p30_precioDolarDia          = null;
 //////variables //////
 
 //////dinamicos //////
@@ -264,25 +265,6 @@ Ext.onReady(function()
                                         mensajeWarning('Solo se permiten hojas de c&aacute;lculo');
                                         me.reset();
                                     }
-                                    if(valido&&_p30_smap1.cdramo+'x'=='5x')
-                                    {
-                                        valido = !Ext.isEmpty(_fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue());
-                                        if(!valido)
-                                        {
-                                            mensajeWarning('Seleccione el negocio');
-                                            me.reset();
-                                        }
-                                    }
-                                    if(valido&&_p30_smap1.cdramo+'x'=='5x')
-                                    {
-                                        valido = _fieldLikeLabel('CIRCULACI',_fieldById('_p30_panel3Fieldset')).isValid();
-                                        if(!valido)
-                                        {
-                                            mensajeWarning('Seleccione el c&oacute;digo postal');
-                                            me.reset();
-                                        }
-                                    }
-                                    
                                     if(valido)
                                     {
                                                Ext.Ajax.request(
@@ -290,7 +272,6 @@ Ext.onReady(function()
                                                      url      : _p30_urlCargarTipoCambioWS
                                                      ,success : function(response)
                                                      {
-                                                         serieCmp.setLoading(false);
                                                          var json=Ext.decode(response.responseText);
                                                          debug('### dolar:',json);
                                                          _p30_precioDolarDia=json.smap1.dolar;
@@ -302,7 +283,6 @@ Ext.onReady(function()
                                                  });
                                         
                                         var panelpri = _fieldById('_p30_panelpri');
-                                        var postalVal   = _fieldLikeLabel('CIRCULACI',_fieldById('_p30_form')).getValue();
                                         panelpri.setLoading(true);
                                         me.up('form').submit(
                                         {
@@ -312,9 +292,8 @@ Ext.onReady(function()
                                                 'smap1.cdramo'    : _p30_smap1.cdramo
                                                 ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
                                                 ,'smap1.tipoflot' : _p30_smap1.tipoflot
-                                                ,'smap1.codpos'   : postalVal
                                                 ,'smap1.cambio'   : _p30_precioDolarDia
-                                                ,'smap1.negocio'  : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
+                                                ,'smap1.negocio'  : 'cargaMasivaIndividual'
                                             }
                                             ,success : function(form,action)
                                             {
