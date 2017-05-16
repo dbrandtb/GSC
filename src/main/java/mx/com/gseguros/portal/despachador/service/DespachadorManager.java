@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.despachador.service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -30,6 +29,7 @@ public interface DespachadorManager {
             String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle, boolean sinBuscarRegreso) throws Exception;
     
+    
     /**
      * SOBRECARGADO
      */
@@ -42,13 +42,14 @@ public interface DespachadorManager {
      * SE TURNA/RECHAZA/REASIGNA UN TRAMITE. SE MODIFICA TMESACONTROL (STATUS, FECSTATU, CDUSUARI, CDUNIDSPCH, CDRAZRECHA),
      * THMESACONTROL (SE CIERRA EL HISTORIAL ANTERIOR, SE ABRE EL HISTORIAL NUEVO),
      * TDMESACONTROL (SE INSERTA DETALLE). SE ENVIAN CORREOS DE AVISOS Y SE RECHAZA EN SIGS 
-     * @param sinGrabarDetalle TODO
+     * 
+     @param sinGrabarDetalle TODO
      * @return String message, boolean encolado
      */
     public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
             String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust, boolean soloCorreosRecibidos, String correosRecibidos)
-            throws Exception;
+                    throws Exception;
     
     @Deprecated
     public String recuperarRolTrabajoEstatus (String cdtipflu, String cdflujomc, String estatus) throws Exception;
@@ -88,54 +89,5 @@ public interface DespachadorManager {
     public String recuperarDescripcionRol (String cdsisrol) throws Exception;
  
     public Map<String, Item> pantallaDatos() throws Exception;
- 
-    /**
-     * Carga la configuracion de una sucursal
-     * @param cdunieco
-     * @param cdunizon 
-     * @param cdnivel 
-     * @return
-     * @throws Exception
-     */
-    public List<Map<String, String>> cargaConfSucursales(String cdunieco, String cdunizon, String cdnivel) throws Exception;
     
-    /**
-     * Guarda la configuracion de una sucursal para el despachador
-     * @param sucursal
-     * @throws Exception
-     */
-    public void guardaConfSucursales(Map<String, String> sucursal) throws Exception;
-
-    /**
-     * Carga la configuracion permisos de flujos
-     * @param cdtipflu
-     * @param cdflujomc 
-     * @param cdramo 
-     * @param cdtipsit 
-     * @return
-     * @throws Exception
-     */
-    public List<Map<String, String>> cargaConfPermisos(String cdtipflu, String cdflujomc, String cdramo, String cdtipsit) throws Exception;
-    
-    /**
-     * Guarda la configuracion de permisos de flujos
-     * @param sucursal
-     * @throws Exception
-     */
-    public void guardaConfPermisos(Map<String, String> permiso) throws Exception;
-    
-    /**
-     * Recupera, Autos Capturados para Rol Tecnico Autos
-     * @param ntramite
-     * @throws Exception
-     */
-    public List<Map<String, String>> claveAutoFlujo(String ntramite) throws Exception;
-    
-    /**
-     * Guarda, Autos Capturados
-     * @param ntramite
-     * @param slist1
-     * @throws Exception
-     */
-    public void guardaClaveAutoFlujo(String ntramite, List<Map<String,String>>  slist1) throws Exception;
 }

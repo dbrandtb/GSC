@@ -989,7 +989,7 @@ Ext.onReady(function()
 		            {
 	    				_setLoading(false,panendabaseguPanelPrincipal);
 	    				json=Ext.decode(response.responseText);
-	    				debug('<<<response',json);
+	    				debug('response',json);
 	    				if(json.success==true)
 	    				{
 	    					Ext.getCmp('panEndAltBajAseBotConfirmar').hide();

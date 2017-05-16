@@ -402,91 +402,60 @@ function _11_solicitarPago(){
                         centrarVentanaInterna(mensajeWarning(resultCobertura));
                     }
                 }else{
-                	
-                	Ext.Ajax.request({
-                        url : _UrlValidaDatosEstudiosFacturasTramite
+                    Ext.Ajax.request({
+                        url : _URL_MONTO_PAGO_SINIESTRO
                         ,params:{
-                            'params.ntramite' : _11_params.NTRAMITE
+                            'params.ntramite' : _11_params.NTRAMITE,
+                            'params.cdramo'   : _11_params.CDRAMO,
+                            'params.tipoPago' : _11_params.OTVALOR02
                         }
-                        ,success : function (responseDatos){
-                            var jsonRespuestaDatos =Ext.decode(responseDatos.responseText);
+                        ,success : function (response){
+                            var jsonRespuesta =Ext.decode(response.responseText);
+                            debug("Valor de Respuesta", jsonRespuesta);
                             
-                            if(jsonRespuestaDatos.success == true){
-                                if( !Ext.isEmpty(jsonRespuestaDatos.params) && !Ext.isEmpty(jsonRespuestaDatos.params.FALTAN_DATOS_ESTUDIOS)
-                                		&& jsonRespuestaDatos.params.FALTAN_DATOS_ESTUDIOS == "S"){
-                                	
-                                	centrarVentanaInterna(mensajeWarning(jsonRespuestaDatos.mensaje));
-                                	
+                            if(jsonRespuesta.success == true){
+                                if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
+                                    //_11_mostrarSolicitudPago(); ...1
+                                    _11_validaProveedorPagoDirecto(); // (EGS) validamos solo un proveedor en reclamo pago directo
+                                    //_11_validaAseguroLimiteCoberturas(); // (EGS) se comenta aquí pero se agrega en funcion _11_validaProveedorPagoDirecto()
                                 }else{
-
-                                	Ext.Ajax.request({
-                                        url : _URL_MONTO_PAGO_SINIESTRO
+                                    //Verificamos si tiene la validacion del dictaminador medico
+                                    Ext.Ajax.request({
+                                        url  : _URL_VAL_AJUSTADOR_MEDICO
                                         ,params:{
-                                            'params.ntramite' : _11_params.NTRAMITE,
-                                            'params.cdramo'   : _11_params.CDRAMO,
-                                            'params.tipoPago' : _11_params.OTVALOR02
+                                            'params.ntramite': _11_params.NTRAMITE
                                         }
-                                        ,success : function (response){
-                                            var jsonRespuesta =Ext.decode(response.responseText);
-                                            debug("Valor de Respuesta", jsonRespuesta);
-                                            
-                                            if(jsonRespuesta.success == true){
-                                                if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
-                                                    //_11_mostrarSolicitudPago(); ...1
-                                                    _11_validaProveedorPagoDirecto(); // (EGS) validamos solo un proveedor en reclamo pago directo
-                                                    //_11_validaAseguroLimiteCoberturas(); // (EGS) se comenta aquí pero se agrega en funcion _11_validaProveedorPagoDirecto()
-                                                }else{
-                                                    //Verificamos si tiene la validacion del dictaminador medico
-                                                    Ext.Ajax.request({
-                                                        url  : _URL_VAL_AJUSTADOR_MEDICO
-                                                        ,params:{
-                                                            'params.ntramite': _11_params.NTRAMITE
-                                                        }
-                                                        ,success : function (response)
-                                                        {
-                                                            if(Ext.decode(response.responseText).datosValidacion != null){
-                                                                var autAM = null;
-                                                                var result ="";
-                                                                banderaValidacion = "0";
-                                                                var json = Ext.decode(response.responseText).datosValidacion;
-                                                                if(json.length > 0){
-                                                                    for(var i = 0; i < json.length; i++){
-                                                                        if(json[i].AREAAUTO =="ME"){
-                                                                            var valorValidacion = json[i].SWAUTORI+"";
-                                                                            if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
-                                                                                banderaValidacion = "1";
-                                                                                result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
-                                                                            }
-                                                                            
-                                                                        }
-                                                                    }
-                                                                    if(banderaValidacion == "1"){
-                                                                        centrarVentanaInterna(mensajeWarning(result));
-                                                                    }else{
-                                                                        //_11_mostrarSolicitudPago(); ..2
-                                                                        _11_validaAseguroLimiteCoberturas();
-                                                                    }
-                                                                }else{
-                                                                    centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
-                                                                }
+                                        ,success : function (response)
+                                        {
+                                            if(Ext.decode(response.responseText).datosValidacion != null){
+                                                var autAM = null;
+                                                var result ="";
+                                                banderaValidacion = "0";
+                                                var json = Ext.decode(response.responseText).datosValidacion;
+                                                if(json.length > 0){
+                                                    for(var i = 0; i < json.length; i++){
+                                                        if(json[i].AREAAUTO =="ME"){
+                                                            var valorValidacion = json[i].SWAUTORI+"";
+                                                            if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
+                                                                banderaValidacion = "1";
+                                                                result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
                                                             }
-                                                        },
-                                                        failure : function (){
-                                                            //me.up().up().setLoading(false);
-                                                            Ext.Msg.show({
-                                                                title:'Error',
-                                                                msg: 'Error de comunicaci&oacute;n',
-                                                                buttons: Ext.Msg.OK,
-                                                                icon: Ext.Msg.ERROR
-                                                            });
+                                                            
                                                         }
-                                                    });
+                                                    }
+                                                    if(banderaValidacion == "1"){
+                                                        centrarVentanaInterna(mensajeWarning(result));
+                                                    }else{
+                                                        //_11_mostrarSolicitudPago(); ..2
+                                                        _11_validaAseguroLimiteCoberturas();
+                                                    }
+                                                }else{
+                                                    centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
                                                 }
-                                            }else {
-                                                centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
                                             }
                                         },
                                         failure : function (){
+                                            //me.up().up().setLoading(false);
                                             Ext.Msg.show({
                                                 title:'Error',
                                                 msg: 'Error de comunicaci&oacute;n',
@@ -495,7 +464,6 @@ function _11_solicitarPago(){
                                             });
                                         }
                                     });
-                            	
                                 }
                             }else {
                                 centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
@@ -510,7 +478,6 @@ function _11_solicitarPago(){
                             });
                         }
                     });
-                	
                 }
             },
             failure : function () {
