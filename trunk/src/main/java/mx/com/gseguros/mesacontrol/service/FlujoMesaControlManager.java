@@ -440,4 +440,6 @@ public interface FlujoMesaControlManager
 	public Map<String,String> recuperaTflujomc(String cdflujomc) throws Exception;
 	
 	public String obtenerSuplementoTramite(String ntramite) throws Exception;
+	
+	public int obtenerCantidadDocumentosCotizacion(String ntramite) throws Exception;
 }

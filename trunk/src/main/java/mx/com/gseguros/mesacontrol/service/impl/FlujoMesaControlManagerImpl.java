@@ -3388,23 +3388,19 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			));
 			
 			if (StringUtils.isNotBlank(params.get("dsdestino")) && !params.get("dsdestino").contains("()")){
-				//req0005 Adjuntar Documento de Cotizacion (ADC) reemplazar luego por variable
+				//req0005 debo obtener el numero de cotizacion de dsmensaje para poder identificar el nombre del archivo a adjuntar				
+				List<Map<String,String>> listaDocumentos = new ArrayList<Map<String, String>>();
+				listaDocumentos = consultasDAO.recuperarNombreDocumentosCotizacion(flujo.getNtramite());
 				
-				//debo obtener el numero de cotizacion de dsmensaje para poder identificar el nombre del archivo a adjuntar				
-				Map<Integer, Map<String, String>> mapFuncionesCot   = new HashMap<Integer, Map<String, String>>();
-				Map<String, String> mapCot = new HashMap <String, String>();
-				mapCot.put("CDVARMAIL", "2");
-				mapCot.put("DSVARMAIL", "NÚMERO DE COTIZACIÓN");
-				mapCot.put("BDFUNCTION", "P_MAIL_GET_NMCOTIZA");
-				mapFuncionesCot.put(2, mapCot);
-				
-				String numCot= cambiarTextoCorreo(flujo.getNtramite(), "{}", "2", mapFuncionesCot);
-				logger.debug("saliendo de cambiarTextoCorreo para numcot*** "+ numCot);
-				String archivo = rutaDocumentosPoliza + "/" + flujo.getNtramite() + "/" + "cotizacion_" + numCot + ".pdf"; 
-				logger.debug("imprimiendo nombre del archivo a adjuntar: " + archivo);
-				
-				String[] archivos = new String [1];
-				archivos[0]=archivo;
+				//debo adjuntar tantos documentos como tenga la lista
+				int cantidadDocumentos = listaDocumentos.size();
+				String[] archivos = new String [cantidadDocumentos];
+				//for(Map<String,String>documento:listaDocumentos){
+				for(int i=0; i<cantidadDocumentos; i++){
+					String archivo = rutaDocumentosPoliza + "/" + flujo.getNtramite() + "/" + listaDocumentos.get(i).get("CDDOCUME");
+					logger.debug("archivo a adjuntar: " + archivo);
+					archivos[i] = archivo;
+				}
 				
 				//continua flujo normal
 				boolean enviado = mailService.enviaCorreo(StringUtils.split(params.get("dsdestino"),";"), 
@@ -4171,5 +4167,22 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	        Utils.generaExcepcion(ex, paso);
 	    }
 	    return suplemento;
+	}
+	
+	@Override
+	public int obtenerCantidadDocumentosCotizacion(String ntramite) throws Exception{
+	    //REQ0005 adjuntar documento de cotizacion
+		int cantidadDocumentos = 0;
+	    String paso = "Obteniendo cantidad de documentos del tramite: " + ntramite;
+	    List<Map<String,String>> listaDocumentos = new ArrayList<Map<String, String>>();
+	    try{
+	    	listaDocumentos = consultasDAO.recuperarNombreDocumentosCotizacion(ntramite);
+	    	cantidadDocumentos = listaDocumentos.size();
+			
+	    }
+	    catch(Exception ex){
+	        Utils.generaExcepcion(ex, paso);
+	    }
+	    return cantidadDocumentos;
 	}
 }
