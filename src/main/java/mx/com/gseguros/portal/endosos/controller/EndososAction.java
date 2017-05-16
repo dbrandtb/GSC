@@ -1098,11 +1098,18 @@ public class EndososAction extends PrincipalCoreAction
 			String estado   = smap1.get("estado");
 			String nmpoliza = smap1.get("nmpoliza");
 			
+			String cdtipsupEntrada = smap1.get("cdtipsup");
+			
+			logger.debug("<<<<<< Tipo suplemento para EndosoNombreSimple >>>>>>: " + cdtipsupEntrada);
+			
 			// Validacion de endoso simple:
-			/*boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
-			if(!permitido) {
-				throw new ApplicationException(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
-			}*/
+			if(TipoEndoso.CORRECCION_DATOS_ASEGURADOS.getCdTipSup().toString().equalsIgnoreCase(cdtipsupEntrada)){
+				logger.debug(">>>>>> Validando Endoso Simple");
+				boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
+				if(!permitido) {
+					throw new ApplicationException(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
+				}
+			}
 			
 			// Valida si hay un endoso anterior pendiente, sino lanzamos una excepcion con el mensaje de error:
 			RespuestaVO resp = endososManager.validaEndosoAnterior(
