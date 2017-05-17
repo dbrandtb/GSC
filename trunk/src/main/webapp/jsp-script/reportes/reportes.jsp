@@ -12,6 +12,8 @@
         Ext.onReady(function(){
             
         	
+        	var panelReportes;
+        	
         	// Models:
             Ext.define('ReportesModel',{
                 extend : 'Ext.data.Model',
@@ -39,12 +41,18 @@
                 	property: 'dsReporte',
                 	direction: 'ASC'
                 }],
-                autoLoad : true
+                autoLoad : true,
+                listeners: {
+                	load: function(){
+                		_fieldByName('filtroReporteCmp',panelReportes).setValue('');
+                		storeReportes.clearFilter();
+                	}
+                } 
 		    });
         	
         	
             // Main component:
-        	Ext.create('Ext.panel.Panel', {
+        	panelReportes = Ext.create('Ext.panel.Panel', {
         		renderTo : 'dvPrincipalReportes',
         		title    : 'Reportes',
         		defaults : {
@@ -85,7 +93,36 @@
        		    	    			}
        		    	    		});
        		    	    	}
-       		    	    }
+       		    	    },
+       		    	 	dockedItems: [{
+                            xtype: 'toolbar',
+                            dock: 'top',
+                            items: [
+                                '->','-',
+                                {
+                                    xtype : 'textfield',
+                                    name : 'filtroReporteCmp',
+                                    fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Reporte:</span>',
+                                    labelWidth : 100,
+                                    width: 260,
+                                    listeners:{
+                                    	change: function(elem,newValue,oldValue){
+                                    		newValue = Ext.util.Format.uppercase(newValue);
+                    						if( newValue == Ext.util.Format.uppercase(oldValue)){
+                    							return false;
+                    						}
+                    						
+                    						try{
+                    							storeReportes.removeFilter('filtroReporte');
+                    							storeReportes.filter(Ext.create('Ext.util.Filter', {property: 'dsReporte', anyMatch: true, value: newValue, root: 'data', id:'filtroReporte'}));
+                    						}catch(e){
+                    							error('Error al filtrar reporte',e);
+                    						}
+                                    	}
+                                    }
+                                }
+                            ]
+                        }]
        		    	},{
        		    		xtype  : 'panel',
        		    		name   : 'pnlComponentesReporte',
