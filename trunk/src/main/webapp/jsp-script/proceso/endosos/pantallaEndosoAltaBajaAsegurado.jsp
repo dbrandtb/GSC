@@ -983,7 +983,7 @@ Ext.onReady(function()
 	    		_setLoading(true,panendabaseguPanelPrincipal);
 	    		Ext.Ajax.request(
 	    		{
-	    			url       : panendabaseguUrlSave
+	    			url       : panendabaseguUrlSave 
 	    			,jsonData : json
 	    			,success  : function(response)
 		            {
@@ -1004,8 +1004,9 @@ Ext.onReady(function()
                                 ////// usa codigo del padre //////
                                 //////////////////////////////////
                             };
-                            
-                            mensajeCorrecto('Confirmar endoso',json.mensaje,function()
+                            if(json.endosoConfirmado==true){
+                            	//Si viene verdadero, entonces no se manda a autorizar
+                            	mensajeCorrecto('Confirmar endoso',json.mensaje,function()
                             {
                                 _generarRemesaClic(
                                     true
@@ -1016,6 +1017,11 @@ Ext.onReady(function()
                                     ,callbackRemesa
                                 );
                             });
+                            }else{
+                            	//Si viene en false, entonces se manda autorizar
+                            	mensajeCorrecto('Confirmar endoso');
+                            }
+                            
 	    				}
 	    				else
 	    				{

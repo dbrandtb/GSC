@@ -5629,6 +5629,7 @@ public String retarificarEndosos()
 			}
 			
 			if (respConfirmacionEndoso.isConfirmado()) {
+				endosoConfirmado = true;
 			
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
@@ -5643,7 +5644,7 @@ public String retarificarEndosos()
 						,DocumentosManager.PROCESO_ENDOSO
 						,ntramite
 						,null //nmsolici
-, null
+                        ,null
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
@@ -5665,6 +5666,8 @@ public String retarificarEndosos()
 			}
 			else
 			{
+				endosoConfirmado = false;
+				
 				String mensajeInvalido = "";
 				if(alta&&invalidos.size()>0)
 				{
