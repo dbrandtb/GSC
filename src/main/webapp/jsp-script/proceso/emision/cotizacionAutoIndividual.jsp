@@ -4058,7 +4058,7 @@ function _p28_cargarPoliza(boton)
                           debug("valoresCampos 2: ",json2);
                           if(!Ext.isEmpty(json2.smap1.mensajeError))
                           {
-                              mensajeError(json2.smap1.mensajeError);
+                              throw json2.smap1.mensajeError;
                           }
                           if(!Ext.isEmpty(json2.smap1.mensajeAviso))
                           {
