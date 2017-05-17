@@ -178,13 +178,15 @@ Ext.onReady(function()
 						        };
 						    storeClaveAuto.each(function(record)
 						        {
-						            debug(record.data);
+						        	
+						            debug('record: {} ',record);
 						            
+						            if (!Ext.isEmpty(record.get('MARCA'))) {
 						           json.slist1.push(record.data);
-						            
+						            }						            
 						        });
 						        
-						        debug('json:',json);
+						        debug('json:',json.slist1);
 						        
 						        if (!Ext.isEmpty(json.slist1)) {
 							        _p55_agregar(json);
@@ -256,7 +258,7 @@ function _p55_agregar(json){
                 debug('### nmsuplem:',json);
                 if(json.success)
                 {
-                    mensajeCorrecto('\u00C9xito', 'Datos guard\u00F3s correctamente', Ext.Msg.OK, Ext.Msg.INFO);
+                    mensajeCorrecto('\u00C9xito', 'Datos guard\u00F3s correctamente.');
                 }
                 else
                 {
