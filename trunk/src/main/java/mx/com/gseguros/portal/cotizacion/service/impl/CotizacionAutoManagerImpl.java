@@ -2041,8 +2041,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			)throws Exception
 	{
 		logger.info(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ cotizacionAutoFlotilla @@@@@@"
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ cotizacionMasivaIndividual @@@@@@"
 				,"\n@@@@@@ cdusuari   = " , cdusuari
 				,"\n@@@@@@ cdsisrol   = " , cdsisrol
 				,"\n@@@@@@ cdunieco   = " , cdunieco
@@ -3914,7 +3914,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	
 	@Override
 	public ManagerRespuestaSlistVO procesarCargaMasivaIndividual(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception
-	//,String tipoflot
 	{
 		logger.info(
 				new StringBuilder()
@@ -3935,7 +3934,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		try
 		{
 			paso = "Recuperando parametrizacion de excel para COTIFLOT";
-			List<Map<String,String>>config=cotizacionDAO.cargarParametrizacionExcel("COTIFLOT",cdramo,cdtipsit);
+			List<Map<String,String>>config=cotizacionDAO.cargarParametrizacionExcel("COTIMASIVAIND",cdramo,cdtipsit);
 			logger.debug(Utils.log(config));
 			
 			paso = "Instanciando mapa buffer de tablas de apoyo";
@@ -3956,11 +3955,6 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					,"AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ"
 					,"BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ"
 			};
-			
-			if(sheet.getLastRowNum() > 51 && tipoflot.equals("P"))
-			{
-			    throw new ApplicationException(Utils.join("Para PyMES 50 son los incisos maximos permitidos."));
-			}
 
 			while (rowIterator.hasNext()) 
             {
@@ -3999,483 +3993,37 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					String   orCdtipsit  = conf.get("ORIGEN_CDTIPSIT");
 					String   otraProp1   = conf.get("OTRA_PROP1");
 					String   otroVal1    = conf.get("OTRO_VAL1");
-					if(!StringUtils.isBlank(decode))
-					{
-						splited = decode.split(",");
-					}
-					
-					sb.append("@").append(propiedad)
-					.append("[").append(cdtipsitCol).append("]")
-					.append("*").append(tipo)
-					.append("#").append(tipoatri)
-					.append("~").append(valorStat)
-					.append("{").append(orCdtipsit).append("}")
-					.append("&").append(otraProp1).append("=").append(otroVal1);
+
+					String original = null;
+					String valor    = null;
 					
 					Cell cell = row.getCell(col);
-				   try 
-                   {
-				       Cell servicio = row.getCell(1);
-                       if(servicio==null || servicio.getStringCellValue().isEmpty())
-                       {
-                           row.createCell(1);//TIPO SERVICIO
-                           row.getCell(1).setCellValue(servicioCarga(row.getCell(2), String.format("%.0f",row.getCell(0).getNumericCellValue())));
-                       }
-                    } catch (Exception e) {}
-					
-					if(propiedad.equals("cdtipsit"))
+					try
 					{
-						String valor = null;
+						valor    = cell.getStringCellValue();
+						original = cell.getStringCellValue();
+					}
+					catch(Exception ex)
+					{
+						sb.append("(E)");
 						try
 						{
-						    valor = cell.getStringCellValue();
+							Double num = cell.getNumericCellValue();
+							valor      = String.format("%d",num.intValue());
+							original   = String.format("%d",num.intValue());
 						}
-						catch(NullPointerException ex)
+						catch(Exception ex2)
 						{
-							throw new ApplicationException(Utils.join("La fila ",fila," tiene valores pero no tiene TIPO VEHICULO"));
-						}
-						sb.append(">cdtipsit!").append(valor);						
-						for(int i=0;i<splited.length/2;i++)
-						{
-							String splitedUsado=splited[i*2];
-							//logger.debug(Utils.log("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
-							if(valor.lastIndexOf(splitedUsado)!=-1)
-							{
-								valor=splited[(i*2)+1];
-								sb.append("==").append(valor);
-								break;
-							}
-						}
-						if(valor.equals(cell.getStringCellValue()))
-						{
-							sb.append("==").append("ERROR");
-							throw new ApplicationException(
-									new StringBuilder("El tipo de vehiculo ")
-									.append(valor)
-									.append(" no viene dentro de ")
-									.append(decode)
-									.append(" en la fila ")
-									.append(fila)
-									.toString()
-									); 
-						}
-						//logger.debug(new StringBuilder("valor=").append(valor).toString());
-						record.put("cdtipsit",valor);
-					}
-					else if("S".equals(respetar)||tipoatri.equals("SITUACION"))
-					{
-						//nuevo para recuperar cdtipsit
-						if(StringUtils.isNotBlank(orCdtipsit))
-						{
-							paso = Utils.join("Recuperando tipo de situacion de la fila ",fila);
-							
-							sb.append(">").append(orCdtipsit);
-							String cellValue         = null;
-							Cell   nextCell          = row.getCell(col+1);//TIPO SERVICIO
-							String nextCellValue     = null;
-							Cell   nextNextCell      = row.getCell(col+2);//TIPO USO
-							String nextNextCellValue = null;
-							try
-                            {
-                                cellValue = cell.getStringCellValue();
-                            }
-                            catch(Exception ex)
-                            {
-                                sb.append("(E)");
-                                try
-                                {
-                                    double num = cell.getNumericCellValue();
-                                    cellValue  = String.format("%.0f",num);
-                                }
-                                catch(Exception ex2)
-                                {
-                                    sb.append("(E)");
-                                    throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila), ex2);
-                                }
-                            }
-							try
-							{
-								nextCellValue = nextCell.getStringCellValue();//TIPO SERVICIO
-								if(!nextCellValue.isEmpty())
-								{
-									int firstWord = nextCellValue.indexOf(" ");
-//									System.out.println("primera palabra hasta:"+firstWord);
-									if(firstWord != -1)
-									{
-										String secondWord = nextCellValue.substring(firstWord+1);
-										if(secondWord.isEmpty())
-										{
-											nextCellValue = nextCellValue.trim();
-										}
-//										else
-//										System.out.println("Segunda palabra:"+secondWord);
-									}
-								}
-								
-//								paso = Utils.join("Recuperando tipo de situacion de la fila ",fila," Sistituyendo dato servicio del layout por el de BD segun tipo de uso y Amis");
-//								String servicio = consultasDAO.recuperarServicioXNegocioYAmis(cdtipram, tipolote)
-								
-							}
-							catch(Exception ex)
-							{
-								sb.append("(E)");
-								try
-								{
-									double num    = nextCell.getNumericCellValue();
-									nextCellValue = String.format("%.0f",num);
-								}
-								catch(Exception ex2)
-								{
-									sb.append("(E)");
-									nextCellValue = "";
-								}
-							}
-							try
-							{
-								nextNextCellValue = nextNextCell.getStringCellValue();
-							}
-							catch(Exception ex)
-							{
-								sb.append("(E)");
-								try
-								{
-									double num    = nextNextCell.getNumericCellValue();
-									nextNextCellValue = String.format("%.0f",num);
-								}
-								catch(Exception ex2)
-								{
-									sb.append("(E)");
-									nextNextCellValue = "";
-								}
-							}
-							String llaveBufferTiposit = Utils.join(orCdtipsit,"-",cellValue,"-",nextCellValue,"-",nextNextCellValue);
-							String cdtipsitProc       = null;
-							if(bufferTiposit.containsKey(llaveBufferTiposit))
-							{
-								sb.append("(buffer)");
-								cdtipsitProc = bufferTiposit.get(llaveBufferTiposit);
-							}
-							else
-							{
-								sb.append("(sin buffer)");
-								cdtipsitProc = consultasDAO.recuperarCdtipsitExtraExcel(
-										fila
-										,orCdtipsit
-										,cellValue
-										,nextCellValue
-										,nextNextCellValue
-										);
-								bufferTiposit.put(llaveBufferTiposit,cdtipsitProc);
-							}
-							sb.append("==").append(cdtipsitProc);
-							record.put("cdtipsit" , cdtipsitProc);
-							
-							paso = Utils.join("Iterando fila ",fila);
-						}
-						//nuevo para recuperar cdtipsit
-						
-						String cdtipsitRecord = record.get("cdtipsit");
-						if(cdtipsitCol.equals("*")||("|"+cdtipsitCol+"|").lastIndexOf("|"+cdtipsitRecord+"|")!=-1)
-						{
-							sb.append(">").append(cdtipsitRecord);
-							if(StringUtils.isNotBlank(valorStat))
-							{
-								sb.append(">valorStat");
-								record.put(propiedad , valorStat);
-							}
-							else if(StringUtils.isBlank(decode)&&StringUtils.isBlank(cdtabla1))
-							{
-							    if(tipo.equals("string"))
-								{
-									sb.append(">string");
-									String valor = null;
-									try
-									{
-										valor=cell.getStringCellValue();
-									}
-									catch(Exception ex)
-									{
-										sb.append("(E)");
-										try
-										{
-											double num = cell.getNumericCellValue();
-											valor = String.format("%.0f",num);
-										}
-										catch(Exception ex2)
-										{
-											sb.append("(E)");
-											valor="";
-										}
-									}
-									sb.append("==").append(valor);
-									if(requerido&&StringUtils.isBlank(valor))
-									{
-										throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
-									}
-									record.put(propiedad,valor);
-								}
-								else if(tipo.equals("int"))
-								{
-									sb.append(">int");
-									Double num = null;
-									try
-									{
-										num=cell.getNumericCellValue();
-									}
-									catch(Exception ex)
-									{
-										sb.append("(E)");
-										num=null;
-									}
-									if(requerido&&num==null)
-									{
-										throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
-									}
-									String valor="";
-									if(num!=null)
-									{
-										valor=String.format("%d",num.intValue());
-									}
-									sb.append("==").append(valor);
-									record.put(propiedad,valor);
-								}
-								else if(tipo.equals("double"))
-								{
-									sb.append(">double");
-									Double num = null;
-									try
-									{
-										num=cell.getNumericCellValue();
-									}
-									catch(Exception ex)
-									{
-										sb.append("(E)");
-										num=null;
-									}
-									if(requerido&&num==null)
-									{
-										throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
-									}
-									String valor="";
-									if(num!=null)
-									{
-										valor=String.format("%.2f",num);
-									}
-									sb.append("==").append(valor);
-									record.put(propiedad,valor);
-								}
-								else if(tipo.length()>"int-string_".length()
-										&&tipo.substring(0,"int-string_".length()).equals("int-string_")
-										)
-								{
-									sb.append(">int-string");
-									Double num = null;
-									try
-									{
-										num=cell.getNumericCellValue();
-									}
-									catch(Exception ex)
-									{
-										sb.append("(E)");
-										num=null;
-									}
-									if(requerido&&num==null)
-									{
-										throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
-									}
-									String valor="";
-									if(num!=null)
-									{
-										int len = Integer.valueOf(tipo.split("_")[1]);
-										valor=String.format(Utils.join("%0",len,"d"),num.intValue());
-									}
-									sb.append("==").append(valor);
-									record.put(propiedad,valor);
-									
-									//nuevo para "OTRA PROPIEDAD ESTATICA"
-									if(!StringUtils.isBlank(otraProp1)&&!StringUtils.isBlank(otroVal1)&&!StringUtils.isBlank(valor))
-									{
-										sb.append("(>otraProp1");
-										String[] val1Splited = otroVal1.split(","); //B+,S,C,S,N
-										String valorEncontrado = null;
-										for(int i=0;i<val1Splited.length-1;i=i+2)
-										{
-											if(valor.equals(val1Splited[i]))
-											{
-												valorEncontrado=val1Splited[i+1];
-												break;
-											}
-										}
-										if(valorEncontrado==null)
-										{
-											valorEncontrado=val1Splited[val1Splited.length-1];
-										}
-										sb.append("&").append(otraProp1).append("==").append(valorEncontrado).append(")");
-										record.put(otraProp1,valorEncontrado);
-									}
-									//nuevo para "OTRA PROPIEDAD ESTATICA"
-								}
-								else
-								{
-									throw new ApplicationException(Utils.join("Error de parametrizacion: tipo de valor incorrecto para la columna ",col));
-								}
-							}
-							else if(!StringUtils.isBlank(cdtabla1))
-							{
-								sb.append(">tabla");
-								String valor = null;
-								try
-								{
-									valor=cell.getStringCellValue();
-								}
-								catch(Exception ex)
-								{
-									sb.append("(E)");
-									try
-									{
-										Double num = cell.getNumericCellValue();
-										valor      = String.format("%d",num.intValue());
-									}
-									catch(Exception ex2)
-									{
-										sb.append("(E)");
-										valor="";
-									}
-								}
-								sb.append("!").append(valor);
-								if(requerido&&StringUtils.isBlank(valor))
-								{
-									throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
-								}
-								String clave = "";
-								if(!StringUtils.isBlank(valor))
-								{
-									try
-									{
-									    clave=cotizacionDAO.cargarClaveTtapvat1(cdtabla1, valor, buffer);
-									    if(StringUtils.isNotBlank(clave)
-									    		&&clave.length()>"num".length()
-									    		&&clave.substring(0, "num".length()).equals("num")
-									    		)
-									    {
-									    	//rebanamos cuando viene "num1" a "1"
-									    	clave=clave.substring("num".length());
-									    }
-									}
-									catch(Exception ex)
-									{
-										if(ex instanceof ApplicationException)
-										{
-											throw new ApplicationException(Utils.join(columnas[col],fila,": ",ex.getMessage()));
-										}
-										else
-										{
-											throw ex;
-										}
-									}
-									
-									//nuevo para "OTRA PROPIEDAD ESTATICA"
-									if(!StringUtils.isBlank(otraProp1)&&!StringUtils.isBlank(otroVal1))
-									{
-										sb.append("(>otraProp1");
-										String[] val1Splited = otroVal1.split(","); //B+,S,C,S,N
-										String valorEncontrado = null;
-										for(int i=0;i<val1Splited.length-1;i=i+2)
-										{
-											if(valor.equals(val1Splited[i]))
-											{
-												valorEncontrado=val1Splited[i+1];
-												break;
-											}
-										}
-										if(valorEncontrado==null)
-										{
-											valorEncontrado=val1Splited[val1Splited.length-1];
-										}
-										sb.append("&").append(otraProp1).append("==").append(valorEncontrado).append(")");
-										record.put(otraProp1,valorEncontrado);
-									}
-									//nuevo para "OTRA PROPIEDAD ESTATICA"
-								}
-								sb.append("==").append(clave);
-								record.put(propiedad,clave);
-							}
-							else if(!StringUtils.isBlank(decode))
-							{
-								sb.append(">decode");
-								String original = null;
-								String valor    = null;
-								try
-								{
-									valor    = cell.getStringCellValue();
-									original = cell.getStringCellValue();
-								}
-								catch(Exception ex)
-								{
-									sb.append("(E)");
-									try
-									{
-										Double num = cell.getNumericCellValue();
-										valor      = String.format("%d",num.intValue());
-										original   = String.format("%d",num.intValue());
-									}
-									catch(Exception ex2)
-									{
-										sb.append("(E)");
-										valor    = "";
-										original = "";
-									}
-								}
-								sb.append("!").append(valor);
-								if(requerido&&StringUtils.isBlank(valor))
-								{
-									throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
-								}
-								if(!StringUtils.isBlank(valor))
-								{
-									for(int i=0;i<splited.length/2;i++)
-									{
-										String splitedUsado=splited[i*2];
-										//logger.debug(Utils.log("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
-										if(valor.lastIndexOf(splitedUsado)!=-1)
-										{
-											valor=splited[(i*2)+1];
-											sb.append("==").append(valor);
-											break;
-										}
-									}
-									if(valor.equals(original))
-									{
-										throw new ApplicationException(Utils.join(
-												"La descripcion "
-												,valor
-												," no viene dentro de '"
-												,decode
-												,"' en la fila "
-												,fila
-												," en la columna "
-												,columnas[col]
-												));
-									}
-								}
-								record.put(propiedad,valor);
-							}
-						}
-						else
-						{
-							sb.append(">NOTIPSIT[").append(cdtipsitRecord).append("]");
+							sb.append("(E)");
+							valor    = "";
+							original = "";
 						}
 					}
-					else
-					{
-						sb.append(">NOCOBER");
-					}
+					record.put(propiedad, valor);
+					
 				}
-				
 				logger.debug(sb.toString());
             }
-			
-			
 		}
 		catch(Exception ex)
 		{
