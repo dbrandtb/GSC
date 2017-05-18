@@ -5704,6 +5704,7 @@ public String retarificarEndosos()
 				 "\n###### success = " , success
 				,"\n###### error   = " , error
 				,"\n###### mensaje = " , mensaje
+				,"\n###### endosoConfirmado = " , endosoConfirmado
 				,"\n###### guardarEndosoAltaBajaAsegurado ######"
 				,"\n############################################"
 				));
