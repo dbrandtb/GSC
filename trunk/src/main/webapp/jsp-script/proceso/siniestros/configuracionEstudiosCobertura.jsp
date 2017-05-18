@@ -217,7 +217,7 @@ Ext.onReady(function()
 	/*///////////////////*/
 	
 	panelPrincipalConfResEstudios = Ext.create('Ext.panel.Panel',{
-		title: 'Configuraci\u00f3n de estudios m&eacute;dicos para conceptos de subcobertura.',
+		title: 'Configuraci\u00f3n de captura de estudios m&eacute;dicos para conceptos de subcobertura.',
 		width: 900,
 		titleAlign: 'center',
 		defaults : {
@@ -329,7 +329,7 @@ Ext.onReady(function()
                                        	        	gridConceptos.getStore().reload();
                                        	        	conceptoBusquedaStore.reload();
                                                 }else{
-                                                    mensajeError('Verifique que no haya registros utilizando actualmente esta configuraci&oacute;n. ' + json.mensaje);
+                                                    mensajeError('Verifique que no haya tr&aacute;mites usando actualmente este concepto. ' + json.mensaje);
                                                 }
                                             }
                                             ,failure  : function(response, options){
@@ -520,7 +520,7 @@ Ext.onReady(function()
                                                 	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
                                                 	gridResEstudios.getStore().reload();
                                                 }else{
-                                                    mensajeError('Verifique que no haya registros utilizando actualmente esta configuraci&oacute;n. ' + json.mensaje);
+                                                    mensajeError('Verifique que no haya esstudios usando actualmente los resultados modificados. ' + json.mensaje);
                                                 }
                                             }
                                             ,failure  : function(response, options){
@@ -729,7 +729,7 @@ Ext.onReady(function()
                                                 	gridEstudios.getStore().reload();
                                                 	estudioBusquedaStore.reload();
                                                 }else{
-                                                    mensajeError('Verifique que no haya registros utilizando actualmente esta configuraci&oacute;n. ' + json.mensaje);
+                                                    mensajeError('Verifique que no haya tr&aacute;mites usando actualmente este estudio. ' + json.mensaje);
                                                 }
                                             }
                                             ,failure  : function(response, options){
@@ -1449,7 +1449,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                                 	windowConfEstudios.close();
                                 	
                                 }else{
-                                    mensajeError('Verifique que no haya registros utilizando actualmente esta configuraci&oacute;n. ' + json.mensaje);
+                                    mensajeError('Verifique que no haya tr&aacute;mites usando actualmente esta configuraci&oacute;n. ' + json.mensaje);
                                 }
                             }
                             ,failure  : function(response, options){

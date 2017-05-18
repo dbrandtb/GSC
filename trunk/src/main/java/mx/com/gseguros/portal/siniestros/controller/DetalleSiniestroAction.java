@@ -33,6 +33,8 @@ import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.opensymphony.xwork2.ActionContext;
+
 public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 1L;
@@ -919,6 +921,10 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     
     public String actualizaEliminaConceptos() throws Exception {
 		logger.debug("Entra a actualizaEliminaConceptos Params: {}", saveList);
+		
+		this.session = ActionContext.getContext().getSession();
+		UserVO usuario= (UserVO)session.get("USUARIO");
+		
 		try {
 			Utils.validate(saveList, "No se recibieron datos para guardar/eliminar conceptos.");
 			
@@ -927,6 +933,9 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				if(correcto){
 					HashMap<String, String> paramsResEstudio = new HashMap<String, String>();
 					paramsResEstudio.putAll(conceptoAct);
+					
+					paramsResEstudio.put("pi_cdusuari", usuario.getUser());
+					
 					correcto = siniestrosManager.actualizaEliminaConceptos(paramsResEstudio);
 				}else{
 					break;
@@ -950,6 +959,10 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     
     public String actualizaEliminaResultadosEstudios() throws Exception {
     	logger.debug("Entra a actualizaEliminaResultadosEstudios Params: {}", saveList);
+    	
+    	this.session = ActionContext.getContext().getSession();
+		UserVO usuario= (UserVO)session.get("USUARIO");
+    	
     	try {
     		Utils.validate(saveList, "No se recibieron datos para guardar/eliminar Restultados Estudios.");
     		
@@ -958,6 +971,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     			if(correcto){
     				HashMap<String, String> paramsResEstudio = new HashMap<String, String>();
     				paramsResEstudio.putAll(resEst);
+    				paramsResEstudio.put("pi_cdusuari", usuario.getUser());
     				correcto = siniestrosManager.actualizaEliminaResultadosEstudios(paramsResEstudio);
     			}else{
     				break;
@@ -981,6 +995,10 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
     public String actualizaEliminaConfEstudios() throws Exception {
     	logger.debug("Entra a actualizaEliminaConfEstudios Params: {}", saveList);
+    	
+    	this.session = ActionContext.getContext().getSession();
+		UserVO usuario= (UserVO)session.get("USUARIO");
+    	
     	try {
     		Utils.validate(saveList, "No se recibieron datos para guardar/eliminar conf estudios.");
     		
@@ -989,6 +1007,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     			if(correcto){
     				HashMap<String, String> paramsResEstudio = new HashMap<String, String>();
     				paramsResEstudio.putAll(estudioAct);
+    				paramsResEstudio.put("pi_cdusuari", usuario.getUser());
     				correcto = siniestrosManager.actualizaEliminaConfEstudios(paramsResEstudio);
     			}else{
     				break;
@@ -1012,9 +1031,14 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
     public String actualizaEliminaConfEstudiosCobertura() throws Exception {
     	logger.debug("Entra a actualizaEliminaConfEstudiosCobertura Params: {}", params);
+    	
+    	this.session = ActionContext.getContext().getSession();
+		UserVO usuario= (UserVO)session.get("USUARIO");
+    	
     	try {
     		Utils.validate(params, "No se recibieron datos para guardar/eliminar configuraci&oacute; de estudios coberturas.");
     		
+    		params.put("pi_cdusuari", usuario.getUser());
     		boolean correcto = siniestrosManager.actualizaEliminaConfEstudiosCobertura(params);
     		
     		if(!correcto){
