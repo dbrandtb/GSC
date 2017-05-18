@@ -1607,6 +1607,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String fehasta
 			,String cdpersonCliente
 			,String dscontra
+			,String nmsolici
 			,int start
 			,int limit
 			)throws Exception
@@ -1627,6 +1628,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("fehasta"         , fehasta);
 //		params.put("cdpersonCliente" , cdpersonCliente);
 		params.put("dscontra"        , dscontra);
+		params.put("nmsolici"        , nmsolici);
 		params.put("start"           , start);
 		params.put("limit"           , limit);
 		Map<String,Object> procRes = ejecutaSP(new RecuperarTramitesSP(getDataSource()),params);
@@ -1671,7 +1673,6 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		protected RecuperarTramitesSP(DataSource dataSource)
 		{
 			super(dataSource,"PKG_MESACONTROL.P_GET_TRAMITES");
-//		    super(dataSource,"P_GET_TRAMITES1");
 			declareParameter(new SqlParameter("agrupamc"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("status"          , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari"        , OracleTypes.VARCHAR));
@@ -1689,6 +1690,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("start"           , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("limit"           , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("dscontra"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsolici"     , OracleTypes.VARCHAR));
 			String cols[]=new String[]{
 					"NTRAMITE"    , "CDTIPFLU"           , "DSTIPFLU"    , "CDFLUJOMC" , "DSFLUJOMC"
 					,"STATUS"     , "DSSTATUS"           , "CDUNIECO"    , "CDRAMO"    , "CDTIPSIT"

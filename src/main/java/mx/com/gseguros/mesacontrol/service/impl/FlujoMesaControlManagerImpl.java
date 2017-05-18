@@ -1812,6 +1812,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String cdpersonCliente
 			,String filtro
 			,String dscontra
+			,String nmsolici
 			,int start
 			,int limit
 			)throws Exception
@@ -1835,6 +1836,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ cdpersonCliente="  , cdpersonCliente
 				,"\n@@@@@@ filtro="           , filtro
 				,"\n@@@@@@ dscontra="         , dscontra
+				,"\n@@@@@@ nmsolici="      , nmsolici
 				,"\n@@@@@@ start="            , start
 				,"\n@@@@@@ limit="            , limit
 				));
@@ -1861,6 +1863,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,fehasta
 					,cdpersonCliente
 					,dscontra
+					,nmsolici
 					,start
 					,limit
 					);
