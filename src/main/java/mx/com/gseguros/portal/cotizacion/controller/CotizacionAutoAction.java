@@ -1739,47 +1739,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             {
                 throw new ApplicationException(respuesta);
             }
-
-            //Pone vacio en los valores desc/rec de la lista
-            resp.setSlist(cotizacionAutoManager.validaVacioDescRecg(resp.getSlist()));
-            
-            //Elimina incisos que no correspondan al negocio seleccionado
-            resp.setSlist(cotizacionAutoManager.validaExcelCdtipsitXNegocio(tipoflot,negocio,resp.getSlist()));
-            exito = !resp.getSlist().isEmpty();
-            if(!exito)
-            {
-                if(tipoflot.equals("P"))
-                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio seleccionado y Autos PyMES.");
-                else if(tipoflot.equals("F"))
-                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio seleccionado y Autos Flotilla.");
-                else
-                throw new ApplicationException("Sin resultados de vehiculos acorde al negocio seleccionado.");
-            }            
-            
-            int lugarMensaje = resp.getSlist().size();
-            Map<String, String> msn = resp.getSlist().get(lugarMensaje-1);
-            
-            if(msn.get("removidos") != null) 
-            {
-                respuestaOculta =msn.get("removidos");
-                resp.getSlist().remove(lugarMensaje-1);
-            }
-            
-            if(resp.getSlist().isEmpty())
-            {   
-                respuestaOculta="No se agregar�n los incisos por no corresponder al negocio seleccionado.";
-                return SUCCESS;
-            }
-            
-            //Para modificar solo PYMES ignorando el valor de vehiculo y haciendo consulta
-            if(tipoflot.equals("P"))
-            {
-                String cdpost = smap1.get("codpos");
-                String cambio = smap1.get("cambio");
-                logger.debug(cambio);
-                resp.setSlist( cotizacionAutoManager.modificadorValorVehPYME(resp.getSlist(),cdsisrol, cdpost, cambio));
-            }
-            
+           
             slist1 = resp.getSlist();
         }
         catch(Exception ex)
