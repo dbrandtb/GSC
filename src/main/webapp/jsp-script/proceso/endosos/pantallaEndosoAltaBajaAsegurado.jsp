@@ -1017,9 +1017,9 @@ Ext.onReady(function()
                                     ,callbackRemesa
                                 );
                             });
-                            }else{
+                            }else if (json.endosoConfirmado==false){
                             	//Si viene en false, entonces se manda autorizar
-                            	mensajeCorrecto('Confirmar endoso');
+                            	mensajeCorrecto('Tr&aacute;mite Turnado',json.mensaje, callbackRemesa);
                             }
                             
 	    				}
