@@ -7317,6 +7317,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pi_cdconcep", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_dsconcep", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdusuari", OracleTypes.VARCHAR));
 				
 				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -7340,6 +7341,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pi_cdresest", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_dsresest", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdusuari", OracleTypes.VARCHAR));
 				
 				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -7362,6 +7364,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pi_dsest", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdtabres", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdusuari", OracleTypes.VARCHAR));
 				
 				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -7396,6 +7399,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pi_swoblval", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swoblobs", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdusuari", OracleTypes.VARCHAR));
 				
 				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
