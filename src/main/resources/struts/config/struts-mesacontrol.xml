@@ -20,9 +20,6 @@
         <action name="actualizarStatusTramite" method="actualizarStatusTramite" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
-        <action name="reasignarTramiteIndividual" method="reasignarTramiteIndividual" class="MesaControlAction">
-            <result name="success" type="json" />
-        </action>
         <action name="turnarAutorizacionServicio" method="turnarAutorizacionServicio" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
@@ -61,25 +58,6 @@
             <result name="success" type="json" />
         </action>
         <action name="validarAntesDeTurnar" class="MesaControlAction" method="validarAntesDeTurnar">
-            <result name="success" type="json" />
-        </action>
-        <action name="reasignarTramitesBloque" class="MesaControlAction" method="reasignarTramitesBloque">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result name="success" type="json" />
-        </action>
-        
-        <action name="recuperaClaveAutoFlujo" class="MesaControlAction" method="recuperacionClaveAutosFlujo">
-            <result name="success" type="json" />
-        </action>
-        
-        <action name="guardaClaveAutoFlujo" class="MesaControlAction" method="guardaClaveAutosFlujo">
-        	<interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
             <result name="success" type="json" />
         </action>
     </package>

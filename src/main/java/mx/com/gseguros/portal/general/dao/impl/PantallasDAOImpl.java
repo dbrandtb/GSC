@@ -55,13 +55,14 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		params.put("PV_CDTIPTRA_I" , cdtiptra);
 		params.put("PV_ORDEN_I"    , orden);
 		params.put("PV_SECCION_I"  , seccion);
+		Utils.debugProcedure(logger, "PKG_CONF_PANTALLAS.P_GET_TCONFCMP", params);
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerComponentes(this.getDataSource()), params);
 		List<ComponenteVO>lista=(List<ComponenteVO>) resultadoMap.get("PV_REGISTRO_O");
 		if(lista==null)
 		{
 			lista=new ArrayList<ComponenteVO>();
 		}
-		logger.debug(Utils.log("obtenerComponentes lista = ", lista));
+		Utils.debugProcedure(logger, "PKG_CONF_PANTALLAS.P_GET_TCONFCMP", params, lista);
 		return lista;
 	}
 	

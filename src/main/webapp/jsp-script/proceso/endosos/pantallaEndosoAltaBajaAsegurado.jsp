@@ -36,10 +36,6 @@ var _3_urlLoadHtml            = '<s:url namespace="/"           action="cargarHt
 
 debug('panendabaseguInputSmap1',panendabaseguInputSmap1);
 debug('panendabaseguInputSmap2',panendabaseguInputSmap2);
-
-var _endAseg_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_endAseg_flujo:',_endAseg_flujo);
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -904,7 +900,6 @@ Ext.onReady(function()
                                 ,width       : 600
                                 ,height      : 400
                                 ,autoScroll  : true
-                                ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
                                 ,loader      :
                                 {
                                     url       : panEndAltBajAseUrlDoc
@@ -974,54 +969,28 @@ Ext.onReady(function()
 	    			json['slist1'].push(record.getData());
 	    		});
 	    		
-	    		if(!Ext.isEmpty(_endAseg_flujo))
-	    		{
-	    		    json.flujo = _endAseg_flujo;
-	    		}
-	    		
 	    		debug('json:',json);
 	    		_setLoading(true,panendabaseguPanelPrincipal);
 	    		Ext.Ajax.request(
 	    		{
-	    			url       : panendabaseguUrlSave 
+	    			url       : panendabaseguUrlSave
 	    			,jsonData : json
 	    			,success  : function(response)
 		            {
 	    				_setLoading(false,panendabaseguPanelPrincipal);
 	    				json=Ext.decode(response.responseText);
-	    				debug('<<<response',json);
+	    				debug('response',json);
 	    				if(json.success==true)
 	    				{
 	    					Ext.getCmp('panEndAltBajAseBotConfirmar').hide();
-	    					
-	    					var callbackRemesa = function()
-	    					{
-	    					    //////////////////////////////////
-                                ////// usa codigo del padre //////
-                                /*//////////////////////////////*/
-                                marendNavegacion(2);
-                                /*//////////////////////////////*/
-                                ////// usa codigo del padre //////
-                                //////////////////////////////////
-                            };
-                            if(json.endosoConfirmado==true){
-                            	//Si viene verdadero, entonces no se manda a autorizar
-                            	mensajeCorrecto('Confirmar endoso',json.mensaje,function()
-                            {
-                                _generarRemesaClic(
-                                    true
-                                    ,panendabaseguInputSmap1.CDUNIECO
-                                    ,panendabaseguInputSmap1.CDRAMO
-                                    ,panendabaseguInputSmap1.ESTADO
-                                    ,panendabaseguInputSmap1.NMPOLIZA
-                                    ,callbackRemesa
-                                );
-                            });
-                            }else if (json.endosoConfirmado==false){
-                            	//Si viene en false, entonces se manda autorizar
-                            	mensajeCorrecto('Tr&aacute;mite Turnado',json.mensaje, callbackRemesa);
-                            }
-                            
+	    					mensajeCorrecto('Confirmar endoso',json.mensaje);
+	    					//////////////////////////////////
+                            ////// usa codigo del padre //////
+                            /*//////////////////////////////*/
+                            marendNavegacion(2);
+                            /*//////////////////////////////*/
+                            ////// usa codigo del padre //////
+                            //////////////////////////////////
 	    				}
 	    				else
 	    				{
@@ -1076,6 +1045,5 @@ Ext.onReady(function()
 	//////////////////////
 	
 });
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="panendabaseDivPri" style="height:1500px;"></div>
