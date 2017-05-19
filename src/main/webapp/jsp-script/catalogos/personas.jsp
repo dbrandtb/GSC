@@ -1617,11 +1617,11 @@ function irModoEdicion(){
 						    {
 						    	_p22_formBusqueda().hide();
 							}
-						    if(_muestraBusqueda){
+							if(_muestraBusqueda){
 								
 								_p22_formBusqueda().show();
 							}
-						    
+							
 							
 						    try{
 								var ventanaMensaje = window.parent;

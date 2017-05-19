@@ -15,7 +15,6 @@ import org.apache.struts2.convention.annotation.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -81,10 +80,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
-	
-	@Value("${documento.cotizacion.cdtipflu.nosicaps}")
-    private String documentoCotizacionCdtipfluNosicaps;	
-	
 	
 	@Action(value   = "workflow",
 	        results = {
@@ -1340,8 +1335,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,fedesde  = params.get("FEDESDE")
 			       ,fehasta  = params.get("FEHASTA")
 			       ,filtro   = params.get("FILTRO")
-			       ,dscontra = params.get("DSCONTRA")
-			       ,nmsolici = params.get("NMSOLICI");
+			       ,dscontra = params.get("DSCONTRA");
 			
 			String cdpersonCliente = params.get("CDPERSONCLI");
 			
@@ -1376,7 +1370,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdpersonCliente
 					,filtro
 					,dscontra
-					,nmsolici
 					,start
 					,limit
 					);
@@ -1989,19 +1982,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			Utils.validate(ntramite  , "No se recibi\u00f3 el tr\u00e1mite",
 			               statusNew , "No se recibi\u00f3 el status nuevo");
 			
-			//REQ0005 antes de turnar el  tramite se debe verificar si es flujo no sicaps (CDTIPFLU=284, DSTIPFLU=EMISIÓN NO SICAPS) para solicitar documento de cotizacion
-			logger.debug("Determinando si es flujo SICAPS o NO SICAPS cdtipflu: "+ cdtipflu + " ntramite: " + ntramite);
-				if (documentoCotizacionCdtipfluNosicaps.equals(cdtipflu)){// si es no sicaps verifico si tiene documentos cargados
-					//llamo al sp de consulta de documentos de cotizacion
-					int cantidadDocumentos = 0;
-					cantidadDocumentos = flujoMesaControlManager.obtenerCantidadDocumentosCotizacion(ntramite);
-					if (cantidadDocumentos == 0 ){
-						throw new ApplicationException("Debe adjuntar los documentos de Cotizaci\u00F3n para continuar");
-					}
-				}
-			//req0005 continua flujo normal
-			
-				RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+			RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
 			        cdusuari,
 			        cdsisrol,
 			        ntramite,
