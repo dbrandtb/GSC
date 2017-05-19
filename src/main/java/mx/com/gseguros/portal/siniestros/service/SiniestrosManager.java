@@ -8,6 +8,7 @@ import java.util.Map;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -823,7 +824,7 @@ public interface SiniestrosManager {
 
 	public boolean actualizaEliminaEstudiosCobAseg(HashMap<String, String> params) throws Exception;
 	
-	public boolean validaDatosEstudiosReclamacion(HashMap<String, String> params) throws Exception;
+	public RespuestaVO validaDatosEstudiosReclamacion(HashMap<String, String> params) throws Exception;
 
 	public List<Map<String, String>> obtieneConceptosSubcob() throws Exception;
 
@@ -840,4 +841,7 @@ public interface SiniestrosManager {
 	public boolean actualizaEliminaConfEstudios(HashMap<String, String> params) throws Exception;
 
 	public boolean actualizaEliminaConfEstudiosCobertura(HashMap<String, String> params) throws Exception;
+	
+	public List<GenericVO> obtieneListadoSubcoberturaPorProdCob(String cdramo, String cdtipsit, String cdgarant)
+			throws Exception;
 }

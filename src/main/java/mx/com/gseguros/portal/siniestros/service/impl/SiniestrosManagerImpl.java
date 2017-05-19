@@ -25,6 +25,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
@@ -3063,7 +3064,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
-	public boolean validaDatosEstudiosReclamacion(HashMap<String, String> params) throws Exception{
+	public RespuestaVO validaDatosEstudiosReclamacion(HashMap<String, String> params) throws Exception{
 		return siniestrosDAO.validaDatosEstudiosReclamacion(params);
 	}
 
@@ -3105,6 +3106,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	@Override
 	public boolean actualizaEliminaConfEstudiosCobertura(HashMap<String, String> params) throws Exception {
 		return siniestrosDAO.actualizaEliminaConfEstudiosCobertura(params);
+	}
+
+	@Override
+	public List<GenericVO> obtieneListadoSubcoberturaPorProdCob(String cdramo, String cdtipsit, String cdgarant)
+			throws Exception {
+		return siniestrosDAO.obtieneListadoSubcoberturaPorProdCob(cdramo, cdtipsit, cdgarant);
 	}
 	
 }

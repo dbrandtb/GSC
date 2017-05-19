@@ -23,7 +23,7 @@ var _URL_CARGA_CATALOGO      = '<s:url namespace="/catalogos" action="obtieneCat
 var _Cat_ProductosSalud = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOSALUD" />';
 var _Cat_SubramosSalud  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT" />';
 var _Cat_Coberturas     = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURAS" />';
-var _Cat_SubCoberturas     = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS" />';
+var _Cat_SubCoberturas     = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS_X_PRODUCTO_COBERTURA" />';
 
 
 var _UrlConsultaConceptos     = '<s:url namespace="/siniestros"    action="obtieneConceptosSubcob" />';
@@ -44,6 +44,7 @@ Ext.onReady(function()
 {
 	
 	var panelPrincipalConfResEstudios;
+	var numWindowAgregar = 0;
 	
 	/////////////////////
 	////// modelos //////
@@ -76,8 +77,8 @@ Ext.onReady(function()
 				extend : 'Ext.data.Model'
 				,fields :
 				['CDRAMO','CDTIPSIT','CDGARANT','CDCONVAL','CDCONCEP','CDEST','DSRAMO','DSTIPSIT','DSGARANT','DSCONVAL','DSCONCEP','DSEST',
-					'CDRAMO_ORIG','CDTIPSIT_ORIG','CDGARANT_ORIG','CDCONVAL_ORIG','CDCONCEP_ORIG','CDEST_ORIG','SWOBLVAL_ORIG','SWOBLOBS_ORIG',
-					'SWOBLVAL','SWOBLOBS']
+					'CDRAMO_ORIG','CDTIPSIT_ORIG','CDGARANT_ORIG','CDCONVAL_ORIG','CDCONCEP_ORIG','CDEST_ORIG','SWOBLVAL_ORIG','SWOBLRES_ORIG',
+					'SWOBLVAL','SWOBLRES']
 	});
 	
 	/*/////////////////*/
@@ -217,15 +218,351 @@ Ext.onReady(function()
 	/*///////////////////*/
 	
 	panelPrincipalConfResEstudios = Ext.create('Ext.panel.Panel',{
-		title: 'Configuraci\u00f3n de captura de estudios m&eacute;dicos para conceptos de subcobertura.',
-		width: 900,
+		title: 'Configuraci\u00f3n de estudios y resultados m&eacute;dicos para programas de detecci&oacute;n oportuna.',
+		width: 930,
 		titleAlign: 'center',
 		defaults : {
-			style : 'margin : 3px;'
+			style : 'margin : 4px;'
 		}
 	    ,renderTo : 'mainDivConfSucurTrabajo'
 	    ,items :
 	    	[
+	    		{
+                    xtype: 'form',
+                    //bodyPadding: '10 3 10 3',
+                    defaults : {
+						style : 'margin : 6px;'
+					},
+                    layout: {
+                        type: 'column'
+                    },
+                    title: 'B&uacute;queda.',
+                    items: [
+                        {
+                            xtype: 'combobox',
+                            fieldLabel: 'Producto',
+                            name: 'params.cdramo',
+                            labelAlign: 'right',
+                            labelWidth: 70,
+                            width: 250,
+                            displayField: 'value',
+                            valueField: 'key',
+                            forceSelection: true,
+        	                anyMatch      : true,
+                            queryMode     : 'local',
+                            store       : Ext.create('Ext.data.Store', {
+                                model : 'Generic',
+                                autoLoad : true,
+                                proxy : {
+                                    type : 'ajax',
+                                    url : _URL_CARGA_CATALOGO,
+                                    extraParams : {
+                                        catalogo : _Cat_ProductosSalud
+                                    },
+                                    reader : {
+                                        type : 'json',
+                                        root : 'lista'
+                                    }
+                                }
+                            }),
+                            listeners: {
+                            	select: function(cmb, records){
+                            		//alert(records[0].get('key'));
+                            		//var panelBusq = btn.up('form');
+                            		var comboModalidad = cmb.up('form').down('[name=params.cdtipsit]');
+                            		comboModalidad.getStore().load({
+                            			params:{
+                            				'params.idPadre' : records[0].get('key')
+                            			}
+                            		})
+                            	}
+                            }
+                        },
+                        {
+                            xtype: 'combobox',
+                            fieldLabel: 'Modalidad',
+                            name: 'params.cdtipsit',
+                            labelAlign: 'right',
+                            labelWidth: 70,
+                            width: 250,
+                            displayField: 'value',
+                            valueField: 'key',
+                            forceSelection: true,
+        	                anyMatch      : true,
+                            queryMode     : 'local',
+                            store       : Ext.create('Ext.data.Store', {
+                                model : 'Generic',
+                                autoLoad : true,
+                                proxy : {
+                                    type : 'ajax',
+                                    url : _URL_CARGA_CATALOGO,
+                                    extraParams : {
+                                        catalogo : _Cat_SubramosSalud
+                                    },
+                                    reader : {
+                                        type : 'json',
+                                        root : 'lista'
+                                    }
+                                }
+                            }),
+                            listeners: {
+                            	select: function(cmb, records){
+                            		var comboRamo = cmb.up('form').down('[name=params.cdramo]');
+                            		var comboGarantias = cmb.up('form').down('[name=params.cdgarant]');
+                            		comboGarantias.getStore().load({
+                            			params:{
+                            				'params.cdramo' : comboRamo.getValue(),
+                            				'params.cdtipsit' : records[0].get('key')
+                            			}
+                            		});
+                            	}
+                            }
+                        },
+                        {
+                            xtype: 'combobox',
+                            fieldLabel: 'Cobertura',
+                            name: 'params.cdgarant',
+                            labelAlign: 'right',
+                            labelWidth: 70,
+                            width: 250,
+                            displayField: 'value',
+                            valueField: 'key',
+                            forceSelection: true,
+        	                anyMatch      : true,
+                            queryMode     : 'local',
+                            store       : Ext.create('Ext.data.Store', {
+                                model : 'Generic',
+                                autoLoad : true,
+                                proxy : {
+                                    type : 'ajax',
+                                    url : _URL_CARGA_CATALOGO,
+                                    extraParams : {
+                                        catalogo : _Cat_Coberturas
+                                    },
+                                    reader : {
+                                        type : 'json',
+                                        root : 'lista'
+                                    }
+                                }
+                            }),
+                            listeners: {
+                            	select: function(cmb, records){
+                            		var comboRamo = cmb.up('form').down('[name=params.cdramo]');
+                            		var comboModalidad = cmb.up('form').down('[name=params.cdtipsit]');
+                            		
+                            		var comboSubcoberturas= cmb.up('form').down('[name=params.cdconval]');
+                            		comboSubcoberturas.getStore().load({
+                            			params:{
+                            				'params.cdramo'   : comboRamo.getValue(),
+                            				'params.cdtipsit' : comboModalidad.getValue(),
+                            				'params.cdgarant' : records[0].get('key')
+                            			}
+                            		});
+                            	}
+                            }
+                        },
+                        {
+                            xtype: 'combobox',
+                            fieldLabel: 'Subcobertura',
+                            name: 'params.cdconval',
+                            labelAlign: 'right',
+                            labelWidth: 70,
+                            width: 250,
+                            displayField: 'value',
+                            valueField: 'key',
+                            forceSelection: true,
+        	                anyMatch      : true,
+                            queryMode     : 'local',
+                            store       : Ext.create('Ext.data.Store', {
+                                model : 'Generic',
+                                autoLoad : true,
+                                proxy : {
+                                    type : 'ajax',
+                                    url : _URL_CARGA_CATALOGO,
+                                    extraParams : {
+                                        catalogo : _Cat_SubCoberturas
+                                    },
+                                    reader : {
+                                        type : 'json',
+                                        root : 'lista'
+                                    }
+                                }
+                            })
+                            
+                        },
+                        {
+                            xtype: 'combobox',
+                            fieldLabel: 'Concepto',
+                            name: 'params.cdconcep',
+                            labelAlign: 'right',
+                            labelWidth: 70,
+                            width: 250,
+                            displayField: 'DSCONCEP',
+                            valueField: 'CDCONCEP',
+                            forceSelection: true,
+        	                anyMatch      : true,
+                            queryMode     : 'local',
+                            listConfig : {
+                            	itemTpl : '{CDCONCEP} - {DSCONCEP}'
+                            },
+                            store         : conceptoBusquedaStore
+                        },
+                        {
+                            xtype: 'combobox',
+                            fieldLabel: 'Estudio',
+                            name: 'params.cdest',
+                            labelAlign: 'right',
+                            labelWidth: 70,
+                            width: 250,
+                            displayField: 'DSEST',
+                            valueField: 'CDEST',
+                            listConfig : {
+                            	itemTpl : '{CDEST} - {DSEST}'
+                            },
+                            forceSelection: true,
+        	                anyMatch      : true,
+                            queryMode     : 'local',
+                            store: estudioBusquedaStore
+                            
+                        }
+                    ],
+                    buttonAlign: 'center',
+                    buttons: [
+                        {
+                            text: 'Buscar',
+                            icon:_CONTEXT+'/resources/fam3icons/icons/magnifier.png',
+                            handler: function(btn){
+                            	var panelBusq = btn.up('form');
+   	                			contEstCobGridStore.load({
+   	                				params: panelBusq.getForm().getValues()
+   	                			});
+                            }
+                        },{
+    	                	text: 'Limpiar'
+    	                		,icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png'
+        	                	,handler: function(btn){
+       	                			var panelBusq = btn.up('form');
+       	                			panelBusq.getForm().reset();
+        	                	}	
+        	             }
+                    ]
+                },
+                {
+                    xtype: 'gridpanel',
+                    height: 310,
+                    title: 'Configuraci&oacute;n de Estudios M&eacute;dicos Por Producto',
+                    store: contEstCobGridStore,
+                    columns: [
+                        {
+                            xtype: 'gridcolumn',
+                            dataIndex: 'DSRAMO',
+                            text: 'Producto',
+                            width: 100
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            dataIndex: 'DSTIPSIT',
+                            text: 'Modalidad',
+                            width: 120
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            dataIndex: 'DSGARANT',
+                            text: 'Cobertura',
+                            width: 150
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            dataIndex: 'DSCONVAL',
+                            text: 'SubCobertura',
+                            width: 200
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            dataIndex: 'DSCONCEP',
+                            text: 'Concepto',
+                            width: 270,
+                            renderer: function(value,metadata,recordFila){
+                            	return recordFila.get('CDCONCEP')+' - '+recordFila.get('DSCONCEP');
+                            }
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            dataIndex: 'DSEST',
+                            text: 'Estudio',
+                            width: 380,
+                            renderer: function(value,metadata,recordFila){
+                            	return recordFila.get('CDEST')+' - '+recordFila.get('DSEST');
+                            }
+                        }
+                    ],
+                   /*  buttonAlign: 'center',
+                    buttons: [
+                        {
+                            xtype: 'button',
+                            text: 'Guardar Cambios de Configuraci&oacute;n'
+                        }
+                    ], */
+                    dockedItems: [
+                        {
+                            xtype: 'toolbar',
+                            dock: 'top',
+                            items: [
+                                {
+                                    xtype: 'button',
+                                    text: 'Agregar',
+                                    icon:_CONTEXT+'/resources/fam3icons/icons/page_add.png',
+                                    handler: function(btn){
+                                    	
+                                    	
+                                    	var comboRamo = panelPrincipalConfResEstudios.down('[name=params.cdramo]');
+    									var comboModalidad = panelPrincipalConfResEstudios.down('[name=params.cdtipsit]');
+                                		var comboGarantias = panelPrincipalConfResEstudios.down('[name=params.cdgarant]');
+    									var comboSubcoberturas= panelPrincipalConfResEstudios.down('[name=params.cdconval]');
+    									
+                                    	var nuevoRecConf = new modelGridConfEstCob();
+                                    	nuevoRecConf.set('CDRAMO',comboRamo.getValue());
+                                    	nuevoRecConf.set('CDTIPSIT',comboModalidad.getValue());
+                                    	nuevoRecConf.set('CDGARANT',comboGarantias.getValue());
+                                    	nuevoRecConf.set('CDCONVAL',comboSubcoberturas.getValue());
+                                    	
+                                    	agregarEditarConfEstudios(nuevoRecConf,btn);
+                                    }
+                                },
+                                {
+                                    xtype: 'button',
+                                    text: 'Editar',
+                                    icon:_CONTEXT+'/resources/fam3icons/icons/page_edit.png',
+                                    handler: function(btn){
+                                    	var gridConfEstudiosCob = btn.up('grid');
+                                    	
+                                    	if(gridConfEstudiosCob.getSelectionModel().hasSelection()){
+                                   			var recordSelected = gridConfEstudiosCob.getSelectionModel().getLastSelected();
+                                   			agregarEditarConfEstudios(recordSelected,btn);
+                                   		}else{
+                                   			mensajeWarning("Debe seleccionar un registro para editar.")	
+                                   		}
+                                    }
+                                },
+                                {
+                                    xtype: 'button',
+                                    text: 'Eliminar',
+                                    icon:_CONTEXT+'/resources/fam3icons/icons/page_delete.png',
+                                    handler: function(btn){
+										var gridConfEstudiosCob = btn.up('grid');
+                                    	
+                                    	if(gridConfEstudiosCob.getSelectionModel().hasSelection()){
+                                   			var recordSelected = gridConfEstudiosCob.getSelectionModel().getLastSelected();
+                                   			eliminarConfEstudios(recordSelected,btn);
+                                   		}else{
+                                   			mensajeWarning("Debe seleccionar un registro para eliminar.")	
+                                   		}
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
                 {
                     xtype: 'gridpanel',
                     height: 250,
@@ -241,7 +578,7 @@ Ext.onReady(function()
                             editor : {
             	                xtype      : 'textfield',
             	                name       : 'CDCONCEP',
-            	               	maxValue   : 6,
+            	                maxLength  : 6,
             	               	allowBlank : false
             	            }
                         },
@@ -253,98 +590,91 @@ Ext.onReady(function()
                             editor : {
             	                xtype      : 'textfield',
             	                name       : 'DSCONCEP',
-            	               	maxValue   : 100,
+            	                maxLength  : 100,
             	               	allowBlank : false
             	            }
                         }
                     ],
-                    dockedItems: [
-                        {
-                            xtype: 'toolbar',
-                            dock: 'bottom',
-                            ui: 'footer',
-                            items: [
-                                {
-                                    xtype: 'tbfill'
-                                },
-                                {
-                                    xtype: 'button',
-                                    text: 'Guardar Cambios',
-                                    handler: function (btn,e){
-                                    	
-                                    	var gridConceptos = btn.up('grid');
-                                    	
-	                                   	if(gridConceptos.getPlugin('pluginConcepts').editing){
-                                    		mensajeWarning('Antes de guardar primero finalice la edicion de los Conceptos.');
-                                    		return;
-                                    	}
-                                        
-                                        var updateList = [];
-                                        
-                                        gridConceptos.getStore().getModifiedRecords().forEach(function(record,index,arr){
-                                        	if(record.dirty){
-                                        		var datosResultado = {
-                                                  		 'pi_cdconcep_ant': record.get('CDCONCEP_ORIG'),
-                                                  		 'pi_cdconcep'    : record.get('CDCONCEP'),
-                                                  		 'pi_dsconcep'    : record.get('DSCONCEP'),
-                                                  		 'pi_swop'        : 'U'
-                                                   };
-                                              	    
-                                                   updateList.push(datosResultado);
-                                        	}
-                                        });
-                                        
-										gridConceptos.getStore().getRemovedRecords().forEach(function(record,index,arr){
-                                        	
-                                            var datosResultado = {
-                                           		 'pi_cdconcep_ant': record.get('CDCONCEP_ORIG'),
-                                           		 'pi_cdconcep'    : record.get('CDCONCEP'),
-                                           		 'pi_dsconcep'    : record.get('DSCONCEP'),
-                                           		 'pi_swop'        : 'D'
-                                            };
-                                       	    
-                                            updateList.push(datosResultado);
-                                        });
-                                        
-                                        
-                                        if(updateList.length <= 0){
-                                    		mensajeWarning('No hay cambios que guardar.');
-                                       	 	return;
-                                        }
-                                        
-                                        debug('Lista de Resultados a guardar: ',updateList);
-
-                                        var maskGuarda = _maskLocal('Guardando...');
-                                        
-                                        Ext.Ajax.request({
-                                            url: _UrlActualizaConceptos,
-                                            jsonData : {
-                                                'saveList' : updateList
-                                            },
-                                            success  : function(response, options){
-                                           	 maskGuarda.close();
-                                                var json = Ext.decode(response.responseText);
-                                                if(json.success){
-                                                	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
-                                       	        	gridConceptos.getStore().reload();
-                                       	        	conceptoBusquedaStore.reload();
-                                                }else{
-                                                    mensajeError('Verifique que no haya tr&aacute;mites usando actualmente este concepto. ' + json.mensaje);
-                                                }
-                                            }
-                                            ,failure  : function(response, options){
-                                           	 maskGuarda.close();
-                                                var json = Ext.decode(response.responseText);
-                                                mensajeError(json.mensaje);
-                                            }
-                                        });
-                                    
-                                        
-                                    }
+                    buttonAlign: 'center',
+                    buttons: [
+                    	{
+                            xtype: 'button',
+                            icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
+                            text: 'Guardar Cambios',
+                            handler: function (btn,e){
+                            	
+                            	var gridConceptos = btn.up('grid');
+                            	
+                               	if(gridConceptos.getPlugin('pluginConcepts').editing){
+                            		mensajeWarning('Antes de guardar primero finalice la edicion de los Conceptos.');
+                            		return;
+                            	}
+                                
+                                var updateList = [];
+                                
+                                gridConceptos.getStore().getModifiedRecords().forEach(function(record,index,arr){
+                                	if(record.dirty){
+                                		var datosResultado = {
+                                          		 'pi_cdconcep_ant': record.get('CDCONCEP_ORIG'),
+                                          		 'pi_cdconcep'    : record.get('CDCONCEP'),
+                                          		 'pi_dsconcep'    : record.get('DSCONCEP'),
+                                          		 'pi_swop'        : 'U'
+                                           };
+                                      	    
+                                           updateList.push(datosResultado);
+                                	}
+                                });
+                                
+								gridConceptos.getStore().getRemovedRecords().forEach(function(record,index,arr){
+                                	
+                                    var datosResultado = {
+                                   		 'pi_cdconcep_ant': record.get('CDCONCEP_ORIG'),
+                                   		 'pi_cdconcep'    : record.get('CDCONCEP'),
+                                   		 'pi_dsconcep'    : record.get('DSCONCEP'),
+                                   		 'pi_swop'        : 'D'
+                                    };
+                               	    
+                                    updateList.push(datosResultado);
+                                });
+                                
+                                
+                                if(updateList.length <= 0){
+                            		mensajeWarning('No hay cambios que guardar.');
+                               	 	return;
                                 }
-                            ]
-                        },
-                        {
+                                
+                                debug('Lista de Resultados a guardar: ',updateList);
+
+                                var maskGuarda = _maskLocal('Guardando...');
+                                
+                                Ext.Ajax.request({
+                                    url: _UrlActualizaConceptos,
+                                    jsonData : {
+                                        'saveList' : updateList
+                                    },
+                                    success  : function(response, options){
+                                   	 maskGuarda.close();
+                                        var json = Ext.decode(response.responseText);
+                                        if(json.success){
+                                        	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
+                               	        	gridConceptos.getStore().reload();
+                               	        	conceptoBusquedaStore.reload();
+                                        }else{
+                                            mensajeError('Verifique que no haya tr&aacute;mites usando actualmente este concepto. ' + json.mensaje);
+                                        }
+                                    }
+                                    ,failure  : function(response, options){
+                                   	 maskGuarda.close();
+                                        var json = Ext.decode(response.responseText);
+                                        mensajeError(json.mensaje);
+                                    }
+                                });
+                            
+                                
+                            }
+                        }
+                    ],
+                    dockedItems: [{
                             xtype: 'toolbar',
                             dock: 'top',
                             items: [
@@ -404,218 +734,7 @@ Ext.onReady(function()
                 {
                     xtype: 'gridpanel',
                     height: 300,
-                    title: 'Grupos de Resultado para Estudios M&eacute;dicos',
-                    plugins: [Ext.create('Ext.grid.plugin.RowEditing', {clicksToEdit: 2, pluginId: 'pluginResEstudios'})],
-                    store: resultadosEstGridStore,
-                    columns: [
-                    	{
-                            xtype: 'gridcolumn',
-                            dataIndex: 'CDTABRES',
-                            text: 'Agrupador de Resultado',
-                            flex: 1,
-                            editor : {
-            	                xtype      : 'textfield',
-            	                name       : 'CDTABRES',
-            	               	maxValue   : 6,
-            	               	allowBlank : false
-            	            }
-                        },
-                        {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'CDRESEST',
-                            text: 'Clave Resultado',
-                            flex: 1,
-                            editor : {
-            	                xtype      : 'textfield',
-            	                name       : 'CDRESEST',
-            	               	maxValue   : 6,
-            	               	allowBlank : false
-            	            }
-                        },
-                        {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'DSRESEST',
-                            text: 'Descripci&oacute;n Resultado',
-                            flex: 2,
-                            editor : {
-            	                xtype      : 'textfield',
-            	                name       : 'DSRESEST',
-            	               	maxValue   : 50,
-            	               	allowBlank : false
-            	            }
-                        }
-                        
-                    ],
-                    dockedItems: [
-                        {
-                            xtype: 'toolbar',
-                            dock: 'bottom',
-                            ui: 'footer',
-                            items: [
-                                {
-                                    xtype: 'tbfill'
-                                },
-                                {
-                                    xtype: 'button',
-                                    text: 'Guardar Cambios',
-									handler: function (btn,e){
-                                    	
-                                    	var gridResEstudios = btn.up('grid');
-                                    	
-	                                   	if(gridResEstudios.getPlugin('pluginResEstudios').editing){
-                                    		mensajeWarning('Antes de guardar primero finalice la edicion de los Resultados de Estudios.');
-                                    		return;
-                                    	}
-                                        
-                                        var updateList = [];
-                                        
-                                        gridResEstudios.getStore().getModifiedRecords().forEach(function(record,index,arr){
-                                        	if(record.dirty){
-                                        			var datosResultado = {
-                                                  		 'pi_cdtabres_ant': record.get('CDTABRES_ORIG'),
-                                                  		 'pi_cdresest_ant': record.get('CDRESEST_ORIG'),
-                                                  		 'pi_cdtabres'    : record.get('CDTABRES'),
-                                                  		 'pi_cdresest'    : record.get('CDRESEST'),
-                                                  		 'pi_dsresest'    : record.get('DSRESEST'),
-                                                  		 'pi_swop'        : 'U'
-                                                   };
-                                              	    
-                                                   updateList.push(datosResultado);
-                                        	}
-                                        });
-                                        
-                                        gridResEstudios.getStore().getRemovedRecords().forEach(function(record,index,arr){
-                                        	
-                                        		var datosResultado = {
-                                             		 'pi_cdtabres_ant': record.get('CDTABRES_ORIG'),
-                                             		 'pi_cdresest_ant': record.get('CDRESEST_ORIG'),
-                                             		 'pi_cdtabres'    : record.get('CDTABRES'),
-                                             		 'pi_cdresest'    : record.get('CDRESEST'),
-                                             		 'pi_dsresest'    : record.get('DSRESEST'),
-                                             		 'pi_swop'        : 'D'
-                                             	};
-                                       	    
-                                            updateList.push(datosResultado);
-                                        });
-                                        
-                                        
-                                        if(updateList.length <= 0){
-                                    		mensajeWarning('No hay cambios que guardar.');
-                                       	 	return;
-                                        }
-                                        
-                                        debug('Lista de Resultados a guardar: ',updateList);
-
-                                        var maskGuarda = _maskLocal('Guardando...');
-                                        
-                                        Ext.Ajax.request({
-                                            url: _UrlActualizaResultadosEst,
-                                            jsonData : {
-                                                'saveList' : updateList
-                                            },
-                                            success  : function(response, options){
-                                           	 maskGuarda.close();
-                                                var json = Ext.decode(response.responseText);
-                                                if(json.success){
-                                                	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
-                                                	gridResEstudios.getStore().reload();
-                                                }else{
-                                                    mensajeError('Verifique que no haya esstudios usando actualmente los resultados modificados. ' + json.mensaje);
-                                                }
-                                            }
-                                            ,failure  : function(response, options){
-                                           	 maskGuarda.close();
-                                                var json = Ext.decode(response.responseText);
-                                                mensajeError(json.mensaje);
-                                            }
-                                        });
-                                    
-                                        
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            xtype: 'toolbar',
-                            dock: 'top',
-                            items: [
-                                {
-                                    xtype: 'button',
-                                    text: 'Agregar',
-                                    icon:_CONTEXT+'/resources/fam3icons/icons/page_add.png',
-                                    handler: function(btn){
-                                   		var gridResEst = btn.up('grid');
-                                   		var nuevoRecord = new modelGridResultadosEst();
-                                   		gridResEst.getStore().add(nuevoRecord);
-                                   		
-                                   		gridResEst.getPlugin('pluginResEstudios').startEdit(nuevoRecord,gridResEst.columns[0]);
-                                   	}
-                                },
-                                {
-                                    xtype: 'button',
-                                    text: 'Eliminar',
-                                    icon:_CONTEXT+'/resources/fam3icons/icons/page_delete.png',
-                                    handler: function(btn){
-										var gridResEst = btn.up('grid');
-                                   		
-                                   		if(gridResEst.getSelectionModel().hasSelection()){
-                                   			var recordSelected = gridResEst.getSelectionModel().getLastSelected();
-                                   			gridResEst.getStore().remove(recordSelected);
-                                   		}else{
-                                   			mensajeWarning("Debe seleccionar un registro para eliminar.")	
-                                   		}
-                                    }
-                                },'->','-',{
-                                    xtype : 'textfield',
-                                    name : 'filtroAgrupadorResultado',
-                                    fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Agrupador de Resultado:</span>',
-                                    labelWidth : 180,
-                                    width: 290,
-                                    listeners:{
-                                    	change: function(elem,newValue,oldValue){
-                                    		newValue = Ext.util.Format.uppercase(newValue);
-                    						if( newValue == Ext.util.Format.uppercase(oldValue)){
-                    							return false;
-                    						}
-                    						
-                    						try{
-                    							resultadosEstGridStore.removeFilter('filtroAgrupaRes');
-                    							resultadosEstGridStore.filter(Ext.create('Ext.util.Filter', {property: 'CDTABRES', anyMatch: true, value: newValue, root: 'data', id:'filtroAgrupaRes'}));
-                    						}catch(e){
-                    							error('Error al filtrar por resultado',e);
-                    						}
-                                    	}
-                                    }
-                                },{
-                                    xtype : 'textfield',
-                                    name : 'filtroResultado',
-                                    fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Resultado:</span>',
-                                    labelWidth : 100,
-                                    width: 240,
-                                    listeners:{
-                                    	change: function(elem,newValue,oldValue){
-                                    		newValue = Ext.util.Format.uppercase(newValue);
-                    						if( newValue == Ext.util.Format.uppercase(oldValue)){
-                    							return false;
-                    						}
-                    						
-                    						try{
-                    							resultadosEstGridStore.removeFilter('filtroRes');
-                    							resultadosEstGridStore.filter(Ext.create('Ext.util.Filter', {property: 'DSRESEST', anyMatch: true, value: newValue, root: 'data', id:'filtroRes'}));
-                    						}catch(e){
-                    							error('Error al filtrar por resultado',e);
-                    						}
-                                    	}
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    xtype: 'gridpanel',
-                    height: 300,
-                    title: 'Estudios M&eacute;dicos y resultados asociados a cada estudio',
+                    title: 'Estudios M&eacute;dicos',
                     plugins: [Ext.create('Ext.grid.plugin.RowEditing', {clicksToEdit: 2, pluginId: 'pluginConfEstudios'})],
                     store: estudiosGridStore,
                     columns: [
@@ -627,7 +746,7 @@ Ext.onReady(function()
                             editor : {
             	                xtype      : 'textfield',
             	                name       : 'CDEST',
-            	               	maxValue   : 6,
+            	                maxLength  : 6,
             	               	allowBlank : false
             	            }
                         },
@@ -639,7 +758,7 @@ Ext.onReady(function()
                             editor : {
             	                xtype      : 'textfield',
             	                name       : 'DSEST',
-            	               	maxValue   : 80,
+            	                maxLength  : 80,
             	               	allowBlank : false
             	            }
                         },
@@ -651,98 +770,90 @@ Ext.onReady(function()
                             editor : {
             	                xtype      : 'textfield',
             	                name       : 'CDTABRES',
-            	               	maxValue   : 6,
+            	                maxLength  : 6,
             	               	allowBlank : false
             	            }
                         }
                     ],
-                    dockedItems: [
-                        {
-                            xtype: 'toolbar',
-                            dock: 'bottom',
-                            ui: 'footer',
-                            items: [
-                                {
-                                    xtype: 'tbfill'
-                                },
-                                {
-                                    xtype: 'button',
-                                    text: 'Guardar Cambios',
-                                    handler: function (btn,e){
-                                    	
-                                    	var gridEstudios = btn.up('grid');
-                                    	
-	                                   	if(gridEstudios.getPlugin('pluginConfEstudios').editing){
-                                    		mensajeWarning('Antes de guardar primero finalice la edicion de los Estudios.');
-                                    		return;
-                                    	}
-                                        
-                                        var updateList = [];
-                                        
-                                        gridEstudios.getStore().getModifiedRecords().forEach(function(record,index,arr){
-                                        	if(record.dirty){
-                                        			var datosResultado = {
-                                                  		 'pi_cdest_ant': record.get('CDEST_ORIG'),
-                                                  		 'pi_cdest'    : record.get('CDEST'),
-                                                  		 'pi_dsest'    : record.get('DSEST'),
-                                                  		 'pi_cdtabres' : record.get('CDTABRES'),
-                                                  		 'pi_swop'     : 'U'
-                                                   };
-                                              	    
-                                                   updateList.push(datosResultado);
-                                        	}
-                                        });
-                                        
-                                        gridEstudios.getStore().getRemovedRecords().forEach(function(record,index,arr){
-                                        	
-                                        	var datosResultado = {
-                                             		 'pi_cdest_ant': record.get('CDEST_ORIG'),
-                                             		 'pi_cdest'    : record.get('CDEST'),
-                                             		 'pi_dsest'    : record.get('DSEST'),
-                                             		 'pi_cdtabres' : record.get('CDTABRES'),
-                                             		 'pi_swop'     : 'D'
-                                            };
-                                       	    
-                                            updateList.push(datosResultado);
-                                        });
-                                        
-                                        
-                                        if(updateList.length <= 0){
-                                    		mensajeWarning('No hay cambios que guardar.');
-                                       	 	return;
-                                        }
-                                        
-                                        debug('Lista de Estudios a guardar: ',updateList);
+                    buttonAlign: 'center',
+                    buttons:[{
+                        xtype: 'button',
+                        icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
+                        text: 'Guardar Cambios',
+                        handler: function (btn,e){
+                        	
+                        	var gridEstudios = btn.up('grid');
+                        	
+                           	if(gridEstudios.getPlugin('pluginConfEstudios').editing){
+                        		mensajeWarning('Antes de guardar primero finalice la edicion de los Estudios.');
+                        		return;
+                        	}
+                            
+                            var updateList = [];
+                            
+                            gridEstudios.getStore().getModifiedRecords().forEach(function(record,index,arr){
+                            	if(record.dirty){
+                            			var datosResultado = {
+                                      		 'pi_cdest_ant': record.get('CDEST_ORIG'),
+                                      		 'pi_cdest'    : record.get('CDEST'),
+                                      		 'pi_dsest'    : record.get('DSEST'),
+                                      		 'pi_cdtabres' : record.get('CDTABRES'),
+                                      		 'pi_swop'     : 'U'
+                                       };
+                                  	    
+                                       updateList.push(datosResultado);
+                            	}
+                            });
+                            
+                            gridEstudios.getStore().getRemovedRecords().forEach(function(record,index,arr){
+                            	
+                            	var datosResultado = {
+                                 		 'pi_cdest_ant': record.get('CDEST_ORIG'),
+                                 		 'pi_cdest'    : record.get('CDEST'),
+                                 		 'pi_dsest'    : record.get('DSEST'),
+                                 		 'pi_cdtabres' : record.get('CDTABRES'),
+                                 		 'pi_swop'     : 'D'
+                                };
+                           	    
+                                updateList.push(datosResultado);
+                            });
+                            
+                            
+                            if(updateList.length <= 0){
+                        		mensajeWarning('No hay cambios que guardar.');
+                           	 	return;
+                            }
+                            
+                            debug('Lista de Estudios a guardar: ',updateList);
 
-                                        var maskGuarda = _maskLocal('Guardando...');
-                                        
-                                        Ext.Ajax.request({
-                                            url: _UrlActualizaEstudiosMed,
-                                            jsonData : {
-                                                'saveList' : updateList
-                                            },
-                                            success  : function(response, options){
-                                           	 maskGuarda.close();
-                                                var json = Ext.decode(response.responseText);
-                                                if(json.success){
-                                                	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
-                                                	gridEstudios.getStore().reload();
-                                                	estudioBusquedaStore.reload();
-                                                }else{
-                                                    mensajeError('Verifique que no haya tr&aacute;mites usando actualmente este estudio. ' + json.mensaje);
-                                                }
-                                            }
-                                            ,failure  : function(response, options){
-                                           	 maskGuarda.close();
-                                                var json = Ext.decode(response.responseText);
-                                                mensajeError(json.mensaje);
-                                            }
-                                        });
-                                    
+                            var maskGuarda = _maskLocal('Guardando...');
+                            
+                            Ext.Ajax.request({
+                                url: _UrlActualizaEstudiosMed,
+                                jsonData : {
+                                    'saveList' : updateList
+                                },
+                                success  : function(response, options){
+                               	 maskGuarda.close();
+                                    var json = Ext.decode(response.responseText);
+                                    if(json.success){
+                                    	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
+                                    	gridEstudios.getStore().reload();
+                                    	estudioBusquedaStore.reload();
+                                    }else{
+                                        mensajeError('Verifique que no haya tr&aacute;mites usando actualmente este estudio. ' + json.mensaje);
                                     }
                                 }
-                            ]
-                        },
+                                ,failure  : function(response, options){
+                               	 maskGuarda.close();
+                                    var json = Ext.decode(response.responseText);
+                                    mensajeError(json.mensaje);
+                                }
+                            });
+                        
+                        }
+                    }],
+                    dockedItems: [
                         {
                             xtype: 'toolbar',
                             dock: 'top',
@@ -822,261 +933,131 @@ Ext.onReady(function()
                     ]
                 },
                 {
-                    xtype: 'form',
-                    //bodyPadding: '10 3 10 3',
-                    defaults : {
-						style : 'margin : 6px;'
-					},
-                    layout: {
-                        type: 'column'
-                    },
-                    title: 'B&uacute;queda de estudios por concepto.',
-                    items: [
-                        {
-                            xtype: 'combobox',
-                            fieldLabel: 'Producto',
-                            name: 'params.cdramo',
-                            labelAlign: 'right',
-                            labelWidth: 70,
-                            displayField: 'value',
-                            valueField: 'key',
-                            forceSelection: true,
-        	                anyMatch      : true,
-                            queryMode     : 'local',
-                            store       : Ext.create('Ext.data.Store', {
-                                model : 'Generic',
-                                autoLoad : true,
-                                proxy : {
-                                    type : 'ajax',
-                                    url : _URL_CARGA_CATALOGO,
-                                    extraParams : {
-                                        catalogo : _Cat_ProductosSalud
-                                    },
-                                    reader : {
-                                        type : 'json',
-                                        root : 'lista'
-                                    }
-                                }
-                            }),
-                            listeners: {
-                            	select: function(cmb, records){
-                            		//alert(records[0].get('key'));
-                            		//var panelBusq = btn.up('form');
-                            		var comboModalidad = cmb.up('form').down('[name=params.cdtipsit]');
-                            		comboModalidad.getStore().load({
-                            			params:{
-                            				'params.idPadre' : records[0].get('key')
-                            			}
-                            		})
-                            	}
-                            }
-                        },
-                        {
-                            xtype: 'combobox',
-                            fieldLabel: 'Modalidad',
-                            name: 'params.cdtipsit',
-                            labelAlign: 'right',
-                            labelWidth: 70,
-                            displayField: 'value',
-                            valueField: 'key',
-                            forceSelection: true,
-        	                anyMatch      : true,
-                            queryMode     : 'local',
-                            store       : Ext.create('Ext.data.Store', {
-                                model : 'Generic',
-                                autoLoad : true,
-                                proxy : {
-                                    type : 'ajax',
-                                    url : _URL_CARGA_CATALOGO,
-                                    extraParams : {
-                                        catalogo : _Cat_SubramosSalud
-                                    },
-                                    reader : {
-                                        type : 'json',
-                                        root : 'lista'
-                                    }
-                                }
-                            }),
-                            listeners: {
-                            	select: function(cmb, records){
-                            		var comboRamo = cmb.up('form').down('[name=params.cdramo]');
-                            		var comboGarantias = cmb.up('form').down('[name=params.cdgarant]');
-                            		comboGarantias.getStore().load({
-                            			params:{
-                            				'params.cdramo' : comboRamo.getValue(),
-                            				'params.cdtipsit' : records[0].get('key')
-                            			}
-                            		});
-                            	}
-                            }
-                        },
-                        {
-                            xtype: 'combobox',
-                            fieldLabel: 'Cobertura',
-                            name: 'params.cdgarant',
-                            labelAlign: 'right',
-                            labelWidth: 70,
-                            displayField: 'value',
-                            valueField: 'key',
-                            forceSelection: true,
-        	                anyMatch      : true,
-                            queryMode     : 'local',
-                            store       : Ext.create('Ext.data.Store', {
-                                model : 'Generic',
-                                autoLoad : true,
-                                proxy : {
-                                    type : 'ajax',
-                                    url : _URL_CARGA_CATALOGO,
-                                    extraParams : {
-                                        catalogo : _Cat_Coberturas
-                                    },
-                                    reader : {
-                                        type : 'json',
-                                        root : 'lista'
-                                    }
-                                }
-                            }),
-                            listeners: {
-                            	select: function(cmb, records){
-                            		//var comboRamo = cmb.up('form').down('[name=params.cdramo]');
-                            		var comboSubcoberturas= cmb.up('form').down('[name=params.cdconval]');
-                            		comboSubcoberturas.getStore().load({
-                            			params:{
-                            				'params.idPadre' : records[0].get('key')
-                            			}
-                            		});
-                            	}
-                            }
-                        },
-                        {
-                            xtype: 'combobox',
-                            fieldLabel: 'Subcobertura',
-                            name: 'params.cdconval',
-                            labelAlign: 'right',
-                            labelWidth: 70,
-                            displayField: 'value',
-                            valueField: 'key',
-                            forceSelection: true,
-        	                anyMatch      : true,
-                            queryMode     : 'local',
-                            store       : Ext.create('Ext.data.Store', {
-                                model : 'Generic',
-                                autoLoad : true,
-                                proxy : {
-                                    type : 'ajax',
-                                    url : _URL_CARGA_CATALOGO,
-                                    extraParams : {
-                                        catalogo : _Cat_SubCoberturas
-                                    },
-                                    reader : {
-                                        type : 'json',
-                                        root : 'lista'
-                                    }
-                                }
-                            })
-                            
-                        },
-                        {
-                            xtype: 'combobox',
-                            fieldLabel: 'Concepto',
-                            name: 'params.cdconcep',
-                            labelAlign: 'right',
-                            labelWidth: 70,
-                            displayField: 'DSCONCEP',
-                            valueField: 'CDCONCEP',
-                            forceSelection: true,
-        	                anyMatch      : true,
-                            queryMode     : 'local',
-                            store         : conceptoBusquedaStore
-                        },
-                        {
-                            xtype: 'combobox',
-                            fieldLabel: 'Estudio',
-                            name: 'params.cdest',
-                            labelAlign: 'right',
-                            labelWidth: 70,
-                            displayField: 'DSEST',
-                            valueField: 'CDEST',
-                            forceSelection: true,
-        	                anyMatch      : true,
-                            queryMode     : 'local',
-                            store: estudioBusquedaStore
-                            
-                        }
-                    ],
-                    buttonAlign: 'center',
-                    buttons: [
-                        {
-                            text: 'Buscar',
-                            icon:_CONTEXT+'/resources/fam3icons/icons/magnifier.png',
-                            handler: function(btn){
-                            	var panelBusq = btn.up('form');
-   	                			contEstCobGridStore.load({
-   	                				params: panelBusq.getForm().getValues()
-   	                			});
-                            }
-                        },{
-    	                	text: "Limpiar"
-    	                		,icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png'
-        	                	,handler: function(btn){
-       	                			var panelBusq = btn.up('form');
-       	                			panelBusq.getForm().reset();
-        	                	}	
-        	             }
-                    ]
-                },
-                {
                     xtype: 'gridpanel',
                     height: 300,
-                    title: 'Configuraci&oacute;n de Estudios Por Concepto',
-                    store: contEstCobGridStore,
+                    title: 'Resultados de Estudios M&eacute;dicos',
+                    plugins: [Ext.create('Ext.grid.plugin.RowEditing', {clicksToEdit: 2, pluginId: 'pluginResEstudios'})],
+                    store: resultadosEstGridStore,
                     columns: [
-                        {
+                    	{
                             xtype: 'gridcolumn',
-                            dataIndex: 'DSRAMO',
-                            text: 'Producto',
-                            width: 100
+                            dataIndex: 'CDTABRES',
+                            text: 'Agrupador de Resultado',
+                            flex: 1,
+                            editor : {
+            	                xtype      : 'textfield',
+            	                name       : 'CDTABRES',
+            	                maxLength  : 6,
+            	               	allowBlank : false
+            	            }
                         },
                         {
                             xtype: 'gridcolumn',
-                            dataIndex: 'DSTIPSIT',
-                            text: 'Modalidad',
-                            width: 150
+                            dataIndex: 'CDRESEST',
+                            text: 'Clave Resultado',
+                            flex: 1,
+                            editor : {
+            	                xtype      : 'textfield',
+            	                name       : 'CDRESEST',
+            	                maxLength  : 6,
+            	               	allowBlank : false
+            	            }
                         },
                         {
                             xtype: 'gridcolumn',
-                            dataIndex: 'DSGARANT',
-                            text: 'Cobertura',
-                            width: 150
-                        },
-                        {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'DSCONVAL',
-                            text: 'SubCobertura',
-                            width: 200
-                        },
-                        {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'DSCONCEP',
-                            text: 'Concepto',
-                            width: 250
-                        },
-                        {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'DSEST',
-                            text: 'Estudio',
-                            width: 350
+                            dataIndex: 'DSRESEST',
+                            text: 'Descripci&oacute;n Resultado',
+                            flex: 2,
+                            editor : {
+            	                xtype      : 'textfield',
+            	                name       : 'DSRESEST',
+            	                maxLength  : 50,
+            	               	allowBlank : false
+            	            }
                         }
+                        
                     ],
-                   /*  buttonAlign: 'center',
-                    buttons: [
-                        {
-                            xtype: 'button',
-                            text: 'Guardar Cambios de Configuraci&oacute;n'
+                    buttonAlign: 'center',
+                    buttons:[{
+                        xtype: 'button',
+                        icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
+                        text: 'Guardar Cambios',
+						handler: function (btn,e){
+                        	
+                        	var gridResEstudios = btn.up('grid');
+                        	
+                           	if(gridResEstudios.getPlugin('pluginResEstudios').editing){
+                        		mensajeWarning('Antes de guardar primero finalice la edicion de los Resultados de Estudios.');
+                        		return;
+                        	}
+                            
+                            var updateList = [];
+                            
+                            gridResEstudios.getStore().getModifiedRecords().forEach(function(record,index,arr){
+                            	if(record.dirty){
+                            			var datosResultado = {
+                                      		 'pi_cdtabres_ant': record.get('CDTABRES_ORIG'),
+                                      		 'pi_cdresest_ant': record.get('CDRESEST_ORIG'),
+                                      		 'pi_cdtabres'    : record.get('CDTABRES'),
+                                      		 'pi_cdresest'    : record.get('CDRESEST'),
+                                      		 'pi_dsresest'    : record.get('DSRESEST'),
+                                      		 'pi_swop'        : 'U'
+                                       };
+                                  	    
+                                       updateList.push(datosResultado);
+                            	}
+                            });
+                            
+                            gridResEstudios.getStore().getRemovedRecords().forEach(function(record,index,arr){
+                            	
+                            		var datosResultado = {
+                                 		 'pi_cdtabres_ant': record.get('CDTABRES_ORIG'),
+                                 		 'pi_cdresest_ant': record.get('CDRESEST_ORIG'),
+                                 		 'pi_cdtabres'    : record.get('CDTABRES'),
+                                 		 'pi_cdresest'    : record.get('CDRESEST'),
+                                 		 'pi_dsresest'    : record.get('DSRESEST'),
+                                 		 'pi_swop'        : 'D'
+                                 	};
+                           	    
+                                updateList.push(datosResultado);
+                            });
+                            
+                            
+                            if(updateList.length <= 0){
+                        		mensajeWarning('No hay cambios que guardar.');
+                           	 	return;
+                            }
+                            
+                            debug('Lista de Resultados a guardar: ',updateList);
+
+                            var maskGuarda = _maskLocal('Guardando...');
+                            
+                            Ext.Ajax.request({
+                                url: _UrlActualizaResultadosEst,
+                                jsonData : {
+                                    'saveList' : updateList
+                                },
+                                success  : function(response, options){
+                               	 maskGuarda.close();
+                                    var json = Ext.decode(response.responseText);
+                                    if(json.success){
+                                    	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
+                                    	gridResEstudios.getStore().reload();
+                                    }else{
+                                        mensajeError('Verifique que no haya esstudios usando actualmente los resultados modificados. ' + json.mensaje);
+                                    }
+                                }
+                                ,failure  : function(response, options){
+                               	 maskGuarda.close();
+                                    var json = Ext.decode(response.responseText);
+                                    mensajeError(json.mensaje);
+                                }
+                            });
+                        
+                            
                         }
-                    ], */
-                    dockedItems: [
-                        {
+                    }],
+                    dockedItems: [{
                             xtype: 'toolbar',
                             dock: 'top',
                             items: [
@@ -1085,37 +1066,68 @@ Ext.onReady(function()
                                     text: 'Agregar',
                                     icon:_CONTEXT+'/resources/fam3icons/icons/page_add.png',
                                     handler: function(btn){
-                                    	agregarEditarConfEstudios(new modelGridConfEstCob(),btn);
-                                    }
-                                },
-                                {
-                                    xtype: 'button',
-                                    text: 'Editar',
-                                    icon:_CONTEXT+'/resources/fam3icons/icons/page_edit.png',
-                                    handler: function(btn){
-                                    	var gridConfEstudiosCob = btn.up('grid');
-                                    	
-                                    	if(gridConfEstudiosCob.getSelectionModel().hasSelection()){
-                                   			var recordSelected = gridConfEstudiosCob.getSelectionModel().getLastSelected();
-                                   			agregarEditarConfEstudios(recordSelected,btn);
-                                   		}else{
-                                   			mensajeWarning("Debe seleccionar un registro para editar.")	
-                                   		}
-                                    }
+                                   		var gridResEst = btn.up('grid');
+                                   		var nuevoRecord = new modelGridResultadosEst();
+                                   		gridResEst.getStore().add(nuevoRecord);
+                                   		
+                                   		gridResEst.getPlugin('pluginResEstudios').startEdit(nuevoRecord,gridResEst.columns[0]);
+                                   	}
                                 },
                                 {
                                     xtype: 'button',
                                     text: 'Eliminar',
                                     icon:_CONTEXT+'/resources/fam3icons/icons/page_delete.png',
                                     handler: function(btn){
-										var gridConfEstudiosCob = btn.up('grid');
-                                    	
-                                    	if(gridConfEstudiosCob.getSelectionModel().hasSelection()){
-                                   			var recordSelected = gridConfEstudiosCob.getSelectionModel().getLastSelected();
-                                   			eliminarConfEstudios(recordSelected,btn);
+										var gridResEst = btn.up('grid');
+                                   		
+                                   		if(gridResEst.getSelectionModel().hasSelection()){
+                                   			var recordSelected = gridResEst.getSelectionModel().getLastSelected();
+                                   			gridResEst.getStore().remove(recordSelected);
                                    		}else{
                                    			mensajeWarning("Debe seleccionar un registro para eliminar.")	
                                    		}
+                                    }
+                                },'->','-',{
+                                    xtype : 'textfield',
+                                    name : 'filtroAgrupadorResultado',
+                                    fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Agrupador de Resultado:</span>',
+                                    labelWidth : 180,
+                                    width: 290,
+                                    listeners:{
+                                    	change: function(elem,newValue,oldValue){
+                                    		newValue = Ext.util.Format.uppercase(newValue);
+                    						if( newValue == Ext.util.Format.uppercase(oldValue)){
+                    							return false;
+                    						}
+                    						
+                    						try{
+                    							resultadosEstGridStore.removeFilter('filtroAgrupaRes');
+                    							resultadosEstGridStore.filter(Ext.create('Ext.util.Filter', {property: 'CDTABRES', anyMatch: true, value: newValue, root: 'data', id:'filtroAgrupaRes'}));
+                    						}catch(e){
+                    							error('Error al filtrar por resultado',e);
+                    						}
+                                    	}
+                                    }
+                                },{
+                                    xtype : 'textfield',
+                                    name : 'filtroResultado',
+                                    fieldLabel : '<span style="color:white;font-size:12px;font-weight:bold;">Filtrar Resultado:</span>',
+                                    labelWidth : 100,
+                                    width: 240,
+                                    listeners:{
+                                    	change: function(elem,newValue,oldValue){
+                                    		newValue = Ext.util.Format.uppercase(newValue);
+                    						if( newValue == Ext.util.Format.uppercase(oldValue)){
+                    							return false;
+                    						}
+                    						
+                    						try{
+                    							resultadosEstGridStore.removeFilter('filtroRes');
+                    							resultadosEstGridStore.filter(Ext.create('Ext.util.Filter', {property: 'DSRESEST', anyMatch: true, value: newValue, root: 'data', id:'filtroRes'}));
+                    						}catch(e){
+                    							error('Error al filtrar por resultado',e);
+                    						}
+                                    	}
                                     }
                                 }
                             ]
@@ -1135,7 +1147,6 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
 		
 	var windowConfEstudios;
 	var esNuevoRegistro = (!Ext.isEmpty(recordEditar) && recordEditar.phantom == false) ? false : true;
-	
 
 	var panelAgregarEditarConfig = Ext.create('Ext.form.Panel',{
         defaults : {
@@ -1151,6 +1162,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 name: 'CDRAMO',
                 labelAlign: 'right',
                 labelWidth: 70,
+                width: 250,
                 displayField: 'value',
                 valueField: 'key',
                 forceSelection: true,
@@ -1191,6 +1203,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 name: 'CDTIPSIT',
                 labelAlign: 'right',
                 labelWidth: 70,
+                width: 250,
                 displayField: 'value',
                 valueField: 'key',
                 forceSelection: true,
@@ -1231,6 +1244,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 name: 'CDGARANT',
                 labelAlign: 'right',
                 labelWidth: 70,
+                width: 250,
                 displayField: 'value',
                 valueField: 'key',
                 forceSelection: true,
@@ -1254,10 +1268,16 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 }),
                 listeners: {
                 	select: function(cmb, records){
+                		
+                		var comboRamo = cmb.up('form').down('[name=CDRAMO]');
+                		var comboModalidad = cmb.up('form').down('[name=CDTIPSIT]');
+                		
                 		var comboSubcoberturas= cmb.up('form').down('[name=CDCONVAL]');
                 		comboSubcoberturas.getStore().load({
                 			params:{
-                				'params.idPadre' : records[0].get('key')
+                				'params.cdramo'   : comboRamo.getValue(),
+                				'params.cdtipsit' : comboModalidad.getValue(),
+                				'params.cdgarant' : records[0].get('key')
                 			}
                 		});
                 	}
@@ -1269,6 +1289,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 name: 'CDCONVAL',
                 labelAlign: 'right',
                 labelWidth: 70,
+                width: 250,
                 displayField: 'value',
                 valueField: 'key',
                 forceSelection: true,
@@ -1298,11 +1319,15 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 name: 'CDCONCEP',
                 labelAlign: 'right',
                 labelWidth: 70,
+                width: 250,
                 displayField: 'DSCONCEP',
                 valueField: 'CDCONCEP',
                 forceSelection: true,
                 anyMatch      : true,
                 queryMode     : 'local',
+                listConfig : {
+                	itemTpl : '{CDCONCEP} - {DSCONCEP}'
+                },
                 allowBlank: false,
                 store         : Ext.create('Ext.data.Store',{
             		pageSize : 20
@@ -1326,8 +1351,12 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 name: 'CDEST',
                 labelAlign: 'right',
                 labelWidth: 70,
+                width: 250,
                 displayField: 'DSEST',
                 valueField: 'CDEST',
+                listConfig : {
+                	itemTpl : '{CDEST} - {DSEST}'
+                },
                 forceSelection: true,
                 anyMatch      : true,
                 queryMode     : 'local',
@@ -1348,15 +1377,48 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                     } 
                 })
            	},{
+              	xtype: 'checkbox',
+              	fieldLabel: 'El estudio requiere un resultado obligatorio',
+              	name : 'SWOBLRES_CHECK',
+              	labelWidth: 200,
+              	labelAlign: 'right', 
+                value: false,
+                listeners: {
+                	change: function(ck, newValue){
+                		if(newValue){
+                			panelAgregarEditarConfig.down('hidden[name=SWOBLRES]').setValue('S');
+                		}else{
+                			panelAgregarEditarConfig.down('hidden[name=SWOBLRES]').setValue('N');
+                		}
+                	}
+                }
+            }
+            ,{
+              	xtype: 'checkbox',
+              	fieldLabel: 'El estudio requiere un valor abierto obligatorio',
+              	name : 'SWOBLVAL_CHECK',
+              	labelWidth: 200,
+              	labelAlign: 'right',
+                value: false,
+                listeners: {
+                	change: function(ck, newValue){
+                		if(newValue){
+                			panelAgregarEditarConfig.down('hidden[name=SWOBLVAL]').setValue('S');
+                		}else{
+                			panelAgregarEditarConfig.down('hidden[name=SWOBLVAL]').setValue('N');
+                		}
+                	}
+                }
+            },{
               	xtype: 'hidden',
-                  name : 'SWOBLVAL',
-                  value: 'N'
-              },
-              {
-              	xtype: 'hidden',
-                  name : 'SWOBLOBS',
-                  value: 'N'
-              },
+                name : 'SWOBLVAL',
+                value: 'N'
+            },
+            {
+            	xtype: 'hidden',
+                name : 'SWOBLRES',
+                value: 'N'
+            },
               {
               	xtype: 'hidden',
                   name : 'CDRAMO_ORIG'
@@ -1388,7 +1450,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
               },
               {
               	xtype: 'hidden',
-                  name : 'SWOBLOBS_ORIG',
+                  name : 'SWOBLRES_ORIG',
                   value: 'N'
               },
               {
@@ -1417,7 +1479,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                        		 'pi_cdconcep_ant': recordEditar.get('CDCONCEP_ORIG'),
                        		 'pi_cdest_ant'   : recordEditar.get('CDEST_ORIG'),
                        		 'pi_swoblval_ant': recordEditar.get('SWOBLVAL_ORIG'),
-                       		 'pi_swoblobs_ant': recordEditar.get('SWOBLOBS_ORIG'),
+                       		 'pi_swoblres_ant': recordEditar.get('SWOBLRES_ORIG'),
                        		 'pi_cdramo'      : recordEditar.get('CDRAMO'),
                        		 'pi_cdtipsit'    : recordEditar.get('CDTIPSIT'),
                        		 'pi_cdgarant'    : recordEditar.get('CDGARANT'),
@@ -1425,7 +1487,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                        		 'pi_cdconcep'    : recordEditar.get('CDCONCEP'),
                        		 'pi_cdest'       : recordEditar.get('CDEST'),
                        		 'pi_swoblval'    : recordEditar.get('SWOBLVAL'),
-                       		 'pi_swoblobs'    : recordEditar.get('SWOBLOBS'),
+                       		 'pi_swoblres'    : recordEditar.get('SWOBLRES'),
                        		 'pi_swop'        : 'U'
                         };
                        	    
@@ -1463,22 +1525,57 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 	}
            			
                 }
+            },{
+				text:'Cancelar',
+				icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+				handler:function()
+				{
+					windowConfEstudios.close();
+				}
+			}
+        ],
+        dockedItems: [
+            {
+                xtype: 'toolbar',
+                dock: 'top',
+                items: ['->','-',{
+                		text: 'Limpiar'
+                		,hidden: !esNuevoRegistro
+                		,icon:_CONTEXT+'/resources/fam3icons/icons/page_white.png'
+                    	,handler: function(btn){
+                    		panelAgregarEditarConfig.getForm().reset();
+                    	}	
+                 }]
             }
         ]
     });
 	
 	windowConfEstudios = Ext.create('Ext.window.Window',{
-		title   : esNuevoRegistro ? 'Agregar Configuraci&oacute;n de estudios m&eacute;dicos':'Editar Configuraci&oacute;n de estudios m&eacute;dicos'
+		title   : esNuevoRegistro ? 'Agregar Configuraci&oacute;n.':'Editar Configuraci&oacute;n.'
 		,modal  : true
-		,width  : 750  
+		,width  : 820
 		,items : [panelAgregarEditarConfig]
-	}).show( !Ext.isEmpty(btnGrid) ? btnGrid : null , function(){
+	}).show( null , function(){
 		
 		panelAgregarEditarConfig.loadRecord(recordEditar);
 		
+		if(!esNuevoRegistro){
+			if(!Ext.isEmpty(recordEditar.get('SWOBLVAL')) && recordEditar.get('SWOBLVAL') == 'S'){
+				panelAgregarEditarConfig.down('checkbox[name=SWOBLVAL_CHECK]').setValue(true);
+			}else{
+				panelAgregarEditarConfig.down('checkbox[name=SWOBLVAL_CHECK]').setValue(false);
+			}
+			
+			if(!Ext.isEmpty(recordEditar.get('SWOBLRES')) && recordEditar.get('SWOBLRES') == 'S'){
+				panelAgregarEditarConfig.down('checkbox[name=SWOBLRES_CHECK]').setValue(true);
+			}else{
+				panelAgregarEditarConfig.down('checkbox[name=SWOBLRES_CHECK]').setValue(false);
+			}
+		}
+		
 		panelAgregarEditarConfig.down('[name=CDRAMO]').getStore().load({
 			callback: function(records, op, success){
-        		if(!esNuevoRegistro && success && !Ext.isEmpty(records) && records.length > 0){
+        		if(success && !Ext.isEmpty(records) && records.length > 0){
         			
         			debug('<<<<<< Entrando a cargar datos en Edicion >>>>>>');
         			
@@ -1491,7 +1588,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
             				'params.idPadre' : comboRamo.getValue()
             			},
             			callback: function(records, op, success){
-                    		if(!esNuevoRegistro && success && !Ext.isEmpty(records) && records.length > 0){
+                    		if(success && !Ext.isEmpty(records) && records.length > 0){
                     			
                     			debug('<<<<<< Entrando a cargar datos en Edicion >>>>>>');
                     			
@@ -1505,20 +1602,25 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                         				'params.cdtipsit': comboModalidad.getValue()
                         			},
                         			callback: function(records, op, success){
-                                		if(!esNuevoRegistro && success && !Ext.isEmpty(records) && records.length > 0){
+                                		if(success && !Ext.isEmpty(records) && records.length > 0){
                                 			
                                 			debug('<<<<<< Entrando a cargar datos en Edicion >>>>>>');
                                 			
-                                			var comboGarantia = panelAgregarEditarConfig.down('[name=CDGARANT]');
+                                    		var comboRamo      = panelAgregarEditarConfig.down('[name=CDRAMO]');
+                                    		var comboModalidad = panelAgregarEditarConfig.down('[name=CDTIPSIT]');
+                                			var comboGarantia  = panelAgregarEditarConfig.down('[name=CDGARANT]');
+                                			
                                 			comboGarantia.select(recordEditar.get('CDGARANT'));
                                 			
                                 			var comboSubcobertura = panelAgregarEditarConfig.down('[name=CDCONVAL]');
                                 			comboSubcobertura.getStore().load({
                                 				params:{
-                                					'params.idPadre' : comboGarantia.getValue()
+                                    				'params.cdramo'   : comboRamo.getValue(),
+                                    				'params.cdtipsit' : comboModalidad.getValue(),
+                                    				'params.cdgarant' : comboGarantia.getValue()
                                     			},
                                     			callback: function(records, op, success){
-                                            		if(!esNuevoRegistro && success && !Ext.isEmpty(records) && records.length > 0){
+                                            		if(success && !Ext.isEmpty(records) && records.length > 0){
                                             			debug('<<<<<< Entrando a cargar datos en Edicion >>>>>>');
                                             			var comboSubcobertura = panelAgregarEditarConfig.down('[name=CDCONVAL]');
                                             			comboSubcobertura.select(recordEditar.get('CDCONVAL'));
@@ -1553,8 +1655,16 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
         	}
 		});
 		
+		if(esNuevoRegistro){
+			numWindowAgregar++;
+			if(numWindowAgregar == 1){
+				mensajeInfo('Puede utilizar los valores de la B&uacute;queda principal para cargar autom&aacute;ticamente los valores de Producto, Modalidad, Cobertura y Subcobertura en esta ventana.');
+			}
+		}
 		
 	} );
+	
+	centrarVentanaInterna(windowConfEstudios);
 	
 }
 
@@ -1575,7 +1685,7 @@ function eliminarConfEstudios(recordEliminar,btnGrid){
                 		 'pi_cdconcep_ant': recordEliminar.get('CDCONCEP_ORIG'),
                 		 'pi_cdest_ant'   : recordEliminar.get('CDEST_ORIG'),
                 		 'pi_swoblval_ant': recordEliminar.get('SWOBLVAL_ORIG'),
-                		 'pi_swoblobs_ant': recordEliminar.get('SWOBLOBS_ORIG'),
+                		 'pi_swoblres_ant': recordEliminar.get('SWOBLRES_ORIG'),
                 		 'pi_cdramo'      : recordEliminar.get('CDRAMO'),
                 		 'pi_cdtipsit'    : recordEliminar.get('CDTIPSIT'),
                 		 'pi_cdgarant'    : recordEliminar.get('CDGARANT'),
@@ -1583,7 +1693,7 @@ function eliminarConfEstudios(recordEliminar,btnGrid){
                 		 'pi_cdconcep'    : recordEliminar.get('CDCONCEP'),
                 		 'pi_cdest'       : recordEliminar.get('CDEST'),
                 		 'pi_swoblval'    : recordEliminar.get('SWOBLVAL'),
-                		 'pi_swoblobs'    : recordEliminar.get('SWOBLOBS'),
+                		 'pi_swoblres'    : recordEliminar.get('SWOBLRES'),
                 		 'pi_swop'        : 'D'
                  };
                 	    
@@ -1615,7 +1725,7 @@ function eliminarConfEstudios(recordEliminar,btnGrid){
                  });
             }
         },
-        animateTarget: btnGrid,
+        //animateTarget: btnGrid,
         icon: Ext.Msg.QUESTION
     });
 	
