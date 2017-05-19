@@ -795,6 +795,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		return resp;
 	}
 	
+	
 	@Override
 	public ManagerRespuestaSmapVO cargarDatosComplementariosAutoInd(
 			String cdunieco
@@ -2644,6 +2645,140 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				));
 		return resp;
 	}
+	
+	////////////////////
+	
+	@Override
+	public ManagerRespuestaSlistVO cargaMasivaClientes(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ cargaMasivaCliente @@@@@@")
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ respetar=").append(respetar)
+				.append("\n@@@@@@ excel=")   .append(excel)
+				.toString()
+				);
+		
+		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
+		resp.setSlist(new ArrayList<Map<String,String>>());
+		
+		String paso = null;
+		
+		try
+		{
+			paso = "Recuperando parametrizacion de excel para COTIFLOT";
+			List<Map<String,String>>config=cotizacionDAO.cargarParametrizacionExcel("CARGMASIVACLI",cdramo,cdtipsit);
+			logger.debug(Utils.log(config));
+			
+			paso = "Instanciando mapa buffer de tablas de apoyo";
+			Map<String,List<Map<String,String>>> buffer        = new HashMap<String,List<Map<String,String>>>();
+			Map<String,String>                   bufferTiposit = new HashMap<String,String>();
+			
+			paso = "Iniciando procesador de hoja de calculo";
+			FileInputStream input       = new FileInputStream(excel);
+			XSSFWorkbook    workbook    = new XSSFWorkbook(input);
+			XSSFSheet       sheet       = workbook.getSheetAt(0);
+			Iterator<Row>   rowIterator = sheet.iterator();
+			StringBuilder   sb;
+			
+			paso = "Iterando filas";
+			int fila = 1;
+			String[] columnas=new String[]{
+					  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+					,"AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ"
+					,"BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ"
+			};
+
+			while (rowIterator.hasNext()) 
+            {
+				fila = fila + 1;
+				
+				paso = new StringBuilder("Iterando fila ").append(fila).toString();
+				Row row = rowIterator.next();
+				
+				if(fila==2)
+				{
+					row = rowIterator.next();
+				}
+				
+				if(Utils.isRowEmpty(row))
+				{
+					break;
+				}
+				
+				sb = new StringBuilder();
+				
+				Map<String,String>record=new LinkedHashMap<String,String>();
+				resp.getSlist().add(record);
+				
+				for(Map<String,String>conf:config)
+				{
+					int      col         = Integer.valueOf(conf.get("COLUMNA"));
+					String   cdtipsitCol = conf.get("CDTIPSIT");
+					String   propiedad   = conf.get("PROPIEDAD");
+					String   tipo        = conf.get("TIPO");
+					boolean  requerido   = !StringUtils.isBlank(conf.get("REQUERIDO"))&&conf.get("REQUERIDO").equals("S");
+					String   decode      = conf.get("DECODE");
+					String[] splited     = null;
+					String   cdtabla1    = conf.get("CDTABLA1");
+					String   tipoatri    = conf.get("TIPOATRI");
+					String   valorStat   = conf.get("VALOR");
+					String   orCdtipsit  = conf.get("ORIGEN_CDTIPSIT");
+					String   otraProp1   = conf.get("OTRA_PROP1");
+					String   otroVal1    = conf.get("OTRO_VAL1");
+
+					String original = null;
+					String valor    = null;
+					
+					Cell cell = row.getCell(col);
+					try
+					{
+						valor    = cell.getStringCellValue();
+						original = cell.getStringCellValue();
+					}
+					catch(Exception ex)
+					{
+						sb.append("(E)");
+						try
+						{
+							Double num = cell.getNumericCellValue();
+							valor      = String.format("%d",num.intValue());
+							original   = String.format("%d",num.intValue());
+						}
+						catch(Exception ex2)
+						{
+							sb.append("(E)");
+							valor    = "";
+							original = "";
+						}
+					}
+					record.put(propiedad, valor);
+					
+				}
+				logger.debug(sb.toString());
+            }
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ ").append(resp)
+				.append("\n@@@@@@ cargaMasivaCliente @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+		return resp;
+	}
+	
+	
+	
+	////////////////////
 	
 	@SuppressWarnings("unchecked")
     @Override
