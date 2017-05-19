@@ -94,22 +94,7 @@ public class EndososColectivosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private KernelManagerSustituto kernelManager;
-
-	@Value("${ruta.documentos.temporal}")
-    private String rutaDocumentosTemporal;
-
-	@Value("${dominio.server.layouts}")
-    private String dominioServerLayouts;
-
-	@Value("${user.server.layouts}")
-    private String userServerLayouts;
-
-	@Value("${pass.server.layouts}")
-    private String passServerLayouts;	
 	
-	@Value("${directorio.server.layouts}")
-    private String directorioServerLayouts;	
-
 	public EndososColectivosAction()
 	{
 		this.session = ActionContext.getContext().getSession();
@@ -900,11 +885,11 @@ public class EndososColectivosAction extends PrincipalCoreAction
 				    estadoOrig,
 				    nmpolizaOrig,
 				    censo,
-				    rutaDocumentosTemporal,
-				    dominioServerLayouts,
-				    userServerLayouts,
-				    passServerLayouts,
-				    directorioServerLayouts,
+				    getText("ruta.documentos.temporal"),
+				    getText("dominio.server.layouts"),
+				    getText("user.server.layouts"),
+				    getText("pass.server.layouts"),
+				    getText("directorio.server.layouts"),
 				    cdtipsit,
 				    user.getUser(),
 				    user.getRolActivo().getClave());
@@ -1181,25 +1166,5 @@ public class EndososColectivosAction extends PrincipalCoreAction
 
 	public void setFlujo(FlujoVO flujo) {
 		this.flujo = flujo;
-	}
-	
-	public String getRutaDocumentosTemporal() {
-		return rutaDocumentosTemporal;
-	}
-
-	public String getDominioServerLayouts() {
-		return dominioServerLayouts;
-	}
-
-	public String getUserServerLayouts() {
-		return userServerLayouts;
-	}
-
-	public String getPassServerLayouts() {
-		return passServerLayouts;
-	}
-
-	public String getDirectorioServerLayouts() {
-		return directorioServerLayouts;
 	}
 }

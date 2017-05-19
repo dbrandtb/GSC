@@ -623,7 +623,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 						
 					}
 				} catch (Exception e1) {
-					logger.error("Error en obtencion y mapeo de datos para envio de Emision WS Autos",e1);
+					logger.error("Error en PL de obtencion de datos para envio de Emision WS Autos",e1);
 					return null;
 				}	
 				
@@ -1070,8 +1070,11 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 				
 			} catch (Exception e){
 				logger.error("Error en validacion de Emision Exitosa y VidaPorRecibo! " + e.getMessage(),e);
-				throw e;
-//				return errorEjec;
+				if(e.getMessage().contains("Error en spValidaEmisionSigs"))
+				{
+					throw e;
+				}
+				return errorEjec;
 			}
 		}else{
 			logger.warn("Aviso, No se tienen datos de Recibos Autos");
