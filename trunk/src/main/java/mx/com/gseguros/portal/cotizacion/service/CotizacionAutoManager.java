@@ -254,4 +254,6 @@ public interface CotizacionAutoManager
 			)throws Exception;
 	
 	public ManagerRespuestaSlistVO procesarCargaMasivaIndividual(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception;
+	
+	public ManagerRespuestaSlistVO cargaMasivaClientes(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception;
 }
