@@ -3447,7 +3447,7 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 			{
 				extend : 'Ext.data.Model'
 				,fields :
-				['CDCONCEP','DSCONCEP','CDEST','DSEST','CDRESEST','VALOR', 'OBSERV']
+				['CDCONCEP','DSCONCEP','CDEST','DSEST','CDRESEST','VALOR', 'OBSERV','SWOBLVAL','SWOBLRES']
 	});
 	
 	/*/////////////////*/
@@ -3598,14 +3598,14 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 	  			editor : {
 	                xtype         : 'textfield',
 	                name          : 'VALOR',
-	               	maxValue      : 100 
+	                maxLength     : 250 
 	            }
 	      },
-	      { header     : 'Comentario' , dataIndex : 'OBSERV', flex: 2,
+	      { header     : 'Observaciones' , dataIndex : 'OBSERV', flex: 2,
 	  			editor : {
 	                xtype         : 'textfield',
 	                name          : 'OBSERV',
-	               	maxValue      : 100 
+	                maxLength     : 500
 	            }
 	      }
 		],
@@ -3679,15 +3679,32 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
             	}*/
                 
                 var updateList = [];
-                var estudioSinResultado = false;
-                var estudioSinResultadoDes = '';
+                var estudioRequiereResVal    = false;
+                var estudioRequiereResValDes = '';
+                var mensajeRequiereCampo     = '';
                 
                 estudiosCobAsegStore.getUpdatedRecords().forEach(function(record,index,arr){
                 	
-                	if(Ext.isEmpty(record.get('CDRESEST')) && ( !Ext.isEmpty(record.get('VALOR')) || !Ext.isEmpty(record.get('OBSERV')) )){
-                		estudioSinResultado = true;
-                		estudioSinResultadoDes = record.get('DSEST');
-                		return false;
+                	if( !Ext.isEmpty(record.get('CDRESEST')) || !Ext.isEmpty(record.get('VALOR')) || !Ext.isEmpty(record.get('OBSERV')) ){
+                		
+                		/* Valida para este estudio si el Resultado es obligatorio */
+                		if(!Ext.isEmpty(record.get('SWOBLRES')) && record.get('SWOBLRES') == 'S'
+                			&& Ext.isEmpty(record.get('CDRESEST'))){
+                			estudioRequiereResVal = true;
+                    		estudioRequiereResValDes = record.get('DSEST');
+                    		mensajeRequiereCampo = 'Resultado';
+                    		return false;
+                		}
+                		
+                		/* Valida para este estudio si el Valor es obligatorio */
+                		if(!Ext.isEmpty(record.get('SWOBLVAL')) && record.get('SWOBLVAL') == 'S'
+                			&& Ext.isEmpty(record.get('VALOR'))){
+                			estudioRequiereResVal = true;
+                    		estudioRequiereResValDes = record.get('DSEST');
+                    		mensajeRequiereCampo = 'Valor';
+                    		return false;
+                		}
+                		
                 	}
                 	
                     var datosResultado = {
@@ -3710,14 +3727,10 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                     updateList.push(datosResultado);
                 });
                 
-//                if(updateList.length <= 0){
-//               	 mensajeWarning('No hay cambios que guardar.');
-//               	 return;
-//                }
                 
-	            if(estudioSinResultado){
-	            	mensajeWarning("Debe capturar un resultado para el estudio: ''"
-	            			+estudioSinResultadoDes+"'' o borre su valor y comentario.");
+	            if(estudioRequiereResVal){
+	            	mensajeWarning("Debe capturar un " + mensajeRequiereCampo + " para el estudio: ''"
+	            			+estudioRequiereResValDes+"'' o borre toda la informaci&oacute;n del mismo.");
 	            	return;
 	            }
                 
@@ -3755,9 +3768,15 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                            	        	
                            	            if(Ext.decode(response.responseText).params != null){
                            	                var respuestaValidacionResEst = Ext.decode(response.responseText).params.VALIDA_RES_RECL;
+                           	                var respuestaTipoProvedor = Ext.decode(response.responseText).params.VALIDA_RES_TIPO_PROV;
                            	                
                            	                if(respuestaValidacionResEst == 'N'){
-                           	                	mensajeWarning('Datos Guardados. Aun faltan capturar estudios para este asegurado.');
+                           	                	var mensajeEstudios = 'Capture almenos un estudio de laboratorio.';
+
+                           	                	if(respuestaTipoProvedor == '15'){
+                               	                	mensajeEstudios = 'Capture los estudios de Sobrepeso y Obesidad.';
+                               	                }
+                           	                	mensajeWarning('Datos Guardados. Aun faltan capturar estudios para este asegurado.<br/>' + mensajeEstudios);
                            	                }else{
                            	                	windowResultEstudios.close();
                            	                	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
@@ -3829,6 +3848,8 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 		,modal  : true
 		,width  : 900  
 		,items : [resultadosEstudiosGrid]
-	}).show( !Ext.isEmpty(gridFacturaDirecto)?gridFacturaDirecto : null  );
+	}).show();
+	
+	centrarVentanaInterna(windowResultEstudios);
 	
 }

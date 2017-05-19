@@ -389,6 +389,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = siniestrosManager.getConsultaListaSubcobertura(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob,cdrol);
 					break;
+				case SUBCOBERTURAS_X_PRODUCTO_COBERTURA:
+					if(params==null)
+					{
+						params=new HashMap<String, String>();
+					}
+					lista = siniestrosManager.obtieneListadoSubcoberturaPorProdCob(params.get("cdramo"), params.get("cdtipsit"), params.get("cdgarant"));
+					break;
 					
 				case SUBCOBERTURASTOTALES:
 					lista = siniestrosManager.getConsultaListaSubcoberturaTotales();

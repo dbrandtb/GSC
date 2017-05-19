@@ -16,6 +16,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.RolSistema;
@@ -763,13 +764,16 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			//Utils.validate(saveList, "No se recibieron datos para guardar/eliminar estudios.");
 			
 			boolean correcto =  true;
+			
 			for(Map<String, String> resultadoEst : saveList){
 				
-				if( StringUtils.isNotBlank( resultadoEst.get("pi_cdresest") ) ){
-					resultadoEst.put("pi_swop", Constantes.UPDATE_MODE);
-				}else{
+				if( StringUtils.isBlank(resultadoEst.get("pi_cdresest")) && StringUtils.isBlank(resultadoEst.get("pi_valor"))
+						&& StringUtils.isBlank(resultadoEst.get("pi_observ"))){
 					resultadoEst.put("pi_swop", Constantes.DELETE_MODE);
+				}else{
+					resultadoEst.put("pi_swop", Constantes.UPDATE_MODE);
 				}
+				
 				if(correcto){
 					HashMap<String, String> paramsResEstudio = new HashMap<String, String>();
 					paramsResEstudio.putAll(resultadoEst);
@@ -796,10 +800,12 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     public String validaDatosEstudiosReclamacion() throws Exception {
     	logger.debug("Entra a validaDatosEstudiosReclamacion");
     	try {
-    		boolean valida = siniestrosManager.validaDatosEstudiosReclamacion(params); 
+    		RespuestaVO valida = siniestrosManager.validaDatosEstudiosReclamacion(params); 
     		Utils.validate(params, "No se recibieron datos para validar captura resultados estudios.");
     		
-    		params.put("VALIDA_RES_RECL", valida? Constantes.SI : Constantes.NO);
+    		params.put("VALIDA_RES_RECL", valida.isSuccess()? Constantes.SI : Constantes.NO);
+    		params.put("VALIDA_RES_TIPO_PROV", valida.getMensaje());
+    		
     		success = true;
     		
     	}catch(Exception e){
@@ -833,12 +839,13 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 					paramsSin.put( "pi_cdconval" ,siniestroAseg.get("CDCONVAL"));
 					
 					try {
-						boolean valido = true;
+						RespuestaVO valido = new RespuestaVO(true,"");
+						
 						if(siniestrosManager.validaRequiereCapturaResEstudios(paramsSin)){
 							valido = siniestrosManager.validaDatosEstudiosReclamacion(paramsSin); 
 						}
 			    		
-			    		if(!valido){
+			    		if(!valido.isSuccess()){
 			    			faltanDatos =  true;
 			    			faltaAsegurados += ("<br/>"+siniestroAseg.get("NOMBRE")+". Factura: "+ factura.get("NFACTURA"));
 			    		}

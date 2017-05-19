@@ -24,6 +24,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
@@ -7003,6 +7004,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 						,"CDRESEST"
 						,"VALOR"
 						,"OBSERV"
+						,"SWOBLVAL"
+						,"SWOBLRES"
 				};
 				declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -7127,11 +7130,18 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	    }
 	 
 	 @Override
-		public boolean validaDatosEstudiosReclamacion(HashMap<String, String> params) throws Exception {
+		public RespuestaVO validaDatosEstudiosReclamacion(HashMap<String, String> params) throws Exception {
 			Map<String, Object> mapResult = ejecutaSP(new ValidaDatosEstudiosReclamacion(getDataSource()), params);
 			BigDecimal registros = (BigDecimal) mapResult.get("pv_swreg");
-			logger.debug(">>>>>> Resultado para validar si hay registros de resultados de estudios, registros de configuracion P_VALIDA_REGDATOS <<<<<<: "+registros);
-			return (registros.intValue() > 0) ?  true : false;
+			String tipoProveedor = (String) mapResult.get("pv_cdtipo");
+			
+			logger.debug(">>>>>> Requiere Validar si hay estudios P_VALIDA_REGDATOS <<<<<<: "+registros);
+			logger.debug(">>>>>> Tipo Proveedor P_VALIDA_REGDATOS <<<<<<: "+tipoProveedor);
+
+			/**
+			 * Si regresa 0 no cumple con los documentos minimos, si regresa 1 o mas si cumple con el minimo
+			 */
+			return new RespuestaVO((registros.intValue() > 0) ?  true : false,tipoProveedor);
 		}
 		
 		protected class ValidaDatosEstudiosReclamacion extends StoredProcedure {
@@ -7148,6 +7158,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pi_cdgarant", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdconval", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_swreg", OracleTypes.NUMBER));
+				declareParameter(new SqlOutParameter("pv_cdtipo", OracleTypes.VARCHAR));
 		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 				compile();
@@ -7262,7 +7273,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					 resEst.put("CDCONCEP_ORIG",resEst.get("CDCONCEP"));
 					 resEst.put("CDEST_ORIG",resEst.get("CDEST"));
 					 resEst.put("SWOBLVAL_ORIG",resEst.get("SWOBLVAL"));
-					 resEst.put("SWOBLOBS_ORIG",resEst.get("SWOBLOBS"));
+					 resEst.put("SWOBLRES_ORIG",resEst.get("SWOBLRES"));
 				}
 			 }
 			 
@@ -7288,7 +7299,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 						 ,"CDCONCEP"
 						 ,"CDEST"
 						 ,"SWOBLVAL"
-						 ,"SWOBLOBS"
+						 ,"SWOBLRES"
 						 ,"DSRAMO"
 						 ,"DSTIPSIT"
 						 ,"DSGARANT"
@@ -7389,7 +7400,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pi_cdconcep_ant", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdest_ant", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swoblval_ant", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pi_swoblobs_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swoblres_ant", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdramo", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdtipsit", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdgarant", OracleTypes.VARCHAR));
@@ -7397,7 +7408,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pi_cdconcep", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdest", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swoblval", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pi_swoblobs", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swoblres", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdusuari", OracleTypes.VARCHAR));
 				
@@ -7406,5 +7417,40 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				compile();
 			}
 		}
+		
+		@Override
+		public List<GenericVO> obtieneListadoSubcoberturaPorProdCob(String cdramo, String cdtipsit, String cdgarant) throws Exception {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("pv_cdramo"  , cdramo); 
+			params.put("pv_cdtipsit", cdtipsit);
+			params.put("pv_cdgarant", cdgarant);
+			
+			Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoSubcoberturaPorProdCob(getDataSource()), params);
+			return (List<GenericVO>) mapResult.get("pv_registro_o");
+		}
+		
+		protected class ObtieneListadoSubcoberturaPorProdCob extends StoredProcedure
+		{
+			protected ObtieneListadoSubcoberturaPorProdCob(DataSource dataSource)
+			{
+				super(dataSource, "PKG_PROESTDETOP.P_OBTIENE_SUBGARANTS");
+				declareParameter(new SqlParameter("pv_cdramo",   OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtipsit", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdgarant", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new SubcoberturasMapper()));
+				declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+				declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+		
+		protected class SubcoberturasMapper  implements RowMapper {
+	        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	GenericVO consulta = new GenericVO();
+	        	consulta.setKey(rs.getString("CDCONVAL"));
+	        	consulta.setValue(rs.getString("DSCONVAL"));
+	            return consulta;
+	        }
+	    }
 		
 }
