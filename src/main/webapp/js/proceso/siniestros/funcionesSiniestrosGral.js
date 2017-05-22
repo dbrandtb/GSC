@@ -597,8 +597,33 @@ function _11_validaAseguroLimiteCoberturas(){
 
 //5.3.- Validamos el monto total del importe de siniestro por asegurado 
 function _11_validaImporteAseguradoTramite(){
-	procesoContinuar = "1";
-    validaGralImpTramFactura(_11_params.NTRAMITE,null,_tipoPago,procesoContinuar);
+    var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+    myMask.show();
+    Ext.Ajax.request({
+        url     : _URL_VALIDA_IMPASEGURADOSINIESTRO
+        ,params:{
+            'params.ntramite'  : _11_params.NTRAMITE,
+            'params.tipopago'  : _tipoPago
+        }
+        ,success : function (response) {
+            json = Ext.decode(response.responseText);
+            if(json.success==false){
+                myMask.hide();
+                centrarVentanaInterna(mensajeWarning(json.msgResult));
+            }else{
+                myMask.hide();
+                _11_mostrarSolicitudPago();
+            }
+        },
+        failure : function (){
+            centrarVentanaInterna(Ext.Msg.show({
+                title:'Error',
+                msg: 'Error de comunicaci&oacute;n',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            }));
+        }
+    });
 }
 
 //5.4.- Mostrar solicitud de pago 
@@ -1571,29 +1596,35 @@ function _p21_agregarAsegurado(){
 //14.- Generar Calculos
 function _p21_generarCalculo(){
     gridFacturaDirecto.setLoading(true);
-    var myMask = new Ext.LoadMask(Ext.getBody(),{msg:"loading..."});
-    myMask.show();
     Ext.Ajax.request( {
         url  : _URL_GENERAR_CALCULO
         ,params:{
             'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue()
         }
         ,success : function (response) {
+            
             Ext.Ajax.request({
-                url     : _URL_VALIDA_IMPASEGURADOSINIESTRO
+                url  : _URL_VALIDA_IMP_ASEGSINIESTRO
                 ,params:{
                     'params.tipopago'  : _tipoPago,
                     'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
                     'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue()
                 }
                 ,success : function (response) {
-                    json = Ext.decode(response.responseText);
-                    if(json.success==false){
-                        myMask.hide();
-                        centrarVentanaInterna(mensajeWarning(json.msgResult));
-                    }else{
-                    	 myMask.hide();
-                    }
+                    var validacionMensaje = Ext.decode(response.responseText).datosValidacion;
+                    var resultMsj= "";
+                    var banderaresultMsj = 0;
+                    if(validacionMensaje.length > 0){
+                        for(var i = 0; i < validacionMensaje.length; i++){
+                            banderaresultMsj = "1";
+                            resultMsj = resultMsj + 'El siniestro '+ validacionMensaje[i].SINIESTRO+' de la Factura '+validacionMensaje[i].FACTURA+ ' el importe es negativo. <br/>';
+                        }
+                        resultMsj = resultMsj+'Favor de corregir el importe para poder continuar.<br/>';
+                        
+                        if(banderaresultMsj == "1"){
+                            centrarVentanaInterna(mensajeWarning(resultMsj));
+                        }
+                    }                       
                     gridFacturaDirecto.setLoading(false);
                     cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
                     
@@ -1601,13 +1632,14 @@ function _p21_generarCalculo(){
                     panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
                     obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
                 },
-                failure : function (){
-                    centrarVentanaInterna(Ext.Msg.show({
+                failure : function () {
+                    gridFacturaDirecto.setLoading(false);
+                    Ext.Msg.show({
                         title:'Error',
                         msg: 'Error de comunicaci&oacute;n',
                         buttons: Ext.Msg.OK,
                         icon: Ext.Msg.ERROR
-                    }));
+                    });
                 }
             });
         },
@@ -2144,12 +2176,9 @@ function _11_guardarInformacionAdicional(){
 
 //20.-Muestra el listado de las autorizaciones disponibles para el asegurado
 function _11_pedirAutorizacion(record) {
-	debug("Valor de _11_pedirAutorizacion => record====> ", record);
     _11_recordActivo = record;
     _11_textfieldAsegurado.setValue(_11_recordActivo.get('NOMBRE'));
     var params = {
-            'params.cdgarant'   :   _11_recordActivo.get('CDGARANT'),
-            'params.cdconval'   :   _11_recordActivo.get('CDCONVAL'),
             'params.cdperson'   :   _11_recordActivo.get('CDPERSON')
     };
     cargaStorePaginadoLocal(storeListadoAutorizacion, _URL_LISTA_AUTSERVICIO, 'datosInformacionAdicional', params, function(options, success, response){
@@ -2241,8 +2270,6 @@ function _11_modificarAutorizacion(record){
     
     _11_textfieldAseguradoMod.setValue(_11_recordActivo.get('NOMBRE'));
     var params = {
-    	    'params.cdgarant'   :   _11_recordActivo.get('CDGARANT'),
-            'params.cdconval'   :   _11_recordActivo.get('CDCONVAL'),
             'params.cdperson'   :   _11_recordActivo.get('CDPERSON')
     };
     cargaStorePaginadoLocal(storeListadoAutorizacion, _URL_LISTA_AUTSERVICIO, 'datosInformacionAdicional', params, function(options, success, response){
@@ -2912,9 +2939,6 @@ function obtenerTotalPagos(ntramite, nfactura){
                     }
                 });
                 // fin (EGS)
-            }else{
-            	procesoContinuar = "0";
-            	validaGralImpTramFactura(ntramite,nfactura,_tipoPago,procesoContinuar);
             }
             
             panelComplementos.down('[name=params.subtotalFac]').setValue(subtotalFactura);
@@ -2936,41 +2960,7 @@ function obtenerTotalPagos(ntramite, nfactura){
     myMask.hide();
     return true;
 }
-
-function validaGralImpTramFactura(ntramite,nfactura,tipopago,procesoContinuar){
-    var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
-    myMask.show();
-    Ext.Ajax.request({
-        url     : _URL_VALIDA_IMPASEGURADOSINIESTRO
-        ,params:{
-            'params.ntramite'  : ntramite,
-            'params.tipopago'  : tipopago,
-            'params.nfactura'  : nfactura
-        }
-        ,success : function (response) {
-            json = Ext.decode(response.responseText);
-            if(json.success==false){
-                myMask.hide();
-                centrarVentanaInterna(mensajeWarning(json.msgResult));
-            }else{
-            	myMask.hide();
-            	if(validaGralImpTramFactura =="1"){
-            		_11_mostrarSolicitudPago();
-            	}
-            }
-        },
-        failure : function (){
-            centrarVentanaInterna(Ext.Msg.show({
-                title:'Error',
-                msg: 'Error de comunicaci&oacute;n',
-                buttons: Ext.Msg.OK,
-                icon: Ext.Msg.ERROR
-            }));
-        }
-    });
-}
-
-
+    
 //27.- Guardamos los datos complementarios del Asegurado cuando realizamos cambios del asegurado Causa Siniestro, ICD,Cobertura,Subcobertura
 function guardarDatosComplementarios(grid,rowIndex){
     var record = grid.getStore().getAt(rowIndex);
@@ -3373,8 +3363,7 @@ function _11_obtieneDatosOpcionalesValor(cdramo,cdtipsit,cdgarant,cdconval,recor
                 var jsonValidacionCober =Ext.decode(response.responseText).datosValidacion;
                 debug("Valor de los datos de Respuesta para validaciones de alta =>",jsonValidacionCober[0]);
                 if(jsonValidacionCober[0].FLAGREQAUT == "SI" &&  (  record.get('NMAUTSER') =="N/A" || +record.get('NMAUTSER') <= '0' || record.get('NMAUTSER')== "")){
-                    _11_modificarAutorizacion(record);
-                	/*msgWindow = Ext.Msg.show({
+                    msgWindow = Ext.Msg.show({
                         title: 'Aviso',
                         msg: 'Se requiere una autorizaci&oacute;n de Servicio. <br/> &iquest;Desea realizar la asociaci&oacute;n ?',
                         buttons: Ext.Msg.YESNO,
@@ -3393,7 +3382,7 @@ function _11_obtieneDatosOpcionalesValor(cdramo,cdtipsit,cdgarant,cdconval,recor
                             }
                         }
                     });
-                    centrarVentanaInterna(msgWindow);*/
+                    centrarVentanaInterna(msgWindow);
                 }
             }
         },
@@ -3771,7 +3760,7 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                                   		 	'params.pi_nmsituac': _nmsituac,
                                   		 	'params.pi_cdtipsit': _cdtipsit,
                                   		 	'params.pi_cdgarant': _cdgarant,
-                                  		 	'params.pi_cdconval': _cdconval
+                                  		 	'params.pi_cdconval': _cdconval,
                            	        }
                            	        ,success : function (response) {
                            	        	

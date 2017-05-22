@@ -1395,7 +1395,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
             }
             ,{
               	xtype: 'checkbox',
-              	fieldLabel: 'El estudio requiere un valor obligatorio',
+              	fieldLabel: 'El estudio requiere un valor abierto obligatorio',
               	name : 'SWOBLVAL_CHECK',
               	labelWidth: 200,
               	labelAlign: 'right',
@@ -1671,9 +1671,9 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
 	
 function eliminarConfEstudios(recordEliminar,btnGrid){
 	
-	var ventanaConfEliminar = Ext.Msg.show({
+	Ext.Msg.show({
         title: 'Confirmar acci&oacute;n',
-        msg: "&iquest;Esta seguro que desea eliminar el estudio ''"+ recordEliminar.get('DSEST') + "'' de la configuraci&oacute;n de "+ recordEliminar.get('DSRAMO') +"?",
+        msg: '&iquest;Esta seguro que desea eliminar esta configuraci&oacute;n?',
         buttons: Ext.Msg.YESNO,
         fn: function(buttonId, text, opt) {
             if(buttonId == 'yes') {
@@ -1728,8 +1728,6 @@ function eliminarConfEstudios(recordEliminar,btnGrid){
         //animateTarget: btnGrid,
         icon: Ext.Msg.QUESTION
     });
-	
-	centrarVentanaInterna(ventanaConfEliminar);
 	
 }
 

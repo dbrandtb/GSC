@@ -24,8 +24,6 @@
 			var _CATALOGO_SUBCOBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
 			var _CATALOGO_VALIDACIONESGRALES            = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@VALIDACIONESGRALES"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALESMS 		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MS"/>';
-			var _CATALOGO_SUBCOBERTURASTOTALESGMPI      = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASGMPI"/>';
-			var _CATALOGO_SUBCOBERTURASTOTALESGMPC      = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASGMPC"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALESMSC		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MSC"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALINFONAVIT	= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASINFONAVIT"/>';
 			var _CATALOGO_SUBCOBERTURASRECUPERA			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASRECUPERA"/>';
@@ -87,7 +85,7 @@
 			var _URL_GENERAR_CALCULO					= '<s:url namespace="/siniestros" 		action="generarCalculoSiniestros" />';
 			var _URL_CONCEPTOSASEG						= '<s:url namespace="/siniestros" 		action="obtenerMsinival" />';
 			var _URL_LISTADO_ASEGURADO          		= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
-			var _URL_CONSULTA_LISTADO_POLIZA			= '<s:url namespace="/siniestros" 		action="consultaListaPolizaFeOcu" />';//(EGS) cambiamos consultaListaPoliza
+			var _URL_CONSULTA_LISTADO_POLIZA			= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
 			var _URL_ASOCIA_MSINEST_REFERENCIADO    	= '<s:url namespace="/siniestros"      	action="asociaMsiniestroReferenciado" />';
 			var _URL_ACTUALIZA_INFO_GRAL_SIN       		= '<s:url namespace="/siniestros"      	action="actualizaDatosGeneralesSiniestro" />';
 			var _URL_GUARDA_CONCEPTO_TRAMITE			= '<s:url namespace="/siniestros"  		action="guardarMsinival"/>';
@@ -133,10 +131,11 @@
             var _UrlGenerarContrarecibo     			= '<s:url namespace="/siniestros" 		action="generarContrarecibo"       />';
 			var _URL_VALIDA_COBASEGURADOS				= '<s:url namespace="/siniestros" 		action="validaLimiteCoberturaAsegurados"/>';
 			var _URL_VALIDA_STATUSASEG			        = '<s:url namespace="/siniestros" 	   	action="validaStatusAseguradoSeleccionado" />';
-			//var _URL_VALIDA_IMP_ASEGSINIESTRO			= '<s:url namespace="/siniestros" 	   	action="validaImporteAsegTramiteAseg" />';
+			var _URL_VALIDA_IMP_ASEGSINIESTRO			= '<s:url namespace="/siniestros" 	   	action="validaImporteAsegTramiteAseg" />';
 			var _URL_VALIDA_IMPASEGURADOSINIESTRO		= '<s:url namespace="/siniestros" 		action="validaImporteTramiteAsegurados"/>';
 			var _URL_LISTA_TIPOEVENTO                   = '<s:url namespace="/siniestros"       action="consultaListaTipoEventoSiniestro" />';
 			var _URL_ALTA_EVENTO                        = '<s:url namespace="/siniestros"       action="consultaDatosTipoEventoAlta" />';
+			var _URL_REQAUTES							= '<s:url namespace="/siniestros"		action="actualizarReqautes" />'; // (EGS) para marcar afiliados que excedan limite de medicamentos
 			var _URL_REQAUTES							= '<s:url namespace="/siniestros"		action="actualizarReqautes" />'; // (EGS) para marcar afiliados que excedan limite de medicamentos
 			var _URL_REVISIONDOCSINIESTRO               = '<s:url namespace="/siniestros"       action="includes/revisionDocumentos" />';
 			
@@ -303,8 +302,7 @@
 						{type:'date',   name:'FEEGRESO',   dateFormat : 'd/m/Y'},
 						{type:'string', name:'CDTIPEVE'},       {type:'string', name:'CDTIPALT'},
 						{type:'string', name:'FLAGTIPEVE'},     {type:'string', name:'FLAGTIPALT'},
-						{type:'string', name:'NUMRECLA'},       {type:'string', name:'FLAGREQAUT'},
-						{type:'string', name:'LIMAUTSEVMED'}
+						{type:'string', name:'NUMRECLA'},       {type:'string', name:'FLAGREQAUT'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -350,9 +348,7 @@
 					fields: [  	{type:'string',	name:'NMAUTSER'},	   		{type:'string',	name:'CDPROVEE'},
 								{type:'string',	name:'FESOLICI'},			{type:'string',	name:'NOMPROV'},
 								{type:'string',	name:'CDCAUSA'},			{type:'string',	name:'DSCAUSA'},
-								{type:'string',	name:'CDICD'},				{type:'string',	name:'DSICD'},
-								{type:'string', name:'DESCDGARANT'},        {type:'string', name:'DESCDCONVAL'}
-								]
+								{type:'string',	name:'CDICD'},				{type:'string',	name:'DSICD'}]
 				});
 //MODELO PARA EL LISTADO DE LA ASOCIACION
 				Ext.define('modelListadoSiniestroMaestro',{
@@ -629,52 +625,6 @@
 					}
 				});
 				storeSubcoberturaAsegurado4MSCRender.load();
-				
-                storeSubcoberturaAseguradoGMPCRender = Ext.create('Ext.data.JsonStore', {
-                    model:'Generic',
-                    //autoLoad:true,
-                    cargado:false,
-                    proxy: {
-                        type: 'ajax',
-                        url: _URL_CATALOGOS,
-                        extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALESGMPC},
-                        reader: {
-                            type: 'json',
-                            root: 'lista'
-                        }
-                    },listeners: {
-                        load : function() {
-                            this.cargado=true;
-                            if(!Ext.isEmpty(gridFacturaDirecto)){
-                                gridFacturaDirecto.getView().refresh();
-                            }
-                        }
-                    }
-                });
-                storeSubcoberturaAseguradoGMPCRender.load();
-                
-                storeSubcoberturaAseguradoGMPIRender = Ext.create('Ext.data.JsonStore', {
-                    model:'Generic',
-                    //autoLoad:true,
-                    cargado:false,
-                    proxy: {
-                        type: 'ajax',
-                        url: _URL_CATALOGOS,
-                        extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALESGMPI},
-                        reader: {
-                            type: 'json',
-                            root: 'lista'
-                        }
-                    },listeners: {
-                        load : function() {
-                            this.cargado=true;
-                            if(!Ext.isEmpty(gridFacturaDirecto)){
-                                gridFacturaDirecto.getView().refresh();
-                            }
-                        }
-                    }
-                });
-                storeSubcoberturaAseguradoGMPIRender.load();
 				
 				storeSubcoberturaAsegurado4INFORender = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
@@ -1459,7 +1409,6 @@
                                     'params.cdconval'  : this.getValue()
                                 }
                                 ,success : function (response) {
-                                	
                                     //Obtenemos los datos
                                     if(Ext.decode(response.responseText).datosValidacion != null){
                                         var jsonValidacionCober =Ext.decode(response.responseText).datosValidacion;
@@ -1496,8 +1445,7 @@
                                         }
                                         
                                         if(jsonValidacionCober[0].FLAGREQAUT == "SI" &&  (  _11_aseguradoSeleccionado.get('NMAUTSER') =="N/A" || +_11_aseguradoSeleccionado.get('NMAUTSER') <= '0' || _11_aseguradoSeleccionado.get('NMAUTSER')== "")){
-                                	        _11_modificarAutorizacion(_11_aseguradoSeleccionado);
-                                        	/*msgWindow = Ext.Msg.show({
+                                	        msgWindow = Ext.Msg.show({
                                                 title: 'Aviso',
                                                 msg: 'Se requiere una autorizaci&oacute;n de Servicio. <br/> &iquest;Desea realizar la asociaci&oacute;n ?',
                                                 buttons: Ext.Msg.YESNO,
@@ -1514,7 +1462,7 @@
                                                     }
                                                 }
                                             });
-                                            centrarVentanaInterna(msgWindow);*/
+                                            centrarVentanaInterna(msgWindow);
                                         }
                                     }
                                 },
@@ -1828,10 +1776,10 @@
                                 header: 'Reclamo',   dataIndex: 'NUMRECLA',          width: 90, hidden : (_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
                             },
 							{
-								header: 'Id<br/>Sini. Existente',   dataIndex: 'NMSINREF',          width: 90, hidden : true//(_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
+								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',			width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
-								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : true//(_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
+								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
 								header: 'Fecha<br/>Ocurrencia',		dataIndex: 'FEOCURRE'
@@ -1957,34 +1905,6 @@
 											    leyenda='Cargando...';
 											}
 										}
-										else if(_cdtipsitProducto =="GMPC"){
-                                            if(storeSubcoberturaAseguradoGMPCRender.cargado) {
-                                                debug("storeSubcoberturaAseguradoGMPCRender");
-                                                debug(storeSubcoberturaAseguradoGMPCRender);
-                                                storeSubcoberturaAseguradoGMPCRender.each(function(rec) {
-                                                    if (rec.data.key == v){
-                                                        leyenda = rec.data.value;
-                                                    }
-                                                });
-                                            }
-                                            else{
-                                                leyenda='Cargando...';
-                                            }
-                                        }
-                                        else if(_cdtipsitProducto =="GMPI"){
-                                            if(storeSubcoberturaAseguradoGMPIRender.cargado) {
-                                                debug("storeSubcoberturaAseguradoGMPIRender");
-                                                debug(storeSubcoberturaAseguradoGMPIRender);
-                                                storeSubcoberturaAseguradoGMPIRender.each(function(rec) {
-                                                    if (rec.data.key == v){
-                                                        leyenda = rec.data.value;
-                                                    }
-                                                });
-                                            }
-                                            else{
-                                                leyenda='Cargando...';
-                                            }
-                                        }
 										else{
 											if(storeSubcoberturaAseguradoRender.cargado) {
 												debug("storeSubcoberturaAseguradoRender");
@@ -2010,7 +1930,7 @@
 									return leyenda;
 								}
 							},
-                            {   header: 'Fecha ingreso',        dataIndex: 'FEINGRESO',  renderer: Ext.util.Format.dateRenderer('d/m/Y')  ,hidden : _tipoProducto == _GMPRUEBA
+                            {   header: 'Fecha ingreso',        dataIndex: 'FEINGRESO',  renderer: Ext.util.Format.dateRenderer('d/m/Y')
                                 ,editor : {
                                     xtype : 'datefield',
                                     format : 'd/m/Y',
@@ -2022,7 +1942,7 @@
                                     }
                                 }
                             }, 
-                            {   header: 'Fecha egreso',             dataIndex: 'FEEGRESO',    renderer: Ext.util.Format.dateRenderer('d/m/Y')       //,hidden : _tipoProducto == _GMPRUEBA
+                            {   header: 'Fecha egreso',             dataIndex: 'FEEGRESO',    renderer: Ext.util.Format.dateRenderer('d/m/Y')
                                 ,editor : {
                                     xtype    : 'datefield',
                                     format   : 'd/m/Y',
@@ -2034,7 +1954,7 @@
                                 }
                             },
                             {
-                                header: 'Tipo evento',              dataIndex: 'CDTIPEVE'           ,hidden : _tipoProducto == _GMPRUEBA
+                                header: 'Tipo evento',              dataIndex: 'CDTIPEVE'
                                 ,editor : comboTipoEventos
                                 ,renderer : function(v) {
                                     var leyenda = '';
@@ -2062,7 +1982,7 @@
                                 }
                             },
                              {
-                                header: 'Alta',                     dataIndex: 'CDTIPALT'           ,hidden : _tipoProducto == _GMPRUEBA
+                                header: 'Alta',                     dataIndex: 'CDTIPALT'
                                 ,editor : comboAltaHospital
                                 ,renderer : function(v) {
                                     var leyenda = '';
@@ -2224,10 +2144,7 @@
                                 header: 'TipoAlta',                 dataIndex: 'FLAGTIPALT',       width: 50,        hidden : true
                             },
                             {
-                                header: 'Req.Aut.Serv',             dataIndex: 'FLAGREQAUT',       width: 100//,        hidden : true
-                            },
-                            {
-                                header: 'Limite Aut Serv',             dataIndex: 'LIMAUTSEVMED',       width: 100//,        hidden : true
+                                header: 'Req.Aut.Serv',             dataIndex: 'FLAGREQAUT',       width: 50//,        hidden : true
                             }
                             
 							
@@ -3063,17 +2980,6 @@
 							 ,dataIndex : 'NOMPROV'
 							 ,width	 : 300
 						}
-                        ,
-                        {
-                             header  : 'COBERTURA'
-                             ,dataIndex : 'DESCDGARANT'
-                             ,width  : 300
-                        },
-                        {
-                             header  : 'SUBCOBERTURA'
-                             ,dataIndex : 'DESCDCONVAL'
-                             ,width  : 300
-                        }
 					 ],
 					 bbar	 :
 					 {
@@ -3130,17 +3036,6 @@
 							 ,dataIndex : 'DSICD'
 							 ,width	 : 300
 						}
-                        ,
-                        {
-                             header  : 'COBERTURA'
-                             ,dataIndex : 'DESCDGARANT'
-                             ,width  : 300
-                        },
-                        {
-                             header  : 'SUBCOBERTURA'
-                             ,dataIndex : 'DESCDCONVAL'
-                             ,width  : 300
-                        }
 					 ],
 					 bbar	 :
 					 {
@@ -3745,17 +3640,15 @@
 								
 								'select' : function(combo, record) {
 									var params = {'params.cdperson' : this.getValue(),
-												  'params.cdramo' : _11_params.CDRAMO,
-												  'params.fe_ocurre' : panelListadoAsegurado.form.getValues().dtfechaOcurrencias	//(EGS)
-												  };
+												  'params.cdramo' : _11_params.CDRAMO };
+									
 									cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
 										if(success){
 											var jsonResponse = Ext.decode(response.responseText);
 											if(jsonResponse.listaPoliza == null) {
 												Ext.Msg.show({
 													title: 'Aviso',
-					                                //msg: 'No existen p&oacute;lizas para el asegurado elegido.', (EGS)
-					                                msg: 'La fecha de ocurrencia del siniestro, no coincide con alguna p&oacute;liza del asegurado',	// (EGS)
+													msg: 'No existen p&oacute;lizas para el asegurado elegido.',
 													buttons: Ext.Msg.OK,
 													icon: Ext.Msg.WARNING
 												});
