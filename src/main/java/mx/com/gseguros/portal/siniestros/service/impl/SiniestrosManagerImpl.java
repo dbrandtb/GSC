@@ -3114,4 +3114,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		return siniestrosDAO.obtieneListadoSubcoberturaPorProdCob(cdramo, cdtipsit, cdgarant);
 	}
 	
+	@Override
+	public List<Map<String, String>> getconsultaAutServPersonaCobertura(String cobertura, String subcobertura, String cdperson) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdgarant_i", cobertura);
+		params.put("pv_cdconval_i", subcobertura);
+		params.put("pv_cdperson_i", cdperson);
+		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return siniestrosDAO.obtieneListaAutServPersonaCobertura(params);
+	}
+	
 }

@@ -720,7 +720,7 @@
 			</result>
 		</action>
 		
-		<action name="consultaAutServicioSiniestro" class="siniestrosAction" method="consultaAutServicioSiniestro">
+		<action name="consultaAutServicioSiniestro" class="siniestrosAction" method="consultaAutServPersonaCobertura">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
@@ -1288,7 +1288,7 @@
 			</result>
 		</action>
 		
-		<action name="validaImporteAsegTramiteAseg" class="siniestrosAction" method="validaImporteAsegTramiteAseg">
+		<!--<action name="validaImporteAsegTramiteAseg" class="siniestrosAction" method="validaImporteAsegTramiteAseg">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
@@ -1296,9 +1296,9 @@
 					success
 				</param>
 			</result>
-		</action>
+		</action>-->
 		
-		<action name="validaImporteTramiteAsegurados" class="siniestrosAction" method="validaImporteTramiteAsegurados">
+		<action name="validaImporteTramiteAsegurados" class="siniestrosAction" method="obtieneValGralImporteAsegurado">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">

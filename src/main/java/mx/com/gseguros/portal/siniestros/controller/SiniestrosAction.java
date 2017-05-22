@@ -1587,11 +1587,15 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	* @param cdperson
 	* @return List<Map<String, String>> datosInformacionAdicional
 	*/ 
-	public String consultaAutServicioSiniestro(){
-		logger.debug("Entra a consultaAutServicioSiniestro params de entrada :{}",params);
+	public String consultaAutServPersonaCobertura(){
+		logger.debug("Entra a consultaAutServPersonaCobertura params de entrada :{}",params);
 		try {
-			datosInformacionAdicional = siniestrosManager.getConsultaListaAutServicioSiniestro(params.get("cdperson"));
-			logger.debug("Valor de Respuesta : {} Total de registros :{}" ,datosInformacionAdicional,datosInformacionAdicional.size());
+			String cobertura    = params.get("cdgarant");
+			String subcobertura = params.get("cdconval");
+			String cdperson     = params.get("cdperson");
+						
+			datosInformacionAdicional = siniestrosManager.getconsultaAutServPersonaCobertura(cobertura,subcobertura,cdperson);
+			logger.debug("Valor de consultaAutServPersonaCobertura : {} Total de registros :{}" ,datosInformacionAdicional,datosInformacionAdicional.size());
 		}catch( Exception e){
 			logger.error("Error al obtener las autorizaciones : {}", e.getMessage(), e);
 			return SUCCESS;
@@ -6025,49 +6029,37 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 
-	public String validaImporteAsegTramiteAseg(){
-		logger.debug("Entra a validaImporteAsegTramiteAseg params de entrada :{}",params);
-		try {
-			datosValidacion = siniestrosManager.obtenerInfImporteAsegTramiteAseg(params.get("tipopago"),params.get("ntramite"),params.get("nfactura"));
-			logger.debug("Respuesta datosValidacion : {}", datosValidacion);
-		}catch( Exception e){
-			logger.error("Error al obtener los datos de la validacion del Siniestro : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
 	
-	public String validaImporteTramiteAsegurados(){
-		logger.debug("Entra a validaImporteTramiteAsegurados params de entrada :{}",params);
-		
+	
+	public String obtieneValGralImporteAsegurado(){
+		logger.debug("Entra a obtieneValGralImporteAsegurado params de entrada :{}",params);
 		try {
-			Map<String,String> factura        = null;
 			Map<String,String> siniestroIte   = null;
-			List<Map<String,String>> facturasAux = siniestrosManager.obtenerFacturasTramite(params.get("ntramite"));
+			String ntramite = params.get("ntramite");
+			String nfactura = params.get("nfactura");
+			String tipopago = params.get("tipopago");
 			String banderaValidacion = "0";
+			
 			String mensaje = "";
-			for(int i = 0; i < facturasAux.size(); i++){
-				factura = facturasAux.get(i);
-				List<Map<String,String>> siniesxfactura = siniestrosManager.obtenerInfImporteAsegTramiteAseg(params.get("tipopago"),params.get("ntramite"),factura.get("NFACTURA"));
+			
+			List<Map<String,String>> siniesxfactura = siniestrosManager.obtenerInfImporteAsegTramiteAseg(tipopago,ntramite,nfactura);
+			if(siniesxfactura.size() > 0){
+				banderaValidacion = "1";
 				for( int j= 0; j < siniesxfactura.size();j++){
-					siniestroIte    = siniesxfactura.get(j);
-					if(Double.parseDouble(siniestroIte.get("IMPORTE"+"")) < 0d){
-						banderaValidacion = "1";
-						mensaje = mensaje + "El Siniestro "+siniestroIte.get("SINIESTRO")+" de la Factura " + siniestroIte.get("FACTURA") + " el importe es negativo. <br/>";
-					}
+					siniestroIte  = siniesxfactura.get(j);
+					mensaje       = mensaje + siniestroIte.get("MSJERROR");
 				}
 			}
 			if(banderaValidacion.equalsIgnoreCase("1")){
 				logger.debug("entra la validacion banderaValidacion" );
 				success = false;
-				msgResult = mensaje+"Favor de corregir el importe para poder continuar.<br/>";
+				msgResult = mensaje+"Favor de corregir.<br/>";
 			}else{
 				success = true;
 				msgResult = "";
 			}
 		}catch( Exception e){
-			logger.error("Error al consultar validaImporteTramiteAsegurados : {}", e.getMessage(), e);
+			logger.error("Error al obtener las validaciones Generales Importe Asegurados: {}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		return SUCCESS;
