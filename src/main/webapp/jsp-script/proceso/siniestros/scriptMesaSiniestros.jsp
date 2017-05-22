@@ -73,8 +73,8 @@ var _URL_EXISTE_COBERTURA				= '<s:url namespace="/siniestros" 	action="consulta
 var _URL_VAL_CAUSASINI			        = '<s:url namespace="/siniestros" 	action="consultaInfCausaSiniestroProducto" />';
 var _URL_VALIDA_COBASEGURADOS			= '<s:url namespace="/siniestros" 	action="validaLimiteCoberturaAsegurados"/>';
 var _URL_VALIDA_IMPASEGURADOSINIESTRO	= '<s:url namespace="/siniestros" 	action="validaImporteTramiteAsegurados"/>';
-var _0_urlRutaReporte                   = '<s:property value="rutaServidorReports" />';
-var _0_reportsServerUser                = '<s:property value="passServidorReports" />';
+var _0_urlRutaReporte                   = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser                = '<s:text name="pass.servidor.reports" />';
 var _0_reporteContraRecibo              = '<s:text name="rdf.siniestro.contrarecibo.nombre" />';
 
 var _0_reporteRechazoReembolso          = '<s:text name="rdf.siniestro.cartarechazo.reembolso.nombre"/>';
@@ -639,71 +639,10 @@ var msgWindow;
 																				    	            }
 																				    	            ,success : function (response)
 																				    	            {
-																				    	                if(record.get('cdramo') =="11"){
-    																				    	                var usuarioTurnadoSiniestro1 = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-    																				    	                ///mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
-    														        	            						debug("Usuario turnado1 ==>"+usuarioTurnadoSiniestro1);
-    																				    	                var fields = usuarioTurnadoSiniestro1.split('|');
-                                                                                                            var Nombre = fields[0];
-                                                                                                            var usuario = fields[1];
-    																				    	                
-                                                                                                            Ext.Ajax.request(
-                                                                                                            {
-                                                                                                                url: _URL_ActualizaStatusTramite,
-                                                                                                                params: {
-                                                                                                                        'smap1.ntramite' : record.get('ntramite'), 
-                                                                                                                        'smap1.status'   : _STATUS_TRAMITE_EN_REVISION_MEDICA
-                                                                                                                        ,'smap1.rol_destino'     : 'medajustador'
-                                                                                                                        ,'smap1.usuario_destino' : ''
-                                                                                                                        ,'smap1.rol_inicial'     : 'OPERADORSINI'
-                                                                                                                        ,'smap1.usuario_inicial' :  usuario 
-                                                                                                                },
-                                                                                                                success:function(response,opts){
-                                                                                                                    Ext.Ajax.request(
-                                                                                                                    {
-                                                                                                                        url     : _URL_NOMBRE_TURNADO
-                                                                                                                        ,params : 
-                                                                                                                        {           
-                                                                                                                            'params.ntramite': record.get('ntramite'),
-                                                                                                                            'params.rolDestino': 'medajustador'
-                                                                                                                        }
-                                                                                                                        ,success : function (response)
-                                                                                                                        {
-                                                                                                                            var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-                                                                                                                            debug("Usuario turnado2 ==>"+usuarioTurnadoSiniestro);
-                                                                                                                            mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
-                                                                                                                            loadMcdinStore();
-                                                                                                                            windowLoader.close();
-                                                                                                                            
-                                                                                                                        },
-                                                                                                                        failure : function ()
-                                                                                                                        {
-                                                                                                                            me.up().up().setLoading(false);
-                                                                                                                            centrarVentanaInterna(Ext.Msg.show({
-                                                                                                                                title:'Error',
-                                                                                                                                msg: 'Error de comunicaci&oacute;n',
-                                                                                                                                buttons: Ext.Msg.OK,
-                                                                                                                                icon: Ext.Msg.ERROR
-                                                                                                                            }));
-                                                                                                                        }
-                                                                                                                    });
-                                                                                                                },
-                                                                                                                failure:function(response,opts)
-                                                                                                                {
-                                                                                                                    Ext.Msg.show({
-                                                                                                                        title:'Error',
-                                                                                                                        msg: 'Error de comunicaci&oacute;n',
-                                                                                                                        buttons: Ext.Msg.OK,
-                                                                                                                        icon: Ext.Msg.ERROR
-                                                                                                                    });
-                                                                                                                }
-                                                                                                            });
-																				    	                }else{
-																				    	                	var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-																				    	                	mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
-														        	            							loadMcdinStore();
-														        	            							windowLoader.close();
-																				    	                }
+																				    	                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+																				    	                mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
+														        	            						loadMcdinStore();
+														        	            						windowLoader.close();
 																				    	            },
 																				    	            failure : function ()
 																				    	            {
