@@ -679,4 +679,5 @@ public interface SiniestrosDAO {
 	public List<GenericVO> obtieneListadoSubcoberturaPorProdCob(String cdramo, String cdtipsit, String cdgarant)
 			throws Exception;
 	
+	public List<Map<String, String>> obtieneListaAutServPersonaCobertura(Map<String, Object> params) throws Exception;
 }

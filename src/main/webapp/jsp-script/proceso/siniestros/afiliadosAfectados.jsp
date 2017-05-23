@@ -131,7 +131,7 @@
             var _UrlGenerarContrarecibo     			= '<s:url namespace="/siniestros" 		action="generarContrarecibo"       />';
 			var _URL_VALIDA_COBASEGURADOS				= '<s:url namespace="/siniestros" 		action="validaLimiteCoberturaAsegurados"/>';
 			var _URL_VALIDA_STATUSASEG			        = '<s:url namespace="/siniestros" 	   	action="validaStatusAseguradoSeleccionado" />';
-			var _URL_VALIDA_IMP_ASEGSINIESTRO			= '<s:url namespace="/siniestros" 	   	action="validaImporteAsegTramiteAseg" />';
+			//var _URL_VALIDA_IMP_ASEGSINIESTRO			= '<s:url namespace="/siniestros" 	   	action="validaImporteAsegTramiteAseg" />';
 			var _URL_VALIDA_IMPASEGURADOSINIESTRO		= '<s:url namespace="/siniestros" 		action="validaImporteTramiteAsegurados"/>';
 			var _URL_LISTA_TIPOEVENTO                   = '<s:url namespace="/siniestros"       action="consultaListaTipoEventoSiniestro" />';
 			var _URL_ALTA_EVENTO                        = '<s:url namespace="/siniestros"       action="consultaDatosTipoEventoAlta" />';
@@ -302,7 +302,8 @@
 						{type:'date',   name:'FEEGRESO',   dateFormat : 'd/m/Y'},
 						{type:'string', name:'CDTIPEVE'},       {type:'string', name:'CDTIPALT'},
 						{type:'string', name:'FLAGTIPEVE'},     {type:'string', name:'FLAGTIPALT'},
-						{type:'string', name:'NUMRECLA'},       {type:'string', name:'FLAGREQAUT'}
+						{type:'string', name:'NUMRECLA'},       {type:'string', name:'FLAGREQAUT'},
+						{type:'string', name:'LIMAUTSEVMED'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -348,7 +349,9 @@
 					fields: [  	{type:'string',	name:'NMAUTSER'},	   		{type:'string',	name:'CDPROVEE'},
 								{type:'string',	name:'FESOLICI'},			{type:'string',	name:'NOMPROV'},
 								{type:'string',	name:'CDCAUSA'},			{type:'string',	name:'DSCAUSA'},
-								{type:'string',	name:'CDICD'},				{type:'string',	name:'DSICD'}]
+								{type:'string',	name:'CDICD'},				{type:'string',	name:'DSICD'},
+								{type:'string', name:'DESCDGARANT'},        {type:'string', name:'DESCDCONVAL'}
+								]
 				});
 //MODELO PARA EL LISTADO DE LA ASOCIACION
 				Ext.define('modelListadoSiniestroMaestro',{
@@ -1445,7 +1448,8 @@
                                         }
                                         
                                         if(jsonValidacionCober[0].FLAGREQAUT == "SI" &&  (  _11_aseguradoSeleccionado.get('NMAUTSER') =="N/A" || +_11_aseguradoSeleccionado.get('NMAUTSER') <= '0' || _11_aseguradoSeleccionado.get('NMAUTSER')== "")){
-                                	        msgWindow = Ext.Msg.show({
+                                	        _11_modificarAutorizacion(_11_aseguradoSeleccionado);
+                                        	/*msgWindow = Ext.Msg.show({
                                                 title: 'Aviso',
                                                 msg: 'Se requiere una autorizaci&oacute;n de Servicio. <br/> &iquest;Desea realizar la asociaci&oacute;n ?',
                                                 buttons: Ext.Msg.YESNO,
@@ -1462,7 +1466,7 @@
                                                     }
                                                 }
                                             });
-                                            centrarVentanaInterna(msgWindow);
+                                            centrarVentanaInterna(msgWindow);*/
                                         }
                                     }
                                 },
@@ -2144,7 +2148,10 @@
                                 header: 'TipoAlta',                 dataIndex: 'FLAGTIPALT',       width: 50,        hidden : true
                             },
                             {
-                                header: 'Req.Aut.Serv',             dataIndex: 'FLAGREQAUT',       width: 50//,        hidden : true
+                                header: 'Req.Aut.Serv',             dataIndex: 'FLAGREQAUT',       width: 100//,        hidden : true
+                            },
+                            {
+                                header: 'Limite Aut Serv',             dataIndex: 'LIMAUTSEVMED',       width: 100//,        hidden : true
                             }
                             
 							
@@ -2980,6 +2987,17 @@
 							 ,dataIndex : 'NOMPROV'
 							 ,width	 : 300
 						}
+                        ,
+                        {
+                             header  : 'COBERTURA'
+                             ,dataIndex : 'DESCDGARANT'
+                             ,width  : 300
+                        },
+                        {
+                             header  : 'SUBCOBERTURA'
+                             ,dataIndex : 'DESCDCONVAL'
+                             ,width  : 300
+                        }
 					 ],
 					 bbar	 :
 					 {
@@ -3036,6 +3054,17 @@
 							 ,dataIndex : 'DSICD'
 							 ,width	 : 300
 						}
+                        ,
+                        {
+                             header  : 'COBERTURA'
+                             ,dataIndex : 'DESCDGARANT'
+                             ,width  : 300
+                        },
+                        {
+                             header  : 'SUBCOBERTURA'
+                             ,dataIndex : 'DESCDCONVAL'
+                             ,width  : 300
+                        }
 					 ],
 					 bbar	 :
 					 {

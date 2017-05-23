@@ -785,4 +785,6 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO> obtieneListadoSubcoberturaPorProdCob(String cdramo, String cdtipsit, String cdgarant)
 			throws Exception;
+	
+	public  List<Map<String, String>> getconsultaAutServPersonaCobertura(String cobertura, String subcobertura, String cdperson)throws Exception;
 }
