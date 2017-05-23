@@ -1606,6 +1606,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String fehasta
 			,String cdpersonCliente
 			,String dscontra
+			,String nmsolici
 			,int start
 			,int limit
 			)throws Exception
@@ -1626,6 +1627,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("fehasta"         , fehasta);
 //		params.put("cdpersonCliente" , cdpersonCliente);
 		params.put("dscontra"        , dscontra);
+		params.put("nmsolici"        , nmsolici);
 		params.put("start"           , start);
 		params.put("limit"           , limit);
 		Map<String,Object> procRes = ejecutaSP(new RecuperarTramitesSP(getDataSource()),params);
@@ -1688,6 +1690,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("start"           , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("limit"           , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("dscontra"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsolici"     , OracleTypes.VARCHAR));
 			String cols[]=new String[]{
 					"NTRAMITE"    , "CDTIPFLU"           , "DSTIPFLU"    , "CDFLUJOMC" , "DSFLUJOMC"
 					,"STATUS"     , "DSSTATUS"           , "CDUNIECO"    , "CDRAMO"    , "CDTIPSIT"

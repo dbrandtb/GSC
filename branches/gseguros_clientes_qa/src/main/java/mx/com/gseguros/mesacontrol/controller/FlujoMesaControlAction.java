@@ -1340,7 +1340,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,fedesde  = params.get("FEDESDE")
 			       ,fehasta  = params.get("FEHASTA")
 			       ,filtro   = params.get("FILTRO")
-			       ,dscontra = params.get("DSCONTRA");
+			       ,dscontra = params.get("DSCONTRA")
+			       ,nmsolici = params.get("NMSOLICI");
 			
 			String cdpersonCliente = params.get("CDPERSONCLI");
 			
@@ -1375,6 +1376,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,cdpersonCliente
 					,filtro
 					,dscontra
+					,nmsolici
 					,start
 					,limit
 					);
