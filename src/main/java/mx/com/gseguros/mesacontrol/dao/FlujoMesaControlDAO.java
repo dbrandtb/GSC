@@ -540,6 +540,7 @@ public interface FlujoMesaControlDAO {
 			,String fehasta
 			,String cdpersonCliente
 			,String dscontra
+			,String nmsolici
 			,int start
 			,int limit
 			)throws Exception;
