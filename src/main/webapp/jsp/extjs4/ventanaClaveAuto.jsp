@@ -134,7 +134,7 @@ Ext.onReady(function()
 					{text:'SubMarca', dataIndex:'SUBMARCA',editor: {xtype: 'textfield',allowBlank: false}},
 					{text:'Modelo', dataIndex:'MODELO',editor: {xtype: 'numberfield',allowBlank: false}},
 					{text:'Version', dataIndex:'VERSION',editor: {xtype: 'textfield',allowBlank: false}},
-					{text:'Comentarios', dataIndex:'COMENTARIOS',editor: {xtype: 'textfield',allowBlank: true}}
+					{text:'Comentarios', dataIndex:'COMENTARIOS',  renderer: renderTip,editor: {xtype: 'textfield',allowBlank: true},flex: 1}
 			    ],
 			    
 			    height: 350,
@@ -146,7 +146,19 @@ Ext.onReady(function()
 			    		hidden : _GLOBAL_CDSISROL=='TECAUTOS',
 			    		icon    : '${ctx}/resources/fam3icons/icons/add.png',
 						handler: function() {
-							storeClaveAuto.add({'NTRAMITE':panDOcInputNtramite});
+							var malos=0;
+							storeClaveAuto.each(function(record)
+								        {
+								            if(Ext.isEmpty(record.get('MARCA')))
+								            {
+								                malos=malos+1;
+								            }
+								        });
+								        if(malos>0)
+								        {
+								        	mensajeWarning( 'La Marca, Submarca, Modelo y Version es obligatorio');
+								        }else {storeClaveAuto.add({'NTRAMITE':panDOcInputNtramite});}
+							
 							}
 			        },{
 			        	text: 'Eliminar',
@@ -176,47 +188,56 @@ Ext.onReady(function()
 						            }
 						            ,slist1 : []
 						        };
-						    storeClaveAuto.each(function(record)
-						        {
-						        	
-						            debug('record: {} ',record);
-						            
-						            if (!Ext.isEmpty(record.get('MARCA'))) {
-						           json.slist1.push(record.data);
-						            }						            
-						        });
 						        
-						        debug('json:',json.slist1);
+						        var malos=0;
+							storeClaveAuto.each(function(record)
+								        {
+								            if(Ext.isEmpty(record.get('MARCA')))
+								            {
+								                malos=malos+1;
+								            }else if (!Ext.isEmpty(record.get('MARCA'))) {
+								            	//
+								           		json.slist1.push(record.data);
+								            }	
+								        });
+								        if(malos>0)
+								        {
+								        	mensajeWarning( 'La Marca, Submarca, Modelo y Version es obligatorio');
+								        }else{
+								        	//
+											debug('json:',json.slist1);
 						        
-						        if (!Ext.isEmpty(json.slist1)) {
-							        _p55_agregar(json);
-							        var ck = 'Enviando datos de cotizaci\u00f3n';
-						    try {
-						        Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTurnado');
-						        new VentanaTurnado({
-						            cdtipflu  :panDOcInputCdtipflu  
-									,cdflujomc :panDOcInputCdflujomc
-									,tipoent   :panDOcInputTipoent  
-									,claveent  :panDOcInputClaveent 
-									,webid     :panDOcInputWebid    
-									,ntramite  :panDOcInputNtramite 
-									,status    :panDOcInputStatus   
-									,cdunieco  :panDOcInputCdunieco 
-									,cdramo    :panDOcInputCdramo   
-									,estado    :panDOcInputEstado   
-									,nmpoliza  :panDOcInputNmpoliza 
-									,nmsituac  :panDOcInputNmsituac 
-									,nmsuplem  :panDOcInputNmsuplem 
-									,cdusuari  :panDOcInputCdusuari 
-									,aux       :panDOcInputAux
-						            ,cdsisrol  : _GLOBAL_CDSISROL
-						        }).mostrar();
-						    } catch (e) {
-						        manejaException(e, ck);
-						    }
-							    }else{
-							    	 mensajeWarning('No hay datos capturados');
-							    }
+									        if (!Ext.isEmpty(json.slist1)) {
+									        	_p55_agregar(json);
+											    var ck = 'Enviando datos de cotizaci\u00f3n';
+											    try {
+											        Ext.syncRequire(_GLOBAL_DIRECTORIO_DEFINES + 'VentanaTurnado');
+											        new VentanaTurnado({
+											            cdtipflu  :panDOcInputCdtipflu  
+														,cdflujomc :panDOcInputCdflujomc
+														,tipoent   :panDOcInputTipoent  
+														,claveent  :panDOcInputClaveent 
+														,webid     :panDOcInputWebid    
+														,ntramite  :panDOcInputNtramite 
+														,status    :panDOcInputStatus   
+														,cdunieco  :panDOcInputCdunieco 
+														,cdramo    :panDOcInputCdramo   
+														,estado    :panDOcInputEstado   
+														,nmpoliza  :panDOcInputNmpoliza 
+														,nmsituac  :panDOcInputNmsituac 
+														,nmsuplem  :panDOcInputNmsuplem 
+														,cdusuari  :panDOcInputCdusuari 
+														,aux       :panDOcInputAux
+											            ,cdsisrol  : _GLOBAL_CDSISROL
+											        }).mostrar();
+											    } catch (e) {
+											        manejaException(e, ck);
+											    }
+										    }else{
+										    	//
+										    	mensajeWarning('No hay datos capturados');
+										    }
+									}
 						}
 			        
 			        }
@@ -243,6 +264,14 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
+ 
+function renderTip(val, meta, rec, rowIndex, colIndex, store) {
+    // meta.tdCls = 'cell-icon'; // icon
+	//rowIndex.
+    meta.tdAttr = 'data-qtip='+(Ext.isEmpty(val)?'Vacio':val);
+    debug('renderTip {} ',val, meta, rec, rowIndex, colIndex, store);
+    return val;
+}
 
 function _p55_agregar(json){
 	//
