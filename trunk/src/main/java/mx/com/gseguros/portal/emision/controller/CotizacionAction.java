@@ -65,6 +65,7 @@ import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.Reporte;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.ReportesManager;
@@ -10114,6 +10115,32 @@ public class CotizacionAction extends PrincipalCoreAction
 			respuestaOculta = ex.getMessage();
 		}
 		
+		try
+		{
+			/**
+			 * Para consultar si este tramite tiene vigencia de un anio, menor o mayor
+			 */
+			
+			//Se fija valor default ANUAL
+			smap1.put("TIEMPO_VIGENCIA_POLIZA", "ANUAL");
+			
+			RespuestaVO datosVigPol = cotizacionManager.obtieneValidaVigPolizaAnual(
+					smap1.get("cdunieco"), smap1.get("cdramo"), smap1.get("estado"),
+					smap1.get("nmpoliza"));
+			
+			if(datosVigPol != null && !datosVigPol.isSuccess()){
+				smap1.put("TIEMPO_VIGENCIA_POLIZA", "NO_ANUAL");
+			}
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error("Error al cargar datos de aprobacion de cambio de nombre de plan."+timestamp,ex);
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+
 		try
         {
 		    /**

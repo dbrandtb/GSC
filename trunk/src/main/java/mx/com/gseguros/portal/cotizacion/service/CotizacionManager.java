@@ -15,6 +15,7 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 
 
 public interface CotizacionManager
@@ -811,6 +812,8 @@ public interface CotizacionManager
 	        String ntramite
 	        ,String claveProceso
 	        )throws Exception;
+		
+	public RespuestaVO obtieneValidaVigPolizaAnual(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 
 	public Map<String,String> obtieneDatosContratantePoliza(
 			String cdunieco

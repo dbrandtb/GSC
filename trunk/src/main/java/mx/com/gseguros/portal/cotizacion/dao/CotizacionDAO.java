@@ -15,6 +15,7 @@ import mx.com.gseguros.portal.cotizacion.model.PMovMpolisitDTO;
 import mx.com.gseguros.portal.cotizacion.model.PMovTvalositDTO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 
 public interface CotizacionDAO {
 	public void movimientoTvalogarGrupoCompleto(String cdunieco, String cdramo,
@@ -1026,4 +1027,7 @@ public interface CotizacionDAO {
 			String nmpoliza) throws Exception;
 	
 	public void actualizaTramiteOVA(String ntramite	,String nmsolici)throws Exception;
+
+	public RespuestaVO obtieneValidaVigPolizaAnual(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
+	
 }
