@@ -168,6 +168,7 @@ _defaultNmordomProspecto = undefined;// valor default del numero de domicilio de
 var nmorddomProspecto = _defaultNmordomProspecto; 
 
 var _faltaAprobarNombrePlan = false;
+var _vigPolizaAnualValida   = false;
 
 var expande                 = function(){};
 
@@ -1702,6 +1703,7 @@ Ext.onReady(function()
                 {
                     
                     _faltaAprobarNombrePlan = ( !Ext.isEmpty(json.smap1) && !Ext.isEmpty(json.smap1.ESPERA_AUT_NOMPLAN_SUPERV) && "S" == json.smap1.ESPERA_AUT_NOMPLAN_SUPERV)? true : false;
+                    _vigPolizaAnualValida   = ( !Ext.isEmpty(json.smap1) && !Ext.isEmpty(json.smap1.TIEMPO_VIGENCIA_POLIZA) && "ANUAL" == json.smap1.TIEMPO_VIGENCIA_POLIZA)? true : false;
                         
                     //alert('falta aprobar:' + _faltaAprobarNombrePlan);
                     
