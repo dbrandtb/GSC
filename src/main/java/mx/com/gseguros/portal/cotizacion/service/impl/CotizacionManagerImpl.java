@@ -6241,8 +6241,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                         try {
                             auxCell=row.getCell(30);
                             cveAsegurado = auxCell!=null?auxCell.getStringCellValue():"";
-                            bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                            /*boolean exitoValidacion;
+                            boolean exitoValidacion;
                             if(StringUtils.isNotBlank(cveAsegurado)){
                                 long timestamp=System.currentTimeMillis();
                                 Map<String,Object>managerResult=personasManager.obtenerPersonaPorCdperson(cveAsegurado,timestamp);
@@ -6263,7 +6262,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                                 	logger.debug("ID ASEGURADO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
                                 	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
                                 }                                
-                            }*/
+                            }
                         } catch(Exception ex) {
                             filaBuena = false;
                             bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' (AE) de la fila ",fila," "));

@@ -1636,6 +1636,52 @@ Ext.onReady(function()
                             {
                                 mensajeError('No hay grupos para cargar');
                             }
+                            for(var i=0;i<aux;i++)
+                            {
+                                Ext.Ajax.request(
+                                {
+                                    url      : _p21_urlObtenerTvalogarsGrupo
+                                    ,params  :
+                                    {
+                                        'smap1.cdunieco'  : _p21_smap1.cdunieco
+                                        ,'smap1.cdramo'   : _p21_smap1.cdramo
+                                        ,'smap1.estado'   : _p21_smap1.estado
+                                        ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
+                                        ,'smap1.letra'    : resp.slist1[i].letra
+                                        ,'smap1.i'        : i
+                                    }
+                                    ,success : function(response)
+                                    {
+                                        var tvalogars=Ext.decode(response.responseText);
+                                        debug('tvalogars:',tvalogars);
+                                        if(tvalogars.exito)
+                                        {
+                                            aux2=aux2+1;
+                                            debug('cargadas:',aux2);
+                                            var grupo=new _p21_modeloGrupo(resp.slist1[tvalogars.smap1.i]);
+                                            grupo.tvalogars=tvalogars.slist1;
+                                            grupo.valido=true;
+                                            _p21_storeGrupos.add(grupo);
+                                            _p21_storeGrupos.sort('letra','ASC');
+                                            _p21_storeGrupos.commitChanges();
+                                            if(aux2==aux)//tenemos todas las respuestas
+                                            {
+                                                _p21_tabpanel().setLoading(false);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            _p21_tabpanel().setLoading(false);
+                                            mensajeError(tvalogars.respuesta);
+                                        }
+                                    }
+                                    ,failure : function()
+                                    {
+                                        _p21_tabpanel().setLoading(false);
+                                        errorComunicacion();
+                                    }
+                                });
+                            }
                             debug('<callback modificada');
                         });
                         debug('<cargar modificada');
