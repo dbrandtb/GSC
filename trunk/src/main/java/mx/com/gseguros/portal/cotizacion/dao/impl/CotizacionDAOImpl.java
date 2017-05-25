@@ -1261,6 +1261,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"APELLIDO_PATERNO"
 					,"APELLIDO_MATERNO"
 					,"FECHA_NACIMIENTO"
+					,"EDAD"
 					,"SEXO"
 					,"NACIONALIDAD"
 					,"RFC"
@@ -1270,6 +1271,11 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"FAMILIA"
 					,"TITULAR"
 					,"FEANTIGU"
+					,"OCUPACION"
+					,"EXTPRI_OCUPACION"
+					,"PESO"
+					,"ESTATURA"
+					,"EXTPRI_SOBREPESO"
 			};
 			declareParameter(new SqlOutParameter("pv_num_o"   	 , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -7836,11 +7842,20 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			declareParameter(new SqlParameter("limit"    , OracleTypes.VARCHAR));
 			String[] cols=new String[]
 					{
-					"nombre"
+					"NOMBRE"
 					,"nmsituac"
 					,"familia"
 					,"titular"
 					,"parentesco"
+					,"SEGUNDO_NOMBRE"
+					,"APELLIDO_PATERNO"
+					,"APELLIDO_MATERNO"
+					,"FECHA_NACIMIENTO"
+					,"EDAD"
+					,"SEXO"
+					,"FEANTIGU"
+					,"RFC"
+					,"CDPERSON"
 					,"otvalor01","otvalor02","otvalor03","otvalor04","otvalor05","otvalor06","otvalor07","otvalor08","otvalor09","otvalor10"
 					,"otvalor11","otvalor12","otvalor13","otvalor14","otvalor15","otvalor16","otvalor17","otvalor18","otvalor19","otvalor20"
 					,"otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29","otvalor30"

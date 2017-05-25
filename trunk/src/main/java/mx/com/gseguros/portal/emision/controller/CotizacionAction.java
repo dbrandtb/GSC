@@ -3906,7 +3906,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							null  , null , null
 							,cdtipsit , null , cdsisrol
 							,"COTIZACION_GRUPO", "ASEGURADOS", null);
-					gc.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
+					gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
 					imap.put("aseguradosColumns" , gc.getColumns());
 					imap.put("aseguradosFields"  , gc.getFields());
 				}
@@ -6893,8 +6893,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		                		throw new ApplicationException("El Asegurado no puede ir en blanco");
 		                	}
 		                }
-                        bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
-                        /*boolean exitoValidacion;
+                        
+                        boolean exitoValidacion;
                         if(StringUtils.isNotBlank(cveAsegurado) && (Integer.parseInt(cveAsegurado) > 0)){
                             long timestamp=System.currentTimeMillis();
                             Map<String,Object>managerResult=personasManager.obtenerPersonaPorCdperson(cveAsegurado,timestamp);
@@ -6915,7 +6915,7 @@ public class CotizacionAction extends PrincipalCoreAction
                             	logger.debug("ID ASEGURADO: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
                             	bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
                             }                            
-                        }*/
+                        }
                     } catch(Exception ex2) { 
                         logger.warn("error al leer el campo 'Id. Asegurado', se intentara como string ==>");
                         try {
@@ -6927,8 +6927,8 @@ public class CotizacionAction extends PrincipalCoreAction
     		                		throw new ApplicationException("El Asegurado no puede ir en blanco");
     		                	}
     		                }
-                            bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                            /*boolean exitoValidacion;
+                            
+                            boolean exitoValidacion;
                             if(StringUtils.isNotBlank(cveAsegurado)){
                                 long timestamp=System.currentTimeMillis();
                                 Map<String,Object>managerResult=personasManager.obtenerPersonaPorCdperson(cveAsegurado,timestamp);
@@ -6949,7 +6949,7 @@ public class CotizacionAction extends PrincipalCoreAction
                                 	logger.debug("ID ASEGURADO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
                                 	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
                                 }                                
-                            }*/
+                            }
                             
                             //bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
                         } catch(Exception ex) {
@@ -7830,7 +7830,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				                if(
 				                		(
 				                				row.getCell(3) == null
-				                				|| row.getCell(3).getNumericCellValue() == 0d
+				                				|| row.getCell(3).getNumericCellValue() < 0d
 				                		)
 				                		&& (
 				                				row.getCell(4) == null
