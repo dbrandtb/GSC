@@ -4833,6 +4833,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     		 if(elem.get("OTVALOR").trim().equals(otvalor.trim()))	
     		 {
     			otclave = elem.get("OTCLAVE");
+    			break;
     		 }
     	 }
     	 if(otclave==null)
@@ -4842,11 +4843,38 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     	 return otclave;
      }
      
+     @Override
+     public List<Map<String,String>> cargarClavesTtapvat1(
+    		 String cdtabla
+    		 )throws Exception
+     {
+    	 List<Map<String,String>> lista = null;
+    	
+    		 Map<String,String>params=new LinkedHashMap<String,String>();
+        	 params.put("cdtabla" , cdtabla);
+        	 logger.debug(Utils.log(
+        			  "\n*************************************************"
+        			 ,"\n****** P_GET_CATALOGO_TTAPVAT1 *********************"
+        			 ,"\n****** params=",params
+        			 ,"\n*************************************************"
+        	 ));
+        	 Map<String,Object> procResult = ejecutaSP(new CargarClaveTtapvat1(getDataSource()),params);
+        	 lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
+        	 Utils.debugProcedure(logger, "PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1", params, lista);
+    	 if(lista==null||lista.size()==0)
+    	 {
+    		 throw new ApplicationException(Utils.join(
+    				 "No hay registros en la(s) tabla(s) de apoyo"
+    				 ));
+    	 }
+    	 return lista;
+     }
+     
      protected class CargarClaveTtapvat1 extends StoredProcedure
      {
      	protected CargarClaveTtapvat1(DataSource dataSource)
          {
-             super(dataSource,"PKG_SATELITES2.P_GET_CLAVE_TTAPVAT1");
+             super(dataSource,"P_GET_CATALOGO_TTAPVAT1");
              declareParameter(new SqlParameter("cdtabla" , OracleTypes.VARCHAR));
              declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"OTCLAVE","OTVALOR"})));
              declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
