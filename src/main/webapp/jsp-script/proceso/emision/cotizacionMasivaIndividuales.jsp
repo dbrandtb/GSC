@@ -92,13 +92,29 @@ Ext.onReady(function()
     {
         extend  : 'Ext.data.Model'
         ,fields :
-        [
-        	  'adaprc','aeuaycana','ajuridica','avialviajes','benefPref','cdagente','claveve','conductor','cp','ddmpp','ddmpt','descadaptaciones'
-        	 ,'descriee','descripcion','desrec','drc','drt','dterss','ectGm','ectrc','fefin','feini','gestoria','gsasalto','maccidental','modelo','moneda'
-        	 ,'motor','negocio',{name:'nmsituac',type:'int'},'objperdidos','paquete','placas','rcOcupantes','rceco','rcmaniobras','rcremolque','rcruzada','reduceGs','rfc','robop'
-        	 ,'saadaptaciones','saeqesp','sagm','sagssigue','sarcfallecimiento','sarcluc','serie','tipCarga','tipUso','tipoSer','tipoValor','valorVeh'
-        	 ,'yo'
-        ]
+                [
+                     'parametros.pv_otvalor01','parametros.pv_otvalor02','parametros.pv_otvalor03','parametros.pv_otvalor04','parametros.pv_otvalor05'
+                    ,'parametros.pv_otvalor06','parametros.pv_otvalor07','parametros.pv_otvalor08','parametros.pv_otvalor09','parametros.pv_otvalor10'
+                    ,'parametros.pv_otvalor11','parametros.pv_otvalor12','parametros.pv_otvalor13','parametros.pv_otvalor14','parametros.pv_otvalor15'
+                    ,'parametros.pv_otvalor16','parametros.pv_otvalor17','parametros.pv_otvalor18','parametros.pv_otvalor19','parametros.pv_otvalor20'
+                    ,'parametros.pv_otvalor21','parametros.pv_otvalor22','parametros.pv_otvalor23','parametros.pv_otvalor24','parametros.pv_otvalor25'
+                    ,'parametros.pv_otvalor26','parametros.pv_otvalor27','parametros.pv_otvalor28','parametros.pv_otvalor29','parametros.pv_otvalor30'
+                    ,'parametros.pv_otvalor31','parametros.pv_otvalor32','parametros.pv_otvalor33','parametros.pv_otvalor34','parametros.pv_otvalor35'
+                    ,'parametros.pv_otvalor36','parametros.pv_otvalor37','parametros.pv_otvalor38','parametros.pv_otvalor39','parametros.pv_otvalor40'
+                    ,'parametros.pv_otvalor41','parametros.pv_otvalor42','parametros.pv_otvalor43','parametros.pv_otvalor44','parametros.pv_otvalor45'
+                    ,'parametros.pv_otvalor46','parametros.pv_otvalor47','parametros.pv_otvalor48','parametros.pv_otvalor49','parametros.pv_otvalor50'
+                    ,'parametros.pv_otvalor51','parametros.pv_otvalor52','parametros.pv_otvalor53','parametros.pv_otvalor54','parametros.pv_otvalor55'
+                    ,'parametros.pv_otvalor56','parametros.pv_otvalor57','parametros.pv_otvalor58','parametros.pv_otvalor59','parametros.pv_otvalor60'
+                    ,'parametros.pv_otvalor61','parametros.pv_otvalor62','parametros.pv_otvalor63','parametros.pv_otvalor64','parametros.pv_otvalor65'
+                    ,'parametros.pv_otvalor66','parametros.pv_otvalor67','parametros.pv_otvalor68','parametros.pv_otvalor69','parametros.pv_otvalor70'
+                    ,'parametros.pv_otvalor71','parametros.pv_otvalor72','parametros.pv_otvalor73','parametros.pv_otvalor74','parametros.pv_otvalor75'
+                    ,'parametros.pv_otvalor76','parametros.pv_otvalor77','parametros.pv_otvalor78','parametros.pv_otvalor79','parametros.pv_otvalor80'
+                    ,'parametros.pv_otvalor81','parametros.pv_otvalor82','parametros.pv_otvalor83','parametros.pv_otvalor84','parametros.pv_otvalor85'
+                    ,'parametros.pv_otvalor86','parametros.pv_otvalor87','parametros.pv_otvalor88','parametros.pv_otvalor89','parametros.pv_otvalor90'
+                    ,'parametros.pv_otvalor91','parametros.pv_otvalor92','parametros.pv_otvalor93','parametros.pv_otvalor94','parametros.pv_otvalor95'
+                    ,'parametros.pv_otvalor96','parametros.pv_otvalor97','parametros.pv_otvalor98','parametros.pv_otvalor99'
+                    ,'cdplan'                 ,'cdtipsit'               ,'personalizado'          ,{name:'nmsituac',type:'int'}
+                ]
     });
     
 ////// modelos //////
@@ -488,10 +504,10 @@ function _p30_gridBotonEliminarClic(view,row,col,item,e,record)
 
 function _p30_renderer(record,mapeo)
 {
-//         debug('>_p30_renderer',mapeo,record.data);
-//         label='N/A';        
-//         var valor  = record.get(name);
-//         label=valor;
+        debug('>_p30_renderer',mapeo,record.data);
+        label='N/A';        
+        var valor  = record.get(name);
+        label=valor;
    		return '.!.';
 }
 //////funciones //////

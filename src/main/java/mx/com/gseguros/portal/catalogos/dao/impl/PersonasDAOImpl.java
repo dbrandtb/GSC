@@ -43,7 +43,7 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 	public List<Map<String,String>>obtenerPersonasPorRFC(String rfc, String nombre, String nombre2, String apat, String amat,
             String validaTienePoliza) throws Exception {
 	    Map<String, String> params = new LinkedHashMap<String, String>();
-	    params.put("pv_cdrfc_i"    , rfc);
+	    params.put("pv_cdrfc_i"    , rfc.trim());
         params.put("pv_dsnombre_i" , nombre);
         params.put("pv_dsnombre1_i" , nombre2);
         params.put("pv_dsapellido_i"   , apat);
