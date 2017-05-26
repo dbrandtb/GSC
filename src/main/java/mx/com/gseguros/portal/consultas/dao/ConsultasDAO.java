@@ -711,7 +711,4 @@ public interface ConsultasDAO
 	        String estado, 
 	        String nmpoliza, 
 	        String nmsuplem) throws Exception;
-	
-	public List<Map<String,String>> recuperarNombreDocumentosCotizacion(String ntramite) throws Exception;
-	
 }
