@@ -7666,7 +7666,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			String nmsuplem, String nmrecibo, String nmimpres, String cdtipsup, UserVO usuarioSesion, String cdusuari,
 			String cdsisrol, FlujoVO flujo) throws Exception 
 	{	
-		//codigo recuperado de gseguros que no existia en gseguros_clientes_preprod
+		//codigo recuperado de gseguros que no existia en gseguros_clientes
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				,"\n@@@@@@ guardarEndosoDespago @@@@@@"

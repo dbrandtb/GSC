@@ -1776,7 +1776,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                       if(modPrim.isEmpty())
 	                        {   
 	                            String facultada = modificaPrimas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, resp.getSmap().get("nmpoliza")==null?nmsolici:resp.getSmap().get("nmpoliza") , cdtipsit,parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-	                            resp.setRespuesta(facultada.substring(1,(facultada.length()-1)));
+	                            resp.setRespuesta(StringUtils.isBlank(facultada)?"":facultada.substring(1,(facultada.length()-1)));
 	                        }
 
 	                    logger.debug(Utils.log(paqYplan));
