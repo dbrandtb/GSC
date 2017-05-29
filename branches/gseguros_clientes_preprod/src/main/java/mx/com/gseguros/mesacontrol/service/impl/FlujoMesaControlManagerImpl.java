@@ -13,6 +13,7 @@ import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import mx.com.gseguros.exception.ApplicationException;
@@ -83,6 +84,9 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
+	
+	@Value("${ruta.documentos.poliza}")
+    private String rutaDocumentosPoliza;
 	
 	@Override
 	public Map<String,Item> workflow(String cdsisrol) throws Exception
@@ -3384,12 +3388,28 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			));
 			
 			if (StringUtils.isNotBlank(params.get("dsdestino")) && !params.get("dsdestino").contains("()")){
+				//req0005 debo obtener el numero de cotizacion de dsmensaje para poder identificar el nombre del archivo a adjuntar				
+				List<Map<String,String>> listaDocumentos = new ArrayList<Map<String, String>>();
+				listaDocumentos = consultasDAO.recuperarNombreDocumentosCotizacion(flujo.getNtramite());
+				
+				//debo adjuntar tantos documentos como tenga la lista
+				int cantidadDocumentos = listaDocumentos.size();
+				String[] archivos = new String [cantidadDocumentos];
+				//for(Map<String,String>documento:listaDocumentos){
+				for(int i=0; i<cantidadDocumentos; i++){
+					String archivo = rutaDocumentosPoliza + "/" + flujo.getNtramite() + "/" + listaDocumentos.get(i).get("CDDOCUME");
+					logger.debug("archivo a adjuntar: " + archivo);
+					archivos[i] = archivo;
+				}
+				
+				//continua flujo normal
 				boolean enviado = mailService.enviaCorreo(StringUtils.split(params.get("dsdestino"),";"), 
 						  new String[]{}, 
 						  new String[]{}, 
 						  params.get("dsasunto"), 
 						  params.get("dsmensaje"), 
-						  new String[]{}, 
+						  //new String[]{},
+						  archivos,
 						  true);
 				if(!enviado){
 					throw new ApplicationException("No se pudo enviar el correo a "+params.get("dsdestino"));
@@ -4127,5 +4147,22 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	        Utils.generaExcepcion(ex, paso);
 	    }
 	    return suplemento;
+	}
+	
+	@Override
+	public int obtenerCantidadDocumentosCotizacion(String ntramite) throws Exception{
+	    //REQ0005 adjuntar documento de cotizacion
+		int cantidadDocumentos = 0;
+	    String paso = "Obteniendo cantidad de documentos del tramite: " + ntramite;
+	    List<Map<String,String>> listaDocumentos = new ArrayList<Map<String, String>>();
+	    try{
+	    	listaDocumentos = consultasDAO.recuperarNombreDocumentosCotizacion(ntramite);
+	    	cantidadDocumentos = listaDocumentos.size();
+			
+	    }
+	    catch(Exception ex){
+	        Utils.generaExcepcion(ex, paso);
+	    }
+	    return cantidadDocumentos;
 	}
 }

@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jdbc.support.oracle.SqlArrayValue;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -819,4 +820,67 @@ public class DespachadorDAOImpl extends AbstractManagerDAO implements Despachado
             compile();
         }
     }
+    
+	@Override
+	public List<Map<String, String>> recuperarClaveAutoFlujo (String ntramite) throws Exception {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("pv_ntramite_i" , ntramite);
+		
+		Map<String, Object> procRes = ejecutaSP(new RecuperarClaveAutosFlujo(getDataSource()), params);
+		List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+		
+		logger.debug("<<<>>> Configuraciones Obtenidas TUNIPERM: " + lista);
+		
+		return lista;
+	}
+	
+	protected class RecuperarClaveAutosFlujo extends StoredProcedure {
+		protected RecuperarClaveAutosFlujo (DataSource dataSource) {
+			super(dataSource, "PKG_MESACONTROL_PRE.P_GET_CLAVE_AUTO_FLUJO");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			String[] cols = new String[] {
+					"NTRAMITE" , "MARCA" , "SUBMARCA" , "MODELO", "VERSION", "COMENTARIOS"};		
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void guardaClaveAutosFlujo (String ntramite, List<Map<String,String>> lista) throws Exception {
+		Map<String,Object> params = new LinkedHashMap<String,Object>();
+		logger.debug("lista{}"+lista);
+		params.put("pv_ntramite_i" , ntramite);
+		String[][] array = new String[lista.size()][];
+		logger.debug("params{}"+params);
+		int i = 0;
+		for(Map<String,String> permiso : lista)
+		{
+			array[i++] = new String[]{
+					permiso.get("NTRAMITE"),
+					permiso.get("MARCA"),
+					permiso.get("SUBMARCA"),
+					permiso.get("MODELO"),
+					permiso.get("VERSION"),
+					permiso.get("COMENTARIOS")
+			};
+		}
+		
+		params.put("array" , new SqlArrayValue(array));
+		
+		ejecutaSP(new GuardaClaveAutoFlujo(getDataSource()), params);
+		logger.debug("params{}"+params);
+	}
+	
+	protected class GuardaClaveAutoFlujo extends StoredProcedure {
+		protected GuardaClaveAutoFlujo (DataSource dataSource) {
+			super(dataSource, "PKG_MESACONTROL_PRE.P_MOV_CLAVE_AUTO");
+			declareParameter(new SqlParameter("array"    , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
