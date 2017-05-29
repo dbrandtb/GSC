@@ -4,17 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.model.FlujoVO;
-import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
-import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.general.dao.PantallasDAO;
-import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.util.GeneradorCampos;
-import mx.com.gseguros.utils.Utils;
-
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -27,6 +16,17 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
+
+import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.mesacontrol.model.FlujoVO;
+import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.dao.PantallasDAO;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.utils.Utils;
 
 @Controller
 @Scope("prototype")
@@ -89,7 +89,7 @@ public class DemosAction extends PrincipalCoreAction
 					throw new ApplicationException("No hay datos de flujo");
 				}
 				
-				String pantalla = flujo.getAux();
+				String pantalla = null;//flujo.getAux(); // TODO: descomentar
 				
 				Utils.validate(
 						pantalla , "No se recibi\u00f3 la pantalla (aux)"

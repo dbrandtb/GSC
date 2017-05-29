@@ -46,10 +46,6 @@ var _TIPOFLOT =  _8_smap1.TIPOFLOT;
 
 debug('_8_smap1:',_8_smap1);
 
-var _p8_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_p8_flujo:',_p8_flujo);
-
 //
 //// variables //////
 ///////////////////////
@@ -435,12 +431,6 @@ function _8_confirmar()
             ,slist1: updateGroups
             ,slist2: noUpdateGroups
         }
-        
-        if(!Ext.isEmpty(_p8_flujo))
-        {
-            json.flujo = _p8_flujo;
-        }
-        
         debug('datos que se enviaran:',json);
         _setLoading(true,_8_panelPri);
         Ext.Ajax.request(

@@ -237,47 +237,6 @@ public class PantallasManagerImpl implements PantallasManager
 		List<Map<String, String>>  res = pantallasDAO.obtienePantalla(params);
 		return res.get(0); 
     }
-	
-	@Override
-	public List<ComponenteVO> recuperarComboDocs(String proceso)
-	{
-		long stamp = System.currentTimeMillis();
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ recuperarComboDocs @@@@@@"
-				,"\n@@@@@@ stamp="   , stamp
-				,"\n@@@@@@ proceso=" , proceso
-				));
-		
-		List<ComponenteVO> lista = new ArrayList<ComponenteVO>();
-		
-		try
-		{
-			lista = pantallasDAO.obtenerComponentes(
-					null//cdtiptra
-					,null//cdunieco
-					,null//cdramo
-					,null//cdtipsit
-					,null//estado
-					,proceso//cdsisrol
-					,"_C2_VENTANA_DOCS"//pantalla
-					,"COMBO_DOCS"//seccion
-					,null//orden
-					);
-		}
-		catch(Exception ex)
-		{
-			logger.error(Utils.join("Error al recuperar combo de docs #",stamp),ex);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ stamp=" , stamp
-				,"\n@@@@@@ lista=" , lista
-				,"\n@@@@@@ recuperarComboDocs @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
-		return lista;
-	}
 
 	///////////////////////////////
 	////// getters y setters //////

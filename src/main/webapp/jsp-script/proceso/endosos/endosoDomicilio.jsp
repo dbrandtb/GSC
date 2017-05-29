@@ -67,11 +67,6 @@ debug('inputCdrfcp4'           , inputCdrfcp4);
 debug('inputCdtipsit'          , inputCdtipsit);
 debug('inputNtramite'          , inputNtramite);
 debug('inputEndosoSimple'      , inputEndosoSimple);
-
-var _enddom_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_enddom_flujo:',_enddom_flujo);
-
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -325,28 +320,20 @@ Ext.onReady(function(){
                     if(this.up().up().getForm().isValid())
                     {
                         _setLoading(true,this.up().up());
-                        
-                        var submitParams =
-                        {
-                            'smap1.pv_cdunieco' : inputCduniecop4,
-                            'smap1.pv_cdramo'   : inputCdramop4,
-                            'smap1.pv_estado'   : inputEstadop4,
-                            'smap1.pv_nmpoliza' : inputNmpolizap4,
-                            'smap1.pv_nmsituac' : inputNmsituacp4,
-                            'smap1.pv_cdperson' : inputCdpersonp4,
-                            'smap1.pv_cdrol'    : inputCdrolp4,
-                            'smap2.cdtipsit'    : inputCdtipsit
-                        };
-                        
-                        if(!Ext.isEmpty(_enddom_flujo))
-                        {
-                            submitParams = _flujoToParams(_enddom_flujo,submitParams);
-                        }
-                        
                         this.up().up().getForm().submit(
                         {
-                            params  : submitParams,
-                            success : function(response,opts)
+                            params:
+                            {
+                                'smap1.pv_cdunieco' : inputCduniecop4,
+                                'smap1.pv_cdramo'   : inputCdramop4,
+                                'smap1.pv_estado'   : inputEstadop4,
+                                'smap1.pv_nmpoliza' : inputNmpolizap4,
+                                'smap1.pv_nmsituac' : inputNmsituacp4,
+                                'smap1.pv_cdperson' : inputCdpersonp4,
+                                'smap1.pv_cdrol'    : inputCdrolp4,
+                                'smap2.cdtipsit'    : inputCdtipsit
+                            },
+                            success:function(response,opts)
                             {
                                 _setLoading(false,formPanelp4);
                                 var json=Ext.decode(opts.response.responseText);
@@ -414,7 +401,6 @@ Ext.onReady(function(){
                         ,width       : 600
                         ,height      : 400
                         ,autoScroll  : true
-                        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
                         ,loader      :
                         {
                             url       : enddomUrlDoc
