@@ -58,4 +58,8 @@ public interface DespachadorDAO {
     public List<Map<String, String>> recuperarLogDespachadorZona (String ntramite, String cdunieco, String estatus) throws Exception;
     
     public List<Map<String, String>> recuperarDetallesMesaHora (String ntramite) throws Exception;
+    
+    public List<Map<String, String>> recuperarClaveAutoFlujo(String ntramite) throws Exception;
+    
+    public void guardaClaveAutosFlujo(String ntramite, List<Map<String, String>>slist1) throws Exception;
 }

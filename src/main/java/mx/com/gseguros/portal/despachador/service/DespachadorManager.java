@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.despachador.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -90,4 +91,19 @@ public interface DespachadorManager {
  
     public Map<String, Item> pantallaDatos() throws Exception;
     
+
+    /**
+     * Recupera, Autos Capturados para Rol Tecnico Autos
+     * @param ntramite
+     * @throws Exception
+     */
+    public List<Map<String, String>> claveAutoFlujo(String ntramite) throws Exception;
+    
+    /**
+     * Guarda, Autos Capturados
+     * @param ntramite
+     * @param slist1
+     * @throws Exception
+     */
+    public void guardaClaveAutoFlujo(String ntramite, List<Map<String,String>>  slist1) throws Exception;
 }

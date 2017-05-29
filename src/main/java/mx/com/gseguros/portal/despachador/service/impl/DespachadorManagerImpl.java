@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.despachador.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -724,7 +725,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 }
                 
                 try {
-                    paso = "Enviando correos configurados";
+                    paso = "Enviando correos configurados 1";
                     logger.debug(paso);
                     flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
                             correosRecibidos);
@@ -906,7 +907,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                         }
                         
                         try {
-                            paso = "Enviando correos configurados";
+                            paso = "Enviando correos configurados 2";
                             logger.debug(paso);
                             flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
                                     correosRecibidos);
@@ -974,7 +975,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                         }
                         
                         try {
-                            paso = "Enviando correos configurados";
+                            paso = "Enviando correos configurados 3";
                             logger.debug(paso);
                             flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
                                     correosRecibidos);
@@ -1178,7 +1179,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                     );
             
             try {
-                paso = "Enviando correos configurados";
+                paso = "Enviando correos configurados 4";
                 logger.debug(paso);
                 flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, false);
             } catch (Exception ex) {
@@ -1278,5 +1279,34 @@ K                   ENCOLAR CON DATOS ORIGINALES
             Utils.generaExcepcion(ex, paso);
         }
         return items;
+    }
+    
+    @Override
+    public List<Map<String, String>> claveAutoFlujo(String ntramite) throws Exception {
+    	String paso = null;
+    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
+    	
+    	try {
+    		lista = despachadorDAO.recuperarClaveAutoFlujo(ntramite);
+    	} catch (Exception ex) {
+    		Utils.generaExcepcion(ex, paso);
+    	}
+    	return lista;
+    }
+    
+    @Override
+    public void guardaClaveAutoFlujo(String ntramite, List<Map<String,String>> slist1) throws Exception {
+    	String paso = null;
+    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
+    	
+    	try {
+    		
+    		for(Map<String,String>inciso:slist1)
+			{
+    			despachadorDAO.guardaClaveAutosFlujo(ntramite, slist1);
+			}
+    	} catch (Exception ex) {
+    		Utils.generaExcepcion(ex, paso);
+    	}
     }
 }

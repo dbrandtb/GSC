@@ -969,6 +969,10 @@
             </interceptor-ref>
             <result type="json" />
         </action>
+        
+        <action name="includes/claveAutoFlujo" class="EndososAction" >
+            <result name="success">/jsp/extjs4/ventanaClaveAuto.jsp</result>
+        </action>
     
 </package>
 

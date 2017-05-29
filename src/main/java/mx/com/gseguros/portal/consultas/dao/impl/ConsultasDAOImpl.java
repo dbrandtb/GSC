@@ -6049,4 +6049,34 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
             compile();
         }
     }
+    @Override
+    public List<Map<String,String>> recuperarNombreDocumentosCotizacion(String ntramite) throws Exception
+    {
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        params.put("ntramite" , ntramite);
+        Map<String,Object>       procResult = ejecutaSP(new RecuperarNombreDocumentosCotizacion(getDataSource()),params);
+        List<Map<String,String>> lista      = (List<Map<String,String>>)procResult.get("pv_registro_o");
+        if(lista==null)
+        {
+            lista = new ArrayList<Map<String,String>>();
+        }
+        return lista;
+    }
+    
+    protected class RecuperarNombreDocumentosCotizacion extends StoredProcedure
+    {
+        protected RecuperarNombreDocumentosCotizacion(DataSource dataSource)
+        {
+            super(dataSource , "P_GET_NOMBRE_DOC_COTIZACION");
+            declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+            String[] cols = new String[]{
+                    "CDDOCUME"
+            };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
 }
