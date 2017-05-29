@@ -162,63 +162,9 @@ public class EndososAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
-
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-
-	@Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-	
-	@Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-	
-	@Value("${ruta.documentos.temporal}")
-    private String rutaDocumentosTemporal;
-	
-	@Value("${recibo.impresion.autos.url}")
-    private String reciboImpresionAutosUrl;
-
-	@Value("${caic.impresion.autos.url}")
-    private String caicImpresionAutosUrl;	
-	
-	@Value("${aeua.impresion.autos.url}")
-    private String aeuaImpresionAutosUrl;	
-	
-	@Value("${ap.impresion.autos.url}")
-    private String apImpresionAutosUrl;
-
-	@Value("${incisos.flotillas.impresion.autos.url}")
-    private String incisosFlotillasImpresionAutosUrl;	
 	
 	@Value("${incisos.flotillas.excel.impresion.autos.url}")
-	private String incisosFlotillasExcelImpresionAutosUrl;	
-				
-	@Value("${tarjeta.iden.impresion.autos.url}")
-    private String tarjetaIdenImpresionAutosUrl;				
-					
-	@Value("${numero.incisos.reporte}")
-    private String numeroIncisosReporte;
-	
-	@Value("${caratula.impresion.autos.url}")
-    private String caratulaImpresionAutosUrl;
-	
-	@Value("${caratula.impresion.autos.endosob.url}")
-    private String caratulaImpresionAutosEndosobUrl;
-	
-	@Value("${caratula.impresion.autos.serviciopublico.url}")
-    private String caratulaImpresionAutosServiciopublicoUrl;
-	
-	@Value("${caratula.impresion.autos.flotillas.url}")
-    private String caratulaImpresionAutosFlotillasUrl;
-
-	@Value("${manual.agente.txtinfocobredgs}")
-    private String manualAgenteTxtinfocobredgs;
-	
-	@Value("${manual.agente.condgralescobsegvida}")
-    private String manualAgenteCondgralescobsegvida;
-	
-	@Value("${manual.agente.txtinfocobgesgs}")
-    private String manualAgenteTxtinfocobgesgs;
+	private String incisosFlotillasExcelImpresionAutosUrl;
 	
 	@Value("${caratula.impresion.autos.docextra.url}")
     private String caratulaImpresionAutosDocExtra;
@@ -372,12 +318,6 @@ public class EndososAction extends PrincipalCoreAction
 			gc.generaComponentes(componentes, true, false, false, true, false, false);
 			columnas = gc.getColumns().toString();
 			logger.debug("columnasTatrisit=" + columnas);
-			try{
-				slist2=consultasPolizaManager.obtieneCoberturas(smap1.get("CDRAMO"), smap1.get("CDTIPSIT"), smap1.get("CDMEJRED"));
-			}catch(Exception ex){
-				logger.error("Error obteniendo coberturas. {}",ex);
-				
-			}
 			
 		} catch (Exception e) {
 			Utils.manejaExcepcion(e);
@@ -1098,17 +1038,10 @@ public class EndososAction extends PrincipalCoreAction
 			String estado   = smap1.get("estado");
 			String nmpoliza = smap1.get("nmpoliza");
 			
-			String cdtipsupEntrada = smap1.get("cdtipsup");
-			
-			logger.debug("<<<<<< Tipo suplemento para EndosoNombreSimple >>>>>>: " + cdtipsupEntrada);
-			
 			// Validacion de endoso simple:
-			if(TipoEndoso.CORRECCION_DATOS_ASEGURADOS.getCdTipSup().toString().equalsIgnoreCase(cdtipsupEntrada)){
-				logger.debug(">>>>>> Validando Endoso Simple");
-				boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
-				if(!permitido) {
-					throw new ApplicationException(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
-				}
+			boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
+			if(!permitido) {
+				throw new ApplicationException(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
 			}
 			
 			// Valida si hay un endoso anterior pendiente, sino lanzamos una excepcion con el mensaje de error:
@@ -1318,7 +1251,7 @@ public class EndososAction extends PrincipalCoreAction
 			    		);
 			    logger.debug("documentos que se regeneran: "+listaDocu);
 			    
-			    String rutaCarpeta=this.rutaDocumentosPoliza+"/"+listaDocu.get(0).get("ntramite");
+			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu) {
@@ -1327,10 +1260,10 @@ public class EndososAction extends PrincipalCoreAction
 					String nmsituac=docu.get("nmsituac");
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
-					String url=this.rutaServidorReports
+					String url=this.getText("ruta.servidor.reports")
 							+ "?destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+this.passServidorReports
+							+ "&userid="+this.getText("pass.servidor.reports")
 							+ "&report="+descripl
 							+ "&paramform=no"
 							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -1667,7 +1600,7 @@ public class EndososAction extends PrincipalCoreAction
 				    		);
 				    logger.debug("documentos que se regeneran: "+listaDocu);
 				    
-				    String rutaCarpeta=this.rutaDocumentosPoliza+"/"+listaDocu.get(0).get("ntramite");
+				    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 				    
 					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 					for(Map<String,String> docu:listaDocu) {
@@ -1676,10 +1609,10 @@ public class EndososAction extends PrincipalCoreAction
 						String nmsituac=docu.get("nmsituac");
 						String descripc=docu.get("descripc");
 						String descripl=docu.get("descripl");
-						String url=this.rutaServidorReports
+						String url=this.getText("ruta.servidor.reports")
 								+ "?destype=cache"
 								+ "&desformat=PDF"
-								+ "&userid="+this.passServidorReports
+								+ "&userid="+this.getText("pass.servidor.reports")
 								+ "&report="+descripl
 								+ "&paramform=no"
 								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -1953,7 +1886,7 @@ public class EndososAction extends PrincipalCoreAction
 			    		);
 			    logger.debug("documentos que se regeneran: "+listaDocu);
 			    
-			    String rutaCarpeta=this.rutaDocumentosPoliza+"/"+listaDocu.get(0).get("ntramite");
+			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu) {
@@ -1962,10 +1895,10 @@ public class EndososAction extends PrincipalCoreAction
 					String nmsituac=docu.get("nmsituac");
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
-					String url=this.rutaServidorReports
+					String url=this.getText("ruta.servidor.reports")
 							+ "?destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+this.passServidorReports
+							+ "&userid="+this.getText("pass.servidor.reports")
 							+ "&report="+descripl
 							+ "&paramform=no"
 							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -2302,15 +2235,15 @@ public class EndososAction extends PrincipalCoreAction
 					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 					for(Map<String,String> docu:listaDocu) {
 						
-						String rutaCarpeta=this.rutaDocumentosPoliza+"/"+listaDocu.get(0).get("ntramite");
+						String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 						
 						logger.debug("docu iterado: "+docu);
 						String descripc=docu.get("descripc");
 						String descripl=docu.get("descripl");
-						String url=this.rutaServidorReports
+						String url=this.getText("ruta.servidor.reports")
 								+ "?destype=cache"
 								+ "&desformat=PDF"
-								+ "&userid="+this.passServidorReports
+								+ "&userid="+this.getText("pass.servidor.reports")
 								+ "&report="+descripl
 								+ "&paramform=no"
 								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -3067,9 +3000,9 @@ public class EndososAction extends PrincipalCoreAction
 							   nmpoliza = (String)omap1.get("pv_nmpoliza_i"),
 							   nmsuplem = smap2.get("pv_nmsuplem_o");
 
-						String rutaReports    = rutaServidorReports;
-						String passReports    = passServidorReports;
-						String rutaDocumentos = rutaDocumentosTemporal;
+						String rutaReports    = getText("ruta.servidor.reports");
+						String passReports    = getText("pass.servidor.reports");
+						String rutaDocumentos = getText("ruta.documentos.temporal");
 						String tipoFlotilla   = (String)omap1.get("tipoflot");
 						String nombreReporte  = getText("rdf.endosos.nombre.auto.individual");
 						String cdperpag       = smap1.get("CDPERPAG");
@@ -3194,7 +3127,7 @@ public class EndososAction extends PrincipalCoreAction
 					    
 					    if(!CollectionUtils.isEmpty(docs)) {
 					    	
-					    	String rutaCarpeta= new StringBuilder(this.rutaDocumentosPoliza)
+					    	String rutaCarpeta= new StringBuilder(this.getText("ruta.documentos.poliza"))
 			    				.append("/").append(docs.get(0).get("ntramite")).toString();
 			    
 							//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
@@ -3205,10 +3138,10 @@ public class EndososAction extends PrincipalCoreAction
 								String descripc = doc.get("descripc");
 								String descripl = doc.get("descripl");
 								
-								String url = new StringBuilder(this.rutaServidorReports)
+								String url = new StringBuilder(this.getText("ruta.servidor.reports"))
 										.append("?destype=cache")
 										.append("&desformat=PDF")
-										.append("&userid=").append(this.passServidorReports)
+										.append("&userid=").append(this.getText("pass.servidor.reports"))
 										.append("&report=").append(descripl)
 										.append("&paramform=no").append("&ACCESSIBLE=YES") //habilita salida en PDF
 										.append("&p_unieco=").append((String)omap1.get("pv_cdunieco_i"))
@@ -3250,7 +3183,7 @@ public class EndososAction extends PrincipalCoreAction
 							String nmtramite = ntramite;//docs.get(0).get("ntramite");
 							// En este caso tipomov y cdtipsup son iguales: 
 							String tipomov = tipoEndoso.getCdTipSup().toString();
-							String rutaCarpeta= new StringBuilder(this.rutaDocumentosPoliza)
+							String rutaCarpeta= new StringBuilder(this.getText("ruta.documentos.poliza"))
 		    				.append("/").append(nmtramite).toString();
 							
 							ice2sigsService.ejecutaWSrecibos((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), 
@@ -3860,7 +3793,7 @@ public String retarificarEndosos()
 				    		);
 				    logger.debug("documentos que se regeneran: "+listaDocu);
 				    
-				    String rutaCarpeta=this.rutaDocumentosPoliza+"/"+listaDocu.get(0).get("ntramite");
+				    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 				    
 					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 					for(Map<String,String> docu:listaDocu) {
@@ -3869,10 +3802,10 @@ public String retarificarEndosos()
 						String nmsituac=docu.get("nmsituac");
 						String descripc=docu.get("descripc");
 						String descripl=docu.get("descripl");
-						String url=this.rutaServidorReports
+						String url=this.getText("ruta.servidor.reports")
 								+ "?destype=cache"
 								+ "&desformat=PDF"
-								+ "&userid="+this.passServidorReports
+								+ "&userid="+this.getText("pass.servidor.reports")
 								+ "&report="+descripl
 								+ "&paramform=no"
 								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -4121,7 +4054,7 @@ public String retarificarEndosos()
 							);
 					logger.debug("documentos que se regeneran: "+listaDocu);
 					
-					String rutaCarpeta=this.rutaDocumentosPoliza+"/"+listaDocu.get(0).get("ntramite");
+					String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
 					
 					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 					for(Map<String,String> docu:listaDocu) {
@@ -4130,10 +4063,10 @@ public String retarificarEndosos()
 						String nmsituac=docu.get("nmsituac");
 						String descripc=docu.get("descripc");
 						String descripl=docu.get("descripl");
-						String url=this.rutaServidorReports
+						String url=this.getText("ruta.servidor.reports")
 								+ "?destype=cache"
 								+ "&desformat=PDF"
-								+ "&userid="+this.passServidorReports
+								+ "&userid="+this.getText("pass.servidor.reports")
 								+ "&report="+descripl
 								+ "&paramform=no"
 								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -5629,7 +5562,6 @@ public String retarificarEndosos()
 			}
 			
 			if (respConfirmacionEndoso.isConfirmado()) {
-				endosoConfirmado = true;
 			
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
@@ -5644,11 +5576,11 @@ public String retarificarEndosos()
 						,DocumentosManager.PROCESO_ENDOSO
 						,ntramite
 						,null //nmsolici
-                        ,null
+, null
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
-				String rutaCarpeta = Utils.join(this.rutaDocumentosPoliza,"/",ntramite);
+				String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
 				
 				String sucursal = cdunieco;
 				
@@ -5666,8 +5598,6 @@ public String retarificarEndosos()
 			}
 			else
 			{
-				endosoConfirmado = false;
-				
 				String mensajeInvalido = "";
 				if(alta&&invalidos.size()>0)
 				{
@@ -5704,7 +5634,6 @@ public String retarificarEndosos()
 				 "\n###### success = " , success
 				,"\n###### error   = " , error
 				,"\n###### mensaje = " , mensaje
-				,"\n###### endosoConfirmado = " , endosoConfirmado
 				,"\n###### guardarEndosoAltaBajaAsegurado ######"
 				,"\n############################################"
 				));
@@ -6044,7 +5973,7 @@ public String retarificarEndosos()
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
-				String rutaCarpeta = Utils.join(this.rutaDocumentosPoliza,"/",ntramite);
+				String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
 				
 				/*
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
@@ -6057,17 +5986,17 @@ public String retarificarEndosos()
 			    		);
 			    logger.debug("documentos que se regeneran: "+listaDocu);
 			    
-			    String rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu) {
 					logger.debug("docu iterado: "+docu);
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
-					String url=this.rutaServidorReports
+					String url=this.getText("ruta.servidor.reports")
 							+ "?destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+this.passServidorReports
+							+ "&userid="+this.getText("pass.servidor.reports")
 							+ "&report="+descripl
 							+ "&paramform=no"
 							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -6464,7 +6393,7 @@ public String retarificarEndosos()
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
-				String rutaCarpeta = Utils.join(this.rutaDocumentosPoliza,"/",ntramite);
+				String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
 				String saludDanios = "S";
 				ClienteGeneral clienteGeneral = new ClienteGeneral();
 				clienteGeneral.setClaveCia(saludDanios);
@@ -7235,7 +7164,7 @@ public String retarificarEndosos()
 				,null
 			);
 			nmsolici    = datosPoliza.get("nmsolici");
-			rutaCarpeta = Utils.join(this.rutaDocumentosPoliza,"/",ntramiteEmi);
+			rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramiteEmi);
 			
 			String sucursal = cdunieco;
 			
@@ -7476,10 +7405,10 @@ public String retarificarEndosos()
 		
 		logger.debug("endosoDomicilioFull()");
 		logger.debug(new StringBuilder("\n")
-		.append("\n#####################################")
-		.append("\n#####################################")
-		.append("\n###### endosoDomicilioAutoFull ######")
-		.append("\n######                         ######").toString());
+				.append("\n#####################################")
+				.append("\n#####################################")
+				.append("\n###### endosoDomicilioAutoFull ######")
+				.append("\n######                         ######").toString());
 		
 		try{
 			
@@ -7488,7 +7417,7 @@ public String retarificarEndosos()
 			paramsValues.put("param2", smap1.get("CDRAMO"));
 			paramsValues.put("param3", smap1.get("ESTADO"));
 			paramsValues.put("param4", smap1.get("NMPOLIZA"));
-			paramsValues.put("param5", "0");// nmsituac contrantante auto
+			paramsValues.put("param5", "0");//nmsituac contrantante auto
 			paramsValues.put("param6", "1");// rol para contratante
 			paramsValues.put("param7", null);
 			
@@ -7499,9 +7428,9 @@ public String retarificarEndosos()
 				Map<String,String> datos = datosContr.get(0);
 				smap1.put("nmsituac", datos.get("NMSITUAC"));
 				smap1.put("cdperson", datos.get("CDPERSON"));
-				smap1.put("cdrol"   , datos.get("CDROL"));
+				smap1.put("cdrol", datos.get("CDROL"));
 			}else{
-			    message = "Error al obtener datos de contratante para pantalla de endoso de domicilio autos";
+				message = "Error al obtener datos de contratante para pantalla de endoso de domicilio autos";
 				logger.error(message);
 				return ERROR;
 			}
@@ -7938,7 +7867,7 @@ public String retarificarEndosos()
 						);
 				
 				String nmsolici    = datosPoliza.get("nmsolici");
-				String rutaCarpeta = Utils.join(this.rutaDocumentosPoliza,"/",ntramite);
+				String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
 				
 				/*
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
@@ -7951,7 +7880,7 @@ public String retarificarEndosos()
 			    		);
 			    logger.debug("documentos que se regeneran: "+listaDocu);
 			    
-			    String rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu) {
@@ -7960,10 +7889,10 @@ public String retarificarEndosos()
 					//String nmsituac=docu.get("nmsituac");
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
-					String url=this.rutaServidorReports
+					String url=this.getText("ruta.servidor.reports")
 							+ "?destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+this.passServidorReports
+							+ "&userid="+this.getText("pass.servidor.reports")
 							+ "&report="+descripl
 							+ "&paramform=no"
 							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -8365,7 +8294,7 @@ public String retarificarEndosos()
 							);
 					
 					String nmsolici    = datosPoliza.get("nmsolici");
-					String rutaCarpeta = Utils.join(this.rutaDocumentosPoliza,"/",ntramite);
+					String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
 					
 					/*
 					List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(
@@ -8378,7 +8307,7 @@ public String retarificarEndosos()
 							);
 					logger.debug("documentos que se regeneran: "+listaDocu);
 					
-					String rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+					String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 					
 					//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 					for(Map<String,String> docu:listaDocu) {
@@ -8387,10 +8316,10 @@ public String retarificarEndosos()
 						//String nmsituac=docu.get("nmsituac");
 						String descripc=docu.get("descripc");
 						String descripl=docu.get("descripl");
-						String url=this.rutaServidorReports
+						String url=this.getText("ruta.servidor.reports")
 								+ "?destype=cache"
 								+ "&desformat=PDF"
-								+ "&userid="+this.passServidorReports
+								+ "&userid="+this.getText("pass.servidor.reports")
 								+ "&report="+descripl
 								+ "&paramform=no"
 								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -9253,7 +9182,7 @@ public String retarificarEndosos()
 	    {
 	    	ntramite = listaDocu.get(0).get("ntramite");
 	    }
-	    String rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+	    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 	    
 		//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 		for(Map<String,String> docu:listaDocu)
@@ -9262,10 +9191,10 @@ public String retarificarEndosos()
 			nmsolici = docu.get("nmsolici");
 			String descripc=docu.get("descripc");
 			String descripl=docu.get("descripl");
-			String url=this.rutaServidorReports
+			String url=this.getText("ruta.servidor.reports")
 					+ "?destype=cache"
 					+ "&desformat=PDF"
-					+ "&userid="+this.passServidorReports
+					+ "&userid="+this.getText("pass.servidor.reports")
 					+ "&report="+descripl
 					+ "&paramform=no"
 					+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -9691,7 +9620,7 @@ public String retarificarEndosos()
 					);
 			
 			
-			consultasManager.copiarArchivosUsuarioTramite(cdunieco, cdramo, estado, nmpoliza, ntramiteNuevaPoliza, this.rutaDocumentosPoliza);
+			consultasManager.copiarArchivosUsuarioTramite(cdunieco, cdramo, estado, nmpoliza, ntramiteNuevaPoliza, this.getText("ruta.documentos.poliza"));
 			
 			/**
 			 * Para cambiar el estatus del tramite nuevo
@@ -10753,9 +10682,9 @@ public String retarificarEndosos()
 					paso = "Realizando PDF de Vista Previa de Autos";
 					logger.debug(paso);
 					
-					String rutaReports    = rutaServidorReports;
-					String passReports    = passServidorReports;
-					String rutaDocumentos = rutaDocumentosTemporal;
+					String rutaReports    = getText("ruta.servidor.reports");
+					String passReports    = getText("pass.servidor.reports");
+					String rutaDocumentos = getText("ruta.documentos.temporal");
 					String tipoFlotilla   =  smap1.get("TIPOFLOT");
 					
 					logger.debug("tipoFlotilla: "+tipoFlotilla);
@@ -13098,9 +13027,9 @@ public String retarificarEndosos()
 					,feefecto
 					,smap2
 					,(UserVO) session.get("USUARIO")
-					,rutaDocumentosPoliza
-					,rutaServidorReports
-					,passServidorReports
+					,getText("ruta.documentos.poliza")
+					,getText("ruta.servidor.reports")
+					,getText("pass.servidor.reports")
 					,flujo
 					);
 			
@@ -13225,7 +13154,7 @@ public String retarificarEndosos()
 	
 	
 			String parametros = null;
-			String urlCaratula =  this.caratulaImpresionAutosEndosobUrl;
+			String urlCaratula =  this.getText("caratula.impresion.autos.endosob.url");
 	
 			parametros = "?"+polRes.getCduniext()+","+polRes.getCdramoext()+","+polRes.getNmpoliex()+",,0,"+ numEnd+",0";
 			logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
@@ -13317,7 +13246,7 @@ public String retarificarEndosos()
 		
 		try {
 			
-			String rutaCarpeta = Utils.join(this.rutaDocumentosPoliza,"/",ntramite);
+			String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"),"/",ntramite);
 			
 			List<Map<String,String>> listaEndosos = emisionAutosService.obtieneEndososImprimir(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
@@ -13343,24 +13272,24 @@ public String retarificarEndosos()
 					if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
 				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
 				    	){
-						urlCaratula = this.caratulaImpresionAutosUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.url");
 					}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
-						urlCaratula = this.caratulaImpresionAutosServiciopublicoUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
 					}
 					
 					if(StringUtils.isNotBlank(tipoGrupoInciso)  && ("F".equalsIgnoreCase(tipoGrupoInciso) || "P".equalsIgnoreCase(tipoGrupoInciso))){
-						urlCaratula = this.caratulaImpresionAutosFlotillasUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.flotillas.url");
 					}
 					
-					String urlRecibo = this.reciboImpresionAutosUrl;
-					String urlCaic = this.caicImpresionAutosUrl;
-					String urlAeua = this.aeuaImpresionAutosUrl;
-					String urlAp = this.apImpresionAutosUrl;
+					String urlRecibo = this.getText("recibo.impresion.autos.url");
+					String urlCaic = this.getText("caic.impresion.autos.url");
+					String urlAeua = this.getText("aeua.impresion.autos.url");
+					String urlAp = this.getText("ap.impresion.autos.url");
 					
-					String urlIncisosFlot = this.incisosFlotillasImpresionAutosUrl;
+					String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
 					String urlIncisosExcelFlot = this.incisosFlotillasExcelImpresionAutosUrl;
-					String urlTarjIdent = this.tarjetaIdenImpresionAutosUrl;
-					String numIncisosReporte = this.numeroIncisosReporte;
+					String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
+					String numIncisosReporte = this.getText("numero.incisos.reporte");
 					
 					String urlDocsExtra = this.caratulaImpresionAutosDocExtra;
 					
@@ -13756,7 +13685,7 @@ public String retarificarEndosos()
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("REDUCEGS")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("REDUCEGS"))){
 						
-					    mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.manualAgenteTxtinfocobredgs).append("\">Reduce GS</a>");
+					    mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.getText("manual.agente.txtinfocobredgs")).append("\">Reduce GS</a>");
 					    
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -13765,7 +13694,7 @@ public String retarificarEndosos()
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,this.manualAgenteTxtinfocobredgs
+								,this.getText("manual.agente.txtinfocobredgs")
 								,"Reduce GS"
 								,nmpoliza
 								,ntramite
@@ -13785,7 +13714,7 @@ public String retarificarEndosos()
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("GESTORIA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("GESTORIA"))){
 						
-					    mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.manualAgenteTxtinfocobgesgs).append("\">Gestoria GS</a>");
+					    mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.getText("manual.agente.txtinfocobgesgs")).append("\">Gestoria GS</a>");
 					    
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -13794,7 +13723,7 @@ public String retarificarEndosos()
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,this.manualAgenteTxtinfocobgesgs
+								,this.getText("manual.agente.txtinfocobgesgs")
 								,"Gestoria GS"
 								,nmpoliza
 								,ntramite
@@ -13818,10 +13747,10 @@ public String retarificarEndosos()
 						String reporteEspVida = this.getText("rdf.emision.nombre.esp.cobvida");
 						String pdfEspVidaNom = "SOL_VIDA_AUTO.pdf";
 						
-						String url=this.rutaServidorReports
+						String url=this.getText("ruta.servidor.reports")
 								+ "?destype=cache"
 								+ "&desformat=PDF"
-								+ "&userid="+this.passServidorReports
+								+ "&userid="+this.getText("pass.servidor.reports")
 								+ "&report="+reporteEspVida
 								+ "&paramform=no"
 								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -13855,7 +13784,7 @@ public String retarificarEndosos()
 								,null, false
 								);
 						
-						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.manualAgenteCondgralescobsegvida).append("\">Condiciones Generales Seguro de Vida</a>");
+						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.getText("manual.agente.condgralescobsegvida")).append("\">Condiciones Generales Seguro de Vida</a>");
 
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -13864,7 +13793,7 @@ public String retarificarEndosos()
 								,nmpoliza
 								,nmsuplem
 								,new Date()
-								,this.manualAgenteCondgralescobsegvida
+								,this.getText("manual.agente.condgralescobsegvida")
 								,"Condiciones Generales Seguro de Vida"
 								,nmpoliza
 								,ntramite
@@ -14681,76 +14610,7 @@ public String retarificarEndosos()
 		this.nsuplogi = nsuplogi;
 	}
 	
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
-	}
-
-	public String getRutaDocumentosTemporal() {
-		return rutaDocumentosTemporal;
-	}
-
-	public String getReciboImpresionAutosUrl() {
-		return reciboImpresionAutosUrl;
-	}
-
-	public String getCaicImpresionAutosUrl() {
-		return caicImpresionAutosUrl;
-	}
-
-	public String getAeuaImpresionAutosUrl() {
-		return aeuaImpresionAutosUrl;
-	}
-
-	public String getApImpresionAutosUrl() {
-		return apImpresionAutosUrl;
-	}
-
-	public String getIncisosFlotillasImpresionAutosUrl() {
-		return incisosFlotillasImpresionAutosUrl;
-	}
-
-	public String getTarjetaIdenImpresionAutosUrl() {
-		return tarjetaIdenImpresionAutosUrl;
-	}
-
-	public String getNumeroIncisosReporte() {
-		return numeroIncisosReporte;
-	}
-
-	public String getCaratulaImpresionAutosUrl() {
-		return caratulaImpresionAutosUrl;
-	}
-
-	public String getCaratulaImpresionAutosEndosobUrl() {
-		return caratulaImpresionAutosEndosobUrl;
-	}
-
-	public String getCaratulaImpresionAutosServiciopublicoUrl() {
-		return caratulaImpresionAutosServiciopublicoUrl;
-	}
-
-	public String getCaratulaImpresionAutosFlotillasUrl() {
-		return caratulaImpresionAutosFlotillasUrl;
-	}
-
-	public String getManualAgenteTxtinfocobredgs() {
-		return manualAgenteTxtinfocobredgs;
-	}
-
-	public String getManualAgenteCondgralescobsegvida() {
-		return manualAgenteCondgralescobsegvida;
-	}
-
-	public String getManualAgenteTxtinfocobgesgs() {
-		return manualAgenteTxtinfocobgesgs;
-	}
+	
+	
 	
 }
