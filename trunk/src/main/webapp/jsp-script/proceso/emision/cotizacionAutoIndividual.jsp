@@ -4881,7 +4881,7 @@ function _p28_cargarRangoValorRamo5(callback)
 
                     try
                     {
-                        _rangoValorBaseDatos(valor, json);
+                        //_rangoValorBaseDatos(valor, json);
                     }
                     catch(e)
                     {
