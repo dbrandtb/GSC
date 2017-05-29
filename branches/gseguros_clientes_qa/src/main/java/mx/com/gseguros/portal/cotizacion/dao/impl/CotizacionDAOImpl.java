@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.dao.impl;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
@@ -9354,4 +9356,40 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+    public RespuestaVO obtieneValidaVigPolizaAnual(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception{
+    	
+		Map<String,String> params = new LinkedHashMap<String,String>();
+    	params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		
+    	Map<String,Object>       mapResult = ejecutaSP(new ObtieneValidaVigPolizaAnual(getDataSource()),params);
+    	
+    	BigDecimal resVigPol = (BigDecimal) mapResult.get("pv_vig_pol ");
+		
+		logger.debug(">>>>>> Respuesta duracion vigencia Poliza P_GET_VIG_POL <<<<<<: "+resVigPol);
+
+		//Si regresa 0 si es menor a un anio, 1 si es exactamente de 1 anio, mayor a 1 si es mayor a un anio y -1 si no existe
+		//Regresa valido si es un anio o no existe poliza aun para tramite
+		return new RespuestaVO((resVigPol.intValue() == 1 || resVigPol.intValue() == -1) ?  true : false, null /*Por ahora no se envia si es menor, mayor, igual o no existe*/);
+    }
+    
+    protected class ObtieneValidaVigPolizaAnual extends StoredProcedure
+    {
+    	protected ObtieneValidaVigPolizaAnual(DataSource dataSource)
+    	{
+    		super(dataSource,"P_GET_VIG_POL");
+    		declareParameter(new SqlParameter("cdunieco"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("cdramo" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("estado" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_vig_pol " , OracleTypes.NUMBER));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

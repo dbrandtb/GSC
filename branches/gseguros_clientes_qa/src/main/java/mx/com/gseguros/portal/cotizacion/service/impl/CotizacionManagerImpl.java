@@ -57,6 +57,7 @@ import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.general.dao.AseguradoDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
@@ -9997,6 +9998,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 	public Map<String,String> consultaBloqueoProcesoTramite(String ntramite, String claveProceso)throws Exception
 	{
 	    return cotizacionDAO.consultaBloqueoProcesoTramite(ntramite,claveProceso);
+	}
+
+	@Override
+	public RespuestaVO obtieneValidaVigPolizaAnual(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception{
+		return cotizacionDAO.obtieneValidaVigPolizaAnual(cdunieco, cdramo, estado, nmpoliza);
 	}
 
 	@Override
