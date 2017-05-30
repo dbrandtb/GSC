@@ -237,6 +237,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	@Value("${caratula.impresion.autos.docextra.url}")
     private String caratulaImpresionAutosDocExtra;
 	
+	@Value("${sigs.RenovarEndososB.url}")
+    private String sigsRenovarEndososB;
+	
 	public ComplementariosAction() {
 		this.session=ActionContext.getContext().getSession();
 	}
@@ -3366,27 +3369,27 @@ public class ComplementariosAction extends PrincipalCoreAction
                             ,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolizaEmitida
                             ));
                     
-//                    try {
                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
                    consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
-//                    } catch (Exception e) {
-//                        mensajeRespuesta = "La poliza ya se habia emitido con anterioridad";
-//                    }
-                    
+                   
+                try
+           		{
+           			String params        = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"));
+           			HttpUtil.sendPost(sigsRenovarEndososB,params);
+           		}
+           		catch (Exception ex)
+           		{
+           			respuesta = Utils.manejaExcepcion(ex);
+           		}
+                   
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
                           vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
-//                    try {
                         Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-                        
-//                    } catch (Exception e) {
-//                        mensajeRespuesta = "La poliza no se logr\u00F3 registrar en el identificador de renovaciones";
-//                    }
                 }
             } 
             catch (Exception ex) 
             {
-//                mensajeRespuesta = "Emitida pero sin registro en sistema sigs";
                 logger.error("Error actualizando segrenovaciones_renovada", ex);
             }
         }
