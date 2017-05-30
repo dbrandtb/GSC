@@ -1303,8 +1303,6 @@ public class EndososAutoAction extends PrincipalCoreAction
 				situaciones = new ArrayList<Map<String,String>>();
 				situaciones.add(nivelPoliza);
 			}
-			
-			
 			Utils.validate(cdunieco , "No se recibio la sucursal");
 			Utils.validate(cdramo   , "No se recibio el producto");
 			Utils.validate(estado   , "No se recibio el estado de la poliza");
@@ -1313,13 +1311,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(feefecto , "No se recibio la fecha feproren");
 			Utils.validate(feproren , "No se recibio la fecha feproren");
 			
-			
-			Utils.validate(session                , "No hay sesion");
-			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
-			
-			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			String cdusuari = session==null?smap1.get("cdusuari"):((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = session==null?smap1.get("cdsisrol"):((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdelemen = session==null?smap1.get("cdelemen"):((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
 			
 			String cdtipsup      = TipoEndoso.ENDOSO_B_LIBRE.getCdTipSup().toString();
 			String fechaEndoso   = smap1.get("FEINIVAL");
