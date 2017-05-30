@@ -11821,6 +11821,37 @@ public class CotizacionManagerImpl implements CotizacionManager
 		this.cotizacionDAO.actualizaTramiteOVA(ntramite, nmsolici);
 	}
 	
+	@Override
+	public void guardarMorbilidad(
+			String nombreArchivo
+			)throws Exception
+	{
+		logger.debug(Utils.log(
+				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ guardarMorbilidad @@@@@@"
+				,"\n@@@@@@ nombreArchivo=" , nombreArchivo
+				));
+		
+		cotizacionDAO.guardarMorbilidad(nombreArchivo);
+		
+		logger.debug(Utils.log(
+				"\n@@@@@@ guardarMorbilidad @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+	}
+	
+	@Override
+	public List<Map<String, String>> getConsultaMorbilidad(String morbilidad) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_morbilidad_i", morbilidad);
+		logger.debug("obtenerDatosAdicionalesCobertura params: "+params);
+		return cotizacionDAO.obtieneListaMorbilidad(params);
+	}
+	
+	@Override
+	public String existeMorbilidadNueva(String morbilidad) throws Exception{
+		return this.cotizacionDAO.existeMorbilidadNueva(morbilidad);
+	}
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
 	////////////////  GETTERS Y SETTERS  ////////////////

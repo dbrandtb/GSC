@@ -14528,7 +14528,519 @@ public class CotizacionAction extends PrincipalCoreAction
                 );
         return SUCCESS;
     }
+
+    
+	public String subirCensoMorbilidadArchivo()
+	{
+		logger.debug(""
+				+ "\n#########################################"
+				+ "\n###### subirCensoMorbilidadArchivo ######"
+				+ "\n censo "+censo+""
+				+ "\n censoFileName "+censoFileName+""
+				+ "\n censoContentType "+censoContentType+""
+				+ "\n smap1 "+smap1
+				);
 		
+		success = true;
+		exito   = true;
+		
+		String ntramite=smap1.get("ntramite");
+		if(StringUtils.isBlank(ntramite))
+		{
+			String timestamp = smap1.get("timestamp");
+			//censo.renameTo(new File(this.rutaDocumentosTemporal+"/censo_"+timestamp));
+			try {
+            	FileUtils.copyFile(censo, new File(this.rutaDocumentosTemporal+"/censoMorbilidad_"+timestamp));
+            	logger.debug("archivo movido");
+			} catch (Exception e) {
+				logger.error("archivo NO movido", e);
+			}
+			
+			logger.debug("censo renamed to: "+this.rutaDocumentosTemporal+"/censo_"+timestamp);
+		}
+		
+		logger.debug(""
+				+ "\n###### subirCensoMorbilidadArchivo ######"
+				+ "\n#########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String subirCensoMorbilidad(){
+		this.session=ActionContext.getContext().getSession();
+		logger.debug(Utils.log(
+				 "\n#####################################"
+				,"\n###### subirCensoMorbilidad ######"
+				,"\n###### smap1="  , smap1
+				,"\n###### olist1=" , olist1
+				));
+		success = true;
+		exito   = true;
+		try {
+			//Recibimos el parametro de timestamp para validar el nombre del archivo
+			String layoutTimestamp = smap1.get("timestamp");
+			String descMorbilidad  = smap1.get("descMorbilidad");
+			String fechaVigencia   = smap1.get("dtFechaVigencia").substring(8,10) + "/" + smap1.get("dtFechaVigencia").substring(5,7) + "/" + smap1.get("dtFechaVigencia").substring(0,4);
+			censo = new File(this.rutaDocumentosTemporal+"/censoMorbilidad_"+layoutTimestamp);
+			//layoutGral = new File(this.rutaDocumentosTemporal+"/layoutGral_"+layoutTimestamp);
+			
+			String nombreLayout = null;
+			String nombreLayoutConfirmado = smap1.get("nombreLayoutConfirmado");
+				
+			if(exito&&StringUtils.isBlank(nombreLayoutConfirmado)){
+				FileInputStream input       = null;
+				Workbook        workbook    = null;
+				Sheet           sheet       = null;
+				Long            inTimestamp = null;
+				File            archivoTxt  = null;
+				PrintStream     output      = null;
+				
+				try{
+					input       = new FileInputStream(censo);
+					workbook    = WorkbookFactory.create(input);
+					sheet       = workbook.getSheetAt(0);
+					inTimestamp = System.currentTimeMillis();
+					nombreLayout = "layout_"+inTimestamp+".txt";
+					archivoTxt  = new File(this.rutaDocumentosTemporal +"/"+nombreLayout);
+					output      = new PrintStream(archivoTxt);
+				}
+				catch(Exception ex){
+					long etimestamp = System.currentTimeMillis();
+					exito           = false;
+					respuesta       = "Error al procesar el layout #"+etimestamp;
+					respuestaOculta = ex.getMessage();
+					logger.error(respuesta,ex);
+				}
+				
+				if(exito&&workbook.getNumberOfSheets()!=1) {
+					long etimestamp = System.currentTimeMillis();
+					exito           = false;
+					respuesta       = "Favor de revisar el n\u00famero de hojas del censo #"+etimestamp;
+					logger.error(respuesta);
+				}
+				if(exito)
+				{
+					//Iterate through each rows one by one
+					logger.debug(""
+						+ "\n##############################################"
+						+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
+					);
+					
+					Iterator<Row> rowIterator        = sheet.iterator();
+		            int           fila               = 0;
+		            int           nConsulta          = 0;
+		            StringBuilder bufferErroresCenso = new StringBuilder();
+		            int           filasLeidas        = 0;
+		            int           filasProcesadas    = 0;
+		            int           filasError         = 0;
+		            
+		            Map<Integer,String>  totalConsultasAseg  = new LinkedHashMap<Integer,String>();
+					Map<Integer,Boolean> estadoConsultas     = new LinkedHashMap<Integer,Boolean>();
+					Map<Integer,Integer> errorConsultas      = new LinkedHashMap<Integer,Integer>();
+					
+					boolean[] gruposValidos = new boolean[olist1.size()];
+					while (rowIterator.hasNext()&&exito) {
+						Row           row            = rowIterator.next();
+		                Date          auxDate        = null;
+		                Cell          auxCell        = null;
+		                StringBuilder bufferLinea    = new StringBuilder();
+		                StringBuilder bufferLineaStr = new StringBuilder();
+		                boolean       filaBuena      = true;
+		                
+		                if(Utils.isRowEmpty(row))
+		                {
+		                	break;
+		                }
+		                
+		                fila       		= fila + 1;
+		                filasLeidas 	= filasLeidas + 1;
+		                double cdgrupo	= -1d;
+		                
+		                //Empezamos a leer los campos del archivo de Excel
+		                double edadPromedio	   		= 0d;
+		                double porcentajeH 			= 0d;
+		                //Medicina Preventiva
+		                double medPreventivaHom 	= 0d;
+		                double medPreventivaMuj 	= 0d;
+		                //Medina de Primer Contacto
+		                double medPrimerContHom 	= 0d;
+		                double medPrimerContaMuj 	= 0d;
+		                //Medina de Primer Contacto
+		                double maternidadHom 		= 0d;
+		                double maternidadMuj 		= 0d;
+		                //Medina de Primer Contacto
+		                double ayudaMatHom 			= 0d;
+		                double ayudaMatMuj 			= 0d;
+		                //Medina de Primer Contacto
+		                double servOdontHom 		= 0d;
+		                double servOdontMuj 		= 0d;
+		                //Servicios Auxiliares de diagnostico
+		                double servAuxDiagtHom 		= 0d;
+		                double servAuxDiagtMuj 		= 0d;
+		                //Medicamentos
+		                double medicamentosHom 		= 0d;
+		                double medicamentosMuj 		= 0d;
+		                //Hospitalizacion
+		                double HospitalizaHom 		= 0d;
+		                double HospitalizaMuj 		= 0d;
+		                String leyendaConcepto 		= null;
+		                //EDAD PROMEDIO
+		                try {
+		                	edadPromedio = row.getCell(0).getNumericCellValue();
+			                logger.debug("EDAD PROMEDIO: "+(String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"));
+			                bufferLinea.append(descMorbilidad+"|"+fechaVigencia+"|"+String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'EDAD PROMEDIO' (A) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
+		                }
+		                //MEDICINA PREVENTIVA HOMBRE
+		                try {
+		                	medPreventivaHom = row.getCell(1).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+medPreventivaHom+"|");
+			                bufferLinea.append(medPreventivaHom+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA PREVENTIVA HOMBRES' (B) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+		                }
+		                //MEDICINA PREVENTIVA MUJERES
+		                try {
+		                	medPreventivaMuj = row.getCell(2).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+medPreventivaMuj+"|");
+			                bufferLinea.append(medPreventivaMuj+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA PREVENTIVA MUJERES' (C) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(2)),"-"));
+		                }
+		                //MEDICINA DE PRIMER CONTACTO HOMBRE
+		                try {
+		                	medPrimerContHom = row.getCell(3).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+medPrimerContHom+"|");
+			                bufferLinea.append(medPrimerContHom+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA DE PRIMER CONTACTO HOMBRES' (D) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(3)),"-"));
+		                }
+		                //MEDICINA DE PRIMER CONTACTO MUJER
+		                try {
+		                	medPrimerContaMuj = row.getCell(4).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+medPrimerContaMuj+"|");
+			                bufferLinea.append(medPrimerContaMuj+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA DE PRIMER CONTACTO HOMBRES' (E) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(4)),"-"));
+		                }
+		                //MATERNIDAD HOMBRE
+		                try {
+		                	maternidadHom = row.getCell(5).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+maternidadHom+"|");
+			                bufferLinea.append(maternidadHom+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MATERNIDAD HOMBRES' (F) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
+		                }
+		                //MATERNIDAD MUJERES
+		                try {
+		                	maternidadMuj = row.getCell(6).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+maternidadMuj+"|");
+			                bufferLinea.append(maternidadMuj+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MATERNIDAD MUJERES' (G) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
+		                }
+		                //AYUDA DE MATERNIDAD HOMBRE
+		                try {
+		                	ayudaMatHom = row.getCell(7).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+ayudaMatHom+"|");
+			                bufferLinea.append(ayudaMatHom+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'AYUDA DE MATERNIDAD HOMBRES' (H) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
+		                }
+		                //AYUDA DE MATERNIDAD MUJERES
+		                try {
+		                	ayudaMatMuj = row.getCell(8).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+ayudaMatMuj+"|");
+			                bufferLinea.append(ayudaMatMuj+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'AYUDA DE MATERNIDAD MUJERES' (I) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
+		                }
+		                //SERVICIOS ODONTOLOGICOS HOMBRE
+		                try {
+		                	servOdontHom = row.getCell(9).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+servOdontHom+"|");
+			                bufferLinea.append(servOdontHom+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS ODONTOLOGICOS HOMBRES' (J) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
+		                }
+		                //SERVICIOS ODONTOLOGICOS MUJERES
+		                try {
+		                	servOdontMuj = row.getCell(10).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+servOdontMuj+"|");
+			                bufferLinea.append(servOdontMuj+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS ODONTOLOGICOS MUJERES' (K) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(10)),"-"));
+		                }
+		                //SERVICIOS AURXILIARES DE DIAGNOSTICO HOMBRE
+		                try {
+		                	servAuxDiagtHom = row.getCell(11).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+servAuxDiagtHom+"|");
+			                bufferLinea.append(servAuxDiagtHom+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS AURXILIARES DE DIAGNOSTICO HOMBRE' (L) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(11)),"-"));
+		                }
+		                //SERVICIOS AURXILIARES DE DIAGNOSTICO MUJERES
+		                try {
+		                	servAuxDiagtMuj = row.getCell(12).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+servAuxDiagtMuj+"|");
+			                bufferLinea.append(servAuxDiagtMuj+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS AURXILIARES DE DIAGNOSTICO MUJERES' (M) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(12)),"-"));
+		                }
+		                //MEDICAMENTOS HOMBRE
+		                try {
+		                	medicamentosHom = row.getCell(13).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+medicamentosHom+"|");
+			                bufferLinea.append(medicamentosHom+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICAMENTOS HOMBRE' (N) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
+		                }
+		                //MEDICAMENTOS MUJERES
+		                try {
+		                	medicamentosMuj = row.getCell(14).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+medicamentosMuj+"|");
+			                bufferLinea.append(medicamentosMuj+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICAMENTOS MUJERES' (O) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
+		                }
+		                //HOSPITALIZACION HOMBRE
+		                try {
+		                	HospitalizaHom = row.getCell(15).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+HospitalizaHom+"|");
+			                bufferLinea.append(HospitalizaHom+"|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'HOSPITALIZACION HOMBRE' (P) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
+		                }
+		                //HOSPITALIZACION MUJERES
+		                try {
+		                	HospitalizaMuj = row.getCell(16).getNumericCellValue()* 100;
+		                	logger.debug("hombre: "+HospitalizaMuj+"|");
+			                bufferLinea.append(HospitalizaMuj+"|MSC|");
+	                	} catch(Exception ex) {
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'HOSPITALIZACION MUJERES' (Q) de la fila ",fila," "));
+		                } finally {
+		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
+		                }
+		                
+		                nConsulta++;
+	                	totalConsultasAseg.put(nConsulta,"");
+	                	estadoConsultas.put(nConsulta,true);
+	                	
+	                	if(filaBuena) {
+		                	totalConsultasAseg.put(nConsulta,Utils.join(totalConsultasAseg.get(nConsulta),bufferLinea.toString(),"\n"));
+		                	filasProcesadas = filasProcesadas + 1;
+		                }
+		                else {
+		                	filasError = filasError + 1;
+		                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
+		                	estadoConsultas.put(nConsulta,false);
+		                	if(!errorConsultas.containsKey(nConsulta)) {
+		                		errorConsultas.put(nConsulta,fila);
+		                	}
+		                }
+					}//while (rowIterator.hasNext()&&exito)
+					
+					logger.debug("VALOR DEL EXITO ====> "+exito);
+					logger.debug("filasError ====>"+filasError);
+					if(exito) {
+		            	logger.debug("total Consultas: {}\nEstado Consultas: {}\nError Consultas: {}"
+			            		,totalConsultasAseg,estadoConsultas,errorConsultas);
+			            
+			            for(Entry<Integer,Boolean>en:estadoConsultas.entrySet()){
+			            	int     n = en.getKey();
+			            	boolean v = en.getValue();
+			            	if(v){
+			            		output.print(totalConsultasAseg.get(n));
+			            	}
+			            }
+			            
+						smap1.put("erroresCenso"    , bufferErroresCenso.toString());
+						smap1.put("filasLeidas"     , Integer.toString(filasLeidas));
+						smap1.put("filasProcesadas" , Integer.toString(filasProcesadas));
+						smap1.put("filasErrores"    , Integer.toString(filasError));
+					}
+					if(exito)
+		            {
+		            	try
+		            	{
+		            		input.close();
+		            		output.close();
+		            	}
+		            	catch(Exception ex)
+		            	{
+		            		long etimestamp = System.currentTimeMillis();
+		            		exito           = false;
+		            		respuesta       = "Error al transformar el archivo #"+etimestamp;
+		            		respuestaOculta = ex.getMessage();
+		            		logger.error(respuesta,ex);
+		            	}
+		            }
+					
+					logger.debug(""
+							+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
+							+ "\n##############################################"
+					);
+					
+					if(exito){
+						if(filasError > 0){
+							exito = false;
+						}else{
+							exito = FTPSUtils.upload
+									(
+										this.dominioServerLayouts,
+										this.userServerLayouts,
+										this.passServerLayouts,
+										archivoTxt.getAbsolutePath(),
+										this.directorioServerLayouts+"/"+nombreLayout
+								    )
+									&&FTPSUtils.upload
+									(
+										this.dominioServerLayouts,
+										this.userServerLayouts,
+										this.passServerLayouts,
+										archivoTxt.getAbsolutePath(),
+										this.directorioServerLayouts+"/"+nombreLayout
+									);
+							
+							if(!exito)
+							{
+								long etimestamp = System.currentTimeMillis();
+								exito           = false;
+								respuesta       = "Error al transferir archivo al servidor #"+etimestamp;
+								respuestaOculta = respuesta;
+								logger.error(respuesta);
+							}
+							
+							if(exito)
+							{
+								try
+								{
+									logger.debug("Entra a la opcion del guardado ===> ");
+									cotizacionManager.guardarMorbilidad(nombreLayout);
+									logger.debug("<=== Sale a la opcion del guardado");
+								}
+								catch(Exception ex)
+								{
+									long etimestamp = System.currentTimeMillis();
+									exito           = false;
+									respuesta       = "Error al guardar los datos #"+etimestamp;
+									respuestaOculta = ex.getMessage();
+									logger.error(respuesta,ex);
+									
+								}
+							}
+						}
+					}
+				}// Fin del iterator
+			}//if(exito&&StringUtils.isBlank(nombreLayoutConfirmado))
+			
+			if(exito)
+			{
+				respuesta       = "Se ha complementado el guardado del layout";
+				success = true;
+				exito   = true;
+				respuestaOculta = "Todo OK";
+			}
+		} catch (Exception e) {
+			Utils.manejaExcepcion(e);
+		}
+		logger.debug(""
+				+ "\n######   subirCensoMorbilidad	 ######"
+				+ "\n######################################"
+				);
+		
+		
+		return SUCCESS;
+	}
+	
+	public String consultaMorbilidad(){
+		logger.debug("Entra a consultaMorbilidad");
+		try {
+			logger.debug("Params: {}", params);
+		}catch( Exception e){
+			logger.error("Error consultaMorbilidad {}", e.getMessage(), e);
+		}
+		success = true;
+		return SUCCESS;
+	}
+
+	
+	public String consultaDatosConfiguracionMorbilidad(){
+		logger.debug("Entra a consultaDatosConfiguracionMorbilidad params de entrada :{} ",params);
+		try {
+			slist1 = cotizacionManager.getConsultaMorbilidad(params.get("morbilidad"));
+			logger.debug("Respuesta consultaDatosConfiguracionMorbilidad : {}",slist1);
+		}catch( Exception e){
+			logger.error("Error al obtener consultaDatosConfiguracionMorbilidad : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		setSuccess(true);
+		return SUCCESS;
+	}
+	
+	public String existeMorbilidadNueva(){
+	    logger.debug("Entra a existeMorbilidadNueva Params: {}", params);
+	    try {
+	    	respuesta = cotizacionManager.existeMorbilidadNueva(params.get("morbilidad"));
+	        logger.debug("respuesta : {}", respuesta);
+	    }catch( Exception e){
+	        logger.error("Error existeMorbilidadNueva : {}", e.getMessage(), e);
+	        return SUCCESS;
+	    }
+	    success = true;
+	    return SUCCESS;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/

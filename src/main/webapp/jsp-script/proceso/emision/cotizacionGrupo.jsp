@@ -104,6 +104,10 @@ var _p21_urlRestaurarRespaldoCenso       = '<s:url namespace="/emision"         
 var _p21_urlBorrarRespaldoCenso          = '<s:url namespace="/emision"         action="borrarRespaldoCenso"              />';
 var _p21_urlRefrescarCensoColectivo      = '<s:url namespace="/emision"         action="refrescarCensoColectivo"          />';
 var _p21_urlReporte                 	 = '<s:url namespace="/consultasPoliza" action="consultaIncisosPoliza" />';
+var _p21_urlConsultaMorbilidad           = '<s:url namespace="/emision"         action="includes/consultaMorbilidad" />';
+var _p21_urlExisteMorbilidadExistente    = '<s:url namespace="/emision"         action="existeMorbilidadNueva" />';
+var _p21_urlSubirCensoMorbilidadArchivo  = '<s:url namespace="/emision"         action="subirCensoMorbilidadArchivo"      />';
+var _p21_urlSubirCensoMorbilidad         = '<s:url namespace="/emision"         action="subirCensoMorbilidad"             />';
 
 var _p21_urlCargarAseguradosFiltroGrupoPag     = '<s:url namespace="/emision"         action="cargarAseguradosFiltroGrupoPag"      />';
 var _p21_urlCargarAseguradosFiltroExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosFiltroExtraprimas"   />';
@@ -990,7 +994,26 @@ Ext.onReady(function()
                                 xtype   : 'fieldset'
                                 ,title  : '<span style="font:bold 14px Calibri;">INFORMACI&Oacute;N DEL RIESGO</span>'
                                 ,itemId : '_p21_fieldsetRiesgo'
-                                ,items  : [ <s:property value="imap.itemsRiesgo" /> ]
+                                ,items  : [ <s:property value="imap.itemsRiesgo" />
+                                            ,{
+                                                xtype   : 'fieldset'
+                                                ,border: false
+                                                ,defaults : { style : 'margin:5px;' }
+                                                ,items  : [ {
+                                                        xtype    : 'button'
+                                                        ,text    : 'Registrar Morbilidad'
+                                                        ,icon    : '${ctx}/resources/fam3icons/icons/lock.png'
+                                                        ,hidden  : Ext.isEmpty(_p21_smap1.nmpoliza)
+                                                        ,handler : subirDocumentoMorbilidad
+                                                    },{
+                                                        xtype    : 'button'
+                                                        ,text    : 'Consultar Morbilidad'
+                                                        ,icon    : '${ctx}/resources/fam3icons/icons/lock.png'
+                                                        ,hidden  : Ext.isEmpty(_p21_smap1.nmpoliza)
+                                                        ,handler : _p21_editarMorbilidad
+                                                    }]
+                                            }
+                                ]
                             }
                             ,{
                                 xtype     : 'fieldset'
@@ -7184,6 +7207,75 @@ function _p21_editarCoberturas(grid,row)
     });
     debug('<_p21_editarCoberturas');
 }
+
+function subirDocumentoMorbilidad(){
+        windowLoader = Ext.create('Ext.window.Window', {
+            title   : 'Morbilidad'
+            ,closeAction : 'hide'
+            //,width  : 400
+            ,modal  : true
+            ,bodyStyle:'padding:5px;'
+            ,items  :
+            [
+                Ext.create('Ext.form.Panel',
+                {
+                    url          : _p21_urlSubirCensoMorbilidadArchivo
+                    ,border      : 0
+                    ,bodyPadding : 5
+                    ,items       :
+                    [
+                        {    xtype       : 'textfield',         fieldLabel : 'Descripci&oacute;n Morbilidad'               ,name       : 'descMorbilidad',
+                             maxLength  :20,                    width      : 450
+                        },
+                        {   xtype   : 'datefield',      width       : 450,          fieldLabel  : 'Fecha inicio vigencia', name        : 'dtFechaVigencia'    ,
+                            value   : new Date(),       format      : 'd/m/Y',      allowBlank  : false
+                        },
+                        {
+                            xtype       : 'filefield'
+                            ,fieldLabel : 'Archivo'
+                            ,buttonText : 'Examinar...'
+                            ,buttonOnly : false
+                            ,name       : 'censo'
+                            ,allowBlank : false
+                            ,msgTarget  : 'side'
+                            ,cAccept    : ['xls','xlsx']
+                            ,listeners  :
+                            {
+                                change : function(me)
+                                {
+                                    var indexofPeriod = me.getValue().lastIndexOf("."),
+                                    uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
+                                    if (!Ext.Array.contains(this.cAccept, uploadedExtension))
+                                    {
+                                        centrarVentanaInterna(Ext.MessageBox.show(
+                                        {
+                                            title   : 'Error de tipo de archivo',
+                                            msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+                                            buttons : Ext.Msg.OK,
+                                            icon    : Ext.Msg.WARNING
+                                        }));
+                                        me.reset();
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                    ,buttonAlign : 'center'
+                    ,buttons     :
+                    [
+                        {
+                            text     : 'Cargar archivo'
+                            ,icon    : '${ctx}/resources/fam3icons/icons/group_edit.png'
+                            ,handler : function(me){ 
+                                        _p21_subirArchivoMorbilidad(me);
+                            }
+                        }
+                    ]
+                })
+            ]
+        });
+        centrarVentanaInterna(windowLoader.show());
+    }
 
 /*
 se paso al archivo funcionesCotizacionGrupo.js por exceso de tamanio

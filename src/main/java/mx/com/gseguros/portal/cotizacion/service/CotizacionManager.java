@@ -1311,4 +1311,9 @@ public interface CotizacionManager
 	
 	public void actualizaTramiteOVA(String ntramite	,String nmsolici)throws Exception;
 	
+	public void guardarMorbilidad(String nombreArchivo)throws Exception;
+
+	public List<Map<String, String>> getConsultaMorbilidad(String morbilidad)throws Exception;
+	
+	public String existeMorbilidadNueva(String morbilidad) throws Exception;
 }
