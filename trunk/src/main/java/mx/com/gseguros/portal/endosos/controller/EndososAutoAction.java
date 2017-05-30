@@ -1311,9 +1311,9 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(feefecto , "No se recibio la fecha feproren");
 			Utils.validate(feproren , "No se recibio la fecha feproren");
 			
-			String cdusuari = session==null?smap1.get("cdusuari"):((UserVO)session.get("USUARIO")).getUser();
-			String cdsisrol = session==null?smap1.get("cdsisrol"):((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-			String cdelemen = session==null?smap1.get("cdelemen"):((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			String cdusuari = session.get("USUARIO")==null?smap1.get("cdusuari"):((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = session.get("USUARIO")==null?smap1.get("cdsisrol"):((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdelemen = session.get("USUARIO")==null?smap1.get("cdelemen"):((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
 			
 			String cdtipsup      = TipoEndoso.ENDOSO_B_LIBRE.getCdTipSup().toString();
 			String fechaEndoso   = smap1.get("FEINIVAL");
