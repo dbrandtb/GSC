@@ -3391,18 +3391,25 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			));
 			
 			if (StringUtils.isNotBlank(params.get("dsdestino")) && !params.get("dsdestino").contains("()")){
-				//req0005 debo obtener el numero de cotizacion de dsmensaje para poder identificar el nombre del archivo a adjuntar				
-				List<Map<String,String>> listaDocumentos = new ArrayList<Map<String, String>>();
-				listaDocumentos = consultasDAO.recuperarNombreDocumentosCotizacion(flujo.getNtramite());
-				
-				//debo adjuntar tantos documentos como tenga la lista
-				int cantidadDocumentos = listaDocumentos.size();
-				String[] archivos = new String [cantidadDocumentos];
-				//for(Map<String,String>documento:listaDocumentos){
-				for(int i=0; i<cantidadDocumentos; i++){
-					String archivo = rutaDocumentosPoliza + "/" + flujo.getNtramite() + "/" + listaDocumentos.get(i).get("CDDOCUME");
-					logger.debug("archivo a adjuntar: " + archivo);
-					archivos[i] = archivo;
+				//req0005 debo obtener el numero de cotizacion de dsmensaje para poder identificar el nombre del archivo a adjuntar	
+				String adjuntarCotizacion = "true";
+				String [] archivos;
+				if ("true".equals(adjuntarCotizacion)){
+					List<Map<String,String>> listaDocumentos = new ArrayList<Map<String, String>>();
+					listaDocumentos = consultasDAO.recuperarNombreDocumentosCotizacion(flujo.getNtramite());
+					
+					//debo adjuntar tantos documentos como tenga la lista
+					int cantidadDocumentos = listaDocumentos.size();
+					archivos = new String [cantidadDocumentos];
+					//for(Map<String,String>documento:listaDocumentos){
+					for(int i=0; i<cantidadDocumentos; i++){
+						String archivo = rutaDocumentosPoliza + "/" + flujo.getNtramite() + "/" + listaDocumentos.get(i).get("CDDOCUME");
+						logger.debug("archivo a adjuntar: " + archivo);
+						archivos[i] = archivo;
+					}
+				}
+				else{
+					archivos=new String[]{};
 				}
 				
 				//continua flujo normal
