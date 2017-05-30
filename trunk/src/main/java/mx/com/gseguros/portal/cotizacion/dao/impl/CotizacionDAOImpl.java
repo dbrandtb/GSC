@@ -9467,4 +9467,76 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
     		compile();
     	}
     }
+    
+	@Override
+	public void guardarMorbilidad(
+			String nombreArchivo
+			)throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pi_filename"       , nombreArchivo);
+		ejecutaSP(new GuardarMorbilidad(getDataSource()),params);
+	}
+	
+	protected class GuardarMorbilidad extends StoredProcedure
+	{
+		protected GuardarMorbilidad(DataSource dataSource)
+		{
+			super(dataSource,"P_CONF_MORBILIDAD");
+			declareParameter(new SqlParameter("pi_filename"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String, String>> obtieneListaMorbilidad(HashMap<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneListaMorbilidad(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+
+	protected class ObtieneListaMorbilidad extends StoredProcedure {
+		protected ObtieneListaMorbilidad(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_COTIZA.P_OBTIENE_MORBILIDAD");
+			declareParameter(new SqlParameter("pv_morbilidad_i",   OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"EDAD",
+					"MEDPREVENTIVAHOM",			"MEDPREVENTIVAMUJ",
+					"MEDPRIMERCONTHOM",			"MEDPRIMERCONTAMUJ",		
+					"MATERNIDADHOM",			"MATERNIDADMUJ",		
+					"AYUDAMATHOM", 				"AYUDAMATMUJ",
+					"SERVODONTHOM",				"SERVODONTMUJ",		
+					"SERVAUXDIAGTHOM",			"SERVAUXDIAGTMUJ",		
+					"MEDICAMENTOSHOM", 			"MEDICAMENTOSMUJ",
+					"HOSPITALIZAHOM",			"HOSPITALIZAMUJ",
+					"URGENCIAMEDHOM",			"URGENCIAMEDMUJ"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String existeMorbilidadNueva(String morbilidad) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_morbilidad_i", morbilidad);
+		Map<String, Object> mapResult = ejecutaSP(new ExisteMorbilidadNueva(getDataSource()), params);
+		 return (String) mapResult.get("pv_existe_o");
+	}
+	
+	protected class ExisteMorbilidadNueva extends StoredProcedure {
+
+		protected ExisteMorbilidadNueva(DataSource dataSource) {
+			super(dataSource, "PKG_COTIZA.P_GET_EXISTEMORBILIDAD");
+			declareParameter(new SqlParameter("pv_morbilidad_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_existe_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

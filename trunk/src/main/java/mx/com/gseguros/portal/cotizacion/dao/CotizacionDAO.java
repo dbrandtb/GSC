@@ -1032,4 +1032,10 @@ public interface CotizacionDAO {
 
 	public RespuestaVO obtieneValidaVigPolizaAnual(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 	
+	public void guardarMorbilidad(String nombreArchivo) throws Exception;
+	
+	public List<Map<String, String>> obtieneListaMorbilidad(HashMap<String, Object> params) throws Exception;
+	
+	public String existeMorbilidadNueva(String morbilidad) throws Exception;
+	
 }

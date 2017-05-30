@@ -603,7 +603,38 @@
            </interceptor-ref>
            <result type="json" />
        </action>
-        
+	   <action name="subirCensoMorbilidad" class="CotizacionAction" method="subirCensoMorbilidad">
+          <interceptor-ref name="json">
+              <param name="enableSMD">true</param>
+              <param name="ignoreSMDMethodInterfaces">false</param>
+          </interceptor-ref>
+          <result type="json" />
+       </action>
+       <action name="subirCensoMorbilidadArchivo" class="CotizacionAction" method="subirCensoMorbilidadArchivo">
+           <result type="json" />
+       </action>
+       <action name="includes/consultaMorbilidad" class="CotizacionAction" method="consultaMorbilidad">
+           <result>/jsp-script/proceso/emision/configuracionMorbilidad.jsp</result>
+       </action>
+       <action name="consultaDatosConfiguracionMorbilidad" class="CotizacionAction" method="consultaDatosConfiguracionMorbilidad">
+           <result type="json">
+               <param name="ignoreHierarchy">false</param>
+               <param name="includeProperties">
+                   slist1.*,
+                   success
+               </param>
+           </result>
+       </action>
+       <action name="existeMorbilidadNueva" class="CotizacionAction" method="existeMorbilidadNueva">
+           <result type="json">
+               <param name="ignoreHierarchy">false</param>
+               <param name="includeProperties">
+                   success,
+                   respuesta
+               </param>
+           </result>
+       </action>
+       
     </package>
     
 </struts>
