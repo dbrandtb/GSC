@@ -12,11 +12,13 @@ import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.despachador.dao.DespachadorDAO;
@@ -66,7 +68,13 @@ public class DespachadorManagerImpl implements DespachadorManager {
 	private FlujoMesaControlManager flujoMesaControlManager;
 	
 	@Autowired
+	private SiniestrosManager  siniestrosManager;
+	
+	@Autowired
 	private PantallasDAO pantallasDAO;
+	
+	@Value("${documento.cotizacion.cdtipflu.nosicaps}")
+    private String documentoCotizacionCdtipfluNosicaps;	
 	
 	@Override
 	public RespuestaDespachadorVO despachar (String ntramite, String status) throws Exception {
@@ -977,8 +985,13 @@ K                   ENCOLAR CON DATOS ORIGINALES
                         try {
                             paso = "Enviando correos configurados 3";
                             logger.debug(paso);
-                            flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
-                                    correosRecibidos);
+                            //req0005 se solicito eliminar la notificacion en este paso para tramites sicaps
+                            Map<String,String> detalleTramite=  siniestrosManager.obtenerTramiteCompleto(ntramite);
+                            String cdtipflu = detalleTramite.get("CDTIPFLU");
+                            logger.debug("Determinando si es flujo SICAPS o NO SICAPS cdtipflu: "+ cdtipflu + " ntramite: " + ntramite);
+            				if (documentoCotizacionCdtipfluNosicaps.equals(cdtipflu)){// si es no sicaps envio la notificacion
+            					flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,correosRecibidos);
+            				}
                         } catch (Exception ex) {
                             logger.error("Error al enviar correos de estatus al turnar", ex);
                         }
