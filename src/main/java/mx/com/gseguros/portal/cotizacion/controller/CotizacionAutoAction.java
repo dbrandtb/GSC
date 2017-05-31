@@ -1129,77 +1129,160 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         return result;
     }
     
-    
 ////////////////////////////////
-    public String cargaMasivaClientes()
-    {
-        logger.debug(Utils.log(""
-                ,"\n###########################################"
-                ,"\n###### cargaMasivaClientes ######"
-                ,"\n###### smap1="            , smap1
-                ,"\n###### excel="            , excel
-                ,"\n###### excelFileName="    , excelFileName
-                ,"\n###### excelContentType=" , excelContentType
-                ));
-        try
-        {
-            logger.debug(Utils.log("","Validando datos de entrada"));
-            
-            Utils.validate(smap1, "No se recibieron datos");
-            
-            String cdramo    = smap1.get("cdramo")
-                   ,cdtipsit = smap1.get("cdtipsit")
-                   ,tipoflot = smap1.get("tipoflot")
-                   ,cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-                   //,negocio  = smap1.get("negocio");
-            
-            logger.debug(Utils.join(
-                     "\ntipoflot=" , tipoflot
-                    ,"\ncdsisrol=" , cdsisrol
-                    //,"\nnegociol=" , negocio
-                    ));
+    
+public String cargaMasivaClientes()
+{
+logger.debug(Utils.log(""
+,"\n####################################"
+,"\n###### cargaMasivaClientes ######"
+,"\n###### smap1=", smap1
+,"\n###### flujo=", flujo
+));
 
-            Utils.validate(
-                     cdramo   , "No se recibi\u00f3 el producto"
-                    ,cdtipsit , "No se recibi\u00f3 la modalidad"
-                    //,negocio  , "No se recibio negocio"
-                    );
-            
-            Utils.validate(excel, "No se recibi\u00f3 el archivo");
-            
-            ManagerRespuestaSlistVO resp = cotizacionAutoManager.cargaMasivaClientes(cdramo,cdtipsit,"",excel,tipoflot);//,tipoflot
-            
-            exito     = resp.isExito();
-            respuesta = resp.getRespuesta();
-            
-            if(!exito)
-            {
-                throw new ApplicationException(respuesta);
-            }
-           
-            slist1 = resp.getSlist();
-        }
-        catch(Exception ex)
-        {
-            respuesta = Utils.manejaExcepcion(ex);
-        }
-        
-        logger.debug(Utils.log(""
-                ,"\n###### exito="  , exito
-                ,"\n###### slist1=" , slist1
-                ,"\n###### cargaMasivaClientes ######"
-                ,"\n###########################################"
-                ));
-        return SUCCESS;
-    }
-    
-    
+String result = ERROR;
+
+try
+{
+UserVO usuario  = Utils.validateSession(session);
+
+String cdusuari  = usuario.getUser()
+,cdsisrol = usuario.getRolActivo().getClave();
+
+boolean renovacion = false;
+
+Utils.validate(smap1, "No se recibieron datos");
+String endoso = "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen")) ? "S" : "N";
+
+String cdunieco = smap1.get("cdunieco")
+,cdramo  = smap1.get("cdramo")
+,cdtipsit = smap1.get("cdtipsit")
+,ntramite = smap1.get("ntramite")
+,tipoflot = smap1.get("tipoflot"); 
+
+smap1.put("cdsisrol" , cdsisrol);
+smap1.put("cdusuari" , cdusuari);
+
+Utils.validate(
+cdramo    , "No se recibi\u00f3 el producto"
+,cdtipsit , "No se recibi\u00f3 la modalidad"
+,tipoflot , "No se recibi\u00f3 el tipo de cotizacion"
+);
+
+ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.cargaMasivaClientes(
+cdusuari
+,cdsisrol
+,cdunieco
+,cdramo
+,cdtipsit
+,ntramite
+,tipoflot
+,"S".equals(endoso)
+,flujo
+,renovacion
+);
+
+if("ARTL".equals(cdtipsit)){
+smap1.put("cdtipsit","AR");
+smap1.put("cdtipsit2","TL");
+}
+exito     = resp.isExito();
+respuesta = resp.getRespuesta();
+
+if(!exito)
+{
+throw new ApplicationException(respuesta);
+}
+
+smap1.putAll(resp.getSmap());
+imap=resp.getImap();
+
+result = SUCCESS;
+}
+catch(Exception ex)
+{
+respuesta = Utils.manejaExcepcion(ex);
+}
+
+logger.debug(Utils.log(""
+,"\n###### result=", result
+,"\n###### cargaMasivaClientes ######"
+,"\n####################################"
+));
+return result;
+}
+
+
+////////////////////////////////
+public String procesarCargaMasivaClientes()
+{
+logger.debug(Utils.log(""
+,"\n###########################################"
+,"\n###### procesarCargaMasivaClientes ######"
+,"\n###### smap1="            , smap1
+,"\n###### excel="            , excel
+,"\n###### excelFileName="    , excelFileName
+,"\n###### excelContentType=" , excelContentType
+));
+try
+{
+logger.debug(Utils.log("","Validando datos de entrada"));
+
+Utils.validate(smap1, "No se recibieron datos");
+
+String cdramo    = smap1.get("cdramo")
+,cdtipsit = smap1.get("cdtipsit")
+,tipoflot = smap1.get("tipoflot")
+,cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave()
+,negocio  = smap1.get("negocio");
+
+logger.debug(Utils.join(
+"\ntipoflot=" , tipoflot
+,"\ncdsisrol=" , cdsisrol
+,"\nnegociol=" , negocio
+));
+
+Utils.validate(
+cdramo   , "No se recibi\u00f3 el producto"
+,cdtipsit , "No se recibi\u00f3 la modalidad"
+,negocio  , "No se recibio negocio"
+);
+
+Utils.validate(excel, "No se recibi\u00f3 el archivo");
+
+ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaClientes(cdramo,cdtipsit,"",excel,tipoflot);//,tipoflot
+
+exito     = resp.isExito();
+respuesta = resp.getRespuesta();
+
+if(!exito)
+{
+throw new ApplicationException(respuesta);
+}
+
+slist1 = resp.getSlist();
+}
+catch(Exception ex)
+{
+respuesta = Utils.manejaExcepcion(ex);
+}
+
+logger.debug(Utils.log(""
+,"\n###### exito="  , exito
+,"\n###### slist1=" , slist1
+,"\n###### procesarCargaMasivaClientes ######"
+,"\n###########################################"
+));
+return SUCCESS;
+}
+
+
 ///////////////////////////////   
     public String cotizarAutosFlotilla()
     {
         logger.debug(Utils.log(""
                 ,"\n##################################"
-                ,"\n###### cargaMasivaClientes - Entra ######"
+                ,"\n###### cotizarAutosFlotilla - Entra ######"
                 ,"\n###### smap1="  , smap1
                 ,"\n###### slist1=" , slist1
                 ,"\n###### slist2=" , slist2
