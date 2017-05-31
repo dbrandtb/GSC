@@ -4065,25 +4065,25 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		
 		ManagerRespuestaSlistVO resp = new ManagerRespuestaSlistVO(true);
 		resp.setSlist(new ArrayList<Map<String,String>>());
-		String paso = null;
+		StringBuilder paso = new StringBuilder();
 		try
 		{
-			paso = "Recuperando parametrizacion de excel para COTIFLOT";
+			paso = paso =  paso.append("Recuperando parametrizacion de excel para COTIFLOT");
 			List<Map<String,String>>config=cotizacionDAO.cargarParametrizacionExcel("COTIMASIVAIND",cdramo,cdtipsit);
 			logger.debug(Utils.log(config));
 			
-			paso = "Instanciando mapa buffer de tablas de apoyo";
+			paso = paso =  paso.append("Instanciando mapa buffer de tablas de apoyo");
 			Map<String,List<Map<String,String>>> buffer        = new HashMap<String,List<Map<String,String>>>();
 			Map<String,String>                   bufferTiposit = new HashMap<String,String>();
 			
-			paso = "Iniciando procesador de hoja de calculo";
+			paso =  paso.append("Iniciando procesador de hoja de calculo");
 			FileInputStream input       = new FileInputStream(excel);
 			XSSFWorkbook    workbook    = new XSSFWorkbook(input);
 			XSSFSheet       sheet       = workbook.getSheetAt(0);
 			Iterator<Row>   rowIterator = sheet.iterator();
 			StringBuilder   sb;
 			
-			paso = "Iterando filas";
+			paso = new StringBuilder("Iterando filas");
 			int fila = 1;
 			String[] columnas=new String[]{
 					  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
@@ -4097,7 +4097,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				List<Map<String,String>> persona = new ArrayList<Map<String,String>>();
 				fila = fila + 1;
 				
-				paso = new StringBuilder("Iterando fila ").append(fila).toString();
+				paso = paso.append("Iterando fila ").append(fila);
 				Row row = rowIterator.next();
 				
 				if(fila==2)
@@ -4121,7 +4121,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					String   cdtipsitCol = conf.get("CDTIPSIT");
 					String   propiedad   = conf.get("PROPIEDAD");
 					String   tipo        = conf.get("TIPO");
-					boolean  requerido   = !StringUtils.isBlank(conf.get("REQUERIDO"))&&conf.get("REQUERIDO").equals("S");
+					boolean  requerido   = StringUtils.isNotBlank(conf.get("REQUERIDO"))&&conf.get("REQUERIDO").equals("S");
 					String   decode      = conf.get("DECODE");
 					String[] splited     = null;
 					String   cdtabla1    = conf.get("CDTABLA1");
@@ -4130,7 +4130,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					String   orCdtipsit  = conf.get("ORIGEN_CDTIPSIT");
 					String   otraProp1   = conf.get("OTRA_PROP1");
 					String   otroVal1    = conf.get("OTRO_VAL1");
-					if(!StringUtils.isBlank(decode))
+					if(StringUtils.isNotBlank(decode))
 					{
 						splited = decode.split(",");
 					}
@@ -4149,7 +4149,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				    {record = validaAgenteYNegocio(record,row, fila, columnas, col);
 					    if(StringUtils.isNotBlank(record.get("paso")))
 					    {
-					    	paso=record.get("paso");
+					    	paso =  new StringBuilder(record.get("paso"));
 					    	throw new ApplicationException(record.get("paso"));
 					    }
 				    }
@@ -4157,55 +4157,20 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				    record = deduceSituacion(record,row,fila);
 				    if(StringUtils.isNotBlank(record.get("paso")))
 				    {
-				    	paso=record.get("paso");
+				    	paso =  new StringBuilder(record.get("paso"));
 				    	throw new ApplicationException(record.get("paso"));
 				    }
 
-				    if(propiedad.equals("cdtipsit"))
-					{
-						String valor = null;
-						try
-						{
-						    valor = cell.getStringCellValue();
-						}
-						catch(NullPointerException ex)
-						{
-							paso = new StringBuilder("La fila ").append(fila).append(" tiene valores pero no tiene TIPO VEHICULO").toString();
-							throw new ApplicationException(paso);
-						}
-						sb.append(">cdtipsit!").append(valor);						
-						for(int i=0;i<splited.length/2;i++)
-						{
-							String splitedUsado=splited[i*2];
-							//logger.debug(Utils.log("valor=",valor,", contra=",splitedUsado,", lastIndexOf=",valor.lastIndexOf(splitedUsado)));
-							if(valor.lastIndexOf(splitedUsado)!=-1)
-							{
-								valor=splited[(i*2)+1];
-								sb.append("==").append(valor);
-								break;
-							}
-						}
-						if(valor.equals(cell.getStringCellValue()))
-						{
-							sb.append("==").append("ERROR");
-							throw new ApplicationException(
-									new StringBuilder("El tipo de vehiculo ")
-									.append(valor)
-									.append(" no viene dentro de ")
-									.append(decode)
-									.append(" en la fila ")
-									.append(fila)
-									.toString()
-									); 
-						}
-						//logger.debug(new StringBuilder("valor=").append(valor).toString());
-						record.put("cdtipsit",valor);
-					}
-					else if("S".equals(respetar)||tipoatri.equals("SITUACION"))
+				    if("S".equals(respetar)||tipoatri.equals("SITUACION"))
 					{
 						String cdtipsitRecord = record.get("cdtipsit");
 						if(cdtipsitCol.equals("*")||("|"+cdtipsitCol+"|").lastIndexOf("|"+cdtipsitRecord+"|")!=-1)
 						{
+							try {
+								logger.debug(Utils.log("Trabajando con ",conf.get("DESCRIPCION")," >>> ",cell.toString()));
+							} catch (Exception e) {
+								logger.debug(Utils.log("Trabajando con ",conf.get("DESCRIPCION")));
+							}
 							if(StringUtils.isBlank(decode)&&StringUtils.isBlank(cdtabla1))
 							{
 							    if(tipo.equals("string"))
@@ -4236,7 +4201,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 										throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 									}
 									///
-									if(valorStat.equals("smap1"))
+									if(valorStat!= null && valorStat.equals("smap1"))
 									{
 										if(persona.isEmpty())
 										{	
@@ -4244,34 +4209,13 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 											persona= (List<Map<String,String>>)datospersona.get("listaPersonas");
 											if(persona.size()==0)
 							    	    	{
-							    	    		paso = new StringBuilder("En la fila ").append(fila).append(" no se han encontrado coincidencias para el rfc ingresado.").toString();
-							    	    		throw new ApplicationException(paso);
+							    	    		paso = new StringBuilder("En la fila ").append(fila).append(" no se han encontrado coincidencias para el rfc ingresado.");
+							    	    		throw new ApplicationException(paso.toString());
 							    	    	}
 											if(persona.size()>1)
 							    	    	{
-							    	    		paso = new StringBuilder("En la fila ").append(fila).append(" se han encontrado mas de una coincidencias para el rfc ingresado.").toString();
-							    	    		throw new ApplicationException(paso);
-							    	    	}
-											record.put("cdideperCli",persona.get(0).get("CDIDEPER"));
-											record.put("cdpersonCli",persona.get(0).get("CDPERSON"));
-											valor = persona.get(0).get("NOMBRE_COMPLETO");
-										}
-									}
-									if(valorStat.equals("smap1"))
-									{
-										if(persona.isEmpty())
-										{	
-											datospersona = personasManager.obtenerPersonasPorRFC(cell.getStringCellValue(), "", "", "", "", "", System.currentTimeMillis());
-											persona= (List<Map<String,String>>)datospersona.get("listaPersonas");
-											if(persona.size()==0)
-							    	    	{
-							    	    		paso = new StringBuilder("En la fila ").append(fila).append(" no se han encontrado coincidencias para el rfc ingresado.").toString();
-							    	    		throw new ApplicationException(paso);
-							    	    	}
-											if(persona.size()>1)
-							    	    	{
-							    	    		paso = new StringBuilder("En la fila ").append(fila).append(" se han encontrado mas de una coincidencias para el rfc ingresado.").toString();
-							    	    		throw new ApplicationException(paso);
+							    	    		paso = new StringBuilder("En la fila ").append(fila).append(" se han encontrado mas de una coincidencias para el rfc ingresado.");
+							    	    		throw new ApplicationException(paso.toString());
 							    	    	}
 											record.put("cdideperCli",persona.get(0).get("CDIDEPER"));
 											record.put("cdpersonCli",persona.get(0).get("CDPERSON"));
@@ -4359,7 +4303,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									record.put(propiedad,valor);
 									
 									//nuevo para "OTRA PROPIEDAD ESTATICA"
-									if(!StringUtils.isBlank(otraProp1)&&!StringUtils.isBlank(otroVal1)&&!StringUtils.isBlank(valor))
+									if(StringUtils.isNotBlank(otraProp1)&&StringUtils.isNotBlank(otroVal1)&&StringUtils.isNotBlank(valor))
 									{
 										sb.append("(>otraProp1");
 										String[] val1Splited = otroVal1.split(","); //B+,S,C,S,N
@@ -4411,7 +4355,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									throw new ApplicationException(Utils.join("Error de parametrizacion: tipo de valor incorrecto para la columna ",col));
 								}
 							}
-							else if(!StringUtils.isBlank(cdtabla1))
+							else if(StringUtils.isNotBlank(cdtabla1))
 							{
 								sb.append(">tabla");
 								String valor = null;
@@ -4439,7 +4383,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 								}
 								String clave = "";
-								if(!StringUtils.isBlank(valor))
+								if(valor.isEmpty() && StringUtils.isNotBlank(valorStat))
+								{
+									sb.append(">valorStat");
+									record.put(propiedad , valorStat);
+									clave = valorStat;
+									valor = valorStat;
+								}
+								if(StringUtils.isNotBlank(valor))
 								{
 									try
 									{
@@ -4466,7 +4417,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 									}
 									
 									//nuevo para "OTRA PROPIEDAD ESTATICA"
-									if(!StringUtils.isBlank(otraProp1)&&!StringUtils.isBlank(otroVal1))
+									if(StringUtils.isNotBlank(otraProp1)&&StringUtils.isNotBlank(otroVal1))
 									{
 										sb.append("(>otraProp1");
 										String[] val1Splited = otroVal1.split(","); //B+,S,C,S,N
@@ -4491,7 +4442,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								sb.append("==").append(clave);
 								record.put(propiedad,clave);
 							}
-							else if(!StringUtils.isBlank(decode))
+							else if(StringUtils.isNotBlank(decode))
 							{
 								sb.append(">decode");
 								String original = null;
@@ -4522,7 +4473,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 								{
 									throw new ApplicationException(Utils.join("La columna ",columnas[col]," es requerida en la fila ",fila));
 								}
-								if(!StringUtils.isBlank(valor))
+								if(StringUtils.isNotBlank(valor))
 								{
 									for(int i=0;i<splited.length/2;i++)
 									{
@@ -4568,14 +4519,14 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		}
 		catch(Exception ex)
 		{
-			Utils.generaExcepcion(ex, paso);
+			Utils.generaExcepcion(ex, paso.toString());
 		}
 
 		logger.info(
 				new StringBuilder()
 				.append("\n@@@@@@ ").append(resp)
-				.append("\n@@@@@@ procesarCargaMasivaFlotilla @@@@@@")
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ procesarCargaMasivaIndividual @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 		return resp;
@@ -4583,25 +4534,25 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	
 	public Map<String, String> validaAgenteYNegocio(Map<String,String>record ,Row row , int fila ,String[] columnas, int col) throws Exception
 	{
-	  String paso = null;
+	  StringBuilder paso = new StringBuilder();
 	  Cell agente = row.getCell(0);
 	  Cell negocio =row.getCell(1);
 	  String negocioValorCelda = "";//obtengo el negocio ingresado
       if(agente==null)
       {
-   	   paso = new StringBuilder("Fila ").append(fila).append(" ,falta definir agente.").toString();
-   	   record.put("paso",paso);
+   	   paso = paso.append("Fila ").append(fila).append(" ,falta definir agente.");
+   	   record.put("paso",paso.toString());
       }
  	  try{
 			   negocioValorCelda = negocio.getStringCellValue();//obtengo el negocio ingresado
 			   if(negocioValorCelda==null || negocioValorCelda.isEmpty())
                {
-			      paso = new StringBuilder("En la fila ").append(fila).append(" falta definir negocio.").toString();
-			      record.put("paso",paso);
+			      paso =  paso.append("En la fila ").append(fila).append(" falta definir negocio.");
+			      record.put("paso",paso.toString());
                }
         }catch(Exception ex){   
-		    	 paso = new StringBuilder("En la fila ").append(fila).append(" tiene que definir negocio de la siguiente manera: TRADICIONAL, SUSCRIPCIÓN ,CONDUCTOR PARTICULAR DE CONTADO...").toString();
-		    	 record.put("paso",paso);
+		    	 paso =  paso.append("En la fila ").append(fila).append(" tiene que definir negocio de la siguiente manera: TRADICIONAL, SUSCRIPCIÓN ,CONDUCTOR PARTICULAR DE CONTADO...");
+		    	 record.put("paso",paso.toString());
 	    }
 	  try{
 		        Integer numAgt = null;
@@ -4619,21 +4570,21 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    	    }
 			    	    if(StringUtils.isBlank(record.get("nombreAgt")))
 				  		{
-				  			paso = new StringBuilder("En la fila ").append(fila).append(" el numero de agente ingresado no encontro coincidencia.").toString();
-				  			record.put("paso",paso);
+				  			paso =  paso.append("En la fila ").append(fila).append(" el numero de agente ingresado no encontro coincidencia.");
+				  			record.put("paso",paso.toString());
 				  		}
 
 				} catch (Exception e) {
-					paso = new StringBuilder("En la fila ").append(fila).append(" introduce un numero para el agente.").toString();
-					record.put("paso",paso);
+					paso =  paso.append("En la fila ").append(fila).append(" introduce un numero para el agente.");
+					record.put("paso",paso.toString());
 				}
 	    	   
 			   List<UsuarioRolEmpresaVO> rolesCliente = usuarioDAO.obtieneRolesCliente("A"+numAgt);//obtengo los roles que al agt tiene permitidos				   
 			   record = validaNegociosXAgente(record,rolesCliente,numAgt+"",negocioValorCelda);
 			   if(StringUtils.isBlank(record.get("cdsisrol")))
 			   {
-				   paso = new StringBuilder("En la fila ").append(fila).append(" no se encontraron negocios para el agente.").toString();
-				   record.put("paso",paso);
+				   paso =  paso.append("En la fila ").append(fila).append(" no se encontraron negocios para el agente.");
+				   record.put("paso",paso.toString());
 			   }
         }catch(Exception ex){   
 	 		    String agt = agente.getStringCellValue();//obtengo el numero de agente ingresado
@@ -4641,8 +4592,8 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			    record = validaNegociosXAgente(record,rolesCliente,agt+"",negocioValorCelda);
 			    if(StringUtils.isBlank(record.get("cdsisrol")))
 				{
-			    	paso = new StringBuilder("En la fila ").append(fila).append(" no se encontraron negocios para el agente.").toString();
-			    	record.put("paso",paso);
+			    	paso =  paso.append("En la fila ").append(fila).append(" no se encontraron negocios para el agente.");
+			    	record.put("paso",paso.toString());
 				}
         }
  	   return record;
@@ -4650,7 +4601,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	
 	public Map<String,String> validaNegociosXAgente(Map<String,String>record ,List<UsuarioRolEmpresaVO> rolesCliente, String agt, String negocioValorCelda)throws Exception
 	{
-		   String paso = null;
+		   StringBuilder paso = new StringBuilder();
 		   boolean negocioValido = false;
 		   for(UsuarioRolEmpresaVO rol:rolesCliente)
 		   {//en base a cada rol cargo sus respectivos negocios
@@ -4670,32 +4621,32 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		   }
 		   if(!negocioValido)
 		   {
-			    paso = new StringBuilder(" el negocio no es valido.").toString();
-			    record.put("paso",paso);
+			    paso = paso.append(" el negocio no es valido.");
+			    record.put("paso",paso.toString());
 		   }
 		   return record;
 	}
 	
-	public Map<String, String>deduceSituacion(Map<String ,String>record ,Row row ,int fila) throws ApplicationException
+	public Map<String, String>deduceSituacion(Map<String ,String>record ,Row row ,int fila)
 	{
-		if(!StringUtils.isNotBlank(record.get("cdtipsit")))
+		if(StringUtils.isBlank(record.get("cdtipsit")))
 		{
 			String paso = "";
 			 try //Primer filtro de recuperacion de cdtipsit mediante amis
 			   {
 				   Cell claveVeh = row.getCell(8); 
 				   paso = new StringBuilder("La fila ").append(fila).append(" no tiene un valor de clave de vehiculo bien definido.").toString();
-				   Integer valorClaveVeh = (int) claveVeh.getNumericCellValue();
-				   
+				   String valorClaveVeh = (int) claveVeh.getNumericCellValue()+"".trim();
+				   record.put("claveVeh",valorClaveVeh);
 				   String catalogoUsos=""
 						 ,catalogoServicio="";
-				   if(!StringUtils.isNotBlank(record.get("cdtipsit")))
-				   {
+				   
+				   if(StringUtils.isBlank(record.get("cdtipsit"))){
 					   if(listaAR==null)
 					   {listaAR = cotizacionDAO.cargarClavesTtapvat1("5DESCAU");}
 					   for(Map<String,String> valoresAR:listaAR)
 					   {
-						   if(valoresAR.containsValue(valorClaveVeh+""))
+						   if(valoresAR != null && valoresAR.containsValue(valorClaveVeh))
 						   {
 							   record.put("cdtipsit","AR");
 							   catalogoUsos= "5USOAUT";
@@ -4704,13 +4655,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						   }
 					   }
 				   }
-				   if(!StringUtils.isNotBlank(record.get("cdtipsit")))
-				   {
+				   if(StringUtils.isBlank(record.get("cdtipsit"))){
 					   if(listaPP==null)
 					   listaPP = cotizacionDAO.cargarClavesTtapvat1("5DESCPP");
 					   for(Map<String,String> valoresPP:listaPP)
 					   {
-						   if(valoresPP.containsValue(valorClaveVeh+""))
+						   if(valoresPP.containsValue(valorClaveVeh))
 						   {
 							   record.put("cdtipsit","PP");
 							   catalogoUsos= "5USOPUP";
@@ -4719,13 +4669,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						   }
 					   }
 					}
-				    if(!StringUtils.isNotBlank(record.get("cdtipsit")))
-				    {
+				   if(StringUtils.isBlank(record.get("cdtipsit"))){
 					   if(listaPC==null)
 					   listaPC = cotizacionDAO.cargarClavesTtapvat1("5DESCPC");
 					   for(Map<String,String> valoresPC:listaPC)
 					   {
-						   if(valoresPC.containsValue(valorClaveVeh+""))
+						   if(valoresPC.containsValue(valorClaveVeh))
 						   {
 							   record.put("cdtipsit","PC");
 							   catalogoUsos= "5USOPUC";
@@ -4734,13 +4683,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						   }
 					   }
 				   }
-				   if(!StringUtils.isNotBlank(record.get("cdtipsit")))
-				   {
+				   if(StringUtils.isBlank(record.get("cdtipsit"))){
 					   if(listaCR==null)
 					   listaCR = cotizacionDAO.cargarClavesTtapvat1("5DESCCA");
 					   for(Map<String,String> valoresCR:listaCR)
 					   {
-						   if(valoresCR.containsValue(valorClaveVeh+""))
+						   if(valoresCR.containsValue(valorClaveVeh))
 						   {
 							   record.put("cdtipsit","CR");
 							   catalogoUsos= "5USOCAM";
@@ -4749,13 +4697,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						   }
 					   }
 				   }
-				   if(!StringUtils.isNotBlank(record.get("cdtipsit")))
-				   {
+				   if(StringUtils.isBlank(record.get("cdtipsit"))){
 					   if(listaRQ==null)
 					   listaRQ = cotizacionDAO.cargarClavesTtapvat1("5GSREM");
 					   for(Map<String,String> valoresRQ:listaRQ)
 					   {
-						   if(valoresRQ.containsValue(valorClaveVeh+""))
+						   if(valoresRQ.containsValue(valorClaveVeh))
 						   {
 							   record.put("cdtipsit","RQ");
 							   catalogoUsos= "5USOREM";
@@ -4764,13 +4711,12 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						   }
 					   }
 				   }
-				   if(!StringUtils.isNotBlank(record.get("cdtipsit")))
-				   {
+				   if(StringUtils.isBlank(record.get("cdtipsit"))){
 					   if(listaTC==null)
 					   listaTC = cotizacionDAO.cargarClavesTtapvat1("5GSTRC");
 					   for(Map<String,String> valoresTC:listaTC)
 					   {
-						   if(valoresTC.containsValue(valorClaveVeh+""))
+						   if(valoresTC.containsValue(valorClaveVeh))
 						   {
 							   record.put("cdtipsit","TC");
 							   catalogoUsos= "5USOTRC";
@@ -4779,134 +4725,11 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						   }
 					   }
 				   }
-				   if(!StringUtils.isNotBlank(record.get("cdtipsit")) && !StringUtils.isNotBlank(catalogoUsos))
-				   {//Motos
+				   if(StringUtils.isBlank(record.get("cdtipsit"))){//Motos mediante 
 					   logger.info(new StringBuilder().append("No se encontraron coincidencias en los catralogos AR,PP,PC,CR,RQ y TC de claves GS para el numero de amis " ).append(valorClaveVeh).append(" de la fila ").append(fila).toString());
-				        try{
-						   paso = new StringBuilder("La fila ").append(fila).append(" no tiene bien definido el tipo de uso.").toString();
-						   Cell uso = row.getCell(10);
-						   String valorUso= uso.getStringCellValue();
-						   paso = new StringBuilder("La fila ").append(fila).append(" falta definir uso.").toString();
-						   if(valorUso!=null && !valorUso.isEmpty())
-		                   {
-		                	   List<Map<String,String>> listaUsosXSituacion = cotizacionDAO.cargarClavesTtapvat1("5USOMOT");
-							   for(Map<String,String> valoresUsos:listaUsosXSituacion)
-							   {
-								   if(valoresUsos.containsValue(valorUso+""))
-								   {
-									   record.put("parametros.pv_otvalor04",valoresUsos.get("OTCLAVE"));
-									   break;
-								   }
-							   }
-		                   }
-						   paso = new StringBuilder("La fila ").append(fila).append(" no tiene bien definido el tipo de servicio.").toString();
-						   Cell servicio = row.getCell(9);
-						   String valorServicio= servicio.getStringCellValue();
-						   paso = new StringBuilder("La fila ").append(fila).append(" falta definir servicio.").toString();
-						   if(valorUso!=null && !valorUso.isEmpty())
-		                   {
-		                	   List<Map<String,String>> listaUsosXSituacion = cotizacionDAO.cargarClavesTtapvat1("5SERVMOT");
-							   for(Map<String,String> valoresUsos:listaUsosXSituacion)
-							   {
-								   if(valoresUsos.containsValue(valorServicio+""))
-								   {
-										   record.put("parametros.pv_otvalor03",valoresUsos.get("OTCLAVE"));
-										   break;
-								   }
-							   }
-		                   }
-						   if(StringUtils.isNotBlank(record.get("parametros.pv_otvalor03")) && StringUtils.isNotBlank(record.get("parametros.pv_otvalor04")))
-		                   {
-							   record.put("cdtipsit","MO");
-		                   }
-		                   else
-		                   {
-								paso = Utils.join("Recuperando tipo de situacion de la fila ",fila);
-								String cellValue         = null;
-								Cell   tipoServicio          = row.getCell(9);//TIPO SERVICIO
-								String nextCellValue     = null;
-								Cell   tipoUso      = row.getCell(10);//TIPO USO
-								String nextNextCellValue = null;
-								try
-	                            {
-	                                cellValue = claveVeh.getStringCellValue();
-	                            }
-	                            catch(Exception ex)
-	                            {
-	                                try
-	                                {
-	                                    double num = claveVeh.getNumericCellValue();
-	                                    cellValue  = String.format("%.0f",num);
-	                                }
-	                                catch(Exception ex2)
-	                                {
-	                                    paso = (Utils.join("La columna clave del vehiculo es requerida en la fila ",fila));
-	                                    record.put("paso",paso);
-	                                }
-	                            }
-								try
-								{
-									nextCellValue = tipoServicio.getStringCellValue();//TIPO SERVICIO
-									if(!nextCellValue.isEmpty())
-									{
-										int firstWord = nextCellValue.indexOf(" ");
-										if(firstWord != -1)
-										{
-											String secondWord = nextCellValue.substring(firstWord+1);
-											if(secondWord.isEmpty())
-											{
-												nextCellValue = nextCellValue.trim();
-											}
-										}
-									}
-								}
-								catch(Exception ex)
-								{
-									try
-									{
-										double num    = tipoServicio.getNumericCellValue();
-										nextCellValue = String.format("%.0f",num);
-									}
-									catch(Exception ex2)
-									{
-										nextCellValue = "";
-									}
-								}
-								try
-								{
-									nextNextCellValue = tipoUso.getStringCellValue();
-								}
-								catch(Exception ex)
-								{
-									try
-									{
-										double num    = tipoUso.getNumericCellValue();
-										nextNextCellValue = String.format("%.0f",num);
-									}
-									catch(Exception ex2)
-									{
-										nextNextCellValue = "";
-									}
-								}
-								String cdtipsitProc       = null;
-									cdtipsitProc = consultasDAO.recuperarCdtipsitExtraExcel(
-											fila
-											,"PKG_CONSULTA.P_GET_CDTIPSIT_EXCEL_FLOT"
-											,cellValue
-											,nextCellValue
-											,nextNextCellValue
-											);
-								record.put("cdtipsit" , cdtipsitProc);
-								paso = Utils.join("Iterando fila ",fila);
-		                   }
-					} catch (Exception e) {
-						 record.put("paso",paso);
-					}
-				   
-				   }
-				   else
-				   {
-					   try {
+					   catalogoUsos= "5USOMOT";
+					   catalogoServicio="5SERVMOT"; 
+					   try{
 						   paso = new StringBuilder("La fila ").append(fila).append(" no tiene bien definido el tipo de uso.").toString();
 						   Cell uso = row.getCell(10);
 						   String valorUso= uso.getStringCellValue();
@@ -4917,18 +4740,10 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							   for(Map<String,String> valoresUsos:listaUsosXSituacion)
 							   {
 								   if(valoresUsos.containsValue(valorUso+""))
-								   {
-									   record.put("parametros.pv_otvalor04",valoresUsos.get("OTCLAVE"));
-									   break;
-								   }
-							   }
-							   if(!StringUtils.isNotBlank(record.get("parametros.pv_otvalor04")))
-							   {
-								   paso = new StringBuilder("Fila ").append(fila).append(" con uso mal definido para el tipo de situacion.").toString();
-								   record.put("paso",paso);
+								   {	record.put("uso",valoresUsos.get("OTCLAVE"));//Encontramos la clave de uso ingesada oara motos
+									   break;}
 							   }
 		                   }
-						   
 						   paso = new StringBuilder("La fila ").append(fila).append(" no tiene bien definido el tipo de servicio.").toString();
 						   Cell servicio = row.getCell(9);
 						   String valorServicio= servicio.getStringCellValue();
@@ -4939,14 +4754,65 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 							   for(Map<String,String> valoresUsos:listaUsosXSituacion)
 							   {
 								   if(valoresUsos.containsValue(valorServicio+""))
-								   {
-										   record.put("parametros.pv_otvalor03",valoresUsos.get("OTCLAVE"));
-										   break;
-								   }
+								   {	record.put("servicio",valoresUsos.get("OTCLAVE"));//Encontramos la clave de servicio ingesada oara motos
+										   break;}
 							   }
-							   if(!StringUtils.isNotBlank(record.get("parametros.pv_otvalor03")))
+		                   }
+						   if(StringUtils.isNotBlank(record.get("uso")) && StringUtils.isNotBlank(record.get("servicio")))
+		                   {
+							   record.put("cdtipsit","MO");
+							   record.put("dummy.claVeh",valorClaveVeh);
+		                   }
+				        } catch (Exception e) {record.put("paso",paso);}
+				   }//FIN MOTOS
+				   if(StringUtils.isBlank(record.get("cdtipsit")))
+				   {
+					   { //NO ES AR PP PC CR RQ TC MO <<< MEDIAN CLAVE VEH
+	                	   record = obtieneCdtipsit(record, row, fila);
+	                	   if(StringUtils.isNotBlank(record.get("paso")))
+	   				       {
+		   				    	paso=record.get("paso");
+		   				    	throw new ApplicationException(record.get("paso"));
+	   				        }
+	                   }
+				   }
+				   if(!catalogoUsos.isEmpty() && StringUtils.isBlank(record.get("cdtipsit"))){//Encontramos coincidencias de catalogos mediante clave del vehiculo
+					   try {
+						   paso = new StringBuilder("La fila ").append(fila).append(" no tiene bien definido el tipo de uso.").toString();
+						   Cell uso = row.getCell(10);
+						   String valorUso= uso.getStringCellValue();
+						   paso = new StringBuilder("La fila ").append(fila).append(" falta definir uso.").toString();
+						   if(valorUso!=null && !valorUso.isEmpty())
+		                   {
+		                	   List<Map<String,String>> listaUsosXSituacion = cotizacionDAO.cargarClavesTtapvat1(catalogoUsos);
+							   for(Map<String,String> valoresUsos:listaUsosXSituacion)
 							   {
-								   paso = new StringBuilder("Fila ").append(fila).append(" con servicio mal definido para el tipo de situacion.").toString();
+								   if(valoresUsos.containsValue(valorUso+"")){
+									   record.put("parametros.pv_otvalor04",valoresUsos.get("OTCLAVE"));
+									   break;}
+							   }
+							   if(StringUtils.isBlank(record.get("parametros.pv_otvalor04")))
+							   {
+								   paso = new StringBuilder("Fila ").append(fila).append(" con uso mal definido para el tipo de situacion.").toString();
+								   record.put("paso",paso);
+							   }
+		                   }
+						   paso = new StringBuilder("La fila ").append(fila).append(" no tiene bien definido el tipo de servicio.").toString();
+						   Cell servicio = row.getCell(9);
+						   String valorServicio= servicio.getStringCellValue();
+						   paso = new StringBuilder("A la fila ").append(fila).append(" le falta definir correctamente el uso para el servicio que tiene indicado.").toString();
+						   if(valorUso!=null && !valorUso.isEmpty())
+		                   {
+		                	   List<Map<String,String>> listaServiciosXSituacion = cotizacionDAO.cargarClavesTtapvat1(catalogoServicio);
+							   for(Map<String,String> valoresUsos:listaServiciosXSituacion)
+							   {
+								   if(valoresUsos.containsValue(valorServicio+"")){
+										   record.put("parametros.pv_otvalor03",valoresUsos.get("OTCLAVE"));
+										   break;}
+							   }
+							   if(StringUtils.isBlank(record.get("parametros.pv_otvalor03")))
+							   {
+								   paso = new StringBuilder("Fila ").append(fila).append(" con uso mal definido para el tipo de situacion.").toString();
 								   record.put("paso",paso);
 							   }
 		                   }
@@ -4954,25 +4820,115 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		                   {
 		                	   record.put("paso",paso);
 		                   }
-					} catch (Exception e) {
-						 record.put("paso",paso);
-					}
-				   }
+						} catch (Exception e){logger.error(e.getMessage());record.put("paso",paso);}
+				   }//Fin coincidencias mediante clave del vehiculo
 				} catch (Exception e) {
 					record.put("paso",paso);
 				}
 			    
+			 record.put("parametros.pv_otvalor04",record.get("uso"));
 			 if(  !record.get("cdtipsit").equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())//AF
                 &&!record.get("cdtipsit").equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))//PU
-               {
+             {
 				 record.put("parametros.pv_otvalor02",record.get("negocio"));
-               }
-			 else
-			 {
+				 try {
+					 paso = new StringBuilder("La fila ").append(fila).append(" no tiene bien definido el codigo Postal.").toString();
+					 Cell cp =row.getCell(6);
+					 Integer vcp = (int) cp.getNumericCellValue();
+					 if(vcp>99999 || vcp<=9999 ){record.put("paso",paso);}
+					 record.put("parametros.pv_otvalor17",vcp+"");//CODIGO POSTAL
+				} catch (Exception e) {
+						record.put("paso",paso);
+				}
+             }else{
 				 record.put("parametros.pv_otvalor33",record.get("negocio"));
 			 }
-		}
+		}//FALTAN MC, AT, TL, TA ,TV
 		return record;
+	}
+	
+	public Map<String, String> obtieneCdtipsit(Map<String, String> record, Row row, int fila) throws Exception
+	{
+		String paso = Utils.join("Recuperando tipo de situacion de la fila ",fila);
+        Cell claveVeh = row.getCell(8);//Clave Veh
+		String cellValue         = null;
+		Cell   tipoServicio      = row.getCell(9);//TIPO SERVICIO
+		String nextCellValue     = null;
+		Cell   tipoUso           = row.getCell(10);//TIPO USO
+		String nextNextCellValue = null;
+		try
+        {
+            cellValue = claveVeh.getStringCellValue();
+        }
+        catch(Exception ex)
+        {
+            try
+            {
+                double num = claveVeh.getNumericCellValue();
+                cellValue  = String.format("%.0f",num);
+            }
+            catch(Exception ex2)
+            {
+                paso = (Utils.join("La columna clave del vehiculo es requerida en la fila ",fila));
+                record.put("paso",paso);
+            }
+        }
+		try
+		{
+			nextCellValue = tipoServicio.getStringCellValue();//TIPO SERVICIO
+			if(!nextCellValue.isEmpty())
+			{
+				int firstWord = nextCellValue.indexOf(" ");
+				if(firstWord != -1)
+				{
+					String secondWord = nextCellValue.substring(firstWord+1);
+					if(secondWord.isEmpty())
+					{
+						nextCellValue = nextCellValue.trim();
+					}
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			try
+			{
+				double num    = tipoServicio.getNumericCellValue();
+				nextCellValue = String.format("%.0f",num);
+			}
+			catch(Exception ex2)
+			{
+				nextCellValue = "";
+			}
+		}
+		try
+		{
+			nextNextCellValue = tipoUso.getStringCellValue();
+		}
+		catch(Exception ex)
+		{
+			try
+			{
+				double num    = tipoUso.getNumericCellValue();
+				nextNextCellValue = String.format("%.0f",num);
+			}
+			catch(Exception ex2)
+			{
+				nextNextCellValue = "";
+			}
+		}
+		String cdtipsitProc       = null;
+			cdtipsitProc = consultasDAO.recuperarCdtipsitExtraExcel(
+					fila
+					,"PKG_CONSULTA.P_GET_CDTIPSIT_EXCEL_FLOT"
+					,cellValue
+					,nextCellValue
+					,nextNextCellValue
+					);
+			
+			 paso = new StringBuilder("Fila ").append(fila).append(" con servicio mal definido para el tipo de situacion.").toString();
+			 record.put("cdtipsit",cdtipsitProc);
+			 return record;
 	}
 	
 	public String servicioCarga(Cell tipoUso, String claveVeh)
