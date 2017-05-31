@@ -1051,7 +1051,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     public String cotizacionMasivaIndividuales()
     {
         logger.debug(Utils.log(""
-                ,"\n####################################"
+                ,"\n##########################################"
                 ,"\n###### cotizacionMasivaIndividuales ######"
                 ,"\n###### smap1=", smap1
                 ,"\n###### flujo=", flujo
@@ -1124,7 +1124,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         logger.debug(Utils.log(""
                 ,"\n###### result=", result
                 ,"\n###### cotizacionMasivaIndividuales ######"
-                ,"\n####################################"
+                ,"\n##########################################"
                 ));
         return result;
     }
@@ -1624,12 +1624,15 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             
             Utils.validate(smap1, "No se recibieron datos");
             
+            UserVO usuario = Utils.validateSession(session);
+            
             String cdramo    = smap1.get("cdramo")
                    ,cdtipsit = smap1.get("cdtipsit")
                    ,tipoflot = smap1.get("tipoflot")
-                   ,cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave()
-                   ,negocio  = smap1.get("negocio");
-            
+                   ,negocio  = smap1.get("negocio")
+                   ,cdusuari = usuario.getUser()
+                   ,cdsisrol =  usuario.getRolActivo().getClave();
+                   
             logger.debug(Utils.join(
                      "\ntipoflot=" , tipoflot
                     ,"\ncdsisrol=" , cdsisrol
@@ -1644,7 +1647,7 @@ public class CotizacionAutoAction extends PrincipalCoreAction
             
             Utils.validate(excel, "No se recibi\u00f3 el archivo");
             
-            ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaIndividual(cdramo,cdtipsit,"",excel,tipoflot);//,tipoflot
+            ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaIndividual(cdramo,cdtipsit,"",excel,tipoflot);
             
             exito     = resp.isExito();
             respuesta = resp.getRespuesta();
