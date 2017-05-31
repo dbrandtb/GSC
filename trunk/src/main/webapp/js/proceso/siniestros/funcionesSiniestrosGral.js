@@ -2954,7 +2954,7 @@ function validaGralImpTramFactura(ntramite,nfactura,tipopago,procesoContinuar){
                 centrarVentanaInterna(mensajeWarning(json.msgResult));
             }else{
             	myMask.hide();
-            	if(validaGralImpTramFactura =="1"){
+            	if(procesoContinuar =="1"){
             		_11_mostrarSolicitudPago();
             	}
             }
