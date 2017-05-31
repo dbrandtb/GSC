@@ -342,12 +342,11 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     protected class ExportaTablaApoyo extends StoredProcedure {
     	protected ExportaTablaApoyo(DataSource dataSource) {
     		super(dataSource,"PKG_TABAPOYO.P_EXPORTA_TABLA_APOYO");
-    		declareParameter(new SqlParameter("pv_cdreporte_i"   , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_usuario_i"     , OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pi_cdtabla"       , OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ExportaTablaApoyoMapper()));
-    		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-    		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdreporte_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_usuario_i",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ExportaTablaApoyoMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
     		compile();
     	}
     }

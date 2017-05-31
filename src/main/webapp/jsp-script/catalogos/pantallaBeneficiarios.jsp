@@ -1,5 +1,5 @@
 <%@ include file="/taglibs.jsp"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="utf-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,10 +18,6 @@ var _p32_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false
 debug('_p32_smap1:',_p32_smap1);
 
 var _p32_store = null;
-
-var _p32_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_p32_flujo:',_p32_flujo);
 ////// variables //////
 
 //////
@@ -163,7 +159,6 @@ Ext.onReady(function()
                         ,itemId   : '_p32_formEndoso'
                         ,layout   : 'hbox'
                         ,defaults : { style : 'margin:5px;' }
-                        ,ui       :'footer'
                         ,items    :
                         [
                             {
@@ -488,20 +483,13 @@ function _p32_guardarClic(callback)
             json.slist1.push(parseaFechas(record.data));
         });
         
-        if(!Ext.isEmpty(_p32_flujo))
-        {
-            json.flujo = _p32_flujo;
-        }
-        
         debug('json a enviar:',json);
         
         ck='Enviando peticion';
         _setLoading(true,_fieldById('_p32_grid'));
         Ext.Ajax.request(
         {
-            url       : Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S'
-                ? _p32_urlGuardar
-                : _p32_urlConfirmarEndoso
+            url       : _p32_smap1.cdtipsup-0==1 ? _p32_urlGuardar : _p32_urlConfirmarEndoso
             ,jsonData : json
             ,success  : function(response)
             {
@@ -510,7 +498,8 @@ function _p32_guardarClic(callback)
                 debug('### guardar:',json2);
                 if(json2.exito)
                 {
-                    if (Number(_p32_smap1.cdtipsup) === 1 || _p32_smap1.sinConfirmar === 'S') {
+                    if(_p32_smap1.cdtipsup-0==1)
+                    {
                         mensajeCorrecto('Datos guardados','Datos guardados',function()
                         {
                             try
@@ -543,8 +532,7 @@ function _p32_guardarClic(callback)
                     }
                     else
                     {
-                        var callbackRemesa = function()
-                        {
+                        mensajeCorrecto('Datos guardados','Endoso generado');
                             try
                             {
                                 //////////////////////////////////
@@ -559,19 +547,6 @@ function _p32_guardarClic(callback)
                             {
                                 manejaException(e,'Reiniciando navegacion');
                             }
-                        };
-                        
-                        mensajeCorrecto('Datos guardados','Endoso generado',function()
-                        {
-                            _generarRemesaClic(
-                                true
-                                ,_p32_smap1.cdunieco
-                                ,_p32_smap1.cdramo
-                                ,_p32_smap1.estado
-                                ,_p32_smap1.nmpoliza
-                                ,callbackRemesa
-                            );
-                        });
                     }
                 }
                 else
@@ -594,7 +569,6 @@ function _p32_guardarClic(callback)
     debug('<_p32_guardarClic');
 }
 ////// funciones //////
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
 <body>

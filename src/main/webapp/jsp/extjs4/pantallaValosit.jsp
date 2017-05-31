@@ -85,56 +85,55 @@ Ext.onReady(function()
             {
             	text     : 'Guardar'
 	            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-	            ,handler : function (me) {
-	                var mask, ck = 'Guardando datos variables de situaci\u00f3n';
-	                try {
-		            	var form = pantallaValositMainContent;
-		            	debug(me);
-		            	if (form.isValid()) {
-		            		mask = _maskLocal(ck);
-		            		var values = Object.assign(form.getValues(), {
-		            		    'smap1.cdunieco' : pantallaValositInputCdunieco,
-                                'smap1.cdramo'   : pantallaValositInputCdramo,
-                                'smap1.estado'   : pantallaValositInputEstado,
-                                'smap1.nmpoliza' : pantallaValositInputNmpoliza,
-                                'smap1.cdtipsit' : pantallaValositInputCdtipsit,
-                                'smap1.agrupado' : pantallaValositInputAgrupado,
-                                'smap1.nmsituac' : pantallaValositInputNmsituac
-		            		});
-		            		debug('values:', values);
-		            		Ext.Ajax.request({
-		            		    url     : pantallaValositUrlSave,
-		            		    params  : values,
-		            		    success : function (response) {
-		            		        mask.close();
-		            		        var ck = 'Decodificando respuesta al guardar cambios';
-		            		        try {
-		            		            var json = Ext.decode(response.responseText);
-		            		            debug('AJAX json guardar valosit:', json);
-		            		            if (json.success !== true) {
-		            		                throw json.respuesta;
-		            		            }
-		            		            try {
-		            		                window.parent.scrollTo(0,0);
-		            		            } catch (e) {}
-		            		            try {
-		            		                expande(2);
-		            		            } catch (e) {}
-		            		        } catch (e) {
-		            		            manejaException(e, ck);
-		            		        }
-	                            },
-	                            failure : function () {
-	                                mask.close();
-	                                errorComunicacion(null, 'Error al guardar datos variables de situaci\u00f3n');
-	                            }
-	                        });
-		            	} else {
-		            		throw 'Favor de llenar los campos requeridos';
-		            	}
-		            } catch (e) {
-		                manejaException(e, ck, mask);
-		            }
+	            ,handler : function(me)
+	            {
+	            	var form=pantallaValositMainContent;
+	            	debug(me);
+	            	if(form.isValid())
+	            	{
+	            		form.setLoading(true);
+	            		form.submit({
+                            params:
+                            {
+                            	'smap1.cdunieco'  : pantallaValositInputCdunieco
+                            	,'smap1.cdramo'   : pantallaValositInputCdramo
+                            	,'smap1.estado'   : pantallaValositInputEstado
+                            	,'smap1.nmpoliza' : pantallaValositInputNmpoliza
+                            	,'smap1.cdtipsit' : pantallaValositInputCdtipsit
+                            	,'smap1.agrupado' : pantallaValositInputAgrupado
+                            	,'smap1.nmsituac' : pantallaValositInputNmsituac
+                            },
+                            success:function()
+                            {
+                                form.setLoading(false);
+                                window.parent.scrollTo(0,0);
+                                centrarVentanaInterna(Ext.Msg.show({
+                                    title:'Cambios guardados',
+                                    msg: 'Sus cambios han sido guardados',
+                                    buttons: Ext.Msg.OK
+                                }));
+                                expande(2);
+                            },
+                            failure:function(){
+                                form.setLoading(false);
+                                Ext.Msg.show({
+                                    title:'Error',
+                                    msg: 'Error de comunicaci&oacute;n',
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.Msg.ERROR
+                                });
+                            }
+                        });
+	            	}
+	            	else
+	            	{
+	            		Ext.Msg.show({
+	                        title:'Error',
+	                        icon: Ext.Msg.WARNING,
+	                        msg: 'Favor de llenar los campos requeridos',
+	                        buttons: Ext.Msg.OK
+	                    });
+	            	}
 	            }
             }
         ]
@@ -311,23 +310,6 @@ Ext.onReady(function()
                 });
             }
         });
-    }
-    
-    if (pantallaValositInputCdramo == Ramo.GastosMedicosMayoresPrueba
-        && pantallaValositInputCdtipsit == TipoSituacion.GastosMedicosMayoresPruebaInd) {
-        if (!Ext.isEmpty(_fieldByLabel('PLAN', pantallaValositMainContent, true))
-            && !Ext.isEmpty(_fieldByLabel('DEDUCIBLE', pantallaValositMainContent, true))) {
-            var planCmp = _fieldByLabel('PLAN', pantallaValositMainContent, true),
-                deduCmp = _fieldByLabel('DEDUCIBLE', pantallaValositMainContent, true);
-            deduCmp.anidado = true;
-            deduCmp.heredar = function () {
-                deduCmp.getStore().load({
-                    params : {
-                        'params.idPadre' : planCmp.getValue()
-                    }
-                });
-            };
-        }
     }
     ////// custom //////
 });

@@ -144,7 +144,7 @@ function _cotcol_quitarAsegurado(grid,rowIndex)
     var record = grid.getStore().getAt(rowIndex);
     debug('>_cotcol_quitarAsegurado:',record.data,'grid.getStore():',grid.getStore());
     
-    centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se borrarÃ¡ el asegurado y no podr\u00e1 recuperarse<br>Â¿Desea continuar?', function(btn)
+    centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'Se borrar\u00e1 el asegurado y no podr\u00e1 recuperarse<br>¿Desea continuar?', function(btn)
     {
         if(btn === 'yes')
         {
@@ -209,140 +209,6 @@ function _cotcol_quitarAsegurado(grid,rowIndex)
     debug('<_cotcol_quitarAsegurado');
 }
 
-function _p21_subirArchivoMorbilidad(button,nombreCensoParaConfirmar){
-	debug('_p21_subirArchivoMorbilidad button:',button,'nombreCensoParaConfirmar:',nombreCensoParaConfirmar,'.');
-    
-    var form=button.up().up();
-    var descMorbilidad  = form.down('[name=descMorbilidad]').getValue();
-    debug("descMorbilidad ==>",descMorbilidad);
-    var dtFechaVigencia = form.down('[name=dtFechaVigencia]').getValue();
-    debug("dtFechaVigencia ==>",dtFechaVigencia);
-    
-    var valido=form.isValid();
-    if(!valido)
-    {
-        datosIncompletos();
-    }
-    
-    if(valido){
-    	//Validamos si ya existe uno con el mismo nombre 
-    	Ext.Ajax.request( {
-            url      : _p21_urlExisteMorbilidadExistente
-            ,params  :
-            {
-                'params.morbilidad' : descMorbilidad
-            }
-            ,success : function(response)
-            {
-                var json = Ext.decode(response.responseText);
-                debug("RESPUESTA DE LA VALIDACION ==>",json);
-                
-                if(json.respuesta > 0){
-                	mensajeWarning('Ya existe la morbilidad '+descMorbilidad+" dado de alta.");
-                }else{
-                	valido = true;
-                    if(valido)
-                    {
-                        form.setLoading(true);
-                        var timestamp = new Date().getTime();
-                        form.submit(
-                        {
-                            params   :
-                            {
-                                'smap1.timestamp' : timestamp
-                                ,'smap1.ntramite' : ''
-                            }
-                            ,success : function()
-                            {
-                                if(!Ext.isEmpty(nombreCensoParaConfirmar))
-                                {
-                                    debug('se quita allowblank');
-                                    form.down('filefield').allowBlank = false;
-                                }
-                            
-                                var conceptos = {};
-                                conceptos['timestamp']              = timestamp;
-                                conceptos['descMorbilidad']         = descMorbilidad;
-                                conceptos['dtFechaVigencia']        = dtFechaVigencia;
-                                conceptos['nombreLayoutConfirmado'] = nombreCensoParaConfirmar;
-                                var grupos = [];
-                                
-                                Ext.Ajax.request(
-                                {
-                                    url       : _p21_urlSubirCensoMorbilidad
-                                    ,jsonData :
-                                    {
-                                        smap1   : conceptos
-                                        ,olist1 : grupos
-                                    }
-                                    ,success  : function(response)
-                                    {
-                                        form.setLoading(false);
-                                        var json=Ext.decode(response.responseText);
-                                        debug('### subir censo completo response:',json);
-                                        if(json.exito)
-                                        {
-                                        	windowLoader.close();
-                                            centrarVentanaInterna(Ext.Msg.show({
-                                                title    : 'Morbilidad'
-                                                ,msg     : 'Se ha guardado la nueva morbilidad.'
-                                                ,buttons : Ext.Msg.OK
-                                                ,fn      : function()
-                                                {
-                                                    _p21_reload(null,_EN_ESPERA_DE_COTIZACION ,_p21_smap1.nmpoliza);
-                                                }
-                                            }));
-                                        }
-                                         else
-                                         {
-                                            form.setLoading(false);
-                                            centrarVentanaInterna(mensajeWarning('El archivo contiene errores de Datos.<br/>Favor de validarlo.',function(){
-                                            centrarVentanaInterna(Ext.create('Ext.window.Window', {
-                                            modal  : true
-                                            ,title : 'Error'
-                                            ,items : [
-                                                {
-                                                     xtype     : 'textarea'
-                                                             ,width    : 700
-                                                             ,height   : 400
-                                                             ,readOnly : true
-                                                             ,value    : json.smap1.erroresCenso
-                                                        }
-                                                    ]
-                                                }).show());
-                                            }));
-                                         }
-                                     }
-                                     ,failure  : function()
-                                     {
-                                         form.setLoading(false);
-                                         errorComunicacion();
-                                     }
-                                 });
-                             }
-                             ,failure : function()
-                             {
-                                 if(!Ext.isEmpty(nombreCensoParaConfirmar))
-                                 {
-                                     debug('se quita allowblank');
-                                     form.down('filefield').allowBlank = false;
-                                 }
-                                 form.setLoading(false);
-                                 errorComunicacion(null,'Error complementando datos');
-                             }
-                         });
-                     }
-                }
-                
-            }
-            ,failure : function()
-            {
-                errorComunicacion(null,'Error en la validaci&oacute;n de existencia de Morbilidad ');
-            }
-        });
-    }
-}
-
 function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
 {
     debug('_p21_subirArchivoCompleto button:',button,'nombreCensoParaConfirmar:',nombreCensoParaConfirmar,'.');
@@ -389,8 +255,6 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                 conceptos['cdtipsit']              = _p21_smap1.cdtipsit;
                 conceptos['ntramiteVacio']         = _p21_ntramiteVacio ? _p21_ntramiteVacio : '';
                 conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
-                conceptos['esRenovacion'] 		   = _p21_smap1.cdtipsup;
-                conceptos['estatusRenovacion'] 	   = _p21_smap1.status;
                 var grupos = [];
                 _p21_storeGrupos.each(function(record)
                 {
@@ -414,23 +278,7 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                         if(json.exito)
                         {
                         
-                            //var callback = function() { _p21_turnar(19,'Observaciones de la carga',false); };
-                            var callback = function() {
-                            	if(_p21_smap1.status == _EN_ESPERA_DE_COTIZACION){
-                            		if(_p21_smap1.cdtipsup == _TIPO_SITUACION_RENOVACION){
-                            			form.up('window').destroy();
-                            			_p21_reload(null,_EN_ESPERA_DE_COTIZACION ,_p21_smap1.nmpoliza);
-                            		}else{
-                            			_p21_mesacontrol();
-                            		}
-                            	}else{
-                            		mensajeCorrecto('Aviso','Se ha turnado el tr\u00e1mite a mesa de control en estatus ' +
-										'"En Tarifa" para procesar el censo. Una vez terminado podra encontrar su tr\u00e1mite ' +
-										'en estatus "Carga completa".',function(){ _p21_mesacontrol(); } 
-									);
-                            	}
-						  	};
-                            
+                            var callback = function() { _p21_turnar(19,'Observaciones de la carga',false); };
                             
                             if(Ext.isEmpty(nombreCensoParaConfirmar))
                             {
@@ -446,7 +294,7 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                             url      : _p21_urlRecuperacionSimpleLista
                                             ,params  :
                                             {
-                                                'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS_FINAL'
+                                                'smap1.procedimiento' : 'RECUPERAR_REVISION_COLECTIVOS'
                                                 ,'smap1.cdunieco'     : _p21_smap1.cdunieco
                                                 ,'smap1.cdramo'       : _p21_smap1.cdramo
                                                 ,'smap1.estado'       : 'W'
@@ -460,37 +308,6 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                                     _p21_tabpanel().setLoading(false);
                                                     var json2 = Ext.decode(response.responseText);
                                                     debug('### asegurados:',json2);
-                                                    
-                                                    var ngrupos = 0;
-                                                    
-                                                    var tabgrupos = _p21_tabGrupos; //Obtiene los grupos de Resumen Subgrupos
-                                                    debug('tabgrupos cotizacion1',tabgrupos,'.');
-                                                    
-                                                    ngrupos = tabgrupos.items.items.items[0].store.getCount();
-                                                    debug('ngrupos ',ngrupos,'.'); //Numero de Grupos en Resumen Subgrupos
-                                                    
-                                                    var gruposValidos = [];
-                                                    for(var i=0; i < ngrupos;i++){
-                                                    	gruposValidos[i+1]=false;
-                                                    }
-                                                    debug('gruposValidos',gruposValidos,'.');
-                                                    
-                                                    for(var i=0; i<json2.slist1.length;i++){
-                                                    	debug('Gpo. ',json2.slist1[i].CDGRUPO);
-                                                    	gruposValidos[Number(json2.slist1[i].CDGRUPO)]=true;//De los grupos asigna true al array cuando este disponible.
-                                                    }
-                                                    debug('iteracion completa gruposValidos',gruposValidos,'.');
-                                                    
-                                                    var enableBoton =true;
-                                                    for(var i=0; i<ngrupos;i++){
-                                                    	debug('boton ->',gruposValidos[i+1],'.');
-                                                    	if(gruposValidos[i+1]===false){//Segun el valor en el array, se sabe si el boton esta o no habilitado.	
-                                                    		enableBoton = false;
-                                                    		break;
-                                                    	}
-                                                    }
-                                                    debug('enableBoton ',enableBoton,'.');
-                                                    
                                                     var store = Ext.create('Ext.data.Store',
                                                     {
                                                         model : '_p21_modeloRevisionAsegurado'
@@ -612,7 +429,6 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                                             {
                                                                 text       : 'Aceptar y continuar'
                                                                 ,icon      : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/accept.png'
-                                                                ,disabled  : !enableBoton
                                                                 ,handler   : function(me)
                                                                 {
                                                                     var ck = 'Borrando respaldo';
@@ -639,8 +455,6 @@ function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                                                                                     if(jsonBorr.success===true)
                                                                                     {
                                                                                         me.up('window').destroy();
-                                                                                        debug("Valor del button ===>",button);
-                                                                                        debug("Valor del json.smap1.nombreCensoParaConfirmar ===>",json.smap1.nombreCensoParaConfirmar);
                                                                                         _p21_subirArchivoCompleto(button,json.smap1.nombreCensoParaConfirmar);
                                                                                     }
                                                                                     else
@@ -892,42 +706,7 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
 	                                            {
 	                                                _p21_tabpanel().setLoading(false);
 	                                                var json2 = Ext.decode(response.responseText);
-	                                                
 	                                                debug('### asegurados:',json2);
-	                                                
-	                                                var ngrupos = 0;
-	                                                
-                                                    var tabgrupos = _p21_tabGrupos; //Obtiene los grupos de Resumen Subgrupos
-                                                    debug('tabgrupos cotizacion endoso',tabgrupos,'.');
-                                                    
-                                                    ngrupos = tabgrupos.items.items.items[0].store.getCount();
-                                                    debug('ngrupos ',ngrupos,'.'); //Numero de Grupos en Resumen Subgrupos
-                                                    
-                                                    
-                                                    var gruposValidos = [];
-                                                    for(var i=0; i < ngrupos;i++){
-                                                    	gruposValidos[i+1]=false;
-                                                    }
-                                                    debug('gruposValidos',gruposValidos,'.');
-                                                    
-                                                    
-                                                    for(var i=0; i<json2.slist1.length;i++){
-                                                    	debug('GPO.',json2.slist1[i].CDGRUPO,'.');
-                                                    	gruposValidos[Number(json2.slist1[i].CDGRUPO)]=true;//De los grupos asigna true al array cuando este disponible.
-                                                    }
-                                                    debug('iteracion completa gruposValidos',gruposValidos,'.');
-                                                    
-                                                    
-                                                    var enableBoton = true;
-                                                    for(var i=0; i<ngrupos;i++){
-                                                    	debug('boton ->',gruposValidos[i+1],'.');
-                                                    	if(gruposValidos[i+1]===false){//Segun el valor en el array, se sabe si el boton esta o no habilitado.	
-                                                    		enableBoton = false;
-                                                    		break;
-                                                    	}
-                                                    }
-                                                    debug('EnableBoton',enableBoton);
-	                                                
 	                                                var store = Ext.create('Ext.data.Store',
 	                                                {
 	                                                    model : '_p21_modeloRevisionAsegurado'
@@ -1047,10 +826,9 @@ function _p21_subirArchivoCompletoEndoso(button,nombreCensoParaConfirmar)
                                                         ,buttons     :
                                                         [
                                                             {
-                                                                text       : 'Aceptar y continuar'
-                                                                ,icon      : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/accept.png'
-                                                                //,disabled  : !enableBoton
-                                                                ,handler   : function(me)
+                                                                text     : 'Aceptar y continuar'
+                                                                ,icon    : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/accept.png'
+                                                                ,handler : function(me)
                                                                 {
                                                                     var ck = 'Borrando respaldo';
                                                                     try
@@ -1399,54 +1177,6 @@ function _p21_guardarExtraprimasTitulares(){
     });
 }
 
-////complementar
-function _p21_guardarExtraprimasTitularesAsegurados(){
-    debug('>_p21_guardarExtraprimas:');
-    _mask('Actualizado valores');
-    var selection = _fieldById('gridAsegurados'+this.grupo).getPlugin('pagingselect'+this.grupo).selection;
-    for (var i = 0; i < selection.length; i++){
-        if (selection[i].data['PARENTESCO'] === 'T'){
-            selection[i].data['EXTPRI_OCUPACION'] = this.up('grid').down('[name=extrtitu]').value;
-        }
-    }
-    Ext.Ajax.request(
-            {
-        url       : _p21_urlGuardarSituacionesTitulares
-        ,jsonData :
-        {
-            params  : {
-                cdunieco   : _p21_smap1.cdunieco
-                ,cdramo    : _p21_smap1.cdramo
-                ,estado    : _p21_smap1.estado
-                ,nmpoliza  : _p21_smap1.nmpoliza
-                ,nmsuplem  : '0'
-                ,cdtipsit  : _p21_smap1.cdtipsit
-                ,cdgrupo   : this.grupo
-                ,valor     : this.up('grid').down('[name=extrtitu]').value
-                }
-        }
-        ,success  : function(response){
-            var json=Ext.decode(response.responseText);
-            debug('respuesta del guardado de extraprimas:',json);
-            if(json.exito){
-                _fieldById('gridAsegurados'+json.params.cdgrupo).getStore().reload();
-                mensajeCorrecto('Datos guardados',json.respuesta);
-                _unmask();
-                //_mask('Actualizando pantalla');
-                //window.location.reload();
-            }
-            else{
-                mensajeError(json.respuesta);
-                _unmask();
-            }
-        }
-        ,failure  : function(){
-            errorComunicacion();
-            _unmask();
-        }
-    });
-}
-
 function _p25_guardarExtraprimas(letra)
 {
     debug('>_p25_guardarExtraprimas:',letra);
@@ -1539,93 +1269,6 @@ function _p25_guardarExtraprimas(letra)
     debug('<_p25_guardarExtraprimas');
 }
 
-function _p21_guardarExtraprimasAseg(letra)
-{
-    debug('>_p21_guardarExtraprimasAseg:',letra);
-    var selection = _fieldById('gridAsegurados'+letra).getPlugin('pagingselect'+letra).selection;
-    for (var i = 0; i < selection.length; i++){
-        //debug('metiendo llave ',selection[i].data['NMSITUAC']);
-        for(var j = 0; j < _fieldById('gridAsegurados'+letra).getStore().data.items.length; j++){
-           //debug('metiendo llave ',_fieldById('gridAseg'+letra).getStore().data.items[j].data['NMSITUAC']);
-           if(_fieldById('gridAsegurados'+letra).getStore().data.items[j].data['NMSITUAC'] === selection[i].data['NMSITUAC']){
-                selection[i].data = _fieldById('gridAsegurados'+letra).getStore().data.items[j].data;
-                debug('metiendo _p21_guardarExtraprimasAseg llave ',selection[i].data['NMSITUAC']);
-           }
-        }
-    }
-    var records = [];
-    var store = _fieldById('gridAsegurados'+letra).getStore();
-    for(var i in _fieldById('gridAsegurados'+letra).getPlugin('pagingselect'+letra).selection){
-        
-        records.push(_fieldById('gridAsegurados'+letra).getPlugin('pagingselect'+letra).selection[i].data);
-    }
-    debug('store a guardar:',store);
-    debug('records a guardar:',records);
-    if(records.length==0)
-    {
-        mensajeWarning('No hay cambios');
-        _unmask();
-        _p21_setActiveResumen();
-    }
-    else
-    {
-        var asegurados = [];
-        $.each(records,function(i,record)
-        {
-            var asegurado =
-            {
-                nmsituac          : record['NMSITUAC']
-                ,ocupacion        : record['OCUPACION']
-                ,extpri_ocupacion : record['EXTPRI_OCUPACION']
-                ,peso             : record['PESO']
-                ,estatura         : record['ESTATURA']
-                ,extpri_estatura  : record['EXTPRI_SOBREPESO']
-                ,cdgrupo          : letra
-            };
-            asegurados.push(asegurado);
-        });
-        debug('asegurados ',asegurados);
-        Ext.Ajax.request(
-        {
-            url       : _p21_urlGuardarExtraprimas
-            ,jsonData :
-            {
-                params  :
-                {
-                    cdunieco   : _p21_smap1.cdunieco,
-                    cdramo     : _p21_smap1.cdramo,
-                    estado     : _p21_smap1.estado,
-                    nmpoliza   : _p21_smap1.nmpoliza,
-                    nmsuplem   : 0,
-                    cdtipsit   : _p21_smap1.cdtipsit,
-                    guardarExt : 'S'
-                }
-                ,slist1 : asegurados
-            }
-            ,success  : function(response)
-            {
-                var json=Ext.decode(response.responseText);
-                debug('respuesta del guardado de extraprimas:',json);
-                if(json.exito)
-                {
-                    mensajeCorrecto('Datos guardados',json.respuesta);
-                }
-                else
-                {
-                    mensajeError(json.respuesta);
-                }
-            }
-            ,failure  : function()
-            {
-                errorComunicacion();
-            }
-        });
-    }
-    debug('<_p21_guardarExtraprimas');
-}
-
-
-
 function _p21_guardarExtraprimas(letra)
 {
     debug('>_p21_guardarExtraprimas:',letra);
@@ -1715,7 +1358,7 @@ function _cotcol_confirmarTurnado(callback)
 {
     debug('>_cotcol_confirmarTurnado:');
     
-    centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'No se guardar\u00e1n los cambios ni se generar\u00e1 tarifa <br>Â¿Desea continuar?', function(btn)
+    centrarVentanaInterna(Ext.MessageBox.confirm('Confirmar', 'No se guardar\u00e1n los cambios ni se generar\u00e1 tarifa <br>¿Desea continuar?', function(btn)
     {
         if(btn === 'yes')
         {
@@ -2460,17 +2103,6 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                             }
                             else
                             {
-                                if (!Ext.isEmpty(_cotcol_flujo) && _cotcol_flujo.aux === 'RSTN') {
-                                    mensajeCorrecto(
-                                        'Censo cargado',
-                                        'Se est\u00e1 procesando el censo de asegurados',
-                                        function () {
-                                            _mask();
-                                            location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?empty';
-                                        }
-                                    );
-                                    return;
-                                }
                                 callback();
                             }
                         }
@@ -2682,7 +2314,7 @@ function _p21_editarExclusiones(grid,row)
 {
     var record=grid.getStore().getAt(row);
     debug('>_p21_editarExclusiones record:',record.data);
-    _p21_guardarAsegurados("0",grid,function()
+    _p21_guardarAsegurados(grid,function()
     {
         var ventana=Ext.create('Ext.window.Window',
         {
@@ -2717,327 +2349,4 @@ function _p21_editarExclusiones(grid,row)
         }
     });
     debug('<_p21_editarExclusiones');
-}
-
-
-function _p21_editarMorbilidad()
-{
-    debug('>_p21_editarMorbilidad record:');
-    var ventana=Ext.create('Ext.window.Window',
-        {
-            title   : 'Consulta Morbilidad'
-            ,width  : 900
-            ,height : 600
-            ,modal  : true
-            ,loader :
-            {
-                url       : _p21_urlConsultaMorbilidad
-                ,params   :
-                {
-                    'smap1.pv_cdramo'       : _p21_smap1.cdramo
-                }
-                ,scripts  : true
-                ,autoLoad : true
-            }
-        }).show()
-        centrarVentanaInterna(ventana);
-        
-    debug('<_p21_editarMorbilidad');
-}
-
-function _verificaAprueba(){
-    
-	debug('<<<>>> Verifica Aprueba Cambio de Nombre de Plan<<<>>>');
-	
-	if(([RolSistema.SuscriptorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ))
-    {
-        if(!_vigPolizaAnualValida){
-            mensajeWarning('No se puede aprobar. La vigencia para esta p&oacute;liza es distinta a un a&ntilde;o. El Supervisor debe aprobar el tr&aacute;mite.');
-            return true; //La vigencia es diferente a un Anio
-        }
-    }
-	
-	if(_p21_tabGrupos){
-		var planExcedeLongitud = false;
-		
-		_p21_query('#'+_p21_tabGrupos.itemId)[0].items.items[0].getStore().each(function(record){
-	        if(!Ext.isEmpty(record.get('dsplanl')) && String(record.get('dsplanl')).length > 40)
-	        {
-	        	planExcedeLongitud = true;
-	        	return false;
-	        }
-	    });
-		
-		if(planExcedeLongitud){
-			mensajeWarning('No se puede aprobar. El Suscriptor/Supervisor debe editar primero los nombres de plan ya que alguno excede la longitud permitida de caracteres.');
-			return true;
-		}
-		
-	}
-    
-    if(([RolSistema.SuscriptorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ))
-    {
-        //alert('suscriptor');
-        var faltaAprobacion = _faltaAprobarNombrePlan;
-        
-        if(faltaAprobacion){
-            mensajeWarning('El Supervisor debe aprobar primero los cambios realizados a los nombres de plan editados.');    
-        }
-        
-        return faltaAprobacion;
-        
-    }else if(([RolSistema.SupervisorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 )){
-        //alert('supervisor');
-        Ext.Ajax.request({
-            url     : _p21_urlLanzaAprobacionNombrePlan,
-            params  : {
-                'smap1.ntramite'    :  _p21_ntramite,
-                'smap1.tipobloqueo' : 'D'
-            },
-            success : function (response) {
-                var json=Ext.decode(response.responseText);
-                
-                if(!json.success){
-                    debugError('Error sin impacto al eliminar bloqueo para aprobacion de cambio de nombre de plan. ', json.respuesta);
-                }
-            },
-            failure : function () {
-                errorComunicacion(null, 'Error al lanzar validaci\u00f3n cambio de nombre plan');
-            }
-        }); 
-        
-        return false;
-    }
-    
-    return false;    
-}
-////////////////////
-function _p21_agregarTabGrupos()
-{
-    debug('>_p21_agregarTabGrupos');
-    _p21_storeGrupos.removeAll();
-    
-    if(_p21_tabGrupos)
-    {
-        debug('remove:',Ext.ComponentQuery.query('#'+_p21_tabGrupos.itemId)[0]);
-        _p21_tabpanel().remove(Ext.ComponentQuery.query('#'+_p21_tabGrupos.itemId)[0],false);
-    }
-    
-    if(_p21_clasif==_p21_TARIFA_LINEA)
-    {
-        _p21_tabGrupos = _p21_tabGruposLineal;
-    }
-    else
-    {
-        _p21_tabGrupos = _p21_tabGruposModifi;
-    }
-    
-    _p21_agregarTab(_p21_tabGrupos);
-    window.parent.scrollTo(0, 0);
-    debug('<_p21_agregarTabGrupos');
-}
-
-
-function _p21_sigsvalipol(callback)
-{
-    debug('>_p21_sigsvalipol');
-    _p21_tabpanel().setLoading(true);
-    Ext.Ajax.request(
-    {
-        url      : _p21_urlSigsvalipol
-        ,params  :
-        {
-            'smap1.cdunieco'  : _p21_smap1.cdunieco
-            ,'smap1.cdramo'   : _p21_smap1.cdramo
-            ,'smap1.estado'   : _p21_smap1.estado
-            ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
-            ,'smap1.nmsituac' : '0'
-            ,'smap1.nmsuplem' : '0'
-            ,'smap1.cdtipsit' : _p21_smap1.cdtipsit
-        }
-        ,success : function(response)
-        {
-            _p21_tabpanel().setLoading(false);
-            var json=Ext.decode(response.responseText);
-            debug('respuesta json sigsvalipol:',json);
-            if(json.exito)
-            {
-                callback();
-            }
-            else
-            {
-                mensajeError(json.respuesta);
-            }
-        }
-        ,failure : function()
-        {
-            _p21_tabpanel().setLoading(false);
-            errorComunicacion();
-        }
-    });
-    debug('<_p21_sigsvalipol');
-}
-
-
-function _p21_imprimir()
-{
-    debug('>_p21_imprimir');
-    var urlRequestImpCotiza = _p21_urlImprimirCotiza
-            + '?p_unieco='      + _p21_smap1.cdunieco
-            + '&p_ramo='        + _p21_smap1.cdramo
-            + '&p_estado=W'
-            + '&p_poliza='      + _p21_smap1.nmpoliza
-            + '&p_suplem=0'
-            + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
-            + '&p_perpag='      + _fieldByName('cdperpag').getValue()
-            + '&p_usuari='      + _p21_smap1.cdusuari
-            + '&p_cdplan='
-            + '&destype=cache'
-            + "&desformat=PDF"
-            + "&userid="        + _p21_reportsServerUser
-            + "&ACCESSIBLE=YES"
-            + "&report="        + _p21_nombreReporteCotizacion
-            + "&paramform=no";
-    debug(urlRequestImpCotiza);
-    var numRand = Math.floor((Math.random() * 100000) + 1);
-    debug(numRand);
-    centrarVentanaInterna(Ext.create('Ext.window.Window',
-    {
-        title          : 'Cotizaci&oacute;n'
-        ,width         : 700
-        ,height        : 500
-        ,collapsible   : true
-        ,titleCollapse : true
-        ,html : '<iframe innerframe="'
-                + numRand
-                + '" frameborder="0" width="100" height="100"'
-                + 'src="'
-                + _p21_urlViewDoc
-                + "?contentType=application/pdf&url="
-                + encodeURIComponent(urlRequestImpCotiza)
-                + "\">"
-                + '</iframe>'
-        ,listeners :
-        {
-            resize : function(win,width,height,opt)
-            {
-                debug(width,height);
-                $('[innerframe="'+ numRand+ '"]').attr(
-                {
-                    'width'   : width - 20
-                    ,'height' : height - 60
-                });
-            }
-        }
-    }).show());
-    debug('<_p21_imprimir');
-}
-
-function _p21_imprimir2()
-{
-    debug('>_p21_imprimir2');
-    var urlRequestImpCotiza = _p21_urlImprimirCotiza
-            + '?p_unieco='      + _p21_smap1.cdunieco
-            + '&p_ramo='        + _p21_smap1.cdramo
-            + '&p_estado=W'
-            + '&p_poliza='      + _p21_smap1.nmpoliza
-            + '&p_suplem=0'
-            + '&p_cdperpag='    + _fieldByName('cdperpag').getValue()
-            + '&p_perpag='      + _fieldByName('cdperpag').getValue()
-            + '&p_usuari='      + _p21_smap1.cdusuari
-            + '&p_cdplan='
-            + '&destype=cache'
-            + "&desformat=PDF"
-            + "&userid="        + _p21_reportsServerUser
-            + "&ACCESSIBLE=YES"
-            + "&report="        + _p21_nombreReporteCotizacionDetalle
-            + "&paramform=no";
-    debug(urlRequestImpCotiza);
-    var numRand = Math.floor((Math.random() * 100000) + 1);
-    debug(numRand);
-    centrarVentanaInterna(Ext.create('Ext.window.Window',
-    {
-        title          : 'Cotizaci&oacute;n'
-        ,width         : 700
-        ,height        : 500
-        ,collapsible   : true
-        ,titleCollapse : true
-        ,html : '<iframe innerframe="'
-                + numRand
-                + '" frameborder="0" width="100" height="100"'
-                + 'src="'
-                + _p21_urlViewDoc
-                + "?contentType=application/pdf&url="
-                + encodeURIComponent(urlRequestImpCotiza)
-                + "\">"
-                + '</iframe>'
-        ,listeners :
-        {
-            resize : function(win,width,height,opt)
-            {
-                debug(width,height);
-                $('[innerframe="'+ numRand+ '"]').attr(
-                {
-                    'width'   : width - 20
-                    ,'height' : height - 60
-                });
-            }
-        }
-    }).show());
-    debug('<_p21_imprimir2');
-}
-
-function _p21_agentes()
-{
-    debug('>_p21_agentes');
-    centrarVentanaInterna(Ext.create('Ext.window.Window',
-    {
-        title        : 'AGENTES'
-        ,modal       : true
-        ,buttonAlign : 'center'
-        ,width       : 800
-        ,height      : 400
-        ,autoScroll  : true
-        ,closeAction : 'destroy'
-        ,loader      :
-        {
-            url       : _p21_urlPantallaAgentes
-            ,scripts  : true
-            ,autoLoad : true
-        },
-        listeners: {
-            close: function (){
-                try{
-                    _ventanaGridAgentesSuperior.destroy();
-                    _p21_reload(null,_EN_ESPERA_DE_COTIZACION ,_p21_smap1.nmpoliza);
-                }catch (e){
-                    debugError('Error al destruir ventana de agentes.',e);
-                }
-            }
-        }
-    }).show());
-    debug('<_p21_agentes');
-}
-
-function  checkEditAseg(editor, context, eOpts) {
-    debug('entrando a checkEditAseg');
-    debug('context',context.newValues);
-    var gras = _fieldById('gridAsegurados'+editor.cdgrupo);
-    gras.getSelectionModel().select(context.record, false);
-    if(!compareObjects(context.newValues, context.originalValues)){
-        gras.getSelectionModel().select(context.record, true);
-    }
-    _fieldById('btnguardarAseg'+this.cdgrupo).enable();
-}
-
-
-function  beforedeselAseg(sm, record) {
-    debug('entrando a beforedeselAseg ');
-    return !_fieldById('gridAsegurados'+sm.cdgrupo).getPlugin('rowedit'+sm.cdgrupo);
-}
-
-function beforeedAseg(editor, context) {
-    debug('entrando a beforeedAseg');
-    _fieldById('btnguardarAseg'+editor.cdgrupo).disable();
-    return context.colIdx !== 0;
 }
