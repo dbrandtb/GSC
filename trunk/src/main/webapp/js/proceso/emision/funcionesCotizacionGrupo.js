@@ -209,140 +209,6 @@ function _cotcol_quitarAsegurado(grid,rowIndex)
     debug('<_cotcol_quitarAsegurado');
 }
 
-function _p21_subirArchivoMorbilidad(button,nombreCensoParaConfirmar){
-	debug('_p21_subirArchivoMorbilidad button:',button,'nombreCensoParaConfirmar:',nombreCensoParaConfirmar,'.');
-    
-    var form=button.up().up();
-    var descMorbilidad  = form.down('[name=descMorbilidad]').getValue();
-    debug("descMorbilidad ==>",descMorbilidad);
-    var dtFechaVigencia = form.down('[name=dtFechaVigencia]').getValue();
-    debug("dtFechaVigencia ==>",dtFechaVigencia);
-    
-    var valido=form.isValid();
-    if(!valido)
-    {
-        datosIncompletos();
-    }
-    
-    if(valido){
-    	//Validamos si ya existe uno con el mismo nombre 
-    	Ext.Ajax.request( {
-            url      : _p21_urlExisteMorbilidadExistente
-            ,params  :
-            {
-                'params.morbilidad' : descMorbilidad
-            }
-            ,success : function(response)
-            {
-                var json = Ext.decode(response.responseText);
-                debug("RESPUESTA DE LA VALIDACION ==>",json);
-                
-                if(json.respuesta > 0){
-                	mensajeWarning('Ya existe la morbilidad '+descMorbilidad+" dado de alta.");
-                }else{
-                	valido = true;
-                    if(valido)
-                    {
-                        form.setLoading(true);
-                        var timestamp = new Date().getTime();
-                        form.submit(
-                        {
-                            params   :
-                            {
-                                'smap1.timestamp' : timestamp
-                                ,'smap1.ntramite' : ''
-                            }
-                            ,success : function()
-                            {
-                                if(!Ext.isEmpty(nombreCensoParaConfirmar))
-                                {
-                                    debug('se quita allowblank');
-                                    form.down('filefield').allowBlank = false;
-                                }
-                            
-                                var conceptos = {};
-                                conceptos['timestamp']              = timestamp;
-                                conceptos['descMorbilidad']         = descMorbilidad;
-                                conceptos['dtFechaVigencia']        = dtFechaVigencia;
-                                conceptos['nombreLayoutConfirmado'] = nombreCensoParaConfirmar;
-                                var grupos = [];
-                                
-                                Ext.Ajax.request(
-                                {
-                                    url       : _p21_urlSubirCensoMorbilidad
-                                    ,jsonData :
-                                    {
-                                        smap1   : conceptos
-                                        ,olist1 : grupos
-                                    }
-                                    ,success  : function(response)
-                                    {
-                                        form.setLoading(false);
-                                        var json=Ext.decode(response.responseText);
-                                        debug('### subir censo completo response:',json);
-                                        if(json.exito)
-                                        {
-                                        	windowLoader.close();
-                                            centrarVentanaInterna(Ext.Msg.show({
-                                                title    : 'Morbilidad'
-                                                ,msg     : 'Se ha guardado la nueva morbilidad.'
-                                                ,buttons : Ext.Msg.OK
-                                                ,fn      : function()
-                                                {
-                                                    _p21_reload(null,_EN_ESPERA_DE_COTIZACION ,_p21_smap1.nmpoliza);
-                                                }
-                                            }));
-                                        }
-                                         else
-                                         {
-                                            form.setLoading(false);
-                                            centrarVentanaInterna(mensajeWarning('El archivo contiene errores de Datos.<br/>Favor de validarlo.',function(){
-                                            centrarVentanaInterna(Ext.create('Ext.window.Window', {
-                                            modal  : true
-                                            ,title : 'Error'
-                                            ,items : [
-                                                {
-                                                     xtype     : 'textarea'
-                                                             ,width    : 700
-                                                             ,height   : 400
-                                                             ,readOnly : true
-                                                             ,value    : json.smap1.erroresCenso
-                                                        }
-                                                    ]
-                                                }).show());
-                                            }));
-                                         }
-                                     }
-                                     ,failure  : function()
-                                     {
-                                         form.setLoading(false);
-                                         errorComunicacion();
-                                     }
-                                 });
-                             }
-                             ,failure : function()
-                             {
-                                 if(!Ext.isEmpty(nombreCensoParaConfirmar))
-                                 {
-                                     debug('se quita allowblank');
-                                     form.down('filefield').allowBlank = false;
-                                 }
-                                 form.setLoading(false);
-                                 errorComunicacion(null,'Error complementando datos');
-                             }
-                         });
-                     }
-                }
-                
-            }
-            ,failure : function()
-            {
-                errorComunicacion(null,'Error en la validaci&oacute;n de existencia de Morbilidad ');
-            }
-        });
-    }
-}
-
 function _p21_subirArchivoCompleto(button,nombreCensoParaConfirmar)
 {
     debug('_p21_subirArchivoCompleto button:',button,'nombreCensoParaConfirmar:',nombreCensoParaConfirmar,'.');
@@ -2727,7 +2593,7 @@ function _p21_editarMorbilidad()
         {
             title   : 'Consulta Morbilidad'
             ,width  : 900
-            ,height : 600
+            ,height : 530
             ,modal  : true
             ,loader :
             {
@@ -2744,6 +2610,43 @@ function _p21_editarMorbilidad()
         
     debug('<_p21_editarMorbilidad');
 }
+
+function _p21_AgregarMorbilidad()
+{
+    debug('>_p21_AgregarMorbilidad record:');
+    var ventana=Ext.create('Ext.window.Window',
+        {
+            title   : 'Agregar Morbilidad'
+            ,width  : 600
+            ,height : 175
+            ,modal  : true
+            ,loader :
+            {
+                url       : _p21_urlAltaMorbilidad
+                ,params   :
+                {
+                    'params.morbilidad'  : "1"
+                    ,'params.cdunieco'   : _p21_smap1.cdunieco
+                    ,'params.cdramo'     : _p21_smap1.cdramo
+                    ,'params.cdtipsit'   : _p21_smap1.cdtipsit
+                    ,'params.estado'     : _p21_smap1.estado
+                    ,'params.nmpoliza'   : _p21_smap1.nmpoliza
+                    ,'params.ntramite'   : _p21_ntramite ? _p21_ntramite : _p21_ntramiteVacio
+                    ,'params.cdagente'   : _fieldByName('cdagente').getValue()
+                    ,'params.status'     : Ext.isEmpty(status) ? _p21_smap1.status : status
+                    ,'params.cdtipsup'   : _p21_smap1.cdtipsup
+                    ,'params.nmpolant'   : _p21_smap1.nmpolant
+                }
+                ,scripts  : true
+                ,autoLoad : true
+            }
+        }).show()
+        centrarVentanaInterna(ventana);
+        
+    debug('<_p21_AgregarMorbilidad');
+}
+
+
 
 function _verificaAprueba(){
     

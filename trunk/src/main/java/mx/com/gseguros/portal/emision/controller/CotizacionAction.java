@@ -15005,6 +15005,47 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	public String consultaMorbilidad(){
 		logger.debug("Entra a consultaMorbilidad");
+		logger.debug("params :{}",params);
+		String morbilidadEx = "0";
+		String cdunieco     = null;
+		String cdramo   	= null;
+		String cdtipsit   	= null;
+		String estado   	= null;
+		String nmpoliza  	= null;
+		String ntramite   	= null;
+		String cdagente   	= null;
+		String status   	= null;
+		String cdtipsup  	= null;
+		String nmpolant   	= null;
+		
+		
+		if(params != null){
+			morbilidadEx  = params.get("morbilidad");
+			cdunieco      = params.get("cdunieco");
+			cdramo        = params.get("cdramo");
+			cdtipsit      = params.get("cdtipsit");
+			estado        = params.get("estado");
+			nmpoliza      = params.get("nmpoliza");
+			ntramite      = params.get("ntramite");
+			cdagente      = params.get("cdagente");
+			status        = params.get("status");
+			cdtipsup      = params.get("cdtipsup");
+			nmpolant      = params.get("nmpolant");
+		}
+		
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("morbilidadEx",morbilidadEx);
+		params.put("cdunieco",cdunieco);
+		params.put("cdramo",cdramo);
+		params.put("cdtipsit",cdtipsit);
+		params.put("estado",estado);
+		params.put("nmpoliza",nmpoliza);
+		params.put("ntramite",ntramite);
+		params.put("cdagente",cdagente);
+		params.put("status",status);
+		params.put("cdtipsup",cdtipsup);
+		params.put("nmpolant",nmpolant);
+		setParamsJson(params);
 		try {
 			logger.debug("Params: {}", params);
 		}catch( Exception e){
@@ -15287,6 +15328,19 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public String getSigsObtenerDatosPorSucRamPolUrl() {
 		return sigsObtenerDatosPorSucRamPolUrl;
+	}
+	
+	public void setParamsJson(HashMap<String, String> params2) {
+		this.params = params2;
+	}
+
+	public String getParamsJson() {
+		try {
+			return JSONUtil.serialize(params);
+		} catch (Exception e) {
+			logger.error("Error al generar JSON de params {}", e.getMessage(), e);
+			return null;
+		}
 	}
 	
 }
