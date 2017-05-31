@@ -1,12 +1,13 @@
 <%@ include file="/taglibs.jsp"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script>
 //////urls //////
-var _p30_urlCargaMasivaClientes = '<s:url namespace="/emision"         action="cargaMasivaClientes"         />';
+var _p30_urlCargaMasivaClientes = '<s:url namespace="/emision"         action="procesarCargaMasivaClientes"   />';
 var _p30_urlCargarTipoCambioWS    = '<s:url namespace="/emision"         action="cargarTipoCambioWS"          />';
 //////urls //////
 
@@ -93,11 +94,10 @@ Ext.onReady(function()
         extend  : 'Ext.data.Model'
         ,fields :
         [
-        	  'estatus','cvegralseg','ajuridica','avialviajes','benefPref','cdagente','claveve','conductor','cp','ddmpp','ddmpt','descadaptaciones'
-        	 ,'descriee','descripcion','desrec','drc','drt','dterss','ectGm','ectrc','fefin','feini','gestoria','gsasalto','maccidental','modelo','moneda'
-        	 ,'motor','negocio',{name:'nmsituac',type:'int'},'objperdidos','paquete','placas','rcOcupantes','rceco','rcmaniobras','rcremolque','rcruzada','reduceGs','rfc','robop'
-        	 ,'saadaptaciones','saeqesp','sagm','sagssigue','sarcfallecimiento','sarcluc','serie','tipCarga','tipUso','tipoSer','tipoValor','valorVeh'
-        	 ,'yo'
+        	  'estatus','cvegralseg','cvegralsal','tipoper','nombre','nombre2','apepat','apemat','sexo'
+        	 ,'fenac','feing','nacionalidad','residente', 'cumprim', 'pernon', 'cuming', 'edociv', 'tel1'
+        	 ,'tel2', 'tel3', 'mail', 'rfc'
+
         ]
     });
 
@@ -332,14 +332,10 @@ Ext.onReady(function()
                         if(selected.length==1)
                         {
                             _p30_selectedRecord=selected[0];
-                            _p30_editarAuto();
                         }
                         else
                         {
-                            for(var i in _p30_situaciones)
-                            {
-                                _fieldById('_p30_tatrisitParcialForm'+_p30_situaciones[i]).hide();
-                            }
+                            
                         }
                     }
                 }
@@ -488,11 +484,12 @@ function _p30_gridBotonEliminarClic(view,row,col,item,e,record)
 
 function _p30_renderer(record,mapeo)
 {
-//         debug('>_p30_renderer',mapeo,record.data);
-//         label='N/A';        
-//         var valor  = record.get(name);
-//         label=valor;
-   		return '.!.';
+    debug('>_p30_renderer',mapeo,record.data);
+    
+	var label = "VACIO";
+    	label=record.get(mapeo);
+
+    return label;
 }
 //////funciones //////
 </script>
