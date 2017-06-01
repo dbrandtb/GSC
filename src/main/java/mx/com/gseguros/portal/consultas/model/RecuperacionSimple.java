@@ -126,6 +126,7 @@ public enum RecuperacionSimple
     ,VALIDA_RENOVACION_COLECTIVO                             ("L")
     ,RENOVAR_X_FECHAS_COLECTIVOS                             ("L")
     ,RECUPERAR_RANGO_DESCUENTO_RECARGO                       ("M")
+    ,RECUPERAR_VALORES_MODELO                                ("L")
 	;
 	 
 	private String tipo;
