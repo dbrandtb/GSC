@@ -219,10 +219,6 @@
 			<result>/jsp-script/proceso/siniestros/altaTramitePrevio.jsp</result>
 		</action>
 		
-        <action name="altaTramitePrevio" class="tramiteSiniestroAction"  method="altaTramite">
-            <result>/jsp-script/proceso/siniestros/altaTramitePrevio.jsp</result>
-        </action>
-        
 		<action name="complementoAltaTramite" class="tramiteSiniestroAction"  method="altaTramite">
 			<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
 		</action>
@@ -446,16 +442,6 @@
 			</result>
 		</action>
 		
-		<action name="consultaListaPolizaFeOcu" class="siniestrosAction" method="consultaListaPolizaFeOcu">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					listaPoliza.*,
-					success
-				</param>
-			</result>
-		</action>
-
 		<action name="consultaListaAsegurado" class="siniestrosAction" method="consultaListaAsegurado">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
@@ -605,26 +591,6 @@
 				</param>
 			</result>
 		</action>
-		
-		<action name="consultaListaCPTUnico" class="siniestrosAction" method="consultaListaCPTUnico"> 
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    datosValidacionGral.*,
-                    success
-                </param>
-            </result>
-        </action>
-        
-        <action name="consultaListaTipoMedico" class="siniestrosAction" method="consultaListaTipoMedico"> 
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    datosValidacionGral.*,
-                    success
-                </param>
-            </result>
-        </action>
 
 		<action name="afiliadosAfectados" class="siniestrosAction" method="afiliadosAfectados">
 			<result name="success">/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</result>
@@ -720,7 +686,7 @@
 			</result>
 		</action>
 		
-		<action name="consultaAutServicioSiniestro" class="siniestrosAction" method="consultaAutServPersonaCobertura">
+		<action name="consultaAutServicioSiniestro" class="siniestrosAction" method="consultaAutServicioSiniestro">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
@@ -1288,7 +1254,7 @@
 			</result>
 		</action>
 		
-		<!--<action name="validaImporteAsegTramiteAseg" class="siniestrosAction" method="validaImporteAsegTramiteAseg">
+		<action name="validaImporteAsegTramiteAseg" class="siniestrosAction" method="validaImporteAsegTramiteAseg">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
@@ -1296,9 +1262,9 @@
 					success
 				</param>
 			</result>
-		</action>-->
+		</action>
 		
-		<action name="validaImporteTramiteAsegurados" class="siniestrosAction" method="obtieneValGralImporteAsegurado">
+		<action name="validaImporteTramiteAsegurados" class="siniestrosAction" method="validaImporteTramiteAsegurados">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
@@ -1417,10 +1383,6 @@
             </interceptor-ref>
             <result type="json" />
         </action>
-        <action name="graficas" class="renovacionAction" method="pantallaRenovacion">
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/renovacion/graficas.jsp</result>
-        </action>
         
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
@@ -1434,266 +1396,6 @@
 		<!--<action name="complementoCitasMedicas" class="siniestrosAction"  method="altaCitasMedica">
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>
 		</action>-->
-		
-		<action name="reservasSiniestralidad" class="siniestrosAction" method="reservaSiniestralidad">
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/siniestros/reservaSiniestralidad.jsp</result>
-        </action>
-        
-        <action name="pantallaProveedores" class="siniestrosAction" >
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/siniestros/pantallaProvedores.jsp</result>
-        </action>
-        
-        <action name="consultaRenovaSiniestros" class="siniestrosAction" method="consultaRenovaSiniestralidad">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					slist1.*,
-					graficas.*,
-					success
-				</param>
-			</result>
-		</action>
-		<action name="listaProveedores" class="siniestrosAction" method="listaProveedores">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					slist1.*,
-					graficas.*,
-					success
-				</param>
-			</result>
-		</action>
-		
-		<action name="topIcd" class="siniestrosAction" method="topIcd">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					slist1.*,
-					success
-				</param>
-			</result>
-		</action>
-		
-		<action name="reservas" class="siniestrosAction" method="reservas">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					slist1.*,
-					success
-				</param>
-			</result>
-		</action>
-		<action name="reservasTipPag" class="siniestrosAction" method="reservasTipPag">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					slist1.*,
-					success
-				</param>
-			</result>
-		</action>
-        <action name="obtieneImporteArancelGNP" class="autorizacionServiciosAction" method="obtieneImporteArancelGNP">
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    success,
-                    msgResult
-                </param>
-            </result>
-        </action>        
-        <action name="includes/consultaListaDetalle" class="siniestrosAction" method="consultaListaDetalleSiniestro">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					success
-				</param>
-			</result>
-		</action>
-        <action name="obtieneDatosGeneralesICD" class="autorizacionServiciosAction" method="obtieneDatosGeneralesICD">
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    success,
-                    msgResult
-                </param>
-            </result>
-        </action>
-        <action name="obtenerValidacionExclusionICD" class="autorizacionServiciosAction" method="obtenerValidacionExclusionICD">
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    success,
-                    msgResult
-                </param>
-            </result>
-        </action>
-        
-        <action name="obtieneDatosEstCobAseg" class="detalleSiniestroAction" method="obtieneDatosEstudiosCoberturaAsegurado">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					loadList.*,
-					success,
-					mensaje
-				</param>
-			</result>
-		</action>
-		
-		<action name="obtieneTiposResultadoEstudio" class="detalleSiniestroAction" method="obtieneTiposResultadoEstudio">
-	       <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    cargaLista.*,
-                    mensaje,
-                    success
-                </param>
-            </result>
-	   </action>
-
-		<action name="obtieneTiposResultadoTodos" class="detalleSiniestroAction" method="obtieneTiposResultadoTodos">
-	       <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    cargaLista.*,
-                    mensaje,
-                    success
-                </param>
-            </result>
-	   </action>
-
-		<action name="validaRequiereCapturaResEstudios" class="detalleSiniestroAction" method="validaRequiereCapturaResEstudios">
-	       <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    params.*,
-                    mensaje,
-                    success
-                </param>
-            </result>
-	   </action>
-	   
-	   <action name="actualizaEliminaEstudiosCobAseg" class="detalleSiniestroAction" method="actualizaEliminaEstudiosCobAseg">
-			<interceptor-ref name="json">
-				<param name="enableSMD">true</param>
-				<param name="ignoreSMDMethodInterfaces">false</param>
-			</interceptor-ref>
-			<result name="success" type="json"/>
-		</action>
-        
-        <action name="validaDatosEstudiosReclamacion" class="detalleSiniestroAction" method="validaDatosEstudiosReclamacion">
-	       <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    params.*,
-                    mensaje,
-                    success
-                </param>
-            </result>
-	   </action>
-
-        <action name="validaDatosEstudiosFacturasTramite" class="detalleSiniestroAction" method="validaDatosEstudiosFacturasTramite">
-	       <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    params.*,
-                    mensaje,
-                    success
-                </param>
-            </result>
-	   </action>
-	   
-	   <action name="configuracionEstPorCob" class="detalleSiniestroAction" >
-			<result>/jsp-script/proceso/siniestros/configuracionEstudiosCobertura.jsp</result>
-		</action>
-
-	   <action name="pruebaKendoUI" class="detalleSiniestroAction" >
-			<result>/jsp-script/proceso/siniestros/pruebaKendoUI.jsp</result>
-		</action>
-	   
-	   <action name="obtieneConceptosSubcob" class="detalleSiniestroAction" method="obtieneConceptosSubcob">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					loadList.*,
-					success,
-					mensaje
-				</param>
-			</result>
-		</action>
-
-	   <action name="obtieneResultadosEst" class="detalleSiniestroAction" method="obtieneResultadosEst">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					loadList.*,
-					success,
-					mensaje
-				</param>
-			</result>
-		</action>
-
-	   <action name="obtieneEstudiosMed" class="detalleSiniestroAction" method="obtieneEstudiosMed">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					loadList.*,
-					success,
-					mensaje
-				</param>
-			</result>
-		</action>
-
-	   <action name="obtieneConfEstudiosMedCob" class="detalleSiniestroAction" method="obtieneConfEstudiosMedCob">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					loadList.*,
-					success,
-					mensaje
-				</param>
-			</result>
-		</action>
-		
-		<action name="actualizaEliminaConceptos" class="detalleSiniestroAction" method="actualizaEliminaConceptos">
-			<interceptor-ref name="json">
-				<param name="enableSMD">true</param>
-				<param name="ignoreSMDMethodInterfaces">false</param>
-			</interceptor-ref>
-			<result name="success" type="json"/>
-		</action>
-		
-		<action name="actualizaEliminaResultadosEstudios" class="detalleSiniestroAction" method="actualizaEliminaResultadosEstudios">
-			<interceptor-ref name="json">
-				<param name="enableSMD">true</param>
-				<param name="ignoreSMDMethodInterfaces">false</param>
-			</interceptor-ref>
-			<result name="success" type="json"/>
-		</action>
-		
-		<action name="actualizaEliminaConfEstudios" class="detalleSiniestroAction" method="actualizaEliminaConfEstudios">
-			<interceptor-ref name="json">
-				<param name="enableSMD">true</param>
-				<param name="ignoreSMDMethodInterfaces">false</param>
-			</interceptor-ref>
-			<result name="success" type="json"/>
-		</action>
-		
-		<action name="actualizaEliminaConfEstudiosCobertura" class="detalleSiniestroAction" method="actualizaEliminaConfEstudiosCobertura">
-			<interceptor-ref name="json">
-				<param name="enableSMD">true</param>
-				<param name="ignoreSMDMethodInterfaces">false</param>
-			</interceptor-ref>
-			<result name="success" type="json"/>
-		</action>
-		
     </package>
 
 </struts>

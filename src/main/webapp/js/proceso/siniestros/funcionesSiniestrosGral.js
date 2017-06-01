@@ -402,91 +402,60 @@ function _11_solicitarPago(){
                         centrarVentanaInterna(mensajeWarning(resultCobertura));
                     }
                 }else{
-                	
-                	Ext.Ajax.request({
-                        url : _UrlValidaDatosEstudiosFacturasTramite
+                    Ext.Ajax.request({
+                        url : _URL_MONTO_PAGO_SINIESTRO
                         ,params:{
-                            'params.ntramite' : _11_params.NTRAMITE
+                            'params.ntramite' : _11_params.NTRAMITE,
+                            'params.cdramo'   : _11_params.CDRAMO,
+                            'params.tipoPago' : _11_params.OTVALOR02
                         }
-                        ,success : function (responseDatos){
-                            var jsonRespuestaDatos =Ext.decode(responseDatos.responseText);
+                        ,success : function (response){
+                            var jsonRespuesta =Ext.decode(response.responseText);
+                            debug("Valor de Respuesta", jsonRespuesta);
                             
-                            if(jsonRespuestaDatos.success == true){
-                                if( !Ext.isEmpty(jsonRespuestaDatos.params) && !Ext.isEmpty(jsonRespuestaDatos.params.FALTAN_DATOS_ESTUDIOS)
-                                		&& jsonRespuestaDatos.params.FALTAN_DATOS_ESTUDIOS == "S"){
-                                	
-                                	centrarVentanaInterna(mensajeWarning(jsonRespuestaDatos.mensaje));
-                                	
+                            if(jsonRespuesta.success == true){
+                                if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
+                                    //_11_mostrarSolicitudPago(); ...1
+                                    _11_validaProveedorPagoDirecto(); // (EGS) validamos solo un proveedor en reclamo pago directo
+                                    //_11_validaAseguroLimiteCoberturas(); // (EGS) se comenta aquí pero se agrega en funcion _11_validaProveedorPagoDirecto()
                                 }else{
-
-                                	Ext.Ajax.request({
-                                        url : _URL_MONTO_PAGO_SINIESTRO
+                                    //Verificamos si tiene la validacion del dictaminador medico
+                                    Ext.Ajax.request({
+                                        url  : _URL_VAL_AJUSTADOR_MEDICO
                                         ,params:{
-                                            'params.ntramite' : _11_params.NTRAMITE,
-                                            'params.cdramo'   : _11_params.CDRAMO,
-                                            'params.tipoPago' : _11_params.OTVALOR02
+                                            'params.ntramite': _11_params.NTRAMITE
                                         }
-                                        ,success : function (response){
-                                            var jsonRespuesta =Ext.decode(response.responseText);
-                                            debug("Valor de Respuesta", jsonRespuesta);
-                                            
-                                            if(jsonRespuesta.success == true){
-                                                if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
-                                                    //_11_mostrarSolicitudPago(); ...1
-                                                    _11_validaProveedorPagoDirecto(); // (EGS) validamos solo un proveedor en reclamo pago directo
-                                                    //_11_validaAseguroLimiteCoberturas(); // (EGS) se comenta aquí pero se agrega en funcion _11_validaProveedorPagoDirecto()
-                                                }else{
-                                                    //Verificamos si tiene la validacion del dictaminador medico
-                                                    Ext.Ajax.request({
-                                                        url  : _URL_VAL_AJUSTADOR_MEDICO
-                                                        ,params:{
-                                                            'params.ntramite': _11_params.NTRAMITE
-                                                        }
-                                                        ,success : function (response)
-                                                        {
-                                                            if(Ext.decode(response.responseText).datosValidacion != null){
-                                                                var autAM = null;
-                                                                var result ="";
-                                                                banderaValidacion = "0";
-                                                                var json = Ext.decode(response.responseText).datosValidacion;
-                                                                if(json.length > 0){
-                                                                    for(var i = 0; i < json.length; i++){
-                                                                        if(json[i].AREAAUTO =="ME"){
-                                                                            var valorValidacion = json[i].SWAUTORI+"";
-                                                                            if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
-                                                                                banderaValidacion = "1";
-                                                                                result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
-                                                                            }
-                                                                            
-                                                                        }
-                                                                    }
-                                                                    if(banderaValidacion == "1"){
-                                                                        centrarVentanaInterna(mensajeWarning(result));
-                                                                    }else{
-                                                                        //_11_mostrarSolicitudPago(); ..2
-                                                                        _11_validaAseguroLimiteCoberturas();
-                                                                    }
-                                                                }else{
-                                                                    centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
-                                                                }
+                                        ,success : function (response)
+                                        {
+                                            if(Ext.decode(response.responseText).datosValidacion != null){
+                                                var autAM = null;
+                                                var result ="";
+                                                banderaValidacion = "0";
+                                                var json = Ext.decode(response.responseText).datosValidacion;
+                                                if(json.length > 0){
+                                                    for(var i = 0; i < json.length; i++){
+                                                        if(json[i].AREAAUTO =="ME"){
+                                                            var valorValidacion = json[i].SWAUTORI+"";
+                                                            if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
+                                                                banderaValidacion = "1";
+                                                                result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
                                                             }
-                                                        },
-                                                        failure : function (){
-                                                            //me.up().up().setLoading(false);
-                                                            Ext.Msg.show({
-                                                                title:'Error',
-                                                                msg: 'Error de comunicaci&oacute;n',
-                                                                buttons: Ext.Msg.OK,
-                                                                icon: Ext.Msg.ERROR
-                                                            });
+                                                            
                                                         }
-                                                    });
+                                                    }
+                                                    if(banderaValidacion == "1"){
+                                                        centrarVentanaInterna(mensajeWarning(result));
+                                                    }else{
+                                                        //_11_mostrarSolicitudPago(); ..2
+                                                        _11_validaAseguroLimiteCoberturas();
+                                                    }
+                                                }else{
+                                                    centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
                                                 }
-                                            }else {
-                                                centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
                                             }
                                         },
                                         failure : function (){
+                                            //me.up().up().setLoading(false);
                                             Ext.Msg.show({
                                                 title:'Error',
                                                 msg: 'Error de comunicaci&oacute;n',
@@ -495,7 +464,6 @@ function _11_solicitarPago(){
                                             });
                                         }
                                     });
-                            	
                                 }
                             }else {
                                 centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
@@ -510,7 +478,6 @@ function _11_solicitarPago(){
                             });
                         }
                     });
-                	
                 }
             },
             failure : function () {
@@ -597,8 +564,33 @@ function _11_validaAseguroLimiteCoberturas(){
 
 //5.3.- Validamos el monto total del importe de siniestro por asegurado 
 function _11_validaImporteAseguradoTramite(){
-	procesoContinuar = "1";
-    validaGralImpTramFactura(_11_params.NTRAMITE,null,_tipoPago,procesoContinuar);
+    var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
+    myMask.show();
+    Ext.Ajax.request({
+        url     : _URL_VALIDA_IMPASEGURADOSINIESTRO
+        ,params:{
+            'params.ntramite'  : _11_params.NTRAMITE,
+            'params.tipopago'  : _tipoPago
+        }
+        ,success : function (response) {
+            json = Ext.decode(response.responseText);
+            if(json.success==false){
+                myMask.hide();
+                centrarVentanaInterna(mensajeWarning(json.msgResult));
+            }else{
+                myMask.hide();
+                _11_mostrarSolicitudPago();
+            }
+        },
+        failure : function (){
+            centrarVentanaInterna(Ext.Msg.show({
+                title:'Error',
+                msg: 'Error de comunicaci&oacute;n',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            }));
+        }
+    });
 }
 
 //5.4.- Mostrar solicitud de pago 
@@ -1571,29 +1563,35 @@ function _p21_agregarAsegurado(){
 //14.- Generar Calculos
 function _p21_generarCalculo(){
     gridFacturaDirecto.setLoading(true);
-    var myMask = new Ext.LoadMask(Ext.getBody(),{msg:"loading..."});
-    myMask.show();
     Ext.Ajax.request( {
         url  : _URL_GENERAR_CALCULO
         ,params:{
             'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue()
         }
         ,success : function (response) {
+            
             Ext.Ajax.request({
-                url     : _URL_VALIDA_IMPASEGURADOSINIESTRO
+                url  : _URL_VALIDA_IMP_ASEGSINIESTRO
                 ,params:{
                     'params.tipopago'  : _tipoPago,
                     'params.ntramite'  : panelInicialPral.down('[name=params.ntramite]').getValue(),
                     'params.nfactura'  : panelInicialPral.down('[name=params.nfactura]').getValue()
                 }
                 ,success : function (response) {
-                    json = Ext.decode(response.responseText);
-                    if(json.success==false){
-                        myMask.hide();
-                        centrarVentanaInterna(mensajeWarning(json.msgResult));
-                    }else{
-                    	 myMask.hide();
-                    }
+                    var validacionMensaje = Ext.decode(response.responseText).datosValidacion;
+                    var resultMsj= "";
+                    var banderaresultMsj = 0;
+                    if(validacionMensaje.length > 0){
+                        for(var i = 0; i < validacionMensaje.length; i++){
+                            banderaresultMsj = "1";
+                            resultMsj = resultMsj + 'El siniestro '+ validacionMensaje[i].SINIESTRO+' de la Factura '+validacionMensaje[i].FACTURA+ ' el importe es negativo. <br/>';
+                        }
+                        resultMsj = resultMsj+'Favor de corregir el importe para poder continuar.<br/>';
+                        
+                        if(banderaresultMsj == "1"){
+                            centrarVentanaInterna(mensajeWarning(resultMsj));
+                        }
+                    }                       
                     gridFacturaDirecto.setLoading(false);
                     cargarPaginacion(panelInicialPral.down('[name=params.ntramite]').getValue(), panelInicialPral.down('[name=params.nfactura]').getValue());
                     
@@ -1601,13 +1599,14 @@ function _p21_generarCalculo(){
                     panelComplementos.down('[name=params.sumaGastada]').setValue("0.00");
                     obtenerTotalPagos(panelInicialPral.down('[name=params.ntramite]').getValue() , panelInicialPral.down('[name=params.nfactura]').getValue());
                 },
-                failure : function (){
-                    centrarVentanaInterna(Ext.Msg.show({
+                failure : function () {
+                    gridFacturaDirecto.setLoading(false);
+                    Ext.Msg.show({
                         title:'Error',
                         msg: 'Error de comunicaci&oacute;n',
                         buttons: Ext.Msg.OK,
                         icon: Ext.Msg.ERROR
-                    }));
+                    });
                 }
             });
         },
@@ -2144,12 +2143,9 @@ function _11_guardarInformacionAdicional(){
 
 //20.-Muestra el listado de las autorizaciones disponibles para el asegurado
 function _11_pedirAutorizacion(record) {
-	debug("Valor de _11_pedirAutorizacion => record====> ", record);
     _11_recordActivo = record;
     _11_textfieldAsegurado.setValue(_11_recordActivo.get('NOMBRE'));
     var params = {
-            'params.cdgarant'   :   _11_recordActivo.get('CDGARANT'),
-            'params.cdconval'   :   _11_recordActivo.get('CDCONVAL'),
             'params.cdperson'   :   _11_recordActivo.get('CDPERSON')
     };
     cargaStorePaginadoLocal(storeListadoAutorizacion, _URL_LISTA_AUTSERVICIO, 'datosInformacionAdicional', params, function(options, success, response){
@@ -2241,8 +2237,6 @@ function _11_modificarAutorizacion(record){
     
     _11_textfieldAseguradoMod.setValue(_11_recordActivo.get('NOMBRE'));
     var params = {
-    	    'params.cdgarant'   :   _11_recordActivo.get('CDGARANT'),
-            'params.cdconval'   :   _11_recordActivo.get('CDCONVAL'),
             'params.cdperson'   :   _11_recordActivo.get('CDPERSON')
     };
     cargaStorePaginadoLocal(storeListadoAutorizacion, _URL_LISTA_AUTSERVICIO, 'datosInformacionAdicional', params, function(options, success, response){
@@ -2912,9 +2906,6 @@ function obtenerTotalPagos(ntramite, nfactura){
                     }
                 });
                 // fin (EGS)
-            }else{
-            	procesoContinuar = "0";
-            	validaGralImpTramFactura(ntramite,nfactura,_tipoPago,procesoContinuar);
             }
             
             panelComplementos.down('[name=params.subtotalFac]').setValue(subtotalFactura);
@@ -2936,41 +2927,7 @@ function obtenerTotalPagos(ntramite, nfactura){
     myMask.hide();
     return true;
 }
-
-function validaGralImpTramFactura(ntramite,nfactura,tipopago,procesoContinuar){
-    var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
-    myMask.show();
-    Ext.Ajax.request({
-        url     : _URL_VALIDA_IMPASEGURADOSINIESTRO
-        ,params:{
-            'params.ntramite'  : ntramite,
-            'params.tipopago'  : tipopago,
-            'params.nfactura'  : nfactura
-        }
-        ,success : function (response) {
-            json = Ext.decode(response.responseText);
-            if(json.success==false){
-                myMask.hide();
-                centrarVentanaInterna(mensajeWarning(json.msgResult));
-            }else{
-            	myMask.hide();
-            	if(procesoContinuar =="1"){
-            		_11_mostrarSolicitudPago();
-            	}
-            }
-        },
-        failure : function (){
-            centrarVentanaInterna(Ext.Msg.show({
-                title:'Error',
-                msg: 'Error de comunicaci&oacute;n',
-                buttons: Ext.Msg.OK,
-                icon: Ext.Msg.ERROR
-            }));
-        }
-    });
-}
-
-
+    
 //27.- Guardamos los datos complementarios del Asegurado cuando realizamos cambios del asegurado Causa Siniestro, ICD,Cobertura,Subcobertura
 function guardarDatosComplementarios(grid,rowIndex){
     var record = grid.getStore().getAt(rowIndex);
@@ -3373,8 +3330,7 @@ function _11_obtieneDatosOpcionalesValor(cdramo,cdtipsit,cdgarant,cdconval,recor
                 var jsonValidacionCober =Ext.decode(response.responseText).datosValidacion;
                 debug("Valor de los datos de Respuesta para validaciones de alta =>",jsonValidacionCober[0]);
                 if(jsonValidacionCober[0].FLAGREQAUT == "SI" &&  (  record.get('NMAUTSER') =="N/A" || +record.get('NMAUTSER') <= '0' || record.get('NMAUTSER')== "")){
-                    _11_modificarAutorizacion(record);
-                	/*msgWindow = Ext.Msg.show({
+                    msgWindow = Ext.Msg.show({
                         title: 'Aviso',
                         msg: 'Se requiere una autorizaci&oacute;n de Servicio. <br/> &iquest;Desea realizar la asociaci&oacute;n ?',
                         buttons: Ext.Msg.YESNO,
@@ -3393,7 +3349,7 @@ function _11_obtieneDatosOpcionalesValor(cdramo,cdtipsit,cdgarant,cdconval,recor
                             }
                         }
                     });
-                    centrarVentanaInterna(msgWindow);*/
+                    centrarVentanaInterna(msgWindow);
                 }
             }
         },
@@ -3406,461 +3362,4 @@ function _11_obtieneDatosOpcionalesValor(cdramo,cdtipsit,cdgarant,cdconval,recor
             });
         }
     });
-}
-
-function validaCapturaResultadoEstudiosAsegurado(paramsResEstudios){
-	
-	Ext.Ajax.request( {
-        url  : _UrlValidaCapturaEstudiosCobertura 
-        ,params:{
-            'params.pi_cdramo'    : paramsResEstudios.cdramo,
-            'params.pi_cdtipsit'  : paramsResEstudios.cdtipsit,
-            'params.pi_cdgarant'  : paramsResEstudios.cdgarant,
-            'params.pi_cdconval'  : paramsResEstudios.cdconval
-        }
-        ,success : function (response) {
-        	
-            if(Ext.decode(response.responseText).params != null){
-                var respuestaValidacionCober =Ext.decode(response.responseText).params.CAPTURA_RESULTADOS;
-                
-                if(respuestaValidacionCober == 'S'){
-                	capturaResultadosInf(paramsResEstudios.cdunieco, paramsResEstudios.cdramo, paramsResEstudios.aaapertu,
-            				paramsResEstudios.status, paramsResEstudios.nmsinies, paramsResEstudios.nmsituac, paramsResEstudios.cdtipsit,
-            				paramsResEstudios.cdgarant, paramsResEstudios.cdconval, paramsResEstudios.dsconval, paramsResEstudios.dsasegurado);
-                }else{
-                	if(paramsResEstudios.accionBoton){
-                		mensajeInfo('La Cobertura y Subcobertura de este asegurado no aplican para esta acci&oacute;n');
-                	}
-                }
-            }
-        },
-        failure : function () {
-            Ext.Msg.show({
-                title:'Error',
-                msg: 'Error de comunicaci&oacute;n',
-                buttons: Ext.Msg.OK,
-                icon: Ext.Msg.ERROR
-            });
-        }
-    });	
-	
-}
-
-function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nmsituac,_cdtipsit,_cdgarant,_cdconval,_dsconval,_dsasegurado){
-	
-	var bufferTiposResultadoEstudios = new Ext.util.HashMap();
-	var windowResultEstudios;
-	/////////////////////
-	////// modelos //////
-	/*/////////////////*/
-	
-	Ext.define('modeloResEstudios',
-			{
-				extend : 'Ext.data.Model'
-				,fields :
-				['CDCONCEP','DSCONCEP','CDEST','DSEST','CDRESEST','VALOR', 'OBSERV','SWOBLVAL','SWOBLRES']
-	});
-	
-	/*/////////////////*/
-	////// modelos //////
-	/////////////////////
-	
-	////////////////////
-	////// stores //////
-	/*////////////////*/
-	
-	var editorPluginResultados = Ext.create('Ext.grid.plugin.CellEditing', {
-    	//autoCancel : false,
-    	//dirtyText  : 'Necesita Aceptar o Cancelar sus cambios',
-        clicksToEdit: 1,
-        listeners: {
-        	beforeedit: function(editor, context, eOpts ){
-        		
-        		if(context.field == 'CDRESEST'){
-        			var comboColumnaFila = context.column.getEditor(context.record);
-            		debug('Combo CDRESEST:',comboColumnaFila);
-            		if(Ext.isEmpty(context.record.get('CDRESEST'))){
-            			comboColumnaFila.clearValue();
-            		}
-        			
-            		comboColumnaFila.getStore().load({
-            			params:{
-            				'params.cdest': context.record.get('CDEST')
-            			}
-            		});
-        		}       		
-        	}
-        }
-    });
-	
-	Ext.define('tiposResEstudioStore', {
-		extend : 'Ext.data.Store',
-		constructor : function(cfg) {
-			var me = this;
-			cfg = cfg || {};
-			me.callParent([ Ext.apply({
-		        model   : 'Generic'
-		        ,proxy   :
-		        {
-		            type        : 'ajax'
-		                ,url        : _UrlCatTiposResultado
-		                ,reader     :
-		                {
-		                    type  : 'json'
-		                    ,root : 'cargaLista'
-		                }
-		        }
-		    }, cfg) ]);
-		}
-	});
-
-	Ext.define('tiposResEstudioStoreTodos', {
-		extend : 'Ext.data.Store',
-		constructor : function(cfg) {
-			var me = this;
-			cfg = cfg || {};
-			me.callParent([ Ext.apply({
-				model   : 'Generic'
-					,proxy   :
-					{
-						type        : 'ajax'
-							,url        : _UrlCatTiposResultadoTodos
-							,reader     :
-							{
-								type  : 'json'
-									,root : 'cargaLista'
-							}
-					}
-			}, cfg) ]);
-		}
-	});
-	
-	var storeResEstudiosAux = new tiposResEstudioStoreTodos();
-	storeResEstudiosAux.load({
-		callback: function(recordsEstRes, operationEst, successEst){
-			
-			Ext.Array.each(recordsEstRes,function(recordsEstResIT, indexRecRes){
-				bufferTiposResultadoEstudios.add(recordsEstResIT.get('key'), recordsEstResIT.get('value'));
-           	});
-			
-			
-		}
-	});
-
-	
-	var estudiosCobAsegStore = Ext.create('Ext.data.Store',
-    {
-		pageSize : 20
-        ,model   : 'modeloResEstudios'
-        ,groupField: 'CDCONCEP'
-        ,proxy   :
-        {
-        	type        : 'ajax'
-            ,url        : _UrlConsultaDatosEstudiosCobAsegurado
-            ,reader     :
-            {
-                type  : 'json'
-                ,root : 'loadList'
-            }
-        }
-    });
-	
-	/*////////////////*/
-	////// stores //////
-	////////////////////
-	
-	///////////////////////
-	////// contenido //////
-	/*///////////////////*/
-	
-	
-	var resultadosEstudiosGrid = Ext.create('Ext.grid.Panel',
-	    {
-    	title : "Capture los resultados del asegurado: " + _dsasegurado//"Capture los resultados de '"+ _dsconval + "' para: " + _dsasegurado
-    	,height : 420
-    	,store : estudiosCobAsegStore
-    	,autoScroll: true
-    	,columns :
-    	[ { header     : 'Estudios por Concepto' , dataIndex : 'DSEST', flex: 3},
-          { header     : 'Resultado', dataIndex : 'CDRESEST', flex: 1,
-    			editor : {
-	                xtype         : 'combobox',
-	                name          : 'CDRESEST',
-	                valueField    : 'key',
-	                displayField  : 'value',
-	                forceSelection: false,
-	                anyMatch      : true,
-                    queryMode     : 'local',
-                    allowBlank    : true,
-	                store         : new tiposResEstudioStore(),
-	                beforeBlur    : function() {
-	                	var value = this.getRawValue();
-	                	var index = this.getStore().findExact('value', value);
-	                	if(index == -1){
-	                		this.setValue('');
-	                	}
-	                }
-	            },
-	            renderer: function(value,metaData,record,rowIndex,colIndex,store){
-	            	return rendererColumnUsandoEditorDep(value,record,colIndex,this); //this -> resultadosEstudiosGrid
-	            }
-          },
-          { header     : 'Valor' , dataIndex : 'VALOR', flex: 1,
-	  			editor : {
-	                xtype         : 'textfield',
-	                name          : 'VALOR',
-	                maxLength     : 250 
-	            }
-	      },
-	      { header     : 'Observaciones' , dataIndex : 'OBSERV', flex: 2,
-	  			editor : {
-	                xtype         : 'textfield',
-	                name          : 'OBSERV',
-	                maxLength     : 500
-	            }
-	      }
-		],
-		features: [{
-			groupHeaderTpl: [
-			    '{children:this.descConcept}',
-			    {
-			    	descConcept: function(children){
-			    		//debug('Para GroupSummary, children',children.length);
-			            if(children.length > 0){
-			            	return children[0].get('DSCONCEP');
-			            }
-			            	return 'Sin Concepto';
-			           
-			        }
-			    }
-			],
-            ftype:'groupingsummary',
-            startCollapsed : true
-        }],
-        //selType: 'rowmodel',
-        plugins: [
-            editorPluginResultados
-        ],
-        /*listeners : {
-        	select : function( grid, record, index, eOpts){
-        		
-        		var indexEstudioSel = -1;
-        		
-        		Ext.Array.each(resultadosEstudiosGrid.columns,function(columnGpo, indexCol){
-               		if(columnGpo.dataIndex == "CDRESEST"){
-               			indexEstudioSel = indexCol;
-               			return false;
-               		}
-               	});
-        		
-        		debug('indexEstudioSel',indexEstudioSel);
-        		debug('record',record);
-        		
-        		var comboColumnaFila = resultadosEstudiosGrid.columns[indexEstudioSel].getEditor(record);
-        		
-        		if(Ext.isEmpty(record.get('CDRESEST'))){
-        			comboColumnaFila.clearValue();
-        			//comboColumnaFila.reset();
-        		}
-    			
-        		
-        		comboColumnaFila.getStore().load({
-        			params:{
-        				'params.cdest': record.get('CDEST')
-        			},
-        			callback: function(){
-        				if(Ext.isEmpty(record.get('CDRESEST'))){
-                			//comboColumnaFila.clearValue();
-                		}
-        			}
-        		});
-        		
-        	}
-        },*/
-        buttonAlign: 'center',
-        buttons: [{
-            icon    : _CONTEXT + '/resources/fam3icons/icons/disk.png',
-            text    : 'Guardar Datos',
-            handler : function(btn, e){
-            	
-            	/*Solo para row editing ya que en cell al hacer clic se quita la edicion al hacer clic en el boton de guardar
-            	 * if(editorPluginResultados.editing){
-            		mensajeWarning('Antes de guardar primero finalice la edicion de las sucursales.');
-            		return;
-            	}*/
-                
-                var updateList = [];
-                var estudioRequiereResVal    = false;
-                var estudioRequiereResValDes = '';
-                var mensajeRequiereCampo     = '';
-                
-                estudiosCobAsegStore.getUpdatedRecords().forEach(function(record,index,arr){
-                	
-                	if( !Ext.isEmpty(record.get('CDRESEST')) || !Ext.isEmpty(record.get('VALOR')) || !Ext.isEmpty(record.get('OBSERV')) ){
-                		
-                		/* Valida para este estudio si el Resultado es obligatorio */
-                		if(!Ext.isEmpty(record.get('SWOBLRES')) && record.get('SWOBLRES') == 'S'
-                			&& Ext.isEmpty(record.get('CDRESEST'))){
-                			estudioRequiereResVal = true;
-                    		estudioRequiereResValDes = record.get('DSEST');
-                    		mensajeRequiereCampo = 'Resultado';
-                    		return false;
-                		}
-                		
-                		/* Valida para este estudio si el Valor es obligatorio */
-                		if(!Ext.isEmpty(record.get('SWOBLVAL')) && record.get('SWOBLVAL') == 'S'
-                			&& Ext.isEmpty(record.get('VALOR'))){
-                			estudioRequiereResVal = true;
-                    		estudioRequiereResValDes = record.get('DSEST');
-                    		mensajeRequiereCampo = 'Valor';
-                    		return false;
-                		}
-                		
-                	}
-                	
-                    var datosResultado = {
-                   		 'pi_cdunieco': _cdunieco,
-                   		 'pi_cdramo': _cdramo,
-                   		 'pi_aaapertu': _aaapertu,
-                   		 'pi_status': _status,
-                   		 'pi_nmsiniest': _nmsinies,
-                   		 'pi_nmsituac': _nmsituac,
-                   		 'pi_cdtipsit': _cdtipsit,
-                   		 'pi_cdgarant': _cdgarant,
-                   		 'pi_cdconval': _cdconval,
-                   		 'pi_cdconcep' : record.get('CDCONCEP'),
-                   		 'pi_cdest' : record.get('CDEST'),
-                   		 'pi_cdresest' : record.get('CDRESEST'),
-                   		 'pi_valor' : record.get('VALOR'),
-                   		 'pi_observ' : record.get('OBSERV')
-                    };
-               	    
-                    updateList.push(datosResultado);
-                });
-                
-                
-	            if(estudioRequiereResVal){
-	            	mensajeWarning("Debe capturar un " + mensajeRequiereCampo + " para el estudio: ''"
-	            			+estudioRequiereResValDes+"'' o borre toda la informaci&oacute;n del mismo.");
-	            	return;
-	            }
-                
-                debug('Lista de Resultados a guardar: ',updateList);
-
-                var maskGuarda = _maskLocal('Guardando...');
-                
-                Ext.Ajax.request({
-                    url: _UrlActualizaEliminaEstudiosCobertura,
-                    jsonData : {
-                        'saveList' : updateList
-                    },
-                    success  : function(response, options){
-                   	 maskGuarda.close();
-                        var json = Ext.decode(response.responseText);
-                        if(json.success){
-                       	 
-//                            mensajeCorrecto('Aviso','Se ha guardado correctamente.', function(){
-                           	 Ext.Ajax.request( {
-                           	        url  : _UrlValidaDatosEstudiosReclamacion 
-                           	        ,params:{
-                           	        	'params.pi_cdunieco': _cdunieco,
-                                  		 	'params.pi_cdramo': _cdramo,
-                                  		 	'params.pi_aaapertu': _aaapertu,
-                                  		 	'params.pi_status': _status,
-                                  		 	'params.pi_nmsiniest': _nmsinies,
-                                  		 	'params.pi_nmsituac': _nmsituac,
-                                  		 	'params.pi_cdtipsit': _cdtipsit,
-                                  		 	'params.pi_cdgarant': _cdgarant,
-                                  		 	'params.pi_cdconval': _cdconval
-                           	        }
-                           	        ,success : function (response) {
-                           	        	
-                           	        	estudiosCobAsegStore.reload();
-                           	        	
-                           	            if(Ext.decode(response.responseText).params != null){
-                           	                var respuestaValidacionResEst = Ext.decode(response.responseText).params.VALIDA_RES_RECL;
-                           	                var respuestaTipoProvedor = Ext.decode(response.responseText).params.VALIDA_RES_TIPO_PROV;
-                           	                
-                           	                if(respuestaValidacionResEst == 'N'){
-                           	                	var mensajeEstudios = 'Capture almenos un estudio de laboratorio.';
-
-                           	                	if(respuestaTipoProvedor == '15'){
-                               	                	mensajeEstudios = 'Capture los estudios de Sobrepeso y Obesidad.';
-                               	                }
-                           	                	mensajeWarning('Datos Guardados. Aun faltan capturar estudios para este asegurado.<br/>' + mensajeEstudios);
-                           	                }else{
-                           	                	windowResultEstudios.close();
-                           	                	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
-                           	                }
-                           	            }
-                           	        },
-                           	        failure : function () {
-                           	            Ext.Msg.show({
-                           	                title:'Error',
-                           	                msg: 'Error de comunicaci&oacute;n',
-                           	                buttons: Ext.Msg.OK,
-                           	                icon: Ext.Msg.ERROR
-                           	            });
-                           	        }
-                           	    });	
-//                            });
-                        }else{
-                            mensajeError(json.mensaje);
-                        }
-                    }
-                    ,failure  : function(response, options){
-                   	 maskGuarda.close();
-                        var json = Ext.decode(response.responseText);
-                        mensajeError(json.mensaje);
-                    }
-                });
-            
-                
-            }
-        }]
-    });
-		
-	
-	function rendererColumnUsandoEditorDep(value, record, columnIndex, grid){
-		var nuevoValor = value;
-//		debug('valor en render',value);
-		var llave =  value;
-		var existe = bufferTiposResultadoEstudios.containsKey(llave);
-		
-		if(existe){
-			nuevoValor=bufferTiposResultadoEstudios.get(llave);
-        }else{
-        	nuevoValor = '';
-        }
-		
-		return nuevoValor;
-	}
-
-	estudiosCobAsegStore.load({
-		params: {
-			'params.cdunieco'  : _cdunieco,
-			'params.cdramo'    : _cdramo,
-			'params.aaapertu'  : _aaapertu,
-			'params.status'    : _status,
-			'params.nmsiniest' : _nmsinies,
-			'params.nmsituac'  : _nmsituac,
-			'params.cdtipsit'  : _cdtipsit,
-			'params.cdgarant'  : _cdgarant,
-			'params.cdconval'  : _cdconval
-		}
-	});
-	
-	/*///////////////////*/
-	////// contenido //////
-	///////////////////////
-	
-	windowResultEstudios = Ext.create('Ext.window.Window',{
-		title: 'Consulta y actualizaci&oacute;n de Datos Informativos para estudios m&eacute;dicos'
-		,modal  : true
-		,width  : 900  
-		,items : [resultadosEstudiosGrid]
-	}).show();
-	
-	centrarVentanaInterna(windowResultEstudios);
-	
 }

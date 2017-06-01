@@ -15,7 +15,6 @@ import mx.com.gseguros.portal.cotizacion.model.PMovMpolisitDTO;
 import mx.com.gseguros.portal.cotizacion.model.PMovTvalositDTO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.model.RespuestaVO;
 
 public interface CotizacionDAO {
 	public void movimientoTvalogarGrupoCompleto(String cdunieco, String cdramo,
@@ -364,8 +363,6 @@ public interface CotizacionDAO {
 	public String cargarClaveTtapvat1(String cdtabla, String otvalor,
 			Map<String, List<Map<String, String>>> buffer) throws Exception;
 
-	public List<Map<String,String>> cargarClavesTtapvat1(String cdtabla)throws Exception;
-	
 	public List<Map<String, String>> cargarResultadosCotizacionAutoFlotilla(
 			String cdunieco, String cdramo, String estado, String nmpoliza)
 			throws Exception;
@@ -993,18 +990,7 @@ public interface CotizacionDAO {
 	 * @throws Exception
 	 */
 	HashMap<String, String> obtieneCodigosPostalesProductos() throws Exception;
-
-	/**
-	 * Obtiene las coberturas por plan y si son obligatorias. 
-	 * @param pv_cdramo_i
-	 * @param pv_cdplan_i
-	 * @param pv_cdtipsit_i
-	 * @return lista de coberturas por plan
-	 * @throws Exception
-	 */
-	public List<Map<String, String>> getCoberturas(String pv_cdramo_i, String pv_cdplan_i, String pv_cdtipsit_i)
-			throws Exception;
-
+	
 	public String aplicaDescAutos(String pcdunieco, String pcdramo, String pnmpoliza, String pdesc, String pisflot) throws Exception;
 	
 	/**
@@ -1016,26 +1002,9 @@ public interface CotizacionDAO {
 	 * @param flotilla
 	 */
 	public String aplicaRecargoPagoFraccionado(String cdunieco, String cdramo, String nmpoliza, String recargoPF, String flotilla) throws Exception;
-	
-	/**
-	 * Mapa de regreso: {
-	 *     MINIMO: -15.5,
-	 *     MAXIMO: 25.5
-	 * }
-	 */
-	public Map<String, String> recuperarRangoDescuentoRecargo (String cdramo, String cdtipsit, String cdusuari, String cdsisrol) throws Exception;
 
 	public List<Map<String, String>> cargarResultadosCotizacionLicenciaFlotilla(String cdunieco, String cdramo, String estado,
 			String nmpoliza) throws Exception;
-	
-	public void actualizaTramiteOVA(String ntramite	,String nmsolici)throws Exception;
 
-	public RespuestaVO obtieneValidaVigPolizaAnual(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
-	
-	public void guardarMorbilidad(String nombreArchivo) throws Exception;
-	
-	public List<Map<String, String>> obtieneListaMorbilidad(HashMap<String, Object> params) throws Exception;
-	
-	public String existeMorbilidadNueva(String morbilidad) throws Exception;
-	
+	public void actualizaTramiteOVA(String ntramite	,String nmsolici)throws Exception;
 }
