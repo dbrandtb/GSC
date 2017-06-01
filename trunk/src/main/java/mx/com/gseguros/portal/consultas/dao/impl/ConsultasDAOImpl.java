@@ -6080,4 +6080,41 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
         }
     }
     
+    @Override
+	public Map<String,String> recuperarValoresModelo(
+			String cdsisrol
+			,String cdusuari
+			,String cdunieco
+			)throws Exception
+	{
+    	Map<String,String> params = new LinkedHashMap<String,String>();
+    	params.put("pv_cdsisrol_i" , cdsisrol);
+    	params.put("pv_cdusuari_i" , cdusuari);
+    	params.put("pv_cdunieco_i" , cdunieco);
+    	Map<String,Object> procResult = ejecutaSP(new RecuperarValorModelo(getDataSource()),params);
+    	logger.debug("{}"+procResult);
+    	Map<String,String> result     = new HashMap<String,String>();
+    	result.put("MinModelo" , (String)procResult.get("pv_MinModelo_o"));
+    	result.put("MaxModelo" , (String)procResult.get("pv_MaxModelo_o"));
+    	logger.debug("result{}"+result);
+    	return result;
+	}
+		
+	
+	protected class RecuperarValorModelo extends StoredProcedure
+	{
+		protected RecuperarValorModelo(DataSource dataSource)
+		{
+			super(dataSource,"PKG_ENDOSOS.P_GET_VALOR_MODELO");
+			declareParameter(new SqlParameter("pv_cdsisrol_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_MinModelo_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_MaxModelo_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+    
 }

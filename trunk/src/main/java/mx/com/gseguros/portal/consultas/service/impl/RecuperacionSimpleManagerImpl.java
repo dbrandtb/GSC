@@ -249,6 +249,18 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("CONTEO" , consultasDAO.recuperarConteoTbloqueo(cdunieco,cdramo,estado,nmpoliza));
 			}
+			else if(proc.equals(RecuperacionSimple.RECUPERAR_VALORES_MODELO))
+			{
+				String cdunieco = params.get("cdunieco");
+				resp.setSmap(new HashMap<String,String>());
+				
+				resp.getSmap().putAll(consultasDAO.recuperarValoresModelo(
+						cdsisrol
+						,cdusuari
+						,cdunieco
+						));
+				
+			}
 		}
 		catch(Exception ex)
 		{
