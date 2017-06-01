@@ -676,14 +676,16 @@ public interface ConsultasDAO
 
    public String obtieneNmsituaext(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i, String pv_nmpoliza_i,
         String pv_nmsuplem_i, String pv_nmsitaux_i) throws Exception;
-        
-   public boolean isServicioCargaFederal(String cellValue) throws Exception;
    
+   public boolean isServicioCargaFederal(String cellValue) throws Exception;
+
+
+
    public List<Map<String, String>> obtieneRangoPeriodoGracia(String pv_cdramo_i, String pv_cdtipsit_i, String pv_cdagente_i)
 		throws Exception;
 
    public List<GenericVO> obtieneComentariosNegocio(String pv_cdramo_i, String pv_cdtipsit_i, String pv_negocio_i)
-		throws Exception;        
+		throws Exception;
    
    public List<Map<String,String>> recuperarEndososSiniestralidad(
            String cdunieco
@@ -699,7 +701,7 @@ public interface ConsultasDAO
            ,String nmpoliza
            )throws Exception;
    
-	public List<Map<String, String>> recuperarDatosValorDefectoLayout(
+   public List<Map<String, String>> recuperarDatosValorDefectoLayout(
 			String cdsisrol
 			,String campo
 			,String renovacionGral
@@ -714,9 +716,4 @@ public interface ConsultasDAO
 	
 	public List<Map<String,String>> recuperarNombreDocumentosCotizacion(String ntramite) throws Exception;
 	
-	public Map<String,String> recuperarValoresModelo(
-			String cdsisrol
-			,String cdusuari
-			,String cdunieco
-			)throws Exception;
 }

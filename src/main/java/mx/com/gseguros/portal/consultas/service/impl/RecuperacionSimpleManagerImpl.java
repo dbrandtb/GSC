@@ -249,18 +249,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("CONTEO" , consultasDAO.recuperarConteoTbloqueo(cdunieco,cdramo,estado,nmpoliza));
 			}
-			else if(proc.equals(RecuperacionSimple.RECUPERAR_VALORES_MODELO))
-			{
-				String cdunieco = params.get("cdunieco");
-				resp.setSmap(new HashMap<String,String>());
-				
-				resp.getSmap().putAll(consultasDAO.recuperarValoresModelo(
-						cdsisrol
-						,cdusuari
-						,cdunieco
-						));
-				
-			}
 		}
 		catch(Exception ex)
 		{
@@ -562,7 +550,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 			{
 				String ntramite = params.get("ntramite");
 				resp.setSlist(consultasDAO.recuperarUsuariosReasignacionTramite(ntramite, cdusuari, cdsisrol));
-			} 
+			}
 			else if(proc.equals(RecuperacionSimple.RECUPERAR_COBERTURAS_PRIMA_NETA))
             {
                 String cdunieco = params.get("cdunieco");
@@ -751,8 +739,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				mapa = endososDAO.recuperarPersonaEndosoAlta(params.get("cdperson"));
 			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_CORREO_AGENTE_TRAMITE)) {
 			    mapa .put("correoAgente", flujoMesaControlDAO.recuperarCorreoAgenteTramite(params.get("ntramite")));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_RANGO_DESCUENTO_RECARGO)) {
-			    mapa = cotizacionDAO.recuperarRangoDescuentoRecargo(params.get("cdramo"), params.get("cdtipsit"), cdusuari, cdsisrol);
 			}
 		}
 		catch(Exception ex)
