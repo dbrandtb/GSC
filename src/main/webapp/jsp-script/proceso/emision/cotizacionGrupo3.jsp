@@ -103,8 +103,8 @@ var _p21_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol"
 var _p21_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
-var _p21_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p21_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p21_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p21_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
@@ -1635,52 +1635,6 @@ Ext.onReady(function()
                             if(aux==0)
                             {
                                 mensajeError('No hay grupos para cargar');
-                            }
-                            for(var i=0;i<aux;i++)
-                            {
-                                Ext.Ajax.request(
-                                {
-                                    url      : _p21_urlObtenerTvalogarsGrupo
-                                    ,params  :
-                                    {
-                                        'smap1.cdunieco'  : _p21_smap1.cdunieco
-                                        ,'smap1.cdramo'   : _p21_smap1.cdramo
-                                        ,'smap1.estado'   : _p21_smap1.estado
-                                        ,'smap1.nmpoliza' : _p21_smap1.nmpoliza
-                                        ,'smap1.letra'    : resp.slist1[i].letra
-                                        ,'smap1.i'        : i
-                                    }
-                                    ,success : function(response)
-                                    {
-                                        var tvalogars=Ext.decode(response.responseText);
-                                        debug('tvalogars:',tvalogars);
-                                        if(tvalogars.exito)
-                                        {
-                                            aux2=aux2+1;
-                                            debug('cargadas:',aux2);
-                                            var grupo=new _p21_modeloGrupo(resp.slist1[tvalogars.smap1.i]);
-                                            grupo.tvalogars=tvalogars.slist1;
-                                            grupo.valido=true;
-                                            _p21_storeGrupos.add(grupo);
-                                            _p21_storeGrupos.sort('letra','ASC');
-                                            _p21_storeGrupos.commitChanges();
-                                            if(aux2==aux)//tenemos todas las respuestas
-                                            {
-                                                _p21_tabpanel().setLoading(false);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            _p21_tabpanel().setLoading(false);
-                                            mensajeError(tvalogars.respuesta);
-                                        }
-                                    }
-                                    ,failure : function()
-                                    {
-                                        _p21_tabpanel().setLoading(false);
-                                        errorComunicacion();
-                                    }
-                                });
                             }
                             debug('<callback modificada');
                         });
