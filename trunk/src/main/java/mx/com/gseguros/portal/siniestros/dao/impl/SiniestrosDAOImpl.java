@@ -905,7 +905,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected ObtenerListadoPolizaFeOcurre(DataSource dataSource)
 		{
-			super(dataSource, "P_LISTA_POLIZAS");
+			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_POLIZAS");
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));

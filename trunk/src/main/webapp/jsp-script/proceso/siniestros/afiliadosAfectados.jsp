@@ -88,6 +88,7 @@
 			var _URL_CONCEPTOSASEG						= '<s:url namespace="/siniestros" 		action="obtenerMsinival" />';
 			var _URL_LISTADO_ASEGURADO          		= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
 			var _URL_CONSULTA_LISTADO_POLIZA			= '<s:url namespace="/siniestros" 		action="consultaListaPolizaFeOcu" />';//(EGS) cambiamos consultaListaPoliza
+			var _URL_CONSULTA_LISTADO_POLIZA_ORIG		= '<s:url namespace="/siniestros"		action="consultaListaPoliza" />'; //(EGS) para poder generar reclamos fuera de vigencia con autorización especial
 			var _URL_ASOCIA_MSINEST_REFERENCIADO    	= '<s:url namespace="/siniestros"      	action="asociaMsiniestroReferenciado" />';
 			var _URL_ACTUALIZA_INFO_GRAL_SIN       		= '<s:url namespace="/siniestros"      	action="actualizaDatosGeneralesSiniestro" />';
 			var _URL_GUARDA_CONCEPTO_TRAMITE			= '<s:url namespace="/siniestros"  		action="guardarMsinival"/>';
@@ -3742,8 +3743,110 @@
 							queryMode :'remote',			queryParam: 'params.cdperson',			store : storeAsegurados,
 							triggerAction: 'all',			hideTrigger:true,						allowBlank: false,
 							listeners : {
-								
 								'select' : function(combo, record) {
+									cdPerson = this.getValue();
+									var params = {'params.cdperson' : this.getValue(),
+												  'params.cdramo' : _11_params.CDRAMO,
+												  'params.fe_ocurre' : panelListadoAsegurado.form.getValues().dtfechaOcurrencias	//(EGS)
+												  };
+							        Ext.Ajax.request({	//(EGS) SE MODIFICA PARA OBTENER SOLO UNA POLIZA, Y MOSTRARLA EN EL ESPACIO CORRESPONDIENTE
+							            url     : _URL_CONSULTA_LISTADO_POLIZA
+							            ,params: params
+							            ,success : function (response) {
+							            	debug('Consultando una poliza para mostrar');
+							            	var jsonResponse = Ext.decode(response.responseText);
+							                if(jsonResponse.listaPoliza != null){
+							                	//(EGS) Si encuentra más de una póliza, debe mostrar la lista
+							                	if(jsonResponse.listaPoliza.length > 1){
+							                		debug('Muestra lista 1');
+							                		cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
+							                			if(success){
+							                				jsonResponse = Ext.decode(response.responseText);
+                                                            if(jsonResponse.listaPoliza == null){
+                                                            	Ext.Msg.show({title:    'Aviso',
+                                                            		msg:    'No existen p&oacute;lizas para el asegurado elegido',
+                                                                    buttons:Ext.Msg.OK,
+                                                                    icon:    Ext.Msg.WARNING,
+                                                                    fn: function() {
+                                                                    	panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
+                                                                    }
+                                                                });
+                                                            }else{
+                                                            	centrarVentanaInterna(modPolizasAsegurado.show());
+                                                            }
+                                                        }else{
+                                                        	Ext.Msg.show({
+                                                            	title: 'Aviso',
+                                                                msg: 'Error al obtener los datos.',
+                                                                buttons: Ext.Msg.OK,
+                                                                icon: Ext.Msg.ERROR
+                                                            });
+                                                        }
+                                                    });
+							                	
+							                	}else{
+							                		debug('No muestra lista 1');
+							                		eligePoliza(jsonResponse.listaPoliza[0],panelListadoAsegurado,modPolizasAsegurado);
+							                	}
+							                }
+							                else {
+												Ext.Msg.show({
+													title:	'Aviso',
+													//msg:	'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',
+													msg:	'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia.',
+													buttons:Ext.Msg.OK,
+													//buttons:Ext.Msg.OKCANCEL,
+													icon:	Ext.Msg.WARNING //,  (PENDIENTE: NO SABEMOS SI SE DEJARA ESTA FUNCIONALIDAD PARA EL ROL OPERADOR!!!!!)
+//                                                    fn: function(buttonId, text, opt) {    // (EGS) agregamos parametros a la función
+//                                                        if (buttonId == 'ok'){
+//                                                            cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA_ORIG, 'listaPoliza', params, function(options, success, response){
+//                                                                if(success){
+//                                                                    jsonResponse = Ext.decode(response.responseText);
+//                                                                    if(jsonResponse.listaPoliza == null){
+//                                                                        Ext.Msg.show({
+//                                                                            title:    'Aviso',
+//                                                                            msg:    'No existen p&oacute;lizas para el asegurado elegido',
+//                                                                            buttons:Ext.Msg.OK,
+//                                                                            icon:    Ext.Msg.WARNING,
+//                                                                                fn: function() {
+//                                                                                panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
+//                                                                            }
+//                                                                        });
+//                                                                    }else{
+//                                                                        centrarVentanaInterna(modPolizasAsegurado.show());
+//                                                                    }
+//                                                                }else{
+//                                                                    Ext.Msg.show({
+//                                                                        title: 'Aviso',
+//                                                                        msg: 'Error al obtener los datos.',
+//                                                                        buttons: Ext.Msg.OK,
+//                                                                        icon: Ext.Msg.ERROR
+//                                                                    });
+//                                                                }
+//                                                            });
+//                                                        }
+//                                                        else{
+//                                                            panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
+//                                                               modPolizasAsegurado.hide();
+//                                                               return;
+//                                                        }
+//                                                    }
+												});
+						                    	panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
+				                       			return;
+							                }//else
+							            },//success
+							            failure : function (){
+							                me.up().up().setLoading(false);
+							                centrarVentanaInterna(Ext.Msg.show({
+							                    title:'Error',
+							                    msg: 'Error de comunicaci&oacute;n',
+							                    buttons: Ext.Msg.OK,
+							                    icon: Ext.Msg.ERROR
+							                }));
+							            }
+							        });//_URL_CONSULTA_LISTADO_POLIZA
+									/*
 									var params = {'params.cdperson' : this.getValue(),
 												  'params.cdramo' : _11_params.CDRAMO,
 												  'params.fe_ocurre' : panelListadoAsegurado.form.getValues().dtfechaOcurrencias	//(EGS)
@@ -3755,16 +3858,24 @@
 												Ext.Msg.show({
 													title: 'Aviso',
 					                                //msg: 'No existen p&oacute;lizas para el asegurado elegido.', (EGS)
-					                                msg: 'La fecha de ocurrencia del siniestro, no coincide con alguna p&oacute;liza del asegurado',	// (EGS)
-													buttons: Ext.Msg.OK,
-													icon: Ext.Msg.WARNING
-												});
-												
+			                                		msg: 'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',	// (EGS)
+            			                    		buttons: Ext.Msg.OKCANCEL, //Ext.Msg.OK, (EGS) cambiamos a OKCANCEL 
+													icon: Ext.Msg.WARNING,
+													fn: function(buttonId, text, opt) {	// (EGS) agregamos function
+														if (buttonId == 'ok'){
+															Ext.Msg.show({
+																title: 'Te digo',
+																msg:	'Que programes5',
+																buttons:Ext.Msg.OK,
+																icon:	Ext.Msg.QUESTION
+															});
+														}
+													}	// fin (EGS) agregamos function
+                                    			});
 												combo.clearValue();
 												modPolizasAsegurado.hide();
 												return;
 											}
-											
 										}else{
 											Ext.Msg.show({
 												title: 'Aviso',
@@ -3774,9 +3885,9 @@
 											});
 										}
 									});
-									centrarVentanaInterna(modPolizasAsegurado.show());
-								}
-							}
+									centrarVentanaInterna(modPolizasAsegurado.show());*/
+								}//select
+							}//listeners
 						}
 					]
 				});
@@ -4312,6 +4423,9 @@
 			}
 		//}
 	}
+	
+
+	
 	
 	//FIN DE FUNCIONES
 		</script>
