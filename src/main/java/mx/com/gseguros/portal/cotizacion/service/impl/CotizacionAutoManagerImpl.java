@@ -4244,7 +4244,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 						record.put("cdtipsit",valor);
 					} //TIPO DE SITUACION NO DEFINIDO 
 					else if("S".equals(respetar)||tipoatri.equals("SITUACION"))
-					{//Definimos una situación
+					{//Definimos una situaci\u00F3n
 						//nuevo para recuperar cdtipsit
 						if(StringUtils.isNotBlank(orCdtipsit))
 						{
@@ -5176,7 +5176,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			      record.put("paso",paso.toString());
                }
         }catch(Exception ex){   
-		    	 paso =  paso.append("En la fila ").append(fila).append(" tiene que definir negocio de la siguiente manera: TRADICIONAL, SUSCRIPCIÓN ,CONDUCTOR PARTICULAR DE CONTADO...");
+		    	 paso =  paso.append("En la fila ").append(fila).append(" tiene que definir negocio de la siguiente manera: TRADICIONAL, SUSCRIPCI\u00F3N ,CONDUCTOR PARTICULAR DE CONTADO...");
 		    	 record.put("paso",paso.toString());
 	    }
 	  try{
