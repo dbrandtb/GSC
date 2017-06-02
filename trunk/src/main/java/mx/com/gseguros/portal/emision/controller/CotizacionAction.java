@@ -14377,7 +14377,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 }
                 logger.debug("Valores de pantalla sin espacios creado.");
                 
-                while (rowIterator.hasNext()) 
+                while (rowIterator.hasNext() && olistMod.size()<fila) 
                 {   //filaVista  >>>   olist1.get(fila)
                     logger.debug("Iterando del layout inciso numero: "+fila);
                     row = rowIterator.next();
