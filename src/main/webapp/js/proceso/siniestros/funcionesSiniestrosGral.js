@@ -565,6 +565,100 @@ function _11_validaProveedorPagoDirecto(){
     });
 }
 
+
+//(EGS) se crea como función para simular seleccion de poliza en grid que muestra lista de polizas
+function eligePoliza(record,panelListadoAsegurado,modPolizasAsegurado){
+	_11_fueraVigencia = "0";	// (EGS) reiniciamos valor
+	//1.- Validamos que el asegurado este vigente
+	if(record.desEstatusCliente=="Vigente") {
+		var valorFechaOcurrencia;
+		var valorFechaOcu = panelListadoAsegurado.query('datefield[name=dtfechaOcurrencias]')[0].rawValue;
+		valorFechaOcurrencia = new Date(valorFechaOcu.substring(6,10)+"/"+valorFechaOcu.substring(3,5)+"/"+valorFechaOcu.substring(0,2));
+		var valorFechaInicial = new Date(record.feinicio.substring(6,10)+"/"+record.feinicio.substring(3,5)+"/"+record.feinicio.substring(0,2));
+		var valorFechaFinal =   new Date(record.fefinal.substring(6,10)+"/"+record.fefinal.substring(3,5)+"/"+record.fefinal.substring(0,2));
+		var valorFechaAltaAsegurado = new Date(record.faltaAsegurado.substring(6,10)+"/"+record.faltaAsegurado.substring(3,5)+"/"+record.faltaAsegurado.substring(0,2));
+		Ext.Ajax.request({
+			url     : _URL_VALIDA_STATUSASEG
+			,params:{
+				'params.cdperson'  : panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').getValue(),
+				'params.feoocurre' : valorFechaOcurrencia,
+				'params.nmpoliza'  : record.nmpoliza
+			}
+			,success : function (response) {
+				json = Ext.decode(response.responseText);
+				if(Ext.decode(response.responseText).validacionGeneral =="V"){
+					if((valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
+						if( valorFechaOcurrencia >= valorFechaAltaAsegurado ) {
+							_11_fueraVigencia = "1";	// (EGS) indicamos que siniestro sale de vigencia de la poliza
+							panelListadoAsegurado.down('[name="cdUniecoAsegurado"]').setValue(record.cdunieco);
+							panelListadoAsegurado.down('[name="cdRamoAsegurado"]').setValue(record.cdramo);
+							panelListadoAsegurado.down('[name="estadoAsegurado"]').setValue(record.estado);
+							panelListadoAsegurado.down('[name="nmPolizaAsegurado"]').setValue(record.nmpoliza);
+							panelListadoAsegurado.down('[name="nmSoliciAsegurado"]').setValue(record.nmsolici);
+							panelListadoAsegurado.down('[name="nmSuplemAsegurado"]').setValue(record.nmsuplem);
+							panelListadoAsegurado.down('[name="nmSituacAsegurado"]').setValue(record.nmsituac);
+							panelListadoAsegurado.down('[name="cdTipsitAsegurado"]').setValue(record.cdtipsit);
+							modPolizasAsegurado.hide();
+						}else{
+							// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
+							Ext.Msg.show({
+								title:'Error',
+								msg: 'La fecha de ocurrencia es mayor a la fecha de alta del asegurado',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							});
+							panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
+							modPolizasAsegurado.hide();
+							//limpiarRegistros();
+						}
+					}else{
+						// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
+						centrarVentanaInterna(Ext.Msg.show({
+							title:'Error',
+							msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						}));
+						panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
+						modPolizasAsegurado.hide();
+					}
+				 }else{
+					// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
+					centrarVentanaInterna(Ext.Msg.show({
+						title:'Error',
+						msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.ERROR
+					}));
+					panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
+					modPolizasAsegurado.hide();
+				 }
+			},
+			failure : function (){
+				me.up().up().setLoading(false);
+				centrarVentanaInterna(Ext.Msg.show({
+					title:'Error',
+					msg: 'Error de comunicaci&oacute;n',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				}));
+			}
+		});
+	}else{
+		// El asegurado no se encuentra vigente
+		centrarVentanaInterna(Ext.Msg.show({
+			title:'Error',
+			msg: 'El asegurado de la p&oacute;liza seleccionado no se encuentra vigente',
+			buttons: Ext.Msg.OK,
+			icon: Ext.Msg.ERROR
+		}));
+		panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
+		modPolizasAsegurado.hide();
+		//limpiarRegistros();
+	}
+
+}
+
 //5.2.- Validamos si existe coberturas que no cubre para su validacion
 function _11_validaAseguroLimiteCoberturas(){
     var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"loading..."});
