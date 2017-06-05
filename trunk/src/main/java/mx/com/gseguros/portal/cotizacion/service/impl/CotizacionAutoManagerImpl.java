@@ -4722,6 +4722,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 				List<Map<String,String>> persona = new ArrayList<Map<String,String>>();
 				fila = fila + 1;
 				
+				paso = new StringBuilder();
 				paso = paso.append("Iterando fila ").append(fila);
 				Row row = rowIterator.next();
 				
@@ -5206,12 +5207,19 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	    	   
 			   List<UsuarioRolEmpresaVO> rolesCliente = usuarioDAO.obtieneRolesCliente("A"+numAgt);//obtengo los roles que al agt tiene permitidos				   
 			   record = validaNegociosXAgente(record,rolesCliente,numAgt+"",negocioValorCelda);
-			   if(StringUtils.isBlank(record.get("cdsisrol")))
+			   if(StringUtils.isNotBlank(record.get("paso")))
 			   {
-				   paso =  paso.append("En la fila ").append(fila).append(" no se encontraron negocios para el agente.");
+				   paso = paso.append("En la fila ").append(fila).append(record.get("paso"));
 				   record.put("paso",paso.toString());
+			       throw new ApplicationException(record.get("paso"));
 			   }
-        }catch(Exception ex){   
+        }catch(Exception ex){  
+	        	if(StringUtils.isNotBlank(record.get("paso")))
+				{
+				   paso = paso.append("En la fila ").append(fila).append(record.get("paso"));
+				   record.put("paso",paso.toString());
+				   throw new ApplicationException(record.get("paso"));
+				}
 	 		    String agt = agente.getStringCellValue();//obtengo el numero de agente ingresado
 			    List<UsuarioRolEmpresaVO> rolesCliente = usuarioDAO.obtieneRolesCliente(agt);//obtengo los roles que al agt tiene permitidos
 			    record = validaNegociosXAgente(record,rolesCliente,agt+"",negocioValorCelda);
@@ -5228,6 +5236,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 	{
 		   StringBuilder paso = new StringBuilder();
 		   boolean negocioValido = false;
+		   String ejNegocios = "";
 		   for(UsuarioRolEmpresaVO rol:rolesCliente)
 		   {//en base a cada rol cargo sus respectivos negocios
 			   List<GenericVO> negociosPermitidos=  catalogosManager.cargarNegociosPorAgenteRamo5(agt, rol.getCdSisRol(),"F");//<<<<<<<<<<<<<<<<<<<
@@ -5242,7 +5251,17 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 					   logger.info(new StringBuilder().append("Negocio con coincidencias para el usuario ").append(agt).append(" en el rol ").append(rol.getCdSisRol()).toString());
 					   break;
 				   }
+				   else
+				   {
+					   ejNegocios= ejNegocios + (ejNegocios.contains(negocioPermitido.getValue().toString())?"": " ,"+negocioPermitido.getValue().toString());
+				   }
 			   }
+		   }
+		   if(StringUtils.isBlank(record.get("cdsisrol")))
+		   {
+		    	paso =  paso.append(" negocio ").append(negocioValorCelda).append(" no valido para el agente ingresado. Ej de negocios validos ").append(ejNegocios);
+		    	record.put("paso",paso.toString());
+		    	throw new ApplicationException(record.get("paso"));
 		   }
 		   if(!negocioValido)
 		   {
