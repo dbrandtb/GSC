@@ -14,7 +14,7 @@
 			<script type="text/javascript" src="${ctx}/js/proceso/emision/configuracionMorbilidad.js"></script>
 	</head>
 	<body>
-		<div style="height:1000px;">
+		<div style="height:500px;">
 			<div id="div_clau"></div>
 		</div>
  	</body>
