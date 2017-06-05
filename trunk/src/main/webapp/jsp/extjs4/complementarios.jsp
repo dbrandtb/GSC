@@ -2637,6 +2637,23 @@ function _p29_emitirClicComplementarios()
                                                                                     var json=Ext.decode(response.responseText);
                                                                                     if(json.success==true)
                                                                                     {
+                                                                                    	
+                                                                                    	var cmt_modificado = Ext.getCmp('inputTextareaCommentsToRechazo').getValue();
+                                                                                        //salto de linea
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'\n','sssss');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'á','aaaaa');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'é','eeeee');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'í','iiiii');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'ó','ooooo');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'ú','uuuuu');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'ñ','nnnnn');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'Á','AAAAA');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'É','EEEEE');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'Í','IIIII');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'Ó','OOOOO');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'Ú','UUUUU');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'Ñ','NNNNN');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,',','ccccc');
                                                                                         Ext.Ajax.request(
                                                                                         {
                                                                                             url     : compleUrlGuardarCartoRechazo
@@ -2644,7 +2661,7 @@ function _p29_emitirClicComplementarios()
                                                                                             ,params :
                                                                                             {
                                                                                                 'map1.ntramite'  : inputNtramite
-                                                                                                ,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+                                                                                                ,'map1.comments' : cmt_modificado
                                                                                                 ,'map1.cdsisrol' : sesionDsrol
                                                                                                 ,'map1.cdunieco' : inputCdunieco
                                                                                                 ,'map1.cdramo'   : inputCdramo
