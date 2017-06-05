@@ -222,9 +222,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 	@Value("${caratula.impresion.autos.serviciopublico.url}")
     private String caratulaImpresionAutosServiciopublicoUrl;
 	
-	@Value("${caratula.impresion.autos.flotillas.url}")
-    private String caratulaImpresionAutosFlotillasUrl;
-	
 	@Value("${manual.agente.txtinfocobredgs}")
     private String manualAgenteTxtinfocobredgs;
 	
@@ -236,6 +233,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	@Value("${caratula.impresion.autos.docextra.url}")
     private String caratulaImpresionAutosDocExtra;
+	
+	@Value("${caratula.impresion.autos.flotillas.url}")
+    private String caratulaImpresionAutosFlotillasUrl;
 	
 	@Value("${sigs.RenovarEndososB.url}")
     private String sigsRenovarEndososB;
@@ -266,26 +266,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String result   = SUCCESS;
 		UserVO usuario  = null;
 		String cdsisrol = null;
-		String caseIdRstn = null;
-		
-		if (exito && map1 != null && "S".equals(map1.get("rstn")) && StringUtils.isNotBlank(map1.get("ntramite"))) { // para RSTN recuperar datos
-		    try {
-		        String paso = "Construyendo flujo RSTN";
-		        try {
-		            UserVO user = Utils.validateSession(session);
-		            String ntramite = map1.get("ntramite");
-		            Utils.validate(ntramite, "Falta ntramite");
-		            flujo = flujoMesaControlManager.generarYRecuperarFlujoRSTN(ntramite, user.getUser(), user.getRolActivo().getClave());
-		            caseIdRstn = map1.get("caseIdRstn");
-		            map1 = null;
-		        } catch (Exception ex) {
-		            Utils.generaExcepcion(ex, paso);
-		        }
-		    } catch (Exception ex) {
-		        exito = false;
-		        respuesta = Utils.manejaExcepcion(ex);
-		    }
-		}
 		
 		if(exito)
 		{
@@ -304,8 +284,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 					cdtipsit = tramite.get("CDTIPSIT");
 					map1 = new HashMap<String, String>();
 					map1.put("ntramite" , flujo.getNtramite());
-					
-					map1.put("caseIdRstn", caseIdRstn);
 					
 					if("RECUPERAR".equals(flujo.getAux()))
 					{
@@ -773,10 +751,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             parametros.putAll(map1);
             parametros.put("pv_status", "V");
             parametros.put("pv_nmsuplem", "0");
-            
-            if (!Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(map1.get("pv_cdramo"))) {
-                kernelManager.pMovTvalopol(parametros);
-            }
+            kernelManager.pMovTvalopol(parametros);
             
 			success = true;
 		}
@@ -2124,8 +2099,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String cdIdeperRes     = null;
 		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
 		boolean esFlotilla     = false;
-		String caseIdRstn = null;
-		
 		tipoGrupoInciso = "I";
 		
 		Date fechaHoy = new Date();
@@ -2148,23 +2121,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						&&panel1.get("tipoGrupoInciso").equals("C"))
 				{
 					tipoGrupoInciso = "C";
-				}
-				
-				if (success) {
-				    caseIdRstn = panel2.get("caseIdRstn");
-				    logger.debug(Utils.log("caseIdRstn: ", caseIdRstn));
-				    if (StringUtils.isNotBlank(caseIdRstn)) {
-				        try {
-				            cotizacionManager.actualizarOtvalorTramitePorDsatribu(
-			                        ntramite
-			                        ,"CASEIDRSTN"
-			                        ,caseIdRstn
-			                        ,"U"
-			                        );
-				        } catch (Exception ex) {
-				            logger.error("WARNING al guardar caseIdRstn en otvalor", ex);
-				        }
-				    }
 				}
 				
 				if(!success)
@@ -2486,7 +2442,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						}catch(Exception ex)
 						{
 							logger.error("error en el pl de emitir",ex);
-							mensajeRespuesta = ex.getMessage()!=null?ex.getMessage().trim().equals("")?"Error en el Web Service para emitir":ex.getMessage():"Error en el Web Service para emitir";
+							mensajeRespuesta = ex.getMessage();
 							success          = false;
 						}
 						
@@ -2981,32 +2937,31 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 */
 						
 						if(StringUtils.isNotBlank(urlIncisosExcelFlot)){
-							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
-							logger.debug("URL Generada para urlIncisosEXCELFlotillas: "+ urlIncisosExcelFlot + parametros);
-							this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
-							
-							documentosManager.guardarDocumento(
-									cdunieco
-									,cdramo
-									,"M"
-									,nmpolizaEmitida
-									,nmsuplemEmitida
-									,new Date()
-									,urlIncisosExcelFlot + parametros
-									,"Incisos EXCEL"
-									,nmpoliza
-									,ntramite
-									,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-									,Constantes.SI
-									,null
-									,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-									,"0"
-									,Documento.EXTERNO_INCISOS_FLOTILLAS
-									,null
-									,null, false
-									);
-						}
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
+						logger.debug("URL Generada para urlIncisosEXCELFlotillas: "+ urlIncisosExcelFlot + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
 						
+						documentosManager.guardarDocumento(
+								cdunieco
+								,cdramo
+								,"M"
+								,nmpolizaEmitida
+								,nmsuplemEmitida
+								,new Date()
+								,urlIncisosExcelFlot + parametros
+								,"Incisos EXCEL"
+								,nmpoliza
+								,ntramite
+								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+								,Constantes.SI
+								,null
+								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+								,"0"
+								,Documento.EXTERNO_INCISOS_FLOTILLAS
+								,null
+								,null, false
+								);
+						}
 						/**
 						 * Para Tarjeta Identificacion
 						 */
@@ -3212,63 +3167,62 @@ public class ComplementariosAction extends PrincipalCoreAction
 					}
 					
 					if(StringUtils.isNotBlank(urlDocsExtra)){
-						/**
-						 * Para documento Sanas Practicas
-						 */
-						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",2";
-						logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Sanas Pr\u00e1cticas</a>";
-						
-						documentosManager.guardarDocumento(
-								cdunieco
-								,cdramo
-								,"M"
-								,nmpolizaEmitida
-								,nmsuplemEmitida
-								,new Date()
-								,urlDocsExtra + parametros
-								,"Sanas Pr\u00e1cticas"
-								,nmpoliza
-								,ntramite
-								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-								,Constantes.SI
-								,null
-								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,"0"
-								,Documento.EXTERNO_DOCUMENTO_EXTRA
-								,null
-								,null, false
-								);
-	
-						/**
-						 * Para documento Constancia de Recepcion
-						 */
-						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",1";
-						logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>";
-						
-						documentosManager.guardarDocumento(
-								cdunieco
-								,cdramo
-								,"M"
-								,nmpolizaEmitida
-								,nmsuplemEmitida
-								,new Date()
-								,urlDocsExtra + parametros
-								,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
-								,nmpoliza
-								,ntramite
-								,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
-								,Constantes.SI
-								,null
-								,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-								,"0"
-								,Documento.EXTERNO_DOCUMENTO_EXTRA
-								,null
-								,null, false
-								);
-					}
+					/**
+					 * Para documento Sanas Practicas
+					 */
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",2";
+					logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Sanas Pr\u00e1cticas</a>";
 					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlDocsExtra + parametros
+							,"Sanas Pr\u00e1cticas"
+							,nmpoliza
+							,ntramite
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.EXTERNO_DOCUMENTO_EXTRA
+							,null
+							,null, false
+							);
+
+					/**
+					 * Para documento Constancia de Recepcion
+					 */
+					parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",1";
+					logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
+					this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlDocsExtra + parametros+"\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>";
+					
+					documentosManager.guardarDocumento(
+							cdunieco
+							,cdramo
+							,"M"
+							,nmpolizaEmitida
+							,nmsuplemEmitida
+							,new Date()
+							,urlDocsExtra + parametros
+							,"Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual"
+							,nmpoliza
+							,ntramite
+							,TipoEndoso.EMISION_POLIZA.getCdTipSup().toString()
+							,Constantes.SI
+							,null
+							,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+							,"0"
+							,Documento.EXTERNO_DOCUMENTO_EXTRA
+							,null
+							,null, false
+							);
+					}
 					// JTEZVA 2016 09 08 Se complementan las ligas con los documentos ice
 					this.mensajeEmail += emisionManager.generarLigasDocumentosEmisionLocalesIce(ntramite);
 					
@@ -3369,26 +3323,26 @@ public class ComplementariosAction extends PrincipalCoreAction
                             ,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolizaEmitida
                             ));
                     
-                   Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
-                   consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
-                   
-                try
-           		{
-           			String params        = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"));
-           			HttpUtil.sendPost(sigsRenovarEndososB,params);
-           		}
-           		catch (Exception ex)
-           		{
-           			respuesta = Utils.manejaExcepcion(ex);
-           		}
-                   
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                    Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
-                          vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
-                        Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-                }
-            } 
-            catch (Exception ex) 
+                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
+                    consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
+                    
+                 try
+            		{
+            			String params        = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"));
+            			HttpUtil.sendPost(sigsRenovarEndososB,params);
+            		}
+            		catch (Exception ex)
+            		{
+            			respuesta = Utils.manejaExcepcion(ex);
+            		}
+                    
+                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                     Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
+                           vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
+                         Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                 }
+             } 
+             catch (Exception ex) 
             {
                 logger.error("Error actualizando segrenovaciones_renovada", ex);
             }
