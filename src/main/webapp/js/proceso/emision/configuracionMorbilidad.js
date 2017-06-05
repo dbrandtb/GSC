@@ -161,7 +161,8 @@ Ext.onReady(function() {
 		if(panelInicialPral.down('[name=morbilidad]').getValue() != null){
 			storeGridMorbilidad.removeAll();
             var params = {
-                'params.morbilidad' : morbilidad.rawValue
+                //'params.morbilidad' : morbilidad.rawValue
+            	'params.morbilidad' : panelInicialPral.down('[name=morbilidad]').getValue()
             };
             cargaStorePaginadoLocal(storeGridMorbilidad, _URL_CONSULTA_MORBILIDAD, 'slist1', params, function(options, success, response){
                 if(success){

@@ -14656,238 +14656,241 @@ public class CotizacionAction extends PrincipalCoreAction
 		                filasLeidas 	= filasLeidas + 1;
 		                double cdgrupo	= -1d;
 		                
-		                //Empezamos a leer los campos del archivo de Excel
-		                double edadPromedio	   		= 0d;
-		                double porcentajeH 			= 0d;
-		                //Medicina Preventiva
-		                double medPreventivaHom 	= 0d;
-		                double medPreventivaMuj 	= 0d;
-		                //Medina de Primer Contacto
-		                double medPrimerContHom 	= 0d;
-		                double medPrimerContaMuj 	= 0d;
-		                //Medina de Primer Contacto
-		                double maternidadHom 		= 0d;
-		                double maternidadMuj 		= 0d;
-		                //Medina de Primer Contacto
-		                double ayudaMatHom 			= 0d;
-		                double ayudaMatMuj 			= 0d;
-		                //Medina de Primer Contacto
-		                double servOdontHom 		= 0d;
-		                double servOdontMuj 		= 0d;
-		                //Servicios Auxiliares de diagnostico
-		                double servAuxDiagtHom 		= 0d;
-		                double servAuxDiagtMuj 		= 0d;
-		                //Medicamentos
-		                double medicamentosHom 		= 0d;
-		                double medicamentosMuj 		= 0d;
-		                //Hospitalizacion
-		                double HospitalizaHom 		= 0d;
-		                double HospitalizaMuj 		= 0d;
-		                String leyendaConcepto 		= null;
-		                //EDAD PROMEDIO
-		                try {
-		                	edadPromedio = row.getCell(0).getNumericCellValue();
-			                logger.debug("EDAD PROMEDIO: "+(String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"));
-			                bufferLinea.append(descMorbilidad+"|"+fechaVigencia+"|"+String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'EDAD PROMEDIO' (A) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
-		                }
-		                //MEDICINA PREVENTIVA HOMBRE
-		                try {
-		                	medPreventivaHom = row.getCell(1).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+medPreventivaHom+"|");
-			                bufferLinea.append(medPreventivaHom+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA PREVENTIVA HOMBRES' (B) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
-		                }
-		                //MEDICINA PREVENTIVA MUJERES
-		                try {
-		                	medPreventivaMuj = row.getCell(2).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+medPreventivaMuj+"|");
-			                bufferLinea.append(medPreventivaMuj+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA PREVENTIVA MUJERES' (C) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(2)),"-"));
-		                }
-		                //MEDICINA DE PRIMER CONTACTO HOMBRE
-		                try {
-		                	medPrimerContHom = row.getCell(3).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+medPrimerContHom+"|");
-			                bufferLinea.append(medPrimerContHom+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA DE PRIMER CONTACTO HOMBRES' (D) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(3)),"-"));
-		                }
-		                //MEDICINA DE PRIMER CONTACTO MUJER
-		                try {
-		                	medPrimerContaMuj = row.getCell(4).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+medPrimerContaMuj+"|");
-			                bufferLinea.append(medPrimerContaMuj+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA DE PRIMER CONTACTO HOMBRES' (E) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(4)),"-"));
-		                }
-		                //MATERNIDAD HOMBRE
-		                try {
-		                	maternidadHom = row.getCell(5).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+maternidadHom+"|");
-			                bufferLinea.append(maternidadHom+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MATERNIDAD HOMBRES' (F) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
-		                }
-		                //MATERNIDAD MUJERES
-		                try {
-		                	maternidadMuj = row.getCell(6).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+maternidadMuj+"|");
-			                bufferLinea.append(maternidadMuj+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MATERNIDAD MUJERES' (G) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
-		                }
-		                //AYUDA DE MATERNIDAD HOMBRE
-		                try {
-		                	ayudaMatHom = row.getCell(7).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+ayudaMatHom+"|");
-			                bufferLinea.append(ayudaMatHom+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'AYUDA DE MATERNIDAD HOMBRES' (H) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
-		                }
-		                //AYUDA DE MATERNIDAD MUJERES
-		                try {
-		                	ayudaMatMuj = row.getCell(8).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+ayudaMatMuj+"|");
-			                bufferLinea.append(ayudaMatMuj+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'AYUDA DE MATERNIDAD MUJERES' (I) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
-		                }
-		                //SERVICIOS ODONTOLOGICOS HOMBRE
-		                try {
-		                	servOdontHom = row.getCell(9).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+servOdontHom+"|");
-			                bufferLinea.append(servOdontHom+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS ODONTOLOGICOS HOMBRES' (J) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
-		                }
-		                //SERVICIOS ODONTOLOGICOS MUJERES
-		                try {
-		                	servOdontMuj = row.getCell(10).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+servOdontMuj+"|");
-			                bufferLinea.append(servOdontMuj+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS ODONTOLOGICOS MUJERES' (K) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(10)),"-"));
-		                }
-		                //SERVICIOS AURXILIARES DE DIAGNOSTICO HOMBRE
-		                try {
-		                	servAuxDiagtHom = row.getCell(11).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+servAuxDiagtHom+"|");
-			                bufferLinea.append(servAuxDiagtHom+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS AURXILIARES DE DIAGNOSTICO HOMBRE' (L) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(11)),"-"));
-		                }
-		                //SERVICIOS AURXILIARES DE DIAGNOSTICO MUJERES
-		                try {
-		                	servAuxDiagtMuj = row.getCell(12).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+servAuxDiagtMuj+"|");
-			                bufferLinea.append(servAuxDiagtMuj+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS AURXILIARES DE DIAGNOSTICO MUJERES' (M) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(12)),"-"));
-		                }
-		                //MEDICAMENTOS HOMBRE
-		                try {
-		                	medicamentosHom = row.getCell(13).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+medicamentosHom+"|");
-			                bufferLinea.append(medicamentosHom+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICAMENTOS HOMBRE' (N) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
-		                }
-		                //MEDICAMENTOS MUJERES
-		                try {
-		                	medicamentosMuj = row.getCell(14).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+medicamentosMuj+"|");
-			                bufferLinea.append(medicamentosMuj+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICAMENTOS MUJERES' (O) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
-		                }
-		                //HOSPITALIZACION HOMBRE
-		                try {
-		                	HospitalizaHom = row.getCell(15).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+HospitalizaHom+"|");
-			                bufferLinea.append(HospitalizaHom+"|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'HOSPITALIZACION HOMBRE' (P) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
-		                }
-		                //HOSPITALIZACION MUJERES
-		                try {
-		                	HospitalizaMuj = row.getCell(16).getNumericCellValue()* 100;
-		                	logger.debug("hombre: "+HospitalizaMuj+"|");
-			                bufferLinea.append(HospitalizaMuj+"|MSC|");
-	                	} catch(Exception ex) {
-		                	filaBuena = false;
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'HOSPITALIZACION MUJERES' (Q) de la fila ",fila," "));
-		                } finally {
-		                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
-		                }
 		                
-		                nConsulta++;
-	                	totalConsultasAseg.put(nConsulta,"");
-	                	estadoConsultas.put(nConsulta,true);
-	                	
-	                	if(filaBuena) {
-		                	totalConsultasAseg.put(nConsulta,Utils.join(totalConsultasAseg.get(nConsulta),bufferLinea.toString(),"\n"));
-		                	filasProcesadas = filasProcesadas + 1;
-		                }
-		                else {
-		                	filasError = filasError + 1;
-		                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
-		                	estadoConsultas.put(nConsulta,false);
-		                	if(!errorConsultas.containsKey(nConsulta)) {
-		                		errorConsultas.put(nConsulta,fila);
-		                	}
-		                }
+		               if(fila > 4){
+			                //Empezamos a leer los campos del archivo de Excel
+			                double edadPromedio	   		= 0d;
+			                double porcentajeH 			= 0d;
+			                //Medicina Preventiva
+			                double medPreventivaHom 	= 0d;
+			                double medPreventivaMuj 	= 0d;
+			                //Medina de Primer Contacto
+			                double medPrimerContHom 	= 0d;
+			                double medPrimerContaMuj 	= 0d;
+			                //Medina de Primer Contacto
+			                double maternidadHom 		= 0d;
+			                double maternidadMuj 		= 0d;
+			                //Medina de Primer Contacto
+			                double ayudaMatHom 			= 0d;
+			                double ayudaMatMuj 			= 0d;
+			                //Medina de Primer Contacto
+			                double servOdontHom 		= 0d;
+			                double servOdontMuj 		= 0d;
+			                //Servicios Auxiliares de diagnostico
+			                double servAuxDiagtHom 		= 0d;
+			                double servAuxDiagtMuj 		= 0d;
+			                //Medicamentos
+			                double medicamentosHom 		= 0d;
+			                double medicamentosMuj 		= 0d;
+			                //Hospitalizacion
+			                double HospitalizaHom 		= 0d;
+			                double HospitalizaMuj 		= 0d;
+			                String leyendaConcepto 		= null;
+			                //EDAD PROMEDIO
+			                try {
+			                	edadPromedio = row.getCell(0).getNumericCellValue();
+				                logger.debug("EDAD PROMEDIO: "+(String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"));
+				                bufferLinea.append(descMorbilidad+"|"+fechaVigencia+"|"+String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'EDAD PROMEDIO' (A) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
+			                }
+			                //MEDICINA PREVENTIVA HOMBRE
+			                try {
+			                	medPreventivaHom = row.getCell(1).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+medPreventivaHom+"|");
+				                bufferLinea.append(medPreventivaHom+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA PREVENTIVA HOMBRES' (B) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+			                }
+			                //MEDICINA PREVENTIVA MUJERES
+			                try {
+			                	medPreventivaMuj = row.getCell(2).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+medPreventivaMuj+"|");
+				                bufferLinea.append(medPreventivaMuj+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA PREVENTIVA MUJERES' (C) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(2)),"-"));
+			                }
+			                //MEDICINA DE PRIMER CONTACTO HOMBRE
+			                try {
+			                	medPrimerContHom = row.getCell(3).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+medPrimerContHom+"|");
+				                bufferLinea.append(medPrimerContHom+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA DE PRIMER CONTACTO HOMBRES' (D) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(3)),"-"));
+			                }
+			                //MEDICINA DE PRIMER CONTACTO MUJER
+			                try {
+			                	medPrimerContaMuj = row.getCell(4).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+medPrimerContaMuj+"|");
+				                bufferLinea.append(medPrimerContaMuj+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA DE PRIMER CONTACTO HOMBRES' (E) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(4)),"-"));
+			                }
+			                //MATERNIDAD HOMBRE
+			                try {
+			                	maternidadHom = row.getCell(5).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+maternidadHom+"|");
+				                bufferLinea.append(maternidadHom+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MATERNIDAD HOMBRES' (F) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
+			                }
+			                //MATERNIDAD MUJERES
+			                try {
+			                	maternidadMuj = row.getCell(6).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+maternidadMuj+"|");
+				                bufferLinea.append(maternidadMuj+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MATERNIDAD MUJERES' (G) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
+			                }
+			                //AYUDA DE MATERNIDAD HOMBRE
+			                try {
+			                	ayudaMatHom = row.getCell(7).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+ayudaMatHom+"|");
+				                bufferLinea.append(ayudaMatHom+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'AYUDA DE MATERNIDAD HOMBRES' (H) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
+			                }
+			                //AYUDA DE MATERNIDAD MUJERES
+			                try {
+			                	ayudaMatMuj = row.getCell(8).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+ayudaMatMuj+"|");
+				                bufferLinea.append(ayudaMatMuj+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'AYUDA DE MATERNIDAD MUJERES' (I) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
+			                }
+			                //SERVICIOS ODONTOLOGICOS HOMBRE
+			                try {
+			                	servOdontHom = row.getCell(9).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+servOdontHom+"|");
+				                bufferLinea.append(servOdontHom+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS ODONTOLOGICOS HOMBRES' (J) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
+			                }
+			                //SERVICIOS ODONTOLOGICOS MUJERES
+			                try {
+			                	servOdontMuj = row.getCell(10).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+servOdontMuj+"|");
+				                bufferLinea.append(servOdontMuj+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS ODONTOLOGICOS MUJERES' (K) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(10)),"-"));
+			                }
+			                //SERVICIOS AURXILIARES DE DIAGNOSTICO HOMBRE
+			                try {
+			                	servAuxDiagtHom = row.getCell(11).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+servAuxDiagtHom+"|");
+				                bufferLinea.append(servAuxDiagtHom+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS AURXILIARES DE DIAGNOSTICO HOMBRE' (L) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(11)),"-"));
+			                }
+			                //SERVICIOS AURXILIARES DE DIAGNOSTICO MUJERES
+			                try {
+			                	servAuxDiagtMuj = row.getCell(12).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+servAuxDiagtMuj+"|");
+				                bufferLinea.append(servAuxDiagtMuj+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS AURXILIARES DE DIAGNOSTICO MUJERES' (M) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(12)),"-"));
+			                }
+			                //MEDICAMENTOS HOMBRE
+			                try {
+			                	medicamentosHom = row.getCell(13).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+medicamentosHom+"|");
+				                bufferLinea.append(medicamentosHom+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICAMENTOS HOMBRE' (N) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
+			                }
+			                //MEDICAMENTOS MUJERES
+			                try {
+			                	medicamentosMuj = row.getCell(14).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+medicamentosMuj+"|");
+				                bufferLinea.append(medicamentosMuj+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICAMENTOS MUJERES' (O) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
+			                }
+			                //HOSPITALIZACION HOMBRE
+			                try {
+			                	HospitalizaHom = row.getCell(15).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+HospitalizaHom+"|");
+				                bufferLinea.append(HospitalizaHom+"|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'HOSPITALIZACION HOMBRE' (P) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
+			                }
+			                //HOSPITALIZACION MUJERES
+			                try {
+			                	HospitalizaMuj = row.getCell(16).getNumericCellValue()* 100;
+			                	logger.debug("hombre: "+HospitalizaMuj+"|");
+				                bufferLinea.append(HospitalizaMuj+"|MSC|");
+		                	} catch(Exception ex) {
+			                	filaBuena = false;
+			                	bufferErroresCenso.append(Utils.join("Error en el campo 'HOSPITALIZACION MUJERES' (Q) de la fila ",fila," "));
+			                } finally {
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
+			                }
+			                
+			                nConsulta++;
+		                	totalConsultasAseg.put(nConsulta,"");
+		                	estadoConsultas.put(nConsulta,true);
+		                	
+		                	if(filaBuena) {
+			                	totalConsultasAseg.put(nConsulta,Utils.join(totalConsultasAseg.get(nConsulta),bufferLinea.toString(),"\n"));
+			                	filasProcesadas = filasProcesadas + 1;
+			                }
+			                else {
+			                	filasError = filasError + 1;
+			                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
+			                	estadoConsultas.put(nConsulta,false);
+			                	if(!errorConsultas.containsKey(nConsulta)) {
+			                		errorConsultas.put(nConsulta,fila);
+			                	}
+			                }
+		               }
 					}//while (rowIterator.hasNext()&&exito)
 					
 					logger.debug("VALOR DEL EXITO ====> "+exito);

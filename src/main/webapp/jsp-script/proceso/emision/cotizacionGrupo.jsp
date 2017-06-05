@@ -1003,14 +1003,14 @@ Ext.onReady(function()
                                                 ,items  : [ {
                                                         xtype    : 'button'
                                                         ,text    : 'Registrar Morbilidad'
-                                                        ,icon    : '${ctx}/resources/fam3icons/icons/lock.png'
-                                                        ,hidden  : Ext.isEmpty(_p21_smap1.nmpoliza)
+                                                        ,icon    : '${ctx}/resources/fam3icons/icons/layout_add.png'
+                                                        ,hidden  :  _p21_smap1.cdsisrol!='COTIZADOR'
                                                         ,handler : _p21_AgregarMorbilidad//subirDocumentoMorbilidad
                                                     },{
                                                         xtype    : 'button'
                                                         ,text    : 'Consultar Morbilidad'
-                                                        ,icon    : '${ctx}/resources/fam3icons/icons/lock.png'
-                                                        ,hidden  : Ext.isEmpty(_p21_smap1.nmpoliza)
+                                                        ,icon    : '${ctx}/resources/fam3icons/icons/layout.png'
+                                                        ,hidden  : _p21_smap1.cdsisrol!='COTIZADOR'
                                                         ,handler : _p21_editarMorbilidad
                                                     }]
                                             }
