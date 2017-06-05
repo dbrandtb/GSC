@@ -324,6 +324,23 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 										buttonAlign : 'center',
 										handler: function() {
 											if (this.up().up().form.isValid()) {
+												
+    											var cmt_modificado = Ext.getCmp('inputTextareaCommentsToRechazo').getValue();
+    										    //salto de linea
+                                                cmt_modificado = replaceAll(cmt_modificado,'\n','sssss');
+                                                cmt_modificado = replaceAll(cmt_modificado,'á','aaaaa');
+                                                cmt_modificado = replaceAll(cmt_modificado,'é','eeeee');
+                                                cmt_modificado = replaceAll(cmt_modificado,'í','iiiii');
+                                                cmt_modificado = replaceAll(cmt_modificado,'ó','ooooo');
+                                                cmt_modificado = replaceAll(cmt_modificado,'ú','uuuuu');
+                                                cmt_modificado = replaceAll(cmt_modificado,'ñ','nnnnn');
+                                                cmt_modificado = replaceAll(cmt_modificado,'Á','AAAAA');
+                                                cmt_modificado = replaceAll(cmt_modificado,'É','EEEEE');
+                                                cmt_modificado = replaceAll(cmt_modificado,'Í','IIIII');
+                                                cmt_modificado = replaceAll(cmt_modificado,'Ó','OOOOO');
+                                                cmt_modificado = replaceAll(cmt_modificado,'Ú','UUUUU');
+                                                cmt_modificado = replaceAll(cmt_modificado,'Ñ','NNNNN');
+                                                cmt_modificado = replaceAll(cmt_modificado,',','ccccc');
 												this.up().up().form.submit({
 													waitMsg:'Procesando...',
 													params: {
@@ -341,7 +358,7 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 															,method:'GET'
 															,params :{
 																'map1.ntramite'  : record.raw.ntramite
-																,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+																,'map1.comments' : cmt_modificado
 																,'map1.cdsisrol' : 'MEDICO'
 																,'map1.cdunieco' : record.raw.cdunieco
 																,'map1.cdramo'   : record.raw.cdramo
@@ -406,12 +423,29 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 										icon    : '${ctx}/resources/fam3icons/icons/application_form_magnify.png',
 										buttonAlign : 'center',
 										handler: function() {
+											//valor de 
+											var cmt_modificado = Ext.getCmp('inputTextareaCommentsToRechazo').getValue();
+											cmt_modificado = replaceAll(cmt_modificado,'\n','sssss');
+                                            cmt_modificado = replaceAll(cmt_modificado,'á','aaaaa');
+                                            cmt_modificado = replaceAll(cmt_modificado,'é','eeeee');
+                                            cmt_modificado = replaceAll(cmt_modificado,'í','iiiii');
+                                            cmt_modificado = replaceAll(cmt_modificado,'ó','ooooo');
+                                            cmt_modificado = replaceAll(cmt_modificado,'ú','uuuuu');
+                                            cmt_modificado = replaceAll(cmt_modificado,'ñ','nnnnn');
+                                            cmt_modificado = replaceAll(cmt_modificado,'Á','AAAAA');
+                                            cmt_modificado = replaceAll(cmt_modificado,'É','EEEEE');
+                                            cmt_modificado = replaceAll(cmt_modificado,'Í','IIIII');
+                                            cmt_modificado = replaceAll(cmt_modificado,'Ó','OOOOO');
+                                            cmt_modificado = replaceAll(cmt_modificado,'Ú','UUUUU');
+                                            cmt_modificado = replaceAll(cmt_modificado,'Ñ','NNNNN');
+                                            cmt_modificado = replaceAll(cmt_modificado,',','ccccc');
+                                            
 											Ext.Ajax.request({
 												url     : compleUrlGuardarCartoRechazo
 												,method:'GET'
 												,params :{
 													'map1.ntramite'  : record.raw.ntramite
-													,'map1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+													,'map1.comments' : cmt_modificado//Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
 													,'map1.cdsisrol' : 'MEDICO'
 													,'map1.cdunieco' : record.raw.cdunieco
 													,'map1.cdramo'   : record.raw.cdramo
@@ -481,6 +515,14 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 			}
 		});
 	}
+}
+
+function replaceAll(string, token, newtoken) {
+    if(token!=newtoken)
+    while(string.indexOf(token) > -1) {
+        string = string.replace(token, newtoken);
+    }
+    return string;
 }
 
 function _4_onComplementariosClick(grid,rowIndex){
