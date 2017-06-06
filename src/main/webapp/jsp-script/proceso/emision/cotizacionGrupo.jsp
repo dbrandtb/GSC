@@ -1906,6 +1906,20 @@ Ext.onReady(function()
                                             grupo.set('deducible' , datosAdic.params.DEDUCIBLE);
                                             grupo.set('asisinte'  , datosAdic.params.ASISINTE);
                                             grupo.set('emerextr'  , datosAdic.params.EMEREXTR);
+                                            
+                                            try{
+                                            	var mapaAtrbGar = new Array();
+                                            	Ext.Array.each(datosAdic.slist2,function(elFormatoAtrGarantia, indexEl){
+                                            		mapaAtrbGar[elFormatoAtrGarantia.CDGARANT + '_' + elFormatoAtrGarantia.CDATRIBU] = elFormatoAtrGarantia.FORMAT;
+                                            	});
+                                            	
+                                            	debug('<<<<<<>>>>>> mapaAtrbGar <<<<<<>>>>>>::::::',mapaAtrbGar);
+                                            	
+                                            	grupo.mapaAtrbsGarsGrupo = mapaAtrbGar;
+                                            }catch(exp){
+                                            	debugError('Error al obtener formatos para atributos coberturas',exp);
+                                            }
+                                            
                                             _p21_storeGrupos.add(grupo);
                                             _p21_storeGrupos.sort('letra','ASC');
                                             _p21_storeGrupos.commitChanges();
@@ -2509,7 +2523,27 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             debug('SWOBLIGA=' + json.slist1[j].SWOBLIGA + ', SWSELECCIONADO=' + json.slist1[j].SWSELECCIONADO + ', SWEDITABLE=' + json.slist1[j].SWEDITABLE);
                                             
                                             var hijosCheckPorcentaje = [];
-                                            var _puedeFlex = ('|COTIZADOR|SUPTECSALUD|SUBDIRSALUD|COTIESPE|'.indexOf('|'+_p21_smap1.cdsisrol+'|') != -1)? true:false;
+                                            var _puedeFlex = ('|COTIZADOR|SUPTECSALUD|SUBDIRSALUD|COTIESPE|DIRECSALUD|'.indexOf('|'+_p21_smap1.cdsisrol+'|') != -1)? true:false;
+                                            
+                                            //Se crea mapa de formatos de atributos de Coberturas a valores default, cuando se crean los grupos por primer vez
+                                            
+                                            debug('record.mapaAtrbsGarsGrupo<<<<:',record.mapaAtrbsGarsGrupo);
+                                            if(record.mapaAtrbsGarsGrupo == undefined || record.mapaAtrbsGarsGrupo == 'undefined' || !(record.mapaAtrbsGarsGrupo)){
+                                            	
+                                            	try{
+                                                	var mapaAtrsbGars = new Array();
+                                                	
+                                                	Ext.Array.each(hijos,function(elementoHijo, indexElCob){
+    	                                            	var formatoDefault = new String(elementoHijo.tipoCampoFormat);
+    	                                            	mapaAtrsbGars[json.slist1[j].CDGARANT + '_' + elementoHijo.cdatribu] = formatoDefault;
+    	                                           	});
+                                                	record.mapaAtrbsGarsGrupo = mapaAtrsbGars;
+
+                                                	debug('<<<<<<>>>>>> mapaAtrsbGars <<<<<<>>>>>>::::::',mapaAtrsbGars);
+                                                }catch(exp){
+                                                	debugError('Error al obtener formatos para atributos coberturas',exp);
+                                                }
+                                            }
                                             
                                             Ext.Array.each(hijos,function(elementoCobertura, indexElCob){
                                             	
