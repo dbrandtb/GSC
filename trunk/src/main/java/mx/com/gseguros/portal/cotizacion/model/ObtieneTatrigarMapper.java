@@ -102,6 +102,55 @@ public class ObtieneTatrigarMapper implements RowMapper
 		{
 			result.setMaxValue(maximo);
 		}
+		
+		String valorComple1 = rs.getString("VALOR"); // Valor default para el caso de Porcentaje/Monto, se usa para Copagos
+		if(StringUtils.isNotBlank(valorComple1))
+		{
+			result.setValorAuxiliar1(valorComple1);
+		}
+
+		String minimoComple1 = rs.getString("MINIMO");// Valor default minimo para el caso de Porcentaje/Monto, se usa para Copagos
+		if(StringUtils.isNotBlank(minimoComple1))
+		{
+			result.setValorAuxiliar2(minimoComple1);
+		}
+		
+		String maximoComple1 = rs.getString("MAXIMO");// Valor default maximo para el caso de Porcentaje/Monto, se usa para Copagos
+		if (StringUtils.isNotBlank(maximoComple1))
+		{
+			result.setValorAuxiliar3(maximoComple1);
+		}
+		
+		
+		String aux = rs.getString("TIPO"); //Para tipo de atributo, se usa C para cuando es Copago
+		if(StringUtils.isNotBlank(aux))
+		{
+			result.setAuxiliar(aux);
+		}
+		
+		String formatoComple = rs.getString("SWFORALT"); // Formato default alterno para el caso de Porcentaje/Monto, se usa para Copagos
+		if(StringUtils.isNotBlank(formatoComple))
+		{
+			result.setFormatoAlterno(formatoComple);
+		}
+		
+		String valorComple2 = rs.getString("VALALT"); // Valor default alterno para el caso de Porcentaje/Monto, se usa para Copagos
+		if(StringUtils.isNotBlank(valorComple2))
+		{
+			result.setValorAuxiliar4(valorComple2);
+		}
+
+		String minimoComple2 = rs.getString("MINALT");// Valor default minimo alterno para el caso de Porcentaje/Monto, se usa para Copagos
+		if(StringUtils.isNotBlank(minimoComple2))
+		{
+			result.setValorAuxiliar5(minimoComple2);
+		}
+		
+		String maximoComple2 = rs.getString("MAXALT");// Valor default maximo alterno para el caso de Porcentaje/Monto, se usa para Copagos
+		if (StringUtils.isNotBlank(maximoComple2))
+		{
+			result.setValorAuxiliar6(maximoComple2);
+		}
 
 		return result;
 	}

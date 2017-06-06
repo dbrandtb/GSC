@@ -2655,7 +2655,7 @@ function _verificaAprueba(){
 	if(([RolSistema.SuscriptorTecnico].indexOf(_p21_smap1.cdsisrol) != -1 ))
     {
         if(!_vigPolizaAnualValida){
-            mensajeWarning('No se puede aprobar. La vigencia para esta p&oacute;liza es distinta a un a&ntilde;o. El Supervisor debe aprobar el tr&aacute;mite.');
+            mensajeWarning('No se puede aprobar. La vigencia para esta p&oacute;liza es distinta a un a&ntilde;o. El Supervisor debe aprobar el tr&aacute;mite.<br/>Verifique que haya guardado los cambios.');
             return true; //La vigencia es diferente a un Anio
         }
     }
