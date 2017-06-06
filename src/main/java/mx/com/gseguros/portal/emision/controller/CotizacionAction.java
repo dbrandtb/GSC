@@ -4374,7 +4374,6 @@ public class CotizacionAction extends PrincipalCoreAction
                     params.put("pv_cdgarant_i"   , smap1.get("cdgarant"));
                     params.put("pv_cdatrivar_i"  , smap1.get("cdatrivar"));
                     componentesTatrigar=cotizacionManager.obtenerAtributosPolizaOriginal(params);
-                    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
                 }
                 else{
                     Map<String,String>params=new HashMap<String,String>();
@@ -4383,7 +4382,7 @@ public class CotizacionAction extends PrincipalCoreAction
                     params.put("pv_cdgarant_i"  , smap1.get("cdgarant"));
                     params.put("pv_cdatrivar_i" , smap1.get("cdatrivar"));
                     componentesTatrigar=kernelManager.obtenerTatrigar(params);
-                    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
+                    
                 }
 			}else{
 			    Map<String,String>params=new HashMap<String,String>();
@@ -4393,6 +4392,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	            params.put("pv_cdatrivar_i" , smap1.get("cdatrivar"));
 	            componentesTatrigar=kernelManager.obtenerTatrigar(params);
 			}
+			
+			//logger.debug("<<<<<<>>>>>> Valor de los componentes recuperados (Antes Generar Campos) ===> "+componentesTatrigar);
+			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
             gc.setCdramo(smap1.get("cdramo"));
             gc.setCdtipsit(smap1.get("cdtipsit"));
@@ -8817,6 +8819,7 @@ public class CotizacionAction extends PrincipalCoreAction
 									//buscar cdatribus
 									boolean hayAtributos=false;
 									Map<String,String>listaCdatribu=new HashMap<String,String>();
+									Map<String,String>listaTipoValorCdatribu=new HashMap<String,String>();
 									for(Entry<String,String>iAtribTvalogar:iTvalogar.entrySet())
 									{
 										String key=iAtribTvalogar.getKey();
@@ -8825,7 +8828,13 @@ public class CotizacionAction extends PrincipalCoreAction
 												&&key.substring(0, "parametros.pv_otvalor".length()).equalsIgnoreCase("parametros.pv_otvalor"))
 										{
 											hayAtributos=true;
-											listaCdatribu.put(key.substring("parametros.pv_otvalor".length(), key.length()),iAtribTvalogar.getValue());
+											String numeroAtr = key.substring("parametros.pv_otvalor".length(), key.length());
+											listaCdatribu.put(numeroAtr, iAtribTvalogar.getValue());
+											
+											//Se guarda el tipo de valor que se captura (porcentaje o monto) para cada atributo que contenga el campo de tipoValor
+											if(iTvalogar.containsKey("TipoValor_"+key)){
+												listaTipoValorCdatribu.put(numeroAtr, iTvalogar.get("TipoValor_"+key));
+											}
 										}
 									}
 									if(hayAtributos)
@@ -8835,9 +8844,12 @@ public class CotizacionAction extends PrincipalCoreAction
 											if(StringUtils.isNotBlank(atributo.getValue()))
 											{
 												logger.debug("26.- cotizacionManager.movimientoTvalogarGrupo");
-											    cotizacionManager.movimientoTvalogarGrupo(
+											    cotizacionManager.movimientoTvalogarGrupoFlexCopago(
 													cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V",
-													atributo.getKey(), atributo.getValue());
+													atributo.getKey(), atributo.getValue(), listaTipoValorCdatribu.get(atributo.getKey()));
+											    
+											    //logger.debug("<<<<<<>>>>>>   Tipo valor a instertar luego de instertar atributo   <<<<<<>>>>>> ::::::" + listaTipoValorCdatribu.get(atributo.getKey()));
+											    
 											}
 										}
 									}
@@ -10559,6 +10571,15 @@ public class CotizacionAction extends PrincipalCoreAction
 					,smap1.get("estado")
 					,smap1.get("nmpoliza")
 					,smap1.get("letra"));
+
+			slist2 = cotizacionManager.obtieneFormatosAtribsCobsGrupo(
+					smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("estado")
+					,smap1.get("nmpoliza")
+					,smap1.get("letra"));
+			
+			
 			exito           = true;
 			respuesta       = "Todo OK";
 			respuestaOculta = "Todo OK";

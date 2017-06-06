@@ -187,6 +187,61 @@ public class CotizacionManagerImpl implements CotizacionManager
 				.toString()
 				);
 	}
+
+	@Override
+	public void movimientoTvalogarGrupoFlexCopago(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsit
+			,String cdgrupo
+			,String cdgarant
+			,String status
+			,String cdatribu
+			,String valor
+			,String formatoCop)throws Exception
+	{
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.append("\n@@@@@@ movimientoTvalogarGrupoFlexCopago @@@@@@")
+				.append("\n@@@@@@ cdunieco=").append(cdunieco)
+				.append("\n@@@@@@ cdramo=")  .append(cdramo)
+				.append("\n@@@@@@ estado=")  .append(estado)
+				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
+				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
+				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
+				.append("\n@@@@@@ cdgrupo=") .append(cdgrupo)
+				.append("\n@@@@@@ cdgarant=").append(cdgarant)
+				.append("\n@@@@@@ status=")  .append(status)
+				.append("\n@@@@@@ cdatribu=").append(cdatribu)
+				.append("\n@@@@@@ valor=")   .append(valor)
+				.append("\n@@@@@@ formatoCop=").append(formatoCop)
+				.toString()
+				);
+		cotizacionDAO.movimientoTvalogarGrupoFlexCopago(
+				cdunieco
+				,cdramo
+				,estado
+				,nmpoliza
+				,nmsuplem
+				,cdtipsit
+				,cdgrupo
+				,cdgarant
+				,status
+				,cdatribu
+				,valor
+				,formatoCop
+				);
+		logger.info(
+				new StringBuilder()
+				.append("\n@@@@@@ movimientoTvalogarGrupoFlexCopago @@@@@@")
+				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+				.toString()
+				);
+	}
 	
 	@Override
 	public void movimientoMpolisitTvalositGrupo(
@@ -728,6 +783,42 @@ public class CotizacionManagerImpl implements CotizacionManager
 		logger.info(""
 				+ "\n###### cargarTvalogarsGrupo ######"
 				+ "\n##################################"
+				);
+		return listaTvalogars;
+	}
+
+	@Override
+	public List<Map<String,String>>obtieneFormatosAtribsCobsGrupo(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdgrupo)throws Exception
+	{
+		logger.info(""
+				+ "\n#############################################"
+				+ "\n###### obtieneFormatosAtribsCobsGrupo ######"
+				+ "\n cdunieco "+cdunieco
+				+ "\n cdramo "+cdramo
+				+ "\n estado "+estado
+				+ "\n nmpoliza "+nmpoliza
+				+ "\n cdgrupo "+cdgrupo
+				);
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("cdgrupo"  , cdgrupo);
+		List<Map<String,String>>listaTvalogars=cotizacionDAO.obtieneFormatosAtribsCobsGrupo(params);
+		if(listaTvalogars==null)
+		{
+			listaTvalogars=new ArrayList<Map<String,String>>();
+		}
+		logger.debug("lista size: "+listaTvalogars.size());
+		logger.info(""
+				+ "\n###### obtieneFormatosAtribsCobsGrupo ######"
+				+ "\n############################################"
 				);
 		return listaTvalogars;
 	}

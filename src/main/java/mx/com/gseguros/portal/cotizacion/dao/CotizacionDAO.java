@@ -28,6 +28,11 @@ public interface CotizacionDAO {
 			String cdgrupo, String cdgarant, String status, String cdatribu,
 			String valor) throws Exception;
 
+	public void movimientoTvalogarGrupoFlexCopago(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String cdtipsit,
+			String cdgrupo, String cdgarant, String status, String cdatribu,
+			String valor, String formatoCop) throws Exception;
+
 	public void movimientoMpolisitTvalositGrupo(Map<String, String> params)
 			throws Exception;
 
@@ -53,6 +58,9 @@ public interface CotizacionDAO {
 			throws Exception;
 
 	public List<Map<String, String>> cargarTvalogarsGrupo(
+			Map<String, String> params) throws Exception;
+
+	public List<Map<String, String>> obtieneFormatosAtribsCobsGrupo(
 			Map<String, String> params) throws Exception;
 
 	public List<Map<String, String>> cargarTarifasPorEdad(

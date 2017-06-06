@@ -181,6 +181,69 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+
+	@Override
+	public void movimientoTvalogarGrupoFlexCopago(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsit
+			,String cdgrupo
+			,String cdgarant
+			,String status
+			,String cdatribu
+			,String valor
+			,String formatoCop
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdgrupo"  , cdgrupo);
+		params.put("cdgarant" , cdgarant);
+		params.put("status"   , status);
+		params.put("cdatribu" , cdatribu);
+		params.put("valor"    , valor);
+		params.put("formatoCop", formatoCop);
+		logger.debug(
+				new StringBuilder()
+				.append("\n*****************************************")
+				.append("\n****** P_MOV_TVALOGAR_GRUPO_COPAGO ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************")
+				.toString()
+				);
+		ejecutaSP(new MovimientoTvalogarGrupoFlexCopago(getDataSource()), params);
+	}
+	
+	protected class MovimientoTvalogarGrupoFlexCopago extends StoredProcedure
+	{
+		protected MovimientoTvalogarGrupoFlexCopago(DataSource dataSource)
+		{
+			super(dataSource,"P_MOV_TVALOGAR_GRUPO_COPAGO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdatribu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("valor"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("formatoCop", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public void movimientoMpolisitTvalositGrupo(Map<String,String>params)throws Exception
@@ -671,6 +734,38 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 						    .toString()
 						    );
 			}
+			
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(columnas)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String,String>> obtieneFormatosAtribsCobsGrupo(Map<String,String>params)throws Exception
+	{
+		Map<String,Object>resultado=ejecutaSP(new ObtieneFormatosAtribsCobsGrupo(getDataSource()), params);
+		List<Map<String,String>>listaTvalogars=(List<Map<String,String>>)resultado.get("pv_registro_o");
+		return listaTvalogars;
+	}
+	
+	protected class ObtieneFormatosAtribsCobsGrupo extends StoredProcedure
+	{
+		private List<String> columnas=new ArrayList<String>();
+		protected ObtieneFormatosAtribsCobsGrupo(DataSource dataSource)
+		{
+			super(dataSource,"P_OBTIENE_FORMATO_ATRIGAR");
+			
+			columnas.add("CDGARANT");
+			columnas.add("CDATRIBU");
+			columnas.add("FORMAT");
+			
 			
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
