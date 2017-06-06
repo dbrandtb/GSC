@@ -10536,6 +10536,14 @@ public class CotizacionAction extends PrincipalCoreAction
 					,smap1.get("nmpoliza")
 					,smap1.get("letra")
 					);
+			
+			slist2 = cotizacionManager.obtieneFormatosAtribsCobsGrupo(
+					smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("estado")
+					,smap1.get("nmpoliza")
+					,smap1.get("letra"));
+			
 			exito           = true;
 			respuesta       = "Todo OK";
 			respuestaOculta = "Todo OK";
