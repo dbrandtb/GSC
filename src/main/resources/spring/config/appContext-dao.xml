@@ -81,14 +81,4 @@
     
     <bean id="clienteDAOSIGSImpl" class="mx.com.gseguros.portal.catalogos.dao.impl.ClienteDAOSIGSImpl" parent="abstractManagerDAOSIGS"/>
     
-    <bean id="indicadoresDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.IndicadoresDAOImpl" parent="abstractManagerDAO"/>
-    
-    <bean id="despachadorDAOImpl" class="mx.com.gseguros.portal.despachador.dao.impl.DespachadorDAOImpl" parent="abstractManagerDAO"/>
-    
-    <bean id="templateDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.TemplateDAOImpl" parent="abstractManagerDAO"/>
-    
-    <bean id="consultasPerfilMedicoDAOICEImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasPerfilMedicoDAOICEImpl" parent="abstractManagerDAO"/>
-    
-    <bean id="consultasPerfilMedicoDAOSISAImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasPerfilMedicoDAOSISAImpl" parent="abstractManagerDAOSISA"/>
-    
 </beans>

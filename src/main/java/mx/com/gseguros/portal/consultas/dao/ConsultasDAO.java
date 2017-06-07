@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 
 public interface ConsultasDAO
@@ -146,7 +145,6 @@ public interface ConsultasDAO
 			,String statusVig
 			,String finicio //Se agrega campo fecha de inicio param No. 9
 			,String ffin //Se agrega campo fecha de fin param No. 10
-			,String cdsisrol
 			)throws Exception;
 	
 	public List<Map<String,String>>recuperarHistoricoPoliza(
@@ -338,7 +336,7 @@ public interface ConsultasDAO
 			,String nmpoliza
 			)throws Exception;
 	
-	public List<Map<String,String>>recuperarUsuariosReasignacionTramite(String ntramite, String cdusuari, String cdsisrol) throws Exception;
+	public List<Map<String,String>>recuperarUsuariosReasignacionTramite(String ntramite) throws Exception;
 	
 	public boolean validarVentanaDocumentosBloqueada(
 			String ntramite
@@ -641,82 +639,4 @@ public interface ConsultasDAO
             String cdtipsit) throws Exception;
 
     public Map<String, String> obtieneUsuarioXAgente(String pv_cdagente_i) throws Exception;
-    
-    public String recuperaAgentePoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String cdusuari) throws Exception;
-
-    public String verificaFusFamilia(String pv_cdunieco_i, 
-                                     String pv_cdramo_i, 
-                                     String pv_estado_i,
-                                     String pv_nmpoliza_i, 
-                                     String pv_nmsuplem_i, 
-                                     String pv_cdusuari) throws Exception;
-
-    public List<Map<String, String>> titularesFus(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i,
-            String pv_nmpoliza_i, String pv_nmsuplem_i) throws Exception;
-
-    public void actualizaEstadoTFusLock(String pv_cdunieco_i, 
-                                        String pv_cdramo_i, 
-                                        String pv_estado_i, 
-                                        String pv_nmpoliza_i,
-                                        String pv_nmsuplem_i, 
-                                        String pv_swestado_i) throws Exception;
-
-    public List<Map<String, String>> docsXTitular(String pv_cdunieco_i
-                                                , String pv_cdramo_i
-                                                , String pv_estado_i
-                                                , String pv_nmpoliza_i
-                                                , String pv_nmsuplem_i
-                                                , String pv_nmsitaux_i) throws Exception;
-
-   public  void movTdocupolFus(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i,
-            String pv_nmpoliza_i, String pv_nmsuplem_i, String pv_nmsolici_i, String pv_ntramite_i, Date pv_feinici_i,
-            String pv_cddocume_i, String pv_dsdocume_i, String pv_tipmov_i, String pv_swvisible_i, String pv_cdtiptra_i,
-            String pv_codidocu_i, Date pv_fefecha_i, String pv_cdorddoc_i, String pv_cdmoddoc_i, String pv_nmcertif_i,
-            String pv_nmsituac_i, String pv_cdusuari_i, String pv_cdsisrol_i) throws Exception;
-
-   public String obtieneNmsituaext(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i, String pv_nmpoliza_i,
-        String pv_nmsuplem_i, String pv_nmsitaux_i) throws Exception;
-        
-   public boolean isServicioCargaFederal(String cellValue) throws Exception;
-   
-   public List<Map<String, String>> obtieneRangoPeriodoGracia(String pv_cdramo_i, String pv_cdtipsit_i, String pv_cdagente_i)
-		throws Exception;
-
-   public List<GenericVO> obtieneComentariosNegocio(String pv_cdramo_i, String pv_cdtipsit_i, String pv_negocio_i)
-		throws Exception;        
-   
-   public List<Map<String,String>> recuperarEndososSiniestralidad(
-           String cdunieco
-           ,String cdramo
-           ,String estado
-           ,String nmpoliza
-           )throws Exception;
-   
-   public List<Map<String,String>> recuperarEndososRehabilitablesSiniestralidad(
-           String cdunieco
-           ,String cdramo
-           ,String estado
-           ,String nmpoliza
-           )throws Exception;
-   
-	public List<Map<String, String>> recuperarDatosValorDefectoLayout(
-			String cdsisrol
-			,String campo
-			,String renovacionGral
-			)throws Exception;
-	
-	public String esDXN(
-	        String cdunieco, 
-	        String cdramo, 
-	        String estado, 
-	        String nmpoliza, 
-	        String nmsuplem) throws Exception;
-	
-	public List<Map<String,String>> recuperarNombreDocumentosCotizacion(String ntramite) throws Exception;
-	
-	public Map<String,String> recuperarValoresModelo(
-			String cdsisrol
-			,String cdusuari
-			,String cdunieco
-			)throws Exception;
 }
