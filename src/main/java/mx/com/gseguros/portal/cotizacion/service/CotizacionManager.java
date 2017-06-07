@@ -34,10 +34,6 @@ public interface CotizacionManager
 			,String cdatribu
 			,String valor)throws Exception;
 	
-	public void movimientoTvalogarGrupoFlexCopago(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsuplem, String cdtipsit, String cdgrupo, String cdgarant, String status, String cdatribu,
-			String valor, String formatoCop) throws Exception;
-	
 	public void movimientoMpolisitTvalositGrupo(
 			String  cdunieco
 			,String cdramo
@@ -124,13 +120,6 @@ public interface CotizacionManager
 			,String cdgrupo)throws Exception;
 	
 	public List<Map<String,String>>cargarTvalogarsGrupo(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String cdgrupo)throws Exception;
-
-	public List<Map<String,String>>obtieneFormatosAtribsCobsGrupo(
 			String cdunieco
 			,String cdramo
 			,String estado
