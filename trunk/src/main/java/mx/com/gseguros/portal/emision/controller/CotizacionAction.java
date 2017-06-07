@@ -8365,7 +8365,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							,sincenso , censoAtrasado , resubirCenso
 							,cdperpag , cdsisrol      , complemento
 							,asincrono,cdmunici,cdedo,codpostal,false, //censoCompleto
-							duplicar
+							duplicar, nmrenova
 							);
 				if(!aux.exito)
 				{
@@ -8430,6 +8430,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			,String codpostal
 			,boolean censoCompleto
 			,boolean duplicar
+			,String nmrenova
 			)
 	{
 		logger.debug(Utils.log(
@@ -8459,6 +8460,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				,"\n## asincrono="            , asincrono
 				,"\n## censoCompleto="        , censoCompleto
 				,"\n## duplicar="             , duplicar
+				,"\n## nmrenova="             , nmrenova
 				));
 		tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject resp =
 				new tvalositSigsvdefTvalogarContratanteTramiteSigsvalipolObject();
@@ -8647,10 +8649,10 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		//sigsvdef
-		logger.debug("10.- resp.exito : {} hayTramite: {} hayTramiteVacio: {} censoAtrasado: {} resubirCenso: {} complemento:{} asincrono:{} ",resp.exito, 
-				hayTramite,hayTramiteVacio,censoAtrasado,resubirCenso,complemento,asincrono);
+		logger.debug("10.- resp.exito : {} hayTramite: {} hayTramiteVacio: {} censoAtrasado: {} resubirCenso: {} complemento:{} asincrono:{} nmrenova:{} ",resp.exito, 
+				hayTramite,hayTramiteVacio,censoAtrasado,resubirCenso,complemento,asincrono,nmrenova);
 		
-		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||censoCompleto||duplicar)&&asincrono==false)
+		if(resp.exito&&(!hayTramite||hayTramiteVacio||censoAtrasado||resubirCenso||complemento||censoCompleto||duplicar)&&asincrono==false&& nmrenova =="0")
 		{
 			try
 			{
@@ -13755,6 +13757,7 @@ public class CotizacionAction extends PrincipalCoreAction
     						,null
     						,true //censoCompleto
     						,false // duplicar
+    						,nmrenova
     						);
     				exito     = aux.exito;
     				respuesta = StringUtils.isBlank(aux.respuesta)
