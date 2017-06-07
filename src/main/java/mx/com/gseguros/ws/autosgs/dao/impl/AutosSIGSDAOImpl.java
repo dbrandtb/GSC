@@ -1281,4 +1281,49 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
             compile();
         }
     }
+    
+    @Override
+    public Map<String, String> cargaEndososB (String cdunieco, String cdramo, String nmpoliza, String cdusuari,
+			String cdtipsit, String cdsisrol, String cduniext, String ramo, String nmpoliex, String renuniext,
+			String renramo, String renpoliex, String feefect, String feproren) throws Exception 
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("12" , "Texto Endoso 12");
+        params.put("13" , "Texto Endoso 13");
+        params.put("14" , "Texto Endoso 14");
+        params.put("15" , "Texto Endoso 15");
+        params.put("16" , "Texto Endoso 16");
+        params.put("17" , "Texto Endoso 17");
+        params.put("18" , "Texto Endoso 18"); 
+        params.put("1"  , "Texto Endoso 19");
+        params.put("20" , "Texto Endoso 20");
+        return params;
+        }
+    
+    protected class cargaEndososBSP extends StoredProcedure{
+        protected cargaEndososBSP(DataSource dataSource){
+            super(dataSource, "cargaEndososB");
+            declareParameter(new SqlParameter("vSucursalNueva"   ,Types.SMALLINT));
+            declareParameter(new SqlParameter("vRamoNuevo"       ,Types.SMALLINT));
+            declareParameter(new SqlParameter("vPolizaNueva"     ,Types.INTEGER));
+            declareParameter(new SqlParameter("vFechaEmision"    ,Types.DATE));
+            declareParameter(new SqlParameter("vInicioVigencia"  ,Types.DATE));
+            declareParameter(new SqlParameter("vFinVigencia"     ,Types.DATE));
+            declareParameter(new SqlParameter("vSucursalAnterior",Types.SMALLINT));
+            declareParameter(new SqlParameter("vRamoAnterior"    ,Types.SMALLINT));
+            declareParameter(new SqlParameter("vPolizaAnterior"  ,Types.INTEGER));
+            declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Integer>(){  
+                @Override  
+                public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {  
+                    Integer result = null;
+                    while(rs.next()){  
+                        result = rs.getInt(1);
+                    }  
+                    return result;  
+                }
+            }));
+            
+            compile();
+        }
+    }
 }
