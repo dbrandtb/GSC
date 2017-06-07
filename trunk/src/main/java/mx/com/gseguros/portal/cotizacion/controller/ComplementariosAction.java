@@ -67,7 +67,6 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
-import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -162,9 +161,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DocumentosManager documentosManager;
-	
-	@Autowired
-	private MesaControlManager mesaControlManager;
 	
 	@Autowired
 	private FlujoMesaControlManager flujoMesaControlManager;
@@ -2097,6 +2093,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				.append("\n###### emitir ######")
 				.append("\n###### panel1=").append(panel1)
 				.append("\n###### panel2=").append(panel2)
+				.append("\n###### panel2=").append(slist1)
 				.toString()
 				);
 		
@@ -3372,15 +3369,15 @@ public class ComplementariosAction extends PrincipalCoreAction
                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
                    consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
                    
-                try
-           		{
-           			String params        = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"));
-           			HttpUtil.sendPost(sigsRenovarEndososB,params);
-           		}
-           		catch (Exception ex)
-           		{
-           			respuesta = Utils.manejaExcepcion(ex);
-           		}
+//                try
+//           		{
+//           			String params        = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"));
+//           			HttpUtil.sendPost(sigsRenovarEndososB,params);
+//           		}
+//           		catch (Exception ex)
+//           		{
+//           			respuesta = Utils.manejaExcepcion(ex);
+//           		}
                    
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
@@ -4647,6 +4644,50 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 		logger.debug(Utils.log(
 				 "\n###### guardarCartaRechazo ######"
+				,"\n#################################"
+				));
+		return SUCCESS;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public String cargaEndososB()
+	{
+		logger.debug(Utils.log(
+				 "\n#################################"
+				,"\n######## cargaEndososB ##########"
+				,"\n######## flujo = ", flujo
+				,"\n######## smap1 = ", map1
+				));
+		try
+		{
+			cdunieco        = map1.get("cdunieco");
+			cdramo          = map1.get("cdramo");
+			estado          = map1.get("estado");
+			nmpoliza        = map1.get("nmpoliza");
+			String cdusuari = map1.get("cdusuari");
+			Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, estado, nmpoliza, cdusuari);
+			
+			map2  = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,infoPoliza.get("cdsisrol"),infoPoliza.get("cduniext"),infoPoliza.get("ramo"),infoPoliza.get("nmpoliex"),infoPoliza.get("RENUNIEXT"),infoPoliza.get("RENRAMO"),infoPoliza.get("RENPOLIEX"),infoPoliza.get("feefecto"),infoPoliza.get("feproren"));
+			Iterator It = map2.entrySet().iterator();
+			slist1 = new ArrayList<Map<String, String>>();
+	        while (It.hasNext()) {
+	        	Map.Entry entry = (Map.Entry) It.next();
+	        	String idEndosoB = (String)entry.getKey();
+	        	String descEndosoB = (String)entry.getValue();
+	        	HashMap<String, String> agregar = new HashMap<String, String>();
+	        	agregar.put("renovar","true");
+	        	agregar.put("id",idEndosoB);
+	        	agregar.put("descripcion",descEndosoB);
+	        	slist1.add(agregar);
+	        }
+	    }
+		catch(Exception ex)
+		{
+			logger.error("error al cargar endosos B",ex);
+		}
+	
+		logger.debug(Utils.log(
+				 "\n######## cargaEndososB ##########"
 				,"\n#################################"
 				));
 		return SUCCESS;

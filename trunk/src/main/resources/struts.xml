@@ -298,6 +298,14 @@
         <action name="emitir" class="beanDatosComplementarios" method="emitir">
             <result name="success" type="json" />
         </action>
+        <action name="cargaEndososB" class="beanDatosComplementarios" method="cargaEndososB">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
         <action name="autorizaEmision" class="beanDatosComplementarios" method="autorizaEmision">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -315,7 +323,6 @@
         <action name="manualWSRecibosDxN" class="beanDatosComplementarios" method="ejecutaWSManualRecibosDxN">
             <result name="success" type="json" />
         </action>
-        
         
         <!-- <action name="cargaColonias" class="beanCatalogosAction" method="cargaColonias">
             <result name="success" type="json" />

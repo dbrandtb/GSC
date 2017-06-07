@@ -355,4 +355,8 @@ public interface ConsultasPolizaManager {
 
 	public List<Map<String, String>> obtieneCoberturas(String cdramo, String cdtipsit, String cdplan) throws Exception;
 
+	public Map<String, String> cargaEndososB(String cdunieco, String cdramo, String nmpoliza, String cdusuari,
+			String cdtipsit, String cdsisrol, String cduniext, String ramo, String nmpoliex, String renuniext,
+			String renramo, String renpoliex, String feefect, String feproren)throws Exception;
+
 }
