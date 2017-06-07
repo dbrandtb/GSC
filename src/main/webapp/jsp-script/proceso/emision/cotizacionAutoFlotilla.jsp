@@ -5651,7 +5651,7 @@ function _p30_enviar()
                             {
                                 to          : _fieldById('_p30_idInputCorreos').getValue()
                                 ,mensaje    : 'Estimado(a) Agente,\n \n'+ 
-                                'Se ha realizado la cotización solicitada en el trámite, ' + _p28_smap1.ntramite + ' la cual se anexa para su revisión y/o aprobación.\n \n' +
+                                'Se ha realizado la cotización solicitada en el trámite, ' + _p30_smap1.ntramite + ' la cual se anexa para su revisión y/o aprobación.\n \n' +
                     			'Quedamos a sus ordenes para cualquier duda o aclaración \n \n' +
                     			'General de Seguros \n \n'
                                 ,urlArchivo : _p30_urlImprimirCotiza
