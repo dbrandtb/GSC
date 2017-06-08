@@ -365,41 +365,9 @@ public class GeneradorCampos
         item.add("readOnly"        , comp.isSoloLectura());
         item.add("swobligaflot"    , comp.isObligatorioFlot());
         item.add("swobligaemiflot" , comp.isObligatorioEmiFlot());
-        if(StringUtils.isNotBlank(tipoCampo))
-        {
-        	item.add("tipoCampoFormat" , tipoCampo);
-        }
         if(StringUtils.isNotBlank(comp.getAuxiliar()))
         {
         	item.add("auxiliar" , comp.getAuxiliar());
-        }
-        if(StringUtils.isNotBlank(comp.getValorAuxiliar1()))
-        {
-        	item.add("valorAux1" , comp.getValorAuxiliar1());
-        }
-        if(StringUtils.isNotBlank(comp.getValorAuxiliar2()))
-        {
-        	item.add("valorAux2" , comp.getValorAuxiliar2());
-        }
-        if(StringUtils.isNotBlank(comp.getValorAuxiliar3()))
-        {
-        	item.add("valorAux3" , comp.getValorAuxiliar3());
-        }
-        if(StringUtils.isNotBlank(comp.getValorAuxiliar4()))
-        {
-        	item.add("valorAux4" , comp.getValorAuxiliar4());
-        }
-        if(StringUtils.isNotBlank(comp.getValorAuxiliar5()))
-        {
-        	item.add("valorAux5" , comp.getValorAuxiliar5());
-        }
-        if(StringUtils.isNotBlank(comp.getValorAuxiliar6()))
-        {
-        	item.add("valorAux6" , comp.getValorAuxiliar6());
-        }
-        if(StringUtils.isNotBlank(comp.getFormatoAlterno()))
-        {
-        	item.add("formatoAlterno" , comp.getFormatoAlterno());
         }
         if(StringUtils.isNotBlank(value))
         {
