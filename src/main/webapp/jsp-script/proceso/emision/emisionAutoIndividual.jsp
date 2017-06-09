@@ -790,7 +790,12 @@ Ext.onReady(function()
 		            }
 		        }
 		    });
-  
+	    
+	    debug("Si aplican para renovaciones, se cargan endosos de default");
+	    if(!Ext.isEmpty(_p29_flujo) && ( _p29_flujo.cdflujomc != 240 || _p29_flujo.cdtipflu != 103))
+		{
+	    	cargaStoreB(seteoListaEndosos);
+		}
 });
 
 ////// funciones //////
@@ -2369,26 +2374,10 @@ function mostrarVentanaEndoso()
     								,icon    :'${ctx}/resources/fam3icons/icons/accept.png'
     								,handler : function() 
     								{
-    									saveList = []; var i=0;
-    									
     									if(storeDocumentos.getUpdatedRecords().length==0)
     									{ventanaEndoso.close();}
 
-    									storeDocumentos.data.items.forEach
-    									(
-    										function(record)
-    									    {
-    											if(record.data.renovar)
-   												{
-    												saveList.push(record.data);
-   												}
-    											if((i+1) == storeDocumentos.getUpdatedRecords().length)
-												{
-													ventanaEndoso.close();
-												}
-												i++;
-    										}
-    									);
+    									seteoListaEndosos();
     								}
     						    }
     						]
@@ -2402,6 +2391,32 @@ function mostrarVentanaEndoso()
     	           	}
     	      	}).show()
         );
+    }
+}
+
+function seteoListaEndosos()
+{
+	if(storeDocumentos!=null)
+    {
+	    saveList = []; var i=0;
+		storeDocumentos.data.items.forEach
+		(
+			function(record)
+		    {
+				if(record.data.renovar)
+				{
+					saveList.push(record.data);
+				}
+				if((i+1) == storeDocumentos.getUpdatedRecords().length)
+				{
+					if(ventanaEndoso!=undefined)
+					{
+						ventanaEndoso.close();
+					}
+				}
+				i++;
+			}
+		);
     }
 }
 ////// funciones //////
