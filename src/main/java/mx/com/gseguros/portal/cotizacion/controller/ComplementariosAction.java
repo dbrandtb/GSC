@@ -97,9 +97,20 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private CatalogosManager catalogosManager;
 	private StoredProceduresManager storedProceduresManager;
 	
+	private List<Map<String,String>>slist1;
+	private List<Map<String,Object>> list1;
+	private List<Map<String,Object>> list2;
+	private List<Map<String,Object>> list3;
+	private List<Map<String,Object>> list4;
 	private Map<String, String> panel1;
 	private Map<String, String> panel2;
 	private Map<String, String> parametros;
+	private Map<String, String> map1;
+	private Map<String, String> map2;
+	private Map<String, String> map3;
+	private Map<String, String> map4;
+	private Map<String, String> params;
+	private Map<String, Object> omap1;
 	private String cdunieco;
 	private String sucursalGS;
 	private String cdRamoGS;
@@ -110,48 +121,35 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private String nmsuplem;
 	private String cdIdeper;
 	private String cdtipsit;
-	private boolean success = true;
-	private boolean retryWS;
-	private boolean retryRec;
-	private ScreenInterceptor scrInt = new ScreenInterceptor();
-	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
-	private Calendar calendarHoy = Calendar.getInstance();
+	private String cdperson;
+	private String tipoGrupoInciso;
+	private String mensajeRespuesta;
+	private String auxiliarProductoCdramo   = null;
+	private String auxiliarProductoCdtipsit = null;
+	private String mensajeEmail;
+	private String respuesta;
+	private String respuestaOculta;
+	private String message;
 	private Item item1;
 	private Item item2;
 	private Item item3;
 	private Item item4;
 	private Item item5;
-	private Map<String, String> map1;
-	private Map<String, String> map2;
-	private Map<String, String> map3;
-	private Map<String, String> map4;
-	private List<Map<String,Object>> list1;
-	private List<Map<String,Object>> list2;
-	private List<Map<String,Object>> list3;
-	private List<Map<String,Object>> list4;
-	private Map<String,Object> omap1;
-	private String cdperson;
-	private List<Map<String,String>>slist1;
-	private GridVO gridResultados;
-	private String mensajeRespuesta;
-	private String auxiliarProductoCdramo   = null;
-	private String auxiliarProductoCdtipsit = null;
-	private String tipoGrupoInciso;
-	private FlujoVO flujo;
-	
-	private ConsultasManager consultasManager;
+	private boolean success = true;
+	private boolean retryWS;
+	private boolean retryRec;
+	private boolean clienteWS;
 	private boolean exito = false;
+	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	private FlujoVO flujo;
+	private GridVO gridResultados;
+	private Calendar calendarHoy = Calendar.getInstance();
+	private ScreenInterceptor scrInt = new ScreenInterceptor();
+	private ConsultasManager consultasManager;
 	private PantallasManager pantallasManager;
 	private EmisionAutosService emisionAutosService;
-	private boolean clienteWS;
-	private String mensajeEmail;
-	private String respuesta;
-	private String respuestaOculta;
 	private CotizacionManager cotizacionManager;
 	private EmisionManager    emisionManager;
-	
-	private String message;
-	private Map<String, String> params;
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
@@ -2093,7 +2091,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				.append("\n###### emitir ######")
 				.append("\n###### panel1=").append(panel1)
 				.append("\n###### panel2=").append(panel2)
-				.append("\n###### panel2=").append(slist1)
+				.append("\n###### slist1=").append(slist1)
 				.toString()
 				);
 		
@@ -2120,12 +2118,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String esDxN           = null;
 		String cdIdeperRes     = null;
 		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
+		String caseIdRstn      = null;
+		Date fechaHoy          = new Date();
 		boolean esFlotilla     = false;
-		String caseIdRstn = null;
 		
 		tipoGrupoInciso = "I";
-		
-		Date fechaHoy = new Date();
 		
 		////// obtener parametros
 		if(success)
@@ -3368,16 +3365,35 @@ public class ComplementariosAction extends PrincipalCoreAction
                     
                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
                    consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
-                   
-//                try
-//           		{
-//           			String params        = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"));
-//           			HttpUtil.sendPost(sigsRenovarEndososB,params);
-//           		}
-//           		catch (Exception ex)
-//           		{
-//           			respuesta = Utils.manejaExcepcion(ex);
-//           		}
+                  
+                try
+           		{
+                	String[] idEndosos = null;  
+                    try
+               		{
+                    	if(!slist1.isEmpty())
+                    	{
+                    		idEndosos = new String[slist1.size()];
+                    		int i=0;
+                    		for(Map<String,String>endoso:slist1)
+                  		    {
+                    			idEndosos[i]=endoso.get("id");
+                    			i++;
+                  		    }
+                    	}
+               		}
+               		catch (Exception ex)
+               		{
+               			respuesta = Utils.manejaExcepcion(ex);
+               		}
+                	
+           			String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&idEndosos=",idEndosos);
+           			HttpUtil.sendPost(sigsRenovarEndososB,params);
+           		}
+           		catch (Exception ex)
+           		{
+           			respuesta = Utils.manejaExcepcion(ex);
+           		}
                    
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
