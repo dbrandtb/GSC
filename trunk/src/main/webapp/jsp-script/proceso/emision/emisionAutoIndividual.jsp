@@ -1486,117 +1486,14 @@ function _p29_mostrarVistaPrevia()
                                    	,hidden : !Ext.isEmpty(_p29_flujo) ? (_p29_flujo.cdflujomc != 240 && _p29_flujo.cdtipflu != 103) : true
                                    	,handler      : function()
                                    	{
-                                   		 ventanaEndoso=Ext.create('Ext.window.Window' 
-                  				            	,{
-                  				            	     xtype    : 'grid'
-                                   					,title    : 'Endosos B'
-                  				            	   	,closable : false
-                  				            	    ,modal    : true
-                  				            	    ,height   : 200
-                  				            	    ,width    : 400
-                  				            	    ,layout   : 'fit'
-                  				            	    ,renderTo : '_p29_divpri'
-                  				            	    ,items    : 
-                  				            	    {
-                  				            	      xtype   : 'grid'
-                  				            	     ,border  : false
-                  				            	     ,columns :
-                  				            	      [ 
-                  						                  { 
-                  						                     header      : 'Renovar'
-                  						                    ,dataIndex   : 'renovar'
-                  						                    ,xtype       : 'checkcolumn'
-                  						                    ,menuDisabled: true
-                  						                  }
-                  						                 ,{ 
-                  						                      header      : 'Id'
-                       						                 ,dataIndex   : 'id'
-                       						                 ,hidden      : true
-                       						              }
-                  						                 ,{ 
-                  						                	 header      :'Descripcion'
-                  						                	,dataIndex   :'descripcion'
-                  						                	,flex        : 1
-                  						                  }
-                  									  ]
-                  				            		  ,store      : storeDocumentos
-                      								  ,buttonAlign: 'center' 
-                      								  ,buttons    :
-                      								   [
-                      									   {
-                      											 text    : 'Guardar'
-                      											,icon    :'${ctx}/resources/fam3icons/icons/accept.png'
-                      											,handler : function() 
-                      											{
-                      												saveList = []; var i=0;
-                      												
-                      												if(storeDocumentos.getUpdatedRecords().length==0)
-          															{ventanaEndoso.close();}
-                      												
-                      												storeDocumentos.getUpdatedRecords().forEach(
-                      														function(record,index,arr)
-                      														{
-                      															saveList.push(record.data);
-                      															if((i+1) == storeDocumentos.getUpdatedRecords().length)
-                      															{
-                      																ventanaEndoso.close();
-                      															}
-                      															i++;
-                      														});
-                      											}
-                      									    }
-                      									]
-                                   					}
- 	                  				            	,listeners:
- 	                  				            	{
- 	                  				            		af: function(me)
-												        {
- 	                  				            			me.load();
-												        }
- 	                  				            	}
-                  				            	});
-                                   		
-	                                   	if(storeDocumentos==null)
-	                                   	{	
-	                                   	  var json =
-	                                      {
-	                                           map1  : _p29_smap1
-	                                          ,flujo : _p29_flujo
-	                                      };
-                                   		  Ext.Ajax.request(
-                          				    {
-                          				         url      : _p29_cargaEndososB
-                          				        ,jsonData : json 
-                          				        ,success:function(response)
-                          				        {
-                          				            panelpri.setLoading(false);
-                          				            var json=Ext.decode(response.responseText);
-                          				            var testStoreEndososB= json.slist1;
-                          				            debug('### emitir:',json.slist1);
-                          				            if(json.success==true)
-                          				            { 
-	                          				            storeDocumentos = Ext.create('Ext.data.Store'
-	                          				            ,{
-			                          				       	 model:'modeloRenovarEndososB'
-			                          				        ,data : testStoreEndososB
-		                          				         });
-	                          				            ventanaEndoso.show();
-                          				            }
-                          				            else
-                          				            {
-                          				            	 mensajeError(json.message);
-                          				            }
-                          				        }
-                          				        ,failure:function()
-                          				        {
-                          				            panelpri.setLoading(false);
-                          				            errorComunicacion();
-                          				        }
-                          				    });
-	                                   	   }
-	                                   	   else{
-	                                   		 ventanaEndoso.show();
-	                                   	   }
+                                		if(storeDocumentos==null)
+    									{
+                                			cargaStoreB(mostrarVentanaEndoso);
+    									}
+                                		else
+                                   	    {    
+                                			mostrarVentanaEndoso();
+                                   	    }
                                    	}
                                 }
                                 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -1620,20 +1517,29 @@ function _p29_emitirFinal(me)
     debug('>_p29_emitirFinal');
     var panelpri = me.up().up();
     panelpri.setLoading(true);
+    
+    var json =
+    {
+    	panel1 :
+        {
+         	  pv_nmpoliza : _p29_smap1.nmpoliza
+             ,pv_ntramite : _p29_smap1.ntramite
+        }
+	    ,panel2 :
+	    {
+	           pv_estado  : _p29_smap1.estado
+	         ,pv_cdtipsit : _p29_smap1.cdtipsit
+	         ,pv_nmpoliza : _p29_smap1.nmpoliza
+	         ,pv_cdramo   : _p29_smap1.cdramo
+	         ,pv_cdunieco : _p29_smap1.cdunieco
+	    }
+        ,slist1 : saveList
+    };
+    
     Ext.Ajax.request(
     {
-        url      : _p29_urlEmitir
-        ,params  :
-        {
-            'panel1.pv_ntramite'  : _p29_smap1.ntramite
-            ,'panel2.pv_cdunieco' : _p29_smap1.cdunieco
-            ,'panel2.pv_cdramo'   : _p29_smap1.cdramo
-            ,'panel2.pv_estado'   : _p29_smap1.estado
-            ,'panel1.pv_nmpoliza' : _p29_smap1.nmpoliza
-            ,'panel2.pv_nmpoliza' : _p29_smap1.nmpoliza
-            ,'panel2.pv_cdtipsit' : _p29_smap1.cdtipsit
-        }
-		,slist1 : 	saveList
+         url      : _p29_urlEmitir
+        ,jsonData : json
         ,success:function(response)
         {
             panelpri.setLoading(false);
@@ -2382,6 +2288,127 @@ function rangoPeriodoGracia(){
 	}catch(e){
 		debugError(e)
 	}
+}
+
+function cargaStoreB(callback)
+{
+	var json =
+    {
+         map1  : _p29_smap1
+        ,flujo : _p29_flujo
+    };
+		  Ext.Ajax.request(
+	    {
+	         url      : _p29_cargaEndososB
+	        ,jsonData : json 
+	        ,success:function(response)
+	        {
+	            var json=Ext.decode(response.responseText);
+	            var testStoreEndososB= json.slist1;
+	            debug('### emitir:',json.slist1);
+	            if(json.success==true)
+	            { 
+		            storeDocumentos = Ext.create('Ext.data.Store'
+		            ,{
+				       	 model:'modeloRenovarEndososB'
+				        ,data : testStoreEndososB
+			         });
+					callback();
+	            }
+	            else
+	            {
+	            	 mensajeError(json.message);
+	            }
+	        }
+	        ,failure:function()
+	        {
+	            errorComunicacion();
+	        }
+	    });
+}
+
+function mostrarVentanaEndoso()
+{
+    if(storeDocumentos!=null)
+    {
+    	ventanaEndoso =
+        centrarVentanaInterna(
+		Ext.create('Ext.window.Window' 
+    	      	,{
+    	      	     xtype    : 'grid'
+    				,title    : 'Endosos B'
+    	      	   	,closable : false
+    	      	    ,modal    : true
+    	      	    ,height   : 200
+    	      	    ,width    : 400
+    	      	    ,layout   : 'fit'
+    	      	    ,renderTo : '_p29_divpri'
+    	      	    ,items    : 
+    	      	    {
+    	      	      xtype   : 'grid'
+    	      	     ,border  : false
+    	      	     ,columns :
+    	      	      [ 
+    		                  { 
+    		                     header      : 'Renovar'
+    		                    ,dataIndex   : 'renovar'
+    		                    ,xtype       : 'checkcolumn'
+    		                    ,menuDisabled: true
+    		                  }
+    		                 ,{ 
+    		                      header      : 'Id'
+    			                 ,dataIndex   : 'id'
+    			                 ,hidden      : true
+    			              }
+    		                 ,{ 
+    		                	 header      :'Descripcion'
+    		                	,dataIndex   :'descripcion'
+    		                	,flex        : 1
+    		                  }
+    					  ]
+    	      		      ,store      : storeDocumentos
+    					  ,buttonAlign: 'center' 
+    					  ,buttons    :
+    					   [
+    						   {
+    								 text    : 'Guardar'
+    								,icon    :'${ctx}/resources/fam3icons/icons/accept.png'
+    								,handler : function() 
+    								{
+    									saveList = []; var i=0;
+    									
+    									if(storeDocumentos.getUpdatedRecords().length==0)
+    									{ventanaEndoso.close();}
+
+    									storeDocumentos.data.items.forEach
+    									(
+    										function(record)
+    									    {
+    											if(record.data.renovar)
+   												{
+    												saveList.push(record.data);
+   												}
+    											if((i+1) == storeDocumentos.getUpdatedRecords().length)
+												{
+													ventanaEndoso.close();
+												}
+												i++;
+    										}
+    									);
+    								}
+    						    }
+    						]
+    					}
+    	           	,listeners:
+    	           	{
+    	           		af: function(me)
+    			        {
+    	           			me.load();
+    			        }
+    	           	}
+    	      	}).show()
+        );
+    }
 }
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
