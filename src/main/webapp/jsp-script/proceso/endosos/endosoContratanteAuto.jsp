@@ -24,8 +24,6 @@ smap1:
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _35_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
-var _35_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
 var _35_formLectura;
 var _35_formContratante;
 var _35_panelPri;
@@ -43,7 +41,7 @@ var _p35_urlPantallaCliente  = '<s:url namespace="/catalogos" action="includes/p
 var _p35_urlRecuperacionSimple = '<s:url namespace="/emision"         action="recuperacionSimple"     />';
 
 debug('_35_smap1:',_35_smap1);
-debug('_35_flujo:',_35_flujo);
+
 
 var _cdpersonActual;
 var _cdpersonNuevo = '';
@@ -438,7 +436,7 @@ Ext.Ajax.request(
         {
             _fieldByName('fecha_endoso').setMinValue(json.smap1.FECHA_MINIMA);
             _fieldByName('fecha_endoso').setMaxValue(json.smap1.FECHA_MAXIMA);
-            _fieldByName('fecha_endoso').setReadOnly(json.smap1.EDITABLE=='N');
+            _fieldByName('fecha_endoso').setReadOnly(json.smap1.EDITABLE=='S');
             _fieldByName('fecha_endoso').isValid();
         }
         else
@@ -487,12 +485,6 @@ function _35_confirmar()
             }
             ,slist1 : slist1
         }
-        
-        if(!Ext.isEmpty(_35_flujo))
-        {
-            json.flujo = _35_flujo;
-        }
-        
         debug('datos que se enviaran:',json);
         var panelMask = new Ext.LoadMask('_35_divPri', {msg:"Confirmando..."});
 		panelMask.show();

@@ -74480,12 +74480,6 @@
                                     public static final java.lang.String _SEMI_INDISTINTO =
                                         org.apache.axis2.databinding.utils.ConverterUtil.convertToString("SEMI_INDISTINTO");
                                 
-                                    public static final java.lang.String _AUTO_TURISTA =
-                                        org.apache.axis2.databinding.utils.ConverterUtil.convertToString("AUTO_TURISTA");
-                                
-                                    public static final java.lang.String _LICENCIA_TURISTA =
-                                        org.apache.axis2.databinding.utils.ConverterUtil.convertToString("LICENCIA_TURISTA");
-                                
                                 public static final TipoVehiculo AUTO_PICKUP =
                                     new TipoVehiculo(_AUTO_PICKUP,true);
                             
@@ -74512,12 +74506,6 @@
                             
                                 public static final TipoVehiculo SEMI_INDISTINTO =
                                     new TipoVehiculo(_SEMI_INDISTINTO,true);
-                            
-                                public static final TipoVehiculo AUTO_TURISTA =
-                                    new TipoVehiculo(_AUTO_TURISTA,true);
-                            
-                                public static final TipoVehiculo LICENCIA_TURISTA =
-                                    new TipoVehiculo(_LICENCIA_TURISTA,true);
                             
 
                                 public java.lang.String getValue() { return localTipoVehiculo;}
