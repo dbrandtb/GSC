@@ -1619,10 +1619,6 @@ debug("validarYGuardar flag:2");
                                                                            }
                                                                        ]
                                                                    },{
-                                                                       header     : 'ID. Asegurado'
-                                                                       ,dataIndex : 'CLAVECLI'
-                                                                       ,flex      : 1
-                                                                   },{
                                                                        header     : 'RFC'
                                                                        ,dataIndex : 'RFCCLI'
                                                                        ,flex      : 1
@@ -1773,11 +1769,6 @@ debug("validarYGuardar flag:2");
                                                                            }
                                                                        ]
                                                                    },{
-                                                                       header     : 'ID. Asegurado'
-                                                                       ,dataIndex : 'CLAVECLI'
-                                                                       ,flex      : 1
-                                                                   }
-                                                                   ,{
                                                                        header     : 'RFC'
                                                                        ,dataIndex : 'RFCCLI'
                                                                        ,flex      : 1

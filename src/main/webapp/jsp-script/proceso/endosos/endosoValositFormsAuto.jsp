@@ -12,7 +12,6 @@ var _p44_urlRecuperacionSimple  = '<s:url namespace="/emision"          action="
 var _p30_urlViewDoc             = '<s:url namespace="/documentos"       action="descargaDocInline"               />';
 var _p28_urlCargarSumaAsegurada = '<s:url namespace="/emision"          action="cargarSumaAseguradaAuto"         />';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
-var _p44_urlRecuperaValoresModelo  = '<s:url namespace="/emision"       action="recuperacionSimple"            />';
 ////// urls //////
 
 ////// variables //////
@@ -24,7 +23,6 @@ debug('_p44_slist1:',_p44_slist1);
 
 var _p44_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 debug('_p44_flujo:',_p44_flujo);
-
 ////// variables //////
 
 ////// overrides //////
@@ -410,54 +408,20 @@ Ext.onReady(function()
 		        }
 		    }
 		    if(_p44_smap1.cdtipsup==TipoEndoso.EndosoCambioModelo){
-		    	//
-		    	var  maxModelo = 0;
-				var  minModelo = 0;
-		    	   Ext.Ajax.request(
-					    {
-					        url      : _p44_urlRecuperaValoresModelo
-					        ,params  :
-					        {
-					            'smap1.procedimiento' : 'RECUPERAR_VALORES_MODELO'
-					            ,'smap1.cdunieco'     : _p44_smap1.CDUNIECO
-					        }
-					        ,success : function(response)
-					        {
-					            var json = Ext.decode(response.responseText);
-					            debug('### RECUPERAR_VALORES_MODELO:',json);
-					            if(json.exito)
-					            {
-					            	debug('json.smap1.MaxModelo',json.smap1.MaxModelo);
-					                maxModelo = Number(json.smap1.MaxModelo);
-			    	                minModelo = Number(json.smap1.MinModelo);
-			    	                mensajeCorrecto('Aviso','El Endoso Cambio de Modelo aplica para menor a: '+minModelo+' años y mayor a: '+maxModelo+' años..   ');
-					            }
-					            else
-					            {
-					                mensajeError(json.respuesta);
-					            }
-					        }
-					        ,failure : function()
-					        {
-					            errorComunicacion();
-					        }
-					    });
-		    	//var xxx = Ext.ComponentQuery.query('[fieldLabel=MODELO]');
-		    	var actual = form.down('[fieldLabel=MODELO]').rawValue;
-		    	debug('xxx ',form.down('[fieldLabel=MODELO]').rawValue);
 		    	debug('Entro a cambio de Modelo');
-		    //	mensajeCorrecto('Aviso','El Endoso Cambio de Modelo aplica para menor de: '+(+actual + +minModelo)+' años o mayor a: '+(maxModelo)+' años   ');
+		    	mensajeError('El Endoso Cambio de Modelo aplica para menor o mayor a una año. ');
 		    	Ext.ComponentQuery.query('[fieldLabel=MODELO]',_fieldById('_p44_panelpri')).forEach(function(it){ 
 			                                                                                            it.on({change:function( me, newValue, oldValue){
-			                                                                                            	          
+			                                                                                            	            debug(me);
+			                                                                                            	            debug(Number(me.valorInicial)+1);
+			                                                                                            	            debug(me.valorInicial-1);
 			                                                                                            	            me.validator=function(val){
 			                                                                                            	            	
-	                                                                                            	            				if(val>Number(me.valorInicial)+Number(maxModelo) || val<Number(me.valorInicial)-Number(minModelo)){
+			                                                                                            	            		if(val>Number(me.valorInicial)+1 || val<Number(me.valorInicial)-1){
 			                                                                                            	            			debug('invalido');
 			                                                                                            	            			return "Invalido, Valor Original: "+ me.valorInicial;
 			                                                                                            	            		}
 			                                                                                            	            		debug('Validos');
-			                                                                                            	            		
 			                                                                                            	            		return true;
 			                                                                                            	            }
 			                                                                                                           }
@@ -814,10 +778,6 @@ Ext.onReady(function()
             errorComunicacion();
         }
     });
-    
-    
- 
-  
     
     ////// loaders //////
 });

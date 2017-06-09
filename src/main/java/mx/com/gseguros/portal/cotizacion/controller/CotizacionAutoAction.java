@@ -79,24 +79,12 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     
     @Autowired
     private CotizacionManager cotizacionManager;
-    
+
     @Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
     
-	@Value("${sigs.facultaDatosPolizaSicaps.url}")
-    private String sigsFacultaDatosPolizaSicapsUrl;	
-    
     @Value("${ruta.documentos.temporal}")
     private String rutaDocumentosTemporal;
-    
-    @Value("${sigs.obtenerDatosPorSucRamPol.url}")
-    private String sigsObtenerDatosPorSucRamPolUrl;
-    
-    @Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports; 
     
     /**
      * Constructor que se asegura de que el action tenga sesion
@@ -371,7 +359,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
                 smap1.put("cdunieco", flujo.getCdunieco());
                 logger.debug("Nuevo valor de smap1.cdunieco: {}", smap1.get("cdunieco"));
             }
-			
             String cdunieco = smap1.get("cdunieco")
                    ,cdramo   = smap1.get("cdramo")
                    ,cdtipsit = smap1.get("cdtipsit")
@@ -583,7 +570,6 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         
         try
         {
-        	
             logger.debug(Utils.log("","Validando datos de entrada"));
             
             Utils.validate(smap1, "No se recibieron datos de entrada");
@@ -1048,241 +1034,11 @@ public class CotizacionAutoAction extends PrincipalCoreAction
         return result;
     }
     
-    public String cotizacionMasivaIndividuales()
-    {
-        logger.debug(Utils.log(""
-                ,"\n##########################################"
-                ,"\n###### cotizacionMasivaIndividuales ######"
-                ,"\n###### smap1=", smap1
-                ,"\n###### flujo=", flujo
-                ));
-        
-        String result = ERROR;
-        
-        try
-        {
-            UserVO usuario  = Utils.validateSession(session);
-            
-            String cdusuari  = usuario.getUser()
-                   ,cdsisrol = usuario.getRolActivo().getClave();
-            
-            boolean renovacion = false;
-
-            Utils.validate(smap1, "No se recibieron datos");
-            String endoso = "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen")) ? "S" : "N";
-            
-            String cdunieco = smap1.get("cdunieco")
-                   ,cdramo  = smap1.get("cdramo")
-                   ,cdtipsit = smap1.get("cdtipsit")
-                   ,ntramite = smap1.get("ntramite")
-                   ,tipoflot = smap1.get("tipoflot"); 
-            
-            smap1.put("cdsisrol" , cdsisrol);
-            smap1.put("cdusuari" , cdusuari);
-            
-            Utils.validate(
-                    cdramo    , "No se recibi\u00f3 el producto"
-                    ,cdtipsit , "No se recibi\u00f3 la modalidad"
-                    ,tipoflot , "No se recibi\u00f3 el tipo de cotizacion"
-                    );
-            
-            ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.cotizacionMasivaIndividual(
-                    cdusuari
-                    ,cdsisrol
-                    ,cdunieco
-                    ,cdramo
-                    ,cdtipsit
-                    ,ntramite
-                    ,tipoflot
-                    ,"S".equals(endoso)
-                    ,flujo
-                    ,renovacion
-                    );
-            
-            if("ARTL".equals(cdtipsit)){
-            	smap1.put("cdtipsit","AR");
-            	smap1.put("cdtipsit2","TL");
-            }
-            exito     = resp.isExito();
-            respuesta = resp.getRespuesta();
-            
-            if(!exito)
-            {
-                throw new ApplicationException(respuesta);
-            }
-            
-            smap1.putAll(resp.getSmap());
-            imap=resp.getImap();
-            
-            result = SUCCESS;
-        }
-        catch(Exception ex)
-        {
-            respuesta = Utils.manejaExcepcion(ex);
-        }
-        
-        logger.debug(Utils.log(""
-                ,"\n###### result=", result
-                ,"\n###### cotizacionMasivaIndividuales ######"
-                ,"\n##########################################"
-                ));
-        return result;
-    }
-    
-////////////////////////////////
-    
-public String cargaMasivaClientes()
-{
-logger.debug(Utils.log(""
-,"\n####################################"
-,"\n###### cargaMasivaClientes ######"
-,"\n###### smap1=", smap1
-,"\n###### flujo=", flujo
-));
-
-String result = ERROR;
-
-try
-{
-UserVO usuario  = Utils.validateSession(session);
-
-String cdusuari  = usuario.getUser()
-,cdsisrol = usuario.getRolActivo().getClave();
-
-boolean renovacion = false;
-
-Utils.validate(smap1, "No se recibieron datos");
-String endoso = "MARCO_ENDOSOS_GENERAL".equals(smap1.get("pantallaOrigen")) ? "S" : "N";
-
-String cdunieco = smap1.get("cdunieco")
-,cdramo  = smap1.get("cdramo")
-,cdtipsit = smap1.get("cdtipsit")
-,ntramite = smap1.get("ntramite")
-,tipoflot = smap1.get("tipoflot"); 
-
-smap1.put("cdsisrol" , cdsisrol);
-smap1.put("cdusuari" , cdusuari);
-
-Utils.validate(
-cdramo    , "No se recibi\u00f3 el producto"
-,cdtipsit , "No se recibi\u00f3 la modalidad"
-,tipoflot , "No se recibi\u00f3 el tipo de cotizacion"
-);
-
-ManagerRespuestaImapSmapVO resp=cotizacionAutoManager.cargaMasivaClientes(
-cdusuari
-,cdsisrol
-,cdunieco
-,cdramo
-,cdtipsit
-,ntramite
-,tipoflot
-,"S".equals(endoso)
-,flujo
-,renovacion
-);
-
-if("ARTL".equals(cdtipsit)){
-smap1.put("cdtipsit","AR");
-smap1.put("cdtipsit2","TL");
-}
-exito     = resp.isExito();
-respuesta = resp.getRespuesta();
-
-if(!exito)
-{
-throw new ApplicationException(respuesta);
-}
-
-smap1.putAll(resp.getSmap());
-imap=resp.getImap();
-
-result = SUCCESS;
-}
-catch(Exception ex)
-{
-respuesta = Utils.manejaExcepcion(ex);
-}
-
-logger.debug(Utils.log(""
-,"\n###### result=", result
-,"\n###### cargaMasivaClientes ######"
-,"\n####################################"
-));
-return result;
-}
-
-
-////////////////////////////////
-public String procesarCargaMasivaClientes()
-{
-logger.debug(Utils.log(""
-,"\n###########################################"
-,"\n###### procesarCargaMasivaClientes ######"
-,"\n###### smap1="            , smap1
-,"\n###### excel="            , excel
-,"\n###### excelFileName="    , excelFileName
-,"\n###### excelContentType=" , excelContentType
-));
-try
-{
-logger.debug(Utils.log("","Validando datos de entrada"));
-
-Utils.validate(smap1, "No se recibieron datos");
-
-String cdramo    = smap1.get("cdramo")
-,cdtipsit = smap1.get("cdtipsit")
-,tipoflot = smap1.get("tipoflot")
-,cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave()
-,negocio  = smap1.get("negocio");
-
-logger.debug(Utils.join(
-"\ntipoflot=" , tipoflot
-,"\ncdsisrol=" , cdsisrol
-,"\nnegociol=" , negocio
-));
-
-Utils.validate(
-cdramo   , "No se recibi\u00f3 el producto"
-,cdtipsit , "No se recibi\u00f3 la modalidad"
-,negocio  , "No se recibio negocio"
-);
-
-Utils.validate(excel, "No se recibi\u00f3 el archivo");
-
-ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaClientes(cdramo,cdtipsit,"",excel,tipoflot);//,tipoflot
-
-exito     = resp.isExito();
-respuesta = resp.getRespuesta();
-
-if(!exito)
-{
-throw new ApplicationException(respuesta);
-}
-
-slist1 = resp.getSlist();
-}
-catch(Exception ex)
-{
-respuesta = Utils.manejaExcepcion(ex);
-}
-
-logger.debug(Utils.log(""
-,"\n###### exito="  , exito
-,"\n###### slist1=" , slist1
-,"\n###### procesarCargaMasivaClientes ######"
-,"\n###########################################"
-));
-return SUCCESS;
-}
-
-
-///////////////////////////////   
     public String cotizarAutosFlotilla()
     {
         logger.debug(Utils.log(""
                 ,"\n##################################"
-                ,"\n###### cotizarAutosFlotilla - Entra ######"
+                ,"\n###### cotizarAutosFlotilla ######"
                 ,"\n###### smap1="  , smap1
                 ,"\n###### slist1=" , slist1
                 ,"\n###### slist2=" , slist2
@@ -1386,11 +1142,11 @@ return SUCCESS;
             }
             else if(!parame.isEmpty())
             {
-                if(nmsolici== null && parame.get("NMSOLICI") != null)
+            	if(nmsolici== null && parame.get("NMSOLICI") != null)
                 {nmsolici = parame.get("NMSOLICI");}
                 if(parame.get("CDTIPTRA").equals("21"))
                 {
-                    String detalles = cotizacionManager.validaDatosAutoSigs(slist1);
+                	String detalles = cotizacionManager.validaDatosAutoSigs(slist1);
                     if(!detalles.isEmpty())
                     throw new ApplicationException(detalles);
                 }
@@ -1440,10 +1196,8 @@ return SUCCESS;
                     resp.setExito(true);
                     resp.setSmap(smap1);
             }
-            
+
             exito     = resp.isExito();
-            respuesta = resp.getRespuesta();
-            
             if(!exito)
             {
                 throw new ApplicationException(respuesta);
@@ -1509,7 +1263,7 @@ return SUCCESS;
                 else if(fila.equals("64")) {fila="Contado";} 
                 
                 List<Map<String,String>> listaResultados= resp.getSlist();
-               
+                
                 if(modPrim.isEmpty() && facultar && !emergency)
                 {  
                 	String str = modificaPrimasFlotillas(ntramite, listaResultados, Integer.parseInt(paqYplan.get(0).trim()), paqYplan, cdunieco, cdramo, nmsolici==null?resp.getSmap().get("nmpoliza"):nmsolici , cdtipsits.toString(),parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
@@ -1687,71 +1441,6 @@ return SUCCESS;
                 ,"\n###### slist1=" , slist1
                 ,"\n###### procesarCargaMasivaFlotilla ######"
                 ,"\n#########################################"
-                ));
-        return SUCCESS;
-    }
-    
-    public String procesarCargaMasivaIndividual()
-    {
-        logger.debug(Utils.log(""
-                ,"\n###########################################"
-                ,"\n###### procesarCargaMasivaIndividual ######"
-                ,"\n###### smap1="            , smap1
-                ,"\n###### excel="            , excel
-                ,"\n###### excelFileName="    , excelFileName
-                ,"\n###### excelContentType=" , excelContentType
-                ));
-        try
-        {
-            logger.debug(Utils.log("","Validando datos de entrada"));
-            
-            Utils.validate(smap1, "No se recibieron datos");
-            
-            UserVO usuario = Utils.validateSession(session);
-            
-            String cdramo    = smap1.get("cdramo")
-                   ,cdtipsit = smap1.get("cdtipsit")
-                   ,tipoflot = smap1.get("tipoflot")
-                   ,negocio  = smap1.get("negocio")
-                   ,cdusuari = usuario.getUser()
-                   ,cdsisrol =  usuario.getRolActivo().getClave();
-                   
-            logger.debug(Utils.join(
-                     "\ntipoflot=" , tipoflot
-                    ,"\ncdsisrol=" , cdsisrol
-                    ,"\nnegociol=" , negocio
-                    ));
-
-            Utils.validate(
-                     cdramo   , "No se recibi\u00f3 el producto"
-                    ,cdtipsit , "No se recibi\u00f3 la modalidad"
-                    ,negocio  , "No se recibio negocio"
-                    );
-            
-            Utils.validate(excel, "No se recibi\u00f3 el archivo");
-            
-            ManagerRespuestaSlistVO resp = cotizacionAutoManager.procesarCargaMasivaIndividual(cdramo,cdtipsit,"",excel,tipoflot);
-            
-            exito     = resp.isExito();
-            respuesta = resp.getRespuesta();
-            
-            if(!exito)
-            {
-                throw new ApplicationException(respuesta);
-            }
-           
-            slist1 = resp.getSlist();
-        }
-        catch(Exception ex)
-        {
-            respuesta = Utils.manejaExcepcion(ex);
-        }
-        
-        logger.debug(Utils.log(""
-                ,"\n###### exito="  , exito
-                ,"\n###### slist1=" , slist1
-                ,"\n###### procesarCargaMasivaIndividual ######"
-                ,"\n###########################################"
                 ));
         return SUCCESS;
     }
@@ -2429,7 +2118,7 @@ return SUCCESS;
         try
         {
             String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-                  ,respuestaWS =HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl,params);
+                  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
                 HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
                 Map<String,String>parametros = (Map<String,String>)someObject.get("params");
                 String formpagSigs = parametros.get("formpagSigs");
@@ -2484,7 +2173,7 @@ return SUCCESS;
                     try
                     {
                         String params  = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",nmpoliza,"&primaObjetivo=",mnprima,"&renuniext=",renuniext,"&renramo=",renramo,"&cdtipsit=",cdtipsit,"&renpoliex=",renpoliex,"&cdplan=",formpagSigs,"&cdperpag=",paquete.toString());
-                               mensaje = HttpUtil.sendPost(sigsFacultaDatosPolizaSicapsUrl,params);
+                               mensaje = HttpUtil.sendPost(getText("sigs.facultaDatosPolizaSicaps.url"),params);
                         if(mensaje != null)
                         {
                             return mensaje;
@@ -2740,43 +2429,6 @@ return SUCCESS;
      return SUCCESS;
  }
  
- public String obtieneRangoPeriodoGraciaAgente()
- {
-     logger.debug(Utils.log(""
-             ,"\n#########################################"
-             ,"\n###### obtieneRangoPeriodoGraciaAgente ######"
-             ,"\n###### slist1="           , slist1
-             ,"\n###### smap1="            , smap1
-             ));
-     
-     try
-     {
-    	 Utils.validate(smap1, "No se recibieron datos");
-    	 String cdramo   = smap1.get("cdramo");
-    	 String cdtipsit = smap1.get("cdtipsit");
-    	 String cdagente = smap1.get("cdagente");
-    	 Utils.validate( cdramo  ,"No se recibio cdramo"
-    			 		,cdtipsit,"No se recibio cdtipsit"
-    			 		,cdagente,"No se recibio cdagente");
-         slist1=consultasManager.obtieneRangoPeriodoGracia(cdramo,cdtipsit,cdagente);
-         
-         
-         exito=true;
-     }
-     catch(Exception ex)
-     {
-         respuesta = Utils.manejaExcepcion(ex);
-     }
-     
-     logger.debug(Utils.log(""
-             ,"\n###### exito="  , exito
-             ,"\n###### slist1=" , slist1
-             ,"\n###### obtieneRangoPeriodoGraciaAgente ######"
-             ,"\n#########################################"
-             ));
-     return SUCCESS;
- }
- 
      /*
      * Getters y setters
      */
@@ -2891,24 +2543,4 @@ return SUCCESS;
     public void setFlujo(FlujoVO flujo) {
         this.flujo = flujo;
     }
-    
-    public String getSigsFacultaDatosPolizaSicapsUrl() {
-		return sigsFacultaDatosPolizaSicapsUrl;
-	}
-
-	public String getRutaDocumentosTemporal() {
-		return rutaDocumentosTemporal;
-	}
-
-	public String getSigsObtenerDatosPorSucRamPolUrl() {
-		return sigsObtenerDatosPorSucRamPolUrl;
-	}
-
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
 }

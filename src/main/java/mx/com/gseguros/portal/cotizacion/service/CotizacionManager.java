@@ -15,7 +15,6 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroCotizacion;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.model.RespuestaVO;
 
 
 public interface CotizacionManager
@@ -33,10 +32,6 @@ public interface CotizacionManager
 			,String status
 			,String cdatribu
 			,String valor)throws Exception;
-	
-	public void movimientoTvalogarGrupoFlexCopago(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsuplem, String cdtipsit, String cdgrupo, String cdgarant, String status, String cdatribu,
-			String valor, String formatoCop) throws Exception;
 	
 	public void movimientoMpolisitTvalositGrupo(
 			String  cdunieco
@@ -124,13 +119,6 @@ public interface CotizacionManager
 			,String cdgrupo)throws Exception;
 	
 	public List<Map<String,String>>cargarTvalogarsGrupo(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String cdgrupo)throws Exception;
-
-	public List<Map<String,String>>obtieneFormatosAtribsCobsGrupo(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -823,8 +811,6 @@ public interface CotizacionManager
 	        String ntramite
 	        ,String claveProceso
 	        )throws Exception;
-		
-	public RespuestaVO obtieneValidaVigPolizaAnual(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
 
 	public Map<String,String> obtieneDatosContratantePoliza(
 			String cdunieco
@@ -1234,7 +1220,7 @@ public interface CotizacionManager
 	 */
 	public HashMap<String, String> obtieneCodigosPostalesProductos()throws Exception;
 
-    public String aplicaDescAutos(String cdunieco, String cdramo, String nmpoliza,
+	public String aplicaDescAutos(String cdunieco, String cdramo, String nmpoliza,
             String modPrim, String cdtipsit)
             throws Exception;
     
@@ -1247,7 +1233,7 @@ public interface CotizacionManager
     public List<Map<String, String>> cargarResultadosCotizacionAutoFlotilla(
             String cdunieco, String cdramo, String estado, String nmpoliza)
             throws Exception;
-
+    
     /**
      * Metodo que elimina todos los documentos predefinidos de Cotizacion
      * @param cdunieco
@@ -1314,17 +1300,10 @@ public interface CotizacionManager
 	 * @param flotilla
 	 */
 	public String aplicaRecargoPagoFraccionado(String cdunieco, String cdramo, String nmpoliza, String recargoPF, String flotilla) throws Exception;
-
+	
 	public List<Map<String, String>> cargarResultadosCotizacionLicenciaFlotilla(String cdunieco, String cdramo, String estado,
 			String nmpoliza) throws Exception;
 	
-	public Map<String, String> obtieneOtValorCorrespondienteSubtipoCR()throws Exception;
-	
 	public void actualizaTramiteOVA(String ntramite	,String nmsolici)throws Exception;
 	
-	public void guardarMorbilidad(String nombreArchivo)throws Exception;
-
-	public List<Map<String, String>> getConsultaMorbilidad(String morbilidad)throws Exception;
-	
-	public String existeMorbilidadNueva(String morbilidad) throws Exception;
 }
