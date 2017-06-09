@@ -1,5 +1,6 @@
 package mx.com.gseguros.ws.autosgs.dao.impl;
 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -7,20 +8,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import javax.sql.DataSource;
+
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
-import oracle.jdbc.driver.OracleTypes;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -913,7 +914,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class ObtieneTipoCliWS extends StoredProcedure{
 		protected ObtieneTipoCliWS(DataSource dataSource){
-			super(dataSource, "sp_PolizasXCliente");
+			super(dataSource, "sp_PolizasXCliente2");
 			
 			declareParameter(new SqlParameter("vNumCliente", Types.INTEGER));
 			declareParameter(new SqlParameter("vTipoCliente", Types.SMALLINT));
@@ -939,11 +940,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	 */
 	@Override
 	public void validarAgenteParaNuevoTramite(String cdagente, String ramo, String cdtipend) throws Exception {
-		
-	    logger.warn("****** spvalidaagente COMENTADO   TODO: DESCOMENTAR ****");
-	    
-	    /*
-	    logger.debug(Utils.log(
+		logger.debug(Utils.log(
 				"\n*******************************************",
 				"\n****** validarAgenteParaNuevoTramite ******",
 				"\n****** cdagente = ", cdagente,
@@ -989,8 +986,6 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 				"\n****** validarAgenteParaNuevoTramite ******",
 				"\n*******************************************"
 				));
-				
-		*/
 	}
 	
 	public class ValidarAgenteParaNuevoTramiteSP extends StoredProcedure {
@@ -1201,7 +1196,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
             compile();
         }
     }
-    
+
     @Override
     public Integer endosoCambioModeloDescripcion(Map<String, Object> params) throws Exception {
         Integer resp = null;
@@ -1279,86 +1274,5 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
             
             compile();
         }
-    }
-    
-    @Override
-    public Map<String, String> cargaEndososB (String cdunieco, String cdramo, String nmpoliza, String cdusuari,
-			String cdtipsit, String cdsisrol, String cduniext, String ramo, String nmpoliex, String renuniext,
-			String renramo, String renpoliex, String feefect, String feproren) throws Exception 
-    {
-    	Map<String,String>params=new LinkedHashMap<String,String>();
-//			params.put("cdunieco"  , cdunieco);
-//			params.put("cdramo"    , cdramo);
-//			params.put("nmpoliza"  , nmpoliza);
-//			params.put("cdusuari"  , cdusuari);
-//			params.put("cdtipsit"  , cdtipsit);
-//			params.put("cdsisrol"  , cdsisrol);
-//			params.put("cduniext"  , cduniext);
-//			params.put("ramo"      , ramo);
-//			params.put("nmpoliex"  , nmpoliex);
-//			params.put("renuniext" , renuniext);
-//			params.put("renramo"   , renramo);
-//			params.put("renpoliex" , renpoliex);
-//			params.put("feefect"   , feefect);
-//			params.put("feproren"  , feproren);
-//		logger.debug(
-//				new StringBuilder()
-//				.append("\n***************************")
-//				.append("\n****** cargaEndososB ******")
-//				.append("\n*****params=").append(params)
-//				.append("\n***************************")
-//				.toString()
-//				);
-//    	Map<String,Object>procedureResult=ejecutaSP(new cargaEndososBSP(getDataSource()),params);
-//		List<Map<String,String>>listaAux=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
-//		if(listaAux==null||listaAux.size()==0)
-//		{
-//			logger.warn("*** sin ensos B para la poliza a emitir ****");
-//		}
-//		else if(listaAux.size()>1)
-//		{
-//			throw new ApplicationException("Datos repetidos para la poliza a emitir");
-//		}
-        params = new HashMap<String, String>();
-        params.put("12" , "Texto Endoso 12");
-        params.put("13" , "Texto Endoso 13");
-        params.put("14" , "Texto Endoso 14");
-        params.put("15" , "Texto Endoso 15");
-        params.put("16" , "Texto Endoso 16");
-        params.put("17" , "Texto Endoso 17");
-        params.put("18" , "Texto Endoso 18"); 
-        params.put("1"  , "Texto Endoso 1");
-        params.put("20" , "Texto Endoso 20");
-        return params;
-//        return listaAux.get(0);
-        }
-    
-    protected class cargaEndososBSP extends StoredProcedure{
-        protected cargaEndososBSP(DataSource dataSource){
-            super(dataSource, "cargaEndososB");
-            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmpoliza" ,Types.SMALLINT));
-			declareParameter(new SqlParameter("cdusuari" ,Types.SMALLINT));
-			declareParameter(new SqlParameter("cdtipsit" ,Types.INTEGER));
-			declareParameter(new SqlParameter("cdsisrol" ,Types.DATE));
-			declareParameter(new SqlParameter("cduniext" ,Types.DATE));
-			declareParameter(new SqlParameter("ramo"     ,Types.DATE));
-			declareParameter(new SqlParameter("nmpoliex" ,Types.SMALLINT));
-			declareParameter(new SqlParameter("renuniext",Types.SMALLINT));
-			declareParameter(new SqlParameter("renramo"  ,Types.INTEGER));
-			declareParameter(new SqlParameter("renpoliex"  ,Types.INTEGER));
-			declareParameter(new SqlParameter("feefect"  ,Types.INTEGER));
-			declareParameter(new SqlParameter("feproren"  ,Types.INTEGER));
-			String[] cols=new String[]
-					{
-					 "idEndososB"
-					,"descripcion"
-					};
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-        }
-    }
+    }    
 }
