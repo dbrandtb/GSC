@@ -114,6 +114,8 @@ var _p25_urlImprimirCotiza      = '<s:property value="rutaServidorReports" />';
 var _p25_reportsServerUser      = '<s:property value="passServidorReports" />';
 var _TIPO_SITUACION_RENOVACION  = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
 var _EN_ESPERA_DE_COTIZACION    = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
+var _EN_EMISION_EN_REVISION_TECNICA  = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EMISION_EN_REVISION_TECNICA.codigo" />';
+
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 
 debug('_p25_smap1:',_p25_smap1);

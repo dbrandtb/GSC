@@ -128,6 +128,7 @@ var _p21_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
 var _p21_reportsServerUser = '<s:property value="passServidorReports" />';
 var _TIPO_SITUACION_RENOVACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
 var _EN_ESPERA_DE_COTIZACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
+var _EN_EMISION_EN_REVISION_TECNICA  = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EMISION_EN_REVISION_TECNICA.codigo" />';
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
@@ -2572,12 +2573,11 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                 	        		}
                                             	}
                                             	
-                                            	hijosCheckPorcentaje.push(elementoCobertura);
-                                            	
                                             	if(!Ext.isEmpty(elementoCobertura.auxiliar) && elementoCobertura.auxiliar == 'C'){
                                             		//&& !Ext.isEmpty(elementoCobertura.tipoCampoFormat) && elementoCobertura.tipoCampoFormat == 'C'){
                                             		var nuevoCheck = Ext.create('Ext.form.ComboBox', {
                                             	        store: modeloTipoCopago,
+                                            	        style : 'margin:5px;',
                                             	        displayField: 'value',
                                             	        valueField: 'key',
                                             	        value: formatoCargar,
@@ -2618,11 +2618,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                     		    	});
                                             		
                                             		hijosCheckPorcentaje.push(nuevoCheck);
-                                            		//No es necesario
-                                            		//json.slist1[j].modeloHijos.push({
-                                            		//	name: 'TipoValor_' + elementoCobertura.name,
-                                            		//	type: 'string'
-                                            		//});
                                             	}else{
                                             		var nuevoCheck = Ext.create('Ext.form.Label', {
                                             	        html:'<br/>'
@@ -2630,6 +2625,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             		
                                             		hijosCheckPorcentaje.push(nuevoCheck);
                                             	}
+                                            	
+                                            	hijosCheckPorcentaje.push(elementoCobertura);
                                             	
                                            	});
                                             
