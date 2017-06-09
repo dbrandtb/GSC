@@ -1167,7 +1167,7 @@ function _p29_mostrarVistaPrevia()
                     [
                         Ext.create('Ext.grid.Panel',
                         {
-                            width  : 600
+                            width  : 650
                             ,store : Ext.create('Ext.data.Store',
                             {
                                 model       : 'ModeloDetalleCotizacion'
@@ -1209,7 +1209,7 @@ function _p29_mostrarVistaPrevia()
                                     ,dataIndex   : 'Importe'
                                     ,flex        : 1
                                     ,renderer    : Ext.util.Format.usMoney
-                                    ,align       : 'right'
+                                    ,align       : 'center'
                                     ,summaryType : 'sum'
                                 }
                             ]
@@ -1278,8 +1278,7 @@ function _p29_mostrarVistaPrevia()
                                     ,itemId     : '_p29_numerofinalpoliza'
                                     ,fieldLabel : 'N&uacute;mero de poliza'
                                     ,readOnly   : true
-                                }
-                                ,{
+                                },{
                                     itemId   : '_p29_botonEmitirPolizaFinal'
                                     ,xtype   : 'button'
                                     ,text    : 'Emitir'
@@ -1357,8 +1356,7 @@ function _p29_mostrarVistaPrevia()
                                             }
                                         })
                                     }
-                                }
-                                ,{
+                                },{
                                     itemId : 'botonReenvioWS'
                                     ,xtype : 'button'
                                     ,text  : 'Reintentar Emisi&oacute;n'
@@ -1369,8 +1367,7 @@ function _p29_mostrarVistaPrevia()
                                         var me=this;
                                         reintentarWSAuto(me.up().up(), _paramsRetryWS);
                                     }
-                                }
-                                ,{
+                                },{
                                     xtype     : 'button'
                                     ,itemId   : '_p29_botonDocumentosPolizaEmitida'
                                     ,text     : 'Imprimir'
@@ -1449,9 +1446,7 @@ function _p29_mostrarVistaPrevia()
                                             }
                                         });
                                     }
-                                }
-//====================================--------------------=======================================||
-                             ,{
+                                },{
                                       hidden  :  Number(_fieldByName('cdperpag').getValue()) != 1 
                                      ,xtype   : 'button'
                                      ,itemId  : '_p29_botonRedireccionar'
@@ -1462,8 +1457,7 @@ function _p29_mostrarVistaPrevia()
                                      {  
                                          domiciliar();
                                      }
-                                 }
-                                ,{
+                                 },{
                                     itemId   : '_p29_botonMesaControl'
                                     ,xtype   : 'button'
                                     ,text    : 'Mesa de control'
@@ -1476,12 +1470,10 @@ function _p29_mostrarVistaPrevia()
                                             ,url           : _GLOBAL_COMP_URL_MCFLUJO
                                             });     
                                         } 
-                                }
-                                //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><
-                               ,{
+                                },{
                                     itemId   : '_p29_botonEndososB'
                                     ,xtype   : 'button'
-                                    ,text    : 'Renovar endosos endosos B'
+                                    ,text    : 'Renovar endosos B'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/application_edit.png'
                                    	,hidden : !Ext.isEmpty(_p29_flujo) ? (_p29_flujo.cdflujomc != 240 && _p29_flujo.cdtipflu != 103) : true
                                    	,handler      : function()
@@ -2354,14 +2346,16 @@ function mostrarVentanaEndoso()
     		                    ,dataIndex   : 'renovar'
     		                    ,xtype       : 'checkcolumn'
     		                    ,menuDisabled: true
+    		                    ,width       : 80
     		                  }
     		                 ,{ 
-    		                      header      : 'Id'
+    		                      header      : 'No.Endoso'
     			                 ,dataIndex   : 'id'
-    			                 ,hidden      : true
+    			                 ,hidden      : false
+    			                 ,width       : 40
     			              }
-    		                 ,{ 
-    		                	 header      :'Descripcion'
+    		                 ,{
+    		                	 header      :'Detalle'
     		                	,dataIndex   :'descripcion'
     		                	,flex        : 1
     		                  }
