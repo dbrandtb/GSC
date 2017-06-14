@@ -2777,6 +2777,43 @@ return SUCCESS;
      return SUCCESS;
  }
  
+ public String cargarCorreosPorTramite()
+ {
+     logger.debug(Utils.log(""
+             ,"\n####################################"
+             ,"\n###### cargarCorreosPorTramite ######"
+             ,"\n###### smap1=", smap1
+             ));
+     
+     String correos = "";
+     
+     try
+     {
+         logger.debug(Utils.log("","Validando datos de entrada"));
+         Utils.validate(smap1, "No se recibieron datos de entrada");
+         
+         String ntramite    = smap1.get("ntramite");
+         Utils.validate(ntramite    , "No se recibi\u00f3 el ntramite");
+         
+         correos = cotizacionAutoManager.cargarCorreosPorTramite(ntramite);
+         //respuesta = "exito";
+         respuesta = correos;
+         exito = true;
+     }
+     catch(Exception ex)
+     {
+         respuesta = Utils.manejaExcepcion(ex);
+         exito=false;
+     }
+     
+     logger.debug(Utils.log(""
+             ,"\n###### correos= "     , correos
+             ,"\n###### cargarCorreosPorTramite ######"
+             ,"\n####################################"
+             ));
+     return SUCCESS;
+ }
+ 
      /*
      * Getters y setters
      */

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -7261,6 +7262,34 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 			return iCodAviso;
 		}catch (Exception e){
 			throw new ApplicationException("1", e);
+		}
+	}
+	
+	//Retorna un string con la lista de correos asociados al tramite separados por ";"
+	@Override
+	public String cargarCorreosPorTramite(String ntramite) throws ApplicationException {
+		try{
+			String correos="";
+			
+			List<Map<String,String>>lista=new ArrayList<Map<String,String>>();
+			lista = flujoMesaControlDAO.recuperarRequisitosDatosTramite(ntramite);
+			
+			Iterator<Map<String,String>> itLista = lista.listIterator();
+			Map<String, String> itemLista;
+			while(itLista.hasNext()) {
+				itemLista = itLista.next();
+				logger.debug("Recorriendo DSREQUISI: " +  itemLista.get("DSREQUISI") + " DSDATO: " + itemLista.get("DSDATO"));
+				//correos = itemLista.get("DSREQUISI").equals("CORREOS") ? itemLista.get("DSDATO") : break;
+				if (itemLista.get("DSREQUISI").equals("CORREOS")){
+					correos = itemLista.get("DSDATO");
+					break;
+				}
+			}
+			logger.debug("Retornando correos: " + correos);
+			return correos;
+			
+		}catch (Exception e){
+			throw new ApplicationException("Error de Aplicacion ", e);
 		}
 	}
 }
