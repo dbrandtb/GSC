@@ -13,6 +13,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -3362,43 +3363,34 @@ public class ComplementariosAction extends PrincipalCoreAction
                             ,"\n datos originales: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
                             ,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolizaEmitida
                             ));
-                    
-                   Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
-                   consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
-                  
-                try
-           		{
-                	String[] idEndosos = null;  
+                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
                     try
                		{
+                    	String[] idEndosos = null; 
                     	if(!slist1.isEmpty())
-                    	{
-                    		idEndosos = new String[slist1.size()];
-                    		int i=0;
-                    		for(Map<String,String>endoso:slist1)
-                  		    {
-                    			idEndosos[i]=endoso.get("id");
-                    			i++;
-                  		    }
-                    	}
+                       	{
+                       		idEndosos = new String[slist1.size()];
+                       		int i=0;
+                       		for(Map<String,String>endoso:slist1)
+                     		    {
+                       			idEndosos[i]=endoso.get("id");
+                       			i++;
+                     		    }
+                       	}
+                    	String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&endosos=",Arrays.toString(idEndosos).replace("[", "").replace("]", ""));
+                    	HttpUtil.sendPost(sigsRenovarEndososB,params);
                		}
                		catch (Exception ex)
                		{
-               			respuesta = Utils.manejaExcepcion(ex);
+               		 logger.error("Error actualizando endosos B", ex);
                		}
-                	
-           			String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&idEndosos=",idEndosos);
-           			HttpUtil.sendPost(sigsRenovarEndososB,params);
-           		}
-           		catch (Exception ex)
-           		{
-           			respuesta = Utils.manejaExcepcion(ex);
-           		}
-                   
+                    
+                   consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
+               
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
-                          vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
-                        Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                    vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
+                    Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
                 }
             } 
             catch (Exception ex) 
@@ -4676,26 +4668,33 @@ public class ComplementariosAction extends PrincipalCoreAction
 				));
 		try
 		{
+			String ntramite = map1.get("ntramite");
+			String cdusuari = map1.get("cdusuari");
 			cdunieco        = map1.get("cdunieco");
 			cdramo          = map1.get("cdramo");
 			estado          = map1.get("estado");
 			nmpoliza        = map1.get("nmpoliza");
-			String cdusuari = map1.get("cdusuari");
-			Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, estado, nmpoliza, cdusuari);
+			Map<String, String> infoPoliza = siniestrosManager.obtenerTramiteCompleto(ntramite);
 			
-			map2  = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,infoPoliza.get("cdsisrol"),infoPoliza.get("cduniext"),infoPoliza.get("ramo"),infoPoliza.get("nmpoliex"),infoPoliza.get("RENUNIEXT"),infoPoliza.get("RENRAMO"),infoPoliza.get("RENPOLIEX"),infoPoliza.get("feefecto"),infoPoliza.get("feproren"));
-			Iterator It = map2.entrySet().iterator();
-			slist1 = new ArrayList<Map<String, String>>();
-	        while (It.hasNext()) {
-	        	Map.Entry entry = (Map.Entry) It.next();
-	        	String idEndosoB = (String)entry.getKey();
-	        	String descEndosoB = (String)entry.getValue();
-	        	HashMap<String, String> agregar = new HashMap<String, String>();
-	        	agregar.put("renovar","true");
-	        	agregar.put("id",idEndosoB);
-	        	agregar.put("descripcion",descEndosoB);
-	        	slist1.add(agregar);
-	        }
+			if(StringUtils.isNotBlank(infoPoliza.get("RENUNIEXT")) && StringUtils.isNotBlank(infoPoliza.get("RENRAMO")) && StringUtils.isNotBlank(infoPoliza.get("RENPOLIEX")) && (infoPoliza.get("RENRAMO").contains("711") || infoPoliza.get("RENRAMO").contains("721")))
+			{
+				map2  = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,infoPoliza.get("cdsisrol"),infoPoliza.get("cduniext"),infoPoliza.get("ramo"),infoPoliza.get("nmpoliex"),infoPoliza.get("RENUNIEXT"),infoPoliza.get("RENRAMO"),infoPoliza.get("RENPOLIEX"),infoPoliza.get("feefecto"),infoPoliza.get("feproren"));
+				if(map2!=null && !map2.isEmpty())
+				{	
+					Iterator It = map2.entrySet().iterator();
+					slist1 = new ArrayList<Map<String, String>>();
+			        while (It.hasNext()) {
+			        	Map.Entry entry = (Map.Entry) It.next();
+			        	String idEndosoB = (String)entry.getKey();
+			        	String descEndosoB = (String)entry.getValue();
+			        	HashMap<String, String> agregar = new HashMap<String, String>();
+			        	agregar.put("renovar","true");
+			        	agregar.put("id",idEndosoB.trim());
+			        	agregar.put("descripcion",descEndosoB.trim());
+			        	slist1.add(agregar);
+			        }
+				}
+			}
 	    }
 		catch(Exception ex)
 		{
