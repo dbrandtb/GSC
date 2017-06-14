@@ -269,4 +269,6 @@ public interface CotizacionAutoManager
 			)throws Exception;
 	
 	public ManagerRespuestaSlistVO procesarCargaMasivaClientes(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception;
+	
+	public String cargarCorreosPorTramite (String ntramite) throws Exception;
 }
