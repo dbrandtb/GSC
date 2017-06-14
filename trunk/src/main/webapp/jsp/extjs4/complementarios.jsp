@@ -2655,8 +2655,8 @@ function _p29_emitirClicComplementarios()
                                                                                         cmt_modificado = replaceAll(cmt_modificado,'Ñ','NNNNN');
                                                                                         cmt_modificado = replaceAll(cmt_modificado,',','ccccc');
                                                                                         cmt_modificado = replaceAll(cmt_modificado,'&','qqq');
-                                                                                        cmt_modificado = replaceAll(cmt_modificado,'ü','uuuuuu');
-                                                                                        cmt_modificado = replaceAll(cmt_modificado,'Ü','UUUUUU');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'ü','rrrrr');
+                                                                                        cmt_modificado = replaceAll(cmt_modificado,'Ü','RRRRR');
                                                                                         Ext.Ajax.request(
                                                                                         {
                                                                                             url     : compleUrlGuardarCartoRechazo
