@@ -6,6 +6,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import mx.com.gseguros.exception.ApplicationException;
@@ -1287,77 +1288,52 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 			String renramo, String renpoliex, String feefect, String feproren) throws Exception 
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
-//			params.put("cdunieco"  , cdunieco);
-//			params.put("cdramo"    , cdramo);
-//			params.put("nmpoliza"  , nmpoliza);
-//			params.put("cdusuari"  , cdusuari);
-//			params.put("cdtipsit"  , cdtipsit);
-//			params.put("cdsisrol"  , cdsisrol);
-//			params.put("cduniext"  , cduniext);
-//			params.put("ramo"      , ramo);
-//			params.put("nmpoliex"  , nmpoliex);
-//			params.put("renuniext" , renuniext);
-//			params.put("renramo"   , renramo);
-//			params.put("renpoliex" , renpoliex);
-//			params.put("feefect"   , feefect);
-//			params.put("feproren"  , feproren);
-//		logger.debug(
-//				new StringBuilder()
-//				.append("\n***************************")
-//				.append("\n****** cargaEndososB ******")
-//				.append("\n*****params=").append(params)
-//				.append("\n***************************")
-//				.toString()
-//				);
-//    	Map<String,Object>procedureResult=ejecutaSP(new cargaEndososBSP(getDataSource()),params);
-//		List<Map<String,String>>listaAux=(List<Map<String,String>>)procedureResult.get("pv_registro_o");
-//		if(listaAux==null||listaAux.size()==0)
-//		{
-//			logger.warn("*** sin ensos B para la poliza a emitir ****");
-//		}
-//		else if(listaAux.size()>1)
-//		{
-//			throw new ApplicationException("Datos repetidos para la poliza a emitir");
-//		}
-        params = new HashMap<String, String>();
-        params.put("12" , "Texto Endoso 12");
-        params.put("13" , "Texto Endoso 13");
-        params.put("14" , "Texto Endoso 14");
-        params.put("15" , "Texto Endoso 15");
-        params.put("16" , "Texto Endoso 16");
-        params.put("17" , "Texto Endoso 17");
-        params.put("18" , "Texto Endoso 18"); 
-        params.put("1"  , "Texto Endoso 1");
-        params.put("20" , "Texto Endoso 20");
-        return params;
-//        return listaAux.get(0);
+			params.put("inNumsuc " , renuniext);
+			params.put("inNumram " , renramo);
+			params.put("inNumpol " , renpoliex);
+			params.put("inMotivo " , "75");
+		logger.debug(
+				new StringBuilder()
+				.append("\n********************************")
+				.append("\n****** spRecuperaEndososB ******")
+				.append("\n******params=").append(params)
+				.append("\n********************************")
+				.toString()
+				);
+			try 
+			{
+				Map<String,Object>procedureResult=ejecutaSP(new cargaEndososBSP(getDataSource()),params);
+				@SuppressWarnings("unchecked")
+				Map<String,String>listaAux=(Map<String,String>)procedureResult.get("rs");
+				if(listaAux==null||listaAux.size()==0)
+				{
+					logger.warn("*** sin ensos B para la poliza a emitir ****");
+				}
+		        return listaAux;
+			} catch (Exception e)
+			{
+				logger.error("Mensaje de respuesta de sprevierteemision: " + e);
+				return null;
+			}
         }
     
     protected class cargaEndososBSP extends StoredProcedure{
         protected cargaEndososBSP(DataSource dataSource){
-            super(dataSource, "cargaEndososB");
-            declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmpoliza" ,Types.SMALLINT));
-			declareParameter(new SqlParameter("cdusuari" ,Types.SMALLINT));
-			declareParameter(new SqlParameter("cdtipsit" ,Types.INTEGER));
-			declareParameter(new SqlParameter("cdsisrol" ,Types.DATE));
-			declareParameter(new SqlParameter("cduniext" ,Types.DATE));
-			declareParameter(new SqlParameter("ramo"     ,Types.DATE));
-			declareParameter(new SqlParameter("nmpoliex" ,Types.SMALLINT));
-			declareParameter(new SqlParameter("renuniext",Types.SMALLINT));
-			declareParameter(new SqlParameter("renramo"  ,Types.INTEGER));
-			declareParameter(new SqlParameter("renpoliex"  ,Types.INTEGER));
-			declareParameter(new SqlParameter("feefect"  ,Types.INTEGER));
-			declareParameter(new SqlParameter("feproren"  ,Types.INTEGER));
-			String[] cols=new String[]
-					{
-					 "idEndososB"
-					,"descripcion"
-					};
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            super(dataSource, "spRecuperaEndososB");
+            declareParameter(new SqlParameter("inNumsuc ", Types.SMALLINT));
+			declareParameter(new SqlParameter("inNumram ", Types.SMALLINT));
+			declareParameter(new SqlParameter("inNumpol ", Types.INTEGER));
+			declareParameter(new SqlParameter("inMotivo " , Types.SMALLINT));
+			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Map<String,String>>(){  
+                @Override  
+                 public Map<String,String> extractData(ResultSet rs) throws SQLException, DataAccessException {  
+                	Map<String,String>result=new LinkedHashMap<String,String>();
+                    while(rs.next()){  
+                        result.put(rs.getString(1),rs.getString(2));
+                    }  
+                    return result;  
+                    }
+                }));
 			compile();
         }
     }
