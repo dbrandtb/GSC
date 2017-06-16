@@ -15,8 +15,6 @@ var recargaGridUsuarios;
 var _UrlBusquedaUsuarios        = '<s:url namespace="/catalogos"    action="busquedaUsuarios" />';
 var _URL_LOADER_NUEVO_USUARIO   = '<s:url namespace="/catalogos"    action="includes/agregaUsuarios" />';
 var _URL_LOADER_EDITAR_ROLES    = '<s:url namespace="/catalogos"    action="includes/editarRolesUsuario" />';
-var URL_ASIGNAR_IMPRESORA    = '<s:url namespace="/catalogos"    action="includes/asignarImpresorasUsuario" />';
-var URL_NUEVA_IMPRESORA    = '<s:url namespace="/catalogos"    action="includes/nuevaImpresora" />';
 var _URL_LOADER_EDITAR_PRODUCTOS= '<s:url namespace="/catalogos"    action="includes/editarProductosAgente" />';
 var _UrlActivarDesactivarUsuario= '<s:url namespace="/catalogos"    action="activaDesactivaUsuario" />';
 var _UrlCambiaPasswordUsuario   = '<s:url namespace="/catalogos"    action="cambiarPasswordUsuario" />';
@@ -166,12 +164,7 @@ Ext.apply(Ext.form.field.VTypes, {
             id: 'usuariosbbar'
             
         },
-        
-        //tbar: []
-        dockedItems:[
-                     {
-                         xtype:'toolbar',
-                         items:[{
+        tbar: [{
                              icon    : '${ctx}/resources/fam3icons/icons/add.png',
                              text    : 'Agregar usuario',
                              handler : function()
@@ -557,105 +550,14 @@ Ext.apply(Ext.form.field.VTypes, {
                                      showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
                                  }
                              }
-                         },
-                         '-',
-                         {
-                         	icon    : '${ctx}/resources/images/printButton.png',
-                             text    : 'Asignar Impresoras',
-                             handler : function(){
-                             	 var model =  gridUsuarios.getSelectionModel();
-                             	 
-                                  if(!model.hasSelection()){
-                                 	 showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
-                                 	 return;
-                                  }
-                             	 var record = model.getLastSelected();
-                             	 
-                             	windowLoader = Ext.create('Ext.window.Window',
-                                         {
-                                             title        : 'Asignar impresoras al usuario: ' + record.get('cdUsuario')
-                                             ,itemId		 : 'asignaImp'
-                                             ,modal       : true
-                                             ,buttonAlign : 'center'
-                                             ,width       : 500
-                                             ,height      : 350
-                                             ,autoScroll  : true
-                                             ,loader      :
-                                             {
-                                                 url       : URL_ASIGNAR_IMPRESORA
-                                                 ,scripts  : true
-                                                 ,autoLoad : true
-                                                 ,loadMask : true
-                                                 ,ajaxOptions: {
-                                                     method   : 'POST'
-                                                 },
-                                                 params: {
-                                                     'params.cdusuario': record.get('cdUsuario')
-                                                     
-                                                 },
-                                                 callback: function(records, operation, success) {
-                                     	    		windowLoader.setLoading(false);// Aqui se desactiva el loading de la ventana
-                                     	        }
-                                             }
-                                         }).show();
-                             	        windowLoader.setLoading(true);//Aqui se activa el loading de la ventana
-                             	
-                             }
-                         },
-                         
-                         ,'->',{
-                             icon    : '${ctx}/resources/fam3icons/icons/award_star_silver_2.png',
-                             text    : 'Creaci&oacute;n de Roles',
-                             hidden  : true,
-                             handler : function(){
-                                         crearEditarRoles();
-                                     }
-                         }]
-                     },
-                     {
-                         xtype:'toolbar',
-                         items:[{
-                         	icon    : '${ctx}/resources/images/printButton.png',
-                            text    : 'Agregar/Editar Impresoras',
-                            handler : function(){
-                            	 var model =  gridUsuarios.getSelectionModel();
-                            	 
-                                 
-                            	 var record = model.getLastSelected();
-                            	 
-                            	windowLoader = Ext.create('Ext.window.Window',
-                                        {
-                                            title        : 'Agregar/Editar Impresoras' 
-                                            ,itemId		 : 'asignaImp'
-                                            ,modal       : true
-                                            ,buttonAlign : 'center'
-                                            ,width       : 500
-                                            ,height      : 350
-                                            ,autoScroll  : true
-                                            ,loader      :
-                                            {
-                                                url       : URL_NUEVA_IMPRESORA
-                                                ,scripts  : true
-                                                ,autoLoad : true
-                                                ,loadMask : true
-                                                ,ajaxOptions: {
-                                                    method   : 'POST'
-                                                },
-                                                params: {
-                                                    'params.cdusuario': null
-                                                    
-                                                },
-                                                callback: function(records, operation, success) {
-                                    	    		windowLoader.setLoading(false);// Aqui se desactiva el loading de la ventana
-                                    	        }
-                                            }
-                                        }).show();
-                            	        windowLoader.setLoading(true);//Aqui se activa el loading de la ventana
-                            	
-                            }
-                        }]
-                     }
-                 ]
+        },'->',{
+            icon    : '${ctx}/resources/fam3icons/icons/award_star_silver_2.png',
+            text    : 'Creaci&oacute;n de Roles',
+            hidden  : true,
+            handler : function(){
+                        crearEditarRoles();
+                    }
+        }]
     });
     
     

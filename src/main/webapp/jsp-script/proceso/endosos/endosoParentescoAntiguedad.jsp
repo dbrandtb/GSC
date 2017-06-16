@@ -1,5 +1,4 @@
 <%@ include file="/taglibs.jsp"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script>
 ///////////////////////
 ////// variables //////
@@ -41,10 +40,6 @@ var _storeParentescos;
 var _gridAsegurados;
 
 debug('input',pantallaValositInput);
-
-var _endParen_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_endParen_flujo:',_endParen_flujo);
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -117,12 +112,6 @@ function endvalbasSumit(form,confirmar){
             }
             ,slist1 : slist1
         }
-    
-    if(!Ext.isEmpty(_endParen_flujo))
-    {
-        json.flujo = _endParen_flujo;
-    }
-    
     debug('datos que se enviaran:',json);
         
 	_setLoading(true,form);
@@ -143,32 +132,18 @@ function endvalbasSumit(form,confirmar){
                     {
                         title   : 'Endoso generado',
                         msg     : json.mensaje,
-                        buttons : Ext.Msg.OK,
-                        fn      : function()
-                        {
-                            if(confirmar=='si')
-                            {
-                                var callbackRemesa = function()
-                                {
-                                    //////////////////////////////////
-                                    ////// usa codigo del padre //////
-                                    /*//////////////////////////////*/
-                                    marendNavegacion(2);
-                                    /*//////////////////////////////*/
-                                    ////// usa codigo del padre //////
-                                    //////////////////////////////////
-                                };
-                                _generarRemesaClic(
-                                    true
-                                    ,pantallaValositInput['cdunieco']
-                                    ,pantallaValositInput['cdramo']
-                                    ,pantallaValositInput['estado']
-                                    ,pantallaValositInput['nmpoliza']
-                                    ,callbackRemesa
-                                );
-                            }
-                        }
+                        buttons : Ext.Msg.OK
                     });
+                    if(confirmar=='si')
+                    {
+                    	//////////////////////////////////
+                        ////// usa codigo del padre //////
+                        /*//////////////////////////////*/
+                        marendNavegacion(2);
+                        /*//////////////////////////////*/
+                        ////// usa codigo del padre //////
+                        //////////////////////////////////
+                    }
                 }
                 else
                 {
@@ -443,7 +418,6 @@ Ext.onReady(function()
                         ,width       : 600
                         ,height      : 400
                         ,autoScroll  : true
-                        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
                         ,loader      :
                         {
                             url       : pantallaValositUrlDoc
@@ -543,6 +517,5 @@ Ext.onReady(function()
     ////// cargador //////
     //////////////////////
 });
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="maindivpantallavalosit" style="min-height:150px;"></div>

@@ -9,7 +9,11 @@
 var _p39_urlRecuperacionSimpleLista = '<s:url namespace="/emision"         action="recuperacionSimpleLista"           />';
 var _p39_urlGuardarTvalositEndoso   = '<s:url namespace="/endosos"         action="guardarTvalositEndoso"             />';
 var _p39_urlConfirmarEndoso         = '<s:url namespace="/endosos"         action="guardarEndosoAjusteSiniestralidad" />';
+var url_PantallaPreview             = '<s:url namespace="/endosos"         action="includes/previewEndosos"           />';
+var _p48_urlMovimientos             = '<s:url namespace="/movimientos"     action="ejecutar"                          />';
 var _p39_urlRecuperacionSimple      = '<s:url namespace="/emision"         action="recuperacionSimple"                />';
+var _p30_urlViewDoc                 = '<s:url namespace="/documentos"      action="descargaDocInline"                 />';
+var _RUTA_DOCUMENTOS_TEMPORAL       = '<s:text name="ruta.documentos.temporal"                                        />';
 ////// urls //////
 
 ////// variables //////
@@ -228,12 +232,6 @@ Ext.onReady(function()
                 ,plugins: [
                        Ext.create('Ext.grid.plugin.CellEditing', {
                            clicksToEdit: 1
-                           , listeners: {
-                                beforeedit: function(e, editor){
-                                    if (editor.colIdx  == 0)
-                                        return false;
-                                }
-                            }
                        })
                    ]
                 ,columns   : _p39_coberturaColumns

@@ -8,7 +8,6 @@
 ////// urls //////
 
 ////// variables //////
-//var json;
 var store;
 var win;
 var mesConUrlDocu                   = '<s:url namespace="/documentos"  action="ventanaDocumentosPoliza"     />';
@@ -28,21 +27,19 @@ var itemsGrid = [<s:property value="imap1.itemsGrid" escapeHtml="false" />];
 var itemsGridModel = [<s:property value="imap1.itemsGridModel" escapeHtml="false" />];
 
 itemsGrid.push({xtype : 'actioncolumn'
-				,width:50
 		        ,icon : '${icons}page_copy.png'
 		        ,tooltip : 'clonacion total'
 		        ,handler : function(itemsGrid, rowIndex)
                     {   
 		        	_mask('Procesando...');
 		        	  var values = store.getAt(rowIndex).getData();	
-  		        	  debug("rec",values);
-  		        	  
+  		        	  debug("rec",values);		        		
 		            	   Ext.Ajax.request({
                             url     : '<s:url namespace="/endosos" action="generarCopiaCompleta" />'
                             ,params :
                             {
                                 'params.cdunieco'    : values.cdunieco
-                                ,'params.cdramo'     : json.slist1[rowIndex].cdramo
+                                ,'params.cdramo'     : values.cdramo
                                 ,'params.cdtipsit'   : values.cdtipsit
                                 ,'params.estado' 	 : values.estado
                                 ,'params.nmpoliza' 	 : values.nmpoliza
@@ -51,7 +48,7 @@ itemsGrid.push({xtype : 'actioncolumn'
                                 ,'params.status' 	 : values.status
                                 ,'params.ferecepc' 	 : Ext.Date.format(values.ferecepc,'d/m/Y')
                                 ,'params.fecstatus'  : Ext.Date.format(values.fecstatus,'d/m/Y')
-                                ,'params.TIPOFLOT'   : json.slist1[rowIndex].tipoflot
+                                ,'params.TIPOFLOT'   : values.tipoflot
                             }
                             ,success : function(response)
                             {
@@ -68,7 +65,6 @@ itemsGrid.push({xtype : 'actioncolumn'
                                     	        ,width       : 600
                                     	        ,height      : 400
                                     	        ,autoScroll  : true
-                                    	        ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
                                     	        ,loader      :
                                     	        {
                                     	            url       : mesConUrlDocu
@@ -91,11 +87,9 @@ itemsGrid.push({xtype : 'actioncolumn'
                                     	            	text     : 'continuar'
                                     	            	,icon    : '${icons}accept.png'
                                     	            	,handler : function(){
-                                    	            		debug('json.params', json.params);
                                     	            		if(json.params.redireccion == 'S'){
 							                                	if(values.cdtipsit == 'MSC')
 							                                	{
-							                                		debug('entro al if de values cdtipsit MSC');
 							                                        Ext.create('Ext.form.Panel').submit(
 							                                        {
 							                                            url             : mesConUrlComGrupo
@@ -116,7 +110,6 @@ itemsGrid.push({xtype : 'actioncolumn'
 							                                    }
 							                                    else
 							                                    {
-							                                    	debug('entro al if de values cdtipsit');
 							                                        Ext.create('Ext.form.Panel').submit(
 							                                        {
 							                                            url             : mesConUrlComGrupo2
@@ -161,20 +154,18 @@ itemsGrid.push({xtype : 'actioncolumn'
 itemsGrid.push(
     {
         xtype : 'actioncolumn'
-        ,width:50
         ,icon : '${icons}page_white_copy.png'
         ,tooltip : 'clonacion de condiciones'
         ,handler : function(itemsGrid, rowIndex)
         {
             var values = store.getAt(rowIndex).getData();
             debug("rec",values);
-            debug("entrando al boton");
 			Ext.Ajax.request({
 			    url     : '<s:url namespace="/endosos" action="clonarPolizaCenso" />'
 			    ,params :
 				{
 					'params.cdunieco'    : values.cdunieco
-					,'params.cdramo'     : json.slist1[rowIndex].cdramo
+					,'params.cdramo'     : values.cdramo
 					,'params.cdtipsit'   : values.cdtipsit
 					,'params.estado' 	 : values.estado
 					,'params.nmpoliza' 	 : values.nmpoliza
@@ -183,13 +174,12 @@ itemsGrid.push(
 					,'params.status' 	 : values.status
 					,'params.ferecepc' 	 : Ext.Date.format(values.ferecepc,'d/m/Y')
 					,'params.fecstatus'  : Ext.Date.format(values.fecstatus,'d/m/Y')
-					,'params.TIPOFLOT'   : json.slist1[rowIndex].tipoflot
+					,'params.TIPOFLOT'   : values.tipoflot
 				}
 				,success : function(response)
 				{
 					_unmask();
 					var json = Ext.decode(response.responseText);
-					debug("respondio poliza clonacion censo");
 					debug("json",json);
 					if(json.success==true){
 						/* debug("params",json.params); */
@@ -284,24 +274,15 @@ itemsGrid.push(
 					                        ,handler : function(me)
 					                        {
 					                            debug('>complemento clonacion button click');
-					                            debug(values.cdunieco);
-					                            debug(json.params);
-					                            debug(json.params.cdramo);
-					                            debug(values.estado);
-					                            debug(values.nmpoliza);
-					                            debug(values.cdunieco);
-					                            debug(values.cdramo);
-					                            debug(json.params.nmpolizaNueva);
-					                            debug(values.cdtipsit);					                            
 					                            var form = me.up('form');					                            
 					                            var params =
 					                            {					                                
 					                                'params.cduniecoOrig'  : values.cdunieco
-					                                ,'params.cdramoOrig'   : json.params.cdramo
+					                                ,'params.cdramoOrig'   : values.cdramo
 					                                ,'params.estadoOrig'   : values.estado
 					                                ,'params.nmpolizaOrig' : values.nmpoliza
 					                                ,'params.cdunieco'     : values.cdunieco
-					                                ,'params.cdramo'       : json.params.cdramo
+					                                ,'params.cdramo'       : values.cdramo
 					                                ,'params.estado'       : 'W'
 					                                ,'params.nmpoliza'     : json.params.nmpolizaNueva
 					                                ,'params.cdtipsit'     : values.cdtipsit
@@ -463,7 +444,6 @@ itemsGrid.push(
 						                                                            { 
 																						_fieldById('censoWin').close();
 																						me.up('window').close();
-																						debug('boton aceptar y continuar');
 						                                                                _mask('Procesando');
 						                                                                Ext.Ajax.request(
 						                                                                {
@@ -471,7 +451,7 @@ itemsGrid.push(
                             																,params :
                             																{
                                 														 	    'params.cdunieco'      : values.cdunieco
-																								,'params.cdramo'       : json.params.cdramo
+																								,'params.cdramo'       : values.cdramo
 																								//,'params.estado'     : json.params.estado
 																								,'params.estado'       : 'W'
 																								,'params.nmpoliza'     : json.params.nmpolizaNueva
@@ -495,7 +475,6 @@ itemsGrid.push(
 																											,width       : 600
 																											,height      : 400
 																											,autoScroll  : true
-																											,cls         : 'VENTANA_DOCUMENTOS_CLASS'
 																											,loader      :
 																											{
 																												url       : mesConUrlDocu
@@ -683,7 +662,6 @@ Ext.onReady(function()
         title     : 'Panel principal'
         ,panelPri : 'S'
         ,renderTo : '_p100_divpri'
-        ,id		  : '_p100_formulario'
         ,defaults :
         {
             style : 'margin:5px;'
@@ -731,8 +709,7 @@ Ext.onReady(function()
                                 ,success : function(response)
                                 {
                                     _unmask();
-                                    //var json = Ext.decode(response.responseText);
-                                    json = Ext.decode(response.responseText);
+                                    var json = Ext.decode(response.responseText);
                                     if(json.success==true)
                                     {
                                     	store.removeAll();
@@ -782,6 +759,7 @@ Ext.onReady(function()
  
 });
 ////// funciones //////
+
 ////// funciones //////
 </script>
 </head>

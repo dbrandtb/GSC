@@ -35,10 +35,6 @@ var _7_fieldFechaEndoso;
 var _7_urlGuardar = '<s:url namespace="/endosos" action="guardarEndosoCopago" />';
 
 debug('_7_smap1:',_7_smap1);
-
-var _p7_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_p7_flujo:',_p7_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -242,12 +238,6 @@ function _7_confirmar()
                 ,copago      : _7_formCopago.items.items[1].getValue()
             }
         }
-        
-        if(!Ext.isEmpty(_p7_flujo))
-        {
-            json.flujo = _p7_flujo;
-        }
-        
         debug('datos que se enviaran:',json);
         _setLoading(true,_7_panelPri);
         Ext.Ajax.request(
@@ -261,28 +251,15 @@ function _7_confirmar()
                 debug('datos recibidos:',json);
                 if(json.success==true)
                 {
-                    var callbackRemesa = function()
-                    {
-                        //////////////////////////////////
-                        ////// usa codigo del padre //////
-                        /*//////////////////////////////*/
-                        marendNavegacion(2);
-                        /*//////////////////////////////*/
-                        ////// usa codigo del padre //////
-                        //////////////////////////////////
-                    };
+                    mensajeCorrecto('Endoso generado',json.mensaje);
                     
-                    mensajeCorrecto('Endoso generado',json.mensaje,function()
-                    {
-                        _generarRemesaClic(
-                            true
-                            ,_7_smap1.CDUNIECO
-                            ,_7_smap1.CDRAMO
-                            ,_7_smap1.ESTADO
-                            ,_7_smap1.NMPOLIZA
-                            ,callbackRemesa
-                        );
-                    });
+                    //////////////////////////////////
+                    ////// usa codigo del padre //////
+                    /*//////////////////////////////*/
+                    marendNavegacion(2);
+                    /*//////////////////////////////*/
+                    ////// usa codigo del padre //////
+                    //////////////////////////////////
                 }
                 else
                 {
@@ -299,6 +276,5 @@ function _7_confirmar()
 };
 ////// funciones //////
 ///////////////////////
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="_7_divPri" style="height:1000px;"></div>

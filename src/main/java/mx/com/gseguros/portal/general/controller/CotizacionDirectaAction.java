@@ -47,10 +47,6 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 	
 	private String detalleRespuesta;
 	
-	private static final String PORREDAU_DEFAULT = "0";
-	
-	private static final String PORPARTI_DEFAULT = "100";
-	
 	/**
 	 * Lista que recibe los valores del grid de vehículos para flotillas
 	 */
@@ -126,22 +122,16 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 					fefin, 
 					params.get("fesolici"),
 					params.get("cdpersonCli"), 
-					params.get("nmorddomCli"), 
+					/*params.get("nmorddomCli"),*/ 
 					params.get("cdideperCli"),
 					noTarificar, 
 					conIncisos, 
 					list, 
 					params.containsKey("movil"),
 					tvalopol, 
-					params.get("cdagenteAux"), 
-					userVO
-					,""//"fromSigs"
-					,""//"parame.get(\"RENUNIEXT\")"
-					,""//"parame.get(\"RENRAMO\")"
-					,""//"parame.get(\"RENPOLIEX\")"
-					,""//"ntramite"
+					params.get("cdagenteAux")/*, 
+					userVO*/
 					);
-			resp= cotizacionManager.cotizarContinuacion(params.get("cdusuari"),params.get("cdunieco"),params.get("cdramo"), params.get("cdelemento"),params.get("cdtipsit"),resp.getSmap().get("nmpoliza"),params.containsKey("movil"));
 			
 			// Se vacian los datos de entrada para no devolverlos de nuevo:
 			params = new HashMap<String, String>();
@@ -192,16 +182,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
         	Utils.validate(params.get("fechaInicio"),   "No existe el par\u00E1metro params.fechaInicio");
         	Utils.validate(params.get("fechaFin"),      "No existe el par\u00E1metro params.fechaFin");
         	Utils.validate(params.get("cdagenteExt"),   "No existe el par\u00E1metro params.cdagenteExt");
-        	Utils.validate(params.get("sucursal"),      "No exsite el par\u00E1metro params.sucursal");
-        	Utils.validate(params.get("ramo"),          "No exsite el par\u00E1metro params.ramo");
-        	Utils.validate(params.get("poliza"),        "No exsite el par\u00E1metro params.poliza");
         	
-        	String swrenovacion = "S".equals(params.get("swrenovacion")) ? "S" : "N";
-        	
-        	//DBB
-        	String porparti = StringUtils.isNotBlank(params.get("porparti")) ? params.get("porparti") : PORPARTI_DEFAULT;
-        	String porredau = StringUtils.isNotBlank(params.get("porredau")) ? params.get("porredau") : PORREDAU_DEFAULT;
-        	        	
         	// Se llenan datos:
     		boolean esFlotilla  = StringUtils.isNotBlank(params.get("flotilla"))&&params.get("flotilla").equalsIgnoreCase("si");
     		String tipoflot    = params.get("tipoflot");
@@ -215,10 +196,7 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
     				params.get("cdusuari"), params.get("cdsisrol"), params.get("cdelemento"),
     				esFlotilla, tipoflot, params.get("cdpersonCli"), params.get("cdideperCli"),
     				getText("rdf.cotizacion.nombre."+params.get("cdtipsit")),
-    				getText("rdf.cotizacion.flot.nombre."+params.get("cdtipsit")), userVO,
-    				swrenovacion, params.get("sucursal"), params.get("ramo"), params.get("poliza"), 
-    				porparti, porredau
-    				);
+    				getText("rdf.cotizacion.flot.nombre."+params.get("cdtipsit"))/*, userVO*/);
     		
     		params.put("ntramite", ntramite);
     		
@@ -273,7 +251,6 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 			String fefin       = params.get("fefin");
 			String cdagente    = params.get("cdagente");
 			String cdpersonCli = params.get("cdpersonCli");
-			String nmorddomCli = params.get("nmorddomCli");
 			String cdideperCli = params.get("cdideperCli");
 			String tipoflot    = params.get("tipoflot");
 			
@@ -316,7 +293,6 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 					,fefin
 					,cdagente
 					,cdpersonCli
-					,nmorddomCli
 					,cdideperCli
 					,list
 					,listaValoresSituac
@@ -324,11 +300,6 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 					,noTarificar
 					,tipoflot
 					,tvalopol
-					,userVO
-					,""//cduniext
-					,""//renramo
-					,""//nmpoliex
-					,""//ntramite
 					);
 			
 			// Se vacian los datos de entrada para no devolverlos de nuevo:
@@ -357,67 +328,6 @@ public class CotizacionDirectaAction extends PrincipalCoreAction {
 				,"\n##############################"
 				));
 		return SUCCESS;
-	}
-	
-	
-	/**
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	@Action(value="agregarAsegurado",
-        results = {
-            @Result(name="success", type="json")
-        }
-    )
-	public String agregarAsegurado() throws Exception {
-	    
-        try {
-            
-            logger.debug("Inicio agregarAsegurado...");
-        
-            // Se validan datos:
-            Utils.validate(params, "No hay par\u00E1metros");
-            Utils.validate(params.get("cdunieco"),   "No existe el par\u00E1metro params.cdunieco");
-            Utils.validate(params.get("cdramo"),     "No existe el par\u00E1metro params.cdramo");
-            Utils.validate(params.get("estado"),     "No existe el par\u00E1metro params.estado");
-            Utils.validate(params.get("nmpoliza"),   "No existe el par\u00E1metro params.nmpoliza");
-            Utils.validate(params.get("nmsuplem"),   "No existe el par\u00E1metro params.nmsuplem");
-            Utils.validate(params.get("feefecto"),   "No existe el par\u00E1metro params.feefecto");
-            Utils.validate(params.get("dsnombre"),   "No existe el par\u00E1metro params.dsnombre");
-            Utils.validate(params.get("paterno"),    "No existe el par\u00E1metro params.paterno");
-            Utils.validate(params.get("materno"),    "No existe el par\u00E1metro params.materno");
-            Utils.validate(params.get("cdrfc"),      "No existe el par\u00E1metro params.cdrfc");
-            Utils.validate(params.get("sexo"),       "No existe el par\u00E1metro params.sexo");
-            Utils.validate(params.get("fenacimi"),   "No existe el par\u00E1metro params.fenacimi");
-            Utils.validate(params.get("cdestciv"),   "No exsite el par\u00E1metro params.cdestciv");
-            Utils.validate(params.get("dsocupacion"),"No existe el par\u00E1metro params.dsocupacion");
-            Utils.validate(params.get("cdtipsit"),   "No exsite el par\u00E1metro params.cdtipsit");
-            Utils.validate(params.get("cdplan"),     "No existe el par\u00E1metro params.cdplan");
-            Utils.validate(params.get("nmorddom"),   "No existe el par\u00E1metro params.nmorddom");
-            Utils.validate(params.get("cdagrupa"),   "No existe el par\u00E1metro params.cdagrupa");
-            
-            String dsnombre1 = StringUtils.isNotBlank(params.get("dsnombre1")) ? params.get("dsnombre1") : ""; 
-            
-            cotizacionManager.agregarAsegurado(params.get("cdunieco"), params.get("cdramo"), params.get("estado"),
-                params.get("nmpoliza"), params.get("nmsuplem"), params.get("feefecto"), params.get("dsnombre"),
-                dsnombre1, params.get("paterno"), params.get("materno"), params.get("cdrfc"),
-                params.get("sexo"), params.get("fenacimi"), params.get("cdestciv"), params.get("dsocupacion"),
-                params.get("cdtipsit"), params.get("cdplan"), params.get("nmorddom"), params.get("cdagrupa"), params.get("otvalor01"), params.get("otvalor02"),
-                params.get("otvalor03"), params.get("otvalor04"), params.get("otvalor05"), params.get("otvalor06"),
-                params.get("otvalor07"), params.get("otvalor08"), params.get("otvalor09"), params.get("otvalor10"));
-            
-            respuesta = "Asegurado agregado";
-            success   = true;
-        } catch(Exception e) {
-            logger.error("Error:", e);
-            respuesta = Utils.manejaExcepcion(e);
-            detalleRespuesta = ExceptionUtils.getStackTrace(e);
-        }
-        
-        logger.debug("Fin agregarAsegurado...");
-        
-	    return SUCCESS;
 	}
 	
 	// Getters y setters
