@@ -4688,7 +4688,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			        	String idEndosoB = (String)entry.getKey();
 			        	String descEndosoB = (String)entry.getValue();
 			        	HashMap<String, String> agregar = new HashMap<String, String>();
-			        	agregar.put("renovar","true");
+			        	agregar.put("renovar","false");
 			        	agregar.put("id",idEndosoB.trim());
 			        	agregar.put("descripcion",descEndosoB.trim());
 			        	slist1.add(agregar);
