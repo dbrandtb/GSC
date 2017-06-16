@@ -14,7 +14,7 @@ var _p29_urlCargarRetroactividadSuplemento = '<s:url namespace="/emision"    act
 var _p29_urlMovimientoMpoliper             = '<s:url namespace="/emision"    action="movimientoMpoliper"                   />';
 var _p29_urlGuardar                        = '<s:url namespace="/emision"    action="guardarComplementariosAutoIndividual" />';
 var _p29_urlRecotizar                      = '<s:url namespace="/"           action="recotizar"                            />';
-var _p29_urlEmitir                         = '<s:url namespace="/"           action="emitirAutosInd"                       />';
+var _p29_urlEmitir                         = '<s:url namespace="/"           action="emitir"                               />';
 var _p29_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"              />';
 var _p29_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                   />';
 var _p29_urlCotizacionAutoIndividual       = '<s:url namespace="/emision"    action="cotizacionAutoIndividual"             />';
