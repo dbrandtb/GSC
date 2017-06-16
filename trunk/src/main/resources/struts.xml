@@ -295,11 +295,14 @@
         <action name="recotizar" class="beanDatosComplementarios" method="retarificar">
             <result name="success" type="json" />
         </action>
-        <action name="emitir" class="beanDatosComplementarios" method="emitir">
+        <action name="emitirAutosInd" class="beanDatosComplementarios" method="emitir">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
             </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        <action name="emitir" class="beanDatosComplementarios" method="emitir">
             <result name="success" type="json" />
         </action>
         <action name="cargaEndososB" class="beanDatosComplementarios" method="cargaEndososB">
