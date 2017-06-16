@@ -24,11 +24,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -65,7 +66,6 @@ import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.Reporte;
-import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.ReportesManager;
@@ -106,35 +106,35 @@ public class CotizacionAction extends PrincipalCoreAction
 	private static SimpleDateFormat renderHora       = new SimpleDateFormat  ("HH:mm");
 	
 	private transient CatalogosManager       catalogosManager;
-	private ConsultasManager                  consultasManager;
-	private String                            error;
-	private Map<String,Item>                  imap;
+	private ConsultasManager                 consultasManager;
+	private String                           error;
+	private Map<String,Item>                 imap;
 	private transient KernelManagerSustituto kernelManager;
-	private PantallasManager                  pantallasManager;
-	private List<Map<String,String>>          slist1;
-	private List<Map<String,String>>          slist2;
-	private Map<String,String>                smap1;
-	private Map<String,String>                params;
-	private StoredProceduresManager           storedProceduresManager;
-	private NadaService          			   nadaService;
-	private TipoCambioDolarGSService          tipoCambioService;
+	private PantallasManager                 pantallasManager;
+	private List<Map<String,String>>         slist1;
+	private List<Map<String,String>>         slist2;
+	private Map<String,String>               smap1;
+	private Map<String,String>               params;
+	private StoredProceduresManager          storedProceduresManager;
+	private NadaService          			 nadaService;
+	private TipoCambioDolarGSService         tipoCambioService;
 	private transient Ice2sigsService        ice2sigsService;
-	private AgentePorFolioService             agentePorFolioService;
+	private AgentePorFolioService            agentePorFolioService;
 	private boolean                          success;
-	private String                            respuesta;
-	private String                            respuestaOculta = null;
+	private String                           respuesta;
+	private String                           respuestaOculta = null;
 	private boolean                          exito           = false;
-	private File                              censo;
-	private String                            censoFileName;
-	private String                            censoContentType;
-	private List<Map<String,Object>>          olist1;
-	private CotizacionManager                 cotizacionManager;
-	private SiniestrosManager                 siniestrosManager;
-	private FlujoVO                           flujo;
-	private String                            start;
-	private String                            limit;
-	private String                            total;
-	private String                            saMed;
+	private File                             censo;
+	private String                           censoFileName;
+	private String                           censoContentType;
+	private List<Map<String,Object>>         olist1;
+	private CotizacionManager                cotizacionManager;
+	private SiniestrosManager                siniestrosManager;
+	private FlujoVO                          flujo;
+	private String start;
+	private String limit;
+	private String total;
+	private String saMed;
 	
 	@Autowired
 	private EmisionManager emisionManager;
@@ -158,7 +158,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private RecuperacionSimpleManager recuperacionSimpleManager;
 	
 	@Autowired
-	private EndososManager endososManager;
+	private EndososManager           endososManager;
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
@@ -168,39 +168,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	
 	@Autowired
     private PersonasManager personasManager;
-	
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-
-	@Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-	
-	@Value("${sigs.facultaDatosPolizaSicaps.url}")
-    private String sigsFacultaDatosPolizaSicapsUrl;	
-	
-	@Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-	
-	@Value("${ruta.documentos.temporal}")
-    private String rutaDocumentosTemporal;
-	
-	@Value("${user.server.layouts}")
-    private String userServerLayouts;	
-
-	@Value("${pass.server.layouts}")
-    private String passServerLayouts;	
-
-	@Value("${directorio.server.layouts}")
-    private String directorioServerLayouts;	
-
-	@Value("${dominio.server.layouts}")
-    private String dominioServerLayouts;	
-	
-	@Value("${dominio.server.layouts2}")
-    private String dominioServerLayouts2;
-	
-	@Value("${sigs.obtenerDatosPorSucRamPol.url}")
-    private String sigsObtenerDatosPorSucRamPolUrl;
 	
 	public CotizacionAction()
 	{
@@ -856,36 +823,6 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
-		if (exito) {
-		    try {
-		        List<ComponenteVO> tatripol = pantallasManager.obtenerComponentes(
-		                null, //cdtiptra
-		                null, //cdunieco
-		                "|" + cdramo + "|",
-		                "|" + cdtipsit + "|",
-		                null, //estado
-		                cdsisrol,
-		                "COTIZACION_CUSTOM",
-		                "TATRI_POL",
-		                null //orden
-		                );
-		        if (tatripol.size() == 0) {
-		            throw new ApplicationException("WARNING no hay TATRI_POL");
-		        }
-		        
-		        gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-		        gc.setEsMovil(session != null && session.containsKey("ES_MOVIL") && ((Boolean)session.get("ES_MOVIL")) == true);
-		        if (!gc.isEsMovil() && smap1.containsKey("movil")) {
-		            gc.setEsMovil(true);
-		        }
-		        
-		        gc.generaComponentes(tatripol, true, false, true, false, false, false);
-		        imap.put("tatripol", gc.getItems());
-		    } catch (Exception ex) {
-		        logger.error("Error al recuperar tatripol (COTIZACION_CUSTOM>TATRI_POL)", ex);
-		    }
-		}
-		
 		//respuesta
 		String respuesta = null;
 		if(exito)
@@ -1210,26 +1147,12 @@ public class CotizacionAction extends PrincipalCoreAction
 		String ntramite = smap1.get("ntramite");
 		String fechaIni = smap1.get("feini");
 		String fechaFin = smap1.get("fefin");
-		String caseIdRstn = smap1.get("caseIdRstn");
 		
 		try
 		{
 			String paso = null;
 			try
 			{
-			    if (StringUtils.isNotBlank(ntramite) && StringUtils.isNotBlank(caseIdRstn)) {
-			        try {
-                        cotizacionManager.actualizarOtvalorTramitePorDsatribu(
-                                ntramite
-                                ,"CASEIDRSTN"
-                                ,caseIdRstn
-                                ,"U"
-                                );
-                    } catch (Exception ex) {
-                        logger.error("WARNING al guardar caseIdRstn en otvalor", ex);
-                    }
-			    }
-			    
 				//---------------------------------
 				paso = "Obtener datos del usuario";
 				logger.debug(Utils.log("","paso=",paso));
@@ -1435,7 +1358,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo,
 						"M", nmpolizaEmi, 
-						nmsuplemEmi, this.rutaDocumentosPoliza+"/"+ntramite,
+						nmsuplemEmi, this.getText("ruta.documentos.poliza")+"/"+ntramite,
 						cdunieco, nmpoliza,ntramite, 
 						true, TipoEndoso.EMISION_POLIZA.getCdTipSup().toString(),
 						usuario);
@@ -1740,7 +1663,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			boolean noTarificar = StringUtils.isNotBlank(smap1.get("notarificar"))&&smap1.get("notarificar").equals("si");
 			boolean conIncisos  = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
 			String modPrim = StringUtils.isNotBlank(smap1.get("modPrim"))?smap1.get("modPrim"):"";
-
+			
 			Map<String,String>tvalopol=new HashMap<String,String>();
 			for(Entry<String,String>en:slist1.get(0).entrySet())
 			{
@@ -1765,10 +1688,10 @@ public class CotizacionAction extends PrincipalCoreAction
 						));
 			}
 			
-	         ManagerRespuestaSlistSmapVO resp= new ManagerRespuestaSlistSmapVO();
-	            if(modPrim.isEmpty())
-	            {
-	                resp=cotizacionManager.cotizar(
+			ManagerRespuestaSlistSmapVO resp= new ManagerRespuestaSlistSmapVO();
+            if(modPrim.isEmpty())
+            {
+                resp=cotizacionManager.cotizar(
 					cdunieco
 					,cdramo
 					,cdtipsit
@@ -1793,7 +1716,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,parame.get("RENRAMO")
 					,parame.get("RENPOLIEX")
 					,ntramite
-					);
+                	);
 	            }
 	            else
 	            {
@@ -1834,7 +1757,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			             && !emergency
 			          )
 			        {
-			            List<Map<String,String>> listaResultados=cotizacionManager.cargarResultadosCotizacion(
+			        	List<Map<String,String>> listaResultados=cotizacionManager.cargarResultadosCotizacion(
 	                            cdusuari
 	                            ,cdunieco
 	                            ,cdramo
@@ -1903,7 +1826,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                else if(fila.equals("64")) {fila="Contado";}//  \r\n" + 
 //	                else if() {fila="";}//  SEMESTRAL A\r\n" + 
 			    }
-	            resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap()==null?nmsolici:resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
+			    resp= cotizacionManager.cotizarContinuacion(cdusuari,cdunieco,cdramo,cdelemen,cdtipsit,resp.getSmap()==null?nmsolici:resp.getSmap().get("nmpoliza"),smap1.containsKey("movil"));
 			    if(!fila.isEmpty() && !columna.isEmpty())
 			    { 
 			        resp.getSmap().put("fila", fila);
@@ -1979,7 +1902,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			            try
 			    		{
 			    			String params  = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",nmpoliza,"&primaObjetivo=",mnprima,"&renuniext=",renuniext,"&renramo=",renramo,"&cdtipsit=",cdtipsit,"&renpoliex=",renpoliex,"&cdplan=",formpagSigs,"&cdperpag=",paquete.toString());
-			    				   mensaje = HttpUtil.sendPost(sigsFacultaDatosPolizaSicapsUrl,params);
+			    				   mensaje = HttpUtil.sendPost(getText("sigs.facultaDatosPolizaSicaps.url"),params);
 			    			if(mensaje != null)
 			    			{
 			    				return mensaje;
@@ -2014,7 +1937,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			try
 			{
 				String params      = Utils.join("sucursal=",cdunieco,"&ramo=",cdramo,"&poliza=",cdpoliza,"&tipoflot=",tipoflot,"&cdtipsit=",cdtipsit,"&cargaCot=",cargaCot)
-					  ,respuestaWS =HttpUtil.sendPost(sigsObtenerDatosPorSucRamPolUrl,params);
+					  ,respuestaWS =HttpUtil.sendPost(getText("sigs.obtenerDatosPorSucRamPol.url"),params);
 					HashMap<String, ArrayList<String>> someObject = (HashMap<String, ArrayList<String>>)JSONUtil.deserialize(respuestaWS);
 					Map<String,String>parametros = (Map<String,String>)someObject.get("params");
 					String formpagSigs = parametros.get("formpagSigs");
@@ -3207,7 +3130,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						parametros.put("param21"                  , null);
 						parametros.put("param22"                  , null);
 						parametros.put("param23"                  , null);
-						parametros.put("param24"                  , "0");//usuario default externo
+						parametros.put("param24"                  , null);
 						parametros.put("param25_pv_accion_i"      , "I");
 						String[] tipos=new String[]{
 								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
@@ -3442,23 +3365,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			try
 			{
-			    if (smap1 != null && "S".equals(smap1.get("rstn")) && StringUtils.isNotBlank(smap1.get("ntramiteRstn"))) {
-			        String pasoRstn = "Construyendo flujo RSTN";
-			        try {
-	                    UserVO user = Utils.validateSession(session);
-	                    String ntramiteRstn = smap1.get("ntramiteRstn");
-	                    Utils.validate(ntramiteRstn, "Falta ntramiteRstn");
-	                    String cdsisrolRstn = user.getRolActivo().getClave();
-	                    if ("S".equals(smap1.get("emitirRstn"))) {
-	                        cdsisrolRstn = "EMITIR";
-	                    }
-	                    flujo = flujoMesaControlManager.generarYRecuperarFlujoRSTN(ntramiteRstn, user.getUser(), cdsisrolRstn);
-	                    smap1 = null;
-	                } catch (Exception ex) {
-	                    Utils.generaExcepcion(ex, pasoRstn);
-	                }
-			    }
-			    
 				if(flujo!=null)
 				{
 					paso = "Recuperando datos del flujo";
@@ -3506,7 +3412,7 @@ public class CotizacionAction extends PrincipalCoreAction
                         if (lista != null && !lista.isEmpty()) {
                             smap1.put("nmpolant" , lista.get(0).getNmpolant());
                             consultasManager.copiarArchivosRenovacionColectivo(smap1.get("cdunieco"), smap1.get("cdramo"), "M", Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"", 
-                                    tramite.get("NTRAMITE"), this.rutaDocumentosPoliza);
+                                    tramite.get("NTRAMITE"), this.getText("ruta.documentos.poliza"));
                         }else{
                             smap1.put("nmpolant" , "");
                         }
@@ -3690,7 +3596,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						if (lista != null && !lista.isEmpty()) {
 							smap1.put("nmpolant" , lista.get(0).getNmpolant());
 							consultasManager.copiarArchivosRenovacionColectivo(smap1.get("cdunieco"), smap1.get("cdramo"), "M", Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"", 
-                                    tramite.get("NTRAMITE"), this.rutaDocumentosPoliza);
+                                    tramite.get("NTRAMITE"), this.getText("ruta.documentos.poliza"));
 						}else{
 							smap1.put("nmpolant" , "");
 						}
@@ -3906,7 +3812,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							null  , null , null
 							,cdtipsit , null , cdsisrol
 							,"COTIZACION_GRUPO", "ASEGURADOS", null);
-					gc.generaComponentes(componentesExtraprimas, true, true, false, true, true, false);
+					gc.generaComponentes(componentesExtraprimas, true, true, false, true, false, false);
 					imap.put("aseguradosColumns" , gc.getColumns());
 					imap.put("aseguradosFields"  , gc.getFields());
 				}
@@ -4374,6 +4280,7 @@ public class CotizacionAction extends PrincipalCoreAction
                     params.put("pv_cdgarant_i"   , smap1.get("cdgarant"));
                     params.put("pv_cdatrivar_i"  , smap1.get("cdatrivar"));
                     componentesTatrigar=cotizacionManager.obtenerAtributosPolizaOriginal(params);
+                    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
                 }
                 else{
                     Map<String,String>params=new HashMap<String,String>();
@@ -4382,7 +4289,7 @@ public class CotizacionAction extends PrincipalCoreAction
                     params.put("pv_cdgarant_i"  , smap1.get("cdgarant"));
                     params.put("pv_cdatrivar_i" , smap1.get("cdatrivar"));
                     componentesTatrigar=kernelManager.obtenerTatrigar(params);
-                    
+                    logger.debug("Valor de los componentes recuperados ===> "+componentesTatrigar);
                 }
 			}else{
 			    Map<String,String>params=new HashMap<String,String>();
@@ -4392,9 +4299,6 @@ public class CotizacionAction extends PrincipalCoreAction
 	            params.put("pv_cdatrivar_i" , smap1.get("cdatrivar"));
 	            componentesTatrigar=kernelManager.obtenerTatrigar(params);
 			}
-			
-			//logger.debug("<<<<<<>>>>>> Valor de los componentes recuperados (Antes Generar Campos) ===> "+componentesTatrigar);
-			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
             gc.setCdramo(smap1.get("cdramo"));
             gc.setCdtipsit(smap1.get("cdtipsit"));
@@ -4436,15 +4340,15 @@ public class CotizacionAction extends PrincipalCoreAction
 		if(StringUtils.isBlank(ntramite))
 		{
 			String timestamp = smap1.get("timestamp");
-			//censo.renameTo(new File(this.rutaDocumentosTemporal+"/censo_"+timestamp));
+			//censo.renameTo(new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
 			try {
-            	FileUtils.copyFile(censo, new File(this.rutaDocumentosTemporal+"/censo_"+timestamp));
+            	FileUtils.copyFile(censo, new File(this.getText("ruta.documentos.temporal")+"/censo_"+timestamp));
             	logger.debug("archivo movido");
 			} catch (Exception e) {
 				logger.error("archivo NO movido", e);
 			}
 			
-			logger.debug("censo renamed to: "+this.rutaDocumentosTemporal+"/censo_"+timestamp);
+			logger.debug("censo renamed to: "+this.getText("ruta.documentos.temporal")+"/censo_"+timestamp);
 		}
 		
 		logger.debug(""
@@ -4555,7 +4459,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdelemen = user.getEmpresa().getElementoId();
 			cdsisrol = user.getRolActivo().getClave();
 			
-			rutaDocsTemp = rutaDocumentosTemporal;
+			rutaDocsTemp = getText("ruta.documentos.temporal");
 		}
 		catch(ApplicationException ax)
 		{
@@ -4591,10 +4495,10 @@ public class CotizacionAction extends PrincipalCoreAction
 						,pcpgocte
 						,rutaDocsTemp
 						,censoTimestamp
-						,dominioServerLayouts
-						,userServerLayouts
-						,passServerLayouts
-						,directorioServerLayouts
+						,getText("dominio.server.layouts")
+						,getText("user.server.layouts")
+						,getText("pass.server.layouts")
+						,getText("directorio.server.layouts")
 						,cdtipsit
 						,cdusuari
 						,cdsisrol
@@ -4632,10 +4536,10 @@ public class CotizacionAction extends PrincipalCoreAction
 						,pcpgocte
 						,rutaDocsTemp
 						,censoTimestamp
-						,dominioServerLayouts
-						,userServerLayouts
-						,passServerLayouts
-						,directorioServerLayouts
+						,getText("dominio.server.layouts")
+						,getText("user.server.layouts")
+						,getText("pass.server.layouts")
+						,getText("directorio.server.layouts")
 						,cdtipsit
 						,cdusuari
 						,cdsisrol
@@ -4721,7 +4625,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String estado           = smap1.get("estado");
 		String nmsuplem         = smap1.get("nmsuplem");
 		
-		censo = new File(this.rutaDocumentosTemporal+"/censo_"+censoTimestamp);
+		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
 		
 		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 		boolean pagoRepartido = false;
@@ -4764,7 +4668,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				sheet       = workbook.getSheetAt(0);
 				inTimestamp = System.currentTimeMillis();
 				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
-				archivoTxt  = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
+				archivoTxt  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
 				output      = new PrintStream(archivoTxt);
 			} catch(Exception ex){
 				long etimestamp = System.currentTimeMillis();
@@ -5518,19 +5422,19 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 					exito = FTPSUtils.upload
 							(
-								this.dominioServerLayouts,
-								this.userServerLayouts,
-								this.passServerLayouts,
+								this.getText("dominio.server.layouts"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
 								archivoTxt.getAbsolutePath(),
-								this.directorioServerLayouts+"/"+nombreCenso
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 						    )
 							&&FTPSUtils.upload
 							(
-									this.dominioServerLayouts2,
-									this.userServerLayouts,
-									this.passServerLayouts,
-									archivoTxt.getAbsolutePath(),
-									this.directorioServerLayouts+"/"+nombreCenso
+								this.getText("dominio.server.layouts2"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
+								archivoTxt.getAbsolutePath(),
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 							);
 					
 					if(!exito)
@@ -5671,7 +5575,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		String nmrenova         = smap1.get("nmrenova");
 		String esRenovacion		= smap1.get("esRenovacion");
 		String agrupador        = smap1.get("cdpool");
-		censo = new File(this.rutaDocumentosTemporal+"/censo_"+censoTimestamp);
+		censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
 		
 		String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 		
@@ -5819,7 +5723,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				sheet       = workbook.getSheetAt(0);
 				inTimestamp = System.currentTimeMillis();
 				nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
-				archivoTxt  = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
+				archivoTxt  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
 				output      = new PrintStream(archivoTxt);
 			}
 			catch(Exception ex)
@@ -5951,7 +5855,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                String nombre      = "";
 	                double cdgrupo     = -1d;
 	                
-	                //GRUPO
+	              //GRUPO
 	                if(Constantes.SI.equalsIgnoreCase(configCampo.get(0).get("OBLIGATORIO")) || Constantes.NO.equalsIgnoreCase(configCampo.get(0).get("OBLIGATORIO"))){
 		                try {
 		                	cdgrupo = row.getCell(0).getNumericCellValue();
@@ -7192,19 +7096,19 @@ public class CotizacionAction extends PrincipalCoreAction
 	            {
 					exito = FTPSUtils.upload
 							(
-								dominioServerLayouts
-								,userServerLayouts
-								,passServerLayouts
-								,archivoTxt.getAbsolutePath()
-								,directorioServerLayouts+"/"+nombreCenso
+								this.getText("dominio.server.layouts"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
+								archivoTxt.getAbsolutePath(),
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 						    )
 							&&FTPSUtils.upload
 							(
-								dominioServerLayouts2
-								,userServerLayouts
-								,passServerLayouts
-								,archivoTxt.getAbsolutePath()
-								,directorioServerLayouts+"/"+nombreCenso
+								this.getText("dominio.server.layouts2"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
+								archivoTxt.getAbsolutePath(),
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 							);
 					
 					if(!exito)
@@ -7266,7 +7170,12 @@ public class CotizacionAction extends PrincipalCoreAction
 		String ntramite                = null;
 		String ntramiteVacio           = null;
 		String miTimestamp             = null;
+		String rutaDocumentosTemporal  = null;
 		String tipoCenso               = null;
+		String dominioServerLayouts    = null;
+		String userServerLayouts       = null;
+		String passServerLayouts       = null;
+		String directorioServerLayouts = null;
 		String cdtipsit                = null;
 		String codpostal               = null;
 		String cdedo                   = null;
@@ -7346,6 +7255,12 @@ public class CotizacionAction extends PrincipalCoreAction
 			cdideext_       = smap1.get("cdideext_");
 			nmpolant        = smap1.get("nmpolant");
 			nmrenova        = smap1.get("nmrenova");
+			
+			rutaDocumentosTemporal  = getText("ruta.documentos.temporal");
+			dominioServerLayouts    = getText("dominio.server.layouts");
+			userServerLayouts       = getText("user.server.layouts");
+			passServerLayouts       = getText("pass.server.layouts");
+			directorioServerLayouts = getText("directorio.server.layouts");
 			
 			String sincensoS      = smap1.get("sincenso");
 			sincenso              = StringUtils.isNotBlank(sincensoS)&&sincensoS.equals("S");
@@ -7505,7 +7420,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			
 			boolean complemento = "S".equals(smap1.get("complemento"));
 			
-			censo = new File(this.rutaDocumentosTemporal+"/censo_"+inTimestamp);
+			censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+inTimestamp);
 			
 			String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
 			
@@ -7699,7 +7614,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					workbook = WorkbookFactory.create(input);
 					sheet    = workbook.getSheetAt(0);
 					
-					archivoTxt = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
+					archivoTxt = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
 					output     = new PrintStream(archivoTxt);
 					
 					if(workbook.getNumberOfSheets()!=1)
@@ -8262,20 +8177,20 @@ public class CotizacionAction extends PrincipalCoreAction
 						throw new ApplicationException(Utils.join("No hay asegurados para el grupo ",cdgrupoVacio));
 					}
 					
-					boolean transferidoAmbosServer = FTPSUtils.upload(					
-								this.dominioServerLayouts,
-								this.userServerLayouts,
-								this.passServerLayouts,
+					boolean transferidoAmbosServer = FTPSUtils.upload(
+							this.getText("dominio.server.layouts"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
 								archivoTxt.getAbsolutePath(),
-								this.directorioServerLayouts+"/"+nombreCenso
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 							)
 							&&FTPSUtils.upload
 							(
-								this.dominioServerLayouts2,
-								this.userServerLayouts,
-								this.passServerLayouts,
+								this.getText("dominio.server.layouts2"),
+								this.getText("user.server.layouts"),
+								this.getText("pass.server.layouts"),
 								archivoTxt.getAbsolutePath(),
-								this.directorioServerLayouts+"/"+nombreCenso
+								this.getText("directorio.server.layouts")+"/"+nombreCenso
 							);
 						
 					if(!transferidoAmbosServer)
@@ -8821,7 +8736,6 @@ public class CotizacionAction extends PrincipalCoreAction
 									//buscar cdatribus
 									boolean hayAtributos=false;
 									Map<String,String>listaCdatribu=new HashMap<String,String>();
-									Map<String,String>listaTipoValorCdatribu=new HashMap<String,String>();
 									for(Entry<String,String>iAtribTvalogar:iTvalogar.entrySet())
 									{
 										String key=iAtribTvalogar.getKey();
@@ -8830,13 +8744,7 @@ public class CotizacionAction extends PrincipalCoreAction
 												&&key.substring(0, "parametros.pv_otvalor".length()).equalsIgnoreCase("parametros.pv_otvalor"))
 										{
 											hayAtributos=true;
-											String numeroAtr = key.substring("parametros.pv_otvalor".length(), key.length());
-											listaCdatribu.put(numeroAtr, iAtribTvalogar.getValue());
-											
-											//Se guarda el tipo de valor que se captura (porcentaje o monto) para cada atributo que contenga el campo de tipoValor
-											if(iTvalogar.containsKey("TipoValor_"+key)){
-												listaTipoValorCdatribu.put(numeroAtr, iTvalogar.get("TipoValor_"+key));
-											}
+											listaCdatribu.put(key.substring("parametros.pv_otvalor".length(), key.length()),iAtribTvalogar.getValue());
 										}
 									}
 									if(hayAtributos)
@@ -8846,12 +8754,9 @@ public class CotizacionAction extends PrincipalCoreAction
 											if(StringUtils.isNotBlank(atributo.getValue()))
 											{
 												logger.debug("26.- cotizacionManager.movimientoTvalogarGrupo");
-											    cotizacionManager.movimientoTvalogarGrupoFlexCopago(
+											    cotizacionManager.movimientoTvalogarGrupo(
 													cdunieco, cdramo, "W", nmpoliza, "0", cdtipsit, cdgrupo, cdgarant, "V",
-													atributo.getKey(), atributo.getValue(), listaTipoValorCdatribu.get(atributo.getKey()));
-											    
-											    //logger.debug("<<<<<<>>>>>>   Tipo valor a instertar luego de instertar atributo   <<<<<<>>>>>> ::::::" + listaTipoValorCdatribu.get(atributo.getKey()));
-											    
+													atributo.getKey(), atributo.getValue());
 											}
 										}
 									}
@@ -8882,7 +8787,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				try {
 				    
 					try {
-					    cotizacionManager.eliminarGrupos(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit);
+						cotizacionManager.eliminarGrupos(cdunieco, cdramo, Constantes.POLIZA_WORKING, nmpoliza, cdtipsit);
 					} catch (Exception e) {
 						logger.warn("No se eliminaron los grupos de la poliza: {}", e);
 					}
@@ -10130,32 +10035,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		try
-		{
-			/**
-			 * Para consultar si este tramite tiene vigencia de un anio, menor o mayor
-			 */
-			
-			//Se fija valor default ANUAL
-			smap1.put("TIEMPO_VIGENCIA_POLIZA", "ANUAL");
-			
-			RespuestaVO datosVigPol = cotizacionManager.obtieneValidaVigPolizaAnual(
-					smap1.get("cdunieco"), smap1.get("cdramo"), smap1.get("estado"),
-					smap1.get("nmpoliza"));
-			
-			if(datosVigPol != null && !datosVigPol.isSuccess()){
-				smap1.put("TIEMPO_VIGENCIA_POLIZA", "NO_ANUAL");
-			}
-		}
-		catch(Exception ex)
-		{
-			long timestamp=System.currentTimeMillis();
-			logger.error("Error al cargar datos de aprobacion de cambio de nombre de plan."+timestamp,ex);
-			exito           = false;
-			respuesta       = "Error inesperado #"+timestamp;
-			respuestaOculta = ex.getMessage();
-		}
-
-		try
         {
 		    /**
 	         * Para consultar si este tramite esta en espera de validacion de cambio de nombre de plan para alguno de los grupos
@@ -10538,14 +10417,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					,smap1.get("nmpoliza")
 					,smap1.get("letra")
 					);
-			
-			slist2 = cotizacionManager.obtieneFormatosAtribsCobsGrupo(
-					smap1.get("cdunieco")
-					,smap1.get("cdramo")
-					,smap1.get("estado")
-					,smap1.get("nmpoliza")
-					,smap1.get("letra"));
-			
 			exito           = true;
 			respuesta       = "Todo OK";
 			respuestaOculta = "Todo OK";
@@ -10581,15 +10452,6 @@ public class CotizacionAction extends PrincipalCoreAction
 					,smap1.get("estado")
 					,smap1.get("nmpoliza")
 					,smap1.get("letra"));
-
-			slist2 = cotizacionManager.obtieneFormatosAtribsCobsGrupo(
-					smap1.get("cdunieco")
-					,smap1.get("cdramo")
-					,smap1.get("estado")
-					,smap1.get("nmpoliza")
-					,smap1.get("letra"));
-			
-			
 			exito           = true;
 			respuesta       = "Todo OK";
 			respuestaOculta = "Todo OK";
@@ -11324,8 +11186,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			       ,cdtipsit = smap1.get("cdtipsit")
 			       ,ntramite = smap1.get("ntramite")
 			       ,nGrupos  = smap1.get("nGrupos")
-			       ,status   = smap1.get("status")
-			       ,caseIdRstn = smap1.get("caseIdRstn");
+			       ,status   = smap1.get("status");
 			
 			Utils.validate(
 					cdunieco  , "Falta cdunieco"
@@ -11339,7 +11200,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					,status   , "Falta status"
 					);
 			
-			if(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(cdramo) || cotizacionManager.isEstatusGeneraDocumentosCotizacion(status))
+			if(cotizacionManager.isEstatusGeneraDocumentosCotizacion(status))
 			{
 			
 				int bloqueos = 0;
@@ -11396,7 +11257,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 }
 				
 				String urlReporteCotizacion=Utils.join(
-						  rutaServidorReports
+						  getText("ruta.servidor.reports")
 						, "?p_unieco="      , cdunieco
 						, "&p_ramo="        , cdramo
 						, "&p_estado="      , estado
@@ -11408,7 +11269,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						, "&p_cdplan="
 	                    , "&destype=cache"
 	                    , "&desformat=PDF"
-	                    , "&userid="        , passServidorReports
+	                    , "&userid="        , getText("pass.servidor.reports")
 	                    , "&ACCESSIBLE=YES"
 	                    , "&report="        , getText("rdf.cotizacion.nombre."+cdtipsit)
 	                    , "&paramform=no"
@@ -11416,7 +11277,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				String nombreArchivoCotizacion = Utils.join("cotizacion_",nmpoliza,".pdf")
 				       ,pathArchivoCotizacion  = Utils.join(
-				    		   rutaDocumentosPoliza
+				    		   getText("ruta.documentos.poliza")
 				    		   ,"/" , ntramite
 				    		   ,"/" , nombreArchivoCotizacion
 				    		   );
@@ -11445,17 +11306,9 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null
 						,null, false
 						);
-                
-                if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(cdramo)) {
-                    HttpUtil.enviarArchivoRSTN(
-                            HttpUtil.RSTN_DEFAULT_PATH + caseIdRstn, 
-                            pathArchivoCotizacion, 
-                            Utils.join("COTIZACION EN RESUMEN (",nmpoliza,")"),
-                            HttpUtil.RSTN_DOC_CLASS_COTIZACION);
-                }
 				
 				String urlReporteCotizacion2=Utils.join(
-						  rutaServidorReports
+						  getText("ruta.servidor.reports")
 						, "?p_unieco="      , cdunieco
 						, "&p_ramo="        , cdramo
 						, "&p_estado="      , estado
@@ -11466,7 +11319,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						, "&p_cdplan="
 						, "&destype=cache"
 						, "&desformat=PDF"
-						, "&userid="        , passServidorReports
+						, "&userid="        , getText("pass.servidor.reports")
 						, "&ACCESSIBLE=YES"
 						, "&report="        , getText(Utils.join("rdf.cotizacion2.nombre.",cdtipsit))
 						, "&paramform=no"
@@ -11474,7 +11327,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				String nombreArchivoCotizacion2 = Utils.join("cotizacion2_",nmpoliza,".pdf")
 				       ,pathArchivoCotizacion2  = Utils.join(
-				    		   rutaDocumentosPoliza
+				    		   getText("ruta.documentos.poliza")
 				    		   ,"/" , ntramite
 				    		   ,"/" , nombreArchivoCotizacion2
 				    		   );
@@ -11504,21 +11357,15 @@ public class CotizacionAction extends PrincipalCoreAction
 						,null, false
 						);
 				
-				if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(cdramo)) {
-				    HttpUtil.enviarArchivoRSTN(
-				            HttpUtil.RSTN_DEFAULT_PATH + caseIdRstn, 
-				            pathArchivoCotizacion2, 
-				            Utils.join("COTIZACION A DETALLE (",nmpoliza,")"),
-                            HttpUtil.RSTN_DOC_CLASS_COTIZACION);
-				}
-				
+				//RB
+				/*
 				// Documentos generados para el Ramo Multisalud excepto para el cdtipsit TMS:
 				if (Ramo.MULTISALUD.getCdramo().equals(cdramo)
 						&& !TipoSituacion.TRADICIONALES_MEGASALUD.getCdtipsit().equals(cdtipsit))
 				{
 					//pdf resumen
 					String urlReporteResumenCotizacion=Utils.join(
-							  rutaServidorReports
+							  getText("ruta.servidor.reports")
 							, "?p_unieco="      , cdunieco
 							, "&p_ramo="        , cdramo
 							, "&p_estado="      , estado
@@ -11528,7 +11375,7 @@ public class CotizacionAction extends PrincipalCoreAction
 							, "&p_suplem=0"
 		                    , "&destype=cache"
 		                    , "&desformat=PDF"
-		                    , "&userid="        , passServidorReports
+		                    , "&userid="        , getText("pass.servidor.reports")
 		                    , "&ACCESSIBLE=YES"
 		                    , "&report="        , getText(Utils.join("rdf.resumen.cotizacion.col.",cdramo))
 		                    , "&paramform=no"
@@ -11536,7 +11383,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					String nombreArchivoResumenCotizacion = Utils.join("resumen_cotizacion_col_",nmpoliza,".pdf")
 					       ,pathArchivoResumenCotizacion  = Utils.join(
-					    		   rutaDocumentosPoliza
+					    		   getText("ruta.documentos.poliza")
 					    		   ,"/" , ntramite
 					    		   ,"/" , nombreArchivoResumenCotizacion
 					    		   );
@@ -11585,7 +11432,7 @@ public class CotizacionAction extends PrincipalCoreAction
 						String nombreCotGrupo = Utils.join("COTIZACION_GRUPO_",i,"_",nmpoliza,TipoArchivo.XLS.getExtension());
 						
 						FileUtils.copyInputStreamToFile(excelGrupo, new File(Utils.join(
-										rutaDocumentosPoliza,"/",ntramite,"/",nombreCotGrupo
+										getText("ruta.documentos.poliza"),"/",ntramite,"/",nombreCotGrupo
 						)));
 						
 						documentosManager.guardarDocumento(
@@ -11610,7 +11457,8 @@ public class CotizacionAction extends PrincipalCoreAction
 								);
 					}
 				}
-				
+				*/
+				//RB
 			}
 			
 			exito = true;
@@ -13161,11 +13009,11 @@ public class CotizacionAction extends PrincipalCoreAction
 					,nmpoliza
 					,complemento
 					,censo
-					,rutaDocumentosTemporal
-					,dominioServerLayouts
-					,userServerLayouts
-					,passServerLayouts
-					,directorioServerLayouts
+					,getText("ruta.documentos.temporal")
+					,getText("dominio.server.layouts")
+					,getText("user.server.layouts")
+					,getText("pass.server.layouts")
+					,getText("directorio.server.layouts")
 					,cdtipsit
 					,user.getUser()
 					,user.getRolActivo().getClave()
@@ -14231,8 +14079,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		return SUCCESS;
 	}
-	
-    public String tratamientoLayoutEmision()
+		
+	public String tratamientoLayoutEmision()
     {
         this.session=ActionContext.getContext().getSession();
         logger.debug(Utils.log(
@@ -14270,7 +14118,7 @@ public class CotizacionAction extends PrincipalCoreAction
         String nmrenova         = smap1.get("nmrenova");
         String esRenovacion     = smap1.get("esRenovacion");
         String agrupador        = smap1.get("cdpool");
-        censo = new File(this.rutaDocumentosTemporal+"/censo_"+censoTimestamp);
+        censo = new File(this.getText("ruta.documentos.temporal")+"/censo_"+censoTimestamp);
         
         String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
         
@@ -14293,7 +14141,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 sheet       = workbook.getSheetAt(0);
                 inTimestamp = System.currentTimeMillis();
                 nombreCenso = "censo_"+inTimestamp+"_"+nmpoliza+".txt";
-                archivoTxt  = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
+                archivoTxt  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
                 output      = new PrintStream(archivoTxt);
             }
             catch(Exception ex)
@@ -14332,19 +14180,19 @@ public class CotizacionAction extends PrincipalCoreAction
                 {
                     exito = FTPSUtils.upload
                     (
-                        this.dominioServerLayouts,
-                        this.userServerLayouts,
-                        this.passServerLayouts,
+                        this.getText("dominio.server.layouts"),
+                        this.getText("user.server.layouts"),
+                        this.getText("pass.server.layouts"),
                         archivoTxt.getAbsolutePath(),
-                        this.directorioServerLayouts+"/"+nombreCenso
+                        this.getText("directorio.server.layouts")+"/"+nombreCenso
                     )
                     &&FTPSUtils.upload
                     (
-                    	this.dominioServerLayouts2,
-                        this.userServerLayouts,
-                        this.passServerLayouts,
+                        this.getText("dominio.server.layouts2"),
+                        this.getText("user.server.layouts"),
+                        this.getText("pass.server.layouts"),
                         archivoTxt.getAbsolutePath(),
-                        this.directorioServerLayouts+"/"+nombreCenso
+                        this.getText("directorio.server.layouts")+"/"+nombreCenso
                     );
                     
                     if(!exito)
@@ -14390,7 +14238,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 respuesta       = "Error al recuperar layOut Complementario";
                 String inTimestamp =smap1.get("timestamp");
                 String nombreCenso = "excel_"+inTimestamp+".xls";
-                File layOutCompl  = new File(this.rutaDocumentosTemporal+"/"+nombreCenso);
+                File layOutCompl  = new File(this.getText("ruta.documentos.temporal")+"/"+nombreCenso);
                 FileInputStream input       = new FileInputStream(layOutCompl);
                 Workbook workbook    = WorkbookFactory.create(input);
                 Sheet sheet       = workbook.getSheetAt(0);
@@ -14409,7 +14257,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 }
                 logger.debug("Valores de pantalla sin espacios creado.");
                 
-                while (rowIterator.hasNext() && olistMod.size()<fila) 
+                while (rowIterator.hasNext()) 
                 {   //filaVista  >>>   olist1.get(fila)
                     logger.debug("Iterando del layout inciso numero: "+fila);
                     row = rowIterator.next();
@@ -14424,119 +14272,119 @@ public class CotizacionAction extends PrincipalCoreAction
                     }                  
                     
                     String clveVeh = StringUtils.leftPad((int)Double.parseDouble(row.getCell(0).toString())+"",5,"0"),
-                           modelo = row.getCell(4).toString().length() == 4 ? row.getCell(4).toString() : row.getCell(4).toString().substring(0,4),
-                           valorVeh = String.format("%.2f", Double.parseDouble(row.getCell(6).toString())),
-                           serie =  "";
-                           if(row.getCell(9) != null)
-                           {try{serie = String.format("%.0f",Double.parseDouble(row.getCell(9).toString()));
-                        	}catch (Exception e){serie =  String.format(row.getCell(9).toString()).trim();}
-                           }
-                           row.getCell(0).setCellValue(clveVeh);row.getCell(4).setCellValue(modelo);row.getCell(6).setCellValue(valorVeh);row.getCell(9).setCellValue(serie);
-                           row.getCell(3).setCellValue(String.format(row.getCell(3).toString()).trim());
-                    //valida datos ingresados previamente con los de lay out ingresado       
-                    if(    !olistMod.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.MOTOS.getCdtipsit())//Clave no aplicable para motos 
-                        && !olistMod.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())//Ni autos fonterizos
-                        && !olistMod.get(fila).containsValue(row.getCell(0).toString())) //Clave Vehiculo
-                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+1)+" en la clave vehiculo "+row.getCell(0).toString();
-                        exito           = false;   break;
-                    }if(!olistMod.get(fila).containsValue(row.getCell(6).toString())) //Valor Vehiculo
-                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+1)+" en el valor del Vehiculo "+row.getCell(6).toString();
-                        exito           = false;   break;
-                    }if(!olistMod.get(fila).containsValue(String.format(row.getCell(3).toString().toString()).trim())) //Descripcion
-                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+1)+" en la descripcion del vehiculo "+row.getCell(3).toString();
-                        exito           = false;   break;
-                    }if(!olistMod.get(fila).containsValue(row.getCell(4).toString())) //Modelo
-                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+1)+" en el modelo "+row.getCell(4).toString();
-                        exito           = false;   break;
-                    }
-//                    if(!olistMod.get(fila).containsValue(row.getCell(9).toString())) //No. Serie
-//                    {   respuesta       ="El layout ingresado no corresponde al ingresado previamente  en el inciso "+(fila+1)+" en el numero de serie "+row.getCell(9).toString();
-//                        exito           = false;   break;
-//                    }
-                    //Obliga a tener los siguientes datos
-                    logger.debug("El excel introducido, coincide en el inciso numero: "+(fila+1));
-                    if(row.getCell(10) == null || row.getCell(10).toString().equals(""))// Numero de motor
-                    {   respuesta       ="Favor de introducir numero de motor en el inciso "+(fila+1)+" en el layout a ingresado";
-                        exito           = false;   break;
-                    }if(row.getCell(11) == null || row.getCell(11).toString().equals(""))// Placas
-                    {   respuesta       ="Favor de introducir placas en el inciso "+(fila+1)+" en el layout a ingresado";
-                        exito           = false;   break;   
-                    }
-//                    if(row.getCell(12) == null || row.getCell(12).toString().equals(""))// Conductor 
-//                    {   respuesta       ="Favor de introducir conductor en el inciso "+(fila+1)+" en el layout a ingresado";
-//                        exito           = false;   break;
-//                    }if(row.getCell(13) == null)                               // Beneficiario
-//                    {   respuesta       ="Favor de introducir beneficiario en el inciso "+(fila)+" en el layout a ingresado";
-//                        exito           = false;   break;
-//                    }
-                    
-                    respuesta = "Actualizando valores complementarios en el inciso: "+(fila);
-                    if(row.getCell(10)!=null)
-                    {//Motor
-	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
-	                    {   olist1.get(fila).put("parametros.pv_otvalor27",row.getCell(10).toString());
-	                    }else{
-	                        olist1.get(fila).put("parametros.pv_otvalor38",row.getCell(10).toString());
-	                    }
-                    }
-                    if(row.getCell(11)!=null)
-                    {//Placas
-		                if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
-		                {   olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(11).toString());
-		                }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
-		                    olist1.get(fila).put("parametros.pv_otvalor35",row.getCell(11).toString());
-		                }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
-		                    olist1.get(fila).put("parametros.pv_otvalor28",row.getCell(11).toString());
-		                }else{
-		                    olist1.get(fila).put("parametros.pv_otvalor39",row.getCell(11).toString());
-		                }
-                    }
-                    if(row.getCell(12)!=null)
-                    {//Conductor
-	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
-	                    {   olist1.get(fila).put("parametros.pv_otvalor44",row.getCell(12).toString());
-	                    }else{
-	                        olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(12).toString());
-	                    }
-                    }
-                    if(row.getCell(13)!=null)
-                    {//BENEFICIARIO PREFERENTE
-	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.REMOLQUES_INDISTINTOS.getCdtipsit()))
-	                    {   olist1.get(fila).put("parametros.pv_otvalor25",row.getCell(13).toString());
-	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
-	                        olist1.get(fila).put("parametros.pv_otvalor37",row.getCell(13).toString());
-	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit())){
-	                        olist1.get(fila).put("parametros.pv_otvalor47",row.getCell(13).toString());
-	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit())){
-	                        olist1.get(fila).put("parametros.pv_otvalor49",row.getCell(13).toString());
-	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())){
-	                        olist1.get(fila).put("parametros.pv_otvalor53",row.getCell(13).toString());
-	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())){
-	                        olist1.get(fila).put("parametros.pv_otvalor56",row.getCell(13).toString());
-	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
-	                        olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(13).toString());
-	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.TURISTA_LICENCIA.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.TURISTA_VEHICULO.getCdtipsit())){
-	                        olist1.get(fila).put("parametros.pv_otvalor41",row.getCell(13).toString());
-	                    }else{
-	                        olist1.get(fila).put("parametros.pv_otvalor42",row.getCell(13).toString());
-	                    }
-                    }
-                    if(row.getCell(9)!=null)
-                    {//NUMERO DE SERIE
-	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
-	                    {   if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor03",row.getCell(9).toString());}
-	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
-	                    	if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor33",row.getCell(9).toString());}
-	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
-	                    {   if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor35",row.getCell(9).toString());}
-	                    }else{
-	                    	if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor37",row.getCell(9).toString());}
-	                    }
-                    }
-                    fila++;                    
-                }
-                
-                if(!exito)
+                            modelo = row.getCell(4).toString().length() == 4 ? row.getCell(4).toString() : row.getCell(4).toString().substring(0,4),
+                            valorVeh = String.format("%.2f", Double.parseDouble(row.getCell(6).toString())),
+                            serie =  "";
+                            if(row.getCell(9) != null)
+                            {try{serie = String.format("%.0f",Double.parseDouble(row.getCell(9).toString()));
+                         	}catch (Exception e){serie =  String.format(row.getCell(9).toString()).trim();}
+                            }
+                            row.getCell(0).setCellValue(clveVeh);row.getCell(4).setCellValue(modelo);row.getCell(6).setCellValue(valorVeh);row.getCell(9).setCellValue(serie);
+                            row.getCell(3).setCellValue(String.format(row.getCell(3).toString()).trim());
+                     //valida datos ingresados previamente con los de lay out ingresado       
+                     if(    !olistMod.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.MOTOS.getCdtipsit())//Clave no aplicable para motos 
+                         && !olistMod.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())//Ni autos fonterizos
+                         && !olistMod.get(fila).containsValue(row.getCell(0).toString())) //Clave Vehiculo
+                     {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+1)+" en la clave vehiculo "+row.getCell(0).toString();
+                         exito           = false;   break;
+                     }if(!olistMod.get(fila).containsValue(row.getCell(6).toString())) //Valor Vehiculo
+                     {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+1)+" en el valor del Vehiculo "+row.getCell(6).toString();
+                         exito           = false;   break;
+                     }if(!olistMod.get(fila).containsValue(String.format(row.getCell(3).toString().toString()).trim())) //Descripcion
+                     {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+1)+" en la descripcion del vehiculo "+row.getCell(3).toString();
+                         exito           = false;   break;
+                     }if(!olistMod.get(fila).containsValue(row.getCell(4).toString())) //Modelo
+                     {   respuesta       ="El layout ingresado no corresponde al ingresado previamente en el inciso "+(fila+1)+" en el modelo "+row.getCell(4).toString();
+                         exito           = false;   break;
+                     }
+//                     if(!olistMod.get(fila).containsValue(row.getCell(9).toString())) //No. Serie
+//                     {   respuesta       ="El layout ingresado no corresponde al ingresado previamente  en el inciso "+(fila+1)+" en el numero de serie "+row.getCell(9).toString();
+//                         exito           = false;   break;
+//                     }
+                     //Obliga a tener los siguientes datos
+                     logger.debug("El excel introducido, coincide en el inciso numero: "+(fila+1));
+                     if(row.getCell(10) == null || row.getCell(10).toString().equals(""))// Numero de motor
+                     {   respuesta       ="Favor de introducir numero de motor en el inciso "+(fila+1)+" en el layout a ingresado";
+                         exito           = false;   break;
+                     }if(row.getCell(11) == null || row.getCell(11).toString().equals(""))// Placas
+                     {   respuesta       ="Favor de introducir placas en el inciso "+(fila+1)+" en el layout a ingresado";
+                         exito           = false;   break;   
+                     }
+//                     if(row.getCell(12) == null || row.getCell(12).toString().equals(""))// Conductor 
+//                     {   respuesta       ="Favor de introducir conductor en el inciso "+(fila+1)+" en el layout a ingresado";
+//                         exito           = false;   break;
+//                     }if(row.getCell(13) == null)                               // Beneficiario
+//                     {   respuesta       ="Favor de introducir beneficiario en el inciso "+(fila)+" en el layout a ingresado";
+//                         exito           = false;   break;
+//                     }
+                     
+                     respuesta = "Actualizando valores complementarios en el inciso: "+(fila);
+                     if(row.getCell(10)!=null)
+                     {//Motor
+ 	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+ 	                    {   olist1.get(fila).put("parametros.pv_otvalor27",row.getCell(10).toString());
+ 	                    }else{
+ 	                        olist1.get(fila).put("parametros.pv_otvalor38",row.getCell(10).toString());
+ 	                    }
+                     }
+                     if(row.getCell(11)!=null)
+                     {//Placas
+ 		                if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
+ 		                {   olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(11).toString());
+ 		                }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
+ 		                    olist1.get(fila).put("parametros.pv_otvalor35",row.getCell(11).toString());
+ 		                }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+ 		                    olist1.get(fila).put("parametros.pv_otvalor28",row.getCell(11).toString());
+ 		                }else{
+ 		                    olist1.get(fila).put("parametros.pv_otvalor39",row.getCell(11).toString());
+ 		                }
+                     }
+                     if(row.getCell(12)!=null)
+                     {//Conductor
+ 	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+ 	                    {   olist1.get(fila).put("parametros.pv_otvalor44",row.getCell(12).toString());
+ 	                    }else{
+ 	                        olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(12).toString());
+ 	                    }
+                     }
+                     if(row.getCell(13)!=null)
+                     {//BENEFICIARIO PREFERENTE
+ 	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.REMOLQUES_INDISTINTOS.getCdtipsit()))
+ 	                    {   olist1.get(fila).put("parametros.pv_otvalor25",row.getCell(13).toString());
+ 	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
+ 	                        olist1.get(fila).put("parametros.pv_otvalor37",row.getCell(13).toString());
+ 	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.PICK_UP_CARGA.getCdtipsit())){
+ 	                        olist1.get(fila).put("parametros.pv_otvalor47",row.getCell(13).toString());
+ 	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.CAMIONES_CARGA.getCdtipsit())){
+ 	                        olist1.get(fila).put("parametros.pv_otvalor49",row.getCell(13).toString());
+ 	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.PICK_UP_PARTICULAR.getCdtipsit())){
+ 	                        olist1.get(fila).put("parametros.pv_otvalor53",row.getCell(13).toString());
+ 	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_RESIDENTES.getCdtipsit())){
+ 	                        olist1.get(fila).put("parametros.pv_otvalor56",row.getCell(13).toString());
+ 	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit())){
+ 	                        olist1.get(fila).put("parametros.pv_otvalor40",row.getCell(13).toString());
+ 	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.TURISTA_LICENCIA.getCdtipsit()) ||olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.TURISTA_VEHICULO.getCdtipsit())){
+ 	                        olist1.get(fila).put("parametros.pv_otvalor41",row.getCell(13).toString());
+ 	                    }else{
+ 	                        olist1.get(fila).put("parametros.pv_otvalor42",row.getCell(13).toString());
+ 	                    }
+                     }
+                     if(row.getCell(9)!=null)
+                     {//NUMERO DE SERIE
+ 	                    if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit())|| olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.AUTOS_PICK_UP.getCdtipsit()))
+ 	                    {   if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor03",row.getCell(9).toString());}
+ 	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_MICRO.getCdtipsit())){
+ 	                    	if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor33",row.getCell(9).toString());}
+ 	                    }else if(olist1.get(fila).get("CDTIPSIT").toString().equals(TipoSituacion.SERVICIO_PUBLICO_AUTO.getCdtipsit()))
+ 	                    {   if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor35",row.getCell(9).toString());}
+ 	                    }else{
+ 	                    	if(!row.getCell(9).toString().isEmpty()){olist1.get(fila).put("parametros.pv_otvalor37",row.getCell(9).toString());}
+ 	                    }
+                     }
+                     fila++;                    
+                 }
+                 
+                 if(!exito)
                 {
                     throw new ApplicationException(respuesta);
                 }
@@ -14560,563 +14408,7 @@ public class CotizacionAction extends PrincipalCoreAction
                 );
         return SUCCESS;
     }
-
     
-	public String subirCensoMorbilidadArchivo()
-	{
-		logger.debug(""
-				+ "\n#########################################"
-				+ "\n###### subirCensoMorbilidadArchivo ######"
-				+ "\n censo "+censo+""
-				+ "\n censoFileName "+censoFileName+""
-				+ "\n censoContentType "+censoContentType+""
-				+ "\n smap1 "+smap1
-				);
-		
-		success = true;
-		exito   = true;
-		
-		String ntramite=smap1.get("ntramite");
-		if(StringUtils.isBlank(ntramite))
-		{
-			String timestamp = smap1.get("timestamp");
-			//censo.renameTo(new File(this.rutaDocumentosTemporal+"/censo_"+timestamp));
-			try {
-            	FileUtils.copyFile(censo, new File(this.rutaDocumentosTemporal+"/censoMorbilidad_"+timestamp));
-            	logger.debug("archivo movido");
-			} catch (Exception e) {
-				logger.error("archivo NO movido", e);
-			}
-			
-			logger.debug("censo renamed to: "+this.rutaDocumentosTemporal+"/censo_"+timestamp);
-		}
-		
-		logger.debug(""
-				+ "\n###### subirCensoMorbilidadArchivo ######"
-				+ "\n#########################################"
-				);
-		return SUCCESS;
-	}
-	
-	public String subirCensoMorbilidad(){
-		this.session=ActionContext.getContext().getSession();
-		logger.debug(Utils.log(
-				 "\n#####################################"
-				,"\n###### subirCensoMorbilidad ######"
-				,"\n###### smap1="  , smap1
-				,"\n###### olist1=" , olist1
-				));
-		success = true;
-		exito   = true;
-		try {
-			//Recibimos el parametro de timestamp para validar el nombre del archivo
-			String layoutTimestamp = smap1.get("timestamp");
-			String descMorbilidad  = smap1.get("descMorbilidad");
-			String fechaVigencia   = smap1.get("dtFechaVigencia").substring(8,10) + "/" + smap1.get("dtFechaVigencia").substring(5,7) + "/" + smap1.get("dtFechaVigencia").substring(0,4);
-			censo = new File(this.rutaDocumentosTemporal+"/censoMorbilidad_"+layoutTimestamp);
-			//layoutGral = new File(this.rutaDocumentosTemporal+"/layoutGral_"+layoutTimestamp);
-			
-			String nombreLayout = null;
-			String nombreLayoutConfirmado = smap1.get("nombreLayoutConfirmado");
-				
-			if(exito&&StringUtils.isBlank(nombreLayoutConfirmado)){
-				FileInputStream input       = null;
-				Workbook        workbook    = null;
-				Sheet           sheet       = null;
-				Long            inTimestamp = null;
-				File            archivoTxt  = null;
-				PrintStream     output      = null;
-				
-				try{
-					input       = new FileInputStream(censo);
-					workbook    = WorkbookFactory.create(input);
-					sheet       = workbook.getSheetAt(0);
-					inTimestamp = System.currentTimeMillis();
-					nombreLayout = "layout_"+inTimestamp+".txt";
-					archivoTxt  = new File(this.rutaDocumentosTemporal +"/"+nombreLayout);
-					output      = new PrintStream(archivoTxt);
-				}
-				catch(Exception ex){
-					long etimestamp = System.currentTimeMillis();
-					exito           = false;
-					respuesta       = "Error al procesar el layout #"+etimestamp;
-					respuestaOculta = ex.getMessage();
-					logger.error(respuesta,ex);
-				}
-				
-				if(exito&&workbook.getNumberOfSheets()!=1) {
-					long etimestamp = System.currentTimeMillis();
-					exito           = false;
-					respuesta       = "Favor de revisar el n\u00famero de hojas del censo #"+etimestamp;
-					logger.error(respuesta);
-				}
-				if(exito)
-				{
-					//Iterate through each rows one by one
-					logger.debug(""
-						+ "\n##############################################"
-						+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
-					);
-					
-					Iterator<Row> rowIterator        = sheet.iterator();
-		            int           fila               = 0;
-		            int           nConsulta          = 0;
-		            StringBuilder bufferErroresCenso = new StringBuilder();
-		            int           filasLeidas        = 0;
-		            int           filasProcesadas    = 0;
-		            int           filasError         = 0;
-		            
-		            Map<Integer,String>  totalConsultasAseg  = new LinkedHashMap<Integer,String>();
-					Map<Integer,Boolean> estadoConsultas     = new LinkedHashMap<Integer,Boolean>();
-					Map<Integer,Integer> errorConsultas      = new LinkedHashMap<Integer,Integer>();
-					
-					boolean[] gruposValidos = new boolean[olist1.size()];
-					while (rowIterator.hasNext()&&exito) {
-						Row           row            = rowIterator.next();
-		                Date          auxDate        = null;
-		                Cell          auxCell        = null;
-		                StringBuilder bufferLinea    = new StringBuilder();
-		                StringBuilder bufferLineaStr = new StringBuilder();
-		                boolean       filaBuena      = true;
-		                
-		                if(Utils.isRowEmpty(row))
-		                {
-		                	break;
-		                }
-		                
-		                fila       		= fila + 1;
-		                filasLeidas 	= filasLeidas + 1;
-		                double cdgrupo	= -1d;
-		                
-		                
-		               if(fila > 4){
-			                //Empezamos a leer los campos del archivo de Excel
-			                double edadPromedio	   		= 0d;
-			                double porcentajeH 			= 0d;
-			                //Medicina Preventiva
-			                double medPreventivaHom 	= 0d;
-			                double medPreventivaMuj 	= 0d;
-			                //Medina de Primer Contacto
-			                double medPrimerContHom 	= 0d;
-			                double medPrimerContaMuj 	= 0d;
-			                //Medina de Primer Contacto
-			                double maternidadHom 		= 0d;
-			                double maternidadMuj 		= 0d;
-			                //Medina de Primer Contacto
-			                double ayudaMatHom 			= 0d;
-			                double ayudaMatMuj 			= 0d;
-			                //Medina de Primer Contacto
-			                double servOdontHom 		= 0d;
-			                double servOdontMuj 		= 0d;
-			                //Servicios Auxiliares de diagnostico
-			                double servAuxDiagtHom 		= 0d;
-			                double servAuxDiagtMuj 		= 0d;
-			                //Medicamentos
-			                double medicamentosHom 		= 0d;
-			                double medicamentosMuj 		= 0d;
-			                //Hospitalizacion
-			                double HospitalizaHom 		= 0d;
-			                double HospitalizaMuj 		= 0d;
-			                String leyendaConcepto 		= null;
-			                //EDAD PROMEDIO
-			                try {
-			                	edadPromedio = row.getCell(0).getNumericCellValue();
-				                logger.debug("EDAD PROMEDIO: "+(String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"));
-				                bufferLinea.append(descMorbilidad+"|"+fechaVigencia+"|"+String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'EDAD PROMEDIO' (A) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
-			                }
-			                //MEDICINA PREVENTIVA HOMBRE
-			                try {
-			                	medPreventivaHom = row.getCell(1).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+medPreventivaHom+"|");
-				                bufferLinea.append(medPreventivaHom+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA PREVENTIVA HOMBRES' (B) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
-			                }
-			                //MEDICINA PREVENTIVA MUJERES
-			                try {
-			                	medPreventivaMuj = row.getCell(2).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+medPreventivaMuj+"|");
-				                bufferLinea.append(medPreventivaMuj+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA PREVENTIVA MUJERES' (C) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(2)),"-"));
-			                }
-			                //MEDICINA DE PRIMER CONTACTO HOMBRE
-			                try {
-			                	medPrimerContHom = row.getCell(3).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+medPrimerContHom+"|");
-				                bufferLinea.append(medPrimerContHom+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA DE PRIMER CONTACTO HOMBRES' (D) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(3)),"-"));
-			                }
-			                //MEDICINA DE PRIMER CONTACTO MUJER
-			                try {
-			                	medPrimerContaMuj = row.getCell(4).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+medPrimerContaMuj+"|");
-				                bufferLinea.append(medPrimerContaMuj+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICINA DE PRIMER CONTACTO HOMBRES' (E) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(4)),"-"));
-			                }
-			                //MATERNIDAD HOMBRE
-			                try {
-			                	maternidadHom = row.getCell(5).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+maternidadHom+"|");
-				                bufferLinea.append(maternidadHom+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MATERNIDAD HOMBRES' (F) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
-			                }
-			                //MATERNIDAD MUJERES
-			                try {
-			                	maternidadMuj = row.getCell(6).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+maternidadMuj+"|");
-				                bufferLinea.append(maternidadMuj+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MATERNIDAD MUJERES' (G) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
-			                }
-			                //AYUDA DE MATERNIDAD HOMBRE
-			                try {
-			                	ayudaMatHom = row.getCell(7).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+ayudaMatHom+"|");
-				                bufferLinea.append(ayudaMatHom+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'AYUDA DE MATERNIDAD HOMBRES' (H) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
-			                }
-			                //AYUDA DE MATERNIDAD MUJERES
-			                try {
-			                	ayudaMatMuj = row.getCell(8).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+ayudaMatMuj+"|");
-				                bufferLinea.append(ayudaMatMuj+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'AYUDA DE MATERNIDAD MUJERES' (I) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
-			                }
-			                //SERVICIOS ODONTOLOGICOS HOMBRE
-			                try {
-			                	servOdontHom = row.getCell(9).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+servOdontHom+"|");
-				                bufferLinea.append(servOdontHom+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS ODONTOLOGICOS HOMBRES' (J) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
-			                }
-			                //SERVICIOS ODONTOLOGICOS MUJERES
-			                try {
-			                	servOdontMuj = row.getCell(10).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+servOdontMuj+"|");
-				                bufferLinea.append(servOdontMuj+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS ODONTOLOGICOS MUJERES' (K) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(10)),"-"));
-			                }
-			                //SERVICIOS AURXILIARES DE DIAGNOSTICO HOMBRE
-			                try {
-			                	servAuxDiagtHom = row.getCell(11).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+servAuxDiagtHom+"|");
-				                bufferLinea.append(servAuxDiagtHom+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS AURXILIARES DE DIAGNOSTICO HOMBRE' (L) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(11)),"-"));
-			                }
-			                //SERVICIOS AURXILIARES DE DIAGNOSTICO MUJERES
-			                try {
-			                	servAuxDiagtMuj = row.getCell(12).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+servAuxDiagtMuj+"|");
-				                bufferLinea.append(servAuxDiagtMuj+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'SERVICIOS AURXILIARES DE DIAGNOSTICO MUJERES' (M) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(12)),"-"));
-			                }
-			                //MEDICAMENTOS HOMBRE
-			                try {
-			                	medicamentosHom = row.getCell(13).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+medicamentosHom+"|");
-				                bufferLinea.append(medicamentosHom+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICAMENTOS HOMBRE' (N) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
-			                }
-			                //MEDICAMENTOS MUJERES
-			                try {
-			                	medicamentosMuj = row.getCell(14).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+medicamentosMuj+"|");
-				                bufferLinea.append(medicamentosMuj+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'MEDICAMENTOS MUJERES' (O) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
-			                }
-			                //HOSPITALIZACION HOMBRE
-			                try {
-			                	HospitalizaHom = row.getCell(15).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+HospitalizaHom+"|");
-				                bufferLinea.append(HospitalizaHom+"|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'HOSPITALIZACION HOMBRE' (P) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
-			                }
-			                //HOSPITALIZACION MUJERES
-			                try {
-			                	HospitalizaMuj = row.getCell(16).getNumericCellValue()* 100;
-			                	logger.debug("hombre: "+HospitalizaMuj+"|");
-				                bufferLinea.append(HospitalizaMuj+"|MSC|");
-		                	} catch(Exception ex) {
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'HOSPITALIZACION MUJERES' (Q) de la fila ",fila," "));
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
-			                }
-			                
-			                nConsulta++;
-		                	totalConsultasAseg.put(nConsulta,"");
-		                	estadoConsultas.put(nConsulta,true);
-		                	
-		                	if(filaBuena) {
-			                	totalConsultasAseg.put(nConsulta,Utils.join(totalConsultasAseg.get(nConsulta),bufferLinea.toString(),"\n"));
-			                	filasProcesadas = filasProcesadas + 1;
-			                }
-			                else {
-			                	filasError = filasError + 1;
-			                	bufferErroresCenso.append(Utils.join(": ",bufferLineaStr.toString(),"\n"));
-			                	estadoConsultas.put(nConsulta,false);
-			                	if(!errorConsultas.containsKey(nConsulta)) {
-			                		errorConsultas.put(nConsulta,fila);
-			                	}
-			                }
-		               }
-					}//while (rowIterator.hasNext()&&exito)
-					
-					logger.debug("VALOR DEL EXITO ====> "+exito);
-					logger.debug("filasError ====>"+filasError);
-					if(exito) {
-		            	logger.debug("total Consultas: {}\nEstado Consultas: {}\nError Consultas: {}"
-			            		,totalConsultasAseg,estadoConsultas,errorConsultas);
-			            
-			            for(Entry<Integer,Boolean>en:estadoConsultas.entrySet()){
-			            	int     n = en.getKey();
-			            	boolean v = en.getValue();
-			            	if(v){
-			            		output.print(totalConsultasAseg.get(n));
-			            	}
-			            }
-			            
-						smap1.put("erroresCenso"    , bufferErroresCenso.toString());
-						smap1.put("filasLeidas"     , Integer.toString(filasLeidas));
-						smap1.put("filasProcesadas" , Integer.toString(filasProcesadas));
-						smap1.put("filasErrores"    , Integer.toString(filasError));
-					}
-					if(exito)
-		            {
-		            	try
-		            	{
-		            		input.close();
-		            		output.close();
-		            	}
-		            	catch(Exception ex)
-		            	{
-		            		long etimestamp = System.currentTimeMillis();
-		            		exito           = false;
-		            		respuesta       = "Error al transformar el archivo #"+etimestamp;
-		            		respuestaOculta = ex.getMessage();
-		            		logger.error(respuesta,ex);
-		            	}
-		            }
-					
-					logger.debug(""
-							+ "\n###### "+archivoTxt.getAbsolutePath()+" ######"
-							+ "\n##############################################"
-					);
-					
-					if(exito){
-						if(filasError > 0){
-							exito = false;
-						}else{
-							exito = FTPSUtils.upload
-									(
-										this.dominioServerLayouts,
-										this.userServerLayouts,
-										this.passServerLayouts,
-										archivoTxt.getAbsolutePath(),
-										this.directorioServerLayouts+"/"+nombreLayout
-								    )
-									&&FTPSUtils.upload
-									(
-										this.dominioServerLayouts,
-										this.userServerLayouts,
-										this.passServerLayouts,
-										archivoTxt.getAbsolutePath(),
-										this.directorioServerLayouts+"/"+nombreLayout
-									);
-							
-							if(!exito)
-							{
-								long etimestamp = System.currentTimeMillis();
-								exito           = false;
-								respuesta       = "Error al transferir archivo al servidor #"+etimestamp;
-								respuestaOculta = respuesta;
-								logger.error(respuesta);
-							}
-							
-							if(exito)
-							{
-								try
-								{
-									logger.debug("Entra a la opcion del guardado ===> ");
-									cotizacionManager.guardarMorbilidad(nombreLayout);
-									logger.debug("<=== Sale a la opcion del guardado");
-								}
-								catch(Exception ex)
-								{
-									long etimestamp = System.currentTimeMillis();
-									exito           = false;
-									respuesta       = "Error al guardar los datos #"+etimestamp;
-									respuestaOculta = ex.getMessage();
-									logger.error(respuesta,ex);
-									
-								}
-							}
-						}
-					}
-				}// Fin del iterator
-			}//if(exito&&StringUtils.isBlank(nombreLayoutConfirmado))
-			
-			if(exito)
-			{
-				respuesta       = "Se ha complementado el guardado del layout";
-				success = true;
-				exito   = true;
-				respuestaOculta = "Todo OK";
-			}
-		} catch (Exception e) {
-			Utils.manejaExcepcion(e);
-		}
-		logger.debug(""
-				+ "\n######   subirCensoMorbilidad	 ######"
-				+ "\n######################################"
-				);
-		
-		
-		return SUCCESS;
-	}
-	
-	public String consultaMorbilidad(){
-		logger.debug("Entra a consultaMorbilidad");
-		logger.debug("params :{}",params);
-		String morbilidadEx = "0";
-		String cdunieco     = null;
-		String cdramo   	= null;
-		String cdtipsit   	= null;
-		String estado   	= null;
-		String nmpoliza  	= null;
-		String ntramite   	= null;
-		String cdagente   	= null;
-		String status   	= null;
-		String cdtipsup  	= null;
-		String nmpolant   	= null;
-		
-		
-		if(params != null){
-			morbilidadEx  = params.get("morbilidad");
-			cdunieco      = params.get("cdunieco");
-			cdramo        = params.get("cdramo");
-			cdtipsit      = params.get("cdtipsit");
-			estado        = params.get("estado");
-			nmpoliza      = params.get("nmpoliza");
-			ntramite      = params.get("ntramite");
-			cdagente      = params.get("cdagente");
-			status        = params.get("status");
-			cdtipsup      = params.get("cdtipsup");
-			nmpolant      = params.get("nmpolant");
-		}
-		
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("morbilidadEx",morbilidadEx);
-		params.put("cdunieco",cdunieco);
-		params.put("cdramo",cdramo);
-		params.put("cdtipsit",cdtipsit);
-		params.put("estado",estado);
-		params.put("nmpoliza",nmpoliza);
-		params.put("ntramite",ntramite);
-		params.put("cdagente",cdagente);
-		params.put("status",status);
-		params.put("cdtipsup",cdtipsup);
-		params.put("nmpolant",nmpolant);
-		setParamsJson(params);
-		try {
-			logger.debug("Params: {}", params);
-		}catch( Exception e){
-			logger.error("Error consultaMorbilidad {}", e.getMessage(), e);
-		}
-		success = true;
-		return SUCCESS;
-	}
-
-	
-	public String consultaDatosConfiguracionMorbilidad(){
-		logger.debug("Entra a consultaDatosConfiguracionMorbilidad params de entrada :{} ",params);
-		try {
-			slist1 = cotizacionManager.getConsultaMorbilidad(params.get("morbilidad"));
-			logger.debug("Respuesta consultaDatosConfiguracionMorbilidad : {}",slist1);
-		}catch( Exception e){
-			logger.error("Error al obtener consultaDatosConfiguracionMorbilidad : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		setSuccess(true);
-		return SUCCESS;
-	}
-	
-	public String existeMorbilidadNueva(){
-	    logger.debug("Entra a existeMorbilidadNueva Params: {}", params);
-	    try {
-	    	respuesta = cotizacionManager.existeMorbilidadNueva(params.get("morbilidad"));
-	        logger.debug("respuesta : {}", respuesta);
-	    }catch( Exception e){
-	        logger.error("Error existeMorbilidadNueva : {}", e.getMessage(), e);
-	        return SUCCESS;
-	    }
-	    success = true;
-	    return SUCCESS;
-	}
-	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
@@ -15319,63 +14611,6 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setSaMed(String saMed) {
 		this.saMed = saMed;
-	}
-	
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getSigsFacultaDatosPolizaSicapsUrl() {
-		return sigsFacultaDatosPolizaSicapsUrl;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
-	}
-
-	public String getRutaDocumentosTemporal() {
-		return rutaDocumentosTemporal;
-	}
-
-	public String getUserServerLayouts() {
-		return userServerLayouts;
-	}
-
-	public String getPassServerLayouts() {
-		return passServerLayouts;
-	}
-
-	public String getDirectorioServerLayouts() {
-		return directorioServerLayouts;
-	}
-
-	public String getDominioServerLayouts() {
-		return dominioServerLayouts;
-	}
-
-	public String getDominioServerLayouts2() {
-		return dominioServerLayouts2;
-	}
-
-	public String getSigsObtenerDatosPorSucRamPolUrl() {
-		return sigsObtenerDatosPorSucRamPolUrl;
-	}
-	
-	public void setParamsJson(HashMap<String, String> params2) {
-		this.params = params2;
-	}
-
-	public String getParamsJson() {
-		try {
-			return JSONUtil.serialize(params);
-		} catch (Exception e) {
-			logger.error("Error al generar JSON de params {}", e.getMessage(), e);
-			return null;
-		}
 	}
 	
 }

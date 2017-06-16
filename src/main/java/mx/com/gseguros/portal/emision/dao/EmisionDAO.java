@@ -111,8 +111,5 @@ public interface EmisionDAO {
 			String nmsuplem, String cdgrupo, String cdplan) throws Exception;
 	
 	public Map<String, String> redireccionaReporteVidaAuto(Integer cdunieco, Integer cdramo,Integer nmpoliza, String tipoEndoso, String endoso) throws Exception;
-
-    public List<Map<String,String>> obtieneDatosWsCotizacionServPublico(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i,
-            String pv_nmpoliza_i, String pv_nmsuplem_i, String pv_tipoend_i, String pv_numend_i) throws Exception;
 	
 }

@@ -1989,6 +1989,17 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			Utils.validate(ntramite  , "No se recibi\u00f3 el tr\u00e1mite",
 			               statusNew , "No se recibi\u00f3 el status nuevo");
 			
+			//REQ0005 antes de turnar el  tramite se debe verificar si es flujo no sicaps (CDTIPFLU=284, DSTIPFLU=EMISIÓN NO SICAPS) para solicitar documento de cotizacion
+			logger.debug("Determinando si es flujo SICAPS o NO SICAPS cdtipflu: "+ cdtipflu + " ntramite: " + ntramite);
+				if (documentoCotizacionCdtipfluNosicaps.equals(cdtipflu)){// si es no sicaps verifico si tiene documentos cargados
+					//llamo al sp de consulta de documentos de cotizacion
+					int cantidadDocumentos = 0;
+					cantidadDocumentos = flujoMesaControlManager.obtenerCantidadDocumentosCotizacion(ntramite);
+					if (cantidadDocumentos == 0 ){
+						throw new ApplicationException("Debe adjuntar los documentos de Cotizaci\u00F3n para continuar");
+					}
+				}
+			//req0005 continua flujo normal
 			
 				RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
 			        cdusuari,
