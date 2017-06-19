@@ -2912,7 +2912,7 @@ function _p21_agentes()
             close: function (){
                 try{
                     _ventanaGridAgentesSuperior.destroy();
-                    _p21_reload(null,_EN_ESPERA_DE_COTIZACION ,_p21_smap1.nmpoliza);
+                    _p21_reload(null, _p21_smap1.status, _p21_smap1.nmpoliza);
                 }catch (e){
                     debugError('Error al destruir ventana de agentes.',e);
                 }
