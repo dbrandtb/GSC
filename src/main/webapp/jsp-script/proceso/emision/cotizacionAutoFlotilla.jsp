@@ -37,6 +37,7 @@ var url_PantallaPreview                       = '<s:url namespace="/endosos"    
 var _p48_urlMovimientos                       = '<s:url namespace="/movimientos"     action="ejecutar"                            />';
 var _p30_urlConfirmarEndoso                   = '<s:url namespace="/endosos"         action="confirmarEndosoAltaIncisoAuto"       />';
 var _p30_urlCargarPolizaSIGS                  = '<s:url namespace="/emision"         action="cargarPoliza"                        />';
+var _p30_urlCargarCorreos                     = '<s:url namespace="/cotizacionautos"          action="cargarCorreos"              />';
 
 var _p30_urlRecuperarDatosTramiteValidacion = '<s:url namespace="/flujomesacontrol" action="recuperarDatosTramiteValidacionCliente" />';
 var _p29_urlObtieneValNumeroSerie           = '<s:url namespace="/emision"          action="obtieneValNumeroSerie"                  />';
@@ -5629,6 +5630,13 @@ function _p30_enviar()
                 ,allowBlank : false
                 ,blankText  : 'Introducir correo(s) separados por ;'
                 ,width      : 500
+                //REQ0040
+                ,listeners  : {
+                	boxready : function(){
+                		_p30_cargarCorreos();
+                		debug('Saliendo de la funcion ', _fieldById('_p30_idInputCorreos').getValue());
+                	}
+                }
             }
         ]
         ,buttons :
@@ -7920,6 +7928,38 @@ function _p30_cotizacionFinal(sinTarificar,json,form)
             }
         });
 }
+
+//REQ0040 envio de correos
+function _p30_cargarCorreos()
+{
+    debug('>_p03_cargarCorreos');
+    Ext.Ajax.request(
+    {
+        url     : _p30_urlCargarCorreos
+        ,params :
+        {
+            'smap1.ntramite'    : _p30_smap1.ntramite
+        }
+        ,success : function(response) {
+            var json = Ext.decode(response.responseText);
+            debug('### json cargarCorreos:',json);
+            
+            if(json.exito)
+            {
+            	  debug('>_p30_cargarCorreos 1 ', json.respuesta);
+            	  _fieldById('_p30_idInputCorreos').setValue(json.respuesta);
+            }
+            else{
+            	  debug('>_p30_cargarCorreos 2');
+            }
+         }
+         ,failure : function(){
+         	me.setLoading(false);
+            errorComunicacion();
+         }
+    })
+}
+
 ////// funciones //////
 <%-- include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" --%>
 </script>
