@@ -9606,6 +9606,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					"SERVAUXDIAGTHOM",			"SERVAUXDIAGTMUJ",		
 					"MEDICAMENTOSHOM", 			"MEDICAMENTOSMUJ",
 					"HOSPITALIZAHOM",			"HOSPITALIZAMUJ",
+					"ASISTENCIAHOM",			"ASISTENCIAMUJ",
 					"URGENCIAMEDHOM",			"URGENCIAMEDMUJ"
 			};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
