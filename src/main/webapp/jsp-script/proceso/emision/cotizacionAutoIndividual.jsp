@@ -96,9 +96,10 @@ var _p28_urlImprimirCotiza                    = '<s:property value="rutaServidor
 var _p28_reportsServerUser                    = '<s:property value="passServidorReports" />';
 var _0_urlCargaValidacionDescuentoR6          = '<s:url namespace="/emision"          action="obtieneValidacionDescuentoR6"                 />';
 var _0_urlNada                                = '<s:url namespace="/emision"          action="webServiceNada"                 />';
-var _p28_urlImprimirCotiza = '<s:property value="rutaServidorReports" />'; 
-var _p28_reportsServerUser = '<s:property value="passServidorReports" />';
-var _0_urlObtieneValNumeroSerie    = '<s:url namespace="/emision"         action="obtieneValNumeroSerie"          />';
+var _p28_urlImprimirCotiza                    = '<s:property value="rutaServidorReports" />'; 
+var _p28_reportsServerUser                    = '<s:property value="passServidorReports" />';
+var _0_urlObtieneValNumeroSerie               = '<s:url namespace="/emision"          action="obtieneValNumeroSerie"          />';
+var _p28_urlCargarCorreos                     = '<s:url namespace="/cotizacionautos"          action="cargarCorreos"                                    />';
 ////// urls //////
 
 ////// variables //////
@@ -5325,12 +5326,21 @@ function _p28_enviar()
             {
                 xtype       : 'textfield'
                 ,itemId     : '_p28_idInputCorreos'
+                ,id         : '_p28_idInputCorreos'
                 ,fieldLabel : 'Correo(s)'
                 ,emptyText  : 'Correo(s) separados por ;'
                 ,labelWidth : 100
                 ,allowBlank : false
                 ,blankText  : 'Introducir correo(s) separados por ;'
                 ,width      : 500
+                //REQ0040
+                ,listeners  : {
+                	boxready : function(){
+                		_p28_cargarCorreos();
+                		debug('Saliendo de la funcion ', _fieldById('_p28_idInputCorreos').getValue());
+                	}
+                }
+                	
             }
         ]
         ,buttons :
@@ -7155,6 +7165,38 @@ function turistasFormaPago(feini,fefin,listFP){
 		debugError(e)
 	}
 	return listFP;
+}
+
+
+//REQ0040 envio de correos
+function _p28_cargarCorreos()
+{
+    debug('>_p28_cargarCorreos');
+    Ext.Ajax.request(
+    {
+        url     : _p28_urlCargarCorreos
+        ,params :
+        {
+            'smap1.ntramite'    : _p28_smap1.ntramite
+        }
+        ,success : function(response) {
+            var json = Ext.decode(response.responseText);
+            debug('### json cargarCorreos:',json);
+            
+            if(json.exito)
+            {
+            	  debug('>_p28_cargarCorreos 1 ', json.respuesta);
+            	  _fieldById('_p28_idInputCorreos').setValue(json.respuesta);
+            }
+            else{
+            	  debug('>_p28_cargarCorreos 2');
+            }
+         }
+         ,failure : function(){
+         	me.setLoading(false);
+            errorComunicacion();
+         }
+    })
 }
 
 ////// funciones //////

@@ -7265,7 +7265,7 @@ public class CotizacionAutoManagerImpl implements CotizacionAutoManager
 		}
 	}
 	
-	//Retorna un string con la lista de correos asociados al tramite separados por ";"
+	//REQ0040 Retorna un string con la lista de correos asociados al tramite separados por ";"
 	@Override
 	public String cargarCorreosPorTramite(String ntramite) throws ApplicationException {
 		try{
