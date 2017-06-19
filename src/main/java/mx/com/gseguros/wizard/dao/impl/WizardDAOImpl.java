@@ -649,7 +649,7 @@ public class WizardDAOImpl extends AbstractManagerDAO implements WizardDAO {
     protected class ObtieneListaPeriodos extends StoredProcedure {
     	
     	protected ObtieneListaPeriodos(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_OBTIENE_PERIODO");
+    		super(dataSource, "PKG_LISTAS_PRE.P_OBTIENE_PERIODO");
     		
     		declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
     		
@@ -675,7 +675,7 @@ public class WizardDAOImpl extends AbstractManagerDAO implements WizardDAO {
     protected class ObtieneListaCoberturas extends StoredProcedure {
     	
     	protected ObtieneListaCoberturas(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_COBERTURA_RAMO");
+    		super(dataSource, "PKG_LISTAS_PRE.P_COBERTURA_RAMO");
     		
     		declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
     		
@@ -689,7 +689,7 @@ public class WizardDAOImpl extends AbstractManagerDAO implements WizardDAO {
     protected class ObtieneListaConceptos extends StoredProcedure {
     	
     	protected ObtieneListaConceptos(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_CONCEPTO_TARIFICA");
+    		super(dataSource, "PKG_LISTAS_PRE.P_CONCEPTO_TARIFICA");
     		
     		declareParameter(new SqlParameter("pv_tipcon", OracleTypes.VARCHAR));
     		
@@ -703,7 +703,7 @@ public class WizardDAOImpl extends AbstractManagerDAO implements WizardDAO {
     protected class ObtieneTipoConceptos extends StoredProcedure {
     	
     	protected ObtieneTipoConceptos(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_CONCEPTO_PRODUCTO");
+    		super(dataSource, "PKG_LISTAS_PRE.P_CONCEPTO_PRODUCTO");
     		
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ListasPeriodosMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -716,7 +716,7 @@ public class WizardDAOImpl extends AbstractManagerDAO implements WizardDAO {
 protected class ObtieneListaComportamientos extends StoredProcedure {
     	
     	protected ObtieneListaComportamientos(DataSource dataSource) {
-    		super(dataSource, "PKG_TABAPOYO.P_OBTENER_VALORATT_TODO");
+    		super(dataSource, "PKG_TABAPOYO_PRE.P_OBTENER_VALORATT_TODO");
     		
     		declareParameter(new SqlParameter("PI_TABLA", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("PI_ATRIB_DESC", OracleTypes.VARCHAR));
@@ -1032,7 +1032,7 @@ protected class VarTemProMapper implements RowMapper {
 protected class ObtieneListaBloques extends StoredProcedure {
 	
 	protected ObtieneListaBloques(DataSource dataSource) {
-		super(dataSource, "PKG_LISTAS.P_BLOQUES");
+		super(dataSource, "PKG_LISTAS_PRE.P_BLOQUES");
 		
 		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new BloqueMapper()));
 		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -1056,7 +1056,7 @@ protected class BloqueMapper implements RowMapper {
 protected class CatalogoBloque extends StoredProcedure {
 	
 	protected CatalogoBloque(DataSource dataSource) {
-		super(dataSource, "PKG_LISTAS.P_BLOQUES_FIJOS");
+		super(dataSource, "PKG_LISTAS_PRE.P_BLOQUES_FIJOS");
 		
 		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new BloqueFijoMapper()));
 		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -1081,7 +1081,7 @@ protected class BloqueFijoMapper implements RowMapper {
 protected class CatalogoCampo extends StoredProcedure {
 	
 	protected CatalogoCampo(DataSource dataSource) {
-		super(dataSource, "PKG_LISTAS.P_CAMPO_BLOQUE");
+		super(dataSource, "PKG_LISTAS_PRE.P_CAMPO_BLOQUE");
 		
 		declareParameter(new SqlParameter("PV_OTTIPO_I", OracleTypes.VARCHAR));
 		declareParameter(new SqlParameter("PV_CDBLOQUE_I", OracleTypes.VARCHAR));
@@ -1138,7 +1138,7 @@ protected class ReglaValidMapper implements RowMapper {
 protected class ObtenerListaTablasApoyo extends StoredProcedure {
 	
 	protected ObtenerListaTablasApoyo(DataSource dataSource) {
-		super(dataSource, "PKG_LISTAS.P_LISTA_TCATALOG");
+		super(dataSource, "PKG_LISTAS_PRE.P_LISTA_TCATALOG");
 		
 		declareParameter(new SqlParameter("PV_CDTABLA_I", OracleTypes.VARCHAR));
 		declareParameter(new SqlParameter("PV_CDIDIOMA_I", OracleTypes.VARCHAR));
@@ -1565,7 +1565,7 @@ protected class BorraVarTmp extends StoredProcedure {
 	
 	protected class ObtieneTablasApoyo extends StoredProcedure {
 		protected ObtieneTablasApoyo(DataSource dataSource) {
-	        super(dataSource,"Pkg_Tabapoyo.P_OBTIENE_TABLAS_APOYO");
+	        super(dataSource,"PKG_TABAPOYO_PRE.P_OBTIENE_TABLAS_APOYO");
 	        declareParameter(new SqlParameter("PV_NMTABLA_I"  , OracleTypes.VARCHAR));
 	        declareParameter(new SqlParameter("PV_CDTABLA_I"  , OracleTypes.VARCHAR));
 	        declareParameter(new SqlParameter("PV_DSTABLA_I"  , OracleTypes.VARCHAR));
@@ -1599,7 +1599,7 @@ protected class BorraVarTmp extends StoredProcedure {
 	
 	protected class GuardaTablaApoyo extends StoredProcedure {
 		protected GuardaTablaApoyo(DataSource dataSource) {
-			super(dataSource,"PKG_TABAPOYO.P_GUARDA_TABLA");
+			super(dataSource,"PKG_TABAPOYO_PRE.P_GUARDA_TABLA");
 			declareParameter(new SqlParameter("pi_cdtabla" , OracleTypes.VARCHAR));
 			declareParameter(new SqlInOutParameter("pi_nmtabla" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_dstabla" , OracleTypes.VARCHAR));
@@ -1625,7 +1625,7 @@ protected class BorraVarTmp extends StoredProcedure {
 	
 	protected class GuardaClavesTablaApoyo extends StoredProcedure {
 		protected GuardaClavesTablaApoyo(DataSource dataSource) {
-			super(dataSource,"PKG_TABAPOYO.P_GUARDA_CLAVES");
+			super(dataSource,"PKG_TABAPOYO_PRE.P_GUARDA_CLAVES");
 			declareParameter(new SqlParameter("pi_tip_tran" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_nmtabla" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_dsclave1" , OracleTypes.VARCHAR));
@@ -1662,7 +1662,7 @@ protected class BorraVarTmp extends StoredProcedure {
 	
 	protected class GuardaAtributosTablaApoyo extends StoredProcedure {
 		protected GuardaAtributosTablaApoyo(DataSource dataSource) {
-			super(dataSource,"PKG_TABAPOYO.P_GUARDA_ATRIBUTOS");
+			super(dataSource,"PKG_TABAPOYO_PRE.P_GUARDA_ATRIBUTOS");
 			declareParameter(new SqlParameter("pi_tip_tran" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_nmtabla" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_cdatribu" , OracleTypes.VARCHAR));
@@ -1684,7 +1684,7 @@ protected class BorraVarTmp extends StoredProcedure {
 	
 	protected class ObtieneClavesTablaApoyo extends StoredProcedure {
 		protected ObtieneClavesTablaApoyo(DataSource dataSource) {
-			super(dataSource,"PKG_TABAPOYO.P_OBTIENE_CLAVES");
+			super(dataSource,"PKG_TABAPOYO_PRE.P_OBTIENE_CLAVES");
 			declareParameter(new SqlParameter("pi_nmtabla" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"DSCLAVE1"
@@ -1709,7 +1709,7 @@ protected class BorraVarTmp extends StoredProcedure {
 	
 	protected class ObtieneAtributosTablaApoyo extends StoredProcedure {
 		protected ObtieneAtributosTablaApoyo(DataSource dataSource) {
-			super(dataSource,"PKG_TABAPOYO.P_OBTIENE_ATRIBUTOS");
+			super(dataSource,"PKG_TABAPOYO_PRE.P_OBTIENE_ATRIBUTOS");
 			declareParameter(new SqlParameter("pi_nmtabla" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDATRIBU"

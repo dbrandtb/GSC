@@ -123,9 +123,6 @@ public enum RecuperacionSimple
     ,RECUPERAR_CORREO_AGENTE_TRAMITE                         ("M")
     ,RECUPERAR_HISTORIAL_TRAMITE                             ("L")
     ,RECUPERAR_DETALLES_TRAMITE                              ("L")
-    ,VALIDA_RENOVACION_COLECTIVO                             ("L")
-    ,RENOVAR_X_FECHAS_COLECTIVOS                             ("L")
-    ,RECUPERAR_RANGO_DESCUENTO_RECARGO                       ("M")
     ,RECUPERAR_VALORES_MODELO                                ("L")
 	;
 	 
