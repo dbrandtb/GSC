@@ -532,7 +532,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
     public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
             String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle) throws Exception {
-        return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
+        return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,false,
                 porEscalamiento, fechaHoy, sinGrabarDetalle, false, null, false, null);
     }
     
@@ -545,7 +545,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
     public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
             String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle, boolean sinBuscarRegreso) throws Exception {
-        return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
+        return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,false,
                 porEscalamiento, fechaHoy, sinGrabarDetalle, sinBuscarRegreso, null, false, null);
     }
 	
@@ -555,9 +555,9 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	@Override
 	@Deprecated
 	public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
-            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
+            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean cartaRechazo, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust) throws Exception {
-	    return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
+	    return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente, cartaRechazo,
                 porEscalamiento, fechaHoy, sinGrabarDetalle, sinBuscarRegreso, null, false, null);
 	}
 	
@@ -569,7 +569,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
      */
     @Override
 	public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
-	        String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
+	        String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean cartaRechazo, boolean porEscalamiento, Date fechaHoy,
 	        boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust, boolean soloCorreosRecibidos, String correosRecibidos)
 	        throws Exception {
 	    logger.debug(Utils.log(
@@ -584,6 +584,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	            "\n@@@@@@ cdusuariDes          = " , cdusuariDes,
 	            "\n@@@@@@ cdsisrolDes          = " , cdsisrolDes,
 	            "\n@@@@@@ permisoAgente        = " , permisoAgente,
+	            "\n@@@@@@ cartaRechazo         = " , cartaRechazo,
 	            "\n@@@@@@ porEscalamiento      = " , porEscalamiento,
                 "\n@@@@@@ fechaHoy             = " , fechaHoy,
                 "\n@@@@@@ sinGrabarDetalle     = " , sinGrabarDetalle,
@@ -735,8 +736,12 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 try {
                     paso = "Enviando correos configurados 1";
                     logger.debug(paso);
-                    flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
-                            correosRecibidos);
+                    
+                    if(cartaRechazo){
+                    	logger.debug("Enviando Correos");
+	                    flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
+	                            correosRecibidos);
+                    }
                 } catch (Exception ex) {
                     logger.debug("Error al enviar correos de estatus al turnar", ex);
                 }

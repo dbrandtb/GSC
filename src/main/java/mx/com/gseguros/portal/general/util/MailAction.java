@@ -70,14 +70,25 @@ public class MailAction extends PrincipalCoreAction {
 			// Si viene la url de un archivo lo agrega a la lista de archivos adjuntos:
 			if(StringUtils.isNotBlank(urlArchivo) && StringUtils.isNotBlank(nombreArchivo) ) {
 				String nombreCompletoArchivo = this.rutaDocumentosTemporal + File.separator + nombreArchivo;
-				if(HttpUtil.generaArchivo(urlArchivo, nombreCompletoArchivo)) {
+				logger.debug(nombreCompletoArchivo);
+				if(urlArchivo.equals(this.rutaDocumentosTemporal)){
+					logger.debug("Entro a ruta temporal ",urlArchivo);
+					nombreCompletoArchivo = urlArchivo + File.separator + nombreArchivo;
+					logger.debug("Se creo archivo en rutA: {} ",nombreCompletoArchivo);
 					if(archivos == null) {
 						archivos = new ArrayList<String>();
 					}
 					archivos.add(nombreCompletoArchivo);
-				} else {
-					String mensaje = new StringBuffer("El archivo ").append(nombreCompletoArchivo).append(" no existe, no se adjuntar\u00E1").toString(); 
-					throw new Exception(mensaje);
+				}else {
+					if(HttpUtil.generaArchivo(urlArchivo, nombreCompletoArchivo)) {
+						if(archivos == null) {
+							archivos = new ArrayList<String>();
+						}
+						archivos.add(nombreCompletoArchivo);
+					} else {
+						String mensaje = new StringBuffer("El archivo ").append(nombreCompletoArchivo).append(" no existe, no se adjuntar\u00E1").toString(); 
+						throw new Exception(mensaje);
+					}
 				}
 			}
 			

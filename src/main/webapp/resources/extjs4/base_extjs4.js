@@ -3976,6 +3976,140 @@ function executeCopy (text) {
     alert('Copiado');
 }
 
+// Funcion creada para utilizar el sacaendoso
+function sacaEndoso (pv_cdunieco_i,
+                   pv_cdramo_i,
+                   pv_estado_i,
+                   pv_nmpoliza_i,
+                   pv_nmsuplem_o,
+                   pv_nsuplogi_o) {
+	debug('sacaEndoso(): ');
+    debug('sacaEndoso()');
+    var mask, ck = 'Cargando...';
+    try {
+        
+        mask = _maskLocal('Cargando...');
+        Ext.Ajax.request({
+            url     : _GLOBAL_COMP_URL_SACAENDOSO,
+            params  : {
+                'params.cdunieco' : pv_cdunieco_i,
+                'params.cdramo'   : pv_cdramo_i,
+                'params.estado'   : pv_estado_i,
+                'params.nmpoliza' : pv_nmpoliza_i,
+                'params.nmsuplem' : pv_nmsuplem_o,
+                'params.nsuplogi' : pv_nsuplogi_o
+            },
+            success : function (response) {
+                mask.close();
+                var ck = 'Cargando...';
+                try {
+                    var jsonSacaendoso = Ext.decode(response.responseText);
+                    debug('AJAX jsonSacaendoso:', jsonSacaendoso);
+                    if (jsonSacaendoso.success === true) {
+                    
+                    	
+                    } else {
+                        mensajeError(jsonSacaendoso.message);
+                    }
+                } catch (e) {
+                    manejaException(e, ck);
+                }
+            },
+            failure : function () {
+                mask.close();
+                errorComunicacion(null, 'Error al borrar cambios');
+            }
+        });
+    } catch (e) {
+        manejaException(e, ck, mask);
+    }
+}
+
+
+//Envio de Correos para cotizacion de Endoso de Parte de AUtos
+function envioCorreo(_url_temp
+                    ,ntramite
+                    ,nomArchivo
+                    ,usersCorreo){
+	//
+	debug('_url_temp: ',_url_temp);
+    debug('ntramite: ',ntramite);
+    debug('nomArchivo: ',nomArchivo);
+	//var usersCorreo = '';
+	//var nomArchivo = 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf';
+	
+	//Recupera Correos
+	/*Ext.Ajax.request(
+    {
+        url     : _GLOBAL_RECUPERA_CORREO
+        ,params :
+        {
+            'smap1.ntramite'    : ntramite
+        }
+        ,success : function(response) {
+            var json = Ext.decode(response.responseText);
+            debug('### json cargarCorreos:',json);
+            
+            if(json.exito)
+            {
+            	  debug('>_p28_cargarCorreos 1 ', json.respuesta);
+            	  usersCorreo = json.respuesta;
+            }
+            else{
+            	  debug('>recuperaCorreos');
+            }
+         }
+         ,failure : function(){
+         	me.setLoading(false);
+            errorComunicacion();
+         }
+    })*/
+    
+	
+	Ext.Ajax.request(
+    {
+        url : _GLOBAL_URL_ENVIARCORREO_ENDOSO
+        ,params :
+        {
+            to          : usersCorreo
+            ,mensaje    : 'Estimado(a) Agente,\n \n'+ 
+            'Se ha realizado la cotizaci\u00F3n solicitada de Endoso en el tr\u00e1mite, ' + ntramite + ' la cual se anexa para su revisi\u00F3n y/o aprobaci\u00F3n.\n \n' +
+			'Quedamos a sus ordenes para cualquier duda o aclaraci\u00F3n \n \n' +
+			'General de Seguros \n \n'
+            ,urlArchivo   : _url_temp
+            ,nombreArchivo : nomArchivo
+        },
+        callback : function(options,success,response)
+        {
+            
+            if (success)
+            {
+                var json = Ext.decode(response.responseText);
+                if (json.success == true)
+                {
+                    debug('Enviando Correo');
+                    centrarVentanaInterna(Ext.Msg.show(
+                    {
+                        title : 'Correo enviado'
+                        ,msg : 'El correo ha sido enviado'
+                        ,buttons : Ext.Msg.OK
+                    }));
+                }
+                else
+                {
+                    mensajeError('Error al enviar');
+                }
+            }
+            else
+            {
+                errorComunicacion();
+            }
+        }
+    });
+
+	
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

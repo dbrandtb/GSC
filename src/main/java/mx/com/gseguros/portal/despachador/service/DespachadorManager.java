@@ -35,7 +35,7 @@ public interface DespachadorManager {
      */
     @Deprecated
     public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
-            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
+            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean cartaRechazo, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust) throws Exception;
     
     /**
@@ -46,7 +46,7 @@ public interface DespachadorManager {
      * @return String message, boolean encolado
      */
     public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
-            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
+            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean cartaRechazo, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust, boolean soloCorreosRecibidos, String correosRecibidos)
             throws Exception;
     
