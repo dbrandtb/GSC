@@ -7205,7 +7205,8 @@ public String retarificarEndosos()
 			message = despacho.getMessage();
 			
 			mesaControlDAO.movimientoDetalleTramite(
-					flujo.getNtramite()
+					//Correccion de incidencia flujo.getNtramite()
+					ntramiteEnd
 					,fechaHoy //feinicio
 					,null //cdclausu
 					,StringUtils.isBlank(coment) ? "Endoso autorizado sin observaciones" : Utils.join("Endoso autorizado: ",coment)
