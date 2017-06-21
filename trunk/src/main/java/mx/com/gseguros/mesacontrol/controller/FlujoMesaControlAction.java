@@ -1974,6 +1974,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       statusOld   = params.get("STATUSOLD"),
 			       statusNew   = params.get("STATUSNEW"),
 			       swagente    = params.get("SWAGENTE"),
+	    		   swcarta     = params.get("SWCARTA"),
 			       comments    = params.get("COMMENTS"),
 			       cdrazrecha  = params.get("CDRAZRECHA"),
 			       cdusuariDes = params.get("CDUSUARI_DES"),
@@ -2000,6 +2001,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			        cdusuariDes,
 			        cdsisrolDes,
 			        "S".equalsIgnoreCase(swagente),
+			        "S".equalsIgnoreCase(swcarta),//ENVIAR CARTA DE RECHAZO SI VIENE CON S
 			        false, // porEscalamiento
 			        fechaHoy,
 			        false, //sinGrabarDetalle

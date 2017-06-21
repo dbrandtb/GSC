@@ -157,6 +157,20 @@ Ext.onReady(function()
 																,autoLoad : true
 														     }
 														,buttons:[{
+	                                                			itemId    : '_p3_botonEnviar'
+						                                        ,xtype    : 'button'
+						                                        ,text     : 'Enviar'
+						                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
+						                                        //,disabled : true
+						                                        ,handler  : function(){
+						                                        	
+																	_p3_cargarCorreos(_p38_flujo.ntramite)
+						                                        	
+						                                        	_p3_enviar(_p38_flujo.ntramite
+	                    														,jsonResp1.omap1.pdfEndosoNom_o);
+						                                        } 
+                                                			
+                                                			},{
 																	text    : 'Confirmar endoso'
 																	,name    : 'endosoButton'
 																	,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
@@ -164,7 +178,28 @@ Ext.onReady(function()
 																					{
 																						_mask();
 																						me.up('window').destroy();
-																						jsonConfirmar.smap1['confirmar'] = 'si';
+																						
+																						var _p38_flujoAux = {};
+																						
+																						if(!Ext.isEmpty(_p38_flujo)
+																						    &&!Ext.isEmpty(_p38_flujo.aux)){
+																						    	//
+																							    try{
+																							    	//
+																							        _p38_flujoAux = Ext.decode(_p38_flujo.aux);
+																							    }
+																							    catch(e) {
+																							    	//
+																							        manejaException(e);
+																							    }
+																						}
+																						jsonConfirmar.smap1['confirmar'] = 'no';
+																						if(Ext.isEmpty(_p38_flujo)
+																	                    ||Ext.isEmpty(_p38_flujo.aux)
+																	                    ||_p38_flujo.aux.indexOf('onComprar')==-1){
+																	                    	jsonConfirmar.smap1['confirmar'] = 'si';
+																			            }
+																						
 																						
 																						if(!Ext.isEmpty(_p38_flujo))
                                                                                         {
@@ -179,9 +214,13 @@ Ext.onReady(function()
 																			                        {
 																			                            var json = Ext.decode(response.responseText);
 																			                            debug('### confirmar:',json);
-																			                            if(json.success)
-																			                            {
-																			                                var callbackRemesa = function()
+																			                            if(json.success){
+																			                            	//
+																			                            	if(Ext.isEmpty(_p38_flujo)
+																						                    ||Ext.isEmpty(_p38_flujo.aux)
+																						                    ||_p38_flujo.aux.indexOf('onComprar')==-1){
+																						                    	//
+																						                    	var callbackRemesa = function()
 																			                                {
 																			                                    marendNavegacion(2);
 																			                                };
@@ -197,6 +236,91 @@ Ext.onReady(function()
 																			                                    );
 																			                                });
 																			                                _unmask();
+																						                    	
+																						                    }else{
+																						                    	//
+																						                    	debug('endAmpVigFlujoAux.endosoAutorizar: ',_p38_flujoAux.endosoAutorizar);
+																							                    var ck = 'Turnando tr\u00e1mite';
+																							                    try
+																							                    {
+																							                        var status = _p38_flujoAux.endosoAutorizar.split('_')[1];
+																							                        debug('status para turnar onComprar:',status,'.');
+																							                        
+																							                        _mask(ck);
+																							                        debug(' Turnando tr\u00e1mite endAmpVigFlujoAux: ',_p38_flujoAux);
+																							                        Ext.Ajax.request(
+																							                        {
+																							                            url      : _GLOBAL_COMP_URL_TURNAR
+																							                            ,params  :
+																							                            {
+																							                                'params.CDTIPFLU'   : _p38_flujo.cdtipflu
+																							                                ,'params.CDFLUJOMC' : _p38_flujo.cdflujomc
+																							                                ,'params.NTRAMITE'  : _p38_flujo.ntramite
+																							                                ,'params.STATUSOLD' : _p38_flujo.status
+																							                                ,'params.STATUSNEW' : status
+																							                                ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
+																							                                ,'params.SWAGENTE'  : 'S'
+																							                            }
+																							                            ,success : function(response)
+																							                            {
+																							                                _unmask();
+																							                                var ck = '';
+																							                                try
+																							                                {
+																							                                    var json = Ext.decode(response.responseText);
+																							                                    debug('### turnar:',json);
+																							                                    if(json.success)
+																							                                    {
+																							                                        mensajeCorrecto
+																							                                        (
+																							                                            'Tr\u00e1mite turnado'
+																							                                            //,json.message
+																							                                            ,'El tr\u00e1mite fue turnado para aprobaci\u00f3n del agente/promotor'
+																							                                            ,function()
+																							                                            {
+																							                                                _mask('Redireccionando');
+																							                                                Ext.create('Ext.form.Panel').submit(
+																							                                                {
+																							                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
+																							                                                    ,standardSubmit : true
+																							                                                });
+																							                                            }
+																							                                        );
+																							                                       
+																							                                    }
+																							                                    else
+																							                                    {
+																							                                        mensajeError(json.message);
+																							                                    }
+																							                                }
+																							                                catch(e)
+																							                                {
+																							                                    manejaException(e,ck);
+																							                                }
+																							                            }
+																							                            ,failure : function()
+																							                            {
+																							                                _unmask();
+																							                                errorComunicacion(null,'Error al turnar tr\u00e1mite');
+																							                            }
+																							                        });
+																							                    }
+																							                    catch(e)
+																							                    {
+																							                        manejaException(e,ck);
+																							                    }
+																							               
+																								               //Sacaendoso
+																								                    
+																							                    sacaEndoso(_p38_smap1.CDUNIECO,
+																							                               _p38_smap1.CDRAMO,
+																							                               _p38_smap1.ESTADO,
+																							                               _p38_smap1.NMPOLIZA,
+																							                               jsonResp1.omap1.pv_nmsuplem_o,
+																							                               jsonResp1.omap1.pv_nsuplogi_o);
+																						                    }
+																			                            	
+																			                                
 																			                            }
 																			                            else
 																			                            {
@@ -1119,6 +1243,114 @@ function fronterizos()
     });
     debug('<llamando a nada');  
 }
+
+
+function _p3_cargarCorreos(ntramite)
+{
+    debug('>_p3_idInputCorreo');
+    Ext.Ajax.request(
+    {
+        url     : _GLOBAL_RECUPERA_CORREO
+        ,params :
+        {
+            'smap1.ntramite'    : ntramite
+        }
+        ,success : function(response) {
+            var json = Ext.decode(response.responseText);
+            debug('### json cargarCorreos:',json);
+            
+            if(json.exito)
+            {
+            	  debug('>_p3_idInputCorreo 1 ', json.respuesta);
+            	  _fieldById('_p3_idInputCorreo').setValue(json.respuesta);
+            }
+            else{
+            	  debug('>_p3_idInputCorreo 2');
+            }
+         }
+         ,failure : function(){
+         	me.setLoading(false);
+            errorComunicacion();
+         }
+    })
+}
+
+function _p3_enviar(ntramite
+                    ,nomArchivo)
+{
+    debug('>_p28_enviar');
+    
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title        : 'Enviar cotizaci&oacute;n'
+        ,width       : 550
+        ,modal       : true
+        ,height      : 150
+        ,buttonAlign : 'center'
+        ,bodyPadding : 5
+        ,items       :
+        [
+            {
+                xtype       : 'textfield'
+                ,itemId     : '_p3_idInputCorreo'
+                ,id         : '_p3_idInputCorreos'
+                ,fieldLabel : 'Correo(s)'
+                ,emptyText  : 'Correo(s) separados por ;'
+                ,labelWidth : 100
+                ,allowBlank : false
+                ,blankText  : 'Introducir correo(s) separados por ;'
+                ,width      : 500
+                ,listeners  : {
+                	boxready : function(){
+                		
+                		debug('Saliendo de la funcion ', _fieldById('_p3_idInputCorreo').getValue());
+                	}
+                }		
+                	
+            }
+        ]
+        ,buttons :
+        [
+            {
+                text     : 'Enviar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function()
+                {
+                    var me = this;
+                    if (_fieldById('_p3_idInputCorreo').getValue().length > 0
+                            &&_fieldById('_p3_idInputCorreo').getValue() != 'Correo(s) separados por ;')
+                    {
+                        debug('Se va a enviar cotizacion');
+                        //me.up().up().setLoading(true);
+                        
+                        envioCorreo(_RUTA_DOCUMENTOS_TEMPORAL
+				                    ,ntramite
+				                    ,nomArchivo
+				                    ,_fieldById('_p3_idInputCorreo').getValue());
+				                    
+				        //
+				        this.up().up().destroy();
+                        
+                    }
+                    else
+                    {
+                        mensajeWarning('Introduzca al menos un correo');
+                    }
+                }
+            }
+            ,{
+                text     : 'Cancelar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                ,handler : function()
+                {
+                    this.up().up().destroy();
+                }
+            }
+        ]
+    }).show());
+    _fieldById('_p3_idInputCorreo').focus();
+    debug('<_p3_enviar');
+}       
 
 
 
