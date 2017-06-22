@@ -3090,22 +3090,46 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	
 	@Override
 	public boolean actualizaEliminaConceptos(HashMap<String, String> params) throws Exception{
-		return siniestrosDAO.actualizaEliminaConceptos(params);
+		try {
+			siniestrosDAO.actualizaEliminaConceptos(params);
+		} catch (Exception ex) {
+			logger.debug("Error al guardar Concepto. ",ex);
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public boolean actualizaEliminaResultadosEstudios(HashMap<String, String> params) throws Exception {
-		return siniestrosDAO.actualizaEliminaResultadosEstudios(params);
+		try {
+			siniestrosDAO.actualizaEliminaResultadosEstudios(params);
+		} catch (Exception ex) {
+			logger.debug("Error al guardar resultado estudio. ",ex);
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public boolean actualizaEliminaConfEstudios(HashMap<String, String> params) throws Exception {
-		return siniestrosDAO.actualizaEliminaConfEstudios(params);
+		try {
+			siniestrosDAO.actualizaEliminaConfEstudios(params);
+		} catch (Exception ex) {
+			logger.debug("Error al guardar Conf Estudio. ",ex);
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public boolean actualizaEliminaConfEstudiosCobertura(HashMap<String, String> params) throws Exception {
-		return siniestrosDAO.actualizaEliminaConfEstudiosCobertura(params);
+		try {
+			 siniestrosDAO.actualizaEliminaConfEstudiosCobertura(params);
+		} catch (Exception ex) {
+			logger.debug("Error al guardar Conf Estudio Cobertura. ",ex);
+			return false;
+		}
+		return true;
 	}
 
 	@Override
