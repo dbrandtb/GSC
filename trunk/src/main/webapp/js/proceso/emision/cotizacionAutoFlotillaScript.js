@@ -678,3 +678,144 @@ function turistasFormaPago(feini,fefin,listFP){
 	}
 	return listFP;
 }
+
+////// funciones //////}
+
+
+function _p3_cargarCorreos(ntramite)
+{
+    debug('>_p30_idInputCorreo');
+    Ext.Ajax.request(
+    {
+        url     : _GLOBAL_RECUPERA_CORREO
+        ,params :
+        {
+            'smap1.ntramite'    : ntramite
+        }
+        ,success : function(response) {
+            var json = Ext.decode(response.responseText);
+            debug('### json cargarCorreos:',json);
+            
+            if(json.exito)
+            {
+            	  debug('>_p30_idInputCorreo 1 ', json.respuesta);
+            	  _fieldById('_p30_idInputCorreo').setValue(json.respuesta);
+            }
+            else{
+            	  debug('>_p30_idInputCorreo 2');
+            }
+         }
+         ,failure : function(){
+         	me.setLoading(false);
+            errorComunicacion();
+         }
+    })
+}
+
+function _p30_enviar(ntramite
+                    ,nomArchivo)
+{
+    debug('>_p30_enviar');
+    
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title        : 'Enviar cotizaci&oacute;n'
+        ,width       : 550
+        ,modal       : true
+        ,height      : 150
+        ,buttonAlign : 'center'
+        ,bodyPadding : 5
+        ,items       :
+        [
+            {
+                xtype       : 'textfield'
+                ,itemId     : '_p30_idInputCorreos'
+                ,id         : '_p30_idInputCorreos'
+                ,fieldLabel : 'Correo(s)'
+                ,emptyText  : 'Correo(s) separados por ;'
+                ,labelWidth : 100
+                ,allowBlank : false
+                ,blankText  : 'Introducir correo(s) separados por ;'
+                ,width      : 500
+                ,listeners  : {
+                	boxready : function(){
+                		_p30_cargarCorreos()
+                		debug('Saliendo de la funcion ', _fieldById('_p30_idInputCorreos').getValue());
+                	}
+                }		
+                	
+            }
+        ]
+        ,buttons :
+        [
+            {
+                text     : 'Enviar'
+                ,icon    : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/accept.png'
+                ,handler : function()
+                {
+                    var me = this;
+                    if (_fieldById('_p30_idInputCorreos').getValue().length > 0
+                            &&_fieldById('_p30_idInputCorreos').getValue() != 'Correo(s) separados por ;')
+                    {
+                        debug('Se va a enviar cotizacion');
+                        //me.up().up().setLoading(true);
+                        
+                        envioCorreo(_RUTA_DOCUMENTOS_TEMPORAL
+				                    ,ntramite
+				                    ,nomArchivo
+				                    ,_fieldById('_p30_idInputCorreos').getValue());
+				                    
+				        //
+				        this.up().up().destroy();
+                        
+                    }
+                    else
+                    {
+                        mensajeWarning('Introduzca al menos un correo');
+                    }
+                }
+            }
+            ,{
+                text     : 'Cancelar'
+                ,icon    : _GLOBAL_CONTEXTO+'/resources/fam3icons/icons/cancel.png'
+                ,handler : function()
+                {
+                    this.up().up().destroy();
+                }
+            }
+        ]
+    }).show());
+    _fieldById('_p30_idInputCorreos').focus();
+    debug('<_p30_enviar');
+}  
+
+//REQ0040 envio de correos
+function _p30_cargarCorreos()
+{
+    debug('>_p03_cargarCorreos');
+    Ext.Ajax.request(
+    {
+        url     : _p30_urlCargarCorreos
+        ,params :
+        {
+            'smap1.ntramite'    : _p30_flujo.ntramite
+        }
+        ,success : function(response) {
+            var json = Ext.decode(response.responseText);
+            debug('### json cargarCorreos:',json);
+            
+            if(json.exito)
+            {
+            	  debug('>_p30_cargarCorreos 1 ', json.respuesta);
+            	  _fieldById('_p30_idInputCorreos').setValue(json.respuesta);
+            }
+            else{
+            	  debug('>_p30_cargarCorreos 2');
+            }
+         }
+         ,failure : function(){
+         	me.setLoading(false);
+            errorComunicacion();
+         }
+    })
+}
