@@ -573,7 +573,7 @@ Ext.onReady(function()
                         {
                             xtype: 'gridcolumn',
                             dataIndex: 'CDCONCEP',
-                            text: 'Clave Cocepto',
+                            text: 'Clave Concepto',
                             flex: 1,
                             editor : {
             	                xtype      : 'textfield',
@@ -660,7 +660,9 @@ Ext.onReady(function()
                                	        	gridConceptos.getStore().reload();
                                	        	conceptoBusquedaStore.reload();
                                         }else{
-                                            mensajeError('Verifique que no haya tr&aacute;mites usando actualmente este concepto. ' + json.mensaje);
+                                            mensajeError(json.mensaje);
+                                            gridConceptos.getStore().reload();
+                               	        	conceptoBusquedaStore.reload();
                                         }
                                     }
                                     ,failure  : function(response, options){
@@ -841,7 +843,9 @@ Ext.onReady(function()
                                     	gridEstudios.getStore().reload();
                                     	estudioBusquedaStore.reload();
                                     }else{
-                                        mensajeError('Verifique que no haya tr&aacute;mites usando actualmente este estudio. ' + json.mensaje);
+                                        mensajeError(json.mensaje);
+                                        gridEstudios.getStore().reload();
+                                    	estudioBusquedaStore.reload();
                                     }
                                 }
                                 ,failure  : function(response, options){
@@ -1044,7 +1048,8 @@ Ext.onReady(function()
                                     	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
                                     	gridResEstudios.getStore().reload();
                                     }else{
-                                        mensajeError('Verifique que no haya esstudios usando actualmente los resultados modificados. ' + json.mensaje);
+                                        mensajeError(json.mensaje);
+                                        gridResEstudios.getStore().reload();
                                     }
                                 }
                                 ,failure  : function(response, options){
@@ -1511,7 +1516,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                                 	windowConfEstudios.close();
                                 	
                                 }else{
-                                    mensajeError('Verifique que no haya tr&aacute;mites usando actualmente esta configuraci&oacute;n. ' + json.mensaje);
+                                    mensajeError(json.mensaje);
                                 }
                             }
                             ,failure  : function(response, options){
