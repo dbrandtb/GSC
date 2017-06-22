@@ -368,12 +368,12 @@ Ext.define('VentanaRechazo',
                                     itemId     : 'SWCARTA',
                                     name       : 'SWCARTA',
                                     inputValue : 'S',
-                                    checked    : _GLOBAL_CDSISROL===RolSistema.Agente
+                                    checked    :!RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL)|| _GLOBAL_CDSISROL===RolSistema.Agente
                                 }, {
                                     boxLabel    : 'No',
                                     name       : 'SWCARTA',
                                     inputValue : 'N',
-                                    checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                    checked    : RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL)||_GLOBAL_CDSISROL!==RolSistema.Agente
                                 }
                             ]
                         }, {
