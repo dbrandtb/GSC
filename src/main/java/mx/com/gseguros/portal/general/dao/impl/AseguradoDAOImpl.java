@@ -41,7 +41,7 @@ public class AseguradoDAOImpl extends AbstractManagerDAO implements AseguradoDAO
 		
 		protected ValidaEdadAseguradosSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_CONSULTA.P_VALIDA_EDAD_ASEGURADOS");
+			super(dataSource, "PKG_CONSULTA_PRE.P_VALIDA_EDAD_ASEGURADOS");
             
 			String[] cols = new String[]{"NOMBRE","PARENTESCO","EDAD","EDADMINI","EDADMAXI","SUPERAMINI","SUPERAMAXI"};
             
