@@ -6138,7 +6138,7 @@ function _p30_confirmarEndoso()
 			                                        ,xtype    : 'button'
 			                                        ,text     : 'Enviar'
 			                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
-			                                        //,disabled : true
+			                                        ,hidden   : Ext.isEmpty(_p30_flujo)
 			                                        ,handler  : function(){
 			                                        	
 														_p30_cargarCorreos(_p30_flujo.ntramite)

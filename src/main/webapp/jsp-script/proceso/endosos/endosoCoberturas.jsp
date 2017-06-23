@@ -380,8 +380,8 @@ function endcobSumit(form,confirmar)
 					                                        ,xtype    : 'button'
 					                                        ,text     : 'Enviar'
 					                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
-					                                        //,disabled : true
-					                                        ,handler  : function(){
+					                                        ,hidden   : Ext.isEmpty(_p3_flujo)
+		                                                    ,handler  : function(){
 					                                        	
 																_p3_cargarCorreos(_p3_flujo.ntramite)
 					                                        	
