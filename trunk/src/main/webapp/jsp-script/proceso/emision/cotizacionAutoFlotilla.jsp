@@ -5633,7 +5633,7 @@ function _p30_enviar()
                 //REQ0040
                 ,listeners  : {
                 	boxready : function(){
-                		_p30_cargarCorreos();
+                		_p30_cargarCorreos(_p30_smap1.ntramite);
                 		debug('Saliendo de la funcion ', _fieldById('_p30_idInputCorreos').getValue());
                 	}
                 }
@@ -6143,7 +6143,7 @@ function _p30_confirmarEndoso()
 			                                        	
 														_p30_cargarCorreos(_p30_flujo.ntramite)
 			                                        	
-			                                        	_p30_enviar(_p30_flujo.ntramite
+			                                        	_p30_enviarCoti(_p30_flujo.ntramite
             														,json2.omap1.pdfEndosoNom_o);
 			                                        } 
                                         			

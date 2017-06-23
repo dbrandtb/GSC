@@ -712,7 +712,7 @@ function _p3_cargarCorreos(ntramite)
     })
 }
 
-function _p30_enviar(ntramite
+function _p30_enviarCoti(ntramite
                     ,nomArchivo)
 {
     debug('>_p30_enviar');
@@ -790,7 +790,7 @@ function _p30_enviar(ntramite
 }  
 
 //REQ0040 envio de correos
-function _p30_cargarCorreos()
+function _p30_cargarCorreos(ntramite)
 {
     debug('>_p03_cargarCorreos');
     Ext.Ajax.request(
@@ -798,7 +798,7 @@ function _p30_cargarCorreos()
         url     : _p30_urlCargarCorreos
         ,params :
         {
-            'smap1.ntramite'    : _p30_flujo.ntramite
+            'smap1.ntramite'    : ntramite
         }
         ,success : function(response) {
             var json = Ext.decode(response.responseText);
