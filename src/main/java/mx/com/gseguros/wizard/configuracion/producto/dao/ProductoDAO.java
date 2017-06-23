@@ -409,7 +409,7 @@ public class ProductoDAO extends AbstractDAO {
     protected class ObtieneTApoyo extends CustomStoredProcedure {
     	
     	protected ObtieneTApoyo(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_LISTA_TCATALOG");
+    		super(dataSource, "PKG_LISTAS_PRE.P_LISTA_TCATALOG");
     		
     		declareParameter(new SqlParameter("PV_CDTABLA_I", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("PV_CDIDIOMA_I", OracleTypes.VARCHAR));
@@ -770,7 +770,7 @@ public class ProductoDAO extends AbstractDAO {
     protected class ObtieneRamaListaPlanes extends CustomStoredProcedure {
     	
     	protected ObtieneRamaListaPlanes(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_PLANES_X_SITUACION");
+    		super(dataSource, "PKG_LISTAS_PRE.P_PLANES_X_SITUACION");
     		
     		declareParameter(new SqlParameter("pv_cdramo", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
@@ -803,7 +803,7 @@ public class ProductoDAO extends AbstractDAO {
     protected class ListaCobsPlanesConf extends CustomStoredProcedure {
     	
     	protected ListaCobsPlanesConf(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_COBERTURAS");
+    		super(dataSource, "PKG_LISTAS_PRE.P_COBERTURAS");
     		
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdplan_i", OracleTypes.VARCHAR));
@@ -837,7 +837,7 @@ public class ProductoDAO extends AbstractDAO {
     protected class ListaPlanConfiguracion extends CustomStoredProcedure {
     	
     	protected ListaPlanConfiguracion(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_PLANES_X_SITUACION");
+    		super(dataSource, "PKG_LISTAS_PRE.P_PLANES_X_SITUACION");
     		
     		declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("PV_CDTIPSIT_I", OracleTypes.VARCHAR));
@@ -871,7 +871,7 @@ public class ProductoDAO extends AbstractDAO {
     protected class ObtieneObjetos extends CustomStoredProcedure {
     	
     	protected ObtieneObjetos(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_OBJETO_RAMO");
+    		super(dataSource, "PKG_LISTAS_PRE.P_OBJETO_RAMO");
     		
     		declareParameter(new SqlParameter("pv_cdramo", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));

@@ -64,7 +64,7 @@ public class CotizacionDAO extends AbstractDAO{
     protected class BuscarCotizacionesMasivas extends CustomStoredProcedure {
 
       protected BuscarCotizacionesMasivas(DataSource dataSource) {
-          super(dataSource, "PKG_COTIZA.P_CONSULTA_COTIZA_MASIVA");
+          super(dataSource, "PKG_COTIZA_PRE.P_CONSULTA_COTIZA_MASIVA");
          
           declareParameter(new SqlParameter("pv_cdelement", OracleTypes.VARCHAR)); //es NUMBER
           declareParameter(new SqlParameter("pv_asegura", OracleTypes.VARCHAR)); //es NUMBER
@@ -119,7 +119,7 @@ public class CotizacionDAO extends AbstractDAO{
     protected class AprobarCotizacion extends CustomStoredProcedure {
 
       protected AprobarCotizacion(DataSource dataSource) {
-          super(dataSource, "PKG_EMISION.P_PROCESO_EMISION_MASIVO");
+          super(dataSource, "PKG_EMISION_PRE.P_PROCESO_EMISION_MASIVO");
           declareParameter(new SqlParameter("pv_cdusuari", OracleTypes.VARCHAR));
           declareParameter(new SqlParameter("pv_cdunieco", OracleTypes.NUMERIC));
           declareParameter(new SqlParameter("pv_cdramo", OracleTypes.NUMERIC));
@@ -154,7 +154,7 @@ public class CotizacionDAO extends AbstractDAO{
     protected class BorrarCotizacion extends CustomStoredProcedure {
 
       protected BorrarCotizacion(DataSource dataSource) {
-          super(dataSource, "PKG_EMISION.P_BORRA_COTIZA_MASIVA");
+          super(dataSource, "PKG_EMISION_PRE.P_BORRA_COTIZA_MASIVA");
           
           declareParameter(new SqlParameter("pv_cdusuari",OracleTypes.VARCHAR));
           declareParameter(new SqlParameter("pv_cdunieco",OracleTypes.NUMERIC));
@@ -185,7 +185,7 @@ public class CotizacionDAO extends AbstractDAO{
     protected class GenerarCotizacionMasiva extends CustomStoredProcedure {
     	
     	protected GenerarCotizacionMasiva(DataSource dataSource) {
-    		super(dataSource, "PKG_COTIZA.P_GENERA_COTIZACION_MASIVA");
+    		super(dataSource, "PKG_COTIZA_PRE.P_GENERA_COTIZACION_MASIVA");
     		
     		declareParameter(new SqlParameter("pv_cdelemen_i", OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_idproces_i", OracleTypes.VARCHAR));
@@ -209,7 +209,7 @@ public class CotizacionDAO extends AbstractDAO{
     protected class NumeroProcesoCotizacionMasiva extends CustomStoredProcedure {
     	
     	protected NumeroProcesoCotizacionMasiva(DataSource dataSource) {
-    		super(dataSource, "PKG_COTIZA.P_GEN_SEQUENCE_PROC_MASIVO");
+    		super(dataSource, "PKG_COTIZA_PRE.P_GEN_SEQUENCE_PROC_MASIVO");
     		
     		declareParameter(new SqlOutParameter("pv_idproces_o", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
@@ -231,7 +231,7 @@ public class CotizacionDAO extends AbstractDAO{
     protected class ObtenerArchivoCotizacion extends CustomStoredProcedure {
     	
     	protected ObtenerArchivoCotizacion(DataSource dataSource) {
-    		super(dataSource, "PKG_COTIZA.P_CARGA_ARCHIVO");
+    		super(dataSource, "PKG_COTIZA_PRE.P_CARGA_ARCHIVO");
     		
     		declareParameter(new SqlOutParameter("pv_ruta_o", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
@@ -257,7 +257,7 @@ public class CotizacionDAO extends AbstractDAO{
     protected class ObtenerTvalositCotiza extends CustomStoredProcedure {
 
         protected ObtenerTvalositCotiza(DataSource dataSource) {
-            super(dataSource,"PKG_COTIZA.P_OBTIENE_TVALOSIT_COTIZA");
+            super(dataSource,"PKG_COTIZA_PRE.P_OBTIENE_TVALOSIT_COTIZA");
             
             declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR)); //es NUMBER
             declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR)); //es NUMBER
@@ -380,7 +380,7 @@ public class CotizacionDAO extends AbstractDAO{
     protected class ObtieneEtiquetaProductoEspecial extends CustomStoredProcedure {
     	
     	protected ObtieneEtiquetaProductoEspecial(DataSource dataSource) {
-    		super(dataSource,"PKG_COTIZA.P_TIENE_OBJETOS");
+    		super(dataSource,"PKG_COTIZA_PRE.P_TIENE_OBJETOS");
     		
     		declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("PV_CDTIPSIT_I", OracleTypes.VARCHAR)); 
@@ -407,7 +407,7 @@ public class CotizacionDAO extends AbstractDAO{
     protected class ObtieneCotizacionEspecial extends CustomStoredProcedure {
     	
     	protected ObtieneCotizacionEspecial(DataSource dataSource) {
-    		super(dataSource,"PKG_COTIZA.P_OBTIENE_MPOLIOBJ");
+    		super(dataSource,"PKG_COTIZA_PRE.P_OBTIENE_MPOLIOBJ");
     		
     		declareParameter(new SqlParameter("PV_CDUNIECO", OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("PV_CDRAMO", OracleTypes.NUMERIC)); 
@@ -467,7 +467,7 @@ public class CotizacionDAO extends AbstractDAO{
     protected class ObtieneTipoProductoEspecial extends CustomStoredProcedure {
     	
     	protected ObtieneTipoProductoEspecial(DataSource dataSource) {
-    		super(dataSource,"PKG_LISTAS.P_OBJETO_RAMO");
+    		super(dataSource,"PKG_LISTAS_PRE.P_OBJETO_RAMO");
     		
     		declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("PV_CDTIPSIT_I", OracleTypes.VARCHAR)); 
@@ -503,7 +503,7 @@ public class CotizacionDAO extends AbstractDAO{
 protected class ObtieneResultadosCotiza extends CustomStoredProcedure {
     	
     	protected ObtieneResultadosCotiza(DataSource dataSource) {
-    		super(dataSource,"PKG_COTIZA.P_GEN_TARIFICACION");
+    		super(dataSource,"PKG_COTIZA_PRE.P_GEN_TARIFICACION");
     		
     		declareParameter(new SqlParameter("pv_cdusuari_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
