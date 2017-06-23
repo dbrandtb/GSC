@@ -1719,7 +1719,7 @@ function eliminarConfEstudios(recordEliminar,btnGrid){
                          	var gridConfigEstCob = btnGrid.up('grid');
                          	gridConfigEstCob.getStore().reload();
                          }else{
-                             mensajeError('Verifique que no haya registros utilizando actualmente esta configuraci&oacute;n. ' + json.mensaje);
+                             mensajeError(json.mensaje);
                          }
                      }
                      ,failure  : function(response, options){
