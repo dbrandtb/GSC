@@ -79,7 +79,12 @@
     Ext.define('RFCPersona',
     {
         extend  : 'Ext.data.Model'
-        ,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER", "CDIDEEXT"]
+        ,fields : [ "RFCCLI",       "NOMBRECLI",        "FENACIMICLI",          "DIRECCIONCLI",
+                    "CLAVECLI",     "DISPLAY",          "CDIDEPER",             "CDIDEEXT",
+                    //se considera
+                    "NOMBRE",       "SNOMBRE",          "APPAT",                 "APMAT",
+                    "TIPOPERSONA",  "SEXO",             "NACIONALIDAD",          "CDESTCIV"
+                ]
     });
     
     function rendererRolp2(v)
@@ -2589,25 +2594,130 @@ debug("validarYGuardar flag:2");
                     chkCol.disable();
                     var datosContr = obtieneDatosClienteContratante();
                     debug('Datos de Contratante para row: ' + datosContr);
-                    debug('Estado civil contratante', datosContr);
-                    recordContr = gridPersonasp2.getStore().getAt(rowIndex);
-//                  recordContr.set('nmsituac','0');
-//                  recordContr.set('cdrol'   ,'1');
-                    recordContr.set('fenacimi', datosContr.fenacimi);
-                    recordContr.set('sexo'    , datosContr.sexo);
-                    recordContr.set('tpersona', datosContr.tipoper);
-                    recordContr.set('nacional', datosContr.naciona);
-                    recordContr.set('cdperson', datosContr.cdperson);
-                    recordContr.set('nombre'  , datosContr.nombre);
-                    recordContr.set('segundo_nombre'  , datosContr.snombre);
-                    recordContr.set('Apellido_Paterno', datosContr.appat);
-                    recordContr.set('Apellido_Materno', datosContr.apmat);
-                    recordContr.set('cdrfc'   , datosContr.rfc);
-                    recordContr.set('cdideper', datosContr.cdideper);
-                    recordContr.set('cdideext', datosContr.cdideext);
-                    recordContr.set('swexiper', 'S');
-                    //ELP Datos traido de los datos del Contratante.
-                    recordContr.set('cdestciv', datosContr.cdestciv);                    
+                    gridPersonasp2.setLoading(true);
+                    
+                    Ext.Ajax.request
+                    ({
+                        url     : urlAutoRFCp2
+                        ,timeout: 240000
+                        ,params :
+                        {
+                            'map1.pv_rfc_i'     : datosContr.rfc,
+                            'map1.cdtipsit'     : inputCdtipsitp2,
+                            'map1.pv_cdunieco_i':inputCduniecop2,
+                            'map1.pv_cdramo_i'  :inputCdramop2,
+                            'map1.pv_estado_i'  :inputEstadop2,
+                            'map1.pv_nmpoliza_i':inputNmpolizap2,
+                            'map1.esContratante': 'S'
+                        }
+                        ,success:function(response)
+                        {
+                            var json=Ext.decode(response.responseText);
+                            debug(json);
+                            if(json && !json.success){
+                                mensajeError("Error al Buscar RFC, Intente nuevamente. Si el problema persiste consulte a soporte t&eacute;cnico.");
+                                return;
+                            }
+                            if(json&&json.slist1&&json.slist1.length>0)
+                            {
+                            	gridPersonasp2.setLoading(false);
+                                centrarVentanaInterna(Ext.create('Ext.window.Window',
+                                {
+                                    width        : 600
+                                    ,height      : 400
+                                    ,modal       : true
+                                    ,autoScroll  : true
+                                    ,title       : 'El ID. Asegurado del Contratante es : '+datosContr.cdperson+'<br/> <br/>Coincidencias:'
+                                    ,items       : Ext.create('Ext.grid.Panel',
+                                                   {
+                                                       store    : Ext.create('Ext.data.Store',
+                                                                  {
+                                                                      model     : 'RFCPersona'
+                                                                      ,autoLoad : true
+                                                                      ,proxy :
+                                                                      {
+                                                                          type    : 'memory'
+                                                                          ,reader : 'json'
+                                                                          ,data   : json['slist1']
+                                                                      }
+                                                                  })
+                                                       ,columns :
+                                                       [
+                                                           {
+                                                               xtype         : 'actioncolumn'
+                                                               ,menuDisabled : true
+                                                               ,width        : 30
+                                                               ,items        :
+                                                               [
+                                                                   {
+                                                                       icon     : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                                       ,tooltip : 'Seleccionar usuario'
+                                                                       ,handler : function(grid, rowIndexInterno, colIndex) {
+                                                                           var record = grid.getStore().getAt(rowIndexInterno);
+                                                                           
+                                                                           if(datosContr.cdperson == record.get("CLAVECLI")){
+                                                                           	    _p29_llenarDatosGridAsegurados(rowIndex, datosContr.fenacimi, datosContr.sexo, datosContr.tipoper, datosContr.naciona,
+                                                                           	                                    datosContr.cdperson, datosContr.nombre, datosContr.snombre, datosContr.appat,datosContr.apmat,
+                                                                           	                                    datosContr.rfc,datosContr.cdideper,datosContr.cdideext,'S',datosContr.cdestciv,true
+                                                                                );
+                                                                           }else{
+                                                                           	    _p29_llenarDatosGridAsegurados(rowIndex,record.get("FENACIMICLI"),record.get("SEXO"),record.get("TIPOPERSONA"),record.get("NACIONALIDAD"),
+                                                                                                                record.get("CLAVECLI"),record.get("NOMBRE"),record.get("SNOMBRE"),record.get("APPAT"),record.get("APMAT"),
+                                                                                                                record.get("RFCCLI"),record.get("CDIDEPER"),record.get("CDIDEEXT"),'S',record.get("CDESTCIV"),false
+                                                                                );
+                                                                           }
+                                                                           
+                                                                           
+                                                                           
+                                                                           grid.up().up().destroy();
+                                                                       }
+                                                                   }
+                                                               ]
+                                                           },{
+                                                               header     : 'ID. Asegurado'
+                                                               ,dataIndex : 'CLAVECLI'
+                                                               ,flex      : 1
+                                                           }
+                                                           ,{
+                                                               header     : 'RFC'
+                                                               ,dataIndex : 'RFCCLI'
+                                                               ,flex      : 1
+                                                           }
+                                                           ,{
+                                                               header     : 'Nombre'
+                                                               ,dataIndex : 'NOMBRECLI'
+                                                               ,flex      : 1
+                                                           }
+                                                           ,{
+                                                               header     : 'Direcci&oacute;n'
+                                                               ,dataIndex : 'DIRECCIONCLI'
+                                                               ,flex      : 3
+                                                           }
+                                                       ]
+                                                   })
+                                }).show());
+                            }
+                            else
+                            {
+                            	gridPersonasp2.setLoading(false);
+                            	//Si no hay coincidencias entonces poner la información tal como viene 
+                            	_p29_llenarDatosGridAsegurados(rowIndex,datosContr.fenacimi,datosContr.sexo,datosContr.tipoper,datosContr.naciona,
+                                                                datosContr.cdperson,datosContr.nombre,datosContr.snombre,datosContr.appat,datosContr.apmat,
+                                                                datosContr.rfc,datosContr.cdideper,datosContr.cdideext,'S',datosContr.cdestciv,true
+                                );
+                            }
+                        }
+                        ,failure:function()
+                        {
+                            //gridPersonasp2.setLoading(false);
+                            Ext.Msg.show({
+                                title:'Error',
+                                msg: 'Error de comunicaci&oacute;n',
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.Msg.ERROR
+                            });
+                        }
+                    });
                 }
                 
             }
@@ -3297,6 +3407,35 @@ function _p29_personaSaved(json)
     });
         
     debug('<_p29_personaSaved');
+}
+
+function _p29_llenarDatosGridAsegurados(
+    rowIndex,fenacimi,sexo,tipoper,naciona,
+    cdperson,nombre,nombre2,apellidoP,apellidoM,
+    rfc,cdideper,cdideext,swexiper,cdestciv,
+    estomador){
+    recordContr = gridPersonasp2.getStore().getAt(rowIndex);
+    recordContr.set('fenacimi', fenacimi);
+    recordContr.set('sexo'    , sexo);
+    recordContr.set('tpersona', tipoper);
+    recordContr.set('nacional', naciona);
+    recordContr.set('cdperson', cdperson);
+    recordContr.set('nombre'  , nombre);
+    recordContr.set('segundo_nombre'  , nombre2);
+    recordContr.set('Apellido_Paterno', apellidoP);
+    recordContr.set('Apellido_Materno', apellidoM);
+    recordContr.set('cdrfc'   , rfc);
+    recordContr.set('cdideper', cdideper);
+    recordContr.set('cdideext', cdideext);
+    recordContr.set('swexiper', swexiper);
+    recordContr.set('cdestciv', cdestciv);
+    recordContr.set('estomador',estomador);
+    
+    if(estomador){
+        gridPersonasp2.getView().headerCt.child("[dataIndex=estomador]").disable();
+    }else{
+        gridPersonasp2.getView().headerCt.child("[dataIndex=estomador]").enable();
+    }
 }
         
 });
