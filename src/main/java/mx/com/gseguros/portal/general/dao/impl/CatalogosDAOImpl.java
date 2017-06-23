@@ -67,6 +67,15 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             return generic;
         }
     }
+
+    protected class ObtenerTmanteniMapper2 implements RowMapper {
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		GenericVO generic=new GenericVO();
+    		generic.setKey(rs.getString("CODIGO"));
+    		generic.setValue(rs.getString("DESCRIPL"));
+    		return generic;
+    	}
+    }
     
     
     public List<GenericVO> obtieneColonias(String codigoPostal) throws Exception {
@@ -458,6 +467,26 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             compile();
     	}
     }
+	
+
+	@Override
+	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception
+	{
+		Map<String, Object> resultado = ejecutaSP(new ObtieneTiposTramiteClonacion(getDataSource()), new HashMap<String,String>());
+		return (List<GenericVO>) resultado.get("pv_registro_o");
+	}
+	
+	protected class ObtieneTiposTramiteClonacion extends StoredProcedure
+	{
+		protected ObtieneTiposTramiteClonacion(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA2.P_OBTIENE_TIPOS_TRAMITE");
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtenerTmanteniMapper2()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public List<GenericVO> obtieneSucursales(String cdunieco,String cdusuari) throws Exception {

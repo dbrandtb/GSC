@@ -130,6 +130,12 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	{
 		return catalogosDAO.obtieneStatusTramite(params);
 	}
+
+	@Override
+	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception
+	{
+		return catalogosDAO.obtieneTiposTramiteClonacion();
+	}
 	
 	@Override
 	public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango, Validacion validacion) throws Exception {

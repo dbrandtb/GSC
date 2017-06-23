@@ -1169,4 +1169,14 @@ public class ConsultasManagerImpl implements ConsultasManager
         }
         return esDXN;
     }
+    
+    @Override
+	public Map<String,String>cargarDatosClonacion (String nmtramite)throws Exception {
+	    return consultasDAO.cargarDatosClonacion(nmtramite);
+	}
+
+    @Override
+    public String obtienePermisoEdicionClonacion (String cdsisrol)throws Exception {
+    	return consultasDAO.obtienePermisoEdicionClonacion(cdsisrol);
+    }
 }
