@@ -74,7 +74,6 @@ function _4_authEndosoDocumentos(grid,rowIndex,colIndex){
 		,width       : 600
 		,height      : 400
 		,autoScroll  : true
-		,cls         : 'VENTANA_DOCUMENTOS_CLASS'
 		,loader      :{
 			url       : _4_authEndUrlDoc
 			,params   :{
@@ -298,7 +297,6 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 						                    ,columns    : 2
 						                    ,width      : 250
 						                    ,style      : 'margin:5px;'
-						                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 						                    ,items      :
 						                    [
 						                        {
@@ -306,13 +304,12 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 						                            ,itemId     : 'SWAGENTE2'
 						                            ,name       : 'SWAGENTE2'
 						                            ,inputValue : 'S'
-						                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 						                        }
 						                        ,{
 						                            boxLabel    : 'No'
 						                            ,name       : 'SWAGENTE2'
 						                            ,inputValue : 'N'
-	                                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+	                                                ,checked    : true
 						                        }
 						                    ]
 						                }
@@ -341,9 +338,6 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
                                                 cmt_modificado = replaceAll(cmt_modificado,'Ú','UUUUU');
                                                 cmt_modificado = replaceAll(cmt_modificado,'Ñ','NNNNN');
                                                 cmt_modificado = replaceAll(cmt_modificado,',','ccccc');
-                                                cmt_modificado = replaceAll(cmt_modificado,'&','qqq');
-                                                cmt_modificado = replaceAll(cmt_modificado,'ü','rrrrr');
-                                                cmt_modificado = replaceAll(cmt_modificado,'Ü','RRRRR');
 												this.up().up().form.submit({
 													waitMsg:'Procesando...',
 													params: {
@@ -442,9 +436,6 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
                                             cmt_modificado = replaceAll(cmt_modificado,'Ú','UUUUU');
                                             cmt_modificado = replaceAll(cmt_modificado,'Ñ','NNNNN');
                                             cmt_modificado = replaceAll(cmt_modificado,',','ccccc');
-                                            cmt_modificado = replaceAll(cmt_modificado,'&','qqq');
-                                            cmt_modificado = replaceAll(cmt_modificado,'ü','rrrrr');
-                                            cmt_modificado = replaceAll(cmt_modificado,'Ü','RRRRR');
                                             
 											Ext.Ajax.request({
 												url     : compleUrlGuardarCartoRechazo
@@ -757,7 +748,6 @@ function activarTramiteAutorizacionServ (grid,rowIndex,colIndex){
 						                ,columns    : 2
 						                ,width      : 250
 						                ,style      : 'margin:5px;'
-						                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 						                ,items      :
 						                [
 						                    {
@@ -765,13 +755,12 @@ function activarTramiteAutorizacionServ (grid,rowIndex,colIndex){
 						                        ,itemId     : 'SWAGENTE2'
 						                        ,name       : 'SWAGENTE2'
 						                        ,inputValue : 'S'
-						                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 						                    }
 						                    ,{
 						                        boxLabel    : 'No'
 						                        ,name       : 'SWAGENTE2'
 						                        ,inputValue : 'N'
-                                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                ,checked    : true
 						                    }
 						                ]
 						            }],

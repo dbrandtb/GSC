@@ -29,7 +29,6 @@ var _p30_urlEnviarCorreo                      = '<s:url namespace="/general"    
 var _p30_urlCargarDatosEndoso                 = '<s:url namespace="/emision"         action="recuperarDatosEndosoAltaIncisoAuto"  />';
 var _p30_urlObtencionReporteExcel             = '<s:url namespace="/reportes"        action="procesoObtencionReporte"             />';
 var _p30_urlObtencionReporteExcel2            = '<s:url namespace="/reportes"        action="procesoObtencionReporte2"            />';
-var _p30_urlObtencionReporteExcel3            = '<s:url namespace="/reportes"        action="procesoObtencionReporte3"            />';
 var _p30_urlDetalleTramite                    = '<s:url namespace="/mesacontrol"     action="movimientoDetalleTramite"            />';
 var _p30_urlActualizarOtvalorTramiteXDsatribu = '<s:url namespace="/emision"         action="actualizarOtvalorTramitePorDsatribu" />';
 var _p30_urlRecuperarOtvalorTramiteXDsatribu  = '<s:url namespace="/emision"         action="recuperarOtvalorTramitePorDsatribu"  />';
@@ -37,20 +36,17 @@ var url_PantallaPreview                       = '<s:url namespace="/endosos"    
 var _p48_urlMovimientos                       = '<s:url namespace="/movimientos"     action="ejecutar"                            />';
 var _p30_urlConfirmarEndoso                   = '<s:url namespace="/endosos"         action="confirmarEndosoAltaIncisoAuto"       />';
 var _p30_urlCargarPolizaSIGS                  = '<s:url namespace="/emision"         action="cargarPoliza"                        />';
-var _p30_urlCargarCorreos                     = '<s:url namespace="/cotizacionautos"          action="cargarCorreos"              />';
 
 var _p30_urlRecuperarDatosTramiteValidacion = '<s:url namespace="/flujomesacontrol" action="recuperarDatosTramiteValidacionCliente" />';
 var _p29_urlObtieneValNumeroSerie           = '<s:url namespace="/emision"          action="obtieneValNumeroSerie"                  />';
 
-var _p30_urlOtValorSubtiposCr = '<s:url namespace="/emision"         action="obtieneOtValorCorrespondienteSubtipoCR"                        />';
 var MontoMaximo = 0;
 var MontoMinimo = 0;
 
-var _p30_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p30_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p30_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p30_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _p30_urlRecuperacion = '<s:url namespace="/recuperacion" action="recuperar"/>';
 var _RUTA_DOCUMENTOS_TEMPORAL = '<s:text name="ruta.documentos.temporal" />';
-var _p30_descuento = false;
 
 var cargarXpoliza = false;
 ////// urls //////
@@ -204,30 +200,11 @@ var cargarXpoliza = false;
 
 var _p30_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_p30_smap1:',_p30_smap1);
-///Parche para TL
-if(_p30_smap1.cdtipsit=='ARTL'){
-	_p30_smap1.cdtipsit='AR';
-	_p30_smap1.cdtipsit2='TL';
-}
-/////////////////
 var _p28_smap1 =
 {
     cdtipsit : _p30_smap1.cdtipsit
 };
 debug('_p28_smap1:',_p28_smap1);
-
-var _p30_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-debug('_p30_flujo:',_p30_flujo);
-
-var _p30_flujoAux = {};
-try {
-    if (!Ext.isEmpty(_p30_flujo.aux)) {
-        _p30_flujoAux = Ext.decode(_p30_flujo.aux);
-    }
-} catch (e) {
-    debugError('WARNING al decodificar _p30_flujo.aux como JSON:', _p30_flujo, e);
-}
-debug('_p30_flujoAux:', _p30_flujoAux);
 
 var _p30_store                   = null;
 var _p30_selectedRecord          = null;
@@ -251,7 +228,7 @@ var _p30_endoso = _p30_smap1.endoso+'x'=='Sx';
 
 var _p30_bufferAutos = [];
 
-// var rolesSuscriptores ='|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
+var rolesSuscriptores ='|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
 ////// variables //////
 
 ////// dinamicos //////
@@ -308,7 +285,6 @@ _p30_gridCols.push(
             ,icon    : '${ctx}/resources/fam3icons/icons/cog.png'
             ,iconBkp : '${ctx}/resources/fam3icons/icons/cog.png'
             ,handler : _p30_gridBotonConfigClic
-            ,disabled	 : _p30_smap1.turistas=='S'
         }
         ,{
             tooltip  : 'Eliminar'
@@ -328,8 +304,7 @@ var _p30_panel7Items =
         {
            type    : 'table'
           ,columns : 1
-          ,style   : 'width: 20px !important;'
-          ,align   : 'right'
+          ,style   : 'width:10px !important;'
        }
        ,border : 0
        ,items  :
@@ -340,14 +315,12 @@ var _p30_panel7Items =
                 ,fieldLabel  : 'SUCURSAL'
                 ,name        : 'sucursal'               
                 ,sinOverride : true
-                ,labelWidth  : 100
-                ,style       : 'margin:0px;margin-left:5px;'//'margin:5px;margin-left:15px;width:20px !important;'
-                ,value       : !Ext.isEmpty(_p30_smap1.renuniext) ? _p30_smap1.renuniext : ''
+                ,labelWidth  : 170
+                ,style       : 'margin:5px;margin-left:15px;'//'margin:5px;margin-left:15px;width:20px !important;'
                 ,listeners   :
                 {
                     change : _p30_nmpolizaChange
                 }
-                ,readOnly    :  true 
             }
            ,{
                     xtype       : 'numberfield'
@@ -355,14 +328,12 @@ var _p30_panel7Items =
                    ,fieldLabel  : 'RAMO'
                    ,name        : 'ramo'                   
                    ,sinOverride : true                   
-                   ,labelWidth  : 100
-                   ,style       : 'margin:0px;margin-left:5px;'//'width : 30px !important;'
-                   ,value       : !Ext.isEmpty(_p30_smap1.renramo) ? _p30_smap1.renramo : ''
+                   ,labelWidth  : 170
+                   ,style       : 'margin:5px;margin-left:15px;'//'width : 30px !important;'
                    ,listeners   :
                    {
                        change : _p30_nmpolizaChange
                    }
-                   ,readOnly    :  true 
               }
              ,{
                   xtype       : 'numberfield'
@@ -370,23 +341,21 @@ var _p30_panel7Items =
                  ,fieldLabel  : 'POLIZA'
                  ,name        : 'poliza'
                  ,sinOverride : true                 
-                 ,labelWidth  : 100
-                 ,style       : 'margin:0px;margin-left:5px;'//'width : 50px !important;'
-                 ,value       : !Ext.isEmpty(_p30_smap1.renpoliex) ? _p30_smap1.renpoliex : ''
+                 ,labelWidth  : 170
+                 ,style       : 'margin:5px;margin-left:15px;'//'width : 50px !important;'
                  ,listeners   :
                  {
                      change : _p30_nmpolizaChange
                  }
-                 ,readOnly    :  true 
            }
-//           ,{
-//                  xtype   : 'button'
-//                 ,itemId  : '_p30_botonCargarPoliza'
-//                 ,text    : 'BUSCAR'
-//                 ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
-//                 ,style   : 'margin-right'
-//                 //,handler : _p30_cargarPoliza
-//           }
+          ,{
+                 xtype   : 'button'
+                ,itemId  : '_p30_botonCargarPoliza'
+                ,text    : 'BUSCAR'
+                ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+                ,style   : 'margin-right'
+                ,handler : _p30_cargarPoliza
+          }
        ]
     }
  ];
@@ -420,7 +389,7 @@ var _p30_panel6ItemsConf =
 ];
 
 var _p30_paneles  = [];
-<s:iterator value="imap"> 
+<s:iterator value="imap">
     <s:if test='%{key.substring(0,"paneldin_".length()).equals("paneldin_")}'>
         _p30_paneles['<s:property value='%{key.substring("paneldin_".length())}' />']=Ext.create('Ext.window.Window',
         {
@@ -481,14 +450,12 @@ for(var i in _p30_smap1)
 {
     if(i.slice(0,6)=='boton_')
     {
-    	var text=i.split('_')[1];
         _f1_botones.push(
         {
-            text      : text
+            text      : i.split('_')[1]
             ,icon     : '${ctx}/resources/fam3icons/icons/cog.png'
             ,cdtipsit : _p30_smap1[i]
             ,handler  : function(me){_p30_configuracionPanelDinClic(me.cdtipsit,me.text);}
-            ,hidden	  : (_p30_smap1.turistas!='S' && (text=='AUTO TURISTA' || text=='TURISTA LICENCIA')) || (_p30_smap1.turistas=='S' && text!='AUTO TURISTA' && text!='TURISTA LICENCIA')
         });
     }
 }
@@ -554,7 +521,6 @@ var _p30_tatrisitAutoWindows  = [];
                     text     : 'B&uacute;squeda de veh&iacute;culo'
                     ,icon    : '${ctx}/resources/fam3icons/icons/car.png'
                     ,handler : function(bot) { _p30_editarAutoAceptar(bot,_p30_editarAutoBuscar); }
-                    ,hidden	 : _p30_smap1.turistas=='S'
                 }
             ]
         };
@@ -601,16 +567,9 @@ debug('_p30_tatrisitAutoWindows:'  , _p30_tatrisitAutoWindows);
 
 Ext.onReady(function()
 {
-    //_grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p30_smap1.cdramo);
-    
-	///Parche para TL
-	if(_p30_smap1.cdtipsit=='ARTL'){
-		_p30_smap1.cdtipsit='AR';
-		_p30_smap1.cdtipsit2='TL';
-	}
-	/////////////////
-	
-    Ext.Ajax.timeout = 3*60*60*1000; // 1 hora
+    _grabarEvento('COTIZACION','ACCCOTIZA',null,null,_p30_smap1.cdramo);
+
+    Ext.Ajax.timeout = 1*60*60*1000; // 1 hora
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
@@ -978,7 +937,6 @@ Ext.onReady(function()
     [
         {
             xtype   : 'fieldset'
-            ,itemId : 'fsPanel1'
             ,border : 0
             ,items  :
             [
@@ -1014,7 +972,7 @@ Ext.onReady(function()
                 }
             ]
         }
-        ,{
+        ,{//VILS
             xtype   : 'fieldset'
             ,itemId : '_p30_panel3Fieldset'
             ,title  : '<span style="font:bold 14px Calibri;">CLIENTE</span>'
@@ -1056,11 +1014,11 @@ Ext.onReady(function()
     }
     ,{
         xtype   : 'fieldset'
-        ,itemId : '_p30_fieldBusquedaPoliza'
-        ,width  : 290
+        ,itemId : '_p28_fieldBusquedaPoliza'
+        ,width  : 435
         ,title  : '<span style="font:bold 14px Calibri;">RENOVAR POR POLIZA</span>'
         ,items  : _p30_panel7Items
-        ,hidden : !Ext.isEmpty(_p30_flujo) ? (_p30_flujo.cdflujomc != 240 && _p30_flujo.cdtipflu != 103) : true
+        ,hidden : true
       }
     );
     
@@ -1107,41 +1065,7 @@ Ext.onReady(function()
     ////// contenido //////
     var itemspri=
     [
-        Ext.create('Ext.panel.Panel',
-        {
-            itemId       : '_p30_panelFlujo'
-            ,title       : 'ACCIONES'
-            ,hidden      : Ext.isEmpty(_p30_flujo)
-            ,buttonAlign : 'left'
-            ,buttons     : []
-            ,listeners   :
-            {
-                afterrender : function(me)
-                {
-                    if(!Ext.isEmpty(_p30_flujo))
-                    {
-                        _cargarBotonesEntidad(
-                            _p30_flujo.cdtipflu
-                            ,_p30_flujo.cdflujomc
-                            ,_p30_flujo.tipoent
-                            ,_p30_flujo.claveent
-                            ,_p30_flujo.webid
-                            ,me.itemId//callback
-                            ,_p30_flujo.ntramite
-                            ,_p30_flujo.status
-                            ,_p30_flujo.cdunieco
-                            ,_p30_flujo.cdramo
-                            ,_p30_flujo.estado
-                            ,_p30_flujo.nmpoliza
-                            ,_p30_flujo.nmsituac
-                            ,_p30_flujo.nmsuplem
-                            ,null//callbackDespuesProceso
-                        );
-                    }
-                }
-            }
-        })
-        ,Ext.create('Ext.form.Panel',
+        Ext.create('Ext.form.Panel',
         {
             itemId      : '_p30_form'
             ,title      : 'DATOS GENERALES'
@@ -1159,11 +1083,7 @@ Ext.onReady(function()
         {
             itemId      : '_p30_grid'
             ,title      : 'INCISOS'
-            ,tbar       : {
-                layout: 'anchor',
-                defaults: { margin:'2 2 0 0' },
-                items: _p30_gridTbarItems
-            }
+            ,tbar       : _p30_gridTbarItems
             ,bbar       :
             [
                 {
@@ -1201,9 +1121,8 @@ Ext.onReady(function()
                             ,style        : 'background:#223772;'
                             ,buttonConfig :
                             {
-                                text   : 'Carga masiva...'
-                                ,icon  : '${ctx}/resources/fam3icons/icons/book_next.png'
-                                ,hidden: _p30_smap1.turistas == 'S' 
+                                text  : 'Carga masiva...'
+                                ,icon : '${ctx}/resources/fam3icons/icons/book_next.png'
                             }
                             ,listeners :
                             {
@@ -1535,7 +1454,7 @@ Ext.onReady(function()
                 }
             ]
             ,columns    : _p30_gridCols
-            ,height     : 330
+            ,height     : 300
             ,store      : _p30_store
             ,selModel   :
             {
@@ -1613,7 +1532,7 @@ Ext.onReady(function()
     
     _p30_ventanaCdtipsit = Ext.create('Ext.window.Window',
     {
-        title        : _p30_smap1.turistas!='S'?'ELEGIR TIPO DE VEH&Iacute;CULO':'ELEGIR TIPO DE LICENCIA'
+        title        : 'ELEGIR TIPO DE VEH&Iacute;CULO'
         ,modal       : true
         ,closeAction : 'hide'
         ,items       : _p30_editorCdtipsit
@@ -1643,38 +1562,6 @@ Ext.onReady(function()
     
     ////// custom //////
     
-    try{
-    	if(_p30_smap1.turistas=='S'){
-	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).allowBlank=true;
-	    	_fieldByName("parametros.pv_otvalor17",_fieldById('_p30_panel3Fieldset',null,true),true).isValid();
-	    	_fieldByLabel("MONEDA").setValue("2");
-	    	_fieldByLabel("MONEDA").getStore().filter([{filterFn: function(item) {
-	            
-	            return item.get("key") == '2'; }}])
-	    	_fieldByName('aux.otvalor18',_fieldById("_p30_fieldsetTatripol"),true).setMargin('0 0 0 15');
-	    	_fieldById("fsPanel1").insert(Ext.ComponentQuery.query("#fsPanel1>[xtype]").length-2,_fieldByName('aux.otvalor18',_fieldById("_p30_fieldsetTatripol"),true));
-	    	
-	    	_fieldByLabel('AGENTE',_fieldById("fsPanel1")).on({
-	    		select:function(me){
-	    			
-	    			var extraparams={
-	   	    			 catalogo:'RAMO_5_NEGOCIO_X_CDTIPSIT_AGENTE'
-	   	    			,'params.cdtipsit':'TL'
-	   	    			,'params.producto':'I'
-	   	    			,'params.cdsisrol': _GLOBAL_CDSISROL
-	   	    			,'params.cdagente':me.getValue() 
-	   	    	}
-	   	    	_fieldByLabel('NEGOCIO',_fieldById("fsPanel1")).store.proxy.extraParams=extraparams;
-	   	    	_fieldByLabel('NEGOCIO',_fieldById("fsPanel1")).store.load();
-	    		}
-	    	})
-	    	
-	    	
-    	}
-    }catch(e){
-    	debugError(e)
-    }
-    
     //fechas
     _fieldByName('feini').on(
     {
@@ -1692,10 +1579,6 @@ Ext.onReady(function()
     //ramo 5
     if(_p30_smap1.cdramo+'x'=='5x')
     {
-    	
-    	//RPF
-    	_fieldByName("aux.otvalor17",null,true).hide();
-    	
         //fechas
         _fieldByName('feini').on(
         {
@@ -2631,9 +2514,8 @@ Ext.onReady(function()
                                             	try {
                                             		debug('json.smap1.P1VALOR=', Number(json.smap1.P1VALOR));
                                             		debug('json.smap1.P2VALOR=', Number(json.smap1.P2VALOR));
-                                            		// http://stackoverflow.com/questions/11832914/round-to-at-most-2-decimal-places-in-javascript
-                                            		var valormin = Math.round((Number(me.valorCargado) * (1 + Number(json.smap1.P1VALOR))) * 100) / 100;
-                                                    var valormax = Math.round((Number(me.valorCargado) * (1 + Number(json.smap1.P2VALOR))) * 100) / 100;
+                                            		var valormin = Number(me.valorCargado)*(1+Number(json.smap1.P1VALOR));
+                                                    var valormax = Number(me.valorCargado)*(1+Number(json.smap1.P2VALOR));
                                                     MontoMaximo = valormax;
 													MontoMinimo = valormin;
 													
@@ -3522,17 +3404,6 @@ Ext.onReady(function()
 	        }
 	    });
     }
-    
-    _p30_recuperarClienteTramite();
-    
-    _p30_recuperarCotizacionDeTramite();
-    
-    try {
-        _p30_recuperarPolizaSIGS();
-    } catch (e) {
-        debugError('error al invocar funcion _p30_recuperarPolizaSIGS');
-    }
-    
     ////// loaders //////
 });
 
@@ -3654,15 +3525,6 @@ function _p30_agregarAuto()
 {
     debug('>_p30_agregarAuto');
     
-    try{
-    	if(_p30_smap1.turistas=='S' && _p30_store.count()>=3){
-    		mensajeWarning('Solo puedes agregar 3 incisos');
-    		return;
-    	}
-    	
-    }catch(e){
-    	debugError(e);
-    }
     var valido=true;
     if(valido&&_p30_smap1.cdramo+'x'=='5x')
     {
@@ -4144,7 +4006,873 @@ function _p30_cotizar(sinTarificar)
     {
         datosIncompletos();
     }
-	_p30_defBoton(valido, sinTarificar);
+    
+    if(valido)
+    {
+        var error  = '';
+        for(var i=0;i<_f1_botones.length;i++)
+        {
+            var boton    = _f1_botones[i];
+            var cdtipsit = boton.cdtipsit;
+            var panel    = _p30_paneles[cdtipsit];
+            debug('buscando en panel:',panel);
+            if(panel.valores==false)
+            {
+                valido = false;
+                error  = error+'FALTA DEFINIR: '+boton.text+'<br/>';
+            }
+        }
+        if(!valido)
+        {
+            mensajeWarning(error);
+        }
+    }
+    
+    if(valido)
+    {
+    	if(RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol))
+//     	(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+        {
+            valido = _p30_store.getCount()>=1;
+            if(!valido)
+            {
+                mensajeWarning('Debe capturar al menos un inciso');
+            }
+        }
+        else
+        {
+            valido = _p30_store.getCount()>=5;
+            if(!valido)
+            {
+                mensajeWarning('Debe capturar al menos cinco incisos');
+            }
+        }
+    }
+    
+    if(valido)
+    {
+        var error        = '';
+        var agregarError = function(cadena,nmsituac)
+        {
+            valido = false;
+            error  = error + 'Inciso ' + nmsituac + ': ' + cadena +'</br>';
+        };
+        _p30_store.each(function(record)
+        {
+            var cdtipsit = record.get('cdtipsit');
+            var nmsituac = record.get('nmsituac');
+            
+            if(!Ext.isEmpty(cdtipsit))
+            {
+                if(Ext.isEmpty(record.get('cdplan')))
+                {
+                    agregarError('Debe seleccionar el paquete',nmsituac);
+                }
+                var itemsObliga = Ext.ComponentQuery.query('[swobligaflot=true]',_p30_tatrisitFullForms[cdtipsit]);
+                for(var i in itemsObliga)
+                {
+                    if(Ext.isEmpty(record.get(itemsObliga[i].getName())))
+                    {
+                        agregarError('Falta definir "'+itemsObliga[i].getFieldLabel()+'"',nmsituac);
+                    }
+                }
+            }
+            else
+            {
+                agregarError('Debe seleccionar el tipo de veh&iacute;culo',nmsituac);
+            }
+        });
+        if(!valido)
+        {
+            mensajeWarning(error);
+        }
+    }
+    
+    if(valido)
+    {
+    	if(_p30_smap1.tipoflot=='P' 
+    	   &&
+    	   !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+//     	   (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
+    	   )
+    	{
+    		
+    		var ncamiones = 0;
+            var ntractocamiones = 0;
+            var nsemiremolques = 0;
+        	
+        	var nTipo2  = 0;
+        	var nTipo4  = 0;
+            var nTipo13 = 0;
+            _p30_store.each(function(record)
+            {
+                if(record.get('cdtipsit')+'x'=='CRx')
+                {
+            		var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
+            		if(record.get(tipoVehiName)-0==2){
+            			ncamiones = ncamiones+1;
+            		}
+            		else if(record.get(tipoVehiName)-0==4)
+                    {
+                        ncamiones = ncamiones+1;
+                        ntractocamiones = ntractocamiones+1;
+                    }else if(record.get(tipoVehiName)-0==13)
+                    {
+                    	nsemiremolques = nsemiremolques+1;
+                    }
+                    
+                }else if(record.get('cdtipsit')+'x'=='TCx'){
+                	ncamiones = ncamiones+1;
+                	ntractocamiones = ntractocamiones+1;
+                	
+                }else if(record.get('cdtipsit')+'x'=='RQx'){
+                	nsemiremolques = nsemiremolques+1;
+                }
+            });
+            
+            if(ncamiones > _p30_smap1.totalCamiones){
+            	valido = false;
+            	mensajeWarning("&Uacute;nicamente se puede amparar "+_p30_smap1.totalCamiones+" Camiones en la autorización. <br/>Intente nuevamente.");
+            }else{
+            	if(ntractocamiones > _p30_smap1.totalTractocamion){
+                	valido = false;
+                	mensajeWarning("&Uacute;nicamente se puede amparar "+_p30_smap1.totalTractocamion+" Tractocamiones en la autorización. <br/>Intente nuevamente.");
+                }else{
+                	if(nsemiremolques > (+ntractocamiones * +_p30_smap1.remolquesPorTracto)){
+                		valido = false;
+                		mensajeWarning('Se permiten '+_p30_smap1.remolquesPorTracto+' remolques por cada tractocami&oacute;n<br/>'
+                                +'Y en la cotizaci&oacute;n hay '+nsemiremolques+' remolques y '+ntractocamiones+' tractocamiones');
+                	}
+                }
+            }
+    	}
+    }
+    
+    if(valido)
+    {
+        valido = _fieldByName('nmpoliza',_fieldById('_p30_form')).sucio==false;
+        if(!valido)
+        {
+            _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo = true;
+            _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
+            _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo = false;
+            valido = true;
+        }
+    }
+    
+    debug('_p30_paneles:',_p30_paneles,'valido:',valido);
+    if(valido)
+    {
+        var form = _fieldById('_p30_form');
+        
+        //copiar paneles a oculto
+        var arr = Ext.ComponentQuery.query('#_p30_gridTarifas');
+        if(arr.length>0)
+        {
+            var formDescuentoActual = _fieldById('_p30_formDescuento');
+            var formCesion          = _fieldById('_p30_formCesion');
+            var recordPaneles       = new _p30_modelo(formDescuentoActual.getValues());
+            var itemsCesion         = Ext.ComponentQuery.query('[fieldLabel]',formCesion);
+            for(var i=0;i<itemsCesion.length;i++)
+            {
+                recordPaneles.set(itemsCesion[i].getName(),itemsCesion[i].getValue());
+            }
+            form.formOculto.loadRecord(recordPaneles);
+            debug('form.formOculto.getValues():',form.formOculto.getValues());
+        }
+    
+        debug('length:',_p30_paneles.length,'type:',typeof _p30_paneles);
+        var recordsCdtipsit = [];
+        for(var cdtipsitPanel in _p30_paneles)
+        {
+            var panel      = _p30_paneles[cdtipsitPanel];
+            var recordBase = new _p30_modelo(panel.valores);
+            recordBase.set('cdtipsit',cdtipsitPanel);
+            debug('cdtipsitPanel:',cdtipsitPanel,'recordBase:',recordBase);
+            recordsCdtipsit[cdtipsitPanel] = recordBase;
+        }
+        debug('recordsCdtipsit:',recordsCdtipsit);
+        var storeTvalosit = Ext.create('Ext.data.Store',
+        {
+            model : '_p30_modelo'
+        });
+        var formValuesAux = form.getValues();
+        var formValues    = {};
+        for(var prop in formValuesAux)
+        {
+            if(prop+'x'!='x'
+                &&prop.slice(0,5)=='param')
+            {
+                formValues[prop]=formValuesAux[prop];
+            }
+        }
+        debug('formValues:',formValues);
+        var valuesFormOculto = form.formOculto.getValues();
+        debug('valuesFormOculto:',valuesFormOculto);
+        _p30_store.each(function(record)
+        {
+            var cdtipsit       = record.get('cdtipsit');
+            var cdtipsitPanel  = _p30_smap1['destino_'+cdtipsit];
+            var recordBase     = recordsCdtipsit[cdtipsitPanel];
+            var recordTvalosit = new _p30_modelo(record.data);
+            
+            //---
+            if(cdtipsitPanel==cdtipsit)
+            {
+                for(var prop in recordTvalosit.getData())
+                {
+                    var valor = recordTvalosit.get(prop);
+                    var base  = recordBase.get(prop);
+                    if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
+                    {
+                        recordTvalosit.set(prop,base);
+                    }
+                }
+            }
+            else
+            {
+                for(var prop in recordTvalosit.getData())
+                {
+                    var base = recordBase.get(prop);
+                    debug('base:',base);
+                    
+                    var valorValosit = recordTvalosit.get(prop);
+                    debug('valorValosit:',valorValosit);
+                    
+                    var cmpPanel = _p30_paneles[cdtipsitPanel].down('[name='+prop+']');
+                    debug('cmpPanel:',cmpPanel,'.');
+                    if(!Ext.isEmpty(cmpPanel))
+                    {
+                        if(cmpPanel.auxiliar=='adicional'
+                            &&Ext.isEmpty(valorValosit)
+                            &&!Ext.isEmpty(base)
+                        )
+                        {
+                            debug('set normal, porque es adicional');
+                            //alert('ADIC!-'+fieldLabel+'-'+prop);
+                            recordTvalosit.set(prop,base);
+                        }
+                        else
+                        {
+                            var cmpPanelLabel = cmpPanel.fieldLabel;
+                            debug('cmpPanelLabel:',cmpPanelLabel,'.');
+                            var cmpByLabel = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*='+_substringComa(cmpPanelLabel)+']');
+                            if(!Ext.isEmpty(cmpByLabel))
+                            {
+                                var nameByLabel = cmpByLabel.name;
+                                var valor       = recordTvalosit.get(nameByLabel);
+                                debug('valor:',valor);
+                                if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
+                                {
+                                    recordTvalosit.set(nameByLabel,base);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //---
+            
+            /*
+            for(var prop in recordTvalosit.data)
+            {
+                var valor = recordTvalosit.get(prop);
+                var base  = recordBase.get(prop);
+                if(Ext.isEmpty(valor)&&!Ext.isEmpty(base))
+                {
+                    if(cdtipsitPanel==cdtipsit)
+                    {
+                        recordTvalosit.set(prop,base);
+                    }
+                    else
+                    {
+                        var cmpOriginal = _p30_paneles[cdtipsitPanel].down('[name='+prop+']');
+                        debug('cmpOriginal:',cmpOriginal);
+                        if(!Ext.isEmpty(cmpOriginal))
+                        {
+	                        debug('cmpOriginal.auxiliar:',cmpOriginal.auxiliar,'.');
+	                        var fieldLabel = cmpOriginal.fieldLabel;
+	                        debug('fieldLabel:',fieldLabel);
+	                        if(cmpOriginal.auxiliar=='adicional')
+	                        {
+	                            debug('set normal, porque es adicional');
+	                            //alert('ADIC!-'+fieldLabel+'-'+prop);
+	                            recordTvalosit.set(prop,base);
+	                        }
+	                        else
+	                        {
+	                            var cmpByLabel  = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*='+_substringComa(fieldLabel)+']');
+	                            if(!Ext.isEmpty(cmpByLabel))
+	                            {
+	                                var nameByLabel = cmpByLabel.name;
+	                                debug('set en nameByLabel para cdtipsit:',nameByLabel,cdtipsit,'.');
+	                                recordTvalosit.set(nameByLabel,base);
+	                                //alert('SI!-'+fieldLabel+'-'+nameByLabel);
+	                            }
+	                            else
+	                            {
+	                                //alert('NO!-'+fieldLabel+'-'+cdtipsit);
+	                                debug('No existe el dsatribu en el cdtipsit:',fieldLabel,cdtipsit,'.');
+	                            }
+	                        }
+                        }
+                    }
+                }
+            }
+            */
+            
+            if(_p30_smap1.mapeo=='DIRECTO')
+            {
+                for(var prop in formValues)
+                {
+                    recordTvalosit.set(prop,formValues[prop]);
+                }
+                for(var att in valuesFormOculto)
+                {
+                    var valorOculto  = valuesFormOculto[att];
+                    var valorValosit = recordTvalosit.get(att);
+                    if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                    {
+                        recordTvalosit.set(att,valorOculto);
+                    }
+                }
+            }
+            else
+            {
+                var mapeos = _p30_smap1.mapeo.split('#');
+                debug('mapeos:',mapeos);
+                for(var i in mapeos)
+                {
+                    var cdtipsitsMapeo = mapeos[i].split('|')[0];
+                    var mapeo          = mapeos[i].split('|')[1];
+                    debug('cdtipsit:',cdtipsit,'cdtipsitsMapeo:',cdtipsitsMapeo);
+                    if((','+cdtipsitsMapeo+',').lastIndexOf(','+cdtipsit+',')!=-1)
+                    {
+                        debug('coincidente:',cdtipsitsMapeo,'cdtipsit:',cdtipsit)
+                        debug('mapeo:',mapeo);
+                        if(mapeo=='DIRECTO')
+                        {
+                            debug('directo');
+                            for(var prop in formValues)
+                            {
+                                recordTvalosit.set(prop,formValues[prop]);
+                            }
+                            for(var att in valuesFormOculto)
+                            {
+                                var valorOculto  = valuesFormOculto[att];
+                                var valorValosit = recordTvalosit.get(att);
+                                if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                                {
+                                    recordTvalosit.set(att,valorOculto);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var atributos = mapeo.split('@');
+                            debug('atributos:',atributos);
+                            for(var i in atributos)
+                            {
+                                var atributoIte = atributos[i];
+                                var modelo      = atributoIte.split(',')[0];
+                                var origen      = atributoIte.split(',')[1];
+                                var pantalla    = atributoIte.split(',')[2];
+                                
+                                modelo   = 'parametros.pv_otvalor'+(('x00'+modelo)  .slice(-2));
+                                pantalla = 'parametros.pv_otvalor'+(('x00'+pantalla).slice(-2));
+                                
+                                debug('modelo:'   , modelo   , '.');
+                                debug('origen:'   , origen   , '.');
+                                debug('pantalla:' , pantalla , '.');
+                                
+                                if(origen=='F')
+                                {
+                                    recordTvalosit.set(modelo,formValues[pantalla]);
+                                }
+                                else if(origen=='O')
+                                {
+                                    var valorOculto  = valuesFormOculto[pantalla];
+                                    var valorValosit = recordTvalosit.get(modelo);
+                                    if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
+                                    {
+                                        recordTvalosit.set(modelo,valorOculto);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            storeTvalosit.add(recordTvalosit);
+            debug('record:',record.data,'tvalosit:',recordTvalosit.data);
+        });
+        debug('_p30_store:',_p30_store);
+        debug('storeTvalosit:',storeTvalosit);
+        
+        var json =
+        {
+            smap1 :
+            {
+                cdunieco     : _p30_smap1.cdunieco
+                ,cdramo      : _p30_smap1.cdramo
+                ,estado      : 'W'
+                ,nmpoliza    : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+                ,cdtipsit    : _p30_smap1.cdtipsit
+                ,cdpersonCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
+                ,cdideperCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
+                ,feini       : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
+                ,fefin       : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
+                ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
+                ,notarificar : sinTarificar ? 'si' : ''
+                ,tipoflot    : _p30_smap1.tipoflot
+            }
+            ,slist1 : []
+            ,slist2 : []
+            ,slist3 : []
+        };
+        
+        for(var cdtipsitPanel in recordsCdtipsit)
+        {
+            json.slist3.push(recordsCdtipsit[cdtipsitPanel].data);
+        }
+        
+        var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
+        debug('itemsTatripol:',itemsTatripol);
+        for(var i in itemsTatripol)
+        {
+            var tatri=itemsTatripol[i];
+            json.smap1['tvalopol_'+tatri.cdatribu]=tatri.getValue();
+        }
+        
+        _p30_store.each(function(record)
+        {
+            json.slist2.push(record.data);
+        });
+        
+        storeTvalosit.each(function(record)
+        {
+            json.slist1.push(record.data);
+        });
+        
+        //crear record con los valores del formulario y el formulario oculto
+        debug('storeTvalosit.getAt(0).data:',storeTvalosit.getAt(0).data);
+        var recordTvalositPoliza=new _p30_modelo(storeTvalosit.getAt(0).data);
+        debug('recordTvalositPoliza:',recordTvalositPoliza.data);
+        recordTvalositPoliza.set('cdtipsit','XPOLX');
+        recordTvalositPoliza.set('nmsituac',-1);
+        for(var prop in formValues)
+        {
+            recordTvalositPoliza.set(prop,formValues[prop]);
+        }
+        for(var att in valuesFormOculto)
+        {
+            recordTvalositPoliza.set(att,valuesFormOculto[att]);
+        }
+        debug('recordTvalositPoliza final:',recordTvalositPoliza.data);
+        json.slist2.push(recordTvalositPoliza.data);
+        //crear record con los valores del formulario y el formulario oculto
+        
+        debug('>>> json a enviar:',json);
+        
+        var panelpri = _fieldById('_p30_panelpri');
+        panelpri.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url       : _p30_urlCotizar
+            ,jsonData : json
+            ,success  : function(response)
+            {
+                panelpri.setLoading(false);
+                
+                _p30_bloquear(true);
+                
+                json = Ext.decode(response.responseText);
+                debug('### cotizar:',json);
+                if(json.exito)
+                {
+                	
+                	if(!Ext.isEmpty(json.smap1.msnPantalla))
+                    {
+                           mensajeError(json.smap1.msnPantalla);
+                    }
+                	
+                    _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
+                    _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(json.smap1.nmpoliza);
+                    _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
+                    
+                    if(Ext.isEmpty(sinTarificar)||false==sinTarificar)
+                    {
+                        _grabarEvento('COTIZACION'
+                                      ,'COTIZA'
+                                      ,_p30_smap1.ntramite
+                                      ,_p30_smap1.cdunieco
+                                      ,_p30_smap1.cdramo
+                                      ,'W'
+                                      ,json.smap1.nmpoliza
+                                      ,json.smap1.nmpoliza
+                                      ,'buscar'
+                                      ,_fieldById('_p30_form')
+                                      );
+                    }
+                    
+                    var itemsDescuento =
+                    [
+                        {
+                            xtype  : 'displayfield'
+                            ,value : '¿Desea usar su descuento de agente?'
+                        }
+                        ,{
+                            xtype  : 'displayfield'
+                            ,value : 'Si desea aplicar un DESCUENTO seleccione el porcentaje mayor a 0%'
+                        }
+                        ,{
+                            xtype  : 'displayfield'
+                            ,value : 'Si desea aplicar un RECARGO seleccione el porcentaje menor a 0%'
+                        }
+                    ];
+                    
+                    <s:if test='%{getImap().get("panel5Items")!=null}'>
+                        var itemsaux = [<s:property value="imap.panel5Items" />];
+                        for(var ii=0;ii<itemsaux.length;ii++)
+                        {
+                            debug('itemsaux[ii]:',itemsaux[ii]);
+                            itemsDescuento.push(itemsaux[ii]);
+                        }
+                    </s:if>
+                    debug('itemsDescuento:',itemsDescuento);
+                    
+                    var itemsComision =
+                    [
+                        {
+                            xtype  : 'displayfield'
+                            ,value : 'Indique el porcentaje de comisi&oacute;n que desea ceder'
+                        }
+                    ];
+                    
+                    <s:if test='%{getImap().get("panel6Items")!=null}'>
+                        var itemsaux = [<s:property value="imap.panel6Items" />];
+                        for(var ii=0;ii<itemsaux.length;ii++)
+                        {
+                            itemsaux[ii].minValue=0;
+                            itemsaux[ii].maxValue=100;
+                            itemsComision.push(itemsaux[ii]);
+                        }
+                    </s:if>
+                    debug('itemsComision:',itemsComision);
+                    
+                    var arr = Ext.ComponentQuery.query('#_p30_gridTarifas');
+                    if(arr.length>0)
+                    {
+                        _fieldById('_p30_formCesion').destroy();
+                        panelpri.remove(arr[arr.length-1],true);
+                    }
+                    
+                    var _p30_formDescuento = Ext.create('Ext.form.Panel',
+                    {
+                        itemId        : '_p30_formDescuento'
+                        ,border       : 0
+                        ,defaults     : { style : 'margin:5px;' }
+                        ,style        : 'margin-left:535px;'
+                        ,width        : 450
+                        ,windowCesion : Ext.create('Ext.window.Window',
+                        {
+                            title        : 'CESI&Oacute;N DE COMISI&Oacute;N'
+                            ,autoScroll  : true
+                            ,closeAction : 'hide'
+                            ,modal       : true
+                            ,items       :
+                            [
+                                Ext.create('Ext.form.Panel',
+                                {
+                                    itemId       : '_p30_formCesion'
+                                    ,border      : 0
+                                    ,defaults    : { style : 'margin:5px;' }
+                                    ,items       : itemsComision
+                                    ,buttonAlign : 'center'
+                                    ,buttons     :
+                                    [
+                                        {
+                                            itemId   : '_p30_botonAplicarCesion'
+                                            ,text    : 'Aplicar'
+                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                            ,handler : function(me)
+                                            {
+                                                if(me.up('form').getForm().isValid())
+                                                {
+                                                    me.up('window').hide();
+                                                    _p30_cotizar(true);
+                                                }
+                                                else
+                                                {
+                                                    mensajeWarning('Favor de verificar los datos');
+                                                }
+                                            }
+                                        }
+                                    ]
+                                })
+                            ]
+                        })
+                        ,items       :
+                        [
+                            {
+                                xtype  : 'fieldset'
+                                ,title : '<span style="font:bold 14px Calibri;">DESCUENTO DE AGENTE</span>'
+                                ,items : itemsDescuento
+                            }
+                        ]
+                        ,buttonAlign : 'right'
+                        ,buttons     :
+                        [
+                            {
+                                itemId   : '_p30_botonAplicarDescuento'
+                                ,text    : 'Aplicar'
+                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                                ,handler : function(me)
+                                {
+                                    if(me.up('form').getForm().isValid())
+                                    {
+                                        _p30_cotizar();
+                                    }
+                                    else
+                                    {
+                                        mensajeWarning('Favor de verificar los datos');
+                                    }
+                                }
+                            }
+                        ]
+                    });
+                    
+                    _p30_formDescuento.loadRecord(new _p30_modelo(form.formOculto.getValues()));
+                    _fieldById('_p30_formCesion').loadRecord(new _p30_modelo(form.formOculto.getValues()));
+                    
+                    //bloquear descuento
+                    var arrDesc = Ext.ComponentQuery.query('[fieldLabel]',_p30_formDescuento);
+                    var disabledDesc = false;
+                    for(var i=0;i<arrDesc.length;i++)
+                    {
+                        if(arrDesc[i].getValue()-0!=0)
+                        {
+                            arrDesc[i].setReadOnly(true);
+                            disabledDesc = true;
+                        }
+                    }
+                    _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
+                    
+                    //bloquear comision
+                    var arrComi      = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formCesion'));
+                    var disabledComi = false;
+                    for(var i=0;i<arrComi.length;i++)
+                    {
+                        if(arrComi[i].getValue()-0!=0)
+                        {
+                            arrComi[i].setReadOnly(true);
+                            disabledComi = true;
+                        }
+                    }
+                    _fieldById('_p30_botonAplicarCesion').setDisabled(disabledComi);
+                    
+                    var gridTarifas=Ext.create('Ext.panel.Panel',
+                    {
+                        itemId : '_p30_gridTarifas'
+                        ,items :
+                        [
+                            Ext.create('Ext.grid.Panel',
+                            {
+                                title             : 'Resultados'
+                                ,border           : 0
+                                ,store            : Ext.create('Ext.data.Store',
+                                {
+                                    model : '_p30_modeloTarifa'
+                                    ,data : json.slist1
+                                })
+                                ,columns          :
+                                [
+                                    {
+                                        text       : 'FORMA DE PAGO'
+                                        ,dataIndex : 'DSPERPAG'
+                                        ,flex      : 1
+                                    }
+                                    ,{
+                                        text       : 'PRIMA'
+                                        ,dataIndex : 'PRIMA'
+                                        ,renderer  : Ext.util.Format.usMoney
+                                        ,flex      : 1
+                                    }
+                                ]
+                                ,selType          : 'cellmodel'
+                                ,minHeight        : 100
+                                ,enableColumnMove : false
+                                ,listeners        :
+                                {
+                                    select : _p30_tarifaSelect
+                                }
+                            })
+                            ,_p30_formDescuento
+                            ,Ext.create('Ext.panel.Panel',
+                            {
+                                defaults : { style : 'margin:5px;' }
+                                ,border  : 0
+                                ,tbar    :
+                                [
+                                    '->'
+                                    ,{
+                                        itemId    : '_p30_botonDetalles'
+                                        ,text     : 'Detalles'
+                                        ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
+                                        ,disabled : true
+                                        ,handler  : _p30_detalles
+                                       ,hidden    : !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)//(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
+                                    }
+                                    ,{
+                                        itemId    : '_p30_botonCoberturas'
+                                        ,text     : 'Coberturas'
+                                        ,icon     : '${ctx}/resources/fam3icons/icons/table.png'
+                                        ,disabled : true
+                                        ,handler  : _p30_coberturas
+                                    }
+                                    ,{
+                                        itemId   : '_p30_botonEditar'
+                                        ,text    : 'Editar'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                                        ,handler : _p30_editar
+                                    }
+                                    ,{
+                                        itemId   : '_p30_botonClonar'
+                                        ,text    : 'Duplicar'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
+                                        ,handler : _p30_clonar
+                                    }
+                                    ,{
+                                        itemId   : '_p30_botonNueva'
+                                        ,text    : 'Nueva'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+                                        ,handler : _p30_nueva
+                                    }
+                                ]
+                                ,bbar    :
+                                [
+                                    '->'
+                                    ,{
+                                        itemId    : '_p30_botonEnviar'
+                                        ,xtype    : 'button'
+                                        ,text     : 'Enviar'
+                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
+                                        ,disabled : true
+                                        ,handler  : _p30_enviar
+                                    }
+                                    ,{
+                                        itemId    : '_p30_botonImprimir'
+                                        ,xtype    : 'button'
+                                        ,text     : 'Imprimir'
+                                        ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
+                                        ,disabled : true
+                                        ,handler  : _p30_imprimir
+                                    }
+                                    ,{
+                                        itemId   : '_p30_botonCesion'
+                                        ,xtype   : 'button'
+                                        ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
+                                        ,text    : 'Cesi&oacute;n de comisi&oacute;n'
+                                        ,handler : _p30_cesionClic
+                                    }
+                                    ,{
+                                        itemId    : '_p30_botonComprar'
+                                        ,xtype    : 'button'
+                                        ,text     : 'Confirmar cotizaci&oacute;n'
+                                        ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
+                                        ,disabled : true
+                                        ,handler  : _p30_comprar
+                                    }
+                                ]
+                            })
+                        ]
+                    });
+                    
+                    panelpri.add(gridTarifas);
+                    panelpri.doLayout();
+                    
+                    if(_p30_smap1.cdramo+'x'=='5x'&&arrDesc.length>0)
+                    {
+                        _p30_formDescuento.setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url     : _p30_urlRecuperacionSimple
+                            ,params :
+                            {
+                                'smap1.procedimiento' : 'RECUPERAR_DESCUENTO_RECARGO_RAMO_5'
+                                ,'smap1.cdtipsit'     : _p30_smap1.cdtipsit
+                                ,'smap1.cdagente'     : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
+                                ,'smap1.negocio'      : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
+                                ,'smap1.tipocot'      : _p30_smap1.tipoflot
+                                ,'smap1.cdsisrol'     : _p30_smap1.cdsisrol
+                                ,'smap1.cdusuari'     : _p30_smap1.cdusuari
+                            }
+                            ,success : function(response)
+                            {
+                                _p30_formDescuento.setLoading(false);
+                                var json = Ext.decode(response.responseText);
+                                debug('### cargar rango descuento ramo 5:',json);
+                                if(json.exito)
+                                {
+                                    for(var i=0;i<arrDesc.length;i++)
+                                    {
+                                        arrDesc[i].minValue=100*(json.smap1.min-0);
+                                        arrDesc[i].maxValue=100*(json.smap1.max-0);
+                                        arrDesc[i].isValid();
+                                        debug('min:',arrDesc[i].minValue);
+                                        debug('max:',arrDesc[i].maxValue);
+                                        arrDesc[i].setReadOnly(false);
+                                    }
+                                }
+                                else
+                                {
+                                    for(var i=0;i<arrDesc.length;i++)
+                                    {
+                                        arrDesc[i].minValue=0;
+                                        arrDesc[i].maxValue=0;
+                                        arrDesc[i].setValue(0);
+                                        arrDesc[i].isValid();
+                                        arrDesc[i].setReadOnly(true);
+                                    }
+                                    mensajeError(json.respuesta);
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                _p30_formDescuento.setLoading(false);
+                                for(var i=0;i<arrDesc.length;i++)
+                                {
+                                    arrDesc[i].minValue=0;
+                                    arrDesc[i].maxValue=0;
+                                    arrDesc[i].setValue(0);
+                                    arrDesc[i].isValid();
+                                    arrDesc[i].setReadOnly(true);
+                                }
+                                errorComunicacion();
+                            }
+                        });
+                    }
+                    
+                    try {
+                       gridTarifas.down('button[disabled=false]').focus(false, 1000);
+                    } catch(e) {
+                        debug(e);
+                    }
+                }
+                else
+                {
+                    _p30_bloquear(false);
+                    mensajeError(json.respuesta);
+                }
+            }
+            ,failure  : function()
+            {
+                panelpri.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
     
     debug('<_p30_cotizar');
 }
@@ -4194,7 +4922,6 @@ function _p30_limpiar()
     
     _p30_inicializarTatripol();
     
-    _p30_recuperarClienteTramite();
     
     debug('<_p30_limpiar');
 }
@@ -4218,9 +4945,8 @@ function _p30_cargarClic()
             url     : _p30_urlCargar
             ,params :
             {
-                'smap1.cdramo'      : _p30_smap1.cdramo
-                ,'smap1.nmpoliza'   : nmpoliza
-                ,'smap1.ntramiteIn' : _p30_smap1.ntramite
+                'smap1.cdramo'    : _p30_smap1.cdramo
+                ,'smap1.nmpoliza' : nmpoliza
             }
             ,success : function(response)
             {
@@ -4233,7 +4959,125 @@ function _p30_cargarClic()
                     debug('### cargar:',json);
                     checkBool(json.exito,json.respuesta);
                     
-                    llenandoCampos(json, nmpoliza, false);
+                    _p30_smap1.cdunieco=json.smap1.CDUNIECO;
+                    
+                    var maestra=json.smap1.ESTADO=='M';
+                    
+                    var fesolici    = Ext.Date.parse(json.smap1.FESOLICI,'d/m/Y');
+                    var fechaHoy    = Ext.Date.clearTime(new Date());
+                    var fechaLimite = Ext.Date.add(fechaHoy,Ext.Date.DAY,-1*(json.smap1.diasValidos-0));
+                    var vencida     = fesolici<fechaLimite;
+                    debug('fesolici='    , fesolici);
+                    debug('fechaHoy='    , fechaHoy);
+                    debug('fechaLimite=' , fechaLimite);
+                    debug('vencida='     , vencida , '.');
+                    
+                    _p30_limpiar();
+                    
+                    var iniVig = Ext.Date.parse(json.smap1.FEINI,'d/m/Y').getTime();
+                    var finVig = Ext.Date.parse(json.smap1.FEFIN,'d/m/Y').getTime();
+                    var milDif = finVig-iniVig;
+                    var diaDif = milDif/(1000*60*60*24);
+                    debug('diaDif:',diaDif);
+                    
+                    /*if(!maestra&&!vencida)
+                    {
+                        _fieldByName('feini').setValue(Ext.Date.parse(json.smap1.FEINI,'d/m/Y'));
+                    }*/
+                    _fieldByName('feini').setValue(new Date());
+                    _fieldByName('fefin').setValue
+                    (
+                        Ext.Date.add
+                        (
+                            _fieldByName('feini').getValue()
+                            ,Ext.Date.DAY
+                            ,diaDif
+                        )
+                    );
+                    
+                    if(maestra)
+                    {
+                        _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
+                        mensajeWarning('Se va a duplicar la p&oacute;liza emitida '+json.smap1.NMPOLIZA);
+                    }
+                    else if(vencida)
+                    {
+                        _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
+                        mensajeWarning('La cotizaci&oacute;n ha vencido y solo puede duplicarse');
+                    }
+                    else
+                    {
+                        _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
+                        _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(nmpoliza);
+                        _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
+                    }
+                    
+                    _p30_cargarIncisoXpolxTvalopolTconvalsit(json);
+                    
+                    ck='Recuperando incisos base';
+                    var recordsAux = [];
+                    for(var i in json.slist2)
+                    {
+                        recordsAux.push(new _p30_modelo(json.slist2[i]));
+                    }
+                    _p30_store.add(recordsAux);
+                    
+                    if(maestra||vencida)
+                    {
+                        _fieldById('_p30_form').formOculto.getForm().reset();
+                    }
+           
+                    if(Ext.isEmpty(json.smap1.NTRAMITE)||vencida||maestra)
+                    {
+                        _p30_cotizar(!maestra&&!vencida);
+                    }
+                    else
+                    {
+                        centrarVentanaInterna(Ext.create('Ext.window.Window',
+                        {
+                            title      : 'P&oacute;liza en emisi&oacute;n'
+                            ,modal     : true
+                            ,bodyStyle : 'padding:5px;'
+                            ,closable  : false
+                            ,html      : 'La cotizaci&oacute;n se encuentra en proceso de emisi&oacute;n'
+                            ,buttonAlign : 'center'
+                            ,buttons   :
+                            [
+                                {
+                                    text     : 'Complementar'
+                                    ,handler : function()
+                                    {
+                                        var swExiper = (Ext.isEmpty(json.smap1.CDPERSON) && !Ext.isEmpty(json.smap1.CDIDEPER))? 'N' : 'S' ;
+                                        Ext.create('Ext.form.Panel').submit(
+                                        {
+                                            url             : _p30_urlDatosComplementarios
+                                            ,standardSubmit : true
+                                            ,params         :
+                                            {
+                                                'smap1.cdunieco'  : json.smap1.CDUNIECO
+                                                ,'smap1.cdramo'   : json.smap1.cdramo
+                                                ,'smap1.cdtipsit' : _p30_smap1.cdtipsit
+                                                ,'smap1.estado'   : 'W'
+                                                ,'smap1.nmpoliza' : json.smap1.nmpoliza
+                                                ,'smap1.ntramite' : json.smap1.NTRAMITE
+                                                ,'smap1.swexiper' : swExiper
+                                                ,'smap1.tipoflot' : json.smap1.TIPOFLOT
+                                            }
+                                        });
+                                    }
+                                }
+                                ,{
+                                    text     : 'Duplicar'
+                                    ,handler : function(bot)
+                                    {
+                                        bot.up('window').destroy();
+                                        _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
+                                        _fieldById('_p30_form').formOculto.getForm().reset();
+                                    }
+                                }
+                            ]
+                        }).show());
+                    }
                 }
                 catch(e)
                 {
@@ -4274,7 +5118,6 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p30_botonDetalles').setDisabled(true);
         _fieldById('_p30_botonCoberturas').setDisabled(true);
         _fieldById('_p30_botonComprar').setDisabled(true);
-        _fieldById('_p30_botonRecargoPF').setDisabled(true);
     }
     else
     {
@@ -4288,7 +5131,6 @@ function _p30_tarifaSelect(selModel, record, row, column, eOpts)
         _fieldById('_p30_botonDetalles').setDisabled(false);
         _fieldById('_p30_botonCoberturas').setDisabled(false);
         _fieldById('_p30_botonComprar').setDisabled(false);
-        _fieldById('_p30_botonRecargoPF').setDisabled(_p30_smap1.tipoflot=='F'?false:true);
     }
 }
 
@@ -4298,14 +5140,6 @@ function _p30_cesionClic()
     _fieldById('_p30_formDescuento').windowCesion.show();
     centrarVentanaInterna(_fieldById('_p30_formDescuento').windowCesion);
     debug('<_p30_cesionClic');
-}
-
-function _p30_aplicaRecargoPF()
-{
-    debug('>_p30_PanelRecargoPFClic');
-    _fieldById('_p30_PanelRecargoPF').windowCesion.show();
-    centrarVentanaInterna(_fieldById('_p30_PanelRecargoPF').windowCesion);
-    debug('<_p30_PanelRecargoPFClic');
 }
 
 function _p30_editar()
@@ -4359,9 +5193,6 @@ function _p30_bloquear(b)
         agente.setReadOnly(true);
         _p30_ramo5AgenteSelect(agente,_p30_smap1.cdagente);
     }
-    
-    _p30_recuperarClienteTramite();
-    
     debug('<_p30_bloquear');
 }
 
@@ -4369,37 +5200,6 @@ function _p30_clonar()
 {
     debug('>_p30_clonar');
     _fieldById('_p30_form').formOculto.getForm().reset();
-    
-    var ck = 'Borrando descuentos';
-    try {
-        for (var cdtipsit in _p30_paneles) {
-            var panel  = _p30_paneles[cdtipsit];
-            var items = Ext.ComponentQuery.query('[fieldLabel*=DESCUENTO / RECARGO]', panel);
-            for (var j = 0; j < items.length; j++) {
-                var item = items[j];
-                var name = item.name;
-                if (!Ext.isEmpty(panel.valores)) {
-                    var descAnte = panel.valores[name];
-                    panel.valores[name] = '';
-                    debug('El descuento para el panel', cdtipsit, 'en el campo', name, 'se cambio de', descAnte, 'a', panel.valores[name], '.');
-                }
-            }
-        }
-        _p30_store.each(function(record) {
-            var cdtipsit = record.get('cdtipsit'),
-                nmsituac = record.get('nmsituac');
-            var items = Ext.ComponentQuery.query('[fieldLabel*=DESCUENTO / RECARGO]', _p30_tatrisitFullForms[cdtipsit]);
-            for (var i = 0; i < items.length; i++) {
-                var name = items[i].name;
-                var descAnte = record.get(name);
-                record.set(name, '');
-                debug('El descuento para el inciso', nmsituac, cdtipsit, name, 'se cambio de', descAnte, 'a', record.get(name), '.');
-            }
-        });
-    } catch (e) {
-        manejaException(e, ck);
-    }
-    
     _p30_editar();
     _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
     debug('<_p30_clonar');
@@ -4454,15 +5254,7 @@ function _p30_detalles()
             	   var totalIncisos = json.slist1.length;
             	   var j= Number(i);
             	   var cobertura = json.slist1[j].COBERTURA;
-            	   try{
-            		   if(_p30_smap1.turistas == 'S' ){
-            			   if(!json.slist1[j+1]){
-            				   break;
-            			   }
-            		   }
-            	   }catch(e){
-            		   debugError(e)
-            	   }
+            	   
             	   debug('### Cobertura: ',j,'/',totalIncisos,' - ',cobertura);
             	   
             	    	 if(cobertura.indexOf('Recargo')!=-1)
@@ -4498,7 +5290,7 @@ function _p30_detalles()
 			               	nuevoElementoCoberturas = {
 			                        COBERTURA  :  'Total de Coberturas'
 			                       ,PRIMA      :  totalCoberturas+""
-			                       ,ORDEN      :  _p30_smap1.turistas=='S'?'580':'500'
+			                       ,ORDEN      :  '500'
 			                       ,TITULO     :  json.slist1[j].TITULO
 			                       ,CDRAMO     :  json.slist1[j].CDRAMO
 			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
@@ -4509,7 +5301,7 @@ function _p30_detalles()
 			                nuevoElementoGlobales = {
 			                        COBERTURA  : 'Total de Conceptos Globales'
 			                       ,PRIMA      :  totalGlobales+""
-			                       ,ORDEN      :  _p30_smap1.turistas=='S'?'998':'995'//999
+			                       ,ORDEN      :  '995'
 			                       ,TITULO     :  json.slist1[j].TITULO
 			                       ,CDRAMO     :  json.slist1[j].CDRAMO
 			                       ,CDUNIECO   :  json.slist1[j].CDUNIECO
@@ -4517,7 +5309,6 @@ function _p30_detalles()
 			                       ,NMPOLIZA   :  json.slist1[j].NMPOLIZA
 			                       ,NMSITUAC   :  json.slist1[j].NMSITUAC
 			                }
-			               	
 			                nuevoElementoTotal = {
 			                        COBERTURA: 'Total por Inciso'
 			                       ,PRIMA      :  (totalGlobales+totalCoberturas)+""
@@ -4541,15 +5332,7 @@ function _p30_detalles()
 			                ordenIva = 900;
                      }
 	            }
-               debug('### antes:',json.slist1);
-               if(_p30_smap1.turistas=='S'){
-	               json.slist1.forEach(function(it,idx,arr){
-	            	   if(Number(it.PRIMA)==0){
-	            		   arr.splice(idx, 1)
-	            	   }
-	               })
-               }
-               debug('### despues:',json.slist1);
+
                debug('### detalles:',json);
                               
                centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -4566,9 +5349,8 @@ function _p30_detalles()
                             store    : Ext.create('Ext.data.Store',
                             {
                                 model       : '_p30_modeloDetalleCotizacion'
-                               // ,groupField : 'TITULO'
-                                //,groupDir	: 'DESC'
-                              /*  ,sorters    :
+                                ,groupField : 'TITULO'
+                                ,sorters    :
                                 [
                                     {
                                         sorterFn : function(o1,o2)
@@ -4581,41 +5363,7 @@ function _p30_detalles()
                                             return Number(o1.get('ORDEN')) < Number(o2.get('ORDEN')) ? -1 : 1;
                                         }
                                     }
-                                ]*/
-                                ,groupers: [{
-                                    property: 'TITULO',
-                                    sorterFn: function(o1, o2){
-                                    	debug(o1," # ",o2)
-                                    	try{
-                                        	
-                                        		var a=o1.get('TITULO'),
-                                        	 	b=o2.get('TITULO')
-                                        	 	
-                                            	a=Number(a.split("_")[0]);
-                                            	b=Number(b.split("_")[0]);
-                                            	if(a==0)
-                                            		a=99999;
-                                            	if(b==0)
-                                            		b=99999;
-                                            	
-                                            	if(a>b){
-                                            		return 1;
-                                            	}else if(a<b)
-                                            		return -1
-                                            		
-                                            	
-                                        	
-                                        }catch(e){
-                                        	debugError(e)
-                                        }
-                                        debug('sorting:',o1,o2);
-                                        if (Number(o1.get('ORDEN')) == Number(o2.get('ORDEN')))
-                                        {
-                                            return 0;
-                                        }
-                                        return Number(o1.get('ORDEN')) < Number(o2.get('ORDEN')) ? -1 : 1;
-                                    }
-                                }]
+                                ]
                                 ,proxy      :
                                 {
                                     type    : 'memory'
@@ -4676,24 +5424,10 @@ function _p30_detalles()
                                         var sum = 0;
                                         for ( var i = 0; i < json.slist1.length; i++)
                                         {
-                                            if(json.slist1[i].COBERTURA == 'Total por Inciso' && _p30_smap1.turistas!='S'  )
+                                            if(json.slist1[i].COBERTURA == 'Total por Inciso')
                                             	{
                                             	   sum += parseFloat(json.slist1[i].PRIMA);
                                                 }
-                                            else if(json.slist1[i].COBERTURA =='Total de Coberturas' && _p30_smap1.turistas=='S'){
-                                            	sum += parseFloat(json.slist1[i].PRIMA);
-                                            }
-                                        }
-                                        try{
-                                        	if(_p30_smap1.turistas=='S')
-	                                        	json.slist1.forEach(function(it){
-	                                        		
-	                                        		if(Number(it.TITULO.split("_")[0])==0 && it.COBERTURA=='Total de Conceptos Globales'){
-	                                        			sum += parseFloat(it.PRIMA);
-	                                        		}
-	                                        	})
-                                        }catch(e){
-                                        	debugError(e)
                                         }
                                         this.setText('Total: '+ Ext.util.Format.usMoney(sum));
                                         this.callParent();
@@ -4833,60 +5567,33 @@ function _p30_comprar()
     panelPri.setLoading(true);
     var nombreTitular = '';
     
-    var paramsComprar =
-    {
-        comprarNmpoliza        : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
-        ,comprarCdplan         : '*'
-        ,comprarCdperpag       : _p30_selectedTarifa.get('CDPERPAG')
-        ,comprarCdramo         : _p30_smap1.cdramo
-        ,comprarCdciaaguradora : '20'
-        ,comprarCdunieco       : Ext.isEmpty(_p30_smap1.cdunieco) ? _p30_flujo.cdunieco : _p30_smap1.cdunieco
-        ,cdtipsit              : _p30_smap1.cdtipsit
-        ,'smap1.fechaInicio'   : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
-        ,'smap1.fechaFin'      : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
-        ,'smap1.ntramite'      : _p30_smap1.ntramite
-        ,'smap1.cdpersonCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
-        ,'smap1.nmorddomCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.NMORDDOM
-        ,'smap1.cdideperCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
-        ,'smap1.cdagenteExt'   : _p30_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue() : ''
-        ,'smap1.flotilla'      : 'si'
-        ,'smap1.tipoflot'      : _p30_smap1.tipoflot
-        ,'smap1.recargoPF'     : Ext.isEmpty(_fieldByName('otvalor.recargoPF',_fieldById('_p30_formRecargoPF')).getValue())? null:_fieldByName('otvalor.recargoPF',_fieldById('_p30_formRecargoPF')).getValue()
-    };
-    
-    if(!Ext.isEmpty(_p30_flujo))
-    {
-        paramsComprar['flujo.cdtipflu']  = _p30_flujo.cdtipflu;
-        paramsComprar['flujo.cdflujomc'] = _p30_flujo.cdflujomc;
-        paramsComprar['flujo.tipoent']   = _p30_flujo.tipoent;
-        paramsComprar['flujo.claveent']  = _p30_flujo.claveent;
-        paramsComprar['flujo.webid']     = _p30_flujo.webid;
-        paramsComprar['flujo.ntramite']  = _p30_flujo.ntramite;
-        paramsComprar['flujo.status']    = _p30_flujo.status;
-        paramsComprar['flujo.cdunieco']  = _p30_flujo.cdunieco;
-        paramsComprar['flujo.cdramo']    = _p30_flujo.cdramo;
-        paramsComprar['flujo.estado']    = _p30_flujo.estado;
-        paramsComprar['flujo.nmpoliza']  = _p30_flujo.nmpoliza;
-        paramsComprar['flujo.nmsituac']  = _p30_flujo.nmsituac;
-        paramsComprar['flujo.nmsuplem']  = _p30_flujo.nmsuplem;
-    }
-    debug('### Comprar:',paramsComprar);
-
     Ext.Ajax.request(
     {
         url      : _p30_urlComprar
-        ,params  : paramsComprar
+        ,params  :
+        {
+            comprarNmpoliza        : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
+            ,comprarCdplan         : '*'
+            ,comprarCdperpag       : _p30_selectedTarifa.get('CDPERPAG')
+            ,comprarCdramo         : _p30_smap1.cdramo
+            ,comprarCdciaaguradora : '20'
+            ,comprarCdunieco       : _p30_smap1.cdunieco
+            ,cdtipsit              : _p30_smap1.cdtipsit
+            ,'smap1.fechaInicio'   : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
+            ,'smap1.fechaFin'      : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
+            ,'smap1.ntramite'      : _p30_smap1.ntramite
+            ,'smap1.cdpersonCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
+            ,'smap1.cdideperCli'   : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
+            ,'smap1.cdagenteExt'   : _p30_smap1.cdramo+'x'=='5x' ? _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue() : ''
+            ,'smap1.flotilla'      : 'si'
+            ,'smap1.tipoflot'      : _p30_smap1.tipoflot
+        }
         ,success : function(response,opts)
         {
             panelPri.setLoading(false);
             var json = Ext.decode(response.responseText);
             debug('### Comprar:',json);
             if (json.exito)
-            {
-                if(Ext.isEmpty(_p30_flujo)
-                    ||Ext.isEmpty(_p30_flujo.aux)
-                    ||_p30_flujo.aux.indexOf('onComprar')==-1
-                    ) //si no hay flujo, o no hay auxiliar en flujo, o el auxiliar no contiene la palabra onComprar
                 {
 	                centrarVentanaInterna(Ext.Msg.show(
 	               {
@@ -4896,8 +5603,11 @@ function _p30_comprar()
 	                   ,fn      : function()
 	                   {
 	                       var swExiper = (!Ext.isEmpty(_p30_recordClienteRecuperado) && Ext.isEmpty(_p30_recordClienteRecuperado.raw.CLAVECLI) && !Ext.isEmpty(_p30_recordClienteRecuperado.raw.CDIDEPER))? 'N' : 'S' ;
-	                       
-	                       var paramsDatCom =
+                       Ext.create('Ext.form.Panel').submit(
+                       {
+                           url             : _p30_urlDatosComplementarios
+                           ,standardSubmit : true
+                           ,params         :
 	                       {
 	                           'smap1.cdunieco'  : _p30_smap1.cdunieco
 	                           ,'smap1.cdramo'   : _p30_smap1.cdramo
@@ -4907,107 +5617,10 @@ function _p30_comprar()
 	                           ,'smap1.ntramite' : json.smap1.ntramite
 	                           ,'smap1.swexiper' : swExiper
 	                           ,'smap1.tipoflot' : _p30_smap1.tipoflot
-	                           ,'smap1.cdtipsit2': _p30_smap1.cdtipsit2
-	                       };
-	                       
-	                       if(!Ext.isEmpty(_p30_flujo))
-	                       {
-	                           paramsDatCom['flujo.cdtipflu']  = _p30_flujo.cdtipflu;
-	                           paramsDatCom['flujo.cdflujomc'] = _p30_flujo.cdflujomc;
-	                           paramsDatCom['flujo.tipoent']   = _p30_flujo.tipoent;  //ACTUAL QUE SE RECUPERARA
-	                           paramsDatCom['flujo.claveent']  = _p30_flujo.claveent; //ACTUAL QUE SE RECUPERARA
-	                           paramsDatCom['flujo.webid']     = _p30_flujo.webid;    //ACTUAL QUE SE RECUPERARA
-	                           paramsDatCom['flujo.ntramite']  = _p30_flujo.ntramite;
-	                           paramsDatCom['flujo.status']    = _p30_flujo.status;
-	                           paramsDatCom['flujo.cdunieco']  = _p30_flujo.cdunieco;
-	                           paramsDatCom['flujo.cdramo']    = _p30_flujo.cdramo;
-	                           paramsDatCom['flujo.estado']    = _p30_flujo.estado;
-	                           paramsDatCom['flujo.nmpoliza']  = _p30_flujo.nmpoliza;
-	                           paramsDatCom['flujo.nmsituac']  = _p30_flujo.nmsituac;
-	                           paramsDatCom['flujo.nmsuplem']  = _p30_flujo.nmsuplem;
-	                           paramsDatCom['flujo.aux']       = 'RECUPERAR';
-	                       }
-	                       
-	                       Ext.create('Ext.form.Panel').submit(
-	                       {
-	                           url             : _p30_urlDatosComplementarios
-	                           ,standardSubmit : true
-	                           ,params         : paramsDatCom
-	                       });
-	                   }
-	                }));
-	            }   
-	            else //flujo tiene la palabra onComprar
-                {
-                    //si el flujo tiene este comodin ejecutaremos un turnado con el status indicado
-                    var ck = 'Turnando tr\u00e1mite';
-                    try
-                    {
-                        var status = _p30_flujo.aux.split(',')[1].split(':')[1];//primer split= tipoflot:P onComprar:160, segundo= onComprar 160
-                        debug('status para turnar onComprar:',status,'.');
-                        
-                        _mask(ck);
-                        Ext.Ajax.request(
-                        {
-                            url      : _GLOBAL_COMP_URL_TURNAR
-                            ,params  :
-                            {
-                                'params.CDTIPFLU'   : _p30_flujo.cdtipflu
-                                ,'params.CDFLUJOMC' : _p30_flujo.cdflujomc
-                                ,'params.NTRAMITE'  : _p30_flujo.ntramite
-                                ,'params.STATUSOLD' : _p30_flujo.status
-                                ,'params.STATUSNEW' : status
-                                ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
-                                ,'params.SWAGENTE'  : 'S'
-                            }
-                            ,success : function(response)
-                            {
-                                _unmask();
-                                var ck = '';
-                                try
-                                {
-                                    var json = Ext.decode(response.responseText);
-                                    debug('### turnar:',json);
-                                    if(json.success)
-                                    {
-                                        mensajeCorrecto
-                                        (
-                                            'Tr\u00e1mite turnado'
-                                            //,json.message
-                                            ,'El tr\u00e1mite fue turnado para aprobaci\u00f3n del agente/promotor'
-                                            ,function()
-                                            {
-                                                _mask('Redireccionando');
-                                                Ext.create('Ext.form.Panel').submit(
-                                                {
-                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
-                                                    ,standardSubmit : true
-                                                });
-                                            }
-                                        );
-                                    }
-                                    else
-                                    {
-                                        mensajeError(json.message);
-                                    }
-                                }
-                                catch(e)
-                                {
-                                    manejaException(e,ck);
-                                }
-                            }
-                            ,failure : function()
-                            {
-                                _unmask();
-                                errorComunicacion(null,'Error al turnar tr\u00e1mite');
-                            }
-                        });
-                    }
-                    catch(e)
-                    {
-                        manejaException(e,ck);
-                    }
-                }             
+                           }
+                       });
+                   }
+                }));                
             }
             else
             {
@@ -5433,13 +6046,6 @@ function _p30_inicializarTatripol(itemsTatripol)
     if(Ext.isEmpty(itemsTatripol))
     {
         itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
-        try{
-	        if(_p30_smap1.turistas=='S'){
-	        	itemsTatripol.push(_fieldByName('aux.otvalor18',null,true));
-	    	}
-        }catch(e){
-        	debugError(e);
-        }
         debug('itemsTatripol:',itemsTatripol);
     }
 
@@ -5486,7 +6092,7 @@ function _p30_inicializarTatripol(itemsTatripol)
 
 function _p30_imprimir()
 {
-    debug('>_p30_imprimir ', _p30_smap1.tipoflot);
+    debug('>_p30_imprimir');
     
     if(_p30_smap1.tipoflot+'x'=='Px')
     {
@@ -5541,29 +6147,6 @@ function _p30_imprimir()
     }
     else
     {
-        debug('<_p30_imprimir REPCOT001');
-        Ext.Function.defer(function(){  
-        Ext.create('Ext.form.Panel').submit(
-        {
-            url             : _p30_urlObtencionReporteExcel
-            ,standardSubmit : true
-            ,target         : '_blank'
-            ,params         :
-            {
-                'params.pv_cdunieco_i'  : _p30_smap1.cdunieco
-                ,'params.pv_cdramo_i'   : _p30_smap1.cdramo
-                ,'params.pv_estado_i'   : 'W'
-                ,'params.pv_nmpoliza_i' : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
-                ,'params.pv_nmsuplem_i' : '0'
-                ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
-                ,'params.pv_cdusuari_i' : _p30_smap1.cdusuari
-                ,cdreporte              : 'REPCOT001'
-            }
-        });
-        }, 200);
-        
-        debug('<_p30_imprimir REPCOT002');
-        Ext.Function.defer(function(){     
         Ext.create('Ext.form.Panel').submit(
         {
             url             : _p30_urlObtencionReporteExcel2
@@ -5581,14 +6164,9 @@ function _p30_imprimir()
                 ,cdreporte              : 'REPCOT002'
             }
         });
-        }, 400);
-        
-        debug('<_p30_imprimir REPCOT003');
-        
-        Ext.Function.defer(function(){ 
         Ext.create('Ext.form.Panel').submit(
         {
-            url             : _p30_urlObtencionReporteExcel3
+            url             : _p30_urlObtencionReporteExcel
             ,standardSubmit : true
             ,target         : '_blank'
             ,params         :
@@ -5600,10 +6178,9 @@ function _p30_imprimir()
                 ,'params.pv_nmsuplem_i' : '0'
                 ,'params.pv_cdperpag_i' : _p30_selectedTarifa.get('CDPERPAG')
                 ,'params.pv_cdusuari_i' : _p30_smap1.cdusuari
-                ,cdreporte              : 'REPCOT003'
+                ,cdreporte              : 'REPCOT001'
             }
         });
-        }, 600);
     }
     debug('<_p30_imprimir');
 }
@@ -5630,13 +6207,6 @@ function _p30_enviar()
                 ,allowBlank : false
                 ,blankText  : 'Introducir correo(s) separados por ;'
                 ,width      : 500
-                //REQ0040
-                ,listeners  : {
-                	boxready : function(){
-                		_p30_cargarCorreos(_p30_smap1.ntramite);
-                		debug('Saliendo de la funcion ', _fieldById('_p30_idInputCorreos').getValue());
-                	}
-                }
             }
         ]
         ,buttons :
@@ -5658,10 +6228,6 @@ function _p30_enviar()
                             ,params :
                             {
                                 to          : _fieldById('_p30_idInputCorreos').getValue()
-                                ,mensaje    : 'Estimado(a) Agente,\n \n'+ 
-                                'Se ha realizado la cotización solicitada en el trámite, ' + _p30_smap1.ntramite + ' la cual se anexa para su revisión y/o aprobación.\n \n' +
-                    			'Quedamos a sus ordenes para cualquier duda o aclaración \n \n' +
-                    			'General de Seguros \n \n'
                                 ,urlArchivo : _p30_urlImprimirCotiza
                                              + '?p_unieco='      + _p30_smap1.cdunieco
                                              + '&p_ramo='        + _p30_smap1.cdramo
@@ -5951,7 +6517,8 @@ function _p30_confirmarEndoso()
             {
                 var mapeos = _p30_smap1.mapeo.split('#');
                 debug('mapeos:',mapeos);
-                for(var i in mapeos)  {
+                for(var i in mapeos)
+                {
                     var cdtipsitsMapeo = mapeos[i].split('|')[0];
                     var mapeo          = mapeos[i].split('|')[1];
                     debug('cdtipsit:',cdtipsit,'cdtipsitsMapeo:',cdtipsitsMapeo);
@@ -6044,13 +6611,6 @@ function _p30_confirmarEndoso()
         }
         
         var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
-        try{
-	        if(_p30_smap1.turistas=='S'){
-	        	itemsTatripol.push(_fieldByName('aux.otvalor18',null,true));
-	    	}
-        }catch(e){
-        	debugError(e);
-        }
         debug('itemsTatripol:',itemsTatripol);
         for(var i in itemsTatripol)
         {
@@ -6085,9 +6645,6 @@ function _p30_confirmarEndoso()
         json.slist2.push(recordTvalositPoliza.data);
         //crear record con los valores del formulario y el formulario oculto
         
-        if(!Ext.isEmpty(_p30_flujo)) {
-            json.flujo = _p30_flujo;
-        }
         debug('>>> json a enviar:',json);
         var boton=_fieldById('_p30_endosoButton');
         boton.setText('Cargando...');
@@ -6134,21 +6691,6 @@ function _p30_confirmarEndoso()
 												}
 										 }
 										,buttons:[{
-                                        			itemId    : '_p3_botonEnviar'
-			                                        ,xtype    : 'button'
-			                                        ,text     : 'Enviar'
-			                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
-			                                        //,disabled : true
-			                                        ,handler  : function(){
-			                                        	
-														_p30_cargarCorreos(_p30_flujo.ntramite)
-			                                        	
-			                                        	_p30_enviarCoti(_p30_flujo.ntramite
-            														,json2.omap1.pdfEndosoNom_o);
-			                                        } 
-                                        			
-                                        			
-                                        		},{
 													text    : 'Confirmar endoso'
 													,name    : 'endosoButton'
 													,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
@@ -6156,7 +6698,6 @@ function _p30_confirmarEndoso()
 														function (me){
 			                                                boton.setText('Cargando...');
 			                                                boton.setDisabled(true);
-			                                                
 			                                                var json2 =
 															        {
 															            smap1 : {
@@ -6166,7 +6707,7 @@ function _p30_confirmarEndoso()
 															                ,nmpoliza    : _p30_smap1.NMPOLIZA
 															                ,cdtipsup    : _p30_smap1.cdtipsup
 															                ,fechaEndoso : Ext.Date.format(_fieldByName('fechaEndoso').getValue(),'d/m/Y')
-															                ,confirmar   : 'no'
+															                ,confirmar   : 'si'
 															                ,cdperpag    : _p30_smap1.CDPERPAG
 															                ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
 															            }
@@ -6174,101 +6715,31 @@ function _p30_confirmarEndoso()
 															            ,slist2 : []
 															            ,slist3 : []
 															        };
-															        
-															//Se agrega para confirmar cuando sea diferente de Autorizacion
-															if(Ext.isEmpty(_p30_flujo)
-											                    ||Ext.isEmpty(_p30_flujo.aux)
-											                    ||_p30_flujo.aux.indexOf('onComprar')==-1){
-											                    	//
-											                    	json2.smap1.confirmar = 'si';
-											                    }
 															storeTvalosit.each(function(record) {
 															            json2.slist1.push(record.data);
 															        });
-															        
-															if(!Ext.isEmpty(_p30_flujo)) {
-                                                                json2.flujo = _p30_flujo;
-                                                            }       
-                                                            
 			                                                Ext.Ajax.request( {
 														            url       : _p30_urlConfirmarEndoso
 														           ,jsonData : json2
 															       ,success  : function(response){
-															       		var json3 = Ext.decode(response.responseText);debug('***json3',json3);
-															       		if(Ext.isEmpty(_p30_flujo)
-														                    ||Ext.isEmpty(_p30_flujo.aux)
-														                    ||_p30_flujo.aux.indexOf('onComprar')==-1){ //si no hay auxiliar en flujo, o el auxiliar no contiene la palabra onComprar
-																                var callbackRemesa = function() { marendNavegacion(2); };
-																                mensajeCorrecto('Endoso generado',json3.respuesta,function(){
-																						_generarRemesaClic(
-																						true
-																						,_p30_smap1.CDUNIECO
-																						,_p30_smap1.CDRAMO
-																						,_p30_smap1.ESTADO
-																						,_p30_smap1.NMPOLIZA
-																						,callbackRemesa);});
-														                    }else{
-														                    	debug('_p30_flujoAux.endosoAutorizar: ',_p30_flujoAux.endosoAutorizar);
-															                    var ck = 'Turnando tr\u00e1mite';
-															                    try{
-															                        var status = _p30_flujoAux.endosoAutorizar.split('_')[1];
-															                        debug('status para turnar onComprar:',status,'.');
-															                        _mask(ck);
-															                        Ext.Ajax.request( {
-															                            url      : _GLOBAL_COMP_URL_TURNAR
-															                            ,params  :{
-															                                'params.CDTIPFLU'   : _p30_flujo.cdtipflu
-															                                ,'params.CDFLUJOMC' : _p30_flujo.cdflujomc
-															                                ,'params.NTRAMITE'  : _p30_flujo.ntramite
-															                                ,'params.STATUSOLD' : _p30_flujo.status
-															                                ,'params.STATUSNEW' : status
-															                                ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
-															                                ,'params.SWAGENTE'  : 'S'
-															                            }
-															                            ,success : function(response) {
-															                                _unmask();
-															                                var ck = '';
-															                                try{
-															                                    var json = Ext.decode(response.responseText);
-															                                    debug('### turnar:',json);
-															                                    if(json.success) {
-															                                        mensajeCorrecto (
-															                                            'Tr\u00e1mite turnado'
-															                                            ,'El tr\u00e1mite fue turnado para aprobaci\u00f3n del agente/promotor'
-															                                            ,function() {
-															                                                _mask('Redireccionando');
-															                                                Ext.create('Ext.form.Panel').submit({
-															                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
-															                                                    ,standardSubmit : true });
-															                                            }
-															                                        );
-															                                    }else{
-															                                        mensajeError(json.message);
-															                                    }
-															                                }catch(e){
-															                                    manejaException(e,ck);
-															                                }
-															                            }
-															                            ,failure : function(){
-															                                _unmask();
-															                                errorComunicacion(null,'Error al turnar tr\u00e1mite');
-															                            }
-															                        });
-															                    }catch(e){
-															                        manejaException(e,ck);
-															                    }
-														                    sacaEndoso(_p30_smap1.CDUNIECO
-																						,_p30_smap1.CDRAMO
-																						,_p30_smap1.ESTADO
-																						,_p30_smap1.NMPOLIZA
-														                               ,json3.omap1.pv_nmsuplem_o
-														                               ,json3.omap1.pv_nsuplogi_o);
-														                    }
-															       }
+															            	var json3 = Ext.decode(response.responseText);
+															                var callbackRemesa = function() { marendNavegacion(2); };
+															                
+															                mensajeCorrecto('Endoso generado',json3.respuesta,function(){
+																				_generarRemesaClic(
+																				true
+																				,_p30_smap1.CDUNIECO
+																				,_p30_smap1.CDRAMO
+																				,_p30_smap1.ESTADO
+																				,_p30_smap1.NMPOLIZA
+																				,callbackRemesa);
+																		});
+																	}
 														            ,failure  : function(){
 														                errorComunicacion();
 														            }});
 			                                                    me.up('window').destroy();
+			                                                    
 			                                                   }
 																						                    
 												   },{
@@ -6366,59 +6837,67 @@ function _p30_confirmarEndoso()
 				failure : errorComunicacion
 			});
     }
+    
     debug('<_p30_confirmarEndoso');
 }
-function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit){
-    debug('>_p30_cargarIncisoXpolxTvalopolTconvalsit args:', arguments);
+
+function _p30_cargarIncisoXpolxTvalopolTconvalsit(json)
+{
+    debug('>_p30_cargarIncisoXpolxTvalopolTconvalsit json:',json);
     var datosGenerales = new _p30_modelo(json.smap1);
     debug('datosGenerales:',datosGenerales);
     var cdtipsitDatos  = datosGenerales.raw['parametros.pv_cdtipsit'];
     debug('cdtipsitDatos:',cdtipsitDatos);
     
-    if(_p30_smap1.cdramo+'x'=='5x'){
+    if(_p30_smap1.cdramo+'x'=='5x')
+    {
         var clienteNuevoName = _p30_tatrisitFullForms[_p30_smap1.cdtipsit].down('[fieldLabel*=CLIENTE NUEVO]').name;
         debug('clienteNuevoName:',clienteNuevoName);
         datosGenerales.set(clienteNuevoName,'S');
     }
     
     ck='Recuperando datos generales';
-    if(_p30_smap1.mapeo=='DIRECTO') {
+    if(_p30_smap1.mapeo=='DIRECTO')
+    {
         _fieldById('_p30_form').loadRecord(datosGenerales);
         _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
         
         var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
-        try{
-	        if(_p30_smap1.turistas=='S'){
-	        	itemsTatripol.push(_fieldByName('aux.otvalor18',null,true));
-	    	}
-        }catch(e){
-        	debugError(e);
-        }
         debug('itemsTatripol:',itemsTatripol);
-        for(var i in itemsTatripol) {
+        for(var i in itemsTatripol)
+        {
             var tatri=itemsTatripol[i];
             tatri.setValue(json.smap1[tatri.name]);
         }
-    }else{
+    }
+    else
+    {
         var mapeos = _p30_smap1.mapeo.split('#');
-        debug('mapeos:',mapeo );
-        for(var i in mapeos)  {
+        debug('mapeos:',mapeos);
+        for(var i in mapeos)
+        {
             var cdtipsitsMapeo = mapeos[i].split('|')[0];
             var mapeo          = mapeos[i].split('|')[1];
             debug('cdtipsitDatos:',cdtipsitDatos,'cdtipsitsMapeo:',cdtipsitsMapeo);
-            if((','+cdtipsitsMapeo+',').lastIndexOf(','+cdtipsitDatos+',')!=-1){
+            if((','+cdtipsitsMapeo+',').lastIndexOf(','+cdtipsitDatos+',')!=-1)
+            {
                 debug('coincidente:',cdtipsitsMapeo,'cdtipsitDatos:',cdtipsitDatos)
                 debug('mapeo:',mapeo);
-                if(mapeo=='DIRECTO'){
+                if(mapeo=='DIRECTO')
+                {
                     debug('directo');
                     if(_p30_smap1.cdramo+'x'=='5x'&& 
 //                     		(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
-                       RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol) ) {
-                        var agenteCmp  = _fieldByLabel('AGENTE'  , _fieldById('_p30_form'));
+                       RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+                      )
+                    {
+                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
                         agenteCmp.forceSelection=false;
                         negocioCmp.forceSelection=false;
-                    } else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx'){
+                    }
+                    else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                    {
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
                         negocioCmp.forceSelection=false;
                     }
@@ -6426,68 +6905,87 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit){
                     _fieldById('_p30_form').formOculto.loadRecord(datosGenerales);
                     
                     var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
-                    try{
-            	        if(_p30_smap1.turistas=='S'){
-            	        	itemsTatripol.push(_fieldByName('aux.otvalor18',null,true));
-            	    	}
-                    }catch(e){
-                    	debugError(e);
-                    }
                     debug('itemsTatripol:',itemsTatripol);
-                    for(var i in itemsTatripol) {
+                    for(var i in itemsTatripol)
+                    {
                         var tatri=itemsTatripol[i];
                         tatri.setValue(json.smap1[tatri.name]);
                     }
                     
-                    if(_p30_smap1.cdramo+'x'=='5x' &&//(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
-                        RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)) {
-                        var agenteCmp  = _fieldByLabel('AGENTE'  , _fieldById('_p30_form'));
-                        agenteCmp.getStore().load( {
-                            params : {
+                    if(_p30_smap1.cdramo+'x'=='5x'
+                       &&
+//                      (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
+                        RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+                       )
+                    {
+                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                        agenteCmp.getStore().load(
+                        {
+                            params :
+                            {
                                 'params.agente' : agenteCmp.getValue()
                             }
-                            ,callback : function()  {
-                                var agenteCmp  = _fieldByLabel('AGENTE', _fieldById('_p30_form'));
+                            ,callback : function()
+                            {
+                                var agenteCmp  = _fieldLikeLabel('AGENTE' , _fieldById('_p30_form'));
                                 //agenteCmp.select(agenteCmp.getValue());
                                 agenteCmp.forceSelection=true;
                                 var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                                negocioCmp.heredar(true,function(cmp) {
+                                negocioCmp.heredar(true,function(cmp)
+                                {
                                     cmp.forceSelection=true;
-                                    if(_p30_endoso) {
+                                    if(_p30_endoso)
+                                    {
                                         negocioCmp.fireEvent('change',negocioCmp,negocioCmp.getValue());
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         _p30_editorCdtipsit.heredar();
                                     }
                                 });
                             }
                         });
-                    }else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx') {
+                    }
+                    else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                    {
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                        negocioCmp.heredar(true,function(cmp) {
+                        negocioCmp.heredar(true,function(cmp)
+                        {
                             cmp.forceSelection=true;
-                            if(_p30_endoso){
+                            if(_p30_endoso)
+                            {
                                 negocioCmp.fireEvent('change',negocioCmp,negocioCmp.getValue());
-                            }else {
+                            }
+                            else
+                            {
                                 _p30_editorCdtipsit.heredar();
                             }
                         });
-                    }else if(_p30_endoso) {
+                    }
+                    else if(_p30_endoso)
+                    {
                         negocioCmp.fireEvent('change',negocioCmp,negocioCmp.getValue());
-                    }else {
+                    }
+                    else
+                    {
                         _p30_editorCdtipsit.heredar();
                     }
-                }else {
+                }
+                else
+                {
                     var atributos = mapeo.split('@');
                     debug('atributos:',atributos);
                     
                     var recordMapeado = new _p30_modelo();
-                    if(_p30_smap1.cdramo=='5') {
+                    if(_p30_smap1.cdramo=='5')
+                    {
                         var clienteNuevoName = _p30_tatrisitFullForms[_p30_smap1.cdtipsit].down('[fieldLabel*=CLIENTE NUEVO]').name;
                         debug('clienteNuevoName:',clienteNuevoName);
                         datosGenerales.set(clienteNuevoName,'S');
                     }
                     
-                    for(var i in atributos){
+                    for(var i in atributos)
+                    {
                         var atributoIte = atributos[i];
                         var modelo      = atributoIte.split(',')[0];
                         var origen      = atributoIte.split(',')[1];
@@ -6506,12 +7004,16 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit){
                     debug('recordMapeado:',recordMapeado.data);
                     if(_p30_smap1.cdramo+'x'=='5x'&& 
 //                     (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
-                        RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol))  {
-                        var agenteCmp  = _fieldByLabel('AGENTE' , _fieldById('_p30_form'));
+                        RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+                      )
+                    {
+                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
                         agenteCmp.forceSelection=false;
                         negocioCmp.forceSelection=false;
-                    }else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx') {
+                    }
+                    else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                    {
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
                         negocioCmp.forceSelection=false;
                     }
@@ -6520,40 +7022,43 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit){
                     _fieldById('_p30_form').formOculto.loadRecord(recordMapeado);
                     
                     var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
-                    try{
-            	        if(_p30_smap1.turistas=='S'){
-            	        	itemsTatripol.push(_fieldByName('aux.otvalor18',null,true));
-            	    	}
-                    }catch(e){
-                    	debugError(e);
-                    }
                     debug('itemsTatripol:',itemsTatripol);
-                    for(var i in itemsTatripol) {
+                    for(var i in itemsTatripol)
+                    {
                         var tatri=itemsTatripol[i];
                         tatri.setValue(json.smap1[tatri.name]);
                     }
                     
                     if(_p30_smap1.cdramo+'x'=='5x'&& 
 //                        (rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')!=-1)
-                          RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol) )  {
-                        var agenteCmp  = _fieldByLabel('AGENTE' , _fieldById('_p30_form'));
-                        agenteCmp.getStore().load( {
-                            params :  {
+                          RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)
+                       )
+                    {
+                        var agenteCmp  = _fieldLikeLabel('AGENTE'  , _fieldById('_p30_form'));
+                        agenteCmp.getStore().load(
+                        {
+                            params :
+                            {
                                 'params.agente' : agenteCmp.getValue()
                             }
-                            ,callback : function() {
-                                var agenteCmp  = _fieldByLabel('AGENTE', _fieldById('_p30_form'));
+                            ,callback : function()
+                            {
+                                var agenteCmp  = _fieldLikeLabel('AGENTE' , _fieldById('_p30_form'));
                                 //agenteCmp.select(agenteCmp.getValue());
                                 agenteCmp.forceSelection=true;
                                 var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                                negocioCmp.heredar(true,function(cmp) {
+                                negocioCmp.heredar(true,function(cmp)
+                                {
                                     cmp.forceSelection=true;
                                 });
                             }
                         });
-                    } else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx'){
+                    }
+                    else if(_p30_smap1.cdramo+'x'=='5x'&&_p30_smap1.cdsisrol+'x'=='PROMOTORAUTOx')
+                    {
                         var negocioCmp = _fieldLikeLabel('NEGOCIO' , _fieldById('_p30_form'));
-                        negocioCmp.heredar(true,function(cmp) {
+                        negocioCmp.heredar(true,function(cmp)
+                        {
                             cmp.forceSelection=true;
                         });
                     }
@@ -6562,7 +7067,8 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit){
         }
     }
     
-    if(!Ext.isEmpty(json.smap1.CDPERSON)) {
+    if(!Ext.isEmpty(json.smap1.CDPERSON))
+    {
         ck='Recuperando cliente';
         /*if(maestra&&false)
         {
@@ -6582,1128 +7088,67 @@ function _p30_cargarIncisoXpolxTvalopolTconvalsit(json, brincarTconvalsit){
         /*}*/
     }
     
-    if (true !== brincarTconvalsit) {
-        ck='Recuperando configuracion de incisos';
-        for(var i in json.slist1){
-            var tconvalsit = json.slist1[i];
-            var cdtipsit   = tconvalsit.CDTIPSIT;
-            _p30_paneles[cdtipsit].valores=tconvalsit;
-        }
+    ck='Recuperando configuracion de incisos';
+    for(var i in json.slist1)
+    {
+        var tconvalsit = json.slist1[i];
+        var cdtipsit   = tconvalsit.CDTIPSIT;
+        _p30_paneles[cdtipsit].valores=tconvalsit;
     }
 }
 
-function _p30_recuperarClienteTramite(){
-    /*
-     * Cuando se tiene cdpercli se recupera para ramo 5 cuando exista el combo de cliente nuevo
-     * inicio
-     */
-    if(!Ext.isEmpty(_p30_smap1.cdpercli)){
-        var ckCdpercli = 'Recuperando cliente de tr\u00e1mite';
-        try{
-            var comboCliente = _fieldLikeLabel('CLIENTE NUEVO',_fieldById('_p30_panel3Fieldset'),true);
-            debug('combo cliente nuevo:',comboCliente);
-            if(!Ext.isEmpty(comboCliente)){
-                debug('Entro a recuperar cliente con cdperson:',_p30_smap1.cdpercli);
-                _mask(ckCdpercli);
-                Ext.Ajax.request({
-                    url      : _p30_urlRecuperarCliente
-                    ,params  :{
-                        'map1.pv_cdperson_i'  : _p30_smap1.cdpercli
-                        ,'map1.soloBD'        : 'S'
-                        ,'map1.pv_rfc_i'      : ''//rfc
-                        ,'map1.cdtipsit'      : _p30_smap1.cdtipsit
-                        ,'map1.pv_cdtipsit_i' : _p30_smap1.cdtipsit
-                        ,'map1.pv_cdunieco_i' : _p30_smap1.cdunieco
-                        ,'map1.pv_cdramo_i'   : _p30_smap1.cdramo
-                        ,'map1.pv_estado_i'   : 'W'
-                        ,'map1.pv_nmpoliza_i' : _fieldByName('nmpoliza').getValue()
-                    }
-                    ,success : function(response){
-                        _unmask();
-                        var ck = 'Decodificando respuesta al recuperar cliente de tr\u00e1mite';
-                        try{
-                            var json = Ext.decode(response.responseText);
-                            debug('### recuperacion cliente tramite:',json);
-                            
-                            comboCliente.semaforo = true;
-                            comboCliente.setValue('N');
-                            comboCliente.setReadOnly(true);
-                            comboCliente.semaforo = false;
-                            
-                            _p30_recordClienteRecuperado = new _p30_modeloRecuperado(json.slist1[0]);
-                            debug('_p30_recordClienteRecuperado:',_p30_recordClienteRecuperado);
-                            
-                            var nombreCliCmp    = _fieldLikeLabel('NOMBRE CLIENTE'      , _fieldById('_p30_panel3Fieldset'),true)
-                                ,tipoPerCmp     = _fieldLikeLabel('TIPO PERSONA'        , _fieldById('_p30_panel3Fieldset'),true)
-                                ,codPosCliCmp   = _fieldLikeLabel('CP CIRCULACI'        , _fieldById('_p30_panel3Fieldset'),true)
-                                ,feNacimiCliCmp = _fieldLikeLabel('FECHA DE NACIMIENTO' , _fieldById('_p30_panel3Fieldset'),true);
-                            
-                            if(!Ext.isEmpty(nombreCliCmp)) {
-                                nombreCliCmp.setValue(_p30_recordClienteRecuperado.get('NOMBRECLI'));
-                                nombreCliCmp.setReadOnly(true);
-                            }
-                            
-                            if(!Ext.isEmpty(tipoPerCmp)) {
-                                tipoPerCmp.setValue(_p30_recordClienteRecuperado.raw.TIPOPERSONA);
-                                tipoPerCmp.setReadOnly(true);
-                            }
-                            
-                            if(!Ext.isEmpty(codPosCliCmp)) {
-                                codPosCliCmp.setValue(_p30_recordClienteRecuperado.raw.CODPOSTAL);
-                                codPosCliCmp.setReadOnly(true);
-                            }
-                            
-                            if(!Ext.isEmpty(feNacimiCliCmp)){
-                                feNacimiCliCmp.setValue(_p30_recordClienteRecuperado.raw.FENACIMICLI);
-                                feNacimiCliCmp.setReadOnly(true);
-                            }
-                            
-                        }catch(e){
-                            manejaException(e,ck);
-                        }
-                    }
-                    ,failure : function() {
-                        _unmask();
-                        errorComunicacion(null,'Error al recuperar cliente de tr\u00e1mite');
-                    }
-                });
-            }
-        }catch(e){
-            manejaException(e,ckCdpercli);
-        }
-    }
-    /*
-     * Cuando se tiene cdpercli se recupera para ramo 5 cuando exista el combo de cliente nuevo
-     * fin
-     */
-}
-
-/*
- * Este metodo busca en los otvalor del tramite el numero de la ultima cotizacion
- * realizada para recuperarla automaticamente en pantalla
- */
-function _p30_recuperarCotizacionDeTramite(){
-    if(!Ext.isEmpty(_p30_flujo)){
-        var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
-        try {
-            _mask(ck);
-            Ext.Ajax.request( {
-                url      : _p30_urlRecuperarOtvalorTramiteXDsatribu
-                ,params  : {
-                    'params.ntramite'  : _p30_flujo.ntramite
-                    ,'params.dsatribu' : 'COTIZACI%N%TR%MITE'
-                }
-                ,success : function(response) {
-                    _unmask();
-                    var ck = 'Decodificando respuesta al recuperar cotizaci\u00f3n de tr\u00e1mite';
-                    try {
-                        var json = Ext.decode(response.responseText);
-                        debug('### cotizacion de tramite:',json);
-                        if(json.success===true) {
-                            if(!Ext.isEmpty(json.params.otvalor)) {
-                                _fieldByName('nmpoliza').setValue(json.params.otvalor);
-                                _p30_cargarClic();
-                            }
-                        }else {
-                            mensajeError(json.message);
-                        }
-                    } catch(e){
-                        manejaException(e,ck);
-                    }
-                }
-                ,failure : function(response){
-                    _unmask();
-                    errorComunicacion(null,'Error al recuperar cotizaci\u00f3n de tr\u00e1mite');
-                }
-            });
-        }catch(e) {
-            _unmask();
-            manejaException(e,ck);
-        }
-    }
-}
-
-function _p30_defBoton(valido, sinTarificar){
-        var error  = '';
-        for(var i=0;i<_f1_botones.length;i++){
-            var boton    = _f1_botones[i];
-            var cdtipsit = boton.cdtipsit;
-            var panel    = _p30_paneles[cdtipsit];
-            debug('buscando en panel:',panel);
-            if(panel.valores==false){
-                valido = false;
-                error  = error+'FALTA DEFINIR: '+boton.text+'<br/>';
-            }
-        } if(!valido) {
-            mensajeWarning(error);
-        } else{_p30_cantIncisos(valido, sinTarificar);}
-}
-    
-function _p30_cantIncisos(valido, sinTarificar){
-    if(RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)){
-        valido = _p30_store.getCount()>=1;
-        if(!valido) {
-            mensajeWarning('Debe capturar al menos un inciso');
-        }else{_p30_defIncisos(valido, sinTarificar);}
-    } else  {
-        if(_p30_smap1.turistas!='S') { 
-            valido = _p30_store.getCount()>=5;
-            if(!valido) {
-                mensajeWarning('Debe capturar al menos cinco incisos');
-            } else{_p30_defIncisos(valido, sinTarificar)}
-        }else{_p30_defIncisos(valido, sinTarificar)}
-    }
-}
-
-function _p30_defIncisos(valido, sinTarificar){
-        var error        = '';
-        var agregarError = function(cadena,nmsituac) {
-            valido = false;
-            error  = error + 'Inciso ' + nmsituac + ': ' + cadena +'</br>';
-        };
-        _p30_store.each(function(record) {
-            var cdtipsit = record.get('cdtipsit');
-            var nmsituac = record.get('nmsituac');
-            
-            if(!Ext.isEmpty(cdtipsit)) {
-                if(Ext.isEmpty(record.get('cdplan'))) {
-                    agregarError('Debe seleccionar el paquete',nmsituac);
-                }
-                var itemsObliga = Ext.ComponentQuery.query('[swobligaflot=true]',_p30_tatrisitFullForms[cdtipsit]);
-                for(var i in itemsObliga){
-                    if(Ext.isEmpty(record.get(itemsObliga[i].getName()))) {
-                        agregarError('Falta definir "'+itemsObliga[i].getFieldLabel()+'"',nmsituac);
-                    }
-                }
-            } else {
-                agregarError('Debe seleccionar el tipo de veh&iacute;culo',nmsituac);
-            }
-        });
-        if(!valido) {
-            mensajeWarning(error);
-        }else{_p30_sbubTipoCamiones(valido, sinTarificar)}
-}
-
-function _p30_sbubTipoCamiones(valido, sinTarificar){
-    if(_p30_smap1.tipoflot=='P' && !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)){   
-        var ncamiones = 0;
-        var ntractocamiones = 0;
-        var nsemiremolques = 0;
-        
-        var nTipo2  = 0;
-        var nTipo4  = 0;
-        var nTipo13 = 0;
-        _p30_store.each(function(record) {
-            if(record.get('cdtipsit')+'x'=='CRx'){
-                var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
-                if(record.get(tipoVehiName)-0==2){
-                    ncamiones = ncamiones+1;
-                    record.cdtipsit_panel = 'PC';
-                }else if(record.get(tipoVehiName)-0==4){
-                    ncamiones = ncamiones+1;
-                    ntractocamiones = ntractocamiones+1;
-                    record.cdtipsit_panel = 'TC';
-                }else if(record.get(tipoVehiName)-0==13){
-                    nsemiremolques = nsemiremolques+1;
-                    record.cdtipsit_panel = 'RQ';
-                }
-            }else if(record.get('cdtipsit')+'x'=='TCx'){
-                ncamiones = ncamiones+1;
-                ntractocamiones = ntractocamiones+1; 
-            }else if(record.get('cdtipsit')+'x'=='RQx'){
-                nsemiremolques = nsemiremolques+1;
-            }
-        });
-        
-        if(ncamiones > _p30_smap1.totalCamiones) {
-            valido = false;
-            mensajeWarning("&Uacute;nicamente se puede amparar "+_p30_smap1.totalCamiones+" Camiones en la autorización. <br/>Intente nuevamente.");
-        } else{
-            if(ntractocamiones > _p30_smap1.totalTractocamion){
-                valido = false;
-                mensajeWarning("&Uacute;nicamente se puede amparar "+_p30_smap1.totalTractocamion+" Tractocamiones en la autorización. <br/>Intente nuevamente.");
-            }else{
-                if(nsemiremolques > (+ntractocamiones * +_p30_smap1.remolquesPorTracto)){
-                    valido = false;
-                    mensajeWarning('Se permiten '+_p30_smap1.remolquesPorTracto+' remolques por cada tractocami&oacute;n<br/>'
-                            +'Y en la cotizaci&oacute;n hay '+nsemiremolques+' remolques y '+ntractocamiones+' tractocamiones');
-                }else{_p30_cleanPoliza(valido, sinTarificar)}
-            }
-        }
-    }if(_p30_smap1.tipoflot=='F' || _p30_smap1.tipoflot=='P') {   
-	     var ck = 'Cambiando tipo de situaci\u00f3n para camiones';
-	     try {
-	         _p30_store.each(
-	          function(record) {
-	                if( ',CR,'.lastIndexOf(','+record.get('cdtipsit')+',')!=-1) {
-	                    var tipoVehiName = _p30_tatrisitFullForms['CR'].down('[fieldLabel*=TIPO DE VEH]').name;
-	                    if(record.get(tipoVehiName)-0==2){
-	                        record.cdtipsit_panel = 'PC';
-	                    }else if(record.get(tipoVehiName)-0==4) {
-	                        record.cdtipsit_panel = 'TC';
-	                    }else if(record.get(tipoVehiName)-0==13){
-	                        record.cdtipsit_panel = 'RQ';
-	                    }
-	                }
-	             }
-	         );
-	     }catch (e)  {
-	        debug(e);//debugError , ck
-	     }
-    }
-    _p30_cleanPoliza(valido, sinTarificar);
-}
-
-function _p30_cleanPoliza(valido, sinTarificar){
-    debug('_p30_paneles:',_p30_paneles,'valido:',valido);
-    if(valido){
-        valido = _fieldByName('nmpoliza',_fieldById('_p30_form')).sucio==false;
-        if(!valido){
-            _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo = true;
-            _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue('');
-            _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo = false;
-            valido = true;
-        }
-        _p30_manejoDatosPaneles(sinTarificar);
-    }
-}
-
-function _p30_manejoDatosPaneles(sinTarificar){
-	var valida = true;
-    var recordsCdtipsit = [];
-    for(var cdtipsitPanel in _p30_paneles) {
-        var panel      = _p30_paneles[cdtipsitPanel];
-        var recordBase = new _p30_modelo(panel.valores);
-        recordBase.set('cdtipsit',cdtipsitPanel);
-        debug('cdtipsitPanel:',cdtipsitPanel,'recordBase:',recordBase);
-        recordsCdtipsit[cdtipsitPanel] = recordBase;
-    }
-    debug('recordsCdtipsit:',recordsCdtipsit);
-    _p30_obtieneSubCR(sinTarificar,recordsCdtipsit);
-}
-
-function _p30_obtieneSubCR(sinTarificar,recordsCdtipsit){
-	try{
-   	  Ext.Ajax.request({
-	          url      : _p30_urlOtValorSubtiposCr
-	         ,success : function(response){
-	             var json=Ext.decode(response.responseText);
-	             debug('### otValor Correspondiente:',json);
-	             var valoresOtUtil='';
-	             !Ext.isEmpty(json.params)
-	             {
-	                 valoresOtUtil = json.params
-	             }
-	             _p30_seteoSubCR(sinTarificar,recordsCdtipsit,valoresOtUtil);
-	        }
-	        ,failure : function(){
-	        	_p30_cotizarBody(sinTarificar,recordsCdtipsit);
-	        }
-	     });
-	}catch(e){
-        debugError(e);
-        _p30_cotizarBody(sinTarificar,recordsCdtipsit,valoresOtUtil);
-   }
-}
-
-function  _p30_seteoSubCR(sinTarificar,recordsCdtipsit,valoresOtUtil){
-	if(Ext.isEmpty(valoresOtUtil)){
-		_p30_cotizarBody(sinTarificar,recordsCdtipsit);
-    }
-	
-	try{
-		var d=0;var a=0;
-		do{
-			if(!Ext.isEmpty(_p30_store.data.items[d]['cdtipsit_panel'])){
-				var cdtipsit       = _p30_store.data.items[d]['cdtipsit_panel'];
-				var cdtipsitPanel  = _p30_smap1['destino_'+cdtipsit];
-				var recordBase     = recordsCdtipsit[cdtipsitPanel];
-		        var recordTvalosit = new _p30_modelo(_p30_store.data.items[d].data);
-	 			if(cdtipsitPanel==cdtipsit) { 
-	 				var elementosInciso = Object.keys(_p30_store.data.items[d].data);
-	 				elementosInciso.forEach(function(entry){ //Iteramos elementos del inciso
-						prop= cdtipsit + entry.slice(entry.length-2);
-						if(valoresOtUtil[prop]){
-							debug('Encontrado subtipo CR en el inciso #',(d+1),' para otvalor ',valoresOtUtil[prop],' a colocar del tipo ',cdtipsit,' su ',entry);
-							var valor = recordTvalosit.get('parametros.pv_otvalor'+valoresOtUtil[prop]);//Valor CR
-		                    var base  = recordBase.get(entry);//Valor subtipoCR 
-		                    if(Ext.isEmpty(valor)&&!Ext.isEmpty(base)&&valoresOtUtil[prop]!='999') {
-		                    	_p30_store.data.items[d].data['parametros.pv_otvalor'+valoresOtUtil[prop]]=base;
-		                    	debug('Se ha seteado correctamente el valor:', base ,'en el inciso', 'parametros.pv_otvalor',valoresOtUtil[prop]);
-		                    } else {
-		                    	debug('No ha cambiado el valor del inciso CR',_p30_store.data.items[d].data['parametros.pv_otvalor'+valoresOtUtil[prop]]);
-		                    }
-						}
-	 				});
-	 				d++;
-				}else
-				{d++;}
-			}else
-			{d++;} 		
-		}while(d<_p30_store.data.items.length)
-		if(d>=_p30_store.data.items.length){
-			_p30_cotizarBody(sinTarificar,recordsCdtipsit);
-		}
-	}catch(e){
-        debugError(e);
-   }
-}
-
-function _p30_cotizarBody(sinTarificar,recordsCdtipsit){
-	var form = _fieldById('_p30_form');
-    //copiar paneles a oculto
-    var arr = Ext.ComponentQuery.query('#_p30_gridTarifas');
-    if(arr.length>0){
-        var formDescuentoActual = _fieldById('_p30_formDescuento');
-        var formCesion          = _fieldById('_p30_formCesion');
-        var recordPaneles       = new _p30_modelo(formDescuentoActual.getValues());
-        var itemsCesion         = Ext.ComponentQuery.query('[fieldLabel]',formCesion);
-        for(var i=0;i<itemsCesion.length;i++){
-            recordPaneles.set(itemsCesion[i].getName(),itemsCesion[i].getValue());
-        }
-        form.formOculto.loadRecord(recordPaneles);
-        debug('form.formOculto.getValues():',form.formOculto.getValues());
-    }
-    debug('length:',_p30_paneles.length,'type:',typeof _p30_paneles);
-    
-    var storeTvalosit = Ext.create('Ext.data.Store', {
-        model : '_p30_modelo'
-    });
-    
- 	var formValuesAux = form.getValues();
- 	var formValues    = {};
- 	for(var prop in formValuesAux){
-        if(prop+'x'!='x' &&prop.slice(0,5)=='param'){
-            formValues[prop]=formValuesAux[prop];
-       }
- 	}
- 	debug('formValues:',formValues);
- 	var valuesFormOculto = form.formOculto.getValues();
- 	debug('valuesFormOculto:',valuesFormOculto);
-	
-    _p30_store.each(function(record)  {
-        var cdtipsit       = record.cdtipsit_panel || record.get('cdtipsit');
-        var cdtipsitPanel  = _p30_smap1['destino_'+cdtipsit];
-        var recordBase     = recordsCdtipsit[cdtipsitPanel];
-        var recordTvalosit = new _p30_modelo(record.data);
-
-        if(cdtipsitPanel==cdtipsit)  {
-        	if(Ext.isEmpty(record.cdtipsit_panel)){
-	           for(var prop in recordTvalosit.getData()) {
-	     		   var valor = recordTvalosit.get(prop);
-	               var base  = recordBase.get(prop);
-	               if(Ext.isEmpty(valor)&&!Ext.isEmpty(base)){
-	               	recordTvalosit.set(prop,base);
-	               }
-	           }
-        	}	
-        } else {
-            for(var prop in recordTvalosit.getData()) {
-                var base = recordBase.get(prop);
-                debug('base:',base);
-                
-                var valorValosit = recordTvalosit.get(prop);
-                debug('valorValosit:',valorValosit);
-                
-                var cmpPanel = _p30_paneles[cdtipsitPanel].down('[name='+prop+']');
-                debug('cmpPanel:',cmpPanel,'.');
-                if(!Ext.isEmpty(cmpPanel)) {
-                    if(cmpPanel.auxiliar=='adicional'
-                        &&Ext.isEmpty(valorValosit)
-                        &&!Ext.isEmpty(base)) {
-                        debug('set normal, porque es adicional');
-                        recordTvalosit.set(prop,base);
-                    }else{
-                        var cmpPanelLabel = cmpPanel.fieldLabel;
-                        debug('cmpPanelLabel:',cmpPanelLabel,'.');
-                        var cmpByLabel = _p30_tatrisitFullForms[cdtipsit].down('[fieldLabel*='+_substringComa(cmpPanelLabel)+']');
-                        if(!Ext.isEmpty(cmpByLabel)) {
-                            var nameByLabel = cmpByLabel.name;
-                            var valor       = recordTvalosit.get(nameByLabel);
-                            debug('valor:',valor);
-                            if(Ext.isEmpty(valor)&&!Ext.isEmpty(base)) {
-                                recordTvalosit.set(nameByLabel,base);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        if(_p30_smap1.mapeo=='DIRECTO'){
-            for(var prop in formValues) {
-                recordTvalosit.set(prop,formValues[prop]);
-            }
-            for(var att in valuesFormOculto){
-                var valorOculto  = valuesFormOculto[att];
-                var valorValosit = recordTvalosit.get(att);
-                if(valorValosit+'x'=='x'&&valorOculto+'x'!='x'){
-                    recordTvalosit.set(att,valorOculto);
-                }
-            }
-        }else {
-            var mapeos = _p30_smap1.mapeo.split('#');
-            debug('mapeos:',mapeos);
-            for(var i in mapeos) {
-                var cdtipsitsMapeo = mapeos[i].split('|')[0];
-                var mapeo          = mapeos[i].split('|')[1];
-                debug('cdtipsit:',cdtipsit,'cdtipsitsMapeo:',cdtipsitsMapeo);
-                if((','+cdtipsitsMapeo+',').lastIndexOf(','+cdtipsit+',')!=-1) {
-                    debug('coincidente:',cdtipsitsMapeo,'cdtipsit:',cdtipsit)
-                    debug('mapeo:',mapeo);
-                    if(mapeo=='DIRECTO'){
-                        debug('directo');
-                        for(var prop in formValues){
-                            recordTvalosit.set(prop,formValues[prop]);
-                        }
-                        for(var att in valuesFormOculto){
-                            var valorOculto  = valuesFormOculto[att];
-                            var valorValosit = recordTvalosit.get(att);
-                            if(valorValosit+'x'=='x'&&valorOculto+'x'!='x') {
-                                recordTvalosit.set(att,valorOculto);
-                            }
-                        }
-                    }else{
-                        var atributos = mapeo.split('@');
-                        debug('atributos:',atributos);
-                        for(var i in atributos){
-                            var atributoIte = atributos[i];
-                            var modelo      = atributoIte.split(',')[0];
-                            var origen      = atributoIte.split(',')[1];
-                            var pantalla    = atributoIte.split(',')[2];
-                            
-                            modelo   = 'parametros.pv_otvalor'+(('x00'+modelo)  .slice(-2));
-                            pantalla = 'parametros.pv_otvalor'+(('x00'+pantalla).slice(-2));
-                            
-                            debug('modelo:'   , modelo   , '.');
-                            debug('origen:'   , origen   , '.');
-                            debug('pantalla:' , pantalla , '.');
-                            
-                            if(origen=='F'){
-                                recordTvalosit.set(modelo,formValues[pantalla]);
-                            }else if(origen=='O'){
-                                var valorOculto  = valuesFormOculto[pantalla];
-                                var valorValosit = recordTvalosit.get(modelo);
-                                if(valorValosit+'x'=='x'&&valorOculto+'x'!='x')
-                                {
-                                    recordTvalosit.set(modelo,valorOculto);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        storeTvalosit.add(recordTvalosit);
-        debug('record:',record.data,'tvalosit:',recordTvalosit.data);
-    });
-    debug('_p30_store:',_p30_store);
-    debug('storeTvalosit:',storeTvalosit);
-    
-    var json =  {
-        smap1 : {
-            cdunieco     : _p30_smap1.cdunieco
-            ,cdramo      : _p30_smap1.cdramo
-            ,estado      : 'W'
-            ,nmpoliza    : _fieldByName('nmpoliza',_fieldById('_p30_form')).getValue()
-            ,cdtipsit    : _p30_smap1.cdtipsit
-            ,cdpersonCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CLAVECLI
-            ,nmorddomCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.NMORDDOM
-            ,cdideperCli : Ext.isEmpty(_p30_recordClienteRecuperado) ? '' : _p30_recordClienteRecuperado.raw.CDIDEPER
-            ,feini       : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
-            ,fefin       : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
-            ,cdagente    : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
-            ,notarificar : !Ext.isEmpty(sinTarificar)&&sinTarificar==true? 'si':'no'
-            ,tipoflot    : _p30_smap1.tipoflot
-            ,modPrim     : sinTarificar == false || sinTarificar== true ? "" : sinTarificar
-            ,licencias   : _p30_smap1.cdtipsit2 ? 'S':'N'
-        }
-        ,slist1 : []
-        ,slist2 : []
-        ,slist3 : []
-        ,flujo  : !Ext.isEmpty(_p30_flujo) ?_p30_flujo :null
-    };
-    
-    for(var cdtipsitPanel in recordsCdtipsit)  {
-        try{
-            if(_p30_smap1.turistas=='S'){
-                if(recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25'] instanceof Array ){
-                    recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25']=recordsCdtipsit[cdtipsitPanel].data['parametros.pv_otvalor25'][0]
-                }
-            }
-        }catch(e){
-            debugError(e)
-        }
-        json.slist3.push(recordsCdtipsit[cdtipsitPanel].data);
+function _p30_cargarPoliza(boton)
+{   cargarXpoliza = true;
+    var sucursal = _fieldByName('sucursal').getValue();
+    var ramo = _fieldByName('ramo').getValue();
+    var poliza = _fieldByName('poliza').getValue();
+    var agt ;
+    var valido   = !Ext.isEmpty(poliza);// !Ext.isEmpty(ramo) !Ext.isEmpty(sucursal);
+    if(!valido)
+    {
+        mensajeWarning('Introduce los datos necesarios');
     }
     
-    var itemsTatripol = Ext.ComponentQuery.query('[name]',_fieldById('_p30_fieldsetTatripol'));
-    try{
-        if(_p30_smap1.turistas=='S'){
-            itemsTatripol.push(_fieldByName('aux.otvalor18',null,true));
-        }
-    }catch(e){
-        debugError(e);
-    }
-    debug('itemsTatripol:',itemsTatripol);
-    for(var i in itemsTatripol)  {
-        var tatri=itemsTatripol[i];
-        json.smap1['tvalopol_'+tatri.cdatribu]=tatri.getValue();
-    }
-    
-    _p30_store.each(function(record) {
-        try{
-            if(_p30_smap1.turistas=='S'){
-                if(record.data['parametros.pv_otvalor25'] instanceof Array ){
-                    record.data['parametros.pv_otvalor25']=record.data['parametros.pv_otvalor25'][0]
-                }
-            }
-        }catch(e){
-            debugError(e)
-        }
-        
-        json.slist2.push(record.data);
-    });
-    
-    storeTvalosit.each(function(record) {
-        try{
-            if(_p30_smap1.turistas=='S'){
-                if(record.data['parametros.pv_otvalor25'] instanceof Array ){
-                    record.data['parametros.pv_otvalor25']=record.data['parametros.pv_otvalor25'][0]
-                }
-            }
-        }catch(e){
-            debugError(e)
-        }
-        json.slist1.push(record.data);
-    });
-    
-    //crear record con los valores del formulario y el formulario oculto
-    debug('storeTvalosit.getAt(0).data:',storeTvalosit.getAt(0).data);
-    var recordTvalositPoliza=new _p30_modelo(storeTvalosit.getAt(0).data);
-    debug('recordTvalositPoliza:',recordTvalositPoliza.data);
-    recordTvalositPoliza.set('cdtipsit','XPOLX');
-    recordTvalositPoliza.set('nmsituac',-1);
-    for(var prop in formValues) {
-        recordTvalositPoliza.set(prop,formValues[prop]);
-    }for(var att in valuesFormOculto){
-        recordTvalositPoliza.set(att,valuesFormOculto[att]);
-    }
-    debug('recordTvalositPoliza final:',recordTvalositPoliza.data);
-    json.slist2.push(recordTvalositPoliza.data);
-    //crear record con los valores del formulario y el formulario oculto
-    
-    debug('>>> json a enviar:',json);
-    _p30_cotizacionFinal(sinTarificar,json,form);
-}
-
-function _p30_cotizacionFinal(sinTarificar,json,form){
-	var panelpri = _fieldById('_p30_panelpri');
+    if(valido)
+    {
+        var panelpri = _fieldById('_p28_panelpri');
         panelpri.setLoading(true);
-        Ext.Ajax.request(  {
-            url       : _p30_urlCotizar
-            ,jsonData : json
-            ,success  : function(response) {
-                panelpri.setLoading(false);
-                
-                _p30_bloquear(true);
-                
-                json = Ext.decode(response.responseText);
-                debug('### cotizar:',json);
-                if(json.exito){
-                    
-                    if(!Ext.isEmpty(json.smap1.msnPantalla)) {
-                           mensajeError(json.smap1.msnPantalla);
-                    }
-                    
-                    if(!Ext.isEmpty(json.respuesta)){
-                        mensajeWarning(json.respuesta);
-                    }
-                    
-                    _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=true;
-                    _fieldByName('nmpoliza',_fieldById('_p30_form')).setValue(json.smap1.nmpoliza);
-                    _fieldByName('nmpoliza',_fieldById('_p30_form')).semaforo=false;
-                    
-                    if(Ext.isEmpty(sinTarificar)||false==sinTarificar) {
-                        _grabarEvento('COTIZACION'
-                                      ,'COTIZA'
-                                      ,_p30_smap1.ntramite
-                                      ,_p30_smap1.cdunieco
-                                      ,_p30_smap1.cdramo
-                                      ,'W'
-                                      ,json.smap1.nmpoliza
-                                      ,json.smap1.nmpoliza
-                                      ,'buscar'
-                                      ,_fieldById('_p30_form')
-                                      );
-                    }
-                    
-                    var itemsDescuento = [ {
-                            xtype  : 'displayfield'
-                            ,value : '¿Desea usar su descuento de agente?'
-                        },{
-                            xtype  : 'displayfield'
-                            ,value : 'Si desea aplicar un DESCUENTO seleccione el porcentaje mayor a 0%'
-                        },{
-                            xtype  : 'displayfield'
-                            ,value : 'Si desea aplicar un RECARGO seleccione el porcentaje menor a 0%'
-                        } ];
-                    
-                    var itemAntRefPol = [ {
-                                xtype  : 'displayfield'
-                                ,value : 'Forma de pago de p\u00f3liza a renovar: '+json.smap1.fila
-                            }  ];
-                    
-                    <s:if test='%{getImap().get("panel5Items")!=null}'>
-                        var itemsaux = [<s:property value="imap.panel5Items" />];
-                        for(var ii=0;ii<itemsaux.length;ii++) {
-                            debug('itemsaux[ii]:',itemsaux[ii]);
-                            itemsDescuento.push(itemsaux[ii]);
-                        }
-                    </s:if>
-                    debug('itemsDescuento:',itemsDescuento);
-                    
-                    var itemsComision = [ {
-                            xtype  : 'displayfield'
-                            ,value : 'Indique el porcentaje de comisi&oacute;n que desea ceder'
-                        } ];
-                    
-                    var itemsRecargoPF = [ {
-                                xtype  : 'displayfield'
-                                ,value : 'Indique el porcentaje de recargo por pago fraccionado que desea aplicar'
-                            },
-                            Ext.create('Ext.form.NumberField',{
-                                fieldLabel:'PORCENTAJE RECARGO POR PAGO FRACCIONADO',
-                                label:'PORCENTAJE RECARGO POR PAGO FRACCIONADO',
-                                allowBlank:true,
-                                name:'otvalor.recargoPF',
-                                readOnly:false,
-                                swobligaflot:false,
-                                swobligaemiflot:false,
-                                hidden:false,
-                                style:'margin:5px',
-                                allowDecimals:true,
-                                decimalSeparator:'.',
-                                minValue:0
-                                })
-                        ];
-                    
-                    <s:if test='%{getImap().get("panel6Items")!=null}'>
-                        var itemsaux = [<s:property value="imap.panel6Items" />];
-                        for(var ii=0;ii<itemsaux.length;ii++) {
-                            itemsaux[ii].minValue=0;
-                            itemsaux[ii].maxValue=100;
-                            itemsComision.push(itemsaux[ii]);
-                        }
-                    </s:if>
-                    debug('itemsComision:',itemsComision);
-                    
-                    var arr = Ext.ComponentQuery.query('#_p30_gridTarifas');
-                    if(arr.length>0) {
-                        _fieldById('_p30_formCesion').destroy();
-                        panelpri.remove(arr[arr.length-1],true);
-                    }
-                    
-                    var _p30_formDescuento = Ext.create('Ext.form.Panel',  {
-                        itemId        : '_p30_formDescuento'
-                        ,border       : 0
-                        ,defaults     : { style : 'margin:5px;' }
-                        ,style        : 'margin-left:535px;'
-                        ,width        : 450
-                        ,windowCesion : Ext.create('Ext.window.Window',{
-                            title        : 'CESI&Oacute;N DE COMISI&Oacute;N'
-                            ,autoScroll  : true
-                            ,closeAction : 'hide'
-                            ,modal       : true
-                            ,items       :   [
-                                Ext.create('Ext.form.Panel', {
-                                    itemId       : '_p30_formCesion'
-                                    ,border      : 0
-                                    ,defaults    : { style : 'margin:5px;' }
-                                    ,items       : itemsComision
-                                    ,buttonAlign : 'center'
-                                    ,buttons     : [{
-                                            itemId   : '_p30_botonAplicarCesion'
-                                            ,text    : 'Aplicar'
-                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                                            ,handler : function(me)  {
-                                                if(me.up('form').getForm().isValid()) {
-                                                    me.up('window').hide();
-                                                    _p30_cotizar(true);
-                                                } else  {
-                                                    mensajeWarning('Favor de verificar los datos');
-                                                }
-                                            }
-                                        }
-                                    ]
-                                })
-                            ]
-                        })
-                        ,items       : [ {
-                                xtype  : 'fieldset'
-                                ,itemId:"descuentoAgente"
-                                ,title : '<span style="font:bold 14px Calibri;">DESCUENTO DE AGENTE</span>'
-                                ,items : itemsDescuento
-                            }  ,{
-                                xtype  : 'fieldset'
-                                ,title : '<span style="font:bold 14px Calibri;">Datos de Renovacion</span>'
-                                ,items : itemAntRefPol
-                                ,hidden:  !Ext.isEmpty(_p30_flujo) ? (_p30_flujo.cdflujomc != 240 && _p30_flujo.cdtipflu != 103) : true
-                            }  ]
-                        ,buttonAlign : 'right'
-                        ,buttons     : [  {
-                                itemId   : '_p30_botonAplicarDescuento'
-                                ,text    : 'Aplicar'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                                ,disabled:_p30_descuento
-                                ,handler : function(me) {
-                                    if(me.up('form').getForm().isValid()) {
-                                        var modPrim = false;
-                                        if(_p30_smap1.tipoflot == TipoFlotilla.Flotilla)   {
-                                          modPrim = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formDescuento'))[0].lastValue;
-                                        }    
-                                        _p30_cotizar(modPrim);
-                                    }   else{
-                                        mensajeWarning('Favor de verificar los datos');
-                                    }
-                                    _p30_descuento=true;
-                                    
-                                }
-                                ,listeners: {
-                                    afterrender:function(me){
-                                        try{
-                                        if(_fieldById("descuentoAgente",null,true).down("[xtype=numberfield]").getValue()!=null) {
-	                                        if(_p30_smap1.tipoflot=='F')
-	                                        {me.setDisabled(false);}
-	                                        else if(_fieldById("descuentoAgente",null,true).down("[xtype=numberfield]").getValue()!=0)
-                                        	{me.setDisabled(true);}
-                                        }
-                                        }catch(e){
-                                            debugError(e)
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    });
-                    var _p30_PanelRecargoPF = Ext.create('Ext.form.Panel', {
-                                itemId        : '_p30_PanelRecargoPF'
-                                ,border       : 0
-                                ,defaults     : { style : 'margin:5px;' }
-                                ,style        : 'margin-left:535px;'
-                                ,width        : 450
-                                ,windowCesion : Ext.create('Ext.window.Window'
-                                ,{
-                                    title        : 'RECARGO POR PAGO FRACCIONADO'
-                                    ,autoScroll  : true
-                                    ,closeAction : 'hide'
-                                    ,modal       : true
-                                    ,items       :[   
-                                        Ext.create('Ext.form.Panel', {
-                                            itemId       : '_p30_formRecargoPF'
-                                            ,border      : 0
-                                            ,defaults    : { style : 'margin:5px;' }
-                                            ,items       : itemsRecargoPF
-                                            ,buttonAlign : 'center'
-                                            ,buttons     : [  {
-                                                    itemId   : '_p30_botonAplicarRecargoPF'
-                                                    ,text    : 'Aplicar'
-                                                    ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                                                    ,handler : function(me) {
-                                                        if(me.up('form').getForm().isValid()) {
-                                                            me.up('window').hide();
-                                                        }else {
-                                                            mensajeWarning('Favor de verificar los datos');
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        })
-                                    ]
-                                })
-                            });
-                    
-                    _p30_formDescuento.loadRecord(new _p30_modelo(form.formOculto.getValues()));
-                    _fieldById('_p30_formCesion').loadRecord(new _p30_modelo(form.formOculto.getValues()));
-                    
-                    //bloquear descuento
-                    var arrDesc = Ext.ComponentQuery.query('[fieldLabel]',_p30_formDescuento);
-                    var disabledDesc = false;
-                    for(var i=0;i<arrDesc.length;i++)  {
-                        if(arrDesc[i].getValue()-0!=0)  {
-                            arrDesc[i].setReadOnly(true);
-                            disabledDesc = true;
-                        }
-                    }
-                    
-                    if (disabledDesc === true && true === _p30_flujoAux.multiDesc) {
-                        disabledDesc = false;
-                    }
-                    
-                    if(_p30_smap1.tipoflot != TipoFlotilla.Flotilla) {
-                      _fieldById('_p30_botonAplicarDescuento').setDisabled(disabledDesc);
-                    }
-                    
-                    //bloquear comision
-                    var arrComi      = Ext.ComponentQuery.query('[fieldLabel]',_fieldById('_p30_formCesion'));
-                    var disabledComi = false;
-                    for(var i=0;i<arrComi.length;i++){
-                        if(arrComi[i].getValue()-0!=0)  {
-                            arrComi[i].setReadOnly(true);
-                            disabledComi = true;
-                        }
-                    }
-                    
-                    if (disabledComi === true && true === _p30_flujoAux.multiDesc) {
-                        disabledComi = false;
-                    }
-                    
-                    _fieldById('_p30_botonAplicarCesion').setDisabled(disabledComi);
-                    var formasPago=[]
-                    try{
-                        if(_p30_smap1.turistas=='S'){
-                            json.slist1.forEach(function(it){
-                                if(!FormaPago.esDxN(it.CDPERPAG))
-                                    formasPago.push(it);
-                            });
-                            
-                            formasPago=turistasFormaPago(_fieldByName('feini').getValue()
-                                                        ,_fieldByName('fefin').getValue()
-                                                        ,formasPago)
-                        }else{
-                            formasPago=json.slist1;
-                        }
-                        
-                    }catch(e){
-                        debugError(e)
-                    }
-                    var gridTarifas=Ext.create('Ext.panel.Panel',  {
-                        itemId : '_p30_gridTarifas'
-                        ,items :  [
-                            Ext.create('Ext.grid.Panel',  {
-                                title             : 'Resultados'
-                                ,border           : 0
-                                ,store            : Ext.create('Ext.data.Store',  {
-                                    model : '_p30_modeloTarifa'
-                                    ,data : formasPago
-                                })
-                                ,columns          : [ {
-                                        text       : 'FORMA DE PAGO'
-                                        ,dataIndex : 'DSPERPAG'
-                                        ,flex      : 1
-                                    }  ,{
-                                        text       : 'PRIMA'
-                                        ,dataIndex : 'PRIMA'
-                                        ,renderer  : Ext.util.Format.usMoney
-                                        ,flex      : 1
-                                    } ]
-                                ,selType          : 'cellmodel'
-                                ,minHeight        : 100
-                                ,enableColumnMove : false
-                                ,listeners        :   {
-                                    select       : _p30_tarifaSelect
-                                    ,afterrender : function(me)  {
-                                        if(!Ext.isEmpty(json.smap1.columna) && !Ext.isEmpty(json.smap1.fila)) {
-                                            var gridTarifas = _fieldById('_p30_gridTarifas').down('grid');
-                                            var sm = gridTarifas.getSelectionModel();
-                                            try {
-                                                var columna=1 ,fila=999; 
-                                                
-                                                for(var IteGriTar=0;IteGriTar<17;IteGriTar++)  {
-                                                    sm.select({row:IteGriTar,column:columna});
-                                                    var texto = (sm.getSelection({row:IteGriTar,column:columna})[0].data.DSPERPAG).toLowerCase()
-                                                    if(json.smap1.fila.toLowerCase() === texto) {
-                                                          fila = IteGriTar;
-                                                          IteGriTar = 18;
-                                                    }
-                                                }
-                                                
-                                                sm.select({row:fila,column:columna});
-                                             }catch(e) {
-                                               debug("Excede rango fuera de la cuadricula de tarifas");
-                                             }
-                                        }
-                                        
-                                        if(!Ext.isEmpty(_p30_flujo)){ // && !sinTarificar===true)
-                                            _p30_actualizarCotizacionTramite(_p30_actualizarSwexiperTramite);
-                                        }
-                                    }
-                                }
-                            })
-                            ,_p30_formDescuento
-                            ,Ext.create('Ext.panel.Panel', {
-                                defaults : { style : 'margin:5px;' }
-                                ,border  : 0
-                                ,tbar    :    [
-                                    '->'  ,{
-                                        itemId    : '_p30_botonDetalles'
-                                        ,text     : 'Detalles'
-                                        ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
-                                        ,disabled : true
-                                        ,handler  : _p30_detalles
-                                       ,hidden    : !RolSistema.puedeSuscribirAutos(_p30_smap1.cdsisrol)//(rolesSuscriptores.lastIndexOf('|'+_p30_smap1.cdsisrol+'|')==-1)
-                                    }  ,{
-                                        itemId    : '_p30_botonCoberturas'
-                                        ,text     : 'Coberturas'
-                                        ,icon     : '${ctx}/resources/fam3icons/icons/table.png'
-                                        ,disabled : true
-                                        ,handler  : _p30_coberturas
-                                    }  ,{
-                                        itemId   : '_p30_botonEditar'
-                                        ,text    : 'Editar'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
-                                        ,handler : _p30_editar
-                                    } ,{
-                                        itemId   : '_p30_botonClonar'
-                                        ,text    : 'Duplicar'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
-                                        ,handler : _p30_clonar
-                                    } ,{
-                                        itemId   : '_p30_botonNueva'
-                                        ,text    : 'Nueva'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-                                        ,handler : _p30_nueva
-                                    } ]
-                                ,bbar    :  [
-                                    '->' ,{
-                                        itemId    : '_p30_botonEnviar'
-                                        ,xtype    : 'button'
-                                        ,text     : 'Enviar'
-                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
-                                        ,disabled : true
-                                        ,handler  : _p30_enviar
-                                        ,hidden   : _p30_smap1.turistas=='S'
-                                    }  ,{
-                                        itemId    : '_p30_botonImprimir'
-                                        ,xtype    : 'button'
-                                        ,text     : 'Imprimir'
-                                        ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
-                                        ,disabled : true
-                                        ,handler  : _p30_imprimir
-                                        ,hidden   : _p30_smap1.turistas=='S'
-                                    } ,{
-                                        itemId   : '_p30_botonCesion'
-                                        ,xtype   : 'button'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
-                                        ,text    : 'Cesi&oacute;n de comisi&oacute;n'
-                                        ,handler : _p30_cesionClic
-                                        ,hidden   : _p30_smap1.turistas=='S'
-                                    } ,{
-                                        itemId   : '_p30_botonRecargoPF'
-                                        ,xtype   : 'button'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/page_white_star.png'
-                                        ,text    : 'Recargo Pago Fraccionado'
-                                        ,tooltip : 'Aplicable solo para Flotillas'
-                                        ,disabled: true
-                                        ,handler : _p30_aplicaRecargoPF
-                                    }  ,{
-                                        itemId    : '_p30_botonComprar'
-                                        ,xtype    : 'button'
-                                        ,text     : 'Confirmar cotizaci&oacute;n'
-                                        ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
-                                        ,disabled : true
-                                        ,handler  : _p30_comprar
-                                    }, {
-                                        itemId  : '_p30_botonOnCotizar',
-                                        xtype   : 'button',
-                                        text    : 'Enviar',
-                                        icon    : '${icons}user_go.png',
-                                        hidden  : true,
-                                        handler : _p30_botonOnCotizarClic
-                                    }
-                                ]
-                            })
-                        ]
-                    });
-                    
-                    panelpri.add(gridTarifas);
-                    panelpri.doLayout();
-                    
-                    // Cuando se turna al cotizar
-                    if (typeof _p30_flujoAux.onCotizar === 'number') {
-                        if (_p30_flujoAux.onCotizarHide === 'S') {
-                            gridTarifas.down('grid').hide();
-                        }
-                        _fieldById('_p30_botonComprar').hide();
-                        _fieldById('_p30_botonOnCotizar').show();
-                    }
-                    
-                    if(_p30_smap1.cdramo+'x'=='5x'&&arrDesc.length>0) {
-                        _p30_formDescuento.setLoading(true);
-                        Ext.Ajax.request(  {
-                            url     : _p30_urlRecuperacionSimple
-                            ,params : {
-                                'smap1.procedimiento' : 'RECUPERAR_DESCUENTO_RECARGO_RAMO_5'
-                                ,'smap1.cdtipsit'     : _p30_smap1.cdtipsit
-                                ,'smap1.cdagente'     : _fieldByLabel('AGENTE',_fieldById('_p30_form')).getValue()
-                                ,'smap1.negocio'      : _fieldByLabel('NEGOCIO',_fieldById('_p30_form')).getValue()
-                                ,'smap1.tipocot'      : _p30_smap1.tipoflot
-                                ,'smap1.cdsisrol'     : _p30_smap1.cdsisrol
-                                ,'smap1.cdusuari'     : _p30_smap1.cdusuari
-                            }
-                            ,success : function(response) {
-                                _p30_formDescuento.setLoading(false);
-                                var json = Ext.decode(response.responseText);
-                                debug('### cargar rango descuento ramo 5:',json);
-                                if(json.exito) {
-                                    for(var i=0;i<arrDesc.length;i++)
-                                    {
-                                        arrDesc[i].minValue=100*(json.smap1.min-0);
-                                        arrDesc[i].maxValue=100*(json.smap1.max-0);
-                                        arrDesc[i].isValid();
-                                        debug('min:',arrDesc[i].minValue);
-                                        debug('max:',arrDesc[i].maxValue);
-                                        arrDesc[i].setReadOnly(false);
-                                    }
-                                }  else  {
-                                    for(var i=0;i<arrDesc.length;i++)  {
-                                        arrDesc[i].minValue=0;
-                                        arrDesc[i].maxValue=0;
-                                        arrDesc[i].setValue(0);
-                                        arrDesc[i].isValid();
-                                        arrDesc[i].setReadOnly(true);
-                                    }
-                                    mensajeError(json.respuesta);
-                                }
-                            }
-                            ,failure : function() {
-                                _p30_formDescuento.setLoading(false);
-                                for(var i=0;i<arrDesc.length;i++)
-                                {
-                                    arrDesc[i].minValue=0;
-                                    arrDesc[i].maxValue=0;
-                                    arrDesc[i].setValue(0);
-                                    arrDesc[i].isValid();
-                                    arrDesc[i].setReadOnly(true);
-                                }
-                                errorComunicacion();
-                            }
-                        });
-                    }
-                    
-                    try {
-                       gridTarifas.down('button[disabled=false]').focus(false, 1000);
-                    } catch(e) {
-                        debug(e);
-                    }
-                } else{
-                    _p30_bloquear(false);
-                    mensajeError(json.respuesta);
-                }
-            }
-            ,failure  : function(){
-                panelpri.setLoading(false);
-                errorComunicacion();
+        Ext.Ajax.request(
+        {
+            url      : _p28_urlCargarPoliza
+             ,params  :
+             {
+                  'smap1.cdsucursal' : sucursal
+                 ,'smap1.cdramo' : ramo
+                 ,'smap1.cdpoliza' : poliza
+                 ,'smap1.cdusuari' : _p28_smap1.cdusuari
+                 ,'smap1.tipoflot' : 'I'
+             }
+             ,success : function(response)
+             {
+              panelpri.setLoading(false);
+              var json=Ext.decode(response.responseText);
+              debug("valoresCampos: ",json);
+              var json2=Ext.decode(json.smap1.valoresCampos);
+              json2['success']=true;
+              cdper     = json2.smap1.cdper;   //D00000000111005
+              cdperson  = json2.smap1.cdperson;//530400
+              debug("valoresCampos 2: ",json2);
+              llenandoCampos(json2);
+             }
+            ,failure : function()
+            {
+             panelpri.setLoading(false);
+             errorComunicacion();
             }
         });
+    }
 }
 
 
 ////// funciones //////
-<%-- include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" --%>
+<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" %>
 </script>
-<script type="text/javascript" src="${ctx}/js/proceso/emision/cotizacionAutoFlotillaScript.js?now=${now}"></script>
 </head>
-<body><div id="_p30_divpri" style="height:1500px;"></div></body>
+<body><div id="_p30_divpri" style="height:1000px;"</body>
 </html>

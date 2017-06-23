@@ -202,4 +202,5 @@ public interface IConsultasAseguradoDAO {
 	public void actualizaEstatusEnvio(String iCodAviso) throws Exception;
 
 	public List<SolicitudCxPVO> obtieneListadoSolicitudesCxp() throws Exception;
+	
 }

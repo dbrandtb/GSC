@@ -906,10 +906,6 @@ function _p59_agregarFuncionamientoRFC () {
                                                         debug('PERSONAS EXISTENTES actioncolumn handler() args:', arguments);
                                                         _p59_recuperarPersona(record.get('CDPERSON'), record.get('NMORDDOM'), v.up('window'));
                                                     }
-                                                },{
-                                                   header     : 'ID. Asegurado',
-                                                   dataIndex  : 'CDPERSON',
-                                                   width      : 120
                                                 }, {
                                                     text      : 'RFC',
                                                     dataIndex : 'RFC',
@@ -1029,8 +1025,8 @@ function _p59_confirmar (button, autorizar) {
                     debug('AJAX jsonConfirmar:', jsonConfirmar);
                     if (jsonConfirmar.success !== true) {
                         throw jsonConfirmar.message;
-                    }else if(jsonConfirmar.params.autoriza!='N'){
-                    	mensajeCorrecto(
+                    }
+                    mensajeCorrecto(
                         'Endoso confirmado',
                         jsonConfirmar.params.message,
                         function () {
@@ -1059,24 +1055,6 @@ function _p59_confirmar (button, autorizar) {
                             }
                         }
                     );
-                    }else{
-                    	mensajeCorrecto(
-                        'Endoso confirmado',
-                        jsonConfirmar.params.message,
-                        function () {
-                                    try {
-                                        //////////////////////////////////
-                                        ////// usa codigo del padre //////
-                                        /*// ////////////////////////////*/
-                                        marendNavegacion(2);
-                                        /*//////////////////////////////*/
-                                        ////// usa codigo del padre //////
-                                        //////////////////////////////////
-                                    } catch (e) {}
-                                }
-                     );
-                    }
-                    
                 } catch (e) {
                     manejaException(e, ck);
                 }

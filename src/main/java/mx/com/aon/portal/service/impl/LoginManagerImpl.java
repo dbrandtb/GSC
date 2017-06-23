@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
@@ -129,7 +130,6 @@ public class LoginManagerImpl implements LoginManager {
 
 	public boolean validaUsuarioLDAP(boolean unicamenteExiste, String user,
 			String password) throws Exception {
-		boolean existeUsuario = false;
 		DirContext ctx;
 //		logger.debug("URLLDAP=" + Ldap_provider_url);
 //		logger.debug("ContextoLDAP=" + Ldap_factory_initial);
@@ -140,7 +140,7 @@ public class LoginManagerImpl implements LoginManager {
 
 		Hashtable env = obtieneDatosConexionLDAP(Ldap_security_principal,
 				Ldap_security_credentials);
-		
+		boolean existeUsuario = false;
 		ctx = new InitialLdapContext(env, null);
 
 		SearchControls searchCtls = new SearchControls();
@@ -174,12 +174,16 @@ public class LoginManagerImpl implements LoginManager {
 		return existeUsuario;
 	}
 
-	public boolean validaDatosConexionLDAP(String dn, String password) throws Exception{
+	public boolean validaDatosConexionLDAP(String dn, String password) {
 		boolean validadaUsuario = false;
 		Hashtable env1 = obtieneDatosConexionLDAP(dn, password);
+		try {
 			DirContext ctx1 = new InitialLdapContext(env1, null);
 			validadaUsuario = true;
 			ctx1.close();
+		} catch (NamingException e) {
+			logger.error("Error en la validacion LDAP " + e.getMessage());
+		}
 		return validadaUsuario;
 	}
 

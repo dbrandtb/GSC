@@ -128,20 +128,6 @@ var _CONTEXT = '${ctx}';
 														,autoLoad : true
 												     }
 												,buttons:[{
-                                                			itemId    : '_p3_botonEnviar'
-					                                        ,xtype    : 'button'
-					                                        ,text     : 'Enviar'
-					                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
-					                                        //,disabled : true
-					                                        ,handler  : function(){
-					                                        	
-																_p3_cargarCorreos(endAmpVigFlujo.ntramite)
-					                                        	
-					                                        	_p3_enviar(endAmpVigFlujo.ntramite
-                    														,jsonResp1.smap2.pdfEndosoNom_o);
-					                                        } 
-                                                			
-                                                		},{
 															text    : 'Confirmar endoso'
 															,name    : 'endosoButton'
 															,icon    : '${ctx}/resources/fam3icons/icons/award_star_gold_3.png'
@@ -149,31 +135,9 @@ var _CONTEXT = '${ctx}';
 																function (me){
 																	var myMask1 = _maskLocal();
 																	me.up('window').destroy();
-																	// Se crea variable para turnar cuando sea un endoso con autorizacion
-													            	var endAmpVigFlujoAux = {};
-													            	
-													            	if(!Ext.isEmpty(endAmpVigFlujo)
-																	    &&!Ext.isEmpty(endAmpVigFlujo.aux)){
-																	    	//
-																		    try{
-																		    	//
-																		        endAmpVigFlujoAux = Ext.decode(endAmpVigFlujo.aux);
-																		    }
-																		    catch(e) {
-																		    	//
-																		        manejaException(e);
-																		    }
-																	}
 																	myMask.show();
-																	paramsEntrada.confirmar = 'no';
-																	if(Ext.isEmpty(endAmpVigFlujo)
-												                    ||Ext.isEmpty(endAmpVigFlujo.aux)
-												                    ||endAmpVigFlujo.aux.indexOf('onComprar')==-1){
-												                    	paramsEntrada.confirmar = 'si';
-														            }
-														            
 																	//submitValues['smap1.confirmar']='si' ;
-															        //paramsEntrada.confirmar = 'si';
+																	paramsEntrada.confirmar = 'si';
                                                                     submitValues['smap1']= paramsEntrada;
 																	
 																	if(!Ext.isEmpty(endAmpVigFlujo))
@@ -186,114 +150,25 @@ var _CONTEXT = '${ctx}';
 												   						    url: guarda_Vigencia_Poliza,
 												   						    jsonData: Ext.encode(submitValues)
 												   						    ,success:function(response,opts){
-												   						    	//
-												   						    	var jsonResp = Ext.decode(response.responseText);
-												   						    	debug('**** jsonResp: ' ,jsonResp);
-												   						    	if(Ext.isEmpty(endAmpVigFlujo)
-																		                    ||Ext.isEmpty(endAmpVigFlujo.aux)
-																		                    ||endAmpVigFlujo.aux.indexOf('onComprar')==-1){
-													   						    	 //myMask.hide();
-													   						       //  var jsonResp = Ext.decode(response.responseText);
-													   						         
-													   						         var callbackRemesa = function()
-													   						         {
-													   						             marendNavegacion(2);
-													   						         };
-													   						         
-													   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
-													   						      	 {
-													   						      	     _generarRemesaClic(
-													   						      	         true
-													   						      	         ,paramsEntrada.CDUNIECO
-													   						      	         ,paramsEntrada.CDRAMO
-													   						      	         ,paramsEntrada.ESTADO
-													   						      	         ,paramsEntrada.NMPOLIZA
-													   						      	         ,callbackRemesa
-													   						      	     );
-													   						      	 });
-															                    }else{
-															                    	//
-															                    	debug('endAmpVigFlujoAux.endosoAutorizar: ',endAmpVigFlujoAux.endosoAutorizar);
-																                    var ck = 'Turnando tr\u00e1mite';
-																                    try
-																                    {
-																                        var status = endAmpVigFlujoAux.endosoAutorizar.split('_')[1];
-																                        debug('status para turnar onComprar:',status,'.');
-																                        
-																                        _mask(ck);
-																                        debug(' Turnando tr\u00e1mite endAmpVigFlujoAux: ',endAmpVigFlujoAux);
-																                        Ext.Ajax.request(
-																                        {
-																                            url      : _GLOBAL_COMP_URL_TURNAR
-																                            ,params  :
-																                            {
-																                                'params.CDTIPFLU'   : endAmpVigFlujo.cdtipflu
-																                                ,'params.CDFLUJOMC' : endAmpVigFlujo.cdflujomc
-																                                ,'params.NTRAMITE'  : endAmpVigFlujo.ntramite
-																                                ,'params.STATUSOLD' : endAmpVigFlujo.status
-																                                ,'params.STATUSNEW' : status
-																                                ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
-																                                ,'params.SWAGENTE'  : 'S'
-																                            }
-																                            ,success : function(response)
-																                            {
-																                                _unmask();
-																                                var ck = '';
-																                                try
-																                                {
-																                                    var json = Ext.decode(response.responseText);
-																                                    debug('### turnar:',json);
-																                                    if(json.success)
-																                                    {
-																                                        mensajeCorrecto
-																                                        (
-																                                            'Tr\u00e1mite turnado'
-																                                            //,json.message
-																                                            ,'El tr\u00e1mite fue turnado para aprobaci\u00f3n del agente/promotor'
-																                                            ,function()
-																                                            {
-																                                                _mask('Redireccionando');
-																                                                Ext.create('Ext.form.Panel').submit(
-																                                                {
-																                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
-																                                                    ,standardSubmit : true
-																                                                });
-																                                            }
-																                                        );
-																                                       
-																                                    }
-																                                    else
-																                                    {
-																                                        mensajeError(json.message);
-																                                    }
-																                                }
-																                                catch(e)
-																                                {
-																                                    manejaException(e,ck);
-																                                }
-																                            }
-																                            ,failure : function()
-																                            {
-																                                _unmask();
-																                                errorComunicacion(null,'Error al turnar tr\u00e1mite');
-																                            }
-																                        });
-																                    }
-																                    catch(e)
-																                    {
-																                        manejaException(e,ck);
-																                    }
-																               
-																	               //Sacaendoso
-																	                    
-																                    sacaEndoso(paramsEntrada.CDUNIECO,
-																                               paramsEntrada.CDRAMO,
-																                               paramsEntrada.ESTADO,
-																                               paramsEntrada.NMPOLIZA,
-																                               jsonResp1.smap2.pv_nmsuplem_o,
-																                               jsonResp1.smap2.pv_nsuplogi_o);
-															                    }
-												   						    	
+												   						    	 //myMask.hide();
+												   						         var jsonResp = Ext.decode(response.responseText);
+												   						         
+												   						         var callbackRemesa = function()
+												   						         {
+												   						             marendNavegacion(2);
+												   						         };
+												   						         
+												   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
+												   						      	 {
+												   						      	     _generarRemesaClic(
+												   						      	         true
+												   						      	         ,paramsEntrada.CDUNIECO
+												   						      	         ,paramsEntrada.CDRAMO
+												   						      	         ,paramsEntrada.ESTADO
+												   						      	         ,paramsEntrada.NMPOLIZA
+												   						      	         ,callbackRemesa
+												   						      	     );
+												   						      	 });
 												   						    },
 												   						    failure:function(response,opts){
 												   						        myMask.hide();
@@ -384,115 +259,6 @@ var _CONTEXT = '${ctx}';
 
 		
     });
-////// funciones //////}
-
-
-function _p3_cargarCorreos(ntramite)
-{
-    debug('>_p3_idInputCorreo');
-    Ext.Ajax.request(
-    {
-        url     : _GLOBAL_RECUPERA_CORREO
-        ,params :
-        {
-            'smap1.ntramite'    : ntramite
-        }
-        ,success : function(response) {
-            var json = Ext.decode(response.responseText);
-            debug('### json cargarCorreos:',json);
-            
-            if(json.exito)
-            {
-            	  debug('>_p3_idInputCorreo 1 ', json.respuesta);
-            	  _fieldById('_p3_idInputCorreo').setValue(json.respuesta);
-            }
-            else{
-            	  debug('>_p3_idInputCorreo 2');
-            }
-         }
-         ,failure : function(){
-         	me.setLoading(false);
-            errorComunicacion();
-         }
-    })
-}
-
-function _p3_enviar(ntramite
-                    ,nomArchivo)
-{
-    debug('>_p28_enviar');
-    
-    centrarVentanaInterna(Ext.create('Ext.window.Window',
-    {
-        title        : 'Enviar cotizaci&oacute;n'
-        ,width       : 550
-        ,modal       : true
-        ,height      : 150
-        ,buttonAlign : 'center'
-        ,bodyPadding : 5
-        ,items       :
-        [
-            {
-                xtype       : 'textfield'
-                ,itemId     : '_p3_idInputCorreo'
-                ,id         : '_p3_idInputCorreos'
-                ,fieldLabel : 'Correo(s)'
-                ,emptyText  : 'Correo(s) separados por ;'
-                ,labelWidth : 100
-                ,allowBlank : false
-                ,blankText  : 'Introducir correo(s) separados por ;'
-                ,width      : 500
-                ,listeners  : {
-                	boxready : function(){
-                		
-                		debug('Saliendo de la funcion ', _fieldById('_p3_idInputCorreo').getValue());
-                	}
-                }		
-                	
-            }
-        ]
-        ,buttons :
-        [
-            {
-                text     : 'Enviar'
-                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                ,handler : function()
-                {
-                    var me = this;
-                    if (_fieldById('_p3_idInputCorreo').getValue().length > 0
-                            &&_fieldById('_p3_idInputCorreo').getValue() != 'Correo(s) separados por ;')
-                    {
-                        debug('Se va a enviar cotizacion');
-                        //me.up().up().setLoading(true);
-                        
-                        envioCorreo(_RUTA_DOCUMENTOS_TEMPORAL
-				                    ,ntramite
-				                    ,nomArchivo
-				                    ,_fieldById('_p3_idInputCorreo').getValue());
-				                    
-				        //
-				        this.up().up().destroy();
-                        
-                    }
-                    else
-                    {
-                        mensajeWarning('Introduzca al menos un correo');
-                    }
-                }
-            }
-            ,{
-                text     : 'Cancelar'
-                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                ,handler : function()
-                {
-                    this.up().up().destroy();
-                }
-            }
-        ]
-    }).show());
-    _fieldById('_p3_idInputCorreo').focus();
-    debug('<_p3_enviar');
-}       
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="maindivAmpVig" style="height:1000px;"></div>
