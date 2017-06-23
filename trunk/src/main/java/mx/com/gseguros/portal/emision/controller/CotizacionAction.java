@@ -3589,6 +3589,43 @@ public class CotizacionAction extends PrincipalCoreAction
 				smap1.putAll(resp.getSmap());
 				imap=resp.getImap();
 				
+				try
+				{
+					Map<String, String> datosClona = consultasManager.cargarDatosClonacion(smap1.get("ntramite"));
+					
+					smap1.put("esClonado", datosClona.get("SWTRACLON"));
+					smap1.put("censoCloCargado" , datosClona.get("SWCARCEN"));
+					
+					boolean esTipoRenovTramOrig = false;
+					boolean esTipoNuevoTramNvo  = true;
+					boolean cargaCensoRenovNuvo = false;
+					
+					if(TipoTramite.RENOVACION.getCdtiptra().equalsIgnoreCase(datosClona.get("CDTIPTRA"))){
+						esTipoNuevoTramNvo = false;
+					}
+					
+					if(TipoTramite.RENOVACION.getCdtiptra().equalsIgnoreCase(datosClona.get("CDTIPTRAORG"))){
+						esTipoRenovTramOrig = true;
+					}
+					
+					if(esTipoRenovTramOrig && esTipoNuevoTramNvo){
+						cargaCensoRenovNuvo = true;
+					}
+					
+					smap1.put("cambiaTamTramClon"  , datosClona.get("SWCAMTAMCEN"));// para validar que se cargue el censo nuevamente
+					smap1.put("cargaCensoRenovNuvo", cargaCensoRenovNuvo? Constantes.SI : Constantes.NO);//para validar que si el tramite original era poliza nueva se cargue el censo nuevamente 
+					
+					logger.debug(">>> El tramite es clonado::: "+ datosClona.get("SWTRACLON"));
+					logger.debug(">>> El tramite tiene cargado el censo de clonar ::: "+datosClona.get("SWCARCEN"));
+					logger.debug(">>> El tramite Cambio de numero de asegurados ::: "+datosClona.get("SWCAMTAMCEN"));
+					logger.debug(">>> El tramite Orig es renovacion y ahora poliza nueva ::: "+(cargaCensoRenovNuvo? Constantes.SI : Constantes.NO));
+				}
+				catch(Exception ex)
+				{
+					logger.error("Error sin impacto funcional al recuperar codigos clonacion",ex);
+				}
+				
+				
 				result = SUCCESS;
 			}
 			catch(Exception ex)
@@ -3954,7 +3991,43 @@ public class CotizacionAction extends PrincipalCoreAction
 					smap1.put("customCode" , "/* error */");
 					logger.error("Error sin impacto funcional al recuperar codigo custom",ex);
 				}
-				
+
+				try
+				{
+					Map<String, String> datosClona = consultasManager.cargarDatosClonacion(smap1.get("ntramite"));
+					
+					smap1.put("esClonado", datosClona.get("SWTRACLON"));
+					smap1.put("censoCloCargado" , datosClona.get("SWCARCEN"));
+					
+					boolean esTipoRenovTramOrig = false;
+					boolean esTipoNuevoTramNvo  = true;
+					boolean cargaCensoRenovNuvo = false;
+					
+					if(TipoTramite.RENOVACION.getCdtiptra().equalsIgnoreCase(datosClona.get("CDTIPTRA"))){
+						esTipoNuevoTramNvo = false;
+					}
+					
+					if(TipoTramite.RENOVACION.getCdtiptra().equalsIgnoreCase(datosClona.get("CDTIPTRAORG"))){
+						esTipoRenovTramOrig = true;
+					}
+					
+					if(esTipoRenovTramOrig && esTipoNuevoTramNvo){
+						cargaCensoRenovNuvo = true;
+					}
+					
+					smap1.put("cambiaTamTramClon"  , datosClona.get("SWCAMTAMCEN"));// para validar que se cargue el censo nuevamente
+					smap1.put("cargaCensoRenovNuvo", cargaCensoRenovNuvo? Constantes.SI : Constantes.NO);//para validar que si el tramite original era poliza nueva se cargue el censo nuevamente 
+					
+					logger.debug(">>> El tramite es clonado::: "+ datosClona.get("SWTRACLON"));
+					logger.debug(">>> El tramite tiene cargado el censo de clonar ::: "+datosClona.get("SWCARCEN"));
+					logger.debug(">>> El tramite Cambio de numero de asegurados ::: "+datosClona.get("SWCAMTAMCEN"));
+					logger.debug(">>> El tramite Orig es renovacion y ahora poliza nueva ::: "+(cargaCensoRenovNuvo? Constantes.SI : Constantes.NO));
+				}
+				catch(Exception ex)
+				{
+					logger.error("Error sin impacto funcional al recuperar codigos clonacion",ex);
+				}
+
 				/////////////////
 				result = SUCCESS;
 			}
@@ -7361,6 +7434,16 @@ public class CotizacionAction extends PrincipalCoreAction
 			asincrono = StringUtils.isNotBlank(smap1.get("asincrono"))&&smap1.get("asincrono").equalsIgnoreCase("si");
 			
 			duplicar = "S".equals(smap1.get("duplicar"));
+			
+			String esTramiteClonado = smap1.get("esTramiteClonado");
+			String censoCloCargado  = smap1.get("censoCloCargado");
+			
+			if(StringUtils.isNotBlank(ntramite) && StringUtils.isNotBlank(nombreCensoConfirmado)
+					&& StringUtils.isNotBlank(esTramiteClonado) && StringUtils.isNotBlank(censoCloCargado)){
+				if(Constantes.SI.equalsIgnoreCase(esTramiteClonado) && Constantes.NO.equalsIgnoreCase(censoCloCargado)){
+					cotizacionManager.censoTramiteClonadoCargado(ntramite);
+				}
+			}
 		}
 		catch(ApplicationException ax)
 		{
@@ -7508,6 +7591,15 @@ public class CotizacionAction extends PrincipalCoreAction
 			censo = new File(this.rutaDocumentosTemporal+"/censo_"+inTimestamp);
 			
 			String nombreCensoConfirmado = smap1.get("nombreCensoConfirmado");
+			String esTramiteClonado = smap1.get("esTramiteClonado");
+			String censoCloCargado  = smap1.get("censoCloCargado");
+			
+			if(StringUtils.isNotBlank(ntramite) && StringUtils.isNotBlank(nombreCensoConfirmado)
+					&& StringUtils.isNotBlank(esTramiteClonado) && StringUtils.isNotBlank(censoCloCargado)){
+				if(Constantes.SI.equalsIgnoreCase(esTramiteClonado) && Constantes.NO.equalsIgnoreCase(censoCloCargado)){
+					cotizacionManager.censoTramiteClonadoCargado(ntramite);
+				}
+			}
 			
 			boolean asincrono = StringUtils.isNotBlank(smap1.get("asincrono"))&&smap1.get("asincrono").equalsIgnoreCase("si");
 			
@@ -8237,11 +8329,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					if(clasif.equals(LINEA)&&nSituac>49)
 					{
-						//se condiciona por rol lanzar la excepcion, para que guarde las coberturas sin necesidad de editar subgrupo, para roles restringidos (EGS)
-						if(!(RolSistema.AGENTE.getCdsisrol().equals(cdsisrol) || RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol) || RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
-								&&TipoSituacion.RECUPERA_COLECTIVO.getCdtipsit().equals(cdtipsit)){
-							throw new ApplicationException("No se permiten m\u00e1s de 49 asegurados");
-						}
+						throw new ApplicationException("No se permiten m\u00e1s de 49 asegurados");
 					}
 					else if(!clasif.equals(LINEA)&&nSituac<50)
 					{
@@ -10149,7 +10237,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		catch(Exception ex)
 		{
 			long timestamp=System.currentTimeMillis();
-			logger.error("Error al cargar datos de aprobacion de cambio de nombre de plan."+timestamp,ex);
+			logger.error("Error al cargar datos de tipo de vigencia exacta mayor o menor aun anio."+timestamp,ex);
 			exito           = false;
 			respuesta       = "Error inesperado #"+timestamp;
 			respuestaOculta = ex.getMessage();

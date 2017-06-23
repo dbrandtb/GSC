@@ -264,4 +264,6 @@ public interface CatalogosManager {
 	public List<GenericVO> obtieneComentariosNegocio(String cdramo, String cdtipsit, String negocio) throws Exception;
 
     public List<GenericVO> recuperarTiposEndosoPorTramite (String ntramite) throws Exception;
+
+	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception;
 }

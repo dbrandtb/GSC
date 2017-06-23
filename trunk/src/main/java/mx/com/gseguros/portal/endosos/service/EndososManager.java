@@ -173,7 +173,10 @@ public interface EndososManager
 			,String fecha
 			,String cdusuario
 			,String newcdunieco
-			,String tipoClonacion) throws Exception;
+			,String tipoTramite
+			,String nuevoTipoTramite
+			,String tipoClonacion
+			,String tamanioTramite) throws Exception;
 	
 	public boolean clonaGruposReexp(
 			String cdunieco
@@ -642,7 +645,7 @@ public interface EndososManager
 	
 	public Map<String,Item> cargaInfoPantallaClonacion() throws Exception;
 	
-	public List<Map<String, String>> buscarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari) throws Exception;
+	public List<Map<String, String>> buscarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari, String cdagente, String contratante) throws Exception;
 	
 	public Map<String,Object> procesarCensoClonacion(
 			String cdunieco,
@@ -690,4 +693,6 @@ public interface EndososManager
             ,String nmpoliza
             ,String nmsuplem
             )throws Exception;
+	
+	public Map<String, String> obtieneDetalleTramiteClonar(Map<String, String> params) throws Exception;
 }

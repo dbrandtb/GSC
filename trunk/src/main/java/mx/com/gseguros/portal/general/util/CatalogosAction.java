@@ -209,6 +209,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case MC_ESTATUS_TRAMITE:
 					lista = catalogosManager.obtieneStatusTramite(params);
 					break;
+				case MC_ESTATUS_TRAMITE_EMI_RENOV:
+					lista = catalogosManager.obtieneTiposTramiteClonacion();
+					break;
 				case TATRISIT:
 					//lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					//para contemplar atributos situacion por rol (EGS)

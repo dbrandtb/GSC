@@ -719,4 +719,8 @@ public interface ConsultasDAO
 			,String cdusuari
 			,String cdunieco
 			)throws Exception;
+
+	public Map<String, String> cargarDatosClonacion(String ntramite) throws Exception;
+
+	public String obtienePermisoEdicionClonacion(String cdsisrol) throws Exception;
 }

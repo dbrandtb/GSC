@@ -226,4 +226,8 @@ public interface ConsultasManager
 			throws Exception;
 
 	public boolean esDxn(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
+
+	public Map<String, String> cargarDatosClonacion(String nmtramite) throws Exception;
+
+	public String obtienePermisoEdicionClonacion(String cdsisrol) throws Exception;
 }

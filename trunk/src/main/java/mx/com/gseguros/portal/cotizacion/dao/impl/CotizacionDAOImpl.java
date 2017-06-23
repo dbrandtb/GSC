@@ -420,6 +420,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 					,"nmpolant"
 					,"nmrenova"
 					,"nmorddom"
+					,"ofna"
+					,"swtraclon"
 				};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -478,6 +480,8 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			,"nmrenova"
 			,"nmorddom"
 			,"numcontrato"
+			,"ofna"
+			,"swtraclon"
 		};
 		
 		protected CargarDatosCotizacionGrupo(DataSource dataSource)
@@ -882,6 +886,29 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			super(dataSource,"PKG_CONSULTA.P_GET_NOMBRE_AGENTE_TRAMITE");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nombre_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public void censoTramiteClonadoCargado(String ntramite)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("ntramite",ntramite);
+		params.put("pv_swcarcen_i", Constantes.SI);
+		
+		ejecutaSP(new CensoTramiteClonadoCargado(getDataSource()), params);
+	}
+	
+	protected class CensoTramiteClonadoCargado extends StoredProcedure
+	{
+		protected CensoTramiteClonadoCargado(DataSource dataSource)
+		{
+			super(dataSource,"P_ACT_EDOCENSO");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swcarcen_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();

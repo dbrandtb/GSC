@@ -286,6 +286,25 @@ var listaSinPadre = [];
 
 var _cotcol_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 debug('_cotcol_flujo:', _cotcol_flujo, '.');
+
+var esTramiteClonado = (!Ext.isEmpty(_p25_smap1.esClonado) && ("S" == _p25_smap1.esClonado || "s" == _p25_smap1.esClonado) )? true:false ;
+var censoCloCargado  = (!Ext.isEmpty(_p25_smap1.censoCloCargado) && ("S" == _p25_smap1.censoCloCargado || "s" == _p25_smap1.censoCloCargado) )? true:false ;
+var cambiaTamTramClon   = (!Ext.isEmpty(_p25_smap1.cambiaTamTramClon) && ("S" == _p25_smap1.cambiaTamTramClon || "s" == _p25_smap1.cambiaTamTramClon) )? true:false ;
+var cargaCensoRenovNuvo = (!Ext.isEmpty(_p25_smap1.cargaCensoRenovNuvo) && ("S" == _p25_smap1.cargaCensoRenovNuvo || "s" == _p25_smap1.cargaCensoRenovNuvo) )? true:false ;
+
+var forzaCambiaCensoClon = (cambiaTamTramClon||cargaCensoRenovNuvo)? true : false;
+
+var cveDesSucursal = '';
+
+
+//esTramiteClonado = true;
+//censoCloCargado =  false;
+//forzaCambiaCensoClon = true;
+
+alert('esTramiteClonado: '+esTramiteClonado);
+alert('censoCloCargado: '+censoCloCargado);
+alert('forzaCambiaCensoClon: '+forzaCambiaCensoClon);
+
 ////// variables //////
 
 Ext.onReady(function()
@@ -527,6 +546,17 @@ Ext.onReady(function()
             ,handler : _p25_borrarGrupoClic
         });
     }
+    
+    if(_p25_ntramite && esTramiteClonado && !censoCloCargado)
+    {
+        botoneslinea.push(
+        {
+            tooltip  : 'Borrar subgrupo'
+            ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+            ,handler : _p25_borrarGrupoClic
+        });
+    }
+    
     /*if(_p25_smap1.ASEGURADOS=='S')
     {
         botoneslinea.push(
@@ -598,6 +628,7 @@ Ext.onReady(function()
                 {
                     text     : 'Agregar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+                    ,itemId    : '_p25_btnAgregarGrupoLineal'
                     ,handler : _p25_agregarGrupoClic
                     ,hidden  : _p25_ntramite && _cotcol_smap1.modificarTodo === false ? true : false
                 }
@@ -620,7 +651,7 @@ Ext.onReady(function()
                             !_p25_ntramite||_p25_ntramiteVacio||(!Ext.isEmpty(_p25_smap1.sincenso)&&_p25_smap1.sincenso=='S')
                         ))
                         {
-                            if (_cotcol_smap1.modificarTodo === false) {
+                            if (_cotcol_smap1.modificarTodo === false && (esTramiteClonado && !censoCloCargado) === false) {
                                 if ([
                                         RolSistema.SuscriptorTecnico,
                                         RolSistema.SupervisorTecnico,
@@ -697,7 +728,21 @@ Ext.onReady(function()
                     _p25_setActiveConcepto();
                 }
             }
-        ]
+        ],
+        listeners: {
+        	show: function(grd){
+        		if(_p25_ntramite && esTramiteClonado && !censoCloCargado){
+        			var btnAgrClonar = _p25_query('#_p25_btnAgregarGrupoLineal')[0];
+        			btnAgrClonar.show();
+
+        			setTimeout(function(){
+        				if(grd.isVisible()){
+            				mensajeInfo('Si agrega o elimina Grupos para este Tr&aacute;mite Clonado debe volver a cargar el censo con las nuevas caracter&iacute;sticas.');
+            			}
+				    },750);
+        		}
+        	}
+        }
     };
     
     _p25_tabGruposModifiCols =
@@ -767,6 +812,17 @@ Ext.onReady(function()
             ,handler  : _p25_borrarGrupoClic
         });
     }
+    
+    if(_p25_ntramite && esTramiteClonado && !censoCloCargado)
+    {
+        botonesModificada.push(
+        {
+            tooltip   : 'Borrar subgrupo'
+            ,icon     : '${ctx}/resources/fam3icons/icons/delete.png'
+            ,handler  : _p25_borrarGrupoClic
+        });
+    }
+    
     /*if(_p25_smap1.ASEGURADOS=='S')
     {
         botonesModificada.push(
@@ -808,6 +864,7 @@ Ext.onReady(function()
                 {
                     text     : 'Agregar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+                    ,itemId    : '_p25_btnAgregarGrupoModifi'
                     ,handler : _p25_agregarGrupoClic
                     ,hidden  : _p25_ntramite && _cotcol_smap1.modificarTodo === false ? true : false
                 }
@@ -830,7 +887,7 @@ Ext.onReady(function()
                             !_p25_ntramite||_p25_ntramiteVacio||(!Ext.isEmpty(_p25_smap1.sincenso)&&_p25_smap1.sincenso=='S')
                         ))
                         {
-                            if (_cotcol_smap1.modificarTodo === false) {
+                            if (_cotcol_smap1.modificarTodo === false && (esTramiteClonado && !censoCloCargado) === false) {
                                 if ([
                                         RolSistema.SuscriptorTecnico,
                                         RolSistema.SupervisorTecnico,
@@ -905,7 +962,21 @@ Ext.onReady(function()
                 	_p25_setActiveConcepto();
 				}
             }
-        ]
+        ],
+        listeners: {
+        	show: function(grd){
+        		if(_p25_ntramite && esTramiteClonado && !censoCloCargado){
+        			var btnAgrClonar = _p25_query('#_p25_btnAgregarGrupoModifi')[0];
+        			btnAgrClonar.show();
+        			
+        			setTimeout(function(){
+        				if(grd.isVisible()){
+            				mensajeInfo('Si agrega o elimina Grupos para este Tr&aacute;mite Clonado debe volver a cargar el censo con las nuevas caracter&iacute;sticas.');
+            			}
+				    },750);
+        		}
+        	}
+        }
     };
     ////// componentes //////
     
@@ -1087,6 +1158,13 @@ Ext.onReady(function()
                                         ,labelWidth : 250
                                         ,value      : 'Cargando...'
                                     })
+                                    ,Ext.create('Ext.form.field.Text',
+                            		{
+                                    	fieldLabel : 'SUCURSAL'
+                                    	,itemId    : '_p25_fieldDSSUCURSAL'
+                            			,readOnly  : true
+                            			,name      : 'dssucursal'
+                            		})
                                     ,Ext.create('Ext.form.field.Number',
                                     {
                                         fieldLabel : 'TR&Aacute;MITE'
@@ -1196,10 +1274,42 @@ Ext.onReady(function()
                                         ,handler : _p25_construirModificada
                                     }
                                 ]
-                            }
+                            },
+                            {
+                            	xtype     : 'fieldset'
+                                ,title    : '<span style="font:bold 14px Calibri;">CENSO DE TR&Aacute;MITE CLONADO</span>'
+                                ,defaults : { style : 'margin: 12px;' }
+                                ,hidden   : !_p25_ntramite || !esTramiteClonado || censoCloCargado
+                                ,items    :
+                                [{
+                                	xtype: 'button',
+                                	text : 'Remplazar Censo de Tr&aacute;mite Clonado',
+                                	handler: function(){
+                                		_p25_smap1.sincenso = 'S';
+                                		var fieldCensOrig = _p_25_panelPrincipal.down('#fieldsetCensoOrig');
+                                		fieldCensOrig.show();
+                                		_fieldByName('censo').allowBlank = false;
+                                	},
+                                    listeners: {
+                                    	render: function(){
+                                    		
+                                    		if(esTramiteClonado && forzaCambiaCensoClon && !censoCloCargado){
+                                        		_p25_smap1.sincenso = 'S';
+                                        		var fieldCensOrig = _p_25_panelPrincipal.down('#fieldsetCensoOrig');
+                                        		fieldCensOrig.show();
+                                        		_fieldByName('censo').allowBlank = false;
+//                                        		setTimeout(function(){
+//                                        			mensajeInfo('Para &eacute;ste tr&aacute;mite debe volver a cagar el censo.');
+//                            				    },2000);
+                                    		}
+                                    	}
+                                    }
+                                }]
+                           }
                             ,{
                                 xtype     : 'fieldset'
                                 ,title    : '<span style="font:bold 14px Calibri;">CENSO</span>'
+                                ,itemId   : 'fieldsetCensoOrig'
                                 ,defaults : { style : 'margin:5px;' }
                                 ,hidden   : _p25_ntramite&&_p25_smap1.sincenso!='S' && _cotcol_smap1.modificarTodo === false ? true : false
                                 ,items    :
@@ -2058,6 +2168,7 @@ Ext.onReady(function()
      
     if(_p25_ntramiteVacio)
     {
+    	alert('vacio');
         _fieldByName('ntramite').setValue(_p25_ntramiteVacio);
         _p25_tabpanel().setLoading(true);
         Ext.Ajax.request(
@@ -2111,6 +2222,14 @@ Ext.onReady(function()
                 debug('### cargar cotizacion response:',json);
                 if(json.exito)
                 {
+                	
+                	cveDesSucursal = new String(json.params.ofna);
+                    
+                    delete json.params['ofna'];
+                    delete json.params['swtraclon'];
+                    
+                    _p25_fieldDsSucursal().setValue(cveDesSucursal);
+                	
                     for(var prop in json.params)
                     {
                         if(prop!='cdedo'&&prop!='cdmunici'&&prop!='clasif'&&prop!='swexiper'&&prop!='nmorddom')
@@ -2871,6 +2990,14 @@ function _p25_agregarGrupoClic()
     _p25_storeGrupos.sort('letra','ASC');
     _p25_renombrarGrupos(true);
     _p25_storeGrupos.commitChanges();
+    
+    if(_p25_ntramite && esTramiteClonado && !censoCloCargado){
+    	_p25_smap1.sincenso = 'S';
+		var fieldCensOrig = _p_25_panelPrincipal.down('#fieldsetCensoOrig');
+		fieldCensOrig.show();
+		_fieldByName('censo').allowBlank = false;
+    }
+    
     debug('<_p25_agregarGrupoClic');
 }
 
@@ -3065,9 +3192,16 @@ function _p25_borrarGrupoClic(grid,rowIndex)
     function(button){
         debug('clicked:',button);
         if(button=='yes')
-        {
+        {	
             _p25_storeGrupos.remove(record);
             _p25_renombrarGrupos();
+            
+            if(_p25_ntramite && esTramiteClonado && !censoCloCargado){
+            	_p25_smap1.sincenso = 'S';
+        		var fieldCensOrig = _p_25_panelPrincipal.down('#fieldsetCensoOrig');
+        		fieldCensOrig.show();
+        		_fieldByName('censo').allowBlank = false;
+            }
         }
     }));
     debug('<_p25_borrarGrupoClic');
@@ -4230,6 +4364,8 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
             conceptos['resubirCenso']          = _p25_resubirCenso;
             conceptos['complemento']           = true==complemento?'S':'N';
             conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
+            conceptos['esTramiteClonado']      = esTramiteClonado? 'S':'N';
+            conceptos['censoCloCargado']       = censoCloCargado?  'S':'N';
             conceptos['asincrono']             = asincrono;
             conceptos['duplicar']              = _cotcol_smap1.modificarTodo === true ? 'S' : 'N';
             
@@ -4274,7 +4410,7 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                     _p25_smap1.ntramite = _p25_ntramiteVacio;
                                     _p25_smap1.nmpoliza = json.smap1.nmpoliza;
                                 }
-                                if((true==revision||_p25_ntramiteVacio)
+                                if((true==revision || _p25_ntramiteVacio || ( esTramiteClonado && !censoCloCargado))
                                     &&!(_p25_ntramite&&_p25_smap1.sincenso!='S')
                                     &&Ext.isEmpty(nombreCensoParaConfirmar)
                                 )
@@ -4490,7 +4626,9 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                         else
                         {
                             _p25_fieldNmpoliza().setValue(json.smap1.nmpoliza);
+                            _p25_fieldDsSucursal().setValue(cveDesSucursal);
                             _p25_fieldNtramite().setValue(json.smap1.ntramite);
+                            
                             _p25_tabpanel().setDisabled(true);
                             
                             if(Ext.isEmpty(nombreCensoParaConfirmar))
@@ -5099,6 +5237,12 @@ function _p25_turnar(status,titulo,closable)
     }).show();
     centrarVentanaInterna(ventana);
     debug('<_p25_turnar');
+}
+
+function _p25_fieldDsSucursal()
+{
+    debug('>_p25_fieldDsSucursal<');
+    return _p25_query('#_p25_fieldDSSUCURSAL')[0];
 }
 
 function _p25_reload(json,status,nmpoliza)

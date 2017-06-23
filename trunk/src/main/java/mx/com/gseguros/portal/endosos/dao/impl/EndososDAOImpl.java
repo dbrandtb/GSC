@@ -1161,9 +1161,70 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_feinival_i" , OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_cduser_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco_new_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtiptra_org_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtiptra_nvo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_tipo_clonacion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtamtra_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmpolnew_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public Map<String, String> obtieneDetalleTramiteClonar(Map<String, String> params) throws Exception
+	{
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************************")
+				.append("\n****** PKG_CONSULTA2.P_OBTIENE_DETALLE_TRAMITE  ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************************")
+				.toString()
+				);
+		Map<String,String> mapaRes = new LinkedHashMap<String,String>(0);
+		try{
+			
+			Map<String,Object> result = this.ejecutaSP(new ObtieneDetalleTramiteClonar(this.getDataSource()), params);
+			List<Map<String,String>> lista = (List<Map<String,String>>) result.get("pv_registro_o");
+			
+			 mapaRes = lista.get(0);
+			
+		}catch(Exception e){
+			logger.error("Error", e);
+		}
+		return mapaRes;
+	}
+	
+	protected class ObtieneDetalleTramiteClonar extends StoredProcedure
+	{
+		
+		String[] columnas=new String[]{
+				"NTRAMITE" 
+	            ,"CDUNIECO"
+	            ,"DSUNIECO"
+	            ,"CONTRATANTE"
+	            ,"CDRAMO"
+	            ,"DSRAMO"
+	            ,"CDTIPSIT"
+	            ,"DSTIPSIT"
+	            ,"PLAN"
+	            ,"VIGENCIA"
+	            ,"DSESTATUS"
+	            ,"FECSTATUS"
+	            ,"AGENTE"
+	            ,"DSTIPTRA"
+	            ,"CDTIPTRA"
+	            ,"CDTAMTRA"
+		};
+		
+		protected ObtieneDetalleTramiteClonar(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA2.P_OBTIENE_DETALLE_TRAMITE");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(columnas)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
@@ -4731,10 +4792,11 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			String ntramite, 
 			String status, 
 			String fecini, 
-			String fecfin, 
+			String fecfin, 	
 			String cdsisrol, 
 			String cdusuari, 
-			String cdagente) throws Exception
+			String cdagente,
+			String contratante) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -4751,6 +4813,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 				,"\n@@@@@@ cdsisrol=",cdsisrol 
 				,"\n@@@@@@ cdusuari=",cdusuari
 				,"\n@@@@@@ cdagente=",cdagente
+				,"\n@@@@@@ contratante=",contratante
 				));	
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("pv_cdunieco_i" 		   , cdunieco);
@@ -4775,6 +4838,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("pv_tipolote_i"         , null);
 		params.put("pv_tipoimpresion_i"    , null);
 		params.put("pv_cdusuari_busqueda_i", null);
+		params.put("pv_contratante_i"      , contratante);
 		Map<String,Object>       procRes    = ejecutaSP(new RecuperarCotizaciones(getDataSource()),params);
 		List<Map<String,String>> listaMapas = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		logger.debug(Utils.log(
@@ -4816,6 +4880,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_tipolote_i"         , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_tipoimpresion_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdusuari_busqueda_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_contratante_i"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"ntramite","cdunieco","cdsubram","estado","ferecepc","fecstatu","nmpoliza","nmsolici","status","Nombre_agente","CONTRATANTE","cdramo","tipoflot","cdtipsit"})));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

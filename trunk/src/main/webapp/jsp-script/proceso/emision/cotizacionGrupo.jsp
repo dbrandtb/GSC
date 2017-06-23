@@ -313,6 +313,25 @@ var _cotcol_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="fa
 debug('_cotcol_flujo:', _cotcol_flujo, '.');
 
 var listaSinPadre = [];
+
+var esTramiteClonado = (!Ext.isEmpty(_p21_smap1.esClonado) && ("S" == _p21_smap1.esClonado || "s" == _p21_smap1.esClonado) )? true:false ;
+var censoCloCargado  = (!Ext.isEmpty(_p21_smap1.censoCloCargado) && ("S" == _p21_smap1.censoCloCargado || "s" == _p21_smap1.censoCloCargado) )? true:false ;
+var cambiaTamTramClon   = (!Ext.isEmpty(_p21_smap1.cambiaTamTramClon) && ("S" == _p21_smap1.cambiaTamTramClon || "s" == _p21_smap1.cambiaTamTramClon) )? true:false ;
+var cargaCensoRenovNuvo = (!Ext.isEmpty(_p21_smap1.cargaCensoRenovNuvo) && ("S" == _p21_smap1.cargaCensoRenovNuvo || "s" == _p21_smap1.cargaCensoRenovNuvo) )? true:false ;
+
+var forzaCambiaCensoClon = (cambiaTamTramClon||cargaCensoRenovNuvo)? true : false;
+
+var cveDesSucursal = '';
+
+
+//esTramiteClonado = true;
+//censoCloCargado =  false;
+//forzaCambiaCensoClon = true;
+
+alert('esTramiteClonado: '+esTramiteClonado);
+alert('censoCloCargado: '+censoCloCargado);
+alert('forzaCambiaCensoClon: '+forzaCambiaCensoClon);
+
 ////// variables //////
 
 Ext.onReady(function()
@@ -490,6 +509,17 @@ Ext.onReady(function()
             ,handler : _p21_borrarGrupoClic
         });
     }
+
+    if(_p21_ntramite && esTramiteClonado && !censoCloCargado)
+    {
+    	botoneslinea.push(
+    			{
+    				tooltip  : 'Borrar subgrupo'
+    					,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+    						,handler : _p21_borrarGrupoClic
+    			});
+    }
+    
     if(_p21_smap1.ASEGURADOS=='S')
     {
         botoneslinea.push(
@@ -513,6 +543,7 @@ Ext.onReady(function()
                 {
                     text     : 'Agregar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+                    ,itemId    : '_p21_btnAgregarGrupoLineal'
                     ,handler : _p21_agregarGrupoClic
                     ,hidden  : _p21_ntramite && _cotcol_smap1.modificarTodo === false ? true : false
                 }
@@ -635,7 +666,7 @@ Ext.onReady(function()
                             !_p21_ntramite||_p21_ntramiteVacio||(!Ext.isEmpty(_p21_smap1.sincenso)&&_p21_smap1.sincenso=='S')
                         ))
                         {
-                            if (_cotcol_smap1.modificarTodo === false) {
+                            if (_cotcol_smap1.modificarTodo === false && (esTramiteClonado && !censoCloCargado) === false) {
                                 if ([
                                         RolSistema.SuscriptorTecnico,
                                         RolSistema.SupervisorTecnico,
@@ -675,7 +706,21 @@ Ext.onReady(function()
                     _p21_setActiveConcepto();
                 }
             }
-        ]
+        ],
+        listeners: {
+        	show: function(grd){
+        		if(_p21_ntramite && esTramiteClonado && !censoCloCargado){
+        			var btnAgrClonar = _p21_query('#_p21_btnAgregarGrupoLineal')[0];
+        			btnAgrClonar.show();
+
+        			setTimeout(function(){
+        				if(grd.isVisible()){
+            				mensajeInfo('Si agrega o elimina Grupos para este Tr&aacute;mite Clonado debe volver a cargar el censo con las nuevas caracter&iacute;sticas.');
+            			}
+				    },750);
+        		}
+        	}
+        }
     };
     
     var botonesModificada =
@@ -695,6 +740,16 @@ Ext.onReady(function()
             ,handler  : _p21_borrarGrupoClic
         });
     }
+    if(_p21_ntramite && esTramiteClonado && !censoCloCargado)
+    {
+    	botonesModificada.push(
+    			{
+    				tooltip   : 'Borrar subgrupo'
+    					,icon     : '${ctx}/resources/fam3icons/icons/delete.png'
+    						,handler  : _p21_borrarGrupoClic
+    			});
+    }
+    
     if(_p21_smap1.ASEGURADOS=='S')
     {
         botonesModificada.push(
@@ -718,6 +773,7 @@ Ext.onReady(function()
                 {
                     text     : 'Agregar'
                     ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+                    ,itemId    : '_p21_btnAgregarGrupoModifi'
                     ,handler : _p21_agregarGrupoClic
                     ,hidden  : _p21_ntramite && _cotcol_smap1.modificarTodo === false ? true : false
                 }
@@ -800,7 +856,7 @@ Ext.onReady(function()
                             !_p21_ntramite||_p21_ntramiteVacio||(!Ext.isEmpty(_p21_smap1.sincenso)&&_p21_smap1.sincenso=='S')
                         ))
                         {
-                            if (_cotcol_smap1.modificarTodo === false) {
+                            if (_cotcol_smap1.modificarTodo === false && (esTramiteClonado && !censoCloCargado) === false) {
                                 if ([
                                         RolSistema.SuscriptorTecnico,
                                         RolSistema.SupervisorTecnico,
@@ -839,7 +895,21 @@ Ext.onReady(function()
                     _p21_setActiveConcepto();
                 }
             }
-        ]
+        ],
+        listeners: {
+        	show: function(grd){
+        		if(_p21_ntramite && esTramiteClonado && !censoCloCargado){
+        			var btnAgrClonar = _p21_query('#_p21_btnAgregarGrupoModifi')[0];
+        			btnAgrClonar.show();
+        			
+        			setTimeout(function(){
+        				if(grd.isVisible()){
+            				mensajeInfo('Si agrega o elimina Grupos para este Tr&aacute;mite Clonado debe volver a cargar el censo con las nuevas caracter&iacute;sticas.');
+            			}
+				    },750);
+        		}
+        	}
+        }
     };
     ////// componentes //////
     
@@ -1034,6 +1104,13 @@ Ext.onReady(function()
                                         ,labelWidth : 250
                                         ,value      : 'Cargando...'
                                     })
+                                    ,Ext.create('Ext.form.field.Text',
+                            		{
+                                    	fieldLabel : 'SUCURSAL'
+                                    	,itemId    : '_p21_fieldDSSUCURSAL'
+                            			,readOnly  : true
+                            			,name      : 'dssucursal'
+                            		})
                                     ,Ext.create('Ext.form.field.Number',
                                     {
                                         fieldLabel : 'TR&Aacute;MITE'
@@ -1144,10 +1221,42 @@ Ext.onReady(function()
                                         ,handler : _p21_construirModificada
                                     }
                                 ]
-                            }
+                            },
+                            {
+                                	xtype     : 'fieldset'
+                                    ,title    : '<span style="font:bold 14px Calibri;">CENSO DE TR&Aacute;MITE CLONADO</span>'
+                                    ,defaults : { style : 'margin: 12px;' }
+                                    ,hidden   : !_p21_ntramite || !esTramiteClonado || censoCloCargado
+                                    ,items    :
+                                    [{
+                                    	xtype: 'button',
+                                    	text : 'Remplazar Censo de Tr&aacute;mite Clonado',
+                                    	handler: function(){
+                                    		_p21_smap1.sincenso = 'S';
+                                    		var fieldCensOrig = _p_21_panelPrincipal.down('#fieldsetCensoOrig');
+                                    		fieldCensOrig.show();
+                                    		_fieldByName('censo').allowBlank = false;
+                                    	},
+                                        listeners: {
+                                        	render: function(){
+                                        		
+                                        		if(esTramiteClonado && forzaCambiaCensoClon && !censoCloCargado){
+                                            		_p21_smap1.sincenso = 'S';
+                                            		var fieldCensOrig = _p_21_panelPrincipal.down('#fieldsetCensoOrig');
+                                            		fieldCensOrig.show();
+                                            		_fieldByName('censo').allowBlank = false;
+//                                            		setTimeout(function(){
+//                                            			mensajeInfo('Para &eacute;ste tr&aacute;mite debe volver a cagar el censo.');
+//                                				    },2000);
+                                        		}
+                                        	}
+                                        }
+                                    }]
+                               }
                             ,{
                                 xtype     : 'fieldset'
                                 ,title    : '<span style="font:bold 14px Calibri;">CENSO</span>'
+                                ,itemId   : 'fieldsetCensoOrig'
                                 ,defaults : { style : 'margin:5px;' }
                                 ,hidden   : _p21_ntramite&&_p21_smap1.sincenso!='S' && _cotcol_smap1.modificarTodo === false ? true : false
                                 ,items    :
@@ -1658,6 +1767,7 @@ Ext.onReady(function()
     
     if(_p21_ntramiteVacio)
     {
+    	alert('vacio');
         _fieldByName('ntramite').setValue(_p21_ntramiteVacio);
         _p21_tabpanel().setLoading(true);
         Ext.Ajax.request(
@@ -1709,6 +1819,13 @@ Ext.onReady(function()
                     _vigPolizaAnualValida   = ( !Ext.isEmpty(json.smap1) && !Ext.isEmpty(json.smap1.TIEMPO_VIGENCIA_POLIZA) && "ANUAL" == json.smap1.TIEMPO_VIGENCIA_POLIZA)? true : false;
                         
                     //alert('falta aprobar:' + _faltaAprobarNombrePlan);
+                    
+                    cveDesSucursal = new String(json.params.ofna);
+                    
+                    delete json.params['ofna'];
+                    delete json.params['swtraclon'];
+                    
+                    _p21_fieldDsSucursal().setValue(cveDesSucursal);
                     
                     for(var prop in json.params)
                     {
@@ -2321,6 +2438,14 @@ function _p21_agregarGrupoClic()
     _p21_storeGrupos.sort('letra','ASC');
     _p21_renombrarGrupos(true);
     _p21_storeGrupos.commitChanges();
+    
+    if(_p21_ntramite && esTramiteClonado && !censoCloCargado){
+    	_p21_smap1.sincenso = 'S';
+		var fieldCensOrig = _p_21_panelPrincipal.down('#fieldsetCensoOrig');
+		fieldCensOrig.show();
+		_fieldByName('censo').allowBlank = false;
+    }
+    
     debug('<_p21_agregarGrupoClic');
 }
 
@@ -2335,6 +2460,13 @@ function _p21_borrarGrupoClic(grid,rowIndex)
         {
             _p21_storeGrupos.remove(record);
             _p21_renombrarGrupos();
+            
+            if(_p21_ntramite && esTramiteClonado && !censoCloCargado){
+            	_p21_smap1.sincenso = 'S';
+        		var fieldCensOrig = _p_21_panelPrincipal.down('#fieldsetCensoOrig');
+        		fieldCensOrig.show();
+        		_fieldByName('censo').allowBlank = false;
+            }
         }
     }));
     debug('<_p21_borrarGrupoClic');
@@ -4089,6 +4221,8 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                 conceptos['resubirCenso']          = _p21_resubirCenso;
                 conceptos['complemento']           = true==complemento?'S':'N';
                 conceptos['nombreCensoConfirmado'] = nombreCensoParaConfirmar;
+                conceptos['esTramiteClonado']      = esTramiteClonado? 'S':'N';
+                conceptos['censoCloCargado']       = censoCloCargado?  'S':'N';
                 conceptos['asincrono']             = asincrono;
                 conceptos['duplicar']              = _cotcol_smap1.modificarTodo === true ? 'S' : 'N';
                 
@@ -4187,7 +4321,8 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                     }
                                     debug('revision:',revision,'_p21_ntramite:',_p21_ntramite,'.');
                                     debug('_p21_smap1.sincenso:',_p21_smap1.sincenso,'.');
-                                    if((true==revision||_p21_ntramiteVacio)
+                                    
+                                    if((true==revision || _p21_ntramiteVacio || ( esTramiteClonado && !censoCloCargado))
                                         &&!(_p21_ntramite&&_p21_smap1.sincenso!='S')
                                         &&Ext.isEmpty(nombreCensoParaConfirmar)
                                     )
@@ -4403,8 +4538,11 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                             else
                             {
                                 _p21_smap1.ntramite = json.smap1.ntramite;
+                                
                                 _p21_fieldNmpoliza().setValue(json.smap1.nmpoliza);
+                                _p21_fieldDsSucursal().setValue(cveDesSucursal);
                                 _p21_fieldNtramite().setValue(json.smap1.ntramite);
+                                
                                 _p21_tabpanel().setDisabled(true);
                                 
                                 if(Ext.isEmpty(nombreCensoParaConfirmar))
@@ -5010,10 +5148,16 @@ function _p21_turnar(status,titulo,closable)
     debug('<_p21_turnar');
 }
 
+function _p21_fieldDsSucursal()
+{
+    debug('>_p21_fieldDsSucursal<');
+    return _p21_query('#_p21_fieldDSSUCURSAL')[0];
+}
+
 function _p21_fieldNtramite()
 {
-    debug('>_p21_fieldNtramite<');
-    return _p21_query('#_p21_fieldNtramite')[0];
+	debug('>_p21_fieldNtramite<');
+	return _p21_query('#_p21_fieldNtramite')[0];
 }
 
 function _p21_fieldNmpoliza()

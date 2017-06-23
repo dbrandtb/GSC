@@ -71,6 +71,8 @@ public interface CotizacionDAO {
 
 	public String cargarNombreAgenteTramite(String ntramite) throws Exception;
 
+	public void censoTramiteClonadoCargado(String ntramite) throws Exception;
+
 	public Map<String, String> cargarPermisosPantallaGrupo(String cdsisrol,
 			String status) throws Exception;
 

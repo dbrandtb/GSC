@@ -716,7 +716,8 @@ public interface EndososDAO
             String fecfin, 
             String cdsisrol, 
             String cdusuari,
-            String cdagente) throws Exception;
+            String cdagente,
+            String contratante) throws Exception;
     
     public void procesarCensoClonacion(
             String nombreProcedure,         
@@ -907,5 +908,7 @@ public interface EndososDAO
     public List<Map<String,String>> obtieneDatosEndCamDescripcion(Map<String, String> params)throws Exception;
     
     public List<Map<String,String>> obtieneDatosEndTipoCarga(Map<String, String> params)throws Exception;
+
+    public Map<String, String> obtieneDetalleTramiteClonar(Map<String, String> params) throws Exception;
     
 }

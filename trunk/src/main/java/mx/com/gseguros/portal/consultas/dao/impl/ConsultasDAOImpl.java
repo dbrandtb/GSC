@@ -6116,5 +6116,70 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String> cargarDatosClonacion(String ntramite) throws Exception
+	{
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		Map<String,Object> procRes = ejecutaSP(new CargarDatosClonacion(getDataSource()),params);
+		
+		List<Map<String,String>> lista  = (List<Map<String,String>>)procRes.get("pv_registro_o");
+		
+		Map<String,String> datos = new HashMap<String,String>();
+		
+		if(lista!=null&&lista.size()==1)
+		{
+			datos = lista.get(0);
+		}
+		
+		logger.debug(Utils.log("datos de demo=",datos));
+		
+		return datos;
+	}
+	
+	protected class CargarDatosClonacion extends StoredProcedure
+	{
+		protected CargarDatosClonacion(DataSource dataSource)
+		{
+			super(dataSource,"P_OBTIENE_TIPO_TRAMITE");
+			
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"SWTRACLON", "SWCARCEN", "SWCAMTAMCEN", "CDTIPTRAORG", "CDTIPTRA","CDTIPSUP"
+			};
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public String obtienePermisoEdicionClonacion(String cdsisrol) throws Exception
+	{
+		String estatus = null;
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("cdsisrol" , cdsisrol);
+		Map<String,Object> procRes = ejecutaSP(new ObtienePermisoEdicionClonacion(getDataSource()),params);
+		
+		estatus =  (String) procRes.get("pv_status_o");
+		
+		return estatus;
+	}
+	
+	protected class ObtienePermisoEdicionClonacion extends StoredProcedure
+	{
+		protected ObtienePermisoEdicionClonacion(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA2.P_VALIDA_ROL_STATUS");
+			
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_status_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
     
 }
