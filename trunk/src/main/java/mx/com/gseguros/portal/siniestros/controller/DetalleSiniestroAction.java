@@ -946,7 +946,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				
 				correcto = siniestrosManager.actualizaEliminaConceptos(paramsResEstudio);
 				if(!correcto){
-					incorrectos.append("-").append(conceptoAct.get("pi_cdconcep_ant")).append("-,");
+					incorrectos.append("-").append(conceptoAct.get("pi_cdconcep")).append("-,");
 				}
 			}
 			
@@ -984,7 +984,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				correcto = siniestrosManager.actualizaEliminaResultadosEstudios(paramsResEstudio);
 				
 				if(!correcto){
-					incorrectos.append("-(").append(resEst.get("pi_cdtabres_ant")).append(",").append(resEst.get("pi_cdresest_ant")).append(")").append("-,");
+					incorrectos.append("-(").append(resEst.get("pi_cdtabres")).append(",").append(resEst.get("pi_cdresest")).append(")").append("-,");
 				}
     		}
     		
@@ -1022,7 +1022,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				correcto = siniestrosManager.actualizaEliminaConfEstudios(paramsResEstudio);
 				
 				if(!correcto){
-					incorrectos.append("-").append(estudioAct.get("pi_cdest_ant")).append("-,");
+					incorrectos.append("-").append(estudioAct.get("pi_cdest")).append("-,");
 				}
     		}
     		

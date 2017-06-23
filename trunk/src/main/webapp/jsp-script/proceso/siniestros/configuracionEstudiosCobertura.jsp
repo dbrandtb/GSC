@@ -93,7 +93,7 @@ Ext.onReady(function()
     {
 		pageSize : 20
         ,model   : 'modelGridConceptos'
-        ,autoLoad  : true
+        ,autoLoad: true
         ,proxy   :
         {
         	type        : 'ajax'
@@ -115,7 +115,7 @@ Ext.onReady(function()
 	var conceptoBusquedaStore = Ext.create('Ext.data.Store',{
 		pageSize : 20
         ,model   : 'modelGridConceptos'
-        ,autoLoad  : true
+        ,autoLoad: true
         ,proxy   :
         {
         	type        : 'ajax'
@@ -132,7 +132,7 @@ Ext.onReady(function()
     {
 		pageSize : 20
         ,model   : 'modelGridResultadosEst'
-        ,autoLoad  : true
+        ,autoLoad: true
         ,proxy   :
         {
         	type        : 'ajax'
@@ -156,7 +156,7 @@ Ext.onReady(function()
     {
 		pageSize : 20
         ,model   : 'modelGridEstudios'
-        ,autoLoad  : true
+        ,autoLoad: true
         ,proxy   :
         {
         	type        : 'ajax'
@@ -179,7 +179,7 @@ Ext.onReady(function()
 	var estudioBusquedaStore = Ext.create('Ext.data.Store',{
 		pageSize : 20
         ,model   : 'modelGridEstudios'
-        ,autoLoad  : true
+        ,autoLoad: true
         ,proxy   :
         {
         	type        : 'ajax'
@@ -196,7 +196,7 @@ Ext.onReady(function()
     {
 		pageSize : 20
         ,model   : 'modelGridConfEstCob'
-        ,autoLoad  : true
+        ,autoLoad: false
         ,proxy   :
         {
         	type        : 'ajax'
@@ -292,7 +292,7 @@ Ext.onReady(function()
                             queryMode     : 'local',
                             store       : Ext.create('Ext.data.Store', {
                                 model : 'Generic',
-                                autoLoad : true,
+                                autoLoad : false,
                                 proxy : {
                                     type : 'ajax',
                                     url : _URL_CARGA_CATALOGO,
@@ -332,7 +332,7 @@ Ext.onReady(function()
                             queryMode     : 'local',
                             store       : Ext.create('Ext.data.Store', {
                                 model : 'Generic',
-                                autoLoad : true,
+                                autoLoad : false,
                                 proxy : {
                                     type : 'ajax',
                                     url : _URL_CARGA_CATALOGO,
@@ -375,7 +375,7 @@ Ext.onReady(function()
                             queryMode     : 'local',
                             store       : Ext.create('Ext.data.Store', {
                                 model : 'Generic',
-                                autoLoad : true,
+                                autoLoad : false,
                                 proxy : {
                                     type : 'ajax',
                                     url : _URL_CARGA_CATALOGO,
@@ -450,7 +450,7 @@ Ext.onReady(function()
                 {
                     xtype: 'gridpanel',
                     height: 310,
-                    title: 'Configuraci&oacute;n de Estudios M&eacute;dicos Por Producto',
+                    title: 'Resultados de B&uacute;queda para Configuraci&oacute;n de Estudios M&eacute;dicos Por Producto',
                     store: contEstCobGridStore,
                     columns: [
                         {
@@ -1175,8 +1175,8 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 queryMode     : 'local',
                 allowBlank: false,
                 store       : Ext.create('Ext.data.Store', {
-                    model : 'Generic',
-                    autoLoad : false,
+                    model   : 'Generic',
+                    autoLoad : true,
                     proxy : {
                         type : 'ajax',
                         url : _URL_CARGA_CATALOGO,
@@ -1337,7 +1337,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 store         : Ext.create('Ext.data.Store',{
             		pageSize : 20
                     ,model   : 'modelGridConceptos'
-                    ,autoLoad  : false
+                    ,autoLoad: true
                     ,proxy   :
                     {
                     	type        : 'ajax'
@@ -1369,7 +1369,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 store: Ext.create('Ext.data.Store',{
             		pageSize : 20
                     ,model   : 'modelGridEstudios'
-                    ,autoLoad  : false
+                    ,autoLoad: true
                     ,proxy   :
                     {
                     	type        : 'ajax'
@@ -1587,57 +1587,60 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
         			var comboRamo = panelAgregarEditarConfig.down('[name=CDRAMO]');
         			comboRamo.select(recordEditar.get('CDRAMO'));
         			
-        			var comboModalidad = panelAgregarEditarConfig.down('[name=CDTIPSIT]');
-            		comboModalidad.getStore().load({
-            			params:{
-            				'params.idPadre' : comboRamo.getValue()
-            			},
-            			callback: function(records, op, success){
-                    		if(success && !Ext.isEmpty(records) && records.length > 0){
-                    			
-                    			debug('<<<<<< Entrando a cargar datos en Edicion >>>>>>');
-                    			
-                    			var comboModalidad = panelAgregarEditarConfig.down('[name=CDTIPSIT]');
-                    			comboModalidad.select(recordEditar.get('CDTIPSIT'));
-                    			
-                    			var comboGarantia = panelAgregarEditarConfig.down('[name=CDGARANT]');
-                    			comboGarantia.getStore().load({
-                    				params:{
-                        				'params.cdramo'  : comboRamo.getValue(),
-                        				'params.cdtipsit': comboModalidad.getValue()
-                        			},
-                        			callback: function(records, op, success){
-                                		if(success && !Ext.isEmpty(records) && records.length > 0){
-                                			
-                                			debug('<<<<<< Entrando a cargar datos en Edicion >>>>>>');
-                                			
-                                    		var comboRamo      = panelAgregarEditarConfig.down('[name=CDRAMO]');
-                                    		var comboModalidad = panelAgregarEditarConfig.down('[name=CDTIPSIT]');
-                                			var comboGarantia  = panelAgregarEditarConfig.down('[name=CDGARANT]');
-                                			
-                                			comboGarantia.select(recordEditar.get('CDGARANT'));
-                                			
-                                			var comboSubcobertura = panelAgregarEditarConfig.down('[name=CDCONVAL]');
-                                			comboSubcobertura.getStore().load({
-                                				params:{
-                                    				'params.cdramo'   : comboRamo.getValue(),
-                                    				'params.cdtipsit' : comboModalidad.getValue(),
-                                    				'params.cdgarant' : comboGarantia.getValue()
-                                    			},
-                                    			callback: function(records, op, success){
-                                            		if(success && !Ext.isEmpty(records) && records.length > 0){
-                                            			debug('<<<<<< Entrando a cargar datos en Edicion >>>>>>');
-                                            			var comboSubcobertura = panelAgregarEditarConfig.down('[name=CDCONVAL]');
-                                            			comboSubcobertura.select(recordEditar.get('CDCONVAL'));
-                                            		}
-                                            	}
-                                    		});
-                                		}
-                                	}
-                        		});
-                    		}
-                    	}
-            		});
+        			if(!Ext.isEmpty(comboRamo.getValue())){
+        			
+	        			var comboModalidad = panelAgregarEditarConfig.down('[name=CDTIPSIT]');
+	            		comboModalidad.getStore().load({
+	            			params:{
+	            				'params.idPadre' : comboRamo.getValue()
+	            			},
+	            			callback: function(records, op, success){
+	                    		if(success && !Ext.isEmpty(records) && records.length > 0){
+	                    			
+	                    			debug('<<<<<< Entrando a cargar datos en Edicion >>>>>>');
+	                    			
+	                    			var comboModalidad = panelAgregarEditarConfig.down('[name=CDTIPSIT]');
+	                    			comboModalidad.select(recordEditar.get('CDTIPSIT'));
+	                    			
+	                    			var comboGarantia = panelAgregarEditarConfig.down('[name=CDGARANT]');
+	                    			comboGarantia.getStore().load({
+	                    				params:{
+	                        				'params.cdramo'  : comboRamo.getValue(),
+	                        				'params.cdtipsit': comboModalidad.getValue()
+	                        			},
+	                        			callback: function(records, op, success){
+	                                		if(success && !Ext.isEmpty(records) && records.length > 0){
+	                                			
+	                                			debug('<<<<<< Entrando a cargar datos en Edicion >>>>>>');
+	                                			
+	                                    		var comboRamo      = panelAgregarEditarConfig.down('[name=CDRAMO]');
+	                                    		var comboModalidad = panelAgregarEditarConfig.down('[name=CDTIPSIT]');
+	                                			var comboGarantia  = panelAgregarEditarConfig.down('[name=CDGARANT]');
+	                                			
+	                                			comboGarantia.select(recordEditar.get('CDGARANT'));
+	                                			
+	                                			var comboSubcobertura = panelAgregarEditarConfig.down('[name=CDCONVAL]');
+	                                			comboSubcobertura.getStore().load({
+	                                				params:{
+	                                    				'params.cdramo'   : comboRamo.getValue(),
+	                                    				'params.cdtipsit' : comboModalidad.getValue(),
+	                                    				'params.cdgarant' : comboGarantia.getValue()
+	                                    			},
+	                                    			callback: function(records, op, success){
+	                                            		if(success && !Ext.isEmpty(records) && records.length > 0){
+	                                            			debug('<<<<<< Entrando a cargar datos en Edicion >>>>>>');
+	                                            			var comboSubcobertura = panelAgregarEditarConfig.down('[name=CDCONVAL]');
+	                                            			comboSubcobertura.select(recordEditar.get('CDCONVAL'));
+	                                            		}
+	                                            	}
+	                                    		});
+	                                		}
+	                                	}
+	                        		});
+	                    		}
+	                    	}
+	            		});
+        			}
         		}
         	}
 		});
