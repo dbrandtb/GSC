@@ -2326,17 +2326,6 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                             }
                             else
                             {
-                                if (!Ext.isEmpty(_cotcol_flujo) && _cotcol_flujo.aux === 'RSTN') {
-                                    mensajeCorrecto(
-                                        'Censo cargado',
-                                        'Se est\u00e1 procesando el censo de asegurados',
-                                        function () {
-                                            _mask();
-                                            location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?empty';
-                                        }
-                                    );
-                                    return;
-                                }
                                 callback();
                             }
                         }
@@ -2585,7 +2574,6 @@ function _p21_editarExclusiones(grid,row)
     debug('<_p21_editarExclusiones');
 }
 
-
 function _p21_editarMorbilidad()
 {
     debug('>_p21_editarMorbilidad record:');
@@ -2645,8 +2633,6 @@ function _p21_AgregarMorbilidad()
         
     debug('<_p21_AgregarMorbilidad');
 }
-
-
 
 function _verificaAprueba(){
     
