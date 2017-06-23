@@ -243,7 +243,7 @@ Ext.onReady(function()
 								                                        ,xtype    : 'button'
 								                                        ,text     : 'Enviar'
 								                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
-								                                        //,disabled : true
+								                                        ,hidden   : Ext.isEmpty(_p44_flujo)
 								                                        ,handler  : function(){
 								                                        	
 																			_p3_cargarCorreos(_p44_flujo.ntramite)

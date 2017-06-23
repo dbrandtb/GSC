@@ -132,7 +132,7 @@ var _CONTEXT = '${ctx}';
 					                                        ,xtype    : 'button'
 					                                        ,text     : 'Enviar'
 					                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
-					                                        //,disabled : true
+					                                        ,hidden    : Ext.isEmpty(endAmpVigFlujo)
 					                                        ,handler  : function(){
 					                                        	
 																_p3_cargarCorreos(endAmpVigFlujo.ntramite)
