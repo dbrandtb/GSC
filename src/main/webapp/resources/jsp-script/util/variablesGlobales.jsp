@@ -56,10 +56,7 @@
         ,_GLOBAL_URL_OBTENER_COMPONENTES            = '<s:url namespace="/pantallas"        action="obtenerComponentes"         />'
         ,_GLOBAL_COMP_URL_GUARDAR_DATOS_TRAMITE     = '<s:url namespace="/flujomesacontrol" action="guardarVentanaDatosTramite" />'
         ,_GLOBAL_COMP_URL_CAMBIAR_TIPO_ENDOSO       = '<s:url namespace="/flujomesacontrol" action="cambiarTipoEndosoTramite"   />'
-        ,_GLOBAL_COMP_URL_CLAVE_AUTO_FLUJO          = '<s:url namespace="/endosos"          action="includes/claveAutoFlujo"    />'
-        ,_GLOBAL_COMP_URL_SACAENDOSO                = '<s:url namespace ="/endosos"         action = "sacaendoso"               />'
-        ,_GLOBAL_URL_ENVIARCORREO_ENDOSO            = '<s:url namespace="/general"          action="enviaCorreo"                />'
-        ,_GLOBAL_RECUPERA_CORREO                     = '<s:url namespace="/cotizacionautos"  action="cargarCorreos"              />';
+        ,_GLOBAL_COMP_URL_CLAVE_AUTO_FLUJO          = '<s:url namespace="/endosos"          action="includes/claveAutoFlujo"    />';
     
     <s:url namespace="/flujomesacontrol" action="mesaControl" var="urlMesaFlujo">
         <s:param name="params.AGRUPAMC" value="%{'PRINCIPAL'}" />

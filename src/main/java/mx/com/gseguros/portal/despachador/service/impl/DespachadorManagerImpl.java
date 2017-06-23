@@ -532,7 +532,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
     public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
             String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle) throws Exception {
-        return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,false,
+        return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
                 porEscalamiento, fechaHoy, sinGrabarDetalle, false, null, false, null);
     }
     
@@ -545,7 +545,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
     public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
             String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle, boolean sinBuscarRegreso) throws Exception {
-        return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,false,
+        return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
                 porEscalamiento, fechaHoy, sinGrabarDetalle, sinBuscarRegreso, null, false, null);
     }
 	
@@ -555,9 +555,9 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	@Override
 	@Deprecated
 	public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
-            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean cartaRechazo, boolean porEscalamiento, Date fechaHoy,
+            String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
             boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust) throws Exception {
-	    return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente, cartaRechazo,
+	    return this.turnarTramite(cdusuariSes, cdsisrolSes, ntramite, status, comments, cdrazrecha, cdusuariDes, cdsisrolDes, permisoAgente,
                 porEscalamiento, fechaHoy, sinGrabarDetalle, sinBuscarRegreso, null, false, null);
 	}
 	
@@ -569,7 +569,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
      */
     @Override
 	public RespuestaTurnadoVO turnarTramite (String cdusuariSes, String cdsisrolSes, String ntramite, String status, String comments,
-	        String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean cartaRechazo, boolean porEscalamiento, Date fechaHoy,
+	        String cdrazrecha, String cdusuariDes, String cdsisrolDes, boolean permisoAgente, boolean porEscalamiento, Date fechaHoy,
 	        boolean sinGrabarDetalle, boolean sinBuscarRegreso, String ntrasust, boolean soloCorreosRecibidos, String correosRecibidos)
 	        throws Exception {
 	    logger.debug(Utils.log(
@@ -584,7 +584,6 @@ K                   ENCOLAR CON DATOS ORIGINALES
 	            "\n@@@@@@ cdusuariDes          = " , cdusuariDes,
 	            "\n@@@@@@ cdsisrolDes          = " , cdsisrolDes,
 	            "\n@@@@@@ permisoAgente        = " , permisoAgente,
-	            "\n@@@@@@ cartaRechazo         = " , cartaRechazo,
 	            "\n@@@@@@ porEscalamiento      = " , porEscalamiento,
                 "\n@@@@@@ fechaHoy             = " , fechaHoy,
                 "\n@@@@@@ sinGrabarDetalle     = " , sinGrabarDetalle,
@@ -736,12 +735,8 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 try {
                     paso = "Enviando correos configurados 1";
                     logger.debug(paso);
-                    
-                    if(cartaRechazo){
-                    	logger.debug("Enviando Correos");
-	                    flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
-	                            correosRecibidos);
-                    }
+                    flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,
+                            correosRecibidos);
                 } catch (Exception ex) {
                     logger.debug("Error al enviar correos de estatus al turnar", ex);
                 }
@@ -1297,42 +1292,6 @@ K                   ENCOLAR CON DATOS ORIGINALES
             Utils.generaExcepcion(ex, paso);
         }
         return items;
-    }
-
-    @Override
-    public List<Map<String, String>> cargaConfSucursales(String cdunieco, String cdunizon, String cdnivel) throws Exception {
-    	String paso = null;
-    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-    	
-    	try {
-    		lista = despachadorDAO.recuperarClasifSucursalZonaNivel(cdunieco, cdunizon, cdnivel);
-    	} catch (Exception ex) {
-    		Utils.generaExcepcion(ex, paso);
-    	}
-    	return lista;
-    }
-
-    @Override
-    public void guardaConfSucursales(Map<String, String> sucursal) throws Exception {
-    	despachadorDAO.guardaConfSucursales(sucursal);
-    }
-
-    @Override
-    public List<Map<String, String>> cargaConfPermisos(String cdtipflu, String cdflujomc, String cdramo, String cdtipsit) throws Exception {
-    	String paso = null;
-    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-    	
-    	try {
-    		lista = despachadorDAO.recuperarPermisosFlujos(cdtipflu, cdflujomc, cdramo, cdtipsit);
-    	} catch (Exception ex) {
-    		Utils.generaExcepcion(ex, paso);
-    	}
-    	return lista;
-    }
-    
-    @Override
-    public void guardaConfPermisos(Map<String, String> permiso) throws Exception {
-    	despachadorDAO.guardaConfPermisos(permiso);
     }
     
     @Override

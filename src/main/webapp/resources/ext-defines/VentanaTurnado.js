@@ -92,7 +92,7 @@ Ext.define('VentanaTurnado',
                     ,columns    : 2
                     ,width      : 250
                     ,style      : 'margin:5px;'
-                    ,hidden     : RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL)||_GLOBAL_CDSISROL===RolSistema.Agente
+                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                     ,items      :
                     [
                         {

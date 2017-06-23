@@ -540,43 +540,53 @@ function _fieldByNameDown(name,parent,ocultarErrores){
     return comp;
 }
 
-function _fieldByLabel (label, parent, ocultarErrores) {
+function _fieldByLabel(label,parent,ocultarErrores)
+{
     //debug('_fieldByLabel:',label);
     //debug('ocultarErrores:',ocultarErrores,'DUMMY');
-    var comp, arr = [];
-    if (!Ext.isEmpty(parent)) {
-        if (typeof parent === 'string') {
-            parent = _fieldById(parent);
-        }
-        arr = Ext.ComponentQuery.query('[fieldLabel='+label+']', parent);
-    } else {
+    
+    var comp;
+    var arr = [];
+    if(parent)
+    {
+        arr = Ext.ComponentQuery.query('[fieldLabel='+label+']',parent);
+    }
+    else
+    {
         arr = Ext.ComponentQuery.query('[fieldLabel='+label+']');
     }
-    if (arr.length === 0 && true !== ocultarErrores) {
-        mensajeError('No se encuentra el campo "' + label + '"');
-    } else {
+    if(arr.length==0&&(Ext.isEmpty(ocultarErrores)||ocultarErrores==false))
+    {
+        mensajeError('No se encuentra el campo "'+label+'"');
+    }
+    else
+    {
         comp = arr[arr.length-1];
     }
     //debug('_fieldByLabel comp:',comp);
     return comp;
 }
 
-function _fieldLikeLabel (label,parent,ocultarErrores) {
+function _fieldLikeLabel(label,parent,ocultarErrores)
+{
     //debug('_fieldLikeLabel:',label);
     //debug('ocultarErrores:',ocultarErrores,'DUMMY');
     var comp;
     var arr = [];
-    if (!Ext.isEmpty(parent)) {
-        if (typeof parent === 'string') {
-            parent = _fieldById(parent);
-        }
-        arr = Ext.ComponentQuery.query('[fieldLabel*='+label+']', parent);
-    } else {
+    if(parent)
+    {
+        arr = Ext.ComponentQuery.query('[fieldLabel*='+label+']',parent);
+    }
+    else
+    {
         arr = Ext.ComponentQuery.query('[fieldLabel*='+label+']');
     }
-    if (arr.length === 0 && ocultarErrores !== true) {
-        mensajeError('No se encuentra el campo "' + label + '"');
-    } else {
+    if(arr.length==0&&(Ext.isEmpty(ocultarErrores)||ocultarErrores==false))
+    {
+        mensajeError('No se encuentra el campo "'+label+'"');
+    }
+    else
+    {
         comp = arr[arr.length-1];
     }
     //debug('_fieldLikeLabel comp:',comp);
@@ -3934,7 +3944,7 @@ function _request(params) {
                 var ck = 'Decodificando respuesta posterior al proceso: ' + ((params.mask || 'enviando petici\00f3n').toLowerCase());
                 try {
                     var json = Ext.decode(response.responseText);
-                    debug('### AJAX ' + params.url.slice(-50) + ' json:', json);
+                    debug('AJAX ...' + params.url.slice(-50) + ' json:', json);
                     if (true !== json.success) {
                         throw json.message || 'La petici\u00f3n no fue exitosa';
                     }
@@ -3974,140 +3984,6 @@ function executeCopy (text) {
     document.execCommand('Copy');
     input.remove();
     alert('Copiado');
-}
-
-// Funcion creada para utilizar el sacaendoso
-function sacaEndoso (pv_cdunieco_i,
-                   pv_cdramo_i,
-                   pv_estado_i,
-                   pv_nmpoliza_i,
-                   pv_nmsuplem_o,
-                   pv_nsuplogi_o) {
-	debug('sacaEndoso(): ');
-    debug('sacaEndoso()');
-    var mask, ck = 'Cargando...';
-    try {
-        
-        mask = _maskLocal('Cargando...');
-        Ext.Ajax.request({
-            url     : _GLOBAL_COMP_URL_SACAENDOSO,
-            params  : {
-                'params.cdunieco' : pv_cdunieco_i,
-                'params.cdramo'   : pv_cdramo_i,
-                'params.estado'   : pv_estado_i,
-                'params.nmpoliza' : pv_nmpoliza_i,
-                'params.nmsuplem' : pv_nmsuplem_o,
-                'params.nsuplogi' : pv_nsuplogi_o
-            },
-            success : function (response) {
-                mask.close();
-                var ck = 'Cargando...';
-                try {
-                    var jsonSacaendoso = Ext.decode(response.responseText);
-                    debug('AJAX jsonSacaendoso:', jsonSacaendoso);
-                    if (jsonSacaendoso.success === true) {
-                    
-                    	
-                    } else {
-                        mensajeError(jsonSacaendoso.message);
-                    }
-                } catch (e) {
-                    manejaException(e, ck);
-                }
-            },
-            failure : function () {
-                mask.close();
-                errorComunicacion(null, 'Error al borrar cambios');
-            }
-        });
-    } catch (e) {
-        manejaException(e, ck, mask);
-    }
-}
-
-
-//Envio de Correos para cotizacion de Endoso de Parte de AUtos
-function envioCorreo(_url_temp
-                    ,ntramite
-                    ,nomArchivo
-                    ,usersCorreo){
-	//
-	debug('_url_temp: ',_url_temp);
-    debug('ntramite: ',ntramite);
-    debug('nomArchivo: ',nomArchivo);
-	//var usersCorreo = '';
-	//var nomArchivo = 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf';
-	
-	//Recupera Correos
-	/*Ext.Ajax.request(
-    {
-        url     : _GLOBAL_RECUPERA_CORREO
-        ,params :
-        {
-            'smap1.ntramite'    : ntramite
-        }
-        ,success : function(response) {
-            var json = Ext.decode(response.responseText);
-            debug('### json cargarCorreos:',json);
-            
-            if(json.exito)
-            {
-            	  debug('>_p28_cargarCorreos 1 ', json.respuesta);
-            	  usersCorreo = json.respuesta;
-            }
-            else{
-            	  debug('>recuperaCorreos');
-            }
-         }
-         ,failure : function(){
-         	me.setLoading(false);
-            errorComunicacion();
-         }
-    })*/
-    
-	
-	Ext.Ajax.request(
-    {
-        url : _GLOBAL_URL_ENVIARCORREO_ENDOSO
-        ,params :
-        {
-            to          : usersCorreo
-            ,mensaje    : 'Estimado(a) Agente,\n \n'+ 
-            'Se ha realizado la cotizaci\u00F3n solicitada de Endoso en el tr\u00e1mite, ' + ntramite + ' la cual se anexa para su revisi\u00F3n y/o aprobaci\u00F3n.\n \n' +
-			'Quedamos a sus ordenes para cualquier duda o aclaraci\u00F3n \n \n' +
-			'General de Seguros \n \n'
-            ,urlArchivo   : _url_temp
-            ,nombreArchivo : nomArchivo
-        },
-        callback : function(options,success,response)
-        {
-            
-            if (success)
-            {
-                var json = Ext.decode(response.responseText);
-                if (json.success == true)
-                {
-                    debug('Enviando Correo');
-                    centrarVentanaInterna(Ext.Msg.show(
-                    {
-                        title : 'Correo enviado'
-                        ,msg : 'El correo ha sido enviado'
-                        ,buttons : Ext.Msg.OK
-                    }));
-                }
-                else
-                {
-                    mensajeError('Error al enviar');
-                }
-            }
-            else
-            {
-                errorComunicacion();
-            }
-        }
-    });
-
-	
 }
 
 ////////////////////////////

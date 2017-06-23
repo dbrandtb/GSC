@@ -340,7 +340,7 @@ Ext.define('VentanaRechazo',
                             columns    : 2,
                             width      : 250,
                             style      : 'margin:5px;',
-                            hidden     : RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL)||_GLOBAL_CDSISROL===RolSistema.Agente,
+                            hidden     : _GLOBAL_CDSISROL===RolSistema.Agente,
                             items      : [
                                 {
                                     boxLabel    : 'Si',
@@ -353,27 +353,6 @@ Ext.define('VentanaRechazo',
                                     name       : 'SWAGENTE',
                                     inputValue : 'N',
                                     checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
-                                }
-                            ]
-                        }, {
-                            xtype       : 'radiogroup',
-                            fieldLabel : 'Enviar Carta de Rechazo',
-                            columns    : 2,
-                            width      : 250,
-                            style      : 'margin:5px;',
-                            hidden     : !RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL),// _GLOBAL_CDSISROL===RolSistema.Agente,
-                            items      : [
-                                {
-                                    boxLabel    : 'Si',
-                                    itemId     : 'SWCARTA',
-                                    name       : 'SWCARTA',
-                                    inputValue : 'S',
-                                    checked    :!RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL)|| _GLOBAL_CDSISROL===RolSistema.Agente
-                                }, {
-                                    boxLabel    : 'No',
-                                    name       : 'SWCARTA',
-                                    inputValue : 'N',
-                                    checked    : RolSistema.puedeSuscribirAutos(_GLOBAL_CDSISROL)||_GLOBAL_CDSISROL!==RolSistema.Agente
                                 }
                             ]
                         }, {

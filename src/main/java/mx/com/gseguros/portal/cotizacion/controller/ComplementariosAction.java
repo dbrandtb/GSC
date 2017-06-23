@@ -13,7 +13,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,6 +67,7 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -98,20 +98,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private CatalogosManager catalogosManager;
 	private StoredProceduresManager storedProceduresManager;
 	
-	private List<Map<String,String>>slist1;
-	private List<Map<String,Object>> list1;
-	private List<Map<String,Object>> list2;
-	private List<Map<String,Object>> list3;
-	private List<Map<String,Object>> list4;
 	private Map<String, String> panel1;
 	private Map<String, String> panel2;
 	private Map<String, String> parametros;
-	private Map<String, String> map1;
-	private Map<String, String> map2;
-	private Map<String, String> map3;
-	private Map<String, String> map4;
-	private Map<String, String> params;
-	private Map<String, Object> omap1;
 	private String cdunieco;
 	private String sucursalGS;
 	private String cdRamoGS;
@@ -122,35 +111,48 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private String nmsuplem;
 	private String cdIdeper;
 	private String cdtipsit;
-	private String cdperson;
-	private String tipoGrupoInciso;
-	private String mensajeRespuesta;
-	private String auxiliarProductoCdramo   = null;
-	private String auxiliarProductoCdtipsit = null;
-	private String mensajeEmail;
-	private String respuesta;
-	private String respuestaOculta;
-	private String message;
+	private boolean success = true;
+	private boolean retryWS;
+	private boolean retryRec;
+	private ScreenInterceptor scrInt = new ScreenInterceptor();
+	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	private Calendar calendarHoy = Calendar.getInstance();
 	private Item item1;
 	private Item item2;
 	private Item item3;
 	private Item item4;
 	private Item item5;
-	private boolean success = true;
-	private boolean retryWS;
-	private boolean retryRec;
-	private boolean clienteWS;
-	private boolean exito = false;
-	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
-	private FlujoVO flujo;
+	private Map<String, String> map1;
+	private Map<String, String> map2;
+	private Map<String, String> map3;
+	private Map<String, String> map4;
+	private List<Map<String,Object>> list1;
+	private List<Map<String,Object>> list2;
+	private List<Map<String,Object>> list3;
+	private List<Map<String,Object>> list4;
+	private Map<String,Object> omap1;
+	private String cdperson;
+	private List<Map<String,String>>slist1;
 	private GridVO gridResultados;
-	private Calendar calendarHoy = Calendar.getInstance();
-	private ScreenInterceptor scrInt = new ScreenInterceptor();
+	private String mensajeRespuesta;
+	private String auxiliarProductoCdramo   = null;
+	private String auxiliarProductoCdtipsit = null;
+	private String tipoGrupoInciso;
+	private FlujoVO flujo;
+	
 	private ConsultasManager consultasManager;
+	private boolean exito = false;
 	private PantallasManager pantallasManager;
 	private EmisionAutosService emisionAutosService;
+	private boolean clienteWS;
+	private String mensajeEmail;
+	private String respuesta;
+	private String respuestaOculta;
 	private CotizacionManager cotizacionManager;
 	private EmisionManager    emisionManager;
+	
+	private String message;
+	private Map<String, String> params;
 	
 	@Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
@@ -160,6 +162,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DocumentosManager documentosManager;
+	
+	@Autowired
+	private MesaControlManager mesaControlManager;
 	
 	@Autowired
 	private FlujoMesaControlManager flujoMesaControlManager;
@@ -178,62 +183,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public static final String SUCURSAL_SALUD_NOVA = "1403";
 
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-	
-	@Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-	
-	@Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-	
-	@Value("${recibo.impresion.autos.url}")
-    private String reciboImpresionAutosUrl;
-
-	@Value("${caic.impresion.autos.url}")
-    private String caicImpresionAutosUrl;	
-	
-	@Value("${aeua.impresion.autos.url}")
-    private String aeuaImpresionAutosUrl;	
-	
-	@Value("${ap.impresion.autos.url}")
-    private String apImpresionAutosUrl;
-
-	@Value("${incisos.flotillas.impresion.autos.url}")
-    private String incisosFlotillasImpresionAutosUrl;			
-
 	@Value("${incisos.flotillas.excel.impresion.autos.url}")
-	private String incisosFlotillasExcelImpresionAutosUrl;			
-				
-	@Value("${tarjeta.iden.impresion.autos.url}")
-    private String tarjetaIdenImpresionAutosUrl;				
-					
-	@Value("${numero.incisos.reporte}")
-    private String numeroIncisosReporte;	
-	
-	@Value("${caratula.impresion.autos.url}")
-    private String caratulaImpresionAutosUrl;
-	
-	@Value("${caratula.impresion.autos.serviciopublico.url}")
-    private String caratulaImpresionAutosServiciopublicoUrl;
-	
-	@Value("${caratula.impresion.autos.flotillas.url}")
-    private String caratulaImpresionAutosFlotillasUrl;
-	
-	@Value("${manual.agente.txtinfocobredgs}")
-    private String manualAgenteTxtinfocobredgs;
-	
-	@Value("${manual.agente.condgralescobsegvida}")
-    private String manualAgenteCondgralescobsegvida;
-	
-	@Value("${manual.agente.txtinfocobgesgs}")
-    private String manualAgenteTxtinfocobgesgs;
+	private String incisosFlotillasExcelImpresionAutosUrl;	
 	
 	@Value("${caratula.impresion.autos.docextra.url}")
     private String caratulaImpresionAutosDocExtra;
 	
-	@Value("${sigs.RenovarEndososB.url}")
-    private String sigsRenovarEndososB;
+	@Value("${caratula.impresion.autos.flotillas.url}")
+    private String caratulaImpresionAutosFlotillasUrl;
 	
 	public ComplementariosAction() {
 		this.session=ActionContext.getContext().getSession();
@@ -261,26 +218,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String result   = SUCCESS;
 		UserVO usuario  = null;
 		String cdsisrol = null;
-		String caseIdRstn = null;
-		
-		if (exito && map1 != null && "S".equals(map1.get("rstn")) && StringUtils.isNotBlank(map1.get("ntramite"))) { // para RSTN recuperar datos
-		    try {
-		        String paso = "Construyendo flujo RSTN";
-		        try {
-		            UserVO user = Utils.validateSession(session);
-		            String ntramite = map1.get("ntramite");
-		            Utils.validate(ntramite, "Falta ntramite");
-		            flujo = flujoMesaControlManager.generarYRecuperarFlujoRSTN(ntramite, user.getUser(), user.getRolActivo().getClave());
-		            caseIdRstn = map1.get("caseIdRstn");
-		            map1 = null;
-		        } catch (Exception ex) {
-		            Utils.generaExcepcion(ex, paso);
-		        }
-		    } catch (Exception ex) {
-		        exito = false;
-		        respuesta = Utils.manejaExcepcion(ex);
-		    }
-		}
 		
 		if(exito)
 		{
@@ -299,8 +236,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 					cdtipsit = tramite.get("CDTIPSIT");
 					map1 = new HashMap<String, String>();
 					map1.put("ntramite" , flujo.getNtramite());
-					
-					map1.put("caseIdRstn", caseIdRstn);
 					
 					if("RECUPERAR".equals(flujo.getAux()))
 					{
@@ -768,10 +703,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             parametros.putAll(map1);
             parametros.put("pv_status", "V");
             parametros.put("pv_nmsuplem", "0");
-            
-            if (!Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(map1.get("pv_cdramo"))) {
-                kernelManager.pMovTvalopol(parametros);
-            }
+            kernelManager.pMovTvalopol(parametros);
             
 			success = true;
 		}
@@ -2092,7 +2024,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 				.append("\n###### emitir ######")
 				.append("\n###### panel1=").append(panel1)
 				.append("\n###### panel2=").append(panel2)
-				.append("\n###### slist1=").append(slist1)
 				.toString()
 				);
 		
@@ -2119,11 +2050,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String esDxN           = null;
 		String cdIdeperRes     = null;
 		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
-		String caseIdRstn      = null;
-		Date fechaHoy          = new Date();
 		boolean esFlotilla     = false;
-		
 		tipoGrupoInciso = "I";
+		
+		Date fechaHoy = new Date();
 		
 		////// obtener parametros
 		if(success)
@@ -2143,23 +2073,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						&&panel1.get("tipoGrupoInciso").equals("C"))
 				{
 					tipoGrupoInciso = "C";
-				}
-				
-				if (success) {
-				    caseIdRstn = panel2.get("caseIdRstn");
-				    logger.debug(Utils.log("caseIdRstn: ", caseIdRstn));
-				    if (StringUtils.isNotBlank(caseIdRstn)) {
-				        try {
-				            cotizacionManager.actualizarOtvalorTramitePorDsatribu(
-			                        ntramite
-			                        ,"CASEIDRSTN"
-			                        ,caseIdRstn
-			                        ,"U"
-			                        );
-				        } catch (Exception ex) {
-				            logger.error("WARNING al guardar caseIdRstn en otvalor", ex);
-				        }
-				    }
 				}
 				
 				if(!success)
@@ -2396,7 +2309,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
-		rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+		rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 		
 		////// ws cliente y recibos
 		if(success)
@@ -2481,7 +2394,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						}catch(Exception ex)
 						{
 							logger.error("error en el pl de emitir",ex);
-							mensajeRespuesta = ex.getMessage()!=null?ex.getMessage().trim().equals("")?"Error en el Web Service para emitir":ex.getMessage():"Error en el Web Service para emitir";
+							mensajeRespuesta = ex.getMessage();
 							success          = false;
 						}
 						
@@ -2643,7 +2556,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            	try
 	            	{
 	            		String origen  = Utils.join(rutaDocsBaseDatos,doc.get("CDDOCUME"));
-	            		String destino = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",doc.get("CDDOCUME"));
+	            		String destino = Utils.join(getText("ruta.documentos.poliza"),"/",ntramite,"/",doc.get("CDDOCUME"));
 	            		logger.debug(Utils.log("\nIntentando mover desde:",origen,",hacia:",destino));
 	            		FileUtils.moveFile(
 	            				new File(origen)
@@ -2673,10 +2586,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug("docu iterado: "+docu);
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
-					String url=this.rutaServidorReports
+					String url=this.getText("ruta.servidor.reports")
 							+ "?destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+this.passServidorReports
+							+ "&userid="+this.getText("pass.servidor.reports")
 							+ "&report="+descripl
 							+ "&paramform=no"
 							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -2719,24 +2632,24 @@ public class ComplementariosAction extends PrincipalCoreAction
 					if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
 				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
 				    	){
-						urlCaratula = this.caratulaImpresionAutosUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.url");
 					}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
-						urlCaratula = this.caratulaImpresionAutosServiciopublicoUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
 					}
 					
 					if("C".equalsIgnoreCase(tipoGrupoInciso)){
 						urlCaratula = this.caratulaImpresionAutosFlotillasUrl;
 					}
 					
-					String urlRecibo = this.reciboImpresionAutosUrl;
-					String urlCaic = this.caicImpresionAutosUrl;
-					String urlAeua = this.aeuaImpresionAutosUrl;
-					String urlAp = this.apImpresionAutosUrl;
+					String urlRecibo = this.getText("recibo.impresion.autos.url");
+					String urlCaic = this.getText("caic.impresion.autos.url");
+					String urlAeua = this.getText("aeua.impresion.autos.url");
+					String urlAp = this.getText("ap.impresion.autos.url");
 					
-					String urlIncisosFlot = this.incisosFlotillasImpresionAutosUrl;
+					String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
 					String urlIncisosExcelFlot = this.incisosFlotillasExcelImpresionAutosUrl;
-					String urlTarjIdent = this.tarjetaIdenImpresionAutosUrl;
-					String numIncisosReporte = this.numeroIncisosReporte;
+					String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
+					String numIncisosReporte = this.getText("numero.incisos.reporte");
 					
 					String urlDocsExtra = this.caratulaImpresionAutosDocExtra;
 					
@@ -2974,6 +2887,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 						/**
 						 * Para Incisos Flotillas EXCEL
 						 */
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
+						logger.debug("URL Generada para urlIncisosEXCELFlotillas: "+ urlIncisosExcelFlot + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
 						
 						if(StringUtils.isNotBlank(urlIncisosExcelFlot)){
 							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
@@ -3085,7 +3001,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de reduce GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteTxtinfocobredgs+"\">Reduce GS</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobredgs")+"\">Reduce GS</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3094,7 +3010,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteTxtinfocobredgs
+								,this.getText("manual.agente.txtinfocobredgs")
 								,"Reduce GS"
 								,nmpoliza
 								,ntramite
@@ -3113,7 +3029,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de gestoria GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteTxtinfocobgesgs+"\">Gestoria GS</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobgesgs")+"\">Gestoria GS</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3122,7 +3038,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteTxtinfocobgesgs
+								,this.getText("manual.agente.txtinfocobgesgs")
 								,"Gestoria GS"
 								,nmpoliza
 								,ntramite
@@ -3144,10 +3060,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 						String reporteEspVida = this.getText("rdf.emision.nombre.esp.cobvida");
 						String pdfEspVidaNom = "SOL_VIDA_AUTO.pdf";
 						
-						String url=this.rutaServidorReports
+						String url=this.getText("ruta.servidor.reports")
 								+ "?destype=cache"
 								+ "&desformat=PDF"
-								+ "&userid="+this.passServidorReports
+								+ "&userid="+this.getText("pass.servidor.reports")
 								+ "&report="+reporteEspVida
 								+ "&paramform=no"
 								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -3182,7 +3098,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,null, false
 								);
 
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteCondgralescobsegvida+"\">Condiciones Generales Seguro de Vida</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.condgralescobsegvida")+"\">Condiciones Generales Seguro de Vida</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3191,7 +3107,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteCondgralescobsegvida
+								,this.getText("manual.agente.condgralescobsegvida")
 								,"Condiciones Generales Seguro de Vida"
 								,nmpoliza
 								,ntramite
@@ -3363,38 +3279,28 @@ public class ComplementariosAction extends PrincipalCoreAction
                             ,"\n datos originales: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
                             ,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolizaEmitida
                             ));
-                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
-                    try
-               		{
-                    	String[] idEndosos = null; 
-                    	if(!slist1.isEmpty())
-                       	{
-                       		idEndosos = new String[slist1.size()];
-                       		int i=0;
-                       		for(Map<String,String>endoso:slist1)
-                     		    {
-                       			idEndosos[i]=endoso.get("id");
-                       			i++;
-                     		    }
-                       	}
-                    	String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&endosos=",Arrays.toString(idEndosos).replace("[", "").replace("]", ""));
-                    	HttpUtil.sendPost(sigsRenovarEndososB,params);
-               		}
-               		catch (Exception ex)
-               		{
-               		 logger.error("Error actualizando endosos B", ex);
-               		}
                     
+//                    try {
+                   Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
                    consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
-               
+//                    } catch (Exception e) {
+//                        mensajeRespuesta = "La poliza ya se habia emitido con anterioridad";
+//                    }
+                    
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
-                    vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
-                    Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                          vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
+//                    try {
+                        Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                        
+//                    } catch (Exception e) {
+//                        mensajeRespuesta = "La poliza no se logr\u00F3 registrar en el identificador de renovaciones";
+//                    }
                 }
             } 
             catch (Exception ex) 
             {
+//                mensajeRespuesta = "Emitida pero sin registro en sistema sigs";
                 logger.error("Error actualizando segrenovaciones_renovada", ex);
             }
         }
@@ -3586,7 +3492,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 
-	rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+	rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 	
 	////// ws cliente y recibos
 	if(success)
@@ -3843,7 +3749,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 				success = ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, false, tipoMov, usuarioSesion);
 
 				Utils.validate(success, "No se regeneraron correctamente todos los recibos.");
-				
 				
 				if(success && (TipoEndoso.EMISION_POLIZA.getCdTipSup().toString().equalsIgnoreCase((tipoMov)) || TipoEndoso.RENOVACION.getCdTipSup().toString().equalsIgnoreCase((tipoMov)) )){
 					boolean esDxn = false;
@@ -4585,15 +4490,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			logger.debug("nombreRdf = {}", nombreRdf);
 			
-			String rutaCarpeta = Utils.join(this.rutaDocumentosPoliza, "/", ntramite);
+			String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"), "/", ntramite);
 			
 			String url = Utils.join(
-					this.rutaServidorReports,
+					this.getText("ruta.servidor.reports"),
 					"?destype=cache",
 					"&desformat=PDF",
 					"&paramform=no",
 					"&ACCESSIBLE=YES", //parametro que habilita salida en PDF
-					"&userid=", this.passServidorReports,
+					"&userid=", this.getText("pass.servidor.reports"),
 					"&report=", nombreRdf,
 					"&p_ntramite=", ntramite,
 					"&p_ramo=", cdramo,
@@ -4652,57 +4557,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 		logger.debug(Utils.log(
 				 "\n###### guardarCartaRechazo ######"
-				,"\n#################################"
-				));
-		return SUCCESS;
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public String cargaEndososB()
-	{
-		logger.debug(Utils.log(
-				 "\n#################################"
-				,"\n######## cargaEndososB ##########"
-				,"\n######## flujo = ", flujo
-				,"\n######## smap1 = ", map1
-				));
-		try
-		{
-			String ntramite = map1.get("ntramite");
-			String cdusuari = map1.get("cdusuari");
-			cdunieco        = map1.get("cdunieco");
-			cdramo          = map1.get("cdramo");
-			estado          = map1.get("estado");
-			nmpoliza        = map1.get("nmpoliza");
-			Map<String, String> infoPoliza = siniestrosManager.obtenerTramiteCompleto(ntramite);
-			
-			if(StringUtils.isNotBlank(infoPoliza.get("RENUNIEXT")) && StringUtils.isNotBlank(infoPoliza.get("RENRAMO")) && StringUtils.isNotBlank(infoPoliza.get("RENPOLIEX")) && (infoPoliza.get("RENRAMO").contains("711") || infoPoliza.get("RENRAMO").contains("721")))
-			{
-				map2  = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,infoPoliza.get("cdsisrol"),infoPoliza.get("cduniext"),infoPoliza.get("ramo"),infoPoliza.get("nmpoliex"),infoPoliza.get("RENUNIEXT"),infoPoliza.get("RENRAMO"),infoPoliza.get("RENPOLIEX"),infoPoliza.get("feefecto"),infoPoliza.get("feproren"));
-				if(map2!=null && !map2.isEmpty())
-				{	
-					Iterator It = map2.entrySet().iterator();
-					slist1 = new ArrayList<Map<String, String>>();
-			        while (It.hasNext()) {
-			        	Map.Entry entry = (Map.Entry) It.next();
-			        	String idEndosoB = (String)entry.getKey();
-			        	String descEndosoB = (String)entry.getValue();
-			        	HashMap<String, String> agregar = new HashMap<String, String>();
-			        	agregar.put("renovar","false");
-			        	agregar.put("id",idEndosoB.trim());
-			        	agregar.put("descripcion",descEndosoB.trim());
-			        	slist1.add(agregar);
-			        }
-				}
-			}
-	    }
-		catch(Exception ex)
-		{
-			logger.error("error al cargar endosos B",ex);
-		}
-	
-		logger.debug(Utils.log(
-				 "\n######## cargaEndososB ##########"
 				,"\n#################################"
 				));
 		return SUCCESS;
@@ -4963,14 +4817,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setParams(Map<String, String> params) {
 		this.params = params;
-	}
-
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
 	}
 
 }
