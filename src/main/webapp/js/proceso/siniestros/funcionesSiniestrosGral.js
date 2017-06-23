@@ -3544,8 +3544,6 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 	
 	var bufferTiposResultadoEstudios = new Ext.util.HashMap();
 	var windowResultEstudios;
-	
-	var recordSelCombo;
 	/////////////////////
 	////// modelos //////
 	/*/////////////////*/
@@ -3688,17 +3686,12 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 	                anyMatch      : true,
                     queryMode     : 'local',
                     allowBlank    : true,
-                    queryCaching  : false,
 	                store         : new tiposResEstudioStore(),
-	                listeners     : {
-	                	change    : function(cmb, newValue){
-	                		var value = cmb.getRawValue();
-		                	var index = cmb.getStore().findExact('value', value);
-		                	if(index == -1){
-		                		cmb.setValue('');
-		                		recordSelCombo.set('CDRESEST','');
-		                		debug('REcord Seleccionado222:::',recordSelCombo);
-		                	}
+	                beforeBlur    : function() {
+	                	var value = this.getRawValue();
+	                	var index = this.getStore().findExact('value', value);
+	                	if(index == -1){
+	                		this.setValue('');
 	                	}
 	                }
 	            },
@@ -3742,11 +3735,42 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
         plugins: [
             editorPluginResultados
         ],
-        listeners     : {
-        	select    : function(grd, record){
-        		recordSelCombo = record;
+        /*listeners : {
+        	select : function( grid, record, index, eOpts){
+        		
+        		var indexEstudioSel = -1;
+        		
+        		Ext.Array.each(resultadosEstudiosGrid.columns,function(columnGpo, indexCol){
+               		if(columnGpo.dataIndex == "CDRESEST"){
+               			indexEstudioSel = indexCol;
+               			return false;
+               		}
+               	});
+        		
+        		debug('indexEstudioSel',indexEstudioSel);
+        		debug('record',record);
+        		
+        		var comboColumnaFila = resultadosEstudiosGrid.columns[indexEstudioSel].getEditor(record);
+        		
+        		if(Ext.isEmpty(record.get('CDRESEST'))){
+        			comboColumnaFila.clearValue();
+        			//comboColumnaFila.reset();
+        		}
+    			
+        		
+        		comboColumnaFila.getStore().load({
+        			params:{
+        				'params.cdest': record.get('CDEST')
+        			},
+        			callback: function(){
+        				if(Ext.isEmpty(record.get('CDRESEST'))){
+                			//comboColumnaFila.clearValue();
+                		}
+        			}
+        		});
+        		
         	}
-        },
+        },*/
         buttonAlign: 'center',
         buttons: [{
             icon    : _CONTEXT + '/resources/fam3icons/icons/disk.png',
