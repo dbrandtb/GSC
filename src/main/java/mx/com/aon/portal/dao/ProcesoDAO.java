@@ -4287,7 +4287,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 					"SEXO", "TIPOPERSONA", "NACIONALIDAD",
 					"NOMBRE", "SNOMBRE", "APPAT",
 					"APMAT","CODPOSTAL","CDEDO","CDMUNICI","DSDOMICIL",
-					"NMNUMERO","NMNUMINT", "NMORDDOM"
+					"NMNUMERO","NMNUMINT", "NMORDDOM", "CDESTCIV"
 					};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
