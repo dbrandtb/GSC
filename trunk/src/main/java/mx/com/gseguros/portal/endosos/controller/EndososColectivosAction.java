@@ -397,158 +397,18 @@ public class EndososColectivosAction extends PrincipalCoreAction
 		logger.debug(Utils.log("smap1: ",smap1,"\n"));
 		
 		String result = ERROR;
-		//this.session = ActionContext.getContext().getSession();
-
-		//RespuestaVO resp = null;
+		this.session = ActionContext.getContext().getSession();
+		UserVO usuario            = (UserVO) session.get("USUARIO");
+		String rol = usuario.getRolActivo().getClave();
 
 		try {
 			imap1 = endososManager.cargaInfoPantallaClonacion();
+			if(smap1 == null){
+				smap1 = new HashMap<String, String>();
+			}
+			smap1.put("cdsisrol",rol);
+			
 			result = SUCCESS;
-			//new EndososAction().transformaEntrada(smap1, slist1, false);
-
-//			String cdunieco = smap1.get("CDUNIECO");
-//			String cdramo = smap1.get("CDRAMO");
-//			String cdtipsit = smap1.get("CDTIPSIT");
-//			String estado = smap1.get("ESTADO");
-//			String nmpoliza = smap1.get("NMPOLIZA");
-//			String cdtipsup = TipoEndoso.CANCELACION_POR_REEXPEDICION.getCdTipSup().toString();
-//
-//			String keyItemsPanelLectura = "itemsPanelLectura";
-//			String keyFieldsPanelLectura = "fieldsFormLectura";
-//			String keyItemsDatosEndoso = "itemsDatosEndoso";
-//
-//			UserVO usuario = (UserVO) session.get("USUARIO");
-//			String cdelemento = usuario.getEmpresa().getElementoId();
-//			String cdusuari = usuario.getUser();
-//			String rol = usuario.getRolActivo().getClave();
-//
-//			// Valida si hay un endoso anterior pendiente:
-//			resp = endososManager.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-//			error = resp.getMensaje();
-//
-//			if (resp.isSuccess()) {
-//				try {
-//					GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-//					imap1 = new HashMap<String, Item>();
-//
-//					gc.generaParcial(pantallasManager.obtenerComponentes(null, 
-//																		 cdunieco, 
-//																		 cdramo, 
-//																		 cdtipsit, 
-//																		 estado, 
-//																		 rol,
-//																		 "ENDOSO_REEXPEDICION", 
-//																		 "PANEL_LECTURA", 
-//																		 null));
-//
-//					imap1.put(keyItemsPanelLectura, gc.getItems());
-//					imap1.put(keyFieldsPanelLectura, gc.getFields());
-//
-//					gc.generaParcial(pantallasManager.obtenerComponentes(null, 
-//																		 cdunieco, 
-//																		 cdramo, 
-//																		 cdtipsit, 
-//																		 estado, 
-//																		 rol,
-//																		 "ENDOSO_REEXPEDICION", 
-//																		 "DATOS_ENDOSO", 
-//																		 null));
-//
-//					imap1.put(keyItemsDatosEndoso, gc.getItems());
-//				} catch (Exception ex) {
-//					logger.error(Utils.log("error al mostrar pantalla endoso reexpedicion", ex));
-//					error = ex.getMessage();
-//					resp.setSuccess(false);
-//				}
-//			}
-//
-//			GeneradorCampos gcTatri = null;
-//			GeneradorCampos gcGral = null;
-//			List<ComponenteVO> tatrisitOriginal = null;
-//
-//			// componentes
-//			if (resp.isSuccess()) {
-//				try {
-//					gcTatri = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-//					gcTatri.setCdramo(cdramo);
-//					gcTatri.setCdtipsit(cdtipsit);
-//
-//					gcGral = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-//					gcGral.setCdramo(cdramo);
-//
-//					// TATRISIT ORIGINAL
-//					tatrisitOriginal = cotizacionDAO.cargarTatrisit(cdtipsit, cdusuari);
-//
-//					// columnas base
-//					List<ComponenteVO> tatrisitColsBase = new ArrayList<ComponenteVO>();
-//					for (ComponenteVO iTatri : tatrisitOriginal) {
-//						if (StringUtils.isNotBlank(iTatri.getSwsuscri()) && iTatri.getSwsuscri().equals("N")
-//								&& iTatri.getSwGrupo().equals("S") && iTatri.getSwGrupoLinea().equals("N")) {
-//							logger.debug(new StringBuilder("SE AGREGA PARA COLUMNA BASE ").append(iTatri).toString());
-//							iTatri.setColumna("S");
-//							tatrisitColsBase.add(iTatri);
-//						}
-//					}
-//
-//					if (tatrisitColsBase.size() > 0) {
-//						gcTatri.generaComponentes(tatrisitColsBase, true, true, false, true, true, false);
-//						imap1.put("colsBaseFields", gcTatri.getFields());
-//						imap1.put("colsBaseColumns", gcTatri.getColumns());
-//					} else {
-//						imap1.put("colsBaseFields", null);
-//						imap1.put("colsBaseColumns", null);
-//					}
-//					// columnas base
-//
-//					// columnas extendidas (de coberturas)
-//					List<ComponenteVO> tatrisitColsCober = new ArrayList<ComponenteVO>();
-//					for (ComponenteVO iTatri : tatrisitOriginal) {
-//						if (StringUtils.isNotBlank(iTatri.getSwsuscri()) && iTatri.getSwsuscri().equals("N")
-//								&& iTatri.getSwGrupo().equals("S")) {
-//							logger.debug(Utils.log("SE AGREGA PARA COLUMNA DE COBERTURA ",iTatri,"\n"));
-//							iTatri.setColumna("S");
-//							tatrisitColsCober.add(iTatri);
-//						}
-//					}
-//					if (tatrisitColsCober.size() > 0) {
-//						gcTatri.generaComponentes(tatrisitColsCober, true, true, false, true, true, false);
-//						imap1.put("colsExtFields", gcTatri.getFields());
-//						imap1.put("colsExtColumns", gcTatri.getColumns());
-//					} else {
-//						imap1.put("colsExtFields", null);
-//						imap1.put("colsExtColumns", null);
-//					}
-//					// columnas extendidas (de coberturas)
-//
-//					// factores
-//					List<ComponenteVO> factores = new ArrayList<ComponenteVO>();
-//					for (ComponenteVO iTatri : tatrisitOriginal) {
-//						if (StringUtils.isNotBlank(iTatri.getSwsuscri()) && iTatri.getSwsuscri().equals("N")
-//								&& iTatri.getSwGrupo().equals("N") && iTatri.getSwGrupoFact().equals("S")) {
-//							logger.debug(Utils.log("SE AGREGA PARA FACTOR ",iTatri,"\n"));
-//							iTatri.setColumna("S");
-//							factores.add(iTatri);
-//							iTatri.setMenorCero(true);
-//						}
-//					}
-//
-//					List<ComponenteVO> columnaEditorPlan = pantallasManager.obtenerComponentes(null, 
-//																							   null, 
-//																							   null, 
-//																							   null,
-//																							   null, 
-//																							   null, 
-//																							   "COTIZACION_GRUPO", 
-//																							   "EDITOR_PLANES_REEXP", 
-//																							   null);
-//					gcGral.generaComponentes(columnaEditorPlan, true, false, false, true, true, false);
-//					imap1.put("editorPlanesColumn", gcGral.getColumns());
-//
-//				} catch (Exception ex) {
-//					logger.error(Utils.log("Error al obtener componentes", ex,"\n"));
-//				}
-//			}
-			// componentes
 		} catch (Exception ex) {
 			logger.error(Utils.log("Error al construir pantalla de endoso de cancelacion por reexpedicion", ex,"\n"));
 			error = Utils.manejaExcepcion(ex);

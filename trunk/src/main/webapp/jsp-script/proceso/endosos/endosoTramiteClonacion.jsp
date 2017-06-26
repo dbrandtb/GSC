@@ -15,7 +15,7 @@ var _obtieneDetalleTramiteClona     = '<s:url namespace="/endosos"     action="o
 var _p100_urlComplementoClonacion   = '<s:url namespace="/endosos"     action="obtieneDetalleTramiteClonar" />';
 
 var _URL_CARGA_CATALOGO      = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
-var _p100_smap1                     = <s:property value = '%{convertToJSON("params")}' escapeHtml="false" />;
+var _p_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 
 var _CONTEXT = '${ctx}';
 ////// variables //////
@@ -72,7 +72,7 @@ Ext.onReady(function()
         [
 		    Ext.create('Ext.form.Panel',
 		    {
-		        title     : 'Clonaci&oacute;n de tr&aacute;mites'
+		        title     : 'Clonaci&oacute;n de tr&aacute;mites Salud Colectivo'
 		        ,layout   :
 		        {
 		            type     : 'table'
@@ -159,7 +159,14 @@ Ext.onReady(function()
 		        	}
 		        }
 		    }) 
-        ]
+        ],
+        listeners: {
+        	afterrender: function(panelp){
+        		if(RolSistema.Agente == _p_smap1.cdsisrol){
+        			panelp.down('[name=cdagente]').hide();	
+        		}
+        	}
+        }
     });
     ////// contenido //////
     
