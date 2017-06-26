@@ -2463,6 +2463,8 @@ Ext.onReady(function()
                                                     'CDTIPASIG',
                                                     'STATUSOUT',
                                                     'CDETAPA',
+                                                    'ESTACION',
+                                                    'STATUSTRAZA',
                                                     'SWFINNODE'
                                                 ];
                                                 var values = panel.down('form').getValues();
@@ -2503,6 +2505,8 @@ Ext.onReady(function()
                                                     'TIMEMAXM',
                                                     'STATUSOUT',
                                                     'CDETAPA',
+                                                    'ESTACION',
+                                                    'STATUSTRAZA',
                                                     'SWFINNODE'
                                                 ];
                                                 for (var i = 0; i < names.length; i++) {
@@ -2754,6 +2758,10 @@ Ext.onReady(function()
                                                 })
                                             }
                                             ,<s:property value="items.comboEtapa" escapeHtml="false" />
+                                            ,{border : 0}
+                                            ,<s:property value="items.comboEstacion" escapeHtml="false" />
+                                            ,{border : 0}
+                                            ,<s:property value="items.comboTrazabilidad" escapeHtml="false" />
                                             ,{border : 0}
                                             ,{
                                                 xtype       : 'fieldcontainer'
