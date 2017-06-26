@@ -132,6 +132,16 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			items.put("comboEtapa" , gc.getItems());
 			
+			List<ComponenteVO> comboEstacion = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "FLUJOMC", "COMBO_ESTACION", null);
+			gc.generaComponentes(comboEstacion, true, false, true, false, false, false);
+			
+			items.put("comboEstacion" , gc.getItems());
+			
+			List<ComponenteVO> comboTrazabilidad = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "FLUJOMC", "COMBO_TRAZABILIDAD", null);
+			gc.generaComponentes(comboTrazabilidad, true, false, true, false, false, false);
+			
+			items.put("comboTrazabilidad" , gc.getItems());
+			
 		}
 		catch(Exception ex)
 		{
