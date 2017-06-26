@@ -124,8 +124,8 @@ var _p21_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol"
 var _p21_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
-var _p21_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p21_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p21_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p21_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _TIPO_SITUACION_RENOVACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
 var _EN_ESPERA_DE_COTIZACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
 var _EN_EMISION_EN_REVISION_TECNICA     = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EMISION_EN_REVISION_TECNICA.codigo" />';
@@ -1600,12 +1600,12 @@ Ext.onReady(function()
     try
     {
     	if(_p21_cdtipsup  == _TIPO_SITUACION_RENOVACION){
-    		//Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
+    		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Complementar]')[0].hide();
     	}else{
-    		//Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].hide();
+    		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].hide();
     		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].hide();
     		Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].hide();
     		Ext.ComponentQuery.query('button[text=Complementar]')[0].show();
@@ -1767,7 +1767,6 @@ Ext.onReady(function()
     
     if(_p21_ntramiteVacio)
     {
-    	alert('vacio');
         _fieldByName('ntramite').setValue(_p21_ntramiteVacio);
         _p21_tabpanel().setLoading(true);
         Ext.Ajax.request(

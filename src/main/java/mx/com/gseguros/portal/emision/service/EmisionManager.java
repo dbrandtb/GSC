@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.emision.service;
 
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -100,16 +99,7 @@ public interface EmisionManager
 			String apePat, String apeMat, String producto, String cve_plan, String esq_suma_ase, String parentesco,
 			String f_nacimiento, String rFC, String sexo, String peso, String estatura, String fecinivig,
 			String membresia);
-
-	/**
-	 * 
-	 * @param fecha
-	 * @param nombre
-	 * @param polizas
-	 * @param rango
-	 * @param usuario
-	 * @throws Exception
-	 */
-	public void insertaBitacora(Date fecha, String nombre, int polizas, String rango, String usuario) throws Exception;
+	
+	
 	
 }
