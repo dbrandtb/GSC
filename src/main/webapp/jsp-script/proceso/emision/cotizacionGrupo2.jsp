@@ -296,15 +296,6 @@ var forzaCambiaCensoClon = (cambiaTamTramClon||cargaCensoRenovNuvo)? true : fals
 
 var cveDesSucursal = '';
 
-
-//esTramiteClonado = true;
-//censoCloCargado =  false;
-//forzaCambiaCensoClon = true;
-
-alert('esTramiteClonado: '+esTramiteClonado);
-alert('censoCloCargado: '+censoCloCargado);
-alert('forzaCambiaCensoClon: '+forzaCambiaCensoClon);
-
 ////// variables //////
 
 Ext.onReady(function()
@@ -2168,7 +2159,6 @@ Ext.onReady(function()
      
     if(_p25_ntramiteVacio)
     {
-    	alert('vacio');
         _fieldByName('ntramite').setValue(_p25_ntramiteVacio);
         _p25_tabpanel().setLoading(true);
         Ext.Ajax.request(

@@ -3458,9 +3458,9 @@ public class EndososManagerImpl implements EndososManager
 		{
 			paso = "Antes de buscar cotizacion";
 			
-			if (cdsisrol.toUpperCase().equals("EJECUTIVOCUENTA")){
-				cdagente = cdusuari;
-			}
+//			if (cdsisrol.toUpperCase().equals("EJECUTIVOCUENTA")){
+//				cdagente = cdusuari;
+//			}
 			
 			infoGrid = endososDAO.recuperarCotizaciones(
 					cdunieco, 
