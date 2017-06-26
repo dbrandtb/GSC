@@ -150,7 +150,7 @@ Ext.onReady(function()
 		    {
 		        title    : 'Tr&aacute;mites. De dobe clic en alg&uacute;n tr&aacute;mite para clonar.'
 		        //,width   : 900
-		        ,height  : 200
+		        ,height  : 300
 		        ,store   : store
 		        ,columns : itemsGrid
 		        ,listeners: {
