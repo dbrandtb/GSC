@@ -236,7 +236,8 @@ Ext.onReady(function()
                     layout: {
                         type: 'column'
                     },
-                    title: 'B&uacute;queda.',
+                    title: 'Filtro de B&uacute;queda.',
+                    itemId: 'panelBusqueda',
                     items: [
                         {
                             xtype: 'combobox',
@@ -280,7 +281,7 @@ Ext.onReady(function()
                         },
                         {
                             xtype: 'combobox',
-                            fieldLabel: 'Modalidad',
+                            fieldLabel: 'Subramo',
                             name: 'params.cdtipsit',
                             labelAlign: 'right',
                             labelWidth: 70,
@@ -450,6 +451,7 @@ Ext.onReady(function()
                 {
                     xtype: 'gridpanel',
                     height: 310,
+                    itemId: 'gridBusqueda',
                     title: 'Resultados de B&uacute;queda para Configuraci&oacute;n de Estudios M&eacute;dicos Por Producto',
                     store: contEstCobGridStore,
                     columns: [
@@ -462,7 +464,7 @@ Ext.onReady(function()
                         {
                             xtype: 'gridcolumn',
                             dataIndex: 'DSTIPSIT',
-                            text: 'Modalidad',
+                            text: 'Subramo',
                             width: 120
                         },
                         {
@@ -772,8 +774,8 @@ Ext.onReady(function()
                             editor : {
             	                xtype      : 'textfield',
             	                name       : 'CDTABRES',
-            	                maxLength  : 6,
-            	               	allowBlank : false
+            	                maxLength  : 6
+            	               	//allowBlank : false
             	            }
                         }
                     ],
@@ -1204,7 +1206,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
             },
             {
                 xtype: 'combobox',
-                fieldLabel: 'Modalidad',
+                fieldLabel: 'Subramo',
                 name: 'CDTIPSIT',
                 labelAlign: 'right',
                 labelWidth: 70,
@@ -1511,7 +1513,10 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                                 if(json.success){
                                 	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
                                 	var gridConfigEstCob = btnGrid.up('grid');
-                                	gridConfigEstCob.getStore().reload();
+                                	var panelBusq = panelPrincipalConfResEstudios.down('#panelBusqueda');
+                                	gridConfigEstCob.getStore().load({
+       	                				params: panelBusq.getForm().getValues()
+       	                			});
                                 	
                                 	windowConfEstudios.close();
                                 	
@@ -1666,7 +1671,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
 		if(esNuevoRegistro){
 			numWindowAgregar++;
 			if(numWindowAgregar == 1){
-				mensajeInfo('Puede utilizar los valores de la B&uacute;queda principal para cargar autom&aacute;ticamente los valores de Producto, Modalidad, Cobertura y Subcobertura en esta ventana.');
+				mensajeInfo('Puede utilizar los valores de la B&uacute;queda principal para cargar autom&aacute;ticamente los valores de Producto, Subramo, Cobertura y Subcobertura en esta ventana.');
 			}
 		}
 		

@@ -7002,6 +7002,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 						,"DSCONCEP"
 						,"CDEST"
 						,"DSEST"
+						,"CDTABRES"
 						,"CDRESEST"
 						,"VALOR"
 						,"OBSERV"
@@ -7066,13 +7067,24 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			 String[] cols = new String[]{
 					 "CDRESEST"
 					 ,"DSRESEST"
+					 ,"CDTABRES"
 			 };
-			 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ResEstMapper()));
+			 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ResEstMapper2()));
 			 declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 			 declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			 compile();
 		 }
 	 }
+	 
+	 protected class ResEstMapper2  implements RowMapper {
+	        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	GenericVO consulta = new GenericVO();
+	        	consulta.setKey(rs.getString("CDRESEST"));
+	        	consulta.setValue(rs.getString("DSRESEST"));
+	        	consulta.setAux(rs.getString("CDTABRES"));
+	            return consulta;
+	        }
+	}
 	 
 	@Override
 	public boolean validaRequiereCapturaResEstudios(HashMap<String, String> params) throws Exception {
