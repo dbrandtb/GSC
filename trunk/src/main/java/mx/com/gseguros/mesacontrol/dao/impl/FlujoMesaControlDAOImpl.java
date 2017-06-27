@@ -344,7 +344,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 					,"WEBID"     , "XPOS"      , "YPOS"
 					,"TIMEMAX"   , "TIMEWRN1"  , "TIMEWRN2"
 					,"CDTIPASIG" , "DSESTADOMC" , "STATUSOUT"
-					,"SWFINNODE" , "CDETAPA"
+					,"SWFINNODE" , "CDETAPA", "ESTACION", "STATUSTRAZA"
 					};
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
