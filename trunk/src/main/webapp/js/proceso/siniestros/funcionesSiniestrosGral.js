@@ -3554,7 +3554,7 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 			{
 				extend : 'Ext.data.Model'
 				,fields :
-				['CDCONCEP','DSCONCEP','CDEST','DSEST','CDRESEST','VALOR', 'OBSERV','SWOBLVAL','SWOBLRES']
+				['CDCONCEP','DSCONCEP','CDEST','DSEST','CDRESEST','VALOR', 'OBSERV','SWOBLVAL','SWOBLRES', 'CDTABRES']
 	});
 	
 	/*/////////////////*/
@@ -3636,10 +3636,8 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 		callback: function(recordsEstRes, operationEst, successEst){
 			
 			Ext.Array.each(recordsEstRes,function(recordsEstResIT, indexRecRes){
-				bufferTiposResultadoEstudios.add(recordsEstResIT.get('key'), recordsEstResIT.get('value'));
+				bufferTiposResultadoEstudios.add(recordsEstResIT.get('aux')+'-'+recordsEstResIT.get('key'), recordsEstResIT.get('value'));
            	});
-			
-			
 		}
 	});
 
@@ -3894,7 +3892,8 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 	function rendererColumnUsandoEditorDep(value, record, columnIndex, grid){
 		var nuevoValor = value;
 //		debug('valor en render',value);
-		var llave =  value;
+		var llave =  (Ext.isEmpty(record.get('CDTABRES'))? '' : record.get('CDTABRES')) + '-' + value;
+		//alert(llave);
 		var existe = bufferTiposResultadoEstudios.containsKey(llave);
 		
 		if(existe){
