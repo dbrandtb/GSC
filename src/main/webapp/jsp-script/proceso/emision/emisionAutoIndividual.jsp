@@ -1556,7 +1556,8 @@ function _p29_emitirFinal(me)
                     _fieldById('_p29_botonEmitirPolizaFinal').hide();
                     _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                     _fieldById('_p29_botonNueva').setDisabled(false);
-                    
+                    _fieldById('_p29_botonEndososB').setDisabled(true);
+                   
                     
                     Ext.Msg.show(
                     {
@@ -1602,6 +1603,8 @@ function _p29_emitirFinal(me)
                 
                 _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                 _fieldById('_p29_botonNueva').setDisabled(false);
+                _fieldById('_p29_botonEndososB').setDisabled(true);
+                
                 if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
                 {
                     var ventanaTmp = Ext.Msg.show(
@@ -1638,6 +1641,7 @@ function _p29_emitirFinal(me)
                     _fieldById('_p29_botonEmitirPolizaFinal').hide();
                     _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                     _fieldById('_p29_botonNueva').setDisabled(false);
+                    _fieldById('_p29_botonEndososB').setDisabled(true);
                 }
                 Ext.Msg.show(
                 {
