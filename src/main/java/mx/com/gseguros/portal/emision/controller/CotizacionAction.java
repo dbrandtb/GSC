@@ -14748,6 +14748,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 					Iterator<Row> rowIterator        = sheet.iterator();
 		            int           fila               = 0;
+		            int           edad               = -1;
 		            int           nConsulta          = 0;
 		            StringBuilder bufferErroresCenso = new StringBuilder();
 		            int           filasLeidas        = 0;
@@ -14773,37 +14774,54 @@ public class CotizacionAction extends PrincipalCoreAction
 		                }
 		                
 		                fila       		= fila + 1;
+		               
 		                filasLeidas 	= filasLeidas + 1;
 		                double cdgrupo	= -1d;
-		                
+		                String banEdad  = "0";
 		                
 		               if(fila > 4){
-			                
+		            	   edad			= edad + 1;
 		            	   String leyendaConcepto 		= null;
 			                //EDAD PROMEDIO
 			                try {
-			                	logger.debug("Edad Promedio: "+(String.format("%.0f",row.getCell(0).getNumericCellValue())+"|"));
-				                bufferLinea.append(descMorbilidad+"|"+fechaVigencia+"|MSC|"+String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
+			                	if(String.valueOf(edad).equalsIgnoreCase(String.format("%.0f",row.getCell(0).getNumericCellValue()))){
+			                		bufferLinea.append(descMorbilidad+"|"+fechaVigencia+"|MSC|"+String.format("%.0f",row.getCell(0).getNumericCellValue())+"|");
+			                	}else{
+			                		banEdad = "1";
+			                	    throw new ApplicationException("No es valido la secuencia");
+			                	}
+				                
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer la edad promedio como numero, se intentara como string:",ex);
-				                	bufferLinea.append(descMorbilidad+"|"+fechaVigencia+"|MSC|"+String.format("%.0f",Double.parseDouble(row.getCell(0).getStringCellValue()))+"|");
+				                	if(String.valueOf(edad).equalsIgnoreCase(String.format("%.0f",Double.parseDouble(row.getCell(0).getStringCellValue())))){
+		                				bufferLinea.append(descMorbilidad+"|"+fechaVigencia+"|MSC|"+String.format("%.0f",Double.parseDouble(row.getCell(0).getStringCellValue()))+"|");
+		                			}else{
+				                		banEdad = "1";
+				                	    throw new ApplicationException("No es valido la secuencia");
+				                	}
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad Promedio ' (A) de la fila ",fila,"\n"));
+				                	if(banEdad.equalsIgnoreCase("1")){
+			                            bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Edad Promedio ' (A) de la fila",fila," "));
+			                        }else{
+			                        	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad Promedio ' (A) de la fila ",fila,"\n"));
+			                        }
+				                	
+				                	
 				                }
 			                } finally {
 			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
 			                }
 			                //MEDICINA PREVENTIVA HOMBRE
 			                try {
-			                	logger.debug("Hombre Medicina Preventiva : "+(row.getCell(1).getNumericCellValue()* 100) +"|");
-				                bufferLinea.append(row.getCell(1).getNumericCellValue()* 100+"|");
+			                	logger.debug("Hombre Medicina Preventiva : "+(row.getCell(1).getNumericCellValue()* 1) +"|");
+				                bufferLinea.append(row.getCell(1).getNumericCellValue()* 1+"|");
 		                	} catch(Exception ex) {
 			                	try {
 			                		logger.error("error al leer la medicina preventiva para hombre como numero, se intentara como string:",ex);
 				                	logger.debug("Hombre Medicina Preventiva : "+row.getCell(1).getStringCellValue() +"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(1).getStringCellValue())* 100)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(1).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina Preventiva hombres' (B) de la fila ",fila,"\n"));
@@ -14813,13 +14831,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //MEDICINA PREVENTIVA MUJERES
 			                try {
-			                	logger.debug("Mujer Medicina Preventiva: "+(row.getCell(2).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(2).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Mujer Medicina Preventiva: "+(row.getCell(2).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(2).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer la medicina preventiva para mujer como numero, se intentara como string:",ex);
-				                	logger.debug("Mujer Medicina Preventiva: "+(Double.parseDouble(row.getCell(2).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(2).getStringCellValue())* 100)+"|");
+				                	logger.debug("Mujer Medicina Preventiva: "+(Double.valueOf(row.getCell(2).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(2).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina Preventiva Mujeres' (C) de la fila ",fila,"\n"));
@@ -14829,13 +14847,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //MEDICINA DE PRIMER CONTACTO HOMBRE
 			                try {
-			                	logger.debug("Hombre Medicina Primer Contacto : "+(row.getCell(3).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(3).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Hombre Medicina Primer Contacto : "+(row.getCell(3).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(3).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 			                	try {
 			                		logger.error("error al leer la medicina de primer contacto para hombre como numero, se intentara como string:",ex);
-				                	logger.debug("Hombre Medicina Primer Contacto : "+(Double.parseDouble(row.getCell(3).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(3).getStringCellValue())* 100)+"|");
+				                	logger.debug("Hombre Medicina Primer Contacto : "+(Double.parseDouble(row.getCell(3).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(3).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina de Primer Contato Hombres' (D) de la fila ",fila,"\n"));
@@ -14845,13 +14863,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //MEDICINA DE PRIMER CONTACTO MUJER
 			                try {
-			                	logger.debug("Mujer  Medicina Primer Contacto : "+(row.getCell(4).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(4).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Mujer  Medicina Primer Contacto : "+(row.getCell(4).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(4).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer la medicina de primer contacto para mujer como numero, se intentara como string:",ex);
-				                	logger.debug("Mujer  Medicina Primer Contacto : "+(Double.parseDouble(row.getCell(4).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(4).getStringCellValue())* 100)+"|");
+				                	logger.debug("Mujer  Medicina Primer Contacto : "+(Double.valueOf(row.getCell(4).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(4).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina de Primer Contato Mujeres' (E) de la fila ",fila,"\n"));
@@ -14861,13 +14879,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //MATERNIDAD HOMBRE
 			                try {
-			                	logger.debug("Hombre Maternidad : "+(row.getCell(5).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(5).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Hombre Maternidad : "+(row.getCell(5).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(5).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer la maternidad hombre como numero, se intentara como string:",ex);
-				                	logger.debug("Hombre Maternidad : "+(Double.parseDouble(row.getCell(5).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(5).getStringCellValue())* 100)+"|");
+				                	logger.debug("Hombre Maternidad : "+(Double.valueOf(row.getCell(5).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(5).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Maternidad Hombres' (F) de la fila ",fila,"\n"));
@@ -14877,13 +14895,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //MATERNIDAD MUJERES
 			                try {
-			                	logger.debug("Mujer Maternidad: "+(row.getCell(6).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(6).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Mujer Maternidad: "+(row.getCell(6).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(6).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer la maternidad mujer como numero, se intentara como string:",ex);
-				                	logger.debug("Mujer Maternidad: "+(Double.parseDouble(row.getCell(6).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(6).getStringCellValue())* 100)+"|");
+				                	logger.debug("Mujer Maternidad: "+(Double.valueOf(row.getCell(6).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(6).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Maternidad Mujeres' (G) de la fila ",fila,"\n"));
@@ -14893,13 +14911,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //AYUDA DE MATERNIDAD HOMBRE
 			                try {
-			                	logger.debug("Hombre Ayuda de Maternidad : "+(row.getCell(7).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(7).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Hombre Ayuda de Maternidad : "+(row.getCell(7).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(7).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer Hombre Ayuda de Maternidad como numero, se intentara como string:",ex);
-				                	logger.debug("Hombre Ayuda de Maternidad : "+(Double.parseDouble(row.getCell(7).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(7).getStringCellValue())* 100)+"|");
+				                	logger.debug("Hombre Ayuda de Maternidad : "+(Double.valueOf(row.getCell(7).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(7).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ayuda de Maternidad Hombres' (H) de la fila ",fila,"\n"));
@@ -14909,13 +14927,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //AYUDA DE MATERNIDAD MUJERES
 			                try {
-			                	logger.debug("Mujer Ayuda de Maternidad : "+(row.getCell(8).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(8).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Mujer Ayuda de Maternidad : "+(row.getCell(8).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(8).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer Mujeres Ayuda de Maternidad como numero, se intentara como string:",ex);
-				                	logger.debug("Mujer Ayuda de Maternidad : "+(Double.parseDouble(row.getCell(8).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(8).getStringCellValue())* 100)+"|");
+				                	logger.debug("Mujer Ayuda de Maternidad : "+(Double.valueOf(row.getCell(8).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(8).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ayuda de Maternidad Mujeres' (I) de la fila ",fila,"\n"));
@@ -14925,13 +14943,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //SERVICIOS ODONTOLOGICOS HOMBRE
 			                try {
-			                	logger.debug("Hombre Servicios Odontologicos: "+(row.getCell(9).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(9).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Hombre Servicios Odontologicos: "+(row.getCell(9).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(9).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer servicios odontologicos hombre como numero, se intentara como string:",ex);
-				                	logger.debug("Hombre Servicios Odontologicos: "+(Double.parseDouble(row.getCell(9).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(9).getStringCellValue())* 100)+"|");
+				                	logger.debug("Hombre Servicios Odontologicos: "+(Double.valueOf(row.getCell(9).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(9).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Odontologicos Hombres' (J) de la fila ",fila,"\n"));
@@ -14941,13 +14959,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //SERVICIOS ODONTOLOGICOS MUJERES
 			                try {
-			                	logger.debug("Mujer Servicios Odontologicos: "+(row.getCell(10).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(10).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Mujer Servicios Odontologicos: "+(row.getCell(10).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(10).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer servicios odontologicos mujeres como numero, se intentara como string:",ex);
-				                	logger.debug("Mujer Servicios Odontologicos: "+(Double.parseDouble(row.getCell(10).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(10).getStringCellValue())* 100)+"|");
+				                	logger.debug("Mujer Servicios Odontologicos: "+(Double.valueOf(row.getCell(10).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(10).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Odontologicos Mujeres' (K) de la fila ",fila,"\n"));
@@ -14957,13 +14975,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //SERVICIOS AURXILIARES DE DIAGNOSTICO HOMBRE
 			                try {
-			                	logger.debug("Hombre Servicios Auxiliares de Diagnostico :"+(row.getCell(11).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(11).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Hombre Servicios Auxiliares de Diagnostico :"+(row.getCell(11).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(11).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer Hombre Servicios Auxiliares de Diagnostico como numero, se intentara como string:",ex);
-				                	logger.debug("Hombre Servicios Auxiliares de Diagnostico :"+(Double.parseDouble(row.getCell(11).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(11).getStringCellValue())* 100)+"|");
+				                	logger.debug("Hombre Servicios Auxiliares de Diagnostico :"+(Double.valueOf(row.getCell(11).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(11).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Auxiliares de Diagnostico Hombres' (L) de la fila ",fila,"\n"));
@@ -14973,13 +14991,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //SERVICIOS AURXILIARES DE DIAGNOSTICO MUJERES
 			                try {
-			                	logger.debug("Mujer Servicios Auxiliares de Diagnostico :"+(row.getCell(12).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(12).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Mujer Servicios Auxiliares de Diagnostico :"+(row.getCell(12).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(12).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer Mujer Servicios Auxiliares de Diagnostico como numero, se intentara como string:",ex);
-				                	logger.debug("Mujer Servicios Auxiliares de Diagnostico :"+(Double.parseDouble(row.getCell(12).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(12).getStringCellValue())* 100)+"|");
+				                	logger.debug("Mujer Servicios Auxiliares de Diagnostico :"+(Double.valueOf(row.getCell(12).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(12).getStringCellValue())* 1)+"|");
 			                	} catch(Exception extt) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Auxiliares de Diagnostico Mujeres' (M) de la fila ",fila,"\n"));
@@ -14989,13 +15007,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //MEDICAMENTOS HOMBRE
 			                try {
-			                	logger.debug("Hombre Medicamentos : "+(row.getCell(13).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(13).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Hombre Medicamentos : "+(row.getCell(13).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(13).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer Hombre Medicamentos como numero, se intentara como string:",ex);
-				                	logger.debug("Hombre Medicamentos : "+(Double.parseDouble(row.getCell(13).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(13).getStringCellValue())* 100)+"|");
+				                	logger.debug("Hombre Medicamentos : "+(Double.valueOf(row.getCell(13).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(13).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicamentos Hombres' (N) de la fila ",fila,"\n"));
@@ -15005,13 +15023,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //MEDICAMENTOS MUJERES
 			                try {
-			                	logger.debug("Mujer  Medicamentos : "+(row.getCell(14).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(14).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Mujer  Medicamentos : "+(row.getCell(14).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(14).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer Mujeres Medicamentos como numero, se intentara como string:",ex);
-				                	logger.debug("Mujer  Medicamentos : "+(Double.parseDouble(row.getCell(14).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(14).getStringCellValue())* 100)+"|");
+				                	logger.debug("Mujer  Medicamentos : "+(Double.valueOf(row.getCell(14).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(14).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicamentos Mujeres' (O) de la fila ",fila,"\n"));
@@ -15021,13 +15039,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //HOSPITALIZACION HOMBRE
 			                try {
-			                	logger.debug("Hombre Hospitalizacion : "+(row.getCell(15).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(15).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Hombre Hospitalizacion : "+(row.getCell(15).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(15).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer la Hospitalizacion de Hombre como numero, se intentara como string:",ex);
-				                	logger.debug("Hombre Hospitalizacion : "+(Double.parseDouble(row.getCell(15).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(15).getStringCellValue())* 100)+"|");
+				                	logger.debug("Hombre Hospitalizacion : "+(Double.valueOf(row.getCell(15).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(15).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Hospitalizacion Hombres' (P) de la fila ",fila,"\n"));
@@ -15037,13 +15055,13 @@ public class CotizacionAction extends PrincipalCoreAction
 			                }
 			                //HOSPITALIZACION MUJERES
 			                try {
-			                	logger.debug("Mujer Hospitalizacion : "+(row.getCell(16).getNumericCellValue()* 100)+"|");
-				                bufferLinea.append((row.getCell(16).getNumericCellValue()* 100)+"|");
+			                	logger.debug("Mujer Hospitalizacion : "+(row.getCell(16).getNumericCellValue()* 1)+"|");
+				                bufferLinea.append((row.getCell(16).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer la Hospitalizacion de Mujer como numero, se intentara como string:",ex);
-		                			logger.debug("Mujer Hospitalizacion : "+(Double.parseDouble(row.getCell(16).getStringCellValue())* 100)+"|");
-					                bufferLinea.append((Double.parseDouble(row.getCell(16).getStringCellValue())* 100)+"|");
+		                			logger.debug("Mujer Hospitalizacion : "+(Double.valueOf(row.getCell(16).getStringCellValue())* 1)+"|");
+					                bufferLinea.append((Double.valueOf(row.getCell(16).getStringCellValue())* 1)+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Hospitalizacion Mujeres' (Q) de la fila ",fila,"\n"));
@@ -15055,11 +15073,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			                //HOMBRE ASISTENCIA INTERNACIONALEN VIAJE 
 			                try {
 			                	logger.debug("Hombre Asistencia Internacional : ");
-			                	bufferLinea.append((row.getCell(17).getNumericCellValue()* 100)+"|");
+			                	bufferLinea.append((row.getCell(17).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer la asistencia Internacional en viaje de Hombre como numero, se intentara como string:",ex);
-		                			bufferLinea.append(Double.parseDouble(row.getCell(17).getStringCellValue())* 100+"|");
+		                			bufferLinea.append(Double.valueOf(row.getCell(17).getStringCellValue())* 1+"|");
 			                	} catch(Exception ext) {
 			                		filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Asistencia Internacional en Viaje Hombres' (R) de la fila ",fila,"\n"));
@@ -15070,11 +15088,11 @@ public class CotizacionAction extends PrincipalCoreAction
 			                //HOMBRE ASISTENCIA INTERNACIONALEN VIAJE
 			                try {
 			                	logger.debug("Mujer Asistencia Internacional : ");
-			                	bufferLinea.append((row.getCell(18).getNumericCellValue()* 100)+"|");
+			                	bufferLinea.append((row.getCell(18).getNumericCellValue()* 1)+"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer la asistencia Internacional en viaje de Mujer como numero, se intentara como string:",ex);
-				                	bufferLinea.append(Double.parseDouble(row.getCell(18).getStringCellValue())* 100+"|");
+				                	bufferLinea.append(Double.valueOf(row.getCell(18).getStringCellValue())* 1+"|");
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Asistencia Internacional en Viaje Mujeres' (S) de la fila ",fila,"\n"));
@@ -15083,112 +15101,76 @@ public class CotizacionAction extends PrincipalCoreAction
 			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
 			                }
 			                
-			                //EMERGENCIA MEDICA HOMBRE
-			                try {
-			                	logger.debug("Hombre Emergencia Medica : ");
-			                	auxCell=row.getCell(19);
-				                bufferLinea.append(auxCell!=null?(row.getCell(19).getNumericCellValue()* 100)+"|":"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer la emergencia Medica hombre como numero, se intentara como string:",ex);
-		                			auxCell=row.getCell(19);
-		                			bufferLinea.append(auxCell!=null?Double.parseDouble(row.getCell(19).getStringCellValue())* 100+"|":"|");
-		                			
-			                	} catch(Exception ext) {
-			                		filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Emergencia Medica Hombres' (T) de la fila ",fila,"\n"));
-				                }
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
-			                }
-			                //EMERGENCIA MEDICA MUJERES
-			                try {
-			                	logger.debug("Mujer Emergencia Medica : ");
-			                	auxCell=row.getCell(20);
-			                	bufferLinea.append(auxCell!=null?(row.getCell(20).getNumericCellValue()* 100)+"|":"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer la emergencia Medica mujeres como numero, se intentara como string:",ex);
-		                			auxCell=row.getCell(20);
-		                			bufferLinea.append(auxCell!=null?Double.parseDouble(row.getCell(20).getStringCellValue())* 100+"|":"|");		                			
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Emergencia Medica Mujeres' (U) de la fila ",fila,"\n"));
-				                }
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(20)),"-"));
-			                }
-			                
 			                ////////B L O Q U E S	E X T R A S
 			                //BLOQUE 1 HOMBRE
 			                try {
 			                	logger.debug("Bloque 1 HOMBRE: ");
-			                	auxCell=row.getCell(21);
-				                bufferLinea.append(auxCell!=null?(row.getCell(21).getNumericCellValue()* 100)+"|":"|");
+			                	auxCell=row.getCell(19);
+				                bufferLinea.append(auxCell!=null?(row.getCell(19).getNumericCellValue()*1)+"|":"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer Bloque 1 Hombre como numero, se intentara como string:",ex);
-		                			auxCell=row.getCell(21);
-		                			bufferLinea.append(auxCell!=null?Double.parseDouble(row.getCell(21).getStringCellValue())* 100+"|":"|");
+		                			auxCell=row.getCell(19);
+		                			bufferLinea.append(auxCell!=null?(Double.valueOf(row.getCell(19).getStringCellValue())* 1)+"|":"|");
 		                			
 			                	} catch(Exception ext) {
 			                		filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 1 HOMBRE' (V) de la fila ",fila,"\n"));
+				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 1 HOMBRE' (T) de la fila ",fila,"\n"));
 				                }
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(21)),"-"));
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 			                }
 			                //BLOQUE 1 MUJER
 			                try {
 			                	logger.debug("Bloque 1 MUJER: ");
-			                	auxCell=row.getCell(22);
-			                	bufferLinea.append(auxCell!=null?(row.getCell(22).getNumericCellValue()* 100)+"|":"|");
+			                	auxCell=row.getCell(20);
+			                	bufferLinea.append(auxCell!=null?(row.getCell(20).getNumericCellValue()*1)+"|":"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer Bloque 1 MUJER como numero, se intentara como string:",ex);
-		                			auxCell=row.getCell(22);
-		                			bufferLinea.append(auxCell!=null?Double.parseDouble(row.getCell(22).getStringCellValue())* 100+"|":"|");		                			
+		                			auxCell=row.getCell(20);
+		                			bufferLinea.append(auxCell!=null?(Double.valueOf(row.getCell(20).getStringCellValue())* 1)+"|":"|");		                			
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 1 MUJER' (W) de la fila ",fila,"\n"));
+				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 1 MUJER' (U) de la fila ",fila,"\n"));
 				                }
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(22)),"-"));
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(20)),"-"));
 			                }
 			                //BLOQUE 2 HOMBRE
 			                try {
 			                	logger.debug("Bloque 2 HOMBRE: ");
-			                	auxCell=row.getCell(23);
-				                bufferLinea.append(auxCell!=null?(row.getCell(23).getNumericCellValue()* 100)+"|":"|");
+			                	auxCell=row.getCell(21);
+				                bufferLinea.append(auxCell!=null?(row.getCell(21).getNumericCellValue()*1)+"|":"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer Bloque 2 Hombre como numero, se intentara como string:",ex);
-		                			auxCell=row.getCell(23);
-		                			bufferLinea.append(auxCell!=null?Double.parseDouble(row.getCell(23).getStringCellValue())* 100+"|":"|");
+		                			auxCell=row.getCell(21);
+		                			bufferLinea.append(auxCell!=null?(Double.valueOf(row.getCell(21).getStringCellValue())* 1)+"|":"|");
 		                			
 			                	} catch(Exception ext) {
 			                		filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 2 HOMBRE' (X) de la fila ",fila,"\n"));
+				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 2 HOMBRE' (V) de la fila ",fila,"\n"));
 				                }
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(23)),"-"));
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(21)),"-"));
 			                }
 			                //BLOQUE 2 MUJER
 			                try {
 			                	logger.debug("Bloque 2 MUJER: ");
-			                	auxCell=row.getCell(24);
-			                	bufferLinea.append(auxCell!=null?(row.getCell(24).getNumericCellValue()* 100)+"|":"|");
+			                	auxCell=row.getCell(22);
+			                	bufferLinea.append(auxCell!=null?(row.getCell(22).getNumericCellValue()*1)+"|":"|");
 		                	} catch(Exception ex) {
 		                		try {
 		                			logger.error("error al leer Bloque 2 MUJER como numero, se intentara como string:",ex);
-		                			auxCell=row.getCell(24);
-		                			bufferLinea.append(auxCell!=null?Double.parseDouble(row.getCell(24).getStringCellValue())* 100+"|":"|");		                			
+		                			auxCell=row.getCell(22);
+		                			bufferLinea.append(auxCell!=null?(Double.valueOf(row.getCell(22).getStringCellValue())* 1)+"|":"|");		                			
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 2 MUJER' (Y) de la fila ",fila,"\n"));
+				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 2 MUJER' (W) de la fila ",fila,"\n"));
 				                }
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(24)),"-"));
+			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(22)),"-"));
 			                }
 			                
 			                

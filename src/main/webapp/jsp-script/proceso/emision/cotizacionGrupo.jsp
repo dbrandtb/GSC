@@ -1066,13 +1066,13 @@ Ext.onReady(function()
                                                         xtype    : 'button'
                                                         ,text    : 'Registrar Morbilidad'
                                                         ,icon    : '${ctx}/resources/fam3icons/icons/layout_add.png'
-                                                        ,hidden  :  _p21_smap1.cdsisrol!='COTIZADOR'
+                                                        ,hidden  :  _p21_smap1.cdsisrol!='COTIZADOR'&&_p21_smap1.cdsisrol!='SUPTECSALUD'&&_p21_smap1.cdsisrol!='SUBDIRSALUD'&&_p21_smap1.cdsisrol!='DIRECSALUD'
                                                         ,handler : _p21_AgregarMorbilidad//subirDocumentoMorbilidad
                                                     },{
                                                         xtype    : 'button'
                                                         ,text    : 'Consultar Morbilidad'
                                                         ,icon    : '${ctx}/resources/fam3icons/icons/layout.png'
-                                                        ,hidden  : _p21_smap1.cdsisrol!='COTIZADOR'
+                                                        ,hidden  : _p21_smap1.cdsisrol!='COTIZADOR'&&_p21_smap1.cdsisrol!='SUPTECSALUD'&&_p21_smap1.cdsisrol!='SUBDIRSALUD'&&_p21_smap1.cdsisrol!='DIRECSALUD'
                                                         ,handler : _p21_editarMorbilidad
                                                     }]
                                             }
