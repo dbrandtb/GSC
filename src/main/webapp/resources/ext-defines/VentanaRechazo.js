@@ -408,6 +408,24 @@ Ext.define('VentanaRechazo',
                             width      : 550,
                             emptyText  : 'Correos separados por ;',
                             labelWidth : 120,
+                            listeners  : {
+                                afterrender : function (me) {
+                                    _request({
+                                        mask   : 'Recuperando correo del agente',
+                                        url    : _GLOBAL_URL_RECUPERACION,
+                                        params : {
+                                            'params.consulta' : 'RECUPERAR_CORREOS_TRAMITE',
+                                            'params.ntramite' : config.ntramite
+                                        },
+                                        success : function(json) {
+                                            if (!Ext.isEmpty(json.params.correoAgente)) {
+                                                me.correoAgente = json.params.correoAgente;
+                                                me.setValue(json.params.correoAgente);
+                                            }
+                                        }
+                                    })
+                                }
+                            },
                             validator  : function (val) {
                                 var r = 'Error';
                                 try {
