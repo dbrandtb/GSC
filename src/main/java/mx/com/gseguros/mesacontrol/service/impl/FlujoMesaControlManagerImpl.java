@@ -384,9 +384,10 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,"-1"  //statusout
 						,"N"   //swfinnode
 						,"1"   //EN REGISTRO
+						,"MDC"//null
+						,"1"//null
 						,"I"
-						,null
-						,null
+						
 						);
 			}
 			else if("S".equals(tipo))
