@@ -14768,10 +14768,10 @@ public class CotizacionAction extends PrincipalCoreAction
 		                StringBuilder bufferLineaStr = new StringBuilder();
 		                boolean       filaBuena      = true;
 		                
-		                if(Utils.isRowEmpty(row))
+		                /*if(Utils.isRowEmpty(row))
 		                {
 		                	break;
-		                }
+		                }*/
 		                
 		                fila       		= fila + 1;
 		               
