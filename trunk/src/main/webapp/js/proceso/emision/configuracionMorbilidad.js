@@ -18,8 +18,8 @@ Ext.onReady(function() {
 			    {type:'string',      name:'SERVAUXDIAGTHOM'},		    {type:'string',      name:'SERVAUXDIAGTMUJ'},
 			    {type:'string',      name:'MEDICAMENTOSHOM'},		    {type:'string',      name:'MEDICAMENTOSMUJ'},
 			    {type:'string',      name:'HOSPITALIZAHOM'},		    {type:'string',      name:'HOSPITALIZAMUJ'},
-			    {type:'string',      name:'ASISTENCIAHOM'},             {type:'string',      name:'ASISTENCIAMUJ'},
-			    {type:'string',      name:'URGENCIAMEDHOM'},		    {type:'string',      name:'URGENCIAMEDMUJ'}
+			    {type:'string',      name:'ASISTENCIAHOM'},             {type:'string',      name:'ASISTENCIAMUJ'}
+			    //,{type:'string',      name:'URGENCIAMEDHOM'},		    {type:'string',      name:'URGENCIAMEDMUJ'}
         ]
 	});
 	
@@ -101,47 +101,43 @@ Ext.onReady(function() {
 				,height        : 400
 				,columns       : [
 					{
-						header     : 'EDAD',                                            dataIndex  : 'EDAD',	width: 50
+						header     : 'EDAD',                                                dataIndex  : 'EDAD',	width: 50
 					},{
-                        header     : 'MEDICINA PREVENTIVA <br/>HOMBRE',                 dataIndex  : 'MEDPREVENTIVAHOM',    width: 200
+                        header     : 'MEDICINA PREVENTIVA <br/>HOMBRE (%)',                 dataIndex  : 'MEDPREVENTIVAHOM',    width: 200
                     },{
-                        header     : 'MEDICINA PREVENTIVA <br/>MUJER',                  dataIndex  : 'MEDPREVENTIVAMUJ',    width: 200
+                        header     : 'MEDICINA PREVENTIVA <br/>MUJER (%)',                  dataIndex  : 'MEDPREVENTIVAMUJ',    width: 200
                     },{
-                        header     : 'MEDICINA PRIMER CONTACTO <br/>HOMBRE',            dataIndex : 'MEDPRIMERCONTHOM',     width: 200
+                        header     : 'MEDICINA PRIMER CONTACTO <br/>HOMBRE (%)',            dataIndex : 'MEDPRIMERCONTHOM',     width: 200
                     },{
-                        header     : 'MEDICINA PRIMER CONTACTO <br/>MUJER',             dataIndex : 'MEDPRIMERCONTAMUJ',    width: 200
+                        header     : 'MEDICINA PRIMER CONTACTO <br/>MUJER (%)',             dataIndex : 'MEDPRIMERCONTAMUJ',    width: 200
                     },{
-                        header     : 'MATERNIDAD <br/>HOMBRE',                          dataIndex : 'MATERNIDADHOM',        width: 100
+                        header     : 'MATERNIDAD <br/>HOMBRE (%)',                          dataIndex : 'MATERNIDADHOM',        width: 100
                     },{
-                        header     : 'MATERNIDAD <br/>MUJER',                           dataIndex : 'MATERNIDADMUJ',        width: 150
+                        header     : 'MATERNIDAD <br/>MUJER (%)',                           dataIndex : 'MATERNIDADMUJ',        width: 150
                     },{
-                        header     : 'AYUDA DE MATERNIDAD <br/>HOMBRE',                 dataIndex : 'AYUDAMATHOM',          width: 150
+                        header     : 'AYUDA DE MATERNIDAD <br/>HOMBRE (%)',                 dataIndex : 'AYUDAMATHOM',          width: 150
                     },{
-                        header     : 'AYUDA DE MATERNIDAD <br/>MUJER',                  dataIndex : 'AYUDAMATMUJ',          width: 150
+                        header     : 'AYUDA DE MATERNIDAD <br/>MUJER (%)',                  dataIndex : 'AYUDAMATMUJ',          width: 150
                     },{
-                        header     : 'SERVICIOS ODONTOLOGICOS <br/>HOMBRE',             dataIndex : 'SERVODONTHOM',         width: 220
+                        header     : 'SERVICIOS ODONTOLOGICOS <br/>HOMBRE (%)',             dataIndex : 'SERVODONTHOM',         width: 220
                     },{
-                        header     : 'SERVICIOS ODONTOLOGICOS <br/>MUJER',              dataIndex : 'SERVODONTMUJ',         width: 220
+                        header     : 'SERVICIOS ODONTOLOGICOS <br/>MUJER (%)',              dataIndex : 'SERVODONTMUJ',         width: 220
                     },{
-                        header     : 'SERVICIOS AUXILIARES DE DIAGNOSTICO <br/>HOMBRE', dataIndex : 'SERVAUXDIAGTHOM',      width: 230
+                        header     : 'SERVICIOS AUXILIARES DE DIAGNOSTICO <br/>HOMBRE (%)', dataIndex : 'SERVAUXDIAGTHOM',      width: 230
                     },{
-                        header     : 'SERVICIOS AUXILIARES DE DIAGNOSTICO <br/>MUJER',  dataIndex : 'SERVAUXDIAGTMUJ',      width: 230
+                        header     : 'SERVICIOS AUXILIARES DE DIAGNOSTICO <br/>MUJER (%)',  dataIndex : 'SERVAUXDIAGTMUJ',      width: 230
                     },{
-                        header     : 'MEDICAMENTOS <br/>HOMBRE',                        dataIndex : 'MEDICAMENTOSHOM',      width: 150
+                        header     : 'MEDICAMENTOS <br/>HOMBRE (%)',                        dataIndex : 'MEDICAMENTOSHOM',      width: 150
                     },{
-                        header     : 'MEDICAMENTOS <br/>MUJER',                         dataIndex : 'MEDICAMENTOSMUJ',      width: 150
+                        header     : 'MEDICAMENTOS <br/>MUJER (%)',                         dataIndex : 'MEDICAMENTOSMUJ',      width: 150
                     },{
-                        header     : 'HOSPITALIZACI&Oacute;N <br/>HOMBRE',              dataIndex : 'HOSPITALIZAHOM',       width: 150
+                        header     : 'HOSPITALIZACI&Oacute;N <br/>HOMBRE (%)',              dataIndex : 'HOSPITALIZAHOM',       width: 150
                     },{
-                        header     : 'HOSPITALIZACI&Oacute;N <br/>MUJER',               dataIndex : 'HOSPITALIZAMUJ',       width: 150
+                        header     : 'HOSPITALIZACI&Oacute;N <br/>MUJER (%)',               dataIndex : 'HOSPITALIZAMUJ',       width: 150
                     },{
-                        header     : 'ASISTENCIA INTERNACIONAL <br/>HOMBRE',            dataIndex : 'ASISTENCIAHOM',        width: 220
+                        header     : 'ASISTENCIA INTERNACIONAL <br/>HOMBRE (%)',            dataIndex : 'ASISTENCIAHOM',        width: 220
                     },{
-                        header     : 'ASISTENCIA INTERNACIONAL <br/>MUJER',             dataIndex : 'ASISTENCIAMUJ',        width: 220
-                    },{
-                        header     : 'URGENCIAS MEDICAS <br/>HOMBRE',                   dataIndex : 'URGENCIAMEDHOM',       width: 220
-                    },{
-                        header     : 'URGENCIAS MEDICAS <br/>MUJER',                    dataIndex : 'URGENCIAMEDMUJ',       width: 220
+                        header     : 'ASISTENCIA INTERNACIONAL <br/>MUJER (%)',             dataIndex : 'ASISTENCIAMUJ',        width: 220
                     }
 				],
 				bbar     :{

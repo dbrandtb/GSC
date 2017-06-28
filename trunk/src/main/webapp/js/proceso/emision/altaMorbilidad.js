@@ -183,7 +183,17 @@ function _p21_subirArchivoMorbilidad(button,nombreCensoParaConfirmar){
                                         }
                                          else
                                          {
-                                            form.setLoading(false);
+                                         	var mensajeRespuesta="";
+                                         	var mensajeHoja   = json.respuesta+"";
+                                         	var mensajeError  = json.smap1.erroresCenso+"";
+                                         	if(mensajeHoja != 'undefined' && mensajeHoja != 'null'){
+                                         		mensajeRespuesta= mensajeRespuesta+""+mensajeHoja;
+                                         	}
+                                         	if(mensajeError!= 'undefined'){
+                                                mensajeRespuesta= mensajeRespuesta+""+mensajeError;
+                                            }
+                                         	
+                                         	form.setLoading(false);
                                             centrarVentanaInterna(mensajeWarning('El archivo contiene errores de Datos.<br/>Favor de validarlo.',function(){
                                             centrarVentanaInterna(Ext.create('Ext.window.Window', {
                                             modal  : true
@@ -194,7 +204,7 @@ function _p21_subirArchivoMorbilidad(button,nombreCensoParaConfirmar){
                                                              ,width    : 700
                                                              ,height   : 400
                                                              ,readOnly : true
-                                                             ,value    : json.smap1.erroresCenso
+                                                             ,value    : mensajeRespuesta
                                                         }
                                                     ]
                                                 }).show());
