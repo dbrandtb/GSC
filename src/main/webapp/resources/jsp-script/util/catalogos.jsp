@@ -207,6 +207,7 @@ var RolSistema = {
     ,GerenteOperacionesEmision    : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@GENERENTE_OPERACION_EMISION.cdsisrol" />'
     ,SuscriptorSalud              : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR.cdsisrol"                  />'  
     ,SupervicionEmisionSalud      : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUPERVISOR.cdsisrol"                  />'
+    ,TecnicoAutos                 : '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@TECNICO_AUTOS.cdsisrol"               />'
     ,
     
     
@@ -225,7 +226,8 @@ var RolSistema = {
 			this.JefeSuscripcionDanios,
 			this.SubdirectorSuscripcionDanios,
 			this.SuscriptorAuto,
-			this.TecnicoSuscripcionDanios
+			this.TecnicoSuscripcionDanios,
+			this.TecnicoAutos
 		];
 		
 		for (var i in roles) {
