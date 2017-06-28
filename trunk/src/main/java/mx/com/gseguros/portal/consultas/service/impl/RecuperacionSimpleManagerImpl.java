@@ -751,7 +751,26 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				mapa = endososDAO.recuperarPersonaEndosoAlta(params.get("cdperson"));
 			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_CORREO_AGENTE_TRAMITE)) {
 			    mapa .put("correoAgente", flujoMesaControlDAO.recuperarCorreoAgenteTramite(params.get("ntramite")));
-			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_RANGO_DESCUENTO_RECARGO)) {
+			} else if (consulta.equals(RecuperacionSimple.RECUPERAR_CORREOS_TRAMITE)) {
+				String correos="";
+				
+				List<Map<String,String>>lista=new ArrayList<Map<String,String>>();
+				lista = flujoMesaControlDAO.recuperarRequisitosDatosTramite(params.get("ntramite"));
+				
+				Iterator<Map<String,String>> itLista = lista.listIterator();
+				Map<String, String> itemLista;
+				while(itLista.hasNext()) {
+					itemLista = itLista.next();
+					logger.debug("Recorriendo DSREQUISI: " +  itemLista.get("DSREQUISI") + " DSDATO: " + itemLista.get("DSDATO"));
+					//correos = itemLista.get("DSREQUISI").equals("CORREOS") ? itemLista.get("DSDATO") : break;
+					if (itemLista.get("DSREQUISI").equals("CORREOS")){
+						correos = itemLista.get("DSDATO");
+						break;
+					}
+				}
+				
+			    mapa .put("correoAgente",correos );
+			}else if (consulta.equals(RecuperacionSimple.RECUPERAR_RANGO_DESCUENTO_RECARGO)) {
 			    mapa = cotizacionDAO.recuperarRangoDescuentoRecargo(params.get("cdramo"), params.get("cdtipsit"), cdusuari, cdsisrol);
 			}
 		}
