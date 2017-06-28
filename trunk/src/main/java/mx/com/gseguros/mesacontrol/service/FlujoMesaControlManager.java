@@ -91,6 +91,8 @@ public interface FlujoMesaControlManager
 			,String statusout
 			,boolean swfinnode
 			,String cdetapa
+			,String cdestacion 
+			,String cdtrazabilidad
 			)throws Exception;
 	
 	public String registrarConnection(

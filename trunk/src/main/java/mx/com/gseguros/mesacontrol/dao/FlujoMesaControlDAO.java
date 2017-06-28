@@ -256,13 +256,15 @@ public interface FlujoMesaControlDAO {
 	 * @param timewrn2
 	 * @param swescala
 	 * @param cdtipasig
+	 * @param cdestacion
+	 * @param cdtrazabilidad
 	 * @param accion
 	 * @throws Exception
 	 */
 	public void movimientoTfluest(String cdtipflu, String cdflujomc,
 			String cdestadomc, String webid, String xpos, String ypos,
 			String timemax, String timewrn1, String timewrn2,
-			String cdtipasig, String statusout, String swfinnode, String cdetapa,
+			String cdtipasig, String statusout, String swfinnode, String cdetapa, String cdestacion, String cdtrazabilidad,
 			String accion)
 			throws Exception;
 
