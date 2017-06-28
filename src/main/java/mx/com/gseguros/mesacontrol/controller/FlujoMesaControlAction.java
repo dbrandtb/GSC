@@ -658,6 +658,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,statusout  = params.get("STATUSOUT")
 			       ,swfinnode  = params.get("SWFINNODE")
 			       ,cdetapa    = params.get("CDETAPA")
+	    		   ,cdestacion    = params.get("ESTACION")
+				   ,cdtrazabilidad    = params.get("STATUSTRAZA")
 			       ;
 			
 			Utils.validate(
@@ -676,6 +678,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,timewrn2m  , "No se recibi\u00f3 minutos max alerta 2"
 					,cdtipasig  , "No se recibi\u00f3 tipo de asignaci\u00f3n"
 					,cdetapa    , "No se recibi\u00f3 el indicador"
+					,cdestacion    , "No se recibi\u00f3 el Estaci\u00f3n de Trabajo"
+					,cdtrazabilidad    , "No se recibi\u00f3 el Estatus de Trazabilidad"
 					);
 			
 			flujoMesaControlManager.guardarDatosEstado(
@@ -698,6 +702,8 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,statusout
 					,"S".equals(swfinnode)
 					,cdetapa
+					,cdestacion 
+					,cdtrazabilidad
 					);
 			
 			success = true;
