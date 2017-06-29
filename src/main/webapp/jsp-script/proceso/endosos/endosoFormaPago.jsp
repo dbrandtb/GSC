@@ -378,7 +378,7 @@ function _9_confirmar()
 											_p3_cargarCorreos(_9_flujo.ntramite)
                                         	
                                         	_p3_enviar(_9_flujo.ntramite
-														,json1.smap3.pdfEndosoNom_o);
+														,json1.smap2.pdfEndosoNom_o);
                                         } 
                             			
                             		},{
@@ -557,8 +557,8 @@ function _9_confirmar()
 																			                               _9_smap1.CDRAMO,
 																			                               _9_smap1.ESTADO,
 																			                               _9_smap1.NMPOLIZA,
-																			                               json.smap3.pv_nmsuplem_o,
-																			                               json.smap3.pv_nsuplogi_o);
+																			                               json1.smap3.pv_nmsuplem_o,
+																			                               json1.smap3.pv_nsuplogi_o);
 						                
 						                    
 																		                    }
