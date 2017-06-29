@@ -1296,8 +1296,10 @@ function _p29_mostrarVistaPrevia()
                                     ,xtype : 'button'
                                     ,text  : 'Enviar Email'
                                     ,icon  : '${ctx}//resources/fam3icons/icons/email.png'
-                                    ,disabled: true
-                                    ,handler  : _p30_enviar
+                                    //,disabled: true
+                                    ,handler  : function(){
+                                    	_p30_enviar()
+                                    }
                                     //REQ0040
                                 },{
                                     itemId : 'botonReenvioWS'
@@ -2407,10 +2409,10 @@ function _p30_enviar()
                         debug('Se va a enviar cotizacion');
                         me.up().up().setLoading(true);
                         //REQ0040
-                        if(Ext.isEmpty(_mensajeEmail)){
-                        	mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
-                        	return;
-                        }
+                        //if(Ext.isEmpty(_mensajeEmail)){
+                        //	mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
+                        //	return false;
+                        //}
                         Ext.Ajax.request(
                         	{
                             	url : _urlEnviarCorreo,
@@ -2425,33 +2427,38 @@ function _p30_enviar()
                                 {
                                 	if (success)
                                     {
-                                    	var json = Ext.decode(response.responseText);
-                                        if (json.success == true)
+                                    var json = Ext.decode(response.responseText);
+                                    if (json.success == true)
+                                    {
+                                        centrarVentanaInterna(Ext.Msg.show(
                                         {
-                                        	Ext.Msg.show(
+                                            title : 'Correo enviado'
+                                            ,msg : 'El correo ha sido enviado'
+                                            ,buttons : Ext.Msg.OK
+                                            ,fn      : function()
                                             {
-                                            	title    : 'Correo enviado'
-                                                ,msg     : 'El correo ha sido enviado'
-                                                ,buttons : Ext.Msg.OK
-                                                ,icon    : 'x-message-box-ok'
-                                                ,fn      : function()
-                                                {
-                                                	_generarRemesaClic(
-                                                    	false
-                                                        ,_p29_smap1.cdunieco
-                                                        ,_p29_smap1.cdramo
-                                                        ,'M'
-                                                        ,_p29_smap1.nmpolizaEmitida
-                                                        ,function(){}
-                                                        ,'S'
-                                                        );
-                                                 }
-                                           });
-                                       }
-                                       else
-                                       {
-                                       		mensajeError('Error al enviar el correo');
-                                       }
+                                            	_generarRemesaClic(
+                                             	false
+                                             	,_p29_smap1.cdunieco
+                                            	,_p29_smap1.cdramo
+                                             	,'M'
+                                              	,_p29_smap1.nmpolizaEmitida
+                                             	,function(){}
+                                             	,'S'
+                                              	);
+                                              	
+                                                me.up().up().setLoading(false);
+                                            }
+                                        }));
+                                    }
+                                    else
+                                    {
+                                        mensajeError('Error al enviar');
+                                        me.up().up().setLoading(false);
+                                        this.up().up().destroy();
+                                        
+                                    }
+                                
                                    }
                                    else
                                    {
@@ -2464,7 +2471,9 @@ function _p30_enviar()
                     else
                     {
                         mensajeWarning('Introduzca al menos un correo');
+                        this.up().up().destroy();
                     }
+                    
                 }
             }
             ,{
