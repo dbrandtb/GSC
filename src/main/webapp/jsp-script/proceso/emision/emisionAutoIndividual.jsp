@@ -1296,7 +1296,7 @@ function _p29_mostrarVistaPrevia()
                                     ,xtype : 'button'
                                     ,text  : 'Enviar Email'
                                     ,icon  : '${ctx}//resources/fam3icons/icons/email.png'
-                                    //,disabled: true
+                                    ,disabled: true
                                     ,handler  : function(){
                                     	_p30_enviar()
                                     }
