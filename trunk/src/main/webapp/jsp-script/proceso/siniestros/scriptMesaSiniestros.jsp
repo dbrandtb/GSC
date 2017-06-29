@@ -18,12 +18,14 @@ var _STATUS_TRAMITE_RECHAZADO               = '<s:property value="@mx.com.gsegur
 var _STATUS_TRAMITE_EN_CAPTURA              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_CAPTURA.codigo" />';
 var _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_ASIGNACION.codigo" />';
 var _STATUS_TRAMITE_CONFIRMADO              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@CONFIRMADO.codigo" />';
+var _STATUS_TRAMITE_PENDIENTE				= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@PENDIENTE.codigo" />';
 var _CAT_DESTINOPAGO                        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@DESTINOPAGO"/>';
 var _CAT_CONCEPTO                           = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CATCONCEPTO"/>';
 var _STATUS_DEVOLVER_TRAMITE				= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@TRAMITE_EN_DEVOLUCION.codigo" />';
 var _CATALOGO_CONCEPTOPAGO					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CONCEPTOPAGO"/>';
 var _TIPO_TRAMITE_SINIESTRO					= '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra" />';
 var _CATALOGO_PROVEEDORES  					= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
+var _MCSINIESTROS							= '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MESA_DE_CONTROL_SINIESTROS.cdsisrol" />';	//(EGS)
 
 var _URL_LISTADO_ASEGURADO_POLIZA			= '<s:url namespace="/siniestros"       action="consultaListaAseguradoPoliza" />';
 var _URL_CONSULTA_BENEFICIARIO				= '<s:url namespace="/siniestros"		action="consultaDatosBeneficiario" />';
@@ -114,18 +116,129 @@ var msgWindow;
 	function complementarAltaWindow(grid,rowIndex){
 		
 		var record = grid.getStore().getAt(rowIndex);
+		debug("sisrol",_GLOBAL_CDSISROL);
+		debug("status",record.get('status'));
+		debug("RolSistema.MESA_DE_CONTROL_SINIESTROS",_MCSINIESTROS);
 		if(record.get('status') == _STATUS_TRAMITE_RECHAZADO){
-			mensajeWarning('No se puede complementar el tr&aacute;mite ya se encuentra rechazado');
-			return;
+			debug("sisrol",_GLOBAL_CDSISROL);
+			//(EGS) se contempla reactivar el tramite, para rol MCSNIESTROS y tramite rechazado
+			if(_GLOBAL_CDSISROL == _MCSINIESTROS){
+				msgWindow = Ext.Msg.show({
+				title: 'Aviso',
+				msg: 'Tr&aacute;mite rechazado. &iquest;Desea reactivar el tr&aacute;mite '+record.get('ntramite')+'?',
+				buttons: Ext.Msg.YESNO,
+				icon: Ext.Msg.QUESTION,
+				fn: function(buttonId, text, opt){
+					if(buttonId == 'yes'){
+						var comentarioReactivacion = Ext.create('Ext.form.field.TextArea', {
+							fieldLabel: 'Observaciones de reactivaci&oacute;n'
+							,labelWidth: 150
+							,width: 600
+							,name:'smap1.comments'
+							,height: 250
+							,allowBlank : false
+						});
+						windowLoader = Ext.create('Ext.window.Window',{
+							modal       : true,
+							buttonAlign : 'center',
+							width       : 663,
+							height      : 430,
+							autoScroll  : true,
+							items       : [
+								Ext.create('Ext.form.Panel', {
+									title: 'Reactivar Tr&aacute;mite',
+									width: 650,
+									url: _URL_ActualizaStatusTramite,
+									bodyPadding: 5,
+									items: [comentarioReactivacion,
+									        {
+								                xtype       : 'radiogroup'
+								                ,fieldLabel : 'Mostrar al agente'
+								                ,columns    : 2
+								                ,width      : 250
+								                ,style      : 'margin:5px;'
+								                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
+								                ,items      :
+								                [
+								                    {
+								                        boxLabel    : 'Si'
+								                        ,itemId     : 'SWAGENTE2'
+								                        ,name       : 'SWAGENTE2'
+								                        ,inputValue : 'S'
+								                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
+								                    }
+								                    ,{
+								                        boxLabel    : 'No'
+								                        ,name       : 'SWAGENTE2'
+								                        ,inputValue : 'N'
+		                                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+								                    }
+								                ]
+								            }],
+									buttonAlign:'center',
+									buttons: [{
+										text: 'Reactivar',
+										icon    : '${ctx}/resources/fam3icons/icons/accept.png',
+										buttonAlign : 'center',
+										handler: function() {
+											if (this.up().up().form.isValid()) {
+												this.up().up().form.submit({
+													waitMsg:'Procesando...',
+													params: {
+														'smap1.ntramite' : record.get('ntramite'), 
+														'smap1.status'   : _STATUS_TRAMITE_PENDIENTE,
+														'smap1.swagente' : _fieldById('SWAGENTE2').getGroupValue()
+													},
+													failure: function(form, action) {
+														mensajeError('No se pudo reactivar el tr&aacute;mite.');
+													},
+													success: function(form, action) {
+														windowLoader.close();
+														Ext.create("Ext.form.Panel").submit({
+															url     : _Url_ComplementoAltaTramite,
+															params :{ 'params.ntramite' : record.get('ntramite')},
+															standardSubmit:true
+														});
+													}
+												});
+											} else {
+												Ext.Msg.show({
+													title: 'Aviso',
+													msg: 'Complete la informaci&oacute;n requerida',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.WARNING
+												});
+											}
+										}
+									},{
+										text: 'Cancelar',
+										icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
+										buttonAlign : 'center',
+										handler: function() {
+											windowLoader.close();
+										}
+									}
+									]
+								})
+							]
+						}).show();
+						centrarVentana(windowLoader);
+					}
+				}
+				});
+				centrarVentana(msgWindow);
+			}else{
+				mensajeWarning('No se puede complementar el tr&aacute;mite ya se encuentra rechazado');
+				return;
+			}
 		}
 		else{
-			var record = grid.getStore().getAt(rowIndex);
-			Ext.create("Ext.form.Panel").submit(
-					{
-						url     : _Url_ComplementoAltaTramite,
-						params :{ 'params.ntramite' : record.get('ntramite')},
-						standardSubmit:true
-					});
+			//var record = grid.getStore().getAt(rowIndex); // comenta (EGS)
+			Ext.create("Ext.form.Panel").submit({
+				url     : _Url_ComplementoAltaTramite,
+				params :{ 'params.ntramite' : record.get('ntramite')},
+				standardSubmit:true
+			});
 		}
 	}
 	
