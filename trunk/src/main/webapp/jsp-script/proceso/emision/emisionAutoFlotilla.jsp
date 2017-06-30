@@ -1883,12 +1883,11 @@ function _p30_enviar()
                                     	var json = Ext.decode(response.responseText);
                                         if (json.success == true)
                                         {
-                                        	Ext.Msg.show(
+                                        	centrarVentanaInterna(Ext.Msg.show(
                                             {
                                             	title    : 'Correo enviado'
                                                 ,msg     : 'El correo ha sido enviado'
                                                 ,buttons : Ext.Msg.OK
-                                                ,icon    : 'x-message-box-ok'
                                                 ,fn      : function()
                                                 {
                                                 	_generarRemesaClic(
@@ -1900,16 +1899,19 @@ function _p30_enviar()
                                                         ,function(){}
                                                         ,'S'
                                                     );
+                                                    
+                                                    me.up().up().setLoading(false);
+                                                    me.up().up().destroy();
+                                                    
                                                  }
                                                  
-                                                 me.up().up().setLoading(false);
-                                           });
+                                           }));
                                        }
                                        else
                                        {
                                        		mensajeError('Error al enviar el correo');
                                         	me.up().up().setLoading(false);
-                                        	this.up().up().destroy();
+                                        	me.up().up().destroy();
                                        }
                                    }
                                    else
@@ -1923,7 +1925,7 @@ function _p30_enviar()
                     else
                     {
                         mensajeWarning('Introduzca al menos un correo');
-                        this.up().up().destroy();
+                        me.up().up().destroy();
                     }
                 }
             }
