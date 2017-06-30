@@ -235,6 +235,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	@Value("${sigs.RenovarEndososB.url}")
     private String sigsRenovarEndososB;
 	
+	@Value("${caratula.impresion.autos.endosob.url}")
+	private String caratulaImpresionAutosEndosobUrl;
+	
 	public ComplementariosAction() {
 		this.session=ActionContext.getContext().getSession();
 	}
@@ -2122,6 +2125,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String caseIdRstn      = null;
 		Date fechaHoy          = new Date();
 		boolean esFlotilla     = false;
+		boolean endososB=false;
 		
 		tipoGrupoInciso = "I";
 		
@@ -2599,6 +2603,58 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 		*/
 		
+		//Se actualiza valores en sigs de poliza original y emitida, renovacion endosos B
+		if (success) 
+        {
+            try 
+            {
+                Map<String,String>parame = siniestrosManager.obtenerTramiteCompleto(ntramite);
+                if(!parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null )
+                {
+                    logger.debug(Utils.log(
+                             "\nPoliza extraida del sigs"
+                            ,"\n datos originales: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
+                            ,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolizaEmitida
+                            ));
+                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
+                    try
+               		{
+                    	String[] idEndosos = null; 
+                    	if(!slist1.isEmpty())
+                       	{
+                       		idEndosos = new String[slist1.size()];
+                       		int i=0;
+                       		for(Map<String,String>endoso:slist1)
+                     		    {
+                       			idEndosos[i]=endoso.get("id");
+                       			i++;
+                     		    }
+                       	}
+                    	String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&endosos=",Arrays.toString(idEndosos).replace("[", "").replace("]", ""));
+                    	HttpUtil.sendPost(sigsRenovarEndososB,params);
+               		}
+               		catch (Exception ex)
+               		{
+               		 logger.error("Error renovando endosos B", ex);
+               		 mensajeRespuesta = ex.getMessage();
+               		}
+                    
+                   consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
+               
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
+                    vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
+                    Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+                }
+            } 
+            catch (Exception ex) 
+            {
+                logger.error("Error actualizando seguimiento de renovaciones SIGS", ex);                
+					 mensajeRespuesta = ex.getMessage();
+					 //success          = false;
+            }
+        }
+		
 		////// documentos
 		if(success)
 		{
@@ -2732,6 +2788,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					String urlCaic = this.caicImpresionAutosUrl;
 					String urlAeua = this.aeuaImpresionAutosUrl;
 					String urlAp = this.apImpresionAutosUrl;
+					String urlEndoB = this.caratulaImpresionAutosEndosobUrl;
 					
 					String urlIncisosFlot = this.incisosFlotillasImpresionAutosUrl;
 					String urlIncisosExcelFlot = this.incisosFlotillasExcelImpresionAutosUrl;
@@ -2940,6 +2997,46 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,null
 								,null, false
 								);
+					}
+					
+					if(endososB){
+						/**
+						 * Para Endosos B renovados inciso 1
+						 */
+						Map<String,String> endososBrenovados = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,"",sucursalGS,cdRamoGS,this.nmpolAlt,sucursalGS,cdRamoGS,this.nmpolAlt,"","");
+						
+						if(endososBrenovados != null && !endososBrenovados.isEmpty()){
+							Iterator it = endososBrenovados.entrySet().iterator();
+							while(it.hasNext()){
+								Map.Entry entry = (Map.Entry) it.next();
+								String idEndosoB = (String)entry.getKey();
+								
+								parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,"+idEndosoB;
+								logger.debug("URL Generada para Endosos B Inciso 1: "+ urlEndoB + parametros);
+								this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlEndoB + parametros+"\">Endoso B Libre</a>";
+								
+								documentosManager.guardarDocumento(
+										cdunieco
+										,cdramo
+										,"M"
+										,nmpolizaEmitida
+										,nmsuplemEmitida
+										,new Date()
+										,urlEndoB + parametros
+										,"Endoso B Libre"
+										,nmpoliza
+										,ntramite
+										,TipoEndoso.ENDOSO_B_LIBRE.getCdTipSup().toString()
+										,Constantes.SI
+										,null
+										,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+										,"0"
+										,Documento.EXTERNO_CARATULA_B
+										,null
+										,null, false
+										);
+							}
+						}						
 					}
 					
 					if("C".equalsIgnoreCase(tipoGrupoInciso)){
@@ -3351,6 +3448,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		*/
 		
 		//Se actualiza valores en sigs de poliza original y emitida
+		/*
 		if (success) 
         {
             try 
@@ -3398,6 +3496,7 @@ public class ComplementariosAction extends PrincipalCoreAction
                 logger.error("Error actualizando segrenovaciones_renovada", ex);
             }
         }
+        */
 		
 		logger.debug(
 				new StringBuilder()
