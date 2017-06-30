@@ -65,9 +65,9 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre, String cdSisRol) throws Exception{
+	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre, String cdSisRol, String cdramo) throws Exception{
 		String otValor = StringUtils.isNotBlank(idPadre) ? idPadre : null;
-		return catalogosDAO.obtieneAtributosSituacion(cdAtribu, cdTipSit, otValor, cdSisRol);
+		return catalogosDAO.obtieneAtributosSituacion(cdAtribu, cdTipSit, otValor, cdSisRol, cdramo);
 	}
 	
 	@Override
