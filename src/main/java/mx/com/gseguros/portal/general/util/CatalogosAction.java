@@ -217,7 +217,8 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TATRISIT:
 					//lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					//para contemplar atributos situacion por rol (EGS)
-					lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"),((UserVO) session.get("USUARIO")).getRolActivo().getClave());
+					logger.debug("****** Parametros a enviar al nuevo SP  obtieneAtributosSituacion = *******"   + params);
+					lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"),((UserVO) session.get("USUARIO")).getRolActivo().getClave(), params.get("cdramo"));
 					break;
 				case TATRISIN:
 		            lista = catalogosManager.obtieneAtributosSiniestro(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));

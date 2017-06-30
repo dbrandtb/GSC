@@ -186,9 +186,10 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
     
 	@Override
-    public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor, String cdSisRol) throws Exception{
+    public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor, String cdSisRol, String cdramo) throws Exception{
 		try{
 			HashMap<String,Object> params = new LinkedHashMap<String,Object>();
+			params.put("pv_cdramo_i", cdramo);
 			params.put("pv_cdtipsit_i", cdTipSit);
 			params.put("pv_cdatribu_i", cdAtribu);
 			params.put("pv_otvalor_i", otValor);
