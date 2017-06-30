@@ -557,8 +557,8 @@ function _9_confirmar()
 																			                               _9_smap1.CDRAMO,
 																			                               _9_smap1.ESTADO,
 																			                               _9_smap1.NMPOLIZA,
-																			                               json1.smap3.pv_nmsuplem_o,
-																			                               json1.smap3.pv_nsuplogi_o);
+																			                               json.smap3.pv_nmsuplem_o,
+																			                               json.smap3.pv_nsuplogi_o);
 						                
 						                    
 																		                    }
