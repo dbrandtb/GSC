@@ -2448,6 +2448,7 @@ function _p30_enviar()
                                               	);
                                               	
                                                 me.up().up().setLoading(false);
+                                                me.up().up().destroy();
                                             }
                                         }));
                                     }
@@ -2455,7 +2456,7 @@ function _p30_enviar()
                                     {
                                         mensajeError('Error al enviar');
                                         me.up().up().setLoading(false);
-                                        this.up().up().destroy();
+                                        me.up().up().destroy();
                                         
                                     }
                                 
@@ -2471,7 +2472,7 @@ function _p30_enviar()
                     else
                     {
                         mensajeWarning('Introduzca al menos un correo');
-                        this.up().up().destroy();
+                        me.up().up().destroy();
                     }
                     
                 }
