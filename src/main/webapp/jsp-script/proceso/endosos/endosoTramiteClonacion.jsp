@@ -148,7 +148,7 @@ Ext.onReady(function()
 		    })
  		    ,Ext.create('Ext.grid.Panel',
 		    {
-		        title    : 'Tr&aacute;mites. De dobe clic en alg&uacute;n tr&aacute;mite para clonar.'
+		        title    : 'Tr&aacute;mites. D&eacute; doble clic en alg&uacute;n tr&aacute;mite para clonar.'
 		        //,width   : 900
 		        ,height  : 300
 		        ,store   : store
