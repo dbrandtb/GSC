@@ -935,10 +935,11 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		try {
 			Utils.validate(saveList, "No se recibieron datos para guardar/eliminar conceptos.");
 			
-			boolean correcto =  true;
+			success =  true;
 			StringBuilder incorrectos = new StringBuilder("Los siguientes conceptos no han sido actualizados: ");
 			
 			for(Map<String, String> conceptoAct : saveList){
+				boolean correcto =  true;
 				HashMap<String, String> paramsResEstudio = new HashMap<String, String>();
 				paramsResEstudio.putAll(conceptoAct);
 				
@@ -947,15 +948,14 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				correcto = siniestrosManager.actualizaEliminaConceptos(paramsResEstudio);
 				if(!correcto){
 					incorrectos.append("-").append(conceptoAct.get("pi_cdconcep")).append("-,");
+					success = false;
 				}
 			}
 			
-			if(!correcto){
-				success = false;
-				throw new ApplicationException(incorrectos.append(" verifique que no haya tr&aacute;mites usandolos.").toString());
+			if(!success){
+				throw new ApplicationException(incorrectos.append(" verifique que no haya tr&aacute;mites &oacute; configuraci&oacute;n usandolos.").toString());
 			}
 			
-			success =  true;
 		}catch(Exception e){
 			success = false;
 			mensaje = Utils.manejaExcepcion(e);	//(EGS)
@@ -974,10 +974,11 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     	try {
     		Utils.validate(saveList, "No se recibieron datos para guardar/eliminar Restultados Estudios.");
     		
-    		boolean correcto =  true;
+    		success =  true;
 			StringBuilder incorrectos = new StringBuilder("Los siguientes resultados de estudios (Agrupador,Clave) no han sido actualizados: ");
     		
     		for(Map<String, String> resEst : saveList){
+    			boolean correcto =  true;
 				HashMap<String, String> paramsResEstudio = new HashMap<String, String>();
 				paramsResEstudio.putAll(resEst);
 				paramsResEstudio.put("pi_cdusuari", usuario.getUser());
@@ -985,15 +986,14 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				
 				if(!correcto){
 					incorrectos.append("-(").append(resEst.get("pi_cdtabres")).append(",").append(resEst.get("pi_cdresest")).append(")").append("-,");
+					success = false;
 				}
     		}
     		
-    		if(!correcto){
-    			success = false;
+    		if(!success){
     			throw new ApplicationException(incorrectos.append(" verifique que no haya tr&aacute;mites usandolos.").toString());
     		}
     		
-    		success =  true;
     	}catch(Exception e){
     		success = false;
     		mensaje = Utils.manejaExcepcion(e);	//(EGS)
@@ -1012,10 +1012,11 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     	try {
     		Utils.validate(saveList, "No se recibieron datos para guardar/eliminar conf estudios.");
     		
-    		boolean correcto =  true;
+    		success = true;
     		StringBuilder incorrectos = new StringBuilder("Los siguientes estudios no han sido actualizados: ");
     		
     		for(Map<String, String> estudioAct : saveList){
+    			boolean correcto =  true;
 				HashMap<String, String> paramsResEstudio = new HashMap<String, String>();
 				paramsResEstudio.putAll(estudioAct);
 				paramsResEstudio.put("pi_cdusuari", usuario.getUser());
@@ -1023,15 +1024,14 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				
 				if(!correcto){
 					incorrectos.append("-").append(estudioAct.get("pi_cdest")).append("-,");
+					success = false;
 				}
     		}
     		
-    		if(!correcto){
-    			success = false;
-    			throw new ApplicationException(incorrectos.append(" verifique que no haya tr&aacute;mites usandolos.").toString());
+    		if(!success){
+    			throw new ApplicationException(incorrectos.append(" verifique que no haya tr&aacute;mites &oacute; configuraci&oacute;n usandolos.").toString());
     		}
     		
-    		success =  true;
     	}catch(Exception e){
     		success = false;
     		mensaje = Utils.manejaExcepcion(e);	//(EGS)

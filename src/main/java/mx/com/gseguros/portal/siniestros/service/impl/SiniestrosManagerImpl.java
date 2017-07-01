@@ -3089,7 +3089,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public boolean actualizaEliminaConceptos(HashMap<String, String> params) throws Exception{
+	public boolean actualizaEliminaConceptos(HashMap<String, String> params){
 		try {
 			siniestrosDAO.actualizaEliminaConceptos(params);
 		} catch (Exception ex) {
@@ -3100,7 +3100,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
-	public boolean actualizaEliminaResultadosEstudios(HashMap<String, String> params) throws Exception {
+	public boolean actualizaEliminaResultadosEstudios(HashMap<String, String> params){
 		try {
 			siniestrosDAO.actualizaEliminaResultadosEstudios(params);
 		} catch (Exception ex) {
@@ -3111,7 +3111,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
-	public boolean actualizaEliminaConfEstudios(HashMap<String, String> params) throws Exception {
+	public boolean actualizaEliminaConfEstudios(HashMap<String, String> params){
 		try {
 			siniestrosDAO.actualizaEliminaConfEstudios(params);
 		} catch (Exception ex) {
@@ -3122,7 +3122,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 
 	@Override
-	public boolean actualizaEliminaConfEstudiosCobertura(HashMap<String, String> params) throws Exception {
+	public boolean actualizaEliminaConfEstudiosCobertura(HashMap<String, String> params){
 		try {
 			 siniestrosDAO.actualizaEliminaConfEstudiosCobertura(params);
 		} catch (Exception ex) {

@@ -3546,6 +3546,10 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 	var windowResultEstudios;
 	
 	var recordSelCombo;
+	
+	var _TIPO_PROVEEDOR_MEDICO = '15';
+	var _TIPO_PROVEEDOR_LAB    = '16';
+	
 	/////////////////////
 	////// modelos //////
 	/*/////////////////*/
@@ -3554,7 +3558,7 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 			{
 				extend : 'Ext.data.Model'
 				,fields :
-				['CDCONCEP','DSCONCEP','CDEST','DSEST','CDRESEST','VALOR', 'OBSERV','SWOBLVAL','SWOBLRES', 'CDTABRES']
+				['CDCONCEP','DSCONCEP','CDEST','DSEST','CDRESEST','VALOR', 'OBSERV','SWOBLVAL','SWOBLRES', 'CDTABRES', 'SWOBLEST','CDTIPO']
 	});
 	
 	/*/////////////////*/
@@ -3717,7 +3721,8 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 	                name          : 'OBSERV',
 	                maxLength     : 500
 	            }
-	      }
+	      }//,
+	      //{ header     : 'OblP' , dataIndex : 'SWOBLEST', flex: 1}
 		],
 		features: [{
 			groupHeaderTpl: [
@@ -3725,10 +3730,19 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 			    {
 			    	descConcept: function(children){
 			    		//debug('Para GroupSummary, children',children.length);
+			    		
 			            if(children.length > 0){
-			            	return children[0].get('DSCONCEP');
+			            	var tipoConcepto = '';
+			            	
+			            	if(children[0].get('CDTIPO') == _TIPO_PROVEEDOR_MEDICO){
+				    			tipoConcepto = ' (MEDICO)';
+				    		}else if(children[0].get('CDTIPO') == _TIPO_PROVEEDOR_LAB){
+				    			tipoConcepto = ' (LABORATORIO)';
+				    		}
+			            	return children[0].get('DSCONCEP') + tipoConcepto;
 			            }
-			            	return 'Sin Concepto';
+			            
+			            return 'Sin Concepto';
 			           
 			        }
 			    }
@@ -3761,6 +3775,7 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                 var estudioRequiereResVal    = false;
                 var estudioRequiereResValDes = '';
                 var mensajeRequiereCampo     = '';
+                
                 
                 estudiosCobAsegStore.getUpdatedRecords().forEach(function(record,index,arr){
                 	
@@ -3806,7 +3821,6 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                     updateList.push(datosResultado);
                 });
                 
-                
 	            if(estudioRequiereResVal){
 	            	mensajeWarning("Debe capturar un " + mensajeRequiereCampo + " para el estudio: ''"
 	            			+estudioRequiereResValDes+"'' o borre toda la informaci&oacute;n del mismo.");
@@ -3850,10 +3864,27 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                            	                var respuestaTipoProvedor = Ext.decode(response.responseText).params.VALIDA_RES_TIPO_PROV;
                            	                
                            	                if(respuestaValidacionResEst == 'N'){
-                           	                	var mensajeEstudios = 'Capture almenos un estudio de laboratorio.';
+                           	                	var mensajeEstudios = 'Capture almenos un estudio de conceptos de LABORATORIO.';
 
-                           	                	if(respuestaTipoProvedor == '15'){
-                               	                	mensajeEstudios = 'Capture los estudios de Sobrepeso y Obesidad.';
+                           	                	var mensajeEstudiosObligMedico = ''; 
+                           	                	var mensajeEstudiosObligLab    = '';
+                           	                	
+                           	                	estudiosCobAsegStore.each(function(record) {
+                           	                     	if( !Ext.isEmpty(record.get('CDTIPO')) && _TIPO_PROVEEDOR_MEDICO == record.get('CDTIPO')
+                           	                     			&& !Ext.isEmpty(record.get('SWOBLEST')) && record.get('SWOBLEST') == "S"
+                           	                     			&& Ext.isEmpty(record.get('CDRESEST'))  && Ext.isEmpty(record.get('VALOR'))){
+                           	                     		mensajeEstudiosObligMedico += (record.get('DSEST')+", ");
+                           	                     		
+                           	                     	}else if( !Ext.isEmpty(record.get('CDTIPO')) && _TIPO_PROVEEDOR_LAB == record.get('CDTIPO')
+                           	                     			&& !Ext.isEmpty(record.get('SWOBLEST')) && record.get('SWOBLEST') == "S"
+                           	                     			&& Ext.isEmpty(record.get('CDRESEST'))  && Ext.isEmpty(record.get('VALOR'))){
+                           	                     		mensajeEstudiosObligMedico += (record.get('DSEST')+", ");
+                           	                     	}
+                           	                     });
+                           	                 
+                           	                	if(respuestaTipoProvedor == _TIPO_PROVEEDOR_MEDICO){
+                           	                		
+                               	                	mensajeEstudios = 'Capture los estudios de: '+ mensajeEstudiosObligMedico;
                                	                }
                            	                	mensajeWarning('Datos Guardados. Aun faltan capturar estudios para este asegurado.<br/>' + mensajeEstudios);
                            	                }else{
