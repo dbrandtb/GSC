@@ -52,6 +52,7 @@ var _0_urlDetalleCotizacion        = '<s:url namespace="/"                action
 var _0_urlCoberturas               = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"             />';
 var _0_urlDetalleCobertura         = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4"        />';
 var _0_urlEnviarCorreo             = '<s:url namespace="/general"         action="enviaCorreo"                    />';
+var _p28_urlCargarCorreos          = '<s:url namespace="/cotizacionautos" action="cargarCorreos"                  />';
 var _0_urlViewDoc                  = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
 var _0_urlComprar                  = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"             />';
 var _0_urlVentanaDocumentos        = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"        />';
@@ -903,6 +904,13 @@ function _0_mail()
                 ,allowBlank : false
                 ,blankText  : 'Introducir correo(s) separados por ;'
                 ,width      : 500
+                //REQ0040
+                ,listeners  : {
+                	boxready : function(){
+                		_p28_cargarCorreos();
+                		debug('Saliendo de la funcion ', _fieldById('_0_idInputCorreos').getValue());
+                	}
+                }
             }
         ]
         ,buttons :
@@ -5836,6 +5844,37 @@ Ext.onReady(function()
             debugError(e)
         }
     }
+    
+//REQ0040 envio de correos
+function _p28_cargarCorreos()
+{
+    debug('>_p28_cargarCorreos');
+    Ext.Ajax.request(
+    {
+        url     : _p28_urlCargarCorreos
+        ,params :
+        {
+            'smap1.ntramite'    : _0_smap1.ntramite
+        }
+        ,success : function(response) {
+            var json = Ext.decode(response.responseText);
+            debug('### json cargarCorreos:',json);
+            
+            if(json.exito)
+            {
+            	  debug('>_p28_cargarCorreos 1 ', json.respuesta);
+            	  _fieldById('_0_idInputCorreos').setValue(json.respuesta);
+            }
+            else{
+            	  debug('>_p28_cargarCorreos 2');
+            }
+         }
+         ,failure : function(){
+         	me.setLoading(false);
+            errorComunicacion();
+         }
+    })
+}
 </script>
 </head>
 <body><div id="_0_divPri" style="height: 1700px;border:1px solid #CCCCCC;"></div></body>
