@@ -7006,8 +7006,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 						,"CDRESEST"
 						,"VALOR"
 						,"OBSERV"
+						,"SWOBLEST"
 						,"SWOBLVAL"
 						,"SWOBLRES"
+						,"CDTIPO"
 				};
 				declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -7188,6 +7190,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			 if(lista!=null){
 				 for(Map<String,String> concept :lista){
 					 	concept.put("CDCONCEP_ORIG",concept.get("CDCONCEP"));
+					 	concept.put("CDTIPO_ORIG",concept.get("CDTIPO"));
 					}
 			 }
 				
@@ -7200,6 +7203,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				 
 				 String[] cols = new String[]{
 						 "CDCONCEP"
+						 ,"CDTIPO"
 						 ,"DSCONCEP"
 				 };
 				 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -7285,6 +7289,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 					 resEst.put("CDCONVAL_ORIG",resEst.get("CDCONVAL"));
 					 resEst.put("CDCONCEP_ORIG",resEst.get("CDCONCEP"));
 					 resEst.put("CDEST_ORIG",resEst.get("CDEST"));
+					 resEst.put("SWOBLEST_ORIG",resEst.get("SWOBLEST"));
 					 resEst.put("SWOBLVAL_ORIG",resEst.get("SWOBLVAL"));
 					 resEst.put("SWOBLRES_ORIG",resEst.get("SWOBLRES"));
 				}
@@ -7311,6 +7316,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 						 ,"CDCONVAL"
 						 ,"CDCONCEP"
 						 ,"CDEST"
+						 ,"SWOBLEST"
 						 ,"SWOBLVAL"
 						 ,"SWOBLRES"
 						 ,"DSRAMO"
@@ -7338,7 +7344,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				super(dataSource, "PKG_PROESTDETOP.P_GUARDA_CATCONCEPTOS");
 				
 				declareParameter(new SqlParameter("pi_cdconcep_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdtipo_ant"  , OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdconcep", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_cdtipo", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_dsconcep", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdusuari", OracleTypes.VARCHAR));
@@ -7412,6 +7420,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pi_cdconval_ant", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdconcep_ant", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdest_ant", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swoblest_ant", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swoblval_ant", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swoblres_ant", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdramo", OracleTypes.VARCHAR));
@@ -7420,6 +7429,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pi_cdconval", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdconcep", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_cdest", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pi_swoblest", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swoblval", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swoblres", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));

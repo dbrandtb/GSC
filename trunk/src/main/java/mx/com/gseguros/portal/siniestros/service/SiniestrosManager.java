@@ -834,13 +834,13 @@ public interface SiniestrosManager {
 
 	public List<Map<String, String>> obtieneConfEstudiosMedCob(HashMap<String, String> params) throws Exception;
 	
-	public boolean actualizaEliminaConceptos(HashMap<String, String> params) throws Exception;
+	public boolean actualizaEliminaConceptos(HashMap<String, String> params);
 	
-	public boolean actualizaEliminaResultadosEstudios(HashMap<String, String> params) throws Exception;
+	public boolean actualizaEliminaResultadosEstudios(HashMap<String, String> params);
 
-	public boolean actualizaEliminaConfEstudios(HashMap<String, String> params) throws Exception;
+	public boolean actualizaEliminaConfEstudios(HashMap<String, String> params);
 
-	public boolean actualizaEliminaConfEstudiosCobertura(HashMap<String, String> params) throws Exception;
+	public boolean actualizaEliminaConfEstudiosCobertura(HashMap<String, String> params);
 	
 	public List<GenericVO> obtieneListadoSubcoberturaPorProdCob(String cdramo, String cdtipsit, String cdgarant)
 			throws Exception;

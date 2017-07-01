@@ -55,7 +55,7 @@ Ext.onReady(function()
 			{
 				extend : 'Ext.data.Model'
 				,fields :
-				['CDCONCEP_ORIG','CDCONCEP','DSCONCEP']
+				['CDCONCEP_ORIG','CDCONCEP','CDTIPO_ORIG','CDTIPO','DSCONCEP']
 	});
 
 	Ext.define('modelGridResultadosEst',
@@ -78,8 +78,17 @@ Ext.onReady(function()
 				,fields :
 				['CDRAMO','CDTIPSIT','CDGARANT','CDCONVAL','CDCONCEP','CDEST','DSRAMO','DSTIPSIT','DSGARANT','DSCONVAL','DSCONCEP','DSEST',
 					'CDRAMO_ORIG','CDTIPSIT_ORIG','CDGARANT_ORIG','CDCONVAL_ORIG','CDCONCEP_ORIG','CDEST_ORIG','SWOBLVAL_ORIG','SWOBLRES_ORIG',
-					'SWOBLVAL','SWOBLRES']
+					'SWOBLEST_ORIG','SWOBLEST','SWOBLVAL','SWOBLRES']
 	});
+	
+	var tiposProveedorStore = Ext.create('Ext.data.Store', {
+        fields: ['key', 'value'],
+        data : [
+            {"key":"15", "value":"Médico"},
+            {"key":"16", "value":"Laboratorio"}
+            //{"key":"NA", "value":"N/A"}
+        ]
+    });
 	
 	/*/////////////////*/
 	////// modelos //////
@@ -595,6 +604,36 @@ Ext.onReady(function()
             	                maxLength  : 100,
             	               	allowBlank : false
             	            }
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            dataIndex: 'CDTIPO',
+                            text: 'Tipo Proveedor',
+                            flex: 1,
+                            editor : {
+            	                xtype         : 'combobox',
+            	                name          : 'CDTIPO',
+            	                valueField    : 'key',
+            	                displayField  : 'value',
+            	                forceSelection: true,
+                                allowBlank    : false,
+                                editable      : false,
+            	                store         : tiposProveedorStore
+            	                /* listeners     : {
+            	                	change    : function(cmb, newValue){
+            	                		var value = cmb.getRawValue();
+            		                	var index = cmb.getStore().findExact('value', value);
+            		                	if(index == -1){
+            		                		cmb.setValue('');
+            		                		recordSelCombo.set('CDRESEST','');
+            		                		debug('REcord Seleccionado222:::',recordSelCombo);
+            		                	}
+            	                	}
+            	                } */
+            	            },
+            	            renderer: function(value,metaData,record,rowIndex,colIndex,store){
+            	            	return rendererColumnasDinamico(value,'CDTIPO');
+            	            }
                         }
                     ],
                     buttonAlign: 'center',
@@ -618,7 +657,9 @@ Ext.onReady(function()
                                 	if(record.dirty){
                                 		var datosResultado = {
                                           		 'pi_cdconcep_ant': record.get('CDCONCEP_ORIG'),
+                                          		 'pi_cdtipo_ant'  : record.get('CDTIPO_ORIG'),
                                           		 'pi_cdconcep'    : record.get('CDCONCEP'),
+                                          		 'pi_cdtipo'      : record.get('CDTIPO'),
                                           		 'pi_dsconcep'    : record.get('DSCONCEP'),
                                           		 'pi_swop'        : 'U'
                                            };
@@ -631,7 +672,9 @@ Ext.onReady(function()
                                 	
                                     var datosResultado = {
                                    		 'pi_cdconcep_ant': record.get('CDCONCEP_ORIG'),
+                                   		 'pi_cdtipo_ant'  : record.get('CDTIPO_ORIG'),
                                    		 'pi_cdconcep'    : record.get('CDCONCEP'),
+                                   		 'pi_cdtipo'      : record.get('CDTIPO'),
                                    		 'pi_dsconcep'    : record.get('DSCONCEP'),
                                    		 'pi_swop'        : 'D'
                                     };
@@ -1385,7 +1428,23 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 })
            	},{
               	xtype: 'checkbox',
-              	fieldLabel: 'El estudio requiere un resultado obligatorio',
+              	fieldLabel: 'El estudio requiere ser capturado (obligatorio)',
+              	name : 'SWOBLEST_CHECK',
+              	labelWidth: 200,
+              	labelAlign: 'right', 
+                value: false,
+                listeners: {
+                	change: function(ck, newValue){
+                		if(newValue){
+                			panelAgregarEditarConfig.down('hidden[name=SWOBLEST]').setValue('S');
+                		}else{
+                			panelAgregarEditarConfig.down('hidden[name=SWOBLEST]').setValue('N');
+                		}
+                	}
+                }
+            },{
+              	xtype: 'checkbox',
+              	fieldLabel: 'En caso de captura, el estudio requiere un resultado obligatorio',
               	name : 'SWOBLRES_CHECK',
               	labelWidth: 200,
               	labelAlign: 'right', 
@@ -1402,7 +1461,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
             }
             ,{
               	xtype: 'checkbox',
-              	fieldLabel: 'El estudio requiere un valor obligatorio',
+              	fieldLabel: 'En caso de captura, el estudio requiere un valor obligatorio',
               	name : 'SWOBLVAL_CHECK',
               	labelWidth: 200,
               	labelAlign: 'right',
@@ -1416,6 +1475,10 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 		}
                 	}
                 }
+            },{
+              	xtype: 'hidden',
+                name : 'SWOBLEST',
+                value: 'N'
             },{
               	xtype: 'hidden',
                 name : 'SWOBLVAL',
@@ -1452,8 +1515,13 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
               },
               {
               	xtype: 'hidden',
-                  name : 'SWOBLVAL_ORIG',
+                  name : 'SWOBLEST_ORIG',
                   value: 'N'
+              },
+              {
+                	xtype: 'hidden',
+                    name : 'SWOBLVAL_ORIG',
+                    value: 'N'
               },
               {
               	xtype: 'hidden',
@@ -1485,6 +1553,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                        		 'pi_cdconval_ant': recordEditar.get('CDCONVAL_ORIG'),
                        		 'pi_cdconcep_ant': recordEditar.get('CDCONCEP_ORIG'),
                        		 'pi_cdest_ant'   : recordEditar.get('CDEST_ORIG'),
+                       		 'pi_swoblest_ant': recordEditar.get('SWOBLEST_ORIG'),
                        		 'pi_swoblval_ant': recordEditar.get('SWOBLVAL_ORIG'),
                        		 'pi_swoblres_ant': recordEditar.get('SWOBLRES_ORIG'),
                        		 'pi_cdramo'      : recordEditar.get('CDRAMO'),
@@ -1493,6 +1562,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                        		 'pi_cdconval'    : recordEditar.get('CDCONVAL'),
                        		 'pi_cdconcep'    : recordEditar.get('CDCONCEP'),
                        		 'pi_cdest'       : recordEditar.get('CDEST'),
+                       		 'pi_swoblest'    : recordEditar.get('SWOBLEST'),
                        		 'pi_swoblval'    : recordEditar.get('SWOBLVAL'),
                        		 'pi_swoblres'    : recordEditar.get('SWOBLRES'),
                        		 'pi_swop'        : 'U'
@@ -1570,6 +1640,12 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
 		panelAgregarEditarConfig.loadRecord(recordEditar);
 		
 		if(!esNuevoRegistro){
+			if(!Ext.isEmpty(recordEditar.get('SWOBLEST')) && recordEditar.get('SWOBLEST') == 'S'){
+				panelAgregarEditarConfig.down('checkbox[name=SWOBLEST_CHECK]').setValue(true);
+			}else{
+				panelAgregarEditarConfig.down('checkbox[name=SWOBLEST_CHECK]').setValue(false);
+			}
+			
 			if(!Ext.isEmpty(recordEditar.get('SWOBLVAL')) && recordEditar.get('SWOBLVAL') == 'S'){
 				panelAgregarEditarConfig.down('checkbox[name=SWOBLVAL_CHECK]').setValue(true);
 			}else{
@@ -1697,6 +1773,7 @@ function eliminarConfEstudios(recordEliminar,btnGrid){
                 		 'pi_cdconval_ant': recordEliminar.get('CDCONVAL_ORIG'),
                 		 'pi_cdconcep_ant': recordEliminar.get('CDCONCEP_ORIG'),
                 		 'pi_cdest_ant'   : recordEliminar.get('CDEST_ORIG'),
+                		 'pi_swoblest_ant': recordEliminar.get('SWOBLEST_ORIG'),
                 		 'pi_swoblval_ant': recordEliminar.get('SWOBLVAL_ORIG'),
                 		 'pi_swoblres_ant': recordEliminar.get('SWOBLRES_ORIG'),
                 		 'pi_cdramo'      : recordEliminar.get('CDRAMO'),
@@ -1705,6 +1782,7 @@ function eliminarConfEstudios(recordEliminar,btnGrid){
                 		 'pi_cdconval'    : recordEliminar.get('CDCONVAL'),
                 		 'pi_cdconcep'    : recordEliminar.get('CDCONCEP'),
                 		 'pi_cdest'       : recordEliminar.get('CDEST'),
+                		 'pi_swoblest'    : recordEliminar.get('SWOBLEST'),
                 		 'pi_swoblval'    : recordEliminar.get('SWOBLVAL'),
                 		 'pi_swoblres'    : recordEliminar.get('SWOBLRES'),
                 		 'pi_swop'        : 'D'
