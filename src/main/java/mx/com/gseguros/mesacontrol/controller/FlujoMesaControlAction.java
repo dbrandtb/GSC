@@ -658,8 +658,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,statusout  = params.get("STATUSOUT")
 			       ,swfinnode  = params.get("SWFINNODE")
 			       ,cdetapa    = params.get("CDETAPA")
-	    		   ,cdestacion    = params.get("ESTACION")
-				   ,cdtrazabilidad    = params.get("STATUSTRAZA")
 			       ;
 			
 			Utils.validate(
@@ -678,8 +676,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,timewrn2m  , "No se recibi\u00f3 minutos max alerta 2"
 					,cdtipasig  , "No se recibi\u00f3 tipo de asignaci\u00f3n"
 					,cdetapa    , "No se recibi\u00f3 el indicador"
-					,cdestacion    , "No se recibi\u00f3 el Estaci\u00f3n de Trabajo"
-					,cdtrazabilidad    , "No se recibi\u00f3 el Estatus de Trazabilidad"
 					);
 			
 			flujoMesaControlManager.guardarDatosEstado(
@@ -702,8 +698,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,statusout
 					,"S".equals(swfinnode)
 					,cdetapa
-					,cdestacion 
-					,cdtrazabilidad
 					);
 			
 			success = true;
@@ -1996,6 +1990,17 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			Utils.validate(ntramite  , "No se recibi\u00f3 el tr\u00e1mite",
 			               statusNew , "No se recibi\u00f3 el status nuevo");
 			
+			//REQ0005 antes de turnar el  tramite se debe verificar si es flujo no sicaps (CDTIPFLU=284, DSTIPFLU=EMISIÓN NO SICAPS) para solicitar documento de cotizacion
+			logger.debug("Determinando si es flujo SICAPS o NO SICAPS cdtipflu: "+ cdtipflu + " ntramite: " + ntramite);
+				if (documentoCotizacionCdtipfluNosicaps.equals(cdtipflu)){// si es no sicaps verifico si tiene documentos cargados
+					//llamo al sp de consulta de documentos de cotizacion
+					int cantidadDocumentos = 0;
+					cantidadDocumentos = flujoMesaControlManager.obtenerCantidadDocumentosCotizacion(ntramite);
+					if (cantidadDocumentos == 0 ){
+						throw new ApplicationException("Debe adjuntar los documentos de Cotizaci\u00F3n para continuar");
+					}
+				}
+			//req0005 continua flujo normal
 			
 				RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
 			        cdusuari,

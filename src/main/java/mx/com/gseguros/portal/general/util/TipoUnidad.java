@@ -1,10 +1,5 @@
 package mx.com.gseguros.portal.general.util;
 
-/**
- * Catalogo de Tipo de unidad para Servicio Publico de Autos
- * @author Biosnet13
- *
- */
 public enum TipoUnidad {
 	
     AUTO_SP("5"),

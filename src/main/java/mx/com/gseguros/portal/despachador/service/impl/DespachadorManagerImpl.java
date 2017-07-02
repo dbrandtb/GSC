@@ -1298,42 +1298,6 @@ K                   ENCOLAR CON DATOS ORIGINALES
         }
         return items;
     }
-
-    @Override
-    public List<Map<String, String>> cargaConfSucursales(String cdunieco, String cdunizon, String cdnivel) throws Exception {
-    	String paso = null;
-    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-    	
-    	try {
-    		lista = despachadorDAO.recuperarClasifSucursalZonaNivel(cdunieco, cdunizon, cdnivel);
-    	} catch (Exception ex) {
-    		Utils.generaExcepcion(ex, paso);
-    	}
-    	return lista;
-    }
-
-    @Override
-    public void guardaConfSucursales(Map<String, String> sucursal) throws Exception {
-    	despachadorDAO.guardaConfSucursales(sucursal);
-    }
-
-    @Override
-    public List<Map<String, String>> cargaConfPermisos(String cdtipflu, String cdflujomc, String cdramo, String cdtipsit) throws Exception {
-    	String paso = null;
-    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-    	
-    	try {
-    		lista = despachadorDAO.recuperarPermisosFlujos(cdtipflu, cdflujomc, cdramo, cdtipsit);
-    	} catch (Exception ex) {
-    		Utils.generaExcepcion(ex, paso);
-    	}
-    	return lista;
-    }
-    
-    @Override
-    public void guardaConfPermisos(Map<String, String> permiso) throws Exception {
-    	despachadorDAO.guardaConfPermisos(permiso);
-    }
     
     @Override
     public List<Map<String, String>> claveAutoFlujo(String ntramite) throws Exception {

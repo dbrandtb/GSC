@@ -24,7 +24,7 @@ public interface CatalogosDAO {
 	 * @return Atributos de situacion
 	 * @throws Exception
 	 */
-	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor, String cdSisRol, String cdramo) throws Exception; //utilizado para atributos situacion x rol (EGS)
+	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor, String cdSisRol) throws Exception; //utilizado para atributos situacion x rol (EGS)
 	
 	public List<GenericVO> obtieneAtributosSiniestro(String cdAtribu, String cdTipSit ,String otValor) throws Exception;
 	
@@ -187,7 +187,5 @@ public interface CatalogosDAO {
     public List<GenericVO> recuperarListaFiltroPropiedadInciso(String cdramo,String cdtipsit,String nivel) throws Exception;
     
     public List<Map<String, String>> recuperarTiposEndosoPorTramite (String ntramite) throws Exception;
-
-	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception;
 	
 }

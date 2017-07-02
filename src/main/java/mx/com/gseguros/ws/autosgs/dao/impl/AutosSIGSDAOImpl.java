@@ -1,27 +1,27 @@
 package mx.com.gseguros.ws.autosgs.dao.impl;
 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+
 import javax.sql.DataSource;
+
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.ws.autosgs.dao.AutosSIGSDAO;
-import oracle.jdbc.driver.OracleTypes;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -914,7 +914,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	
 	public class ObtieneTipoCliWS extends StoredProcedure{
 		protected ObtieneTipoCliWS(DataSource dataSource){
-			super(dataSource, "sp_PolizasXCliente");
+			super(dataSource, "sp_PolizasXCliente2");
 			
 			declareParameter(new SqlParameter("vNumCliente", Types.INTEGER));
 			declareParameter(new SqlParameter("vTipoCliente", Types.SMALLINT));
@@ -940,11 +940,7 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 	 */
 	@Override
 	public void validarAgenteParaNuevoTramite(String cdagente, String ramo, String cdtipend) throws Exception {
-		
-	    logger.warn("****** spvalidaagente COMENTADO   TODO: DESCOMENTAR ****");
-	    
-	    /*
-	    logger.debug(Utils.log(
+		logger.debug(Utils.log(
 				"\n*******************************************",
 				"\n****** validarAgenteParaNuevoTramite ******",
 				"\n****** cdagente = ", cdagente,
@@ -990,8 +986,6 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
 				"\n****** validarAgenteParaNuevoTramite ******",
 				"\n*******************************************"
 				));
-				
-		*/
 	}
 	
 	public class ValidarAgenteParaNuevoTramiteSP extends StoredProcedure {
@@ -1279,62 +1273,6 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
             }));
             
             compile();
-        }
-    }
-    
-    @Override
-    public Map<String, String> cargaEndososB (String cdunieco, String cdramo, String nmpoliza, String cdusuari,
-			String cdtipsit, String cdsisrol, String cduniext, String ramo, String nmpoliex, String renuniext,
-			String renramo, String renpoliex, String feefect, String feproren) throws Exception 
-    {
-    	Map<String,String>params=new LinkedHashMap<String,String>();
-			params.put("inNumsuc " , renuniext);
-			params.put("inNumram " , renramo);
-			params.put("inNumpol " , renpoliex);
-			params.put("inMotivo " , "75");
-		logger.debug(
-				new StringBuilder()
-				.append("\n********************************")
-				.append("\n****** spRecuperaEndososB ******")
-				.append("\n******params=").append(params)
-				.append("\n********************************")
-				.toString()
-				);
-			try 
-			{
-				Map<String,Object>procedureResult=ejecutaSP(new cargaEndososBSP(getDataSource()),params);
-				@SuppressWarnings("unchecked")
-				Map<String,String>listaAux=(Map<String,String>)procedureResult.get("rs");
-				if(listaAux==null||listaAux.size()==0)
-				{
-					logger.warn("*** sin ensos B para la poliza a emitir ****");
-				}
-		        return listaAux;
-			} catch (Exception e)
-			{
-				logger.error("Mensaje de respuesta de sprevierteemision: " + e);
-				return null;
-			}
-        }
-    
-    protected class cargaEndososBSP extends StoredProcedure{
-        protected cargaEndososBSP(DataSource dataSource){
-            super(dataSource, "spRecuperaEndososB");
-            declareParameter(new SqlParameter("inNumsuc ", Types.SMALLINT));
-			declareParameter(new SqlParameter("inNumram ", Types.SMALLINT));
-			declareParameter(new SqlParameter("inNumpol ", Types.INTEGER));
-			declareParameter(new SqlParameter("inMotivo " , Types.SMALLINT));
-			declareParameter(new SqlReturnResultSet("rs", new ResultSetExtractor<Map<String,String>>(){  
-                @Override  
-                 public Map<String,String> extractData(ResultSet rs) throws SQLException, DataAccessException {  
-                	Map<String,String>result=new LinkedHashMap<String,String>();
-                    while(rs.next()){  
-                        result.put(rs.getString(1),rs.getString(2));
-                    }  
-                    return result;  
-                    }
-                }));
-			compile();
         }
     }
 }
