@@ -2872,10 +2872,14 @@ debug("validarYGuardar flag:2");
 								var hayConyuge = false;
 								var titularCasado =  false;
 								
-								var clavesFam = [];
-								var claveFamRepetida = false;
+								var clavesFam           = [];
+								var clavesSoc           = [];
+								var claveFamRepetida    = false;
 								var titularSinOcupacion = false;
-								
+								var claveSocDiferente   = false;
+								var noASocioAnterior    = null;
+                                var noASocioActual      = null;
+                                    
 								for(var j=0;j < gridSource.length;j++){
 									if(gridSource.getAt(j).data.Parentesco == "C"){
 										hayConyuge = true;
@@ -2897,6 +2901,17 @@ debug("validarYGuardar flag:2");
 										    claveFamRepetida = true;
 										}
 									}
+									
+									if(gridSource.getAt(j).data.cdrol == '2' ){
+										if(!Ext.isEmpty(gridSource.getAt(j).data.numsoc) && gridSource.getAt(j).data.numsoc != null){
+    										noASocioAnterior = (j =='0') ? gridSource.getAt(j).data.numsoc:gridSource.getAt(j-1).data.numsoc;
+                                            noASocioActual   = (j =='0') ? gridSource.getAt(j).data.numsoc:gridSource.getAt(j).data.numsoc;
+                                            
+                                            if(noASocioAnterior != noASocioActual && claveSocDiferente == false){
+                                                claveSocDiferente = true;
+                                            }
+										}
+                                    }									
 								}
 								
 								/** Se agrega validacion para no poder utilizar la misma clave familiar en todos los integrantes de la familia**/
@@ -2910,6 +2925,12 @@ debug("validarYGuardar flag:2");
 								    mensajeWarning('No se puede utilizar mas de una vez la Clave Familiar entre los integrantes de una familia.');
                                     return false;
 								}
+								
+								/** Se agrega validacion para no poder utilizar la misma clave familiar en todos los integrantes de la familia**/
+                                if(claveSocDiferente){
+                                    mensajeWarning('Clave de Socio no corresponde al Titular entre los integrantes de la familia.');
+                                    return false;
+                                }
 								
 								for(var j=0;j < gridSource.length;j++){
 									if(gridSource.getAt(j).data.Parentesco == "C" && titularCasado && gridSource.getAt(j).data.cdestciv != 2){

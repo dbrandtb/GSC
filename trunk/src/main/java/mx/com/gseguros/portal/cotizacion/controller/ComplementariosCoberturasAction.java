@@ -639,7 +639,11 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			gc.setCdrol(smap1.get("pv_cdrol"));
 			gc.setCdramo(smap1.get("pv_cdramo"));
 			gc.setCdtipsit(smap1.get("cdtipsit"));
-			gc.genera(tatriper);
+			if(!smap1.get("pv_cdramo").equalsIgnoreCase("2") && !smap1.get("pv_cdramo").equalsIgnoreCase("4")){
+				gc.genera(tatriper);
+			}else{
+				gc.genera(null);
+			}
 			item1=gc.getFields();
 			item2=gc.getItems();
 			
