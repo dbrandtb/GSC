@@ -73,7 +73,7 @@ public class Cotizar
 			paramsValues.put("param3","W");
 			Map<String,Object>paramsMap=(Map<String,Object>)procedureParamsCall.invoke(
 					manager,
-					"PKG_SATELITES.P_CALC_NUMPOLIZA",
+					"PKG_SATELITES_PRE.P_CALC_NUMPOLIZA",
 					paramsValues,
 					null,
 					new String[]{"pv_nmpoliza_o"},
@@ -131,7 +131,7 @@ public class Cotizar
         mapaMpolizas.put("45swpatent"  , null);
         mapaMpolizas.put("46accion"    , "U");
         procedureVoidCall.invoke(manager,
-        		"PKG_SATELITES.P_MOV_MPOLIZAS",
+        		"PKG_SATELITES_PRE.P_MOV_MPOLIZAS",
         		mapaMpolizas,
         		null);
 		
@@ -145,7 +145,7 @@ public class Cotizar
         	LinkedHashMap<String,Object>paramsObtAtributos=new LinkedHashMap<String,Object>();
         	paramsObtAtributos.put("cdtipsit",cdtipsit);
         	Map<String,String>atributos=(Map<String,String>)procedureMapCall.invoke(manager,
-        			"PKG_SATELITES.P_OBT_ATRIBUTOS",
+        			"PKG_SATELITES_PRE.P_OBT_ATRIBUTOS",
         			paramsObtAtributos,
         			null);
         	if(atributos.get("PARENTESCO") != null) {
@@ -190,7 +190,7 @@ public class Cotizar
         	paramsValues.put("param1",slist1.get(0).get(llaveCodPostal));
         	paramsValues.put("param2",cdtipsit);
         	procedureVoidCall.invoke(manager,
-        			"PKG_SATELITES.P_VALIDA_TARIFA",
+        			"PKG_SATELITES_PRE.P_VALIDA_TARIFA",
         			paramsValues,
         			null);
         }
@@ -264,7 +264,7 @@ public class Cotizar
             	"VARCHAR"
             };
             procedureVoidCall.invoke(manager,
-            		"PKG_SATELITES.P_MOV_MPOLISIT",
+            		"PKG_SATELITES_PRE.P_MOV_MPOLISIT",
             		iMapaPolisit,
             		iMapaPolisitTipos);
         	////// mpolisit iterado //////
@@ -336,7 +336,7 @@ public class Cotizar
             }
             ////// 4. custom //////
             procedureVoidCall.invoke(manager,
-            		"PKG_SATELITES.P_MOV_TVALOSIT",
+            		"PKG_SATELITES_PRE.P_MOV_TVALOSIT",
             		mapaValositIterado,
             		null);
             ////// tvalosit iterado //////
@@ -373,7 +373,7 @@ public class Cotizar
             							renderFechas.parse(llaveFenacimi)));
             mapaClonPersonaIterado.put("pv_parentesco"  , inciso.containsKey(llaveRol)?inciso.get(llaveRol):llaveRol);
             procedureVoidCall.invoke(manager,
-            		"PKG_COTIZA.P_CLONAR_PERSONAS",
+            		"PKG_COTIZA_PRE.P_CLONAR_PERSONAS",
             		mapaClonPersonaIterado,
             		new String[]{"VARCHAR","VARCHAR","VARCHAR","VARCHAR","VARCHAR","VARCHAR","VARCHAR","DATE",
             		"VARCHAR","VARCHAR","VARCHAR","VARCHAR","VARCHAR","VARCHAR","DATE","VARCHAR",
@@ -417,7 +417,7 @@ public class Cotizar
         mapaTarificacion.put("pv_nmsuplem_i" , "0");
         mapaTarificacion.put("pv_cdtipsit_i" , cdtipsit);
         procedureVoidCall.invoke(manager,
-        		"PKG_COTIZA.P_EJECUTA_SIGSVALIPOL",
+        		"PKG_COTIZA_PRE.P_EJECUTA_SIGSVALIPOL",
         		mapaTarificacion,
         		null);
         /*//////////////////////*/
@@ -436,7 +436,7 @@ public class Cotizar
         mapaDuroResultados.put("pv_cdelemen_i" , cdelemento);
         mapaDuroResultados.put("pv_cdtipsit_i" , cdtipsit);
         List<Map<String,String>> listaResultados=(List<Map<String,String>>)procedureListCall.invoke(manager,
-        		"PKG_COTIZA.P_GEN_TARIFICACION",
+        		"PKG_COTIZA_PRE.P_GEN_TARIFICACION",
         		mapaDuroResultados,
         		null);
         /*///////////////////////////////*/

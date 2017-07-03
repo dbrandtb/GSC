@@ -601,90 +601,37 @@
     	var size = grid.getView().dataSource.data.items.length;
 		var arrErrores = [];
 		var err;
-		var edoCivil        = '0';
-        var numEmpleado     = '0';
-        var cveFamiliar     = '0';
-        var ocupacion       = '0';
-        var noSocioAnterior = null;
-        var noSocioActual   = null;
-        var esNoSocio       = '0';
-        
-        var cveFamAnterior  = null;
-        var cveFamActual    = null;
-        var esCveFam        = '0';
-        
+				
 		for (var i=0; i < size; i++){
 		
 			debug('edociv ',grid.getView().dataSource.data.items[i].data.cdestciv);
 			debug('ocup ',grid.getView().dataSource.data.items[i].data.ocup);
-			    // validaremos con la información actual con la anterior, cuando es la primera vez se le asignara el valor 
-			    // de la primera posición
-			    if(i =='0'){
-			    	noSocioAnterior = grid.getView().dataSource.data.items[i].data.numsoc;
-			    	noSocioActual   = grid.getView().dataSource.data.items[i].data.numsoc;
-			    	cveFamAnterior  = null;
-                    cveFamActual    = grid.getView().dataSource.data.items[i].data.clvfam;
-			    }else{
-			    	noSocioAnterior = grid.getView().dataSource.data.items[i-1].data.numsoc;
-			    	noSocioActual   = grid.getView().dataSource.data.items[i].data.numsoc;
-			    	cveFamAnterior  = grid.getView().dataSource.data.items[i-1].data.clvfam;
-                    cveFamActual    = grid.getView().dataSource.data.items[i].data.clvfam;
-                    
-			    }
+			
 				if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.cdestciv)){
-		            if(edoCivil =='0'){
-		                arrErrores.push('* Estado Civil requerido.<br/>');
-                        grid.getStore().getAt(i).set('cdestciv',null);
-                        edoCivil ='1';
-		            }
+		            arrErrores.push('Estado Civil\n');
+		            grid.getStore().getAt(i).set('cdestciv',null);
 		        }
 			
 			
 		        if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.numsoc)){
-		            if(numEmpleado =='0'){
-		            	arrErrores.push('* No. de Socio/Empleado requerido.<br/>');
-                        grid.getStore().getAt(i).set('numsoc',null);
-                        numEmpleado = '1';
-		            }
+		            arrErrores.push('Numero de empleado\n');
+		            grid.getStore().getAt(i).set('numsoc',null);
 		        }
 		
 		        if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.clvfam)){
-		            if(cveFamiliar =='0'){
-		                 arrErrores.push('* Clave Familiar requerido.<br/>');
-		                 grid.getStore().getAt(i).set('clvfam',null);
-		                 cveFamiliar ='1';
-		            }
+		            arrErrores.push('Clave Familiar\n');
+		            grid.getStore().getAt(i).set('clvfam',null);
 		         }
 		         
 		         if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.ocup)){
-		            if(ocupacion =='0'){
-		                 arrErrores.push('* Ocupacion requerido.<br/>');
-		                 grid.getStore().getAt(i).set('ocup','156');
-		                 ocupacion = '1';
-		            }		            
+		            arrErrores.push('Ocupacion\n');
+		            grid.getStore().getAt(i).set('ocup','156');
 		        }
-		        
-		        if(cdunieco == 1403){
-		        	// CUANDO LOS CAMPOS ESTAN LLENOS REALIZAMOS LA VALIDACION
-                    if(esNoSocio == '0' && numEmpleado=='0'){
-                        if(noSocioAnterior != noSocioActual){
-                            esNoSocio = '1';
-                            arrErrores.push('* No. de Socio/Empleado no corresponde al Titular. <br/>');
-                        }
-                    }
-                    
-                    if(esCveFam == '0' && cveFamiliar=='0'){
-                        if(cveFamAnterior == cveFamActual){
-                            esCveFam = '1';
-                            arrErrores.push('* Clave Familiar duplicado. <br/>');
-                        }
-                    }
-                 }
 		
 		}
 		
 		if(!Ext.isEmpty(arrErrores)){
-			err = 'Los campos : <br/>';
+			err = 'Los campos : ';
 			for(var i=0; i < arrErrores.length;i++){
 				err += arrErrores[i];
 			}
