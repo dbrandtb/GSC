@@ -6,7 +6,7 @@
     <!-- Application appender -->
     <!-- <appender name="app" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="INFO" />
-        <param name="File" value="/RES/logs/gseguros/application.log" />
+        <param name="File" value="/RES/logs/gseguros/application_clientes.log" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="50MB"/>
         <param name="MaxBackupIndex" value="10"/>
@@ -18,7 +18,7 @@
     <!-- Developer Appender (Ver todo) -->
     <appender name="dev" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="DEBUG" />
-        <param name="File" value="/RES/logs/gseguros/dev.log" />
+        <param name="File" value="/RES/logs/gseguros/dev_clientes_preprod.log" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="50MB"/>
         <param name="MaxBackupIndex" value="10"/>
@@ -30,7 +30,7 @@
     <!-- Error Appender (Errores) -->
     <appender name="err" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="WARN" />
-        <param name="File" value="/RES/logs/gseguros/err.log" />
+        <param name="File" value="/RES/logs/gseguros/err_clientes.log" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="50MB"/>
         <param name="MaxBackupIndex" value="10"/>
@@ -42,18 +42,10 @@
     <!-- SQL Appender (Sentencias SQL) -->
     <appender name="sql" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="INFO" />
-        <param name="File" value="/RES/logs/gseguros/sql.log" />
+        <param name="File" value="/RES/logs/gseguros/sql_clientes.log" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="50MB"/>
         <param name="MaxBackupIndex" value="10"/>
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%X{USERID}] %-5p %-18C{1} - %m%n" />
-        </layout>
-    </appender>
-    
-    <!-- Console Appender -->
-    <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
-        <param name="Threshold" value="DEBUG" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%X{USERID}] %-5p %-18C{1} - %m%n" />
         </layout>
@@ -65,7 +57,6 @@
         <!-- <appender-ref ref="app" /> -->
         <appender-ref ref="dev" />
         <appender-ref ref="err" />
-        <appender-ref ref="stdout" />
     </logger>
 
     <logger name="mx">
@@ -73,7 +64,6 @@
         <!-- <appender-ref ref="app" /> -->
         <appender-ref ref="dev" />
         <appender-ref ref="err" />
-        <appender-ref ref="stdout" />
     </logger>
     
     <logger name="org.apache">
@@ -81,7 +71,6 @@
         <!-- <appender-ref ref="app" /> -->
         <appender-ref ref="dev" />
         <appender-ref ref="err" />
-        <appender-ref ref="stdout" />
     </logger>
     
     <logger name="org.springframework.jdbc">
@@ -90,7 +79,6 @@
         <appender-ref ref="dev" />
         <appender-ref ref="err" />
         <appender-ref ref="sql" />
-        <appender-ref ref="stdout" />
     </logger>
 
     <logger name="java.sql">
@@ -98,7 +86,6 @@
         <!-- <appender-ref ref="app" /> -->
         <appender-ref ref="dev" />
         <appender-ref ref="err" />
-        <appender-ref ref="stdout" />
     </logger>
     
     <logger name="mx.com.aon.portal.dao">
