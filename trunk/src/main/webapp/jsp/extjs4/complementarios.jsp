@@ -59,6 +59,7 @@
             var compleUrlGuardarCartoRechazo = '<s:url namespace="/"                action="guardarCartaRechazo"         />';
             var compleUrlCotizacion          = '<s:url namespace="/emision"         action="cotizacion"                  />';
             var _urlEnviarCorreo             = '<s:url namespace="/general"         action="enviaCorreo"                 />';
+            var _urlCargarCorreos            = '<s:url namespace="/cotizacionautos" action="cargarCorreos"               />';
             var _URL_CONSULTA_CLAUSU_DETALLE = '<s:url namespace="/catalogos"       action="consultaClausulaDetalle"     />';
             var _URL_CONSULTA_CLAUSU         = '<s:url namespace="/catalogos"       action="consultaClausulas"           />';
             var _URL_ObtieneValNumeroSerie   = '<s:url namespace="/emision" 		action="obtieneValNumeroSerie"       />';
@@ -908,72 +909,12 @@ function _p29_emitirClicComplementarios()
 	                                                                ,icon  : contexto+'/resources/fam3icons/icons/email.png'
 	                                                                ,disabled: true
 	                                                                ,hidden: (panDatComMap1.SITUACION != 'AUTO') ? true: false
-	                                                                ,handler:function()
-	                                                                {
-	                                                                    Ext.Msg.prompt('Envio de Email', 'Escriba los correos que recibir&aacute;n la documentaci&oacute;n (separados por ;)', 
-	                                                                    function(buttonId, text){
-	                                                                        if(buttonId == "ok" && !Ext.isEmpty(text)){
-	                                                                            
-	                                                                            if(Ext.isEmpty(_mensajeEmail)){
-	                                                                                mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
-	                                                                                return;
-	                                                                            }
-	                                                                            
-	                                                                            Ext.Ajax.request(
-	                                                                                    {
-	                                                                                        url : _urlEnviarCorreo,
-	                                                                                        params :
-	                                                                                        {
-	                                                                                            to     : text,
-	                                                                                            asunto : 'Documentación de póliza de Autos',
-	                                                                                            mensaje: _mensajeEmail,
-	                                                                                            html   : true
-	                                                                                        },
-	                                                                                        callback : function(options,success,response)
-	                                                                                        {
-	                                                                                            if (success)
-	                                                                                            {
-	                                                                                                var json = Ext.decode(response.responseText);
-	                                                                                                if (json.success == true)
-	                                                                                                {
-	                                                                                                    Ext.Msg.show(
-	                                                                                                    {
-	                                                                                                        title    : 'Correo enviado'
-	                                                                                                        ,msg     : 'El correo ha sido enviado'
-	                                                                                                        ,buttons : Ext.Msg.OK
-	                                                                                                        ,fn      : function()
-	                                                                                                        {
-	                                                                                                            _generarRemesaClic(
-	                                                                                                                false
-	                                                                                                                ,inputCdunieco
-	                                                                                                                ,inputCdramo
-	                                                                                                                ,'M'
-	                                                                                                                ,datComPolizaMaestra
-	                                                                                                                ,function(){}
-	                                                                                                                ,'S'
-	                                                                                                                );
-	                                                                                                        }
-	                                                                                                    });
-	                                                                                                }
-	                                                                                                else
-	                                                                                                {
-	                                                                                                    mensajeError('Error al enviar el correo');
-	                                                                                                }
-	                                                                                            }
-	                                                                                            else
-	                                                                                            {
-	                                                                                                errorComunicacion();
-	                                                                                            }
-	                                                                                        }
-	                                                                                    });
-	                                                                        
-	                                                                        }else {
-	                                                                            mensajeWarning('Introduzca al menos una direcci&oacute;n de email');    
-	                                                                        }
-	                                                                    })
-	                                                                }
-	                                                            }
-	                                                            ,{
+	                                                                ,handler  : function(){
+								                                    	_p30_enviar()
+								                                    }
+								                                    //REQ0040
+	                                                    			}
+														            ,{
 	                                                                id     : 'botonReenvioWS'
 	                                                                ,xtype : 'button'
 	                                                                ,text  : 'Reintentar Emisi&oacute;n'
@@ -3620,6 +3561,164 @@ function _p29_emitirClicComplementarios()
                     debugError(e);
                 }
             }
+
+            
+            function _p30_enviar()
+{
+    debug('>_p30_enviar');
+    centrarVentanaInterna(Ext.create('Ext.window.Window',
+    {
+        title        : 'Envio de Email'
+        ,width       : 550
+        ,modal       : true
+        ,height      : 150
+        ,buttonAlign : 'center'
+        ,bodyPadding : 5
+        ,items       :
+        [
+            {
+                xtype       : 'textfield'
+                ,itemId     : '_p30_idInputCorreos'
+                ,fieldLabel : 'Correo(s)'
+                ,emptyText  : 'Correo(s) separados por ;'
+                ,labelWidth : 100
+                ,allowBlank : false
+                ,blankText  : 'Introducir correo(s) separados por ;'
+                ,width      : 500
+                //REQ0040
+                ,listeners  : {
+                	boxready : function(){
+                		_p30_cargarCorreos(inputNtramite);
+                	}
+                }
+            }
+        ]
+        ,buttons :
+        [
+            {
+                text     : 'Enviar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                ,handler : function()
+                {
+                    var me = this;
+                    if (_fieldById('_p30_idInputCorreos').getValue().length > 0
+                            &&_fieldById('_p30_idInputCorreos').getValue() != 'Correo(s) separados por ;')
+                    {
+                        debug('Se va a enviar cotizacion');
+                        me.up().up().setLoading(true);
+                        //REQ0040
+                        //if(Ext.isEmpty(_mensajeEmail)){
+                        //	mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
+                        //	return false;
+                        //}
+                        Ext.Ajax.request(
+                        	{
+                            	url : _urlEnviarCorreo,
+                                params :
+                                {
+                                	to     : _fieldById('_p30_idInputCorreos').getValue(),
+                                    asunto : 'Documentación de póliza de Autos',
+                                    mensaje: _mensajeEmail,
+                                    html   : true
+                                },
+                                callback : function(options,success,response)
+                                {
+                                	if (success)
+                                    {
+                                    var json = Ext.decode(response.responseText);
+                                    if (json.success == true)
+                                    {
+                                        centrarVentanaInterna(Ext.Msg.show(
+                                        {
+                                            title : 'Correo enviado'
+                                            ,msg : 'El correo ha sido enviado'
+                                            ,buttons : Ext.Msg.OK
+                                            ,fn      : function()
+                                            {
+                                            	_generarRemesaClic(
+	                                            	false
+	                                                ,inputCdunieco
+	                                            	,inputCdramo
+	                                              	,'M'
+	                                           		,datComPolizaMaestra
+	                                             	,function(){}
+	                                             	,'S'
+	                                            	);
+                                                me.up().up().setLoading(false);
+                                                me.up().up().destroy();
+                                            }
+                                        }));
+                                    }
+                                    else
+                                    {
+                                        mensajeError('Error al enviar');
+                                        me.up().up().setLoading(false);
+                                        me.up().up().destroy();
+                                        
+                                    }
+                                
+                                   }
+                                   else
+                                   {
+                                    	errorComunicacion();
+                                   }
+                               }
+                         });
+                        //REQ0040
+                    }
+                    else
+                    {
+                        mensajeWarning('Introduzca al menos un correo');
+                        me.up().up().destroy();
+                    }
+                    
+                }
+            }
+            ,{
+                text     : 'Cancelar'
+                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                ,handler : function()
+                {
+                    this.up().up().destroy();
+                }
+            }
+        ]
+    }).show());
+    _fieldById('_p30_idInputCorreos').focus();
+    debug('<_p30_enviar');
+}
+
+
+//REQ0040 envio de correos
+function _p30_cargarCorreos(ntramite)
+{
+    debug('>_p03_cargarCorreos');
+    Ext.Ajax.request(
+    {
+        url     : _urlCargarCorreos
+        ,params :
+        {
+            'smap1.ntramite'    : ntramite
+        }
+        ,success : function(response) {
+            var json = Ext.decode(response.responseText);
+            debug('### json cargarCorreos:',json);
+            
+            if(json.exito)
+            {
+            	  debug('>_p30_cargarCorreos 1 ', json.respuesta);
+            	  _fieldById('_p30_idInputCorreos').setValue(json.respuesta);
+            }
+            else{
+            	  debug('>_p30_cargarCorreos 2');
+            }
+         }
+         ,failure : function(){
+         	me.setLoading(false);
+            errorComunicacion();
+         }
+    })
+}
 
         <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
         </script>
