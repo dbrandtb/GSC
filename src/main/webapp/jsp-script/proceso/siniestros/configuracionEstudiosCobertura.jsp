@@ -36,9 +36,6 @@ var _UrlActualizaResultadosEst = '<s:url namespace="/siniestros"    action="actu
 var _UrlActualizaEstudiosMed   = '<s:url namespace="/siniestros"    action="actualizaEliminaConfEstudios" />';
 var _UrlActualizaConfEstudiosMedCob = '<s:url namespace="/siniestros"    action="actualizaEliminaConfEstudiosCobertura" />';
 
-var _TIPO_PROVEEDOR_MEDICO = '15';
-var _TIPO_PROVEEDOR_LAB    = '16';
-
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -81,7 +78,7 @@ Ext.onReady(function()
 				,fields :
 				['CDRAMO','CDTIPSIT','CDGARANT','CDCONVAL','CDCONCEP','CDEST','DSRAMO','DSTIPSIT','DSGARANT','DSCONVAL','DSCONCEP','DSEST',
 					'CDRAMO_ORIG','CDTIPSIT_ORIG','CDGARANT_ORIG','CDCONVAL_ORIG','CDCONCEP_ORIG','CDEST_ORIG','SWOBLVAL_ORIG','SWOBLRES_ORIG',
-					'SWOBLEST_ORIG','SWOBLEST','SWOBLVAL','SWOBLRES','CDTIPO']
+					'SWOBLEST_ORIG','SWOBLEST','SWOBLVAL','SWOBLRES']
 	});
 	
 	var tiposProveedorStore = Ext.create('Ext.data.Store', {
@@ -287,7 +284,7 @@ Ext.onReady(function()
                             			params:{
                             				'params.idPadre' : records[0].get('key')
                             			}
-                            		});
+                            		})
                             	}
                             }
                         },
@@ -1200,9 +1197,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
 		
 	var windowConfEstudios;
 	var esNuevoRegistro = (!Ext.isEmpty(recordEditar) && recordEditar.phantom == false) ? false : true;
-	
-	var tipoLabProvConcept = false;
-	
+
 	var panelAgregarEditarConfig = Ext.create('Ext.form.Panel',{
         defaults : {
 			style : 'margin : 6px;'
@@ -1248,7 +1243,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                 			params:{
                 				'params.idPadre' : records[0].get('key')
                 			}
-                		});
+                		})
                 	}
                 }
             },
@@ -1398,26 +1393,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                             ,root : 'loadList'
                         }
                     }
-                }), 
-                listeners: {
-                	select: function(cmb, records){
-                		var checkConcepto = panelAgregarEditarConfig.down('checkbox[name=SWOBLEST_CHECK]');
-                		
-                		if(_TIPO_PROVEEDOR_LAB == records[0].get('CDTIPO')){
-                			tipoLabProvConcept = true; 
-                			checkConcepto.hide();
-                		}else{
-                			checkConcepto.show();
-                			tipoLabProvConcept = false;
-                		}
-                		
-                		comboModalidad.getStore().load({
-                			params:{
-                				'params.idPadre' : records[0].get('key')
-                			}
-                		});
-                	}
-                }
+                })
             },
             {
                 xtype: 'combobox',
@@ -1586,7 +1562,7 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
                        		 'pi_cdconval'    : recordEditar.get('CDCONVAL'),
                        		 'pi_cdconcep'    : recordEditar.get('CDCONCEP'),
                        		 'pi_cdest'       : recordEditar.get('CDEST'),
-                       		 'pi_swoblest'    : tipoLabProvConcept? 'N' : recordEditar.get('SWOBLEST'),
+                       		 'pi_swoblest'    : recordEditar.get('SWOBLEST'),
                        		 'pi_swoblval'    : recordEditar.get('SWOBLVAL'),
                        		 'pi_swoblres'    : recordEditar.get('SWOBLRES'),
                        		 'pi_swop'        : 'U'
@@ -1668,10 +1644,6 @@ function agregarEditarConfEstudios(recordEditar,btnGrid){
 				panelAgregarEditarConfig.down('checkbox[name=SWOBLEST_CHECK]').setValue(true);
 			}else{
 				panelAgregarEditarConfig.down('checkbox[name=SWOBLEST_CHECK]').setValue(false);
-			}
-			
-			if(_TIPO_PROVEEDOR_LAB == recordEditar.get('CDTIPO')){
-				panelAgregarEditarConfig.down('checkbox[name=SWOBLEST_CHECK]').hide();
 			}
 			
 			if(!Ext.isEmpty(recordEditar.get('SWOBLVAL')) && recordEditar.get('SWOBLVAL') == 'S'){

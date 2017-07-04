@@ -4514,28 +4514,4 @@ public class EndososManagerImpl implements EndososManager
                 .toString()
                 );
     }
-	
-	@Override
-	public List<Map<String,String>> obtenerSocioFamilia(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String noSocio
-			,String familia) throws Exception
-	{
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("pv_cdunieco_i" , cdunieco);
-		params.put("pv_cdramo_i"   , cdramo);
-		params.put("pv_estado_i"   , estado);
-		params.put("pv_nmpoliza_i" , nmpoliza);
-		params.put("pv_nmsocio_i" , noSocio);
-		params.put("pv_familia_i" , familia);
-		List<Map<String,String>>lista=endososDAO.obtenerSocioFamilia(params);
-		lista=lista!=null?lista:new ArrayList<Map<String,String>>();
-		
-		logger.debug("Resultado de carga asegurados : "+lista);
-		
-		return lista;
-	}
 }

@@ -695,12 +695,4 @@ public interface EndososManager
             )throws Exception;
 	
 	public Map<String, String> obtieneDetalleTramiteClonar(Map<String, String> params) throws Exception;
-	
-	public List<Map<String,String>> obtenerSocioFamilia(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String noSocio
-			,String familia) throws Exception;
 }
