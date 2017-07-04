@@ -2632,6 +2632,7 @@ public class ComplementariosAction extends PrincipalCoreAction
                        	}
                     	String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&endosos=",Arrays.toString(idEndosos).replace("[", "").replace("]", ""));
                     	HttpUtil.sendPost(sigsRenovarEndososB,params);
+                    	endososB = true;
                		}
                		catch (Exception ex)
                		{
