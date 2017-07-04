@@ -295,6 +295,7 @@ var cargaCensoRenovNuvo = (!Ext.isEmpty(_p25_smap1.cargaCensoRenovNuvo) && ("S" 
 var forzaCambiaCensoClon = (cambiaTamTramClon||cargaCensoRenovNuvo)? true : false;
 
 var cveDesSucursal = '';
+var mensajeCambioGrupos = 0;
 
 ////// variables //////
 
@@ -728,7 +729,10 @@ Ext.onReady(function()
 
         			setTimeout(function(){
         				if(grd.isVisible()){
-            				mensajeInfo('Si agrega o elimina Grupos para este Tr&aacute;mite Clonado debe volver a cargar el censo con las nuevas caracter&iacute;sticas.');
+        					if(mensajeCambioGrupos == 0){
+        						mensajeCambioGrupos ++;
+        						mensajeInfo('Si agrega o elimina Grupos para este Tr&aacute;mite Clonado debe volver a cargar el censo con las nuevas caracter&iacute;sticas.');
+            				}
             			}
 				    },750);
         		}
