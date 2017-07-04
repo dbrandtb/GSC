@@ -4981,6 +4981,12 @@ public String retarificarEndosos()
 			String ntramite = smap2.get("NTRAMITE");
 			String cdsisrol = usuario.getRolActivo().getClave();
 			
+			String noSocio   = (smap1.get("aux.otvalor49")!= null && !smap1.get("aux.otvalor49").isEmpty()) ? StringUtils.leftPad(smap1.get("aux.otvalor49"),6,"0")+"-":"";
+			String noFamilia = (smap1.get("aux.otvalor50")!= null && !smap1.get("aux.otvalor50").isEmpty()) ? StringUtils.leftPad(smap1.get("aux.otvalor50"),2,"0"):"";
+			
+			String nmsituaext = noSocio+""+noFamilia;
+			String nmsitaux   = (noFamilia!= null && !noFamilia.isEmpty())?noFamilia : nmsituac;
+			
 			String fechaEndoso    = smap3.get("fecha_endoso");
 			Date   fechaEndosoD   = renderFechas.parse(fechaEndoso);
 			
@@ -5064,8 +5070,8 @@ public String retarificarEndosos()
                 mapaPolisit.put("pv_fefecsit_i",    fechaEndosoD);
                 mapaPolisit.put("pv_fecharef_i",    fechaEndosoD);
                 mapaPolisit.put("pv_cdgrupo_i",     null);
-                mapaPolisit.put("pv_nmsituaext_i",  null);
-                mapaPolisit.put("pv_nmsitaux_i",    null);
+                mapaPolisit.put("pv_nmsituaext_i",  nmsituaext);
+                mapaPolisit.put("pv_nmsitaux_i",    nmsitaux);
                 mapaPolisit.put("pv_nmsbsitext_i",  null);
                 mapaPolisit.put("pv_cdplan_i",      cdplan);
                 mapaPolisit.put("pv_cdasegur_i",    "30");
@@ -14440,6 +14446,42 @@ public String retarificarEndosos()
 		return SUCCESS;
 	}
 	
+	
+	public String validaSocioFamilia()
+	{
+		logger.debug("\n"
+				+ "\n######################################"
+				+ "\n######################################"
+				+ "\n###### 	validaSocioFamilia 	 ######"
+				+ "\n######                 		 ######"
+				);
+		logger.debug("smap1 XXX: "+smap1);
+		try
+		{
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String noSocio = smap1.get("noSocio");
+			String familia = smap1.get("familia");
+			
+			slist1=endososManager.obtenerSocioFamilia(cdunieco, cdramo, estado, nmpoliza, noSocio, familia);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al cargar asegurados para el endoso de parentesco",ex);
+			error=ex.getMessage();
+			success=false;
+		}
+		logger.debug("\n"
+				+ "\n######                 	     ######"
+				+ "\n###### 	validaSocioFamilia 	 ######"
+				+ "\n######################################"
+				+ "\n######################################"
+				);
+		return SUCCESS;
+	}
 	
 	
 	

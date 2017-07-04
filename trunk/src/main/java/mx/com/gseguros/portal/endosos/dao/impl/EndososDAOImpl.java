@@ -6661,5 +6661,34 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
             compile();
         }
     }
+    
+	@Override
+	public List<Map<String,String>> obtenerSocioFamilia(Map<String, String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new OtenerSocioFamilia(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
+	}
+	
+	protected class OtenerSocioFamilia extends StoredProcedure
+	{
+		
+		protected OtenerSocioFamilia(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_VALIDA_FAMILIA_SOCIO");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsocio_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_familia_i" , OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"SOCIO"  , "FAMILIA"
+			};
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	    
 }
