@@ -55,7 +55,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 		protected ObtenerEndosos(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_ENDOSOS_G");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_ENDOSOS_G");
 			declareParameter(new SqlParameter("pv_nmpoliex_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdrfc_i"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
@@ -90,7 +90,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 		protected RetarificarEndosos(DataSource dataSource)
 		{ 
-			super(dataSource,"PKG_COTIZA.P_GET_DETALLE_COTI_END");
+			super(dataSource,"PKG_COTIZA_PRE.P_GET_DETALLE_COTI_END");
 			declareParameter(new SqlParameter   ("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter   ("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter   ("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -167,7 +167,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		    pv_msg_id_o
 		    pv_title_o
 			*/
-			super(dataSource, "PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_CONFIRMAR_ENDOSOB");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -236,7 +236,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		protected ObtieneCoberturasDisponibles(DataSource dataSource)
 		{
-			super(dataSource,"PKG_COTIZA.P_GET_COBERTURAS_DISP");
+			super(dataSource,"PKG_COTIZA_PRE.P_GET_COBERTURAS_DISP");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -297,7 +297,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		 */
 		protected ObtenerAtributosCoberturas(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_GET_ATRI_COBER");
+			super(dataSource,"PKG_SATELITES_PRE.P_GET_ATRI_COBER");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));			
 			declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
@@ -324,7 +324,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 		protected EjecutarSIGSVALIPOL_END(DataSource dataSource)
 		{
-			super(dataSource, "PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END");
+			super(dataSource, "PKG_COTIZA_PRE.P_EJECUTA_SIGSVALIPOL_END");
 
 			declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdelemen_i" , OracleTypes.VARCHAR));
@@ -416,7 +416,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected CalcularValorEndoso(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_CALC_VALOR_ENDOSO"); 
+			super(dataSource, "PKG_ENDOSOS_PRE.P_CALC_VALOR_ENDOSO"); 
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -504,7 +504,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected IniciarEndoso(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_ENDOSO_INICIA");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_ENDOSO_INICIA");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -553,7 +553,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected InsertarTworksupEnd(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_INSERTA_TWORKSUP_END");
+			super(dataSource, "PKG_SATELITES2_PRE.P_INSERTA_TWORKSUP_END");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -578,7 +578,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected InsertarTworksupSitTodas(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_INSERTA_TWORKSUP_SIT_TODAS");
+			super(dataSource, "PKG_SATELITES_PRE.P_INSERTA_TWORKSUP_SIT_TODAS");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -627,7 +627,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneDatosMpolisit(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_OBTIENE_DATOS_MPOLISIT");
+			super(dataSource, "PKG_SATELITES_PRE.P_OBTIENE_DATOS_MPOLISIT");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -656,7 +656,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtenerNombreEndosos(DataSource dataSource)
 		{
-			super(dataSource, "PKG_LISTAS.P_GET_TTIPSUPL");
+			super(dataSource, "PKG_LISTAS_PRE.P_GET_TTIPSUPL");
 			declareParameter(new SqlParameter("pv_cdrol_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
@@ -680,7 +680,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	protected class ObtieneDescripcionEndosoSP extends StoredProcedure {
 		protected ObtieneDescripcionEndosoSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.P_GET_DSTIPSUP");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_DSTIPSUP");
 			declareParameter(new SqlParameter("pv_cdtipsup_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_dstipsup_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
@@ -708,7 +708,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	protected class ObtieneNumeroAtributo extends StoredProcedure {
 		protected ObtieneNumeroAtributo(DataSource dataSource) {
 			
-			super(dataSource, "PKG_CONSULTA.P_OBT_CDATRIBU_DE_TATRISIT");
+			super(dataSource, "PKG_CONSULTA_PRE.P_OBT_CDATRIBU_DE_TATRISIT");
 			
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsatribu_i", OracleTypes.VARCHAR));
@@ -733,7 +733,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaNombreCliente(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_ACTUALIZA_NOMBRE_PERSONA");
+			super(dataSource, "PKG_SATELITES2_PRE.P_ACTUALIZA_NOMBRE_PERSONA");
 			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsnombre_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsnombre1_i"   , OracleTypes.VARCHAR));
@@ -755,7 +755,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaRfcCliente(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_ACTUALIZA_RFC_PERSONA");
+			super(dataSource, "PKG_SATELITES2_PRE.P_ACTUALIZA_RFC_PERSONA");
 			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdrfc_i"   , OracleTypes.VARCHAR));
 			
@@ -774,7 +774,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizarFenacimi(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_UPD_FENACIMI");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_UPD_FENACIMI");
 			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_fenacimi_i"   , OracleTypes.DATE));
 			
@@ -794,7 +794,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizarSexo(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_UPD_SEXO");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_UPD_SEXO");
 			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_sexo_i"     , OracleTypes.VARCHAR));
 			
@@ -816,7 +816,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 		protected ObtenerCdpersonMpoliper(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_OBTIENE_CDPERSON_POLIPER");
+			super(dataSource, "PKG_SATELITES_PRE.P_OBTIENE_CDPERSON_POLIPER");
 
 			declareParameter(new SqlParameter("pv_cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo"   , OracleTypes.VARCHAR));
@@ -865,7 +865,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 		protected ObtenerNtramiteEmision(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_NTRAMITE_EMISION");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_NTRAMITE_EMISION");
 
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
@@ -908,7 +908,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ValidaEndosoAnterior(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_VALIDA_ENDOSO_ANTERIOR");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_VALIDA_ENDOSO_ANTERIOR");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -943,7 +943,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ValidaEndosoPagados(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_VAL_ENDOSO_X_RECIBOS_PAGADOS");
+			super(dataSource, "PKG_SATELITES2_PRE.P_VAL_ENDOSO_X_RECIBOS_PAGADOS");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -965,7 +965,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaDeducibleValosit(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_INS_NEW_DEDUCIBLE_TVALOSIT");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_INS_NEW_DEDUCIBLE_TVALOSIT");
 			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -989,7 +989,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaCopagoValosit(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_INS_NEW_COPAGO_TVALOSIT");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_INS_NEW_COPAGO_TVALOSIT");
 			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -1014,7 +1014,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaVigenciaPoliza(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_INSERTA_VIGENCIA_MPOLIZAS");
+			super(dataSource, "PKG_SATELITES2_PRE.P_INSERTA_VIGENCIA_MPOLIZAS");
 			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -1038,7 +1038,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected InsertaTextoLibre(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_MOV_MPOLICOT");
+			super(dataSource, "PKG_SATELITES_PRE.P_MOV_MPOLICOT");
 			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -1179,7 +1179,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		logger.debug(
 				new StringBuilder()
 				.append("\n******************************************************")
-				.append("\n****** PKG_CONSULTA2.P_OBTIENE_DETALLE_TRAMITE  ******")
+				.append("\n****** PKG_CONSULTA2_PRE.P_OBTIENE_DETALLE_TRAMITE  ******")
 				.append("\n****** params=").append(params)
 				.append("\n*****************************************************")
 				.toString()
@@ -1222,7 +1222,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		protected ObtieneDetalleTramiteClonar(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA2.P_OBTIENE_DETALLE_TRAMITE");
+			super(dataSource, "PKG_CONSULTA2_PRE.P_OBTIENE_DETALLE_TRAMITE");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(columnas)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -1277,7 +1277,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaGrupoReexp(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_CAMBIA_PLAN_VALORES_REEXP");
+			super(dataSource, "PKG_SATELITES2_PRE.P_CAMBIA_PLAN_VALORES_REEXP");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -1303,7 +1303,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaTodosGrupoReexp(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_CAMBIA_PLAN_VALORES_REEXP");
+			super(dataSource, "PKG_SATELITES2_PRE.P_CAMBIA_PLAN_VALORES_REEXP");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -1329,7 +1329,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ValoresDefectoGrupoReexp(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_INSERTA_TWORKSUP_GRUPO");
+			super(dataSource, "PKG_SATELITES2_PRE.P_INSERTA_TWORKSUP_GRUPO");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -1354,7 +1354,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ValoresDefectoGruposReexp(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_INSERTA_TWORKSUP_GRUPOS");
+			super(dataSource, "PKG_SATELITES2_PRE.P_INSERTA_TWORKSUP_GRUPOS");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -1390,7 +1390,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 		protected ObtenerValositUltimaImagen(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_OBT_VALOSIT_ULTIMA_IMAGEN");
+			super(dataSource, "PKG_CONSULTA_PRE.P_OBT_VALOSIT_ULTIMA_IMAGEN");
 
 			declareParameter(new SqlParameter("PV_CDUNIECO_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
@@ -1437,7 +1437,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaExtraprimaValosit(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_INS_NEW_EXTRAPRIMA_TVALOSIT");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_INS_NEW_EXTRAPRIMA_TVALOSIT");
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
@@ -1462,7 +1462,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected InsertarPolizaCdperpag(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_INS_MPOLIZAS_CDPERPAG");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_INS_MPOLIZAS_CDPERPAG");
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
@@ -1489,7 +1489,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtenerFechaEndosoFormaPago(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_GET_FEINIVAL_END_FP");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_GET_FEINIVAL_END_FP");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -1607,7 +1607,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 		protected ObtenerAgentesEndosoAgente(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_AGENTE_POLIZA");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_AGENTE_POLIZA");
 			declareParameter(new SqlParameter("PV_CDUNIECO_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
@@ -1641,7 +1641,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		protected ObtenerAseguradosPoliza(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_Get_Datos_Aseg");
+			super(dataSource, "PKG_CONSULTA_PRE.P_Get_Datos_Aseg");
 			declareParameter(new SqlParameter("PV_CDUNIECO_I" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
@@ -1671,7 +1671,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected PMovMpoliage(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_MOV_MPOLIAGE");
+			super(dataSource, "PKG_SATELITES_PRE.P_MOV_MPOLIAGE");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -1705,7 +1705,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 		protected PGetSuplemEmision(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_GET_NMSUPLEM_EMISION");
+			super(dataSource, "PKG_SATELITES_PRE.P_GET_NMSUPLEM_EMISION");
 
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
@@ -1738,7 +1738,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 		protected ObtieneFechaInicioVigenciaPoliza(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_OBTIENE_FEINIVAL_POLIZA");
+			super(dataSource, "PKG_CONSULTA_PRE.P_OBTIENE_FEINIVAL_POLIZA");
 
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
@@ -1777,7 +1777,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ValidaEndosoSimple(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_VALIDA_ENDOSO_SIMPLE");
+			super(dataSource, "PKG_CONSULTA_PRE.P_VALIDA_ENDOSO_SIMPLE");
 
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
@@ -1815,7 +1815,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ValidaNuevaCobertura(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_VALIDA_FEC_ENDOSO");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_VALIDA_FEC_ENDOSO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -1942,7 +1942,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected HabilitaRecibosSubsecuentes(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_HABILITAR_RECIBOS_SUB");
+			super(dataSource, "PKG_SATELITES_PRE.P_HABILITAR_RECIBOS_SUB");
 			declareParameter(new SqlParameter("fechaDeInicio" , OracleTypes.DATE));
 			declareParameter(new SqlParameter("fechaDeFin"    , OracleTypes.DATE));
 			declareParameter(new SqlParameter("cdunieco"      , OracleTypes.VARCHAR));
@@ -1969,7 +1969,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ValidaEstadoCodigoPostal(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_VALIDA_CODPOS");
+			super(dataSource, "PKG_SATELITES_PRE.P_VALIDA_CODPOS");
 			declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_codpos_i"   , OracleTypes.VARCHAR));
 			
@@ -2045,7 +2045,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtenerComponenteSituacionCobertura(DataSource dataSource)
 		{
-			super(dataSource, "PKG_LISTAS.P_RECUPERA_TATRISIT_COB_ADIC");
+			super(dataSource, "PKG_LISTAS_PRE.P_RECUPERA_TATRISIT_COB_ADIC");
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
@@ -2084,7 +2084,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaTvalositSitaucionCobertura(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_ACT_TVALOSIT_X_ATRIB");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_ACT_TVALOSIT_X_ATRIB");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2138,7 +2138,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtenerParametrosEndoso(DataSource dataSource)
 		{
-			super(dataSource,"PKG_LISTAS.P_GET_PARAMS_ENDOSO");
+			super(dataSource,"PKG_LISTAS_PRE.P_GET_PARAMS_ENDOSO");
 			declareParameter(new SqlParameter("parametro" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
@@ -2210,7 +2210,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected GuardarAtributosSituacionGeneral(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_INSERTA_TVALOSIT_DINAM");
+			super(dataSource,"PKG_SATELITES2_PRE.P_INSERTA_TVALOSIT_DINAM");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2237,7 +2237,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	protected class InsertaMPolicapSP extends StoredProcedure {
 		protected InsertaMPolicapSP(DataSource dataSource) {
-			super(dataSource,"PKG_ENDOSOS.P_INSERTA_MPOLICAP");
+			super(dataSource,"PKG_ENDOSOS_PRE.P_INSERTA_MPOLICAP");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -2289,7 +2289,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	protected class MovimientoMpoliperBeneficiario extends StoredProcedure {
 		protected MovimientoMpoliperBeneficiario(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_MOV_MPOLIPER_BENEFIC");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_MPOLIPER_BENEFIC");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2334,7 +2334,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	protected class GuardaAseguradoAlterno extends StoredProcedure {
 		protected GuardaAseguradoAlterno(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_INSERTA_ASEGURADO_ALTERNO");
+			super(dataSource,"PKG_SATELITES2_PRE.P_INSERTA_ASEGURADO_ALTERNO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -2366,7 +2366,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	protected class ObtenerListaDocumentosEndososSP extends StoredProcedure {
 
 		protected ObtenerListaDocumentosEndososSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.P_GET_SUPL_TDOCUPOL");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_SUPL_TDOCUPOL");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i"  , OracleTypes.VARCHAR));
@@ -2407,7 +2407,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	protected class InsertarIncisoEvaluacion extends StoredProcedure {
 
 		protected InsertarIncisoEvaluacion(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES2.P_INS_INCISO_EVAL_ENDOSO");
+			super(dataSource, "PKG_SATELITES2_PRE.P_INS_INCISO_EVAL_ENDOSO");
 			declareParameter(new SqlParameter("stamp"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
@@ -2457,7 +2457,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected RecuperarEndososClasificados(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_GET_ENDOSOS_CLASIFICADOS");
+			super(dataSource,"PKG_SATELITES2_PRE.P_GET_ENDOSOS_CLASIFICADOS");
 			declareParameter(new SqlParameter("stamp"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nivel"    , OracleTypes.VARCHAR));
@@ -2629,7 +2629,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected GuardarTvalositEndoso(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_INS_TVALOSIT_ENDOSO");
+			super(dataSource,"PKG_SATELITES2_PRE.P_INS_TVALOSIT_ENDOSO");
 			declareParameter(new SqlParameter("cdunieco"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"    , OracleTypes.VARCHAR));
@@ -2785,7 +2785,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ConfirmarEndosoTvalositAuto(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_ENDOSO_ATRIBUTOS_AUTO");
+			super(dataSource,"PKG_SATELITES2_PRE.P_ENDOSO_ATRIBUTOS_AUTO");
 			declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tstamp"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
@@ -2822,7 +2822,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneDatosEndPlacasMotor(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_PLAC_MOT");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DAT_SP_SIGS_CAM_PLAC_MOT");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -2862,7 +2862,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneDatosEndTipoServicio(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DAT_SP_SIGS_CAM_TIP_SERV");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DAT_SP_SIGS_CAM_TIP_SERV");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -2902,7 +2902,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneDatosEndVigenciaPol(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_VIG");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DATOS_SP_SIGS_CAM_VIG");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -2945,7 +2945,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneDatosEndSerie(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_SERIE");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DATOS_SP_SIGS_CAM_SERIE");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -2984,7 +2984,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneDatosEndBeneficiario(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_SP_SIGS_CAM_BENEF");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DATOS_SP_SIGS_CAM_BENEF");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -3021,7 +3021,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneDatosEndAseguradoAlterno(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_SP_SIGS_ASEG_ALTER");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DATOS_SP_SIGS_ASEG_ALTER");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -3056,7 +3056,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneDatosEndAdaptacionesRC(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DATOS_SP_SIGS_ADAPTAC_RC");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DATOS_SP_SIGS_ADAPTAC_RC");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -3092,7 +3092,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneDatosEndTextoLibre(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DAT_SP_SIGS_TEXTO_LIBRE");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DAT_SP_SIGS_TEXTO_LIBRE");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -3126,7 +3126,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaNumeroEndosSigs(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_ACTUALIZA_NUM_ENDOSOB_SIGS");
+			super(dataSource,"PKG_SATELITES2_PRE.P_ACTUALIZA_NUM_ENDOSOB_SIGS");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -3172,7 +3172,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ConfirmarEndosoAltaIncisoAuto(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_ENDOSO_ALTA_AUTO");
+			super(dataSource,"PKG_SATELITES2_PRE.P_ENDOSO_ALTA_AUTO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -3226,7 +3226,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ConfirmarEndosoBajaIncisos(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_ENDOSO_BAJA_INCISOS");
+			super(dataSource,"PKG_SATELITES2_PRE.P_ENDOSO_BAJA_INCISOS");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -3326,7 +3326,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 
 		protected ObtenerRetroActividad(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_OBTIENE_RETROACTIVIDAD");
+			super(dataSource, "PKG_CONSULTA_PRE.P_OBTIENE_RETROACTIVIDAD");
 			declareParameter(new SqlParameter("pv_cdsisrol_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"       ,OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsup_i"    , OracleTypes.VARCHAR));
@@ -3358,7 +3358,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		protected ObtieneRecibosPagados(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_REC_A_DESPAGAR_X_POLIZA");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_REC_A_DESPAGAR_X_POLIZA");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"       ,OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -3402,7 +3402,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected GuardarEndosoClaveAuto(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_ENDOSO_CLAVE_AUTO");
+			super(dataSource,"PKG_SATELITES2_PRE.P_ENDOSO_CLAVE_AUTO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -3454,7 +3454,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected RecuperarCoberturasEndosoDevolucionPrimas(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_GET_COBER_ENDOSO_DEV_PRI");
+			super(dataSource,"PKG_SATELITES2_PRE.P_GET_COBER_ENDOSO_DEV_PRI");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -3494,7 +3494,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected RecuperarDiasDiferenciaEndosoValidos(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_DIAS_ENDOSO_AUTORIZA");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_DIAS_ENDOSO_AUTORIZA");
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			//declareParameter(new SqlParameter("cdtipsup" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_dias_endoso_o" , OracleTypes.VARCHAR));
@@ -3623,7 +3623,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ReasignaParentescoTitular(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_REASIGNA_PARENTESCO_TIT");
+			super(dataSource,"PKG_SATELITES2_PRE.P_REASIGNA_PARENTESCO_TIT");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -3661,7 +3661,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	protected class PMovMpolicot extends StoredProcedure {
 		
 		protected PMovMpolicot(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES.P_MOV_MPOLICOT");
+			super(dataSource,"PKG_SATELITES_PRE.P_MOV_MPOLICOT");
 			declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
@@ -3731,7 +3731,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ConfirmarEndosoRehabilitacion(DataSource dataSource)
 		{
-			super(dataSource,"PKG_ENDOSOS.P_ENDOSO_REHABILITA");
+			super(dataSource,"PKG_ENDOSOS_PRE.P_ENDOSO_REHABILITA");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
@@ -3770,7 +3770,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected InsertaRecibosNvaVigencia(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_INSERTA_RECIBOS_NVA_VIGENCIA");
+			super(dataSource, "PKG_SATELITES2_PRE.P_INSERTA_RECIBOS_NVA_VIGENCIA");
 			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -3837,7 +3837,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ConfirmarEndosoCancelacionAuto(DataSource dataSource)
 		{
-			super(dataSource,"PKG_ENDOSOS.P_ENDOSO_CANCELA_AUTO");
+			super(dataSource,"PKG_ENDOSOS_PRE.P_ENDOSO_CANCELA_AUTO");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
@@ -3901,7 +3901,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected GuardarEndosoDevolucionPrimas(DataSource dataSource)
 		{
-			super(dataSource,"PKG_ENDOSOS.P_ENDOSO_DEVOLUCION_PRIMAS");
+			super(dataSource,"PKG_ENDOSOS_PRE.P_ENDOSO_DEVOLUCION_PRIMAS");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
@@ -3944,7 +3944,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ValidaEndosoCambioVigencia(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_VAL_ENDOSO_CAMBIO_VIGENCIA");
+			super(dataSource, "PKG_SATELITES2_PRE.P_VAL_ENDOSO_CAMBIO_VIGENCIA");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -3997,7 +3997,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ConfirmarEndosoValositFormsAuto(DataSource dataSource)
 		{
-			super(dataSource,"PKG_ENDOSOS.P_ENDOSO_VALOSIT_FORM");
+			super(dataSource,"PKG_ENDOSOS_PRE.P_ENDOSO_VALOSIT_FORM");
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
@@ -4095,7 +4095,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneEndososPoliza(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_ENDOSOS_PARA_WS_AUTOS");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_ENDOSOS_PARA_WS_AUTOS");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -4144,7 +4144,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ObtieneDatosEndososB(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_ENDOSOS_B");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_ENDOSOS_B");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4197,7 +4197,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected EsMismaPersonaContratante(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_VERIFICA_SITUAC_CONTRATANTE");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_VERIFICA_SITUAC_CONTRATANTE");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -4243,7 +4243,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected RecuperarCdtipsitInciso1(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_CDTIPSIT_PRIMER_INCISO");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_CDTIPSIT_PRIMER_INCISO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -4323,7 +4323,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected RecuperarNmsuplemEndosoValidando(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_NMSUPLEM_ENDOSO_VAL");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_NMSUPLEM_ENDOSO_VAL");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -4396,7 +4396,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected RecuperarCorreoElectronicoSucursal(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_OBTIENE_EMAIL");
+			super(dataSource, "PKG_CONSULTA_PRE.P_OBTIENE_EMAIL");
 			declareParameter(new SqlParameter("codigo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{"DESCRIPL"})));
@@ -4425,7 +4425,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	protected class ValidaDuplicidadParentescoSP extends StoredProcedure {
 		protected ValidaDuplicidadParentescoSP(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES2.P_VALIDA_DUP_PARENTESCO");
+			super(dataSource, "PKG_SATELITES2_PRE.P_VALIDA_DUP_PARENTESCO");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4468,7 +4468,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	protected class RegeneraSuplemento extends StoredProcedure {
 		protected RegeneraSuplemento(DataSource dataSource) {
-			super(dataSource, "PKG_ENDOSOS.P_REGENERA_SUPLEMENTO");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_REGENERA_SUPLEMENTO");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -4503,7 +4503,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		protected ObtieneRecibosDespagados(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_REC_REHAB_DESPAG_X_POL");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_REC_REHAB_DESPAG_X_POL");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"       ,OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -4525,7 +4525,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected GuardarEndosoNombreRFCFecha(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_MOV_MPERSONA");
+			super(dataSource, "PKG_SATELITES2_PRE.P_MOV_MPERSONA");
 			declareParameter(new SqlParameter("pv_cdperson_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipide_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdideper_i"  , OracleTypes.VARCHAR));
@@ -4583,7 +4583,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		protected ObtieneInformacionCliente(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_DAT_CAM_NOM_RFC_FECNAC");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_DAT_CAM_NOM_RFC_FECNAC");
 			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
@@ -4620,7 +4620,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	protected class ActualizaMpolisitNuevaVigenciaSP extends StoredProcedure {
 		protected ActualizaMpolisitNuevaVigenciaSP(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES2.P_ACTUALIZA_MPOLISIT_NVA_VIG");
+			super(dataSource, "PKG_SATELITES2_PRE.P_ACTUALIZA_MPOLISIT_NVA_VIG");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4645,7 +4645,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		protected ObtenerInfoFamiliaEndoso(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_Get_Datos_InfoFamEndoso");
+			super(dataSource, "PKG_CONSULTA_PRE.P_Get_Datos_InfoFamEndoso");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4696,7 +4696,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	protected class RegeneraSuplementoFamiliaEndoso extends StoredProcedure {
 		protected RegeneraSuplementoFamiliaEndoso(DataSource dataSource) {
 			super(dataSource, "P_REGENERA_SUPLEMENTOALTA");
-			//super(dataSource, "PKG_ENDOSOS.P_REGENERA_SUPLEMENTOALTA");
+			//super(dataSource, "PKG_ENDOSOS_PRE.P_REGENERA_SUPLEMENTOALTA");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -4741,7 +4741,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ClonarGarantiaCapitales(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_CLONAR_GARANTIAS_Y_CAPITALES");
+			super(dataSource, "PKG_SATELITES2_PRE.P_CLONAR_GARANTIAS_Y_CAPITALES");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4767,7 +4767,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected ActualizaExtraprimaValosit2(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_INS_NEW_EXTRAPRIMA_TVALOSIT2");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_INS_NEW_EXTRAPRIMA_TVALOSIT2");
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
@@ -4857,7 +4857,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected RecuperarCotizaciones(DataSource dataSource)
 		{
-			super(dataSource,"pkg_consulta.P_OBT_DATOS_MESA_COTIZACION");
+			super(dataSource,"PKG_CONSULTA_PRE.P_OBT_DATOS_MESA_COTIZACION");
 			declareParameter(new SqlParameter("pv_cdunieco_i"         , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ntramite_i"         , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"           , OracleTypes.VARCHAR));
@@ -4963,7 +4963,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected RecuperarNumeroGruposPoliza(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_MAXIMO_GRUPO");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_MAXIMO_GRUPO");
 			declareParameter(new SqlParameter("pv_cdunieco_i"   	, OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"     	, OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"     	, OracleTypes.VARCHAR));
@@ -5045,7 +5045,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		protected ObtieneIncisosAfectadosEndoso(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_INCISOS_X_SUPLEMENTO");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_INCISOS_X_SUPLEMENTO");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -5691,7 +5691,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	protected class RecuperarTarifaEndosoSaludSP extends StoredProcedure {
 		protected RecuperarTarifaEndosoSaludSP (DataSource dataSource) {
-			super(dataSource, "PKG_COTIZA.P_GET_DETALLE_COTI_END_SALUD");
+			super(dataSource, "PKG_COTIZA_PRE.P_GET_DETALLE_COTI_END_SALUD");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -5874,7 +5874,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	protected class MovimientoMpoligarSP extends StoredProcedure {
 		protected MovimientoMpoligarSP (DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_MOV_MPOLIGAR");
+			super(dataSource, "PKG_SATELITES_PRE.P_MOV_MPOLIGAR");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -6324,7 +6324,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
             "CDPERSON","DSNOMBRE","DSNOMBRE1","DSAPELLIDO","DSAPELLIDO1","OTSEXO","CDPARENT","DESCPARENTESCO","PORBENEF"
         };
         protected obtieneBeneficiariosVidaAuto(DataSource dataSource) {
-            super(dataSource, "PKG_CONSULTA.P_GET_BENEFICIARIOS");
+            super(dataSource, "PKG_CONSULTA_PRE.P_GET_BENEFICIARIOS");
             declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i"       ,OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -6423,7 +6423,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
     
     protected class conviertePuntoMuertoMpoliperBeneficiario extends StoredProcedure {
         protected conviertePuntoMuertoMpoliperBeneficiario(DataSource dataSource) {
-            super(dataSource, "PKG_CONSULTA2.P_SET_ENDOSO_VIDA_BAJA");
+            super(dataSource, "PKG_CONSULTA2_PRE.P_SET_ENDOSO_VIDA_BAJA");
             declareParameter(new SqlParameter("cdunieco"    , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"      ,OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"      , OracleTypes.VARCHAR));
@@ -6458,7 +6458,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
         {
             throw new ApplicationException("No se encontraron coberturas");
         }
-        Utils.debugProcedure(logger, "PKG_CONSULTA2.P_GET_COBER_ENDOSO_FLO", params, lista);
+        Utils.debugProcedure(logger, "PKG_CONSULTA2_PRE.P_GET_COBER_ENDOSO_FLO", params, lista);
         return lista;
     }
     
@@ -6466,7 +6466,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
     {
         protected RecuperarCoberturasEndosoPrimasNetas(DataSource dataSource)
         {
-            super(dataSource,"PKG_CONSULTA2.P_GET_COBER_ENDOSO_FLO");
+            super(dataSource,"PKG_CONSULTA2_PRE.P_GET_COBER_ENDOSO_FLO");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -6524,8 +6524,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
     {
         protected GuardarEndosoAjusteSiniestralidad(DataSource dataSource)
         {
-            //super(dataSource,"PKG_ENDOSOS.P_ENDOSO_DEVOLUCION_PRIMAS");
-            super(dataSource,"PKG_ENDOSOS.P_AJUSTE_SINIESTRALIDAD");
+            //super(dataSource,"PKG_ENDOSOS_PRE.P_ENDOSO_DEVOLUCION_PRIMAS");
+        	super(dataSource,"PKG_ENDOSOS_PRE.P_AJUSTE_SINIESTRALIDAD");
             declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdelemen" , OracleTypes.VARCHAR));
@@ -6547,6 +6547,8 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
             compile();
         }
     }
+	
+    
     
     @Override
     public List<Map<String,String>> obtieneDatosEndCamModelo(Map<String, String> params)throws Exception
@@ -6562,7 +6564,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
     {
         protected ObtieneDatosEndCambioModelo(DataSource dataSource)
         {
-            super(dataSource,"PKG_CONSULTA2.P_GET_DATOS_CAM_MODELO");
+            super(dataSource,"PKG_CONSULTA2_PRE.P_GET_DATOS_CAM_MODELO");
             declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -6600,7 +6602,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
     {
         protected ObtieneDatosEndCambioDescripcion(DataSource dataSource)
         {
-            super(dataSource,"PKG_CONSULTA2.P_GET_DATOS_CAM_DESCRIPCION");
+            super(dataSource,"PKG_CONSULTA2_PRE.P_GET_DATOS_CAM_DESCRIPCION");
             declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -6638,7 +6640,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
     {
         protected ObtieneDatosEndTipoCarga(DataSource dataSource)
         {
-            super(dataSource,"PKG_CONSULTA2.P_GET_DAT_SIGS_CAM_TIP_CARGA");
+            super(dataSource,"PKG_CONSULTA2_PRE.P_GET_DAT_SIGS_CAM_TIP_CARGA");
             declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
@@ -6674,7 +6676,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		
 		protected OtenerSocioFamilia(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_VALIDA_FAMILIA_SOCIO");
+			super(dataSource, "PKG_CONSULTA_PRE.P_VALIDA_FAMILIA_SOCIO");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -6690,5 +6692,4 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
-	    
 }
