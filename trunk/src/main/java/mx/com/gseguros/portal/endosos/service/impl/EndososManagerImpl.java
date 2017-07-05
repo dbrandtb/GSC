@@ -582,6 +582,12 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 
+	@Override
+	public List<Map<String,String>> obtieneGruposTramiteClonar(Map<String,String> params) throws Exception
+	{
+		return endososDAO.obtieneGruposTramiteClonar(params);
+	}
+
 	
 	@Override
 	public Map<String,String> pClonarCotizacionTotal(

@@ -11,6 +11,7 @@ var mesConUrlDocu                   = '<s:url namespace="/documentos"  action="v
 var mesConUrlComGrupo               = '<s:url namespace="/emision"     action="cotizacionGrupo"             />';
 var mesConUrlComGrupo2              = '<s:url namespace="/emision"     action="cotizacionGrupo2"            />';
 var _obtieneDetalleTramiteClona     = '<s:url namespace="/endosos"     action="obtieneDetalleTramiteClonar" />';
+var _UrlConsultaGruposTramite       = '<s:url namespace="/endosos"     action="obtieneGruposTramiteClonar"  />';
 
 var _p100_urlComplementoClonacion   = '<s:url namespace="/endosos"     action="obtieneDetalleTramiteClonar" />';
 
@@ -34,11 +35,17 @@ Ext.onReady(function()
  Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
  Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
     ////// modelos //////
-     Ext.define('ModeloConvenio',
-    {
+    
+     Ext.define('ModeloConvenio',{
         extend  : 'Ext.data.Model'
         ,fields : itemsGridModel
       }); 
+     
+     Ext.define('modelGridGrupos',{
+ 				extend : 'Ext.data.Model',
+ 				fields : ['CDGRUPO','DSGRUPO','CDPLAN','DSPLAN','DSPLAN_VARIABLE']
+ 	});
+     
     ////// modelos //////
     
     ////// stores //////
@@ -55,6 +62,18 @@ Ext.onReady(function()
         ]
     });
     
+    var gruposGridStore = Ext.create('Ext.data.Store',{
+        model   : 'modelGridGrupos'
+        ,proxy  :{
+        	type        : 'ajax'
+            ,url        : _UrlConsultaGruposTramite
+            ,reader     :
+            {
+                type  : 'json'
+                ,root : 'slist1'
+            }
+        }
+    });
     ////// stores //////
     
     ////// contenido //////
@@ -193,6 +212,33 @@ Ext.onReady(function()
                 if(json.success){
                 	var _carga = json.smap1; 
                 	var windowClonaTramites;
+                	
+                	gruposGridStore.load({
+                		params : {
+                			'params.ntramite': recordTramite.get('ntramite')
+                		}
+                	});
+                	
+                	var fieldsetGrupos = Ext.create('Ext.form.FieldSet',{
+                		title: '<span style="font:bold 12px Calibri;">Grupos del tr&aacute;mite.</span>',
+                        items: [Ext.create('Ext.grid.Panel', {
+                            border: false,
+                            autoScroll: false,
+                            minHeight : 110,
+                            disableSelection: true,
+                            viewConfig: {
+                                stripeRows: false,
+                                trackOver : false
+                            },
+                        	store: gruposGridStore,
+                            columns: [
+                                { text: 'ID'   , dataIndex: 'CDGRUPO' , flex: 1 },
+                                { text: 'Grupo', dataIndex: 'DSGRUPO', flex: 2 },
+                                { text: 'Plan' , dataIndex: 'DSPLAN', flex: 2 },
+                                { text: 'Nombre largo del plan', dataIndex: 'DSPLAN_VARIABLE', flex: 3 }
+                            ]
+                        })]
+                    });
 
                 	var panelClonarTramite = Ext.create('Ext.form.FieldSet',{
                 		title: '<span style="font:bold 12px Calibri;">Datos generales del tr&aacute;mite.</span>',
@@ -230,17 +276,24 @@ Ext.onReady(function()
                             {
                             	xtype      : 'textfield',
                             	name       : 'params.cdramo',
-                            	fieldLabel : 'Ramo',
-                            	value      : _carga.CDRAMO +' - '+_carga.DSRAMO,
+                            	fieldLabel : 'Producto',
+                            	value      : _carga.DSRAMO,
                             	readOnly   : true
                             },
                             {
                             	xtype      : 'textfield',
-                            	name       : 'params.plan',
-                            	fieldLabel : 'Plan',
-                            	value      : Ext.isEmpty(_carga.PLAN)? 'N/A. Multiples planes.': _carga.PLAN,
+                            	name       : 'params.dstipsit',
+                            	fieldLabel : 'Subramo',
+                            	value      : _carga.DSTIPSIT,
                             	readOnly   : true
                             },
+//                            {
+//                            	xtype      : 'textfield',
+//                            	name       : 'params.plan',
+//                            	fieldLabel : 'Plan',
+//                            	value      : Ext.isEmpty(_carga.PLAN)? 'N/A. Multiples planes.': _carga.PLAN,
+//                            	readOnly   : true
+//                            },
                             {
                             	xtype      : 'textfield',
                             	name       : 'params.vigencia',
@@ -564,7 +617,7 @@ Ext.onReady(function()
                 		,bodyPadding: '10 8 0 8'
                 		,modal  : true
                 		,width  : 838
-                		,items : [panelClonarTramite,panelClonarTramite2]
+                		,items : [panelClonarTramite,fieldsetGrupos,panelClonarTramite2]
                         ,dockedItems: [
                             {
                                 xtype: 'toolbar',
