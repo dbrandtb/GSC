@@ -167,6 +167,10 @@
        <action name="cargarDatosGrupoLinea" class="CotizacionAction" method="cargarDatosGrupoLinea">
            <result type="json" />
        </action>
+
+       <action name="cargarDatosGrupoLineaGpo2" class="CotizacionAction" method="cargarDatosGrupoLineaGpo2">
+           <result type="json" />
+       </action>
        
        <action name="cargarTvalogarsGrupo" class="CotizacionAction" method="cargarTvalogarsGrupo">
            <result type="json" />

@@ -23,6 +23,11 @@ public interface CotizacionDAO {
 			String cdgrupo, String cdgarant, String status,
 			Map<String, String> valores) throws Exception;
 
+	public void movimientoTvalogarFormFlexCopago(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String cdtipsit,
+			String cdgrupo, String cdgarant, String status,
+			String cdatribu, String formatoCop) throws Exception;
+
 	public void movimientoTvalogarGrupo(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String cdtipsit,
 			String cdgrupo, String cdgarant, String status, String cdatribu,

@@ -4226,6 +4226,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 									);
 							boolean grupoIteCoberturaIteTieneAtrib          = false;
 							Map<String,String>grupoIteCoberturaIteTvalogars = new HashMap<String,String>();
+							Map<String,String>listaTipoValorCdatribu=new HashMap<String,String>();
+							
 							for(Entry<String,String>grupoIteCoberturaIteAtribIte:grupoIteCoberturaIte.entrySet())
 							{
 								String grupoIteCoberturaIteAtribIteKey=grupoIteCoberturaIteAtribIte.getKey();
@@ -4236,11 +4238,16 @@ public class CotizacionManagerImpl implements CotizacionManager
 										)
 								{
 									grupoIteCoberturaIteTieneAtrib=true;
-									grupoIteCoberturaIteTvalogars.put(
-											grupoIteCoberturaIteAtribIteKey.substring("parametros.pv_".length()
-													,grupoIteCoberturaIteAtribIteKey.length()),String.valueOf(grupoIteCoberturaIteAtribIte.getValue()));
+									String numeroAtr = grupoIteCoberturaIteAtribIteKey.substring("parametros.pv_".length(), grupoIteCoberturaIteAtribIteKey.length());
+									grupoIteCoberturaIteTvalogars.put(numeroAtr, String.valueOf(grupoIteCoberturaIteAtribIte.getValue()));
+									
+									//Se guarda el tipo de valor que se captura (porcentaje o monto) para cada atributo que contenga el campo de tipoValor
+									if(grupoIteCoberturaIte.containsKey("TipoValor_"+grupoIteCoberturaIteAtribIteKey)){
+										listaTipoValorCdatribu.put(numeroAtr, grupoIteCoberturaIte.get("TipoValor_"+grupoIteCoberturaIteAtribIteKey));
+									}
 								}
 							}
+							
 							if(grupoIteCoberturaIteTieneAtrib)
 							{
 								cotizacionDAO.movimientoTvalogarGrupoCompleto(
@@ -4255,6 +4262,36 @@ public class CotizacionManagerImpl implements CotizacionManager
 										,"V"      //status
 										,grupoIteCoberturaIteTvalogars
 										);
+								
+								
+								logger.debug("<<<<<<>>>>>> CotizacionManager.movimientoTvalogarGrupoFlexCopago <<<<<<>>>>>>");
+								
+								for(Entry<String,String>atributo:grupoIteCoberturaIteTvalogars.entrySet())
+								{
+									if(StringUtils.isNotBlank(atributo.getKey()) && atributo.getKey().contains("otvalor")
+											&& listaTipoValorCdatribu.containsKey(atributo.getKey()) && StringUtils.isNotBlank(listaTipoValorCdatribu.get(atributo.getKey())))
+									{
+										
+										String numeroAtributo = atributo.getKey().substring("otvalor".length(), atributo.getKey().length());
+												
+										cotizacionDAO.movimientoTvalogarFormFlexCopago(
+												cdunieco
+												,cdramo
+												,"W"      //estado
+												,nmpoliza
+												,"0"      //nmsuplem
+												,cdtipsit
+												,grupoIteCdgrupo
+												,grupoIteCoberturaIteCdgarant
+												,"V"      //status
+												,numeroAtributo
+												,listaTipoValorCdatribu.get(atributo.getKey())
+												);
+									    
+									    logger.debug("<<<<<<>>>>>>   Tipo valor a instertar luego de instertar atributo   <<<<<<>>>>>> ::::::" + listaTipoValorCdatribu.get(atributo.getKey()));
+									    
+									}
+								}
 							}
 						}
 					}

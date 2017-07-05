@@ -2675,13 +2675,32 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             Ext.Array.each(hijos,function(elementoCobertura, indexElCob){
                                             	
                                             	var formatoCargar = new String(elementoCobertura.tipoCampoFormat);
-                                            	
-                                            	elementoCobertura.labelWidth = 215; 
-                                            	elementoCobertura.width = 335;
+                                            	var fieldSinTipoCopago = '';
                                             	
                                             	if(!Ext.isEmpty(elementoCobertura.auxiliar) && elementoCobertura.auxiliar == 'C'){
                                             		elementoCobertura.fieldLabel = new String(elementoCobertura.fieldLabel).replace('(MONTO)','').trim();
                                             		elementoCobertura.fieldLabel = new String(elementoCobertura.fieldLabel).replace('(%)','').trim();
+                                            		
+                                            		fieldSinTipoCopago = new String(elementoCobertura.fieldLabel);
+                                            		
+                                            		elementoCobertura.fieldLabel = '';
+                                            		elementoCobertura.labelWidth = 0; 
+                                                	elementoCobertura.width = 100;
+                                                	
+                                                	elementoCobertura.on({
+                                                		beforerender: function(cmb){
+                                        	        		cmb.labelWidth= 0;
+                                        	        	}
+                                                	});
+                                            	}else{
+                                            		elementoCobertura.labelWidth = 215; 
+                                                	elementoCobertura.width = 310;
+                                                	
+                                            		elementoCobertura.on({
+                                                		beforerender: function(cmb){
+                                        	        		cmb.labelWidth= 215;
+                                        	        	}
+                                                	});
                                             	}
                                             	
                                             	//Si el campo trae definido un campo tipo y ademas hay tipo formato ya guardado para este atributo de garantia se cambia al del formato guardado si es distinto al default
@@ -2702,14 +2721,16 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             	if(!Ext.isEmpty(elementoCobertura.auxiliar) && elementoCobertura.auxiliar == 'C'){
                                             		//&& !Ext.isEmpty(elementoCobertura.tipoCampoFormat) && elementoCobertura.tipoCampoFormat == 'C'){
                                             		var nuevoCheck = Ext.create('Ext.form.ComboBox', {
-                                            	        store: modeloTipoCopago,
+                                            			fieldLabel: fieldSinTipoCopago,
+                                            			labelWidth: 215,
+                                            	        width: 310,
+                                            			store: modeloTipoCopago,
                                             	        style : 'margin:5px;',
                                             	        displayField: 'value',
                                             	        valueField: 'key',
                                             	        value: formatoCargar,
                                             	        name:  'TipoValor_'+elementoCobertura.name,
                                             	        garantAtribu: json.slist1[j].CDGARANT + '_' + elementoCobertura.cdatribu,
-                                            	        width: 85,
                                             	        readOnly : !_puedeFlex,
                                             	        editable: false,
                                             	        listeners:{
@@ -2739,21 +2760,30 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             	        		}catch(ex){
                                             	        			debugError('Error al fijar minimo y maximo para campo de copago',ex);
                                             	        		}
+                                            	        	},
+                                            	        	beforerender: function(cmb){
+                                            	        		cmb.labelWidth= 215;
                                             	        	}
                                             	        }
                                     		    	});
                                             		
                                             		hijosCheckPorcentaje.push(nuevoCheck);
+                                            		hijosCheckPorcentaje.push(elementoCobertura);
                                             	}else{
+                                            		hijosCheckPorcentaje.push(elementoCobertura);
+                                        			
                                             		var nuevoCheck = Ext.create('Ext.form.Label', {
-                                            	        html:'<br/>'
+                                            	        html:'<br/>',
+                                            	        width: 0,
+                                            	        listeners: {
+                                            	        	beforerender: function(cmb){
+                                            	        		cmb.width= 0;
+                                            	        	}
+                                            	        }
                                     		    	});
                                             		
                                             		hijosCheckPorcentaje.push(nuevoCheck);
                                             	}
-                                            	
-                                            	hijosCheckPorcentaje.push(elementoCobertura);
-                                            	
                                            	});
                                             
                                             //para factores menor a cero
