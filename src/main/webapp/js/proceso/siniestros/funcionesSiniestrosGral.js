@@ -3765,20 +3765,13 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
             text    : 'Guardar Datos',
             handler : function(btn, e){
             	
-            	/*Solo para row editing ya que en cell al hacer clic se quita la edicion al hacer clic en el boton de guardar
-            	 * if(editorPluginResultados.editing){
-            		mensajeWarning('Antes de guardar primero finalice la edicion de las sucursales.');
-            		return;
-            	}*/
-                
                 var updateList = [];
                 var estudioRequiereResVal    = false;
                 var estudioRequiereResValDes = '';
                 var mensajeRequiereCampo     = '';
                 
                 
-                estudiosCobAsegStore.getUpdatedRecords().forEach(function(record,index,arr){
-                	
+                estudiosCobAsegStore.each(function(record) {
                 	if( !Ext.isEmpty(record.get('CDRESEST')) || !Ext.isEmpty(record.get('VALOR')) || !Ext.isEmpty(record.get('OBSERV')) ){
                 		
                 		/* Valida para este estudio si el Resultado es obligatorio */
@@ -3800,6 +3793,15 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                 		}
                 		
                 	}
+                });
+                
+                if(estudioRequiereResVal){
+	            	mensajeWarning("Debe capturar un " + mensajeRequiereCampo + " para el estudio: ''"
+	            			+estudioRequiereResValDes+"'' o borre toda la informaci&oacute;n del mismo.");
+	            	return;
+	            }
+                
+                estudiosCobAsegStore.getUpdatedRecords().forEach(function(record,index,arr){
                 	
                     var datosResultado = {
                    		 'pi_cdunieco': _cdunieco,
@@ -3820,12 +3822,6 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                	    
                     updateList.push(datosResultado);
                 });
-                
-	            if(estudioRequiereResVal){
-	            	mensajeWarning("Debe capturar un " + mensajeRequiereCampo + " para el estudio: ''"
-	            			+estudioRequiereResValDes+"'' o borre toda la informaci&oacute;n del mismo.");
-	            	return;
-	            }
                 
                 debug('Lista de Resultados a guardar: ',updateList);
 
