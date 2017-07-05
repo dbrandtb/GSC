@@ -59,13 +59,12 @@
             var compleUrlGuardarCartoRechazo = '<s:url namespace="/"                action="guardarCartaRechazo"         />';
             var compleUrlCotizacion          = '<s:url namespace="/emision"         action="cotizacion"                  />';
             var _urlEnviarCorreo             = '<s:url namespace="/general"         action="enviaCorreo"                 />';
-            var _urlCargarCorreos            = '<s:url namespace="/cotizacionautos" action="cargarCorreos"               />';
             var _URL_CONSULTA_CLAUSU_DETALLE = '<s:url namespace="/catalogos"       action="consultaClausulaDetalle"     />';
             var _URL_CONSULTA_CLAUSU         = '<s:url namespace="/catalogos"       action="consultaClausulas"           />';
             var _URL_ObtieneValNumeroSerie   = '<s:url namespace="/emision" 		action="obtieneValNumeroSerie"       />';
             var urlEditarAsegurados = '${ctx}<s:property value="map1.urlAsegurados" />?now=${now}';
-            var urlServidorReports  = '<s:property value="rutaServidorReports"         />';
-            var complerepSrvUsr     = '<s:property value="passServidorReports"         />';
+            var urlServidorReports  = '<s:text name="ruta.servidor.reports"         />';
+            var complerepSrvUsr     = '<s:text name="pass.servidor.reports"         />';
             var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarValoresSituacion"               />';
             var urlPantallaBeneficiarios = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
             
@@ -96,8 +95,6 @@
             	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ms.nombre" />';
             }else if(inputCdtipsit == 'RI'){
             	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ri.nombre" />';
-            }else if(inputCdtipsit == 'GMPI'){
-                _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.gmpi.nombre" />';
             }
             
             if(Ext.isEmpty(_NOMBRE_REPORTE_CARATULA)){
@@ -257,11 +254,13 @@ function checarBenef()
 	                  if(_p29_validaSeguro == "S")
 	                  {    
 	                	  var panel = Ext.getCmp('panelBeneficiarioHere');
+ 	                	  /*
  	                	  panel.on({
  	                		  afterrender : function(me){
  	                			  me.getLoader().load();
  	                		  }
- 	                	  })
+ 	                	  });
+ 	                	  */
 	                	  panel.show();
                 	  }
 	          }
@@ -271,10 +270,6 @@ function checarBenef()
 	          }
 	      }
 	  });
-	 }
-	 else
-		 {
-	 debug('No es ramo 16, es '+inputCdramo);
 		 }
 }
 
@@ -304,7 +299,6 @@ function _datComTurnarSuscripcion()
                 ,columns    : 2
                 ,width      : 250
                 ,style      : 'margin:5px;'
-                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
                 ,items      :
                 [
                     {
@@ -312,13 +306,12 @@ function _datComTurnarSuscripcion()
                         ,itemId     : 'SWAGENTE'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'S'
-                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
                     }
                     ,{
                         boxLabel    : 'No'
                         ,name       : 'SWAGENTE'
                         ,inputValue : 'N'
-                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                        ,checked    : true
                     }
                 ]
             }
@@ -421,33 +414,11 @@ function _p29_guardarComplementario(callback)
 {
     var form=Ext.getCmp('formPanel');
     //console.log(form.getValues());
-    
-    //validacion de cdunieco=1403
-    if (!Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO',null,true))){
-    	debug('**encontrado en funcion? ', _fieldByLabel('NUMERO DE CONTRATO').value,_fieldByLabel('NUMERO DE CONTRATO',null,true));
-     	
-     	/* Cuando es un producto valido verifica si es la sucursal correcta y esta vacio,  
-     	 * y modifica la obligatoriedad del campo segun la sucursal correcta.
-     	 */
-        //if (inputCdunieco == 1403 && Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO').value)){
-        //if ((inputCdunieco == 1403) && (Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO').value))||(_fieldByLabel('NUMERO DE CONTRATO').value==0)){
-        if (inputCdunieco == 1403 && _fieldByLabel('NUMERO DE CONTRATO').value==0){
-    		_fieldByLabel('NUMERO DE CONTRATO',null,true).allowBlank = false;
-         	_fieldByLabel('NUMERO DE CONTRATO',null,true).regex = /^[a-zA-Z]{3}[-]\d{3}$/;
-         	_fieldByLabel('NUMERO DE CONTRATO',null,true).regexText = 'Debe cumplir con el formato /^[a-zA-Z]{3}[-]\d{3}$/';
-         	debug('**Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
-         	debug('**Valor en Numero de contrato',_fieldByLabel('NUMERO DE CONTRATO').value);
-        }
-    	else{
-         	_fieldByLabel('NUMERO DE CONTRATO').allowBlank = true;
-        }
-    }
-    
     if(form.isValid())//Modificación para advertir que no se han llegnado los campos
     {
         form.setLoading(true);
         //dxn
-        if( inputCdtipsit!='MC' && inputCdtipsit!='AT' && inputCdtipsit!='GMPI'){
+        if( inputCdtipsit!='MC' && inputCdtipsit!='AT'){
             
             guardaEmpleado();
         }
@@ -519,7 +490,6 @@ function _p29_emitirClicComplementarios()
 	        return;
 	    }
 	    var form=Ext.getCmp('formPanel');
-	    debug('contrato',_fieldByLabel('NUMERO DE CONTRATO',null,true));
 	    if(form.isValid())
 	    {
 	        form.setLoading(true);
@@ -582,7 +552,6 @@ function _p29_emitirClicComplementarios()
 	                                            {
 	                                                debugError(e);
 	                                            }
-	                                            	                                            
 	                                            Ext.create('Ext.window.Window',
 	                                            {
 	                                                title: 'Tarifa final',
@@ -698,7 +667,6 @@ function _p29_emitirClicComplementarios()
 	                                                                id      : 'botonEmitirPolizaFinal'
 	                                                                ,xtype  : 'button'
 	                                                                ,text   : 'Emitir'
-	                                                                ,hidden : panDatComMap1.SITUACION !== 'AUTO' && ('SUSCRIPTOR' !== sesionDsrol)
 	                                                                ,icon   : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
 	                                                                //,disabled : true
 	                                                                ,handler:function()
@@ -717,7 +685,6 @@ function _p29_emitirClicComplementarios()
 	                                                                            ,'panel2.pv_estado'   : inputEstado
 	                                                                            ,'panel2.pv_nmpoliza' : inputNmpoliza
 	                                                                            ,'panel2.pv_cdtipsit' : inputCdtipsit
-	                                                                            ,'panel2.caseIdRstn'  : _NVL(panDatComMap1.caseIdRstn)
 	                                                                        }
 	                                                                        ,success:function(response)
 	                                                                        {
@@ -726,18 +693,6 @@ function _p29_emitirClicComplementarios()
 	                                                                            debug(json);
 	                                                                            if(json.success==true)
 		                                                            	    	{
-		                                                            	    	    if ((!Ext.isEmpty(panDatComFlujo)) && 'RSTN' === panDatComFlujo.aux) {
-		                                                            	    	        mensajeCorrecto(
-		                                                            	    	            'P\u00f3liza emitida',
-		                                                            	    	            'Se ha emitido la p\u00f3liza ' + json.panel2.nmpoliex,
-		                                                            	    	            function () {
-		                                                            	    	                _mask();
-		                                                            	    	                location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?nmpoliex=' + json.panel2.nmpoliex;
-		                                                            	    	            }
-		                                                            	    	        );
-		                                                            	    	        return;
-		                                                            	    	    }
-		                                                            	    	    
 		                                                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
 		                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
 		                                                            	    		
@@ -808,7 +763,7 @@ function _p29_emitirClicComplementarios()
 	                                                                                    Ext.getCmp('botonEnvioEmail').hide();
 	                                                                                }
 	                                                                                
-	                                                                                if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
+	                                                                                if(panDatComMap1.SITUACION=='AUTO')
 	                                                                                {
 	                                                                                    Ext.getCmp('venDocVenEmiBotIrCotiza').show();
 	                                                                                }
@@ -843,7 +798,7 @@ function _p29_emitirClicComplementarios()
 	                                                                                    Ext.getCmp('botonEmitirPolizaFinal').hide();
 	                                                                                    Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 	                                                                                    
-	                                                                                    if(panDatComMap1.SITUACION=='AUTO' && Ext.isEmpty(panDatComFlujo))
+	                                                                                    if(panDatComMap1.SITUACION=='AUTO')
 	                                                                                    {
 	                                                                                        Ext.getCmp('venDocVenEmiBotIrCotiza').show();
 	                                                                                    }
@@ -909,12 +864,72 @@ function _p29_emitirClicComplementarios()
 	                                                                ,icon  : contexto+'/resources/fam3icons/icons/email.png'
 	                                                                ,disabled: true
 	                                                                ,hidden: (panDatComMap1.SITUACION != 'AUTO') ? true: false
-	                                                                ,handler  : function(){
-								                                    	_p30_enviar()
-								                                    }
-								                                    //REQ0040
-	                                                    			}
-														            ,{
+	                                                                ,handler:function()
+	                                                                {
+	                                                                    Ext.Msg.prompt('Envio de Email', 'Escriba los correos que recibir&aacute;n la documentaci&oacute;n (separados por ;)', 
+	                                                                    function(buttonId, text){
+	                                                                        if(buttonId == "ok" && !Ext.isEmpty(text)){
+	                                                                            
+	                                                                            if(Ext.isEmpty(_mensajeEmail)){
+	                                                                                mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
+	                                                                                return;
+	                                                                            }
+	                                                                            
+	                                                                            Ext.Ajax.request(
+	                                                                                    {
+	                                                                                        url : _urlEnviarCorreo,
+	                                                                                        params :
+	                                                                                        {
+	                                                                                            to     : text,
+	                                                                                            asunto : 'Documentación de póliza de Autos',
+	                                                                                            mensaje: _mensajeEmail,
+	                                                                                            html   : true
+	                                                                                        },
+	                                                                                        callback : function(options,success,response)
+	                                                                                        {
+	                                                                                            if (success)
+	                                                                                            {
+	                                                                                                var json = Ext.decode(response.responseText);
+	                                                                                                if (json.success == true)
+	                                                                                                {
+	                                                                                                    Ext.Msg.show(
+	                                                                                                    {
+	                                                                                                        title    : 'Correo enviado'
+	                                                                                                        ,msg     : 'El correo ha sido enviado'
+	                                                                                                        ,buttons : Ext.Msg.OK
+	                                                                                                        ,fn      : function()
+	                                                                                                        {
+	                                                                                                            _generarRemesaClic(
+	                                                                                                                false
+	                                                                                                                ,inputCdunieco
+	                                                                                                                ,inputCdramo
+	                                                                                                                ,'M'
+	                                                                                                                ,datComPolizaMaestra
+	                                                                                                                ,function(){}
+	                                                                                                                ,'S'
+	                                                                                                                );
+	                                                                                                        }
+	                                                                                                    });
+	                                                                                                }
+	                                                                                                else
+	                                                                                                {
+	                                                                                                    mensajeError('Error al enviar el correo');
+	                                                                                                }
+	                                                                                            }
+	                                                                                            else
+	                                                                                            {
+	                                                                                                errorComunicacion();
+	                                                                                            }
+	                                                                                        }
+	                                                                                    });
+	                                                                        
+	                                                                        }else {
+	                                                                            mensajeWarning('Introduzca al menos una direcci&oacute;n de email');    
+	                                                                        }
+	                                                                    })
+	                                                                }
+	                                                            }
+	                                                            ,{
 	                                                                id     : 'botonReenvioWS'
 	                                                                ,xtype : 'button'
 	                                                                ,text  : 'Reintentar Emisi&oacute;n'
@@ -997,7 +1012,6 @@ function _p29_emitirClicComplementarios()
 	                                                                            ,width       : 600
 	                                                                            ,height      : 400
 	                                                                            ,autoScroll  : true
-	                                                                            ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
 	                                                                            ,loader      :
 	                                                                            {
 	                                                                                url       : panDatComUrlDoc2
@@ -1119,22 +1133,7 @@ function _p29_emitirClicComplementarios()
 	                                                                    me.up().up().destroy();
 	                                                                }
 	                                                            }
-	                                                        ],
-	                                                        listeners : {
-	                                                            afterrender : function(me){
-	                                                                try{
-	                                                                    debug('mensaje agente activo',json.panel1['mensajeAgenteActivo']);
-	                                                                    if(!Ext.isEmpty(json.panel1['mensajeAgenteActivo'])){
-	                                                                        setTimeout(function(){ 
-	                                                                            mensajeWarning(json.panel1['mensajeAgenteActivo']); 
-	                                                                        }, 3000);
-	                                                                    }
-	                                                                }
-	                                                                catch(e){
-	                                                                    debugError(e);
-	                                                                }
-	                                                            }
-	                                                        }
+	                                                        ]
 	                                                    })
 	                                                ]
 	                                            }).showAt(50,50);
@@ -1216,8 +1215,8 @@ function _p29_emitirClicComplementarios()
                 accordion=Ext.create('Ext.tab.Panel',
                 {
                 	title:'Tr&aacute;mite '+inputNtramite,
-                	border:0
-                	//renderTo : 'maindiv'
+                	border:0,
+                	renderTo : 'maindiv'
                 	/*,layout   :
                		{
                 		type           : 'accordion'
@@ -1253,21 +1252,6 @@ function _p29_emitirClicComplementarios()
                                 {
                                     window.parent.scrollTo(0,150+p.y);
                                 }*/
-                            	activate: function(){
-                        			try{
-                        		        if(inputCdramo==Ramo.ServicioPublico){
-                        		        	Ext.ComponentQuery
-                        		        	.query("[fieldLabel*='(FRONTERIZO)'],[fieldLabel*='TIPO DE CAMBIO AL D'],[fieldLabel*='PAQUETE'],[fieldLabel*='NOMBRE CLIENTE'],[fieldLabel*='TIPO PERSONA'],[fieldLabel*='FECHA DE NACIMIENTO DEL CONTRATANTE']")
-                        		        	.forEach(function(it){ 
-                        		    	    		it.allowBlank=true; 
-                        		    	    		it.hide();
-                        		        		}
-                        		        	);
-                        		    	}
-                        		    }catch(e){
-                        		    	debugError(e);
-                        		    }
-                        		},
                                 afterrender:function(tab)
                                 {
                                 	debug('afterrender tabPanelValosit');
@@ -1278,7 +1262,7 @@ function _p29_emitirClicComplementarios()
                         ,Ext.create('Ext.panel.Panel',
                         {
                             id:'tabPanelAsegurados'
-                            ,title:inputCdtipsit=='AF'||inputCdtipsit=='PU'?'Editar clientes':'Editar contratante'
+                            ,title:inputCdtipsit=='AF'||inputCdtipsit=='PU'?'Editar clientes':'Editar asegurados'
                             ,cls:'claseTitulo'
                             ,border:0
                             ,loader:
@@ -1291,8 +1275,6 @@ function _p29_emitirClicComplementarios()
                                     ,'map1.cdtipsit' : inputCdtipsit
                                     ,'map1.estado'   : inputEstado
                                     ,'map1.nmpoliza' : inputNmpoliza
-                                    ,'map1.cdpercli' : panDatComMap1.cdpercli
-                                    ,'map1.ntramite' : inputNtramite
                                 }
                                 ,scripts:true
                                 ,autoLoad:true
@@ -1642,7 +1624,7 @@ function _p29_emitirClicComplementarios()
 		                                    
 		                                        try{
 		                                          
-		                                            if(inputCdtipsit=='MC' || inputCdtipsit=='AT' || inputCdtipsit=='GMPI'){
+		                                            if(inputCdtipsit=='MC' || inputCdtipsit=='AT'){
                                                        
                                                         return;
                                                     }
@@ -1861,13 +1843,21 @@ function _p29_emitirClicComplementarios()
 			                                       ,autoLoad: false
 			                                       ,scripts:true
 			                                   }
-			                               })
+							                   ,listeners: {
+	                                               afterrender:function(me)
+	                                               {
+	                                                   debug('afterrender panel beneficiarios');
+	                                                   me.loader.load();
+	                                               }
+	                                           }
+			                               }
+			                               )
 		                    ],
 		                    buttons:
 		                    [
 		                        {
 		                            text:'Guardar',
-		                            icon: contexto+'/resources/fam3icons/icons/accept.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
 		                            handler: function(){ _p29_guardarComplementario(null);}	
 		                        },
 		                        {
@@ -1892,7 +1882,7 @@ function _p29_emitirClicComplementarios()
 		                        {
 		                            text:'Editar asegurados',
 		                            hidden:true,
-		                            icon: contexto+'/resources/fam3icons/icons/user.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user.png',
 		                            handler:function(){
 		                                Ext.create('Ext.form.Panel').submit({
 		                                    url : urlEditarAsegurados,
@@ -1909,13 +1899,13 @@ function _p29_emitirClicComplementarios()
 		                        --%>
 		                        {
 		                            text:'Editar agentes',
-		                            icon: contexto+'/resources/fam3icons/icons/user_gray.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_gray.png',
 		                            disabled:true,
 		                            hidden:true
 		                        },
 		                        {
 		                            text:'Editar documentos',
-		                            icon: contexto+'/resources/fam3icons/icons/book.png',
+		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png',
 		                            disabled:true,
 		                            hidden:true
 		                        }
@@ -1951,7 +1941,6 @@ function _p29_emitirClicComplementarios()
 															                ,columns    : 2
 															                ,width      : 250
 															                ,style      : 'margin:5px;'
-															                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 															                ,items      :
 															                [
 															                    {
@@ -1959,13 +1948,12 @@ function _p29_emitirClicComplementarios()
 															                        ,itemId     : 'SWAGENTE'
 															                        ,name       : 'SWAGENTE'
 															                        ,inputValue : 'S'
-															                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 															                    }
 															                    ,{
 															                        boxLabel    : 'No'
 															                        ,name       : 'SWAGENTE'
 															                        ,inputValue : 'N'
-                                                                                    ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                                                    ,checked    : true
 															                    }
 															                ]
 															            }
@@ -2069,23 +2057,18 @@ function _p29_emitirClicComplementarios()
                                      }
                                 }
 		                        ,{
-		                            text     : ['COTIZADOR', 'SUPTECSALUD'].indexOf(sesionDsrol) != -1
-		                                           ? 'Cotizar'
-		                                           : 'Emitir'
+		                            text     : 'Emitir'
                                     ,itemId  : 'panDatComBotonRetarificar'
                                     ,icon    : contexto+'/resources/fam3icons/icons/key.png'
-                                    //,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&panDatComMap1.SITUACION!='AUTO'
-                                    ,hidden  : panDatComMap1.SITUACION !== 'AUTO' && (['SUSCRIPTOR', 'COTIZADOR', 'SUPTECSALUD'].indexOf(sesionDsrol) === -1)
+                                    ,hidden  : ((!sesionDsrol)||sesionDsrol!='SUSCRIPTOR')&&panDatComMap1.SITUACION!='AUTO'
                                     ,handler : function(me)
                                     {
                                     	try
                                     	{
-	                                    	_p29_guardarComplementario
-	                                    	(
-	                                    	  function()
-	                                    	  {
 	                                    			if(inputCdramo == 16)
 	                                                {
+	                                    		_p32_guardarClic
+		                                    	(
 	                                                  Ext.Ajax.request(
 	                                                             {
 	                                                                 url     : _URL_urlCargarTvalosit
@@ -2122,12 +2105,9 @@ function _p29_emitirClicComplementarios()
 	                                                                                 }
 	                                                                                 else
 	                                                                                 {
-	                                                                                	 try{
-	                                                                                     _p32_guardarClic(_p29_emitirClicComplementarios);
+                                                                                    _p29_emitirClicComplementarios();
 	                                                                                	 }
-	                                                                                	 catch(e){manejaException(e);}
-	                                                                                     
-	                                                                                 }
+
 	
 	                                                                             }
 	                                                                             else
@@ -2140,14 +2120,13 @@ function _p29_emitirClicComplementarios()
 	                                                                         mensajeError(json.respuesta);
 	                                                                     }
 	                                                                 }
-	                                                             });
+                                                            })
+			                                    );
 	                                                }
 	                                                else
 	                                                {
 	                                                    _p29_emitirClicComplementarios();
 	                                                }
-	                                    	  }
-	                                    	);
                                     	}
                                     	catch(e)
                                         {
@@ -2187,7 +2166,6 @@ function _p29_emitirClicComplementarios()
 										                ,columns    : 2
 										                ,width      : 250
 										                ,style      : 'margin:5px;'
-										                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 										                ,items      :
 										                [
 										                    {
@@ -2195,13 +2173,12 @@ function _p29_emitirClicComplementarios()
 										                        ,itemId     : 'SWAGENTE'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'S'
-										                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 										                    }
 										                    ,{
 										                        boxLabel    : 'No'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'N'
-                                                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                                ,checked    : true
 										                    }
 										                ]
 										            }
@@ -2339,7 +2316,6 @@ function _p29_emitirClicComplementarios()
 										                ,columns    : 2
 										                ,width      : 250
 										                ,style      : 'margin:5px;'
-										                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 										                ,items      :
 										                [
 										                    {
@@ -2347,13 +2323,12 @@ function _p29_emitirClicComplementarios()
 										                        ,itemId     : 'SWAGENTE'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'S'
-										                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 										                    }
 										                    ,{
 										                        boxLabel    : 'No'
 										                        ,name       : 'SWAGENTE'
 										                        ,inputValue : 'N'
-                                                                ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                                ,checked    : true
 										                    }
 										                ]
 										            }
@@ -2532,7 +2507,6 @@ function _p29_emitirClicComplementarios()
 													                ,columns    : 2
 													                ,width      : 250
 													                ,style      : 'margin:5px;'
-													                ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 													                ,items      :
 													                [
 													                    {
@@ -2540,13 +2514,12 @@ function _p29_emitirClicComplementarios()
 													                        ,itemId     : 'SWAGENTE'
 													                        ,name       : 'SWAGENTE'
 													                        ,inputValue : 'S'
-													                        ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 													                    }
 													                    ,{
 													                        boxLabel    : 'No'
 													                        ,name       : 'SWAGENTE'
 													                        ,inputValue : 'N'
-                                                                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                                            ,checked    : true
 													                    }
 													                ]
 													            }
@@ -2562,7 +2535,14 @@ function _p29_emitirClicComplementarios()
    		                                                                {
    		                                                                    var window=this.up().up();
    		                                                                    window.setLoading(true);
-   		                                                                    
+   		                                                                    /*form.submit({
+   		                                                                        params:{
+   		                                                                            'map1.pv_cdunieco' :  inputCdunieco,
+   		                                                                            'map1.pv_cdramo' :    inputCdramo,
+   		                                                                            'map1.pv_estado' :    inputEstado,
+   		                                                                            'map1.pv_nmpoliza' :  inputNmpoliza
+   		                                                                        },
+   		                                                                        success:function(){*/
                                                                             Ext.Ajax.request
                                                                             ({
                                                                                 url     : datComUrlMCUpdateStatus
@@ -2595,9 +2575,6 @@ function _p29_emitirClicComplementarios()
                                                                                         cmt_modificado = replaceAll(cmt_modificado,'Ú','UUUUU');
                                                                                         cmt_modificado = replaceAll(cmt_modificado,'Ñ','NNNNN');
                                                                                         cmt_modificado = replaceAll(cmt_modificado,',','ccccc');
-                                                                                        cmt_modificado = replaceAll(cmt_modificado,'&','qqq');
-                                                                                        cmt_modificado = replaceAll(cmt_modificado,'ü','rrrrr');
-                                                                                        cmt_modificado = replaceAll(cmt_modificado,'Ü','RRRRR');
                                                                                         Ext.Ajax.request(
                                                                                         {
                                                                                             url     : compleUrlGuardarCartoRechazo
@@ -2655,7 +2632,18 @@ function _p29_emitirClicComplementarios()
                                                                                         icon: Ext.Msg.ERROR
                                                                                     });
                                                                                 }
+   		                                                                            });/*
+   		                                                                        },
+   		                                                                        failure:function(){
+   		                                                                            window.setLoading(false);
+   		                                                                            Ext.Msg.show({
+   		                                                                                title:'Error',
+   		                                                                                msg: 'Error de comunicaci&oacute;n',
+   		                                                                                buttons: Ext.Msg.OK,
+   		                                                                                icon: Ext.Msg.ERROR
                                                                             });
+   		                                                                        }
+   		                                                                    });*/
    		                                                                }
    		                                                                else
    		                                                                {
@@ -2713,34 +2701,6 @@ function _p29_emitirClicComplementarios()
                             	afterrender:function(tab)
                                 {
                                     debug('afterrender tabPanelAsegurados');
-                                    
-                                    // Validaciones:
-                                    
-                                    // Validacion para NUMERO DE CONTRATO en sucursal 1403 ELP
-                                    debug('**traeme la cdunieco',inputCdunieco);
-                                    
-                                    debug('**encontrado? ',_fieldByLabel('NUMERO DE CONTRATO',null,true));
-                                    // Verifica si el campo existe en el producto utilizado ELP
-                                    if (!Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO',null,true)))
-                                    {
-                                    	debug('**encontrado? ', _fieldByLabel('NUMERO DE CONTRATO').value,_fieldByLabel('NUMERO DE CONTRATO',null,true));
-                                    	
-                                    	/* Cuando es un producto valido verifica si es la sucursal correcta y esta vacio,  
-                                    	 * y modifica la obligatoriedad del campo segun la sucursal correcta.
-                                    	 */
-	                                    //if (inputCdunieco == 1403 && Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO').value)){
-	                                    //if ((inputCdunieco == 1403) && (Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO').value))||(_fieldByLabel('NUMERO DE CONTRATO').value==0)){
-	                                    if (inputCdunieco == 1403 && _fieldByLabel('NUMERO DE CONTRATO').value==0){
-	                                    	_fieldByLabel('NUMERO DE CONTRATO',null,true).allowBlank = false;
-	                                    	_fieldByLabel('NUMERO DE CONTRATO',null,true).regex = /^[a-zA-Z]{3}[-]\d{3}$/;
-	                                    	_fieldByLabel('NUMERO DE CONTRATO',null,true).regexText = 'Debe cumplir con el formato /^[a-zA-Z]{3}[-]\d{3}$/';
-	                                    	debug('**Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
-	                                    	debug('**Valor en Numero de contrato',_fieldByLabel('NUMERO DE CONTRATO').value);
-	                                    }else{
-	                                    	_fieldByLabel('NUMERO DE CONTRATO').allowBlank = true;
-	                                    }
-                                    }    
-                                    //
                                     if(inputCdtipsit=='AF'){
                                     	Ext.Ajax.request({
                                   			url     : _URL_ObtieneValNumeroSerie
@@ -2812,54 +2772,9 @@ function _p29_emitirClicComplementarios()
                     }
                 });
                 
-                Ext.create('Ext.panel.Panel',
-                {
-                    renderTo  : 'maindiv'
-                    ,defaults : { style : 'margin:5px;' }
-                    ,border   : 0
-                    ,items    :
-                    [
-                        Ext.create('Ext.panel.Panel',
-			            {
-			                itemId       : '_datcom_panelFlujo'
-			                ,title       : 'ACCIONES'
-			                ,hidden      : Ext.isEmpty(panDatComFlujo) || 'RSTN' === panDatComFlujo.aux
-			                ,buttonAlign : 'left'
-			                ,buttons     : []
-			                ,listeners   :
-			                {
-			                    afterrender : function(me)
-			                    {
-			                        if(!Ext.isEmpty(panDatComFlujo))
-			                        {
-			                            _cargarBotonesEntidad(
-			                                panDatComFlujo.cdtipflu
-			                                ,panDatComFlujo.cdflujomc
-			                                ,panDatComFlujo.tipoent
-			                                ,panDatComFlujo.claveent
-			                                ,panDatComFlujo.webid
-			                                ,me.itemId//callback
-			                                ,panDatComFlujo.ntramite
-			                                ,panDatComFlujo.status
-			                                ,panDatComFlujo.cdunieco
-			                                ,panDatComFlujo.cdramo
-			                                ,panDatComFlujo.estado
-			                                ,panDatComFlujo.nmpoliza
-			                                ,panDatComFlujo.nmsituac
-			                                ,panDatComFlujo.nmsuplem
-			                                ,null//callbackDespuesProceso
-			                            );
-			                        }
-			                    }
-			                }
-			            })
-			            ,accordion
-                    ]
-                });
                 
                 checarBenef();
                 
-                /*
                 if(!Ext.isEmpty(panDatComFlujo))
                 {
                     var formPanel = _fieldById('formPanel');
@@ -2892,7 +2807,6 @@ function _p29_emitirClicComplementarios()
                         ,function(){alert();}
                     );
                 }
-                */
                 
                 function creaWindowPay(url, params, tarjet )
 			    {
@@ -2948,9 +2862,6 @@ function _p29_emitirClicComplementarios()
 	                            	    	if(json.success==true)
 	                            	    	{
 	                            	    		mensajeCorrecto('Aviso', 'Ejecuci&oacute;n Correcta de Reintento. P&oacute;liza Emitida: ' + json.nmpolAlt);
-	                            	    		
-	                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
-	                            	    		
 	                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.nmpolAlt);
 	                            	    		_numeroPolizaExt = json.nmpolAlt;
                                 	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
@@ -3079,7 +2990,6 @@ function _p29_emitirClicComplementarios()
 		            ,titleCollapse  : true
 		            ,startCollapsed : true
 		            ,resizable      : false
-		            ,cls            : 'VENTANA_DOCUMENTOS_CLASS'
 		            ,loader         :
 		            {
 		                scripts   : true
@@ -3095,14 +3005,10 @@ function _p29_emitirClicComplementarios()
 		                    ,'smap1.nmsolici' : ''
 		                    ,'smap1.ntramite' : inputNtramite
 		                    ,'smap1.tipomov'  : '0'
-		                    ,'smap1.lista'    : 'EMISION'
 		                }
 		            }
 		        }).showAt(500,0);
                 venDocuTramite.collapse();
-                if ((!Ext.isEmpty(panDatComFlujo)) && 'RSTN' === panDatComFlujo.aux) {
-                    venDocuTramite.hide();
-                }
                 //para ver documentos en vivo
                 
                 //codigo dinamico recuperado de la base de datos
@@ -3561,164 +3467,6 @@ function _p29_emitirClicComplementarios()
                     debugError(e);
                 }
             }
-
-            
-            function _p30_enviar()
-{
-    debug('>_p30_enviar');
-    centrarVentanaInterna(Ext.create('Ext.window.Window',
-    {
-        title        : 'Envio de Email'
-        ,width       : 550
-        ,modal       : true
-        ,height      : 150
-        ,buttonAlign : 'center'
-        ,bodyPadding : 5
-        ,items       :
-        [
-            {
-                xtype       : 'textfield'
-                ,itemId     : '_p30_idInputCorreos'
-                ,fieldLabel : 'Correo(s)'
-                ,emptyText  : 'Correo(s) separados por ;'
-                ,labelWidth : 100
-                ,allowBlank : false
-                ,blankText  : 'Introducir correo(s) separados por ;'
-                ,width      : 500
-                //REQ0040
-                ,listeners  : {
-                	boxready : function(){
-                		_p30_cargarCorreos(inputNtramite);
-                	}
-                }
-            }
-        ]
-        ,buttons :
-        [
-            {
-                text     : 'Enviar'
-                ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                ,handler : function()
-                {
-                    var me = this;
-                    if (_fieldById('_p30_idInputCorreos').getValue().length > 0
-                            &&_fieldById('_p30_idInputCorreos').getValue() != 'Correo(s) separados por ;')
-                    {
-                        debug('Se va a enviar cotizacion');
-                        me.up().up().setLoading(true);
-                        //REQ0040
-                        //if(Ext.isEmpty(_mensajeEmail)){
-                        //	mensajeError('Mensaje de Email sin contenido. Consulte a Soporte T&eacute;cnico');
-                        //	return false;
-                        //}
-                        Ext.Ajax.request(
-                        	{
-                            	url : _urlEnviarCorreo,
-                                params :
-                                {
-                                	to     : _fieldById('_p30_idInputCorreos').getValue(),
-                                    asunto : 'Documentación de póliza de Autos',
-                                    mensaje: _mensajeEmail,
-                                    html   : true
-                                },
-                                callback : function(options,success,response)
-                                {
-                                	if (success)
-                                    {
-                                    var json = Ext.decode(response.responseText);
-                                    if (json.success == true)
-                                    {
-                                        centrarVentanaInterna(Ext.Msg.show(
-                                        {
-                                            title : 'Correo enviado'
-                                            ,msg : 'El correo ha sido enviado'
-                                            ,buttons : Ext.Msg.OK
-                                            ,fn      : function()
-                                            {
-                                            	_generarRemesaClic(
-	                                            	false
-	                                                ,inputCdunieco
-	                                            	,inputCdramo
-	                                              	,'M'
-	                                           		,datComPolizaMaestra
-	                                             	,function(){}
-	                                             	,'S'
-	                                            	);
-                                                me.up().up().setLoading(false);
-                                                me.up().up().destroy();
-                                            }
-                                        }));
-                                    }
-                                    else
-                                    {
-                                        mensajeError('Error al enviar');
-                                        me.up().up().setLoading(false);
-                                        me.up().up().destroy();
-                                        
-                                    }
-                                
-                                   }
-                                   else
-                                   {
-                                    	errorComunicacion();
-                                   }
-                               }
-                         });
-                        //REQ0040
-                    }
-                    else
-                    {
-                        mensajeWarning('Introduzca al menos un correo');
-                        me.up().up().destroy();
-                    }
-                    
-                }
-            }
-            ,{
-                text     : 'Cancelar'
-                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                ,handler : function()
-                {
-                    this.up().up().destroy();
-                }
-            }
-        ]
-    }).show());
-    _fieldById('_p30_idInputCorreos').focus();
-    debug('<_p30_enviar');
-}
-
-
-//REQ0040 envio de correos
-function _p30_cargarCorreos(ntramite)
-{
-    debug('>_p03_cargarCorreos');
-    Ext.Ajax.request(
-    {
-        url     : _urlCargarCorreos
-        ,params :
-        {
-            'smap1.ntramite'    : ntramite
-        }
-        ,success : function(response) {
-            var json = Ext.decode(response.responseText);
-            debug('### json cargarCorreos:',json);
-            
-            if(json.exito)
-            {
-            	  debug('>_p30_cargarCorreos 1 ', json.respuesta);
-            	  _fieldById('_p30_idInputCorreos').setValue(json.respuesta);
-            }
-            else{
-            	  debug('>_p30_cargarCorreos 2');
-            }
-         }
-         ,failure : function(){
-         	me.setLoading(false);
-            errorComunicacion();
-         }
-    })
-}
 
         <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
         </script>

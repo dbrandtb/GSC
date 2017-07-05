@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.consultas.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -287,28 +286,6 @@ public interface ConsultasPolizaManager {
      * @throws Exception
      */
     public String obtieneNmsituacContratantePoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza) throws Exception;
-
-    /**
-     * Obtiene el numero de nmsituac del contratate de una poliza 
-     * @param cdunieco
-     * @param cdramo
-     * @param nmpoliza
-     * @param numtra
-     * @throws Exception
-     */
-    @Deprecated
-	public void actualizaTramiteMC(PolizaVO poliza, String estra) throws Exception;
-    
-    /**
-     * Obtiene el numero de nmsituac del contratate de una poliza 
-     * @param cdunieco
-     * @param cdramo
-     * @param nmpoliza
-     * @param numtra
-     * @throws Exception
-     */
-    @Deprecated
-	public void actualizaTramiteEmisionMC(String inNumsuc,String inNumram,String inNumpol,String inRensuc,String inRenram,String inRenpol,String inUsuario) throws Exception;
     
     public List<Map<String, String>> ejecutaQuery(String query, String password) throws Exception;
     
@@ -324,39 +301,7 @@ public interface ConsultasPolizaManager {
      */
     public Map<String, String> obtieneDatosLigasRecibosPoliza(String cdunieco,String cdramo,String cdestado,String nmpoliza,String nmsuplem) throws Exception;
     
-    /**
-     * Consulta los incisos de una poliza
-     * @param cdunieco Sucursal de la poliza
-     * @param cdramo   Ramo de la poliza
-     * @param estado   Estado de la poliza
-     * @param nmpoliza Numero de poliza
-     * @return Incisos de la poliza
-     * @throws Exception
-     */
-    public List<Map<String, String>> consultaIncisosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception;
-
-    /**
-     * Actualiza sigs poliza de renovacion 
-     * @param inNumsuc
-     * @param inNumram
-     * @param inNumpol
-     * @param vFechaEmision
-     * @param string
-     * @param string2
-     * @param inRensuc
-     * @param inRenram
-     * @param inRenpol
-     * @throws Exception
-     */
-    public Integer spIdentificaRenovacion(String inNumsuc,String inNumram,String inNumpol,Date vFechaEmision,Date vInicioVigencia,Date vFinVigencia,String inRensuc,String inRenram,String inRenpol) throws Exception;
-    
     public Map<String, String> obtieneTvalopol(String cdunieco, String cdramo, String estado, String nmpoliza)
             throws Exception;
-
-	public List<Map<String, String>> obtieneCoberturas(String cdramo, String cdtipsit, String cdplan) throws Exception;
-
-	public Map<String, String> cargaEndososB(String cdunieco, String cdramo, String nmpoliza, String cdusuari,
-			String cdtipsit, String cdsisrol, String cduniext, String ramo, String nmpoliex, String renuniext,
-			String renramo, String renpoliex, String feefect, String feproren)throws Exception;
 
 }

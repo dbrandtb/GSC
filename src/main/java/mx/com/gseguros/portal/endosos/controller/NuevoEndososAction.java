@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
 import org.apache.struts2.convention.annotation.InterceptorRef;
@@ -268,18 +267,6 @@ public class NuevoEndososAction extends PrincipalCoreAction
 			UserVO usuario = Utils.validateSession(session);
 			String cdusuari = usuario.getUser(),
 			       cdsisrol = usuario.getRolActivo().getClave();
-			
-			String usuarioCaptura =  null;
-			
-			if(usuario!=null){
-				if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
-					usuarioCaptura = usuario.getClaveUsuarioCaptura();
-				}else{
-					usuarioCaptura = usuario.getCodigoPersona();
-				}
-				
-			}
-			
 			Utils.validate(params, "No hay params");
 			String cdunieco   = params.get("cdunieco"),
 			       cdramo     = params.get("cdramo"),
@@ -372,8 +359,7 @@ public class NuevoEndososAction extends PrincipalCoreAction
 					nsuplogi,
 					fesolici,
 					feendoso,
-					valosit,
-					usuarioCaptura
+					valosit
 					);
 			success = true;
 		} catch (Exception ex) {

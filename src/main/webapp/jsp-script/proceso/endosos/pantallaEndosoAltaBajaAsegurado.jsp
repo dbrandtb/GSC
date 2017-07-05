@@ -33,14 +33,9 @@ var panEndAltBajAseUrlDoc     = '<s:url namespace="/documentos" action="ventanaD
 var _3_urlCargarClaDisp       = '<s:url namespace="/"           action="obtenerExclusionesPorTipo" />';
 var _3_urlCargarClaTipos      = '<s:url namespace="/"           action="cargarTiposClausulasExclusion" />';
 var _3_urlLoadHtml            = '<s:url namespace="/"           action="cargarHtmlExclusion" />';
-var pvalidaSocioFamilia       = '<s:url namespace="/endosos"    action="validaSocioFamilia" />';
 
 debug('panendabaseguInputSmap1',panendabaseguInputSmap1);
 debug('panendabaseguInputSmap2',panendabaseguInputSmap2);
-
-var _endAseg_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_endAseg_flujo:',_endAseg_flujo);
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -681,100 +676,28 @@ Ext.onReady(function()
 			                		if(form.isValid())
 			                		{
 			                			panEndAltBajAseValues=form.getValues();
-			                			if(panendabaseguInputSmap1.CDUNIECO =='1403'){
-			                				if((panEndAltBajAseValues['aux.otvalor49'] != null && panEndAltBajAseValues['aux.otvalor49'] !='')
-                                            || (panEndAltBajAseValues['aux.otvalor50'] != null && panEndAltBajAseValues['aux.otvalor50'] !='')){
-                                                Ext.Ajax.request({
-                                                    url     : pvalidaSocioFamilia
-                                                    ,params : {
-                                                        'smap1.cdunieco': panendabaseguInputSmap1.CDUNIECO,
-                                                        'smap1.cdramo'  : panendabaseguInputSmap1.CDRAMO,
-                                                        'smap1.estado'  : panendabaseguInputSmap1.ESTADO,
-                                                        'smap1.nmpoliza': panendabaseguInputSmap1.NMPOLIZA,
-                                                        'smap1.noSocio' : panEndAltBajAseValues['aux.otvalor49'],
-                                                        'smap1.familia' : panEndAltBajAseValues['aux.otvalor50'] 
-                                                    }
-                                                    ,success : function (response){
-                                                        var resEspera  = Ext.decode(response.responseText).slist1[0];
-                                                        var varSocio   = Ext.decode(response.responseText).slist1[0].SOCIO;
-                                                        var varFamilia = Ext.decode(response.responseText).slist1[0].FAMILIA;
-                                                        debug("Entra a la funcion ",_window,varSocio,varFamilia);
-                                                        respuestaNoSocioFamilia(_window,varSocio,varFamilia);
-                                                    },
-                                                    failure : function (){
-                                                        centrarVentanaInterna(Ext.Msg.show({
-                                                            title:'Error',
-                                                            msg: 'Error de comunicaci&oacute;n',
-                                                            buttons: Ext.Msg.OK,
-                                                            icon: Ext.Msg.ERROR
-                                                        }));
-                                                    }
-                                                });
-                                            }else{
-                                            	var mensajeError = 'Los campos : <br/>';
-                                            	if((panEndAltBajAseValues['aux.otvalor49'] == null || panEndAltBajAseValues['aux.otvalor49'] =='')){
-                                            		mensajeError+="No. de Socio/Empleado requerido. <br/>";
-                                            	}
-                                            	if((panEndAltBajAseValues['aux.otvalor49'] == null || panEndAltBajAseValues['aux.otvalor49'] =='')){
-                                                    mensajeError+="Clave Familiar requerido. <br/>";
-                                                }
-                                                mensajeError+='no son validos.'
-                                                 centrarVentanaInterna(mensajeWarning(mensajeError));
-                                            }
-			                			}else{
-			                				if((panEndAltBajAseValues['aux.otvalor49'] != null && panEndAltBajAseValues['aux.otvalor49'] !='')
-                                            || (panEndAltBajAseValues['aux.otvalor50'] != null && panEndAltBajAseValues['aux.otvalor50'] !='')){
-                                                Ext.Ajax.request({
-                                                    url     : pvalidaSocioFamilia
-                                                    ,params : {
-                                                        'smap1.cdunieco': panendabaseguInputSmap1.CDUNIECO,
-                                                        'smap1.cdramo'  : panendabaseguInputSmap1.CDRAMO,
-                                                        'smap1.estado'  : panendabaseguInputSmap1.ESTADO,
-                                                        'smap1.nmpoliza': panendabaseguInputSmap1.NMPOLIZA,
-                                                        'smap1.noSocio' : panEndAltBajAseValues['aux.otvalor49'],
-                                                        'smap1.familia' : panEndAltBajAseValues['aux.otvalor50'] 
-                                                    }
-                                                    ,success : function (response){
-                                                        var resEspera  = Ext.decode(response.responseText).slist1[0];
-                                                        var varSocio   = Ext.decode(response.responseText).slist1[0].SOCIO;
-                                                        var varFamilia = Ext.decode(response.responseText).slist1[0].FAMILIA;
-                                                        debug("Entra a la funcion ",_window,varSocio,varFamilia);
-                                                        respuestaNoSocioFamilia(_window,varSocio,varFamilia);
-                                                    },
-                                                    failure : function (){
-                                                        centrarVentanaInterna(Ext.Msg.show({
-                                                            title:'Error',
-                                                            msg: 'Error de comunicaci&oacute;n',
-                                                            buttons: Ext.Msg.OK,
-                                                            icon: Ext.Msg.ERROR
-                                                        }));
-                                                    }
-                                                });
-                                            }else{
-                                                panEndAltBajAseValues=form.getValues();
-                                                debug('panEndAltBajAseValues',panEndAltBajAseValues);
-                                                panEndAltBajAseStoreAltas.removeAll();
-                                                var parentescoName = _fieldById('_3_formNuevo').down('[fieldLabel=PARENTESCO]').name;
-                                                var sexoName       = _fieldById('_3_formNuevo').down('[fieldLabel=SEXO]').name;
-                                                var nacimientoName = _fieldById('_3_formNuevo').down('[fieldLabel*=NACIMIENTO]').name;
-                                                panEndAltBajAseStoreAltas.add(
-                                                {
-                                                    nmsituac          : panEndAltBajAseNmsituac
-                                                    ,nombre           : panEndAltBajAseValues['nombre']
-                                                    ,segundo_nombre   : panEndAltBajAseValues['nombre2']
-                                                    ,Apellido_Paterno : panEndAltBajAseValues['apat']
-                                                    ,Apellido_Materno : panEndAltBajAseValues['amat']
-                                                    ,cdrol            : 2
-                                                    ,Parentesco       : panEndAltBajAseValues[parentescoName]
-                                                    ,cdrfc            : panEndAltBajAseValues['rfc']
-                                                    ,tpersona         : panEndAltBajAseValues['tpersona']
-                                                    ,sexo             : panEndAltBajAseValues[sexoName]
-                                                    ,fenacimi         : panEndAltBajAseValues[nacimientoName]
-                                                });
-                                                _window.hide();
-                                            }
-			                			}                     
-			                		}else
+			                			debug('panEndAltBajAseValues',panEndAltBajAseValues);
+			                			panEndAltBajAseStoreAltas.removeAll();
+			                			var parentescoName = _fieldById('_3_formNuevo').down('[fieldLabel=PARENTESCO]').name;
+			                			var sexoName       = _fieldById('_3_formNuevo').down('[fieldLabel=SEXO]').name;
+			                			var nacimientoName = _fieldById('_3_formNuevo').down('[fieldLabel*=NACIMIENTO]').name;
+			                			panEndAltBajAseStoreAltas.add(
+			                			{
+			                				nmsituac          : panEndAltBajAseNmsituac
+			                				,nombre           : panEndAltBajAseValues['nombre']
+			                				,segundo_nombre   : panEndAltBajAseValues['nombre2']
+			                			    ,Apellido_Paterno : panEndAltBajAseValues['apat']
+			                			    ,Apellido_Materno : panEndAltBajAseValues['amat']
+			                			    ,cdrol            : 2
+			                			    ,Parentesco       : panEndAltBajAseValues[parentescoName]
+			                			    ,cdrfc            : panEndAltBajAseValues['rfc']
+			                			    ,tpersona         : panEndAltBajAseValues['tpersona']
+			                			    ,sexo             : panEndAltBajAseValues[sexoName]
+			                			    ,fenacimi         : panEndAltBajAseValues[nacimientoName]
+			                			});
+			                			_window.hide();
+			                		}
+			                		else
 			                		{
 			                			Ext.Msg.show(
 	                			        {
@@ -977,7 +900,6 @@ Ext.onReady(function()
                                 ,width       : 600
                                 ,height      : 400
                                 ,autoScroll  : true
-                                ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
                                 ,loader      :
                                 {
                                     url       : panEndAltBajAseUrlDoc
@@ -1047,54 +969,28 @@ Ext.onReady(function()
 	    			json['slist1'].push(record.getData());
 	    		});
 	    		
-	    		if(!Ext.isEmpty(_endAseg_flujo))
-	    		{
-	    		    json.flujo = _endAseg_flujo;
-	    		}
-	    		
 	    		debug('json:',json);
 	    		_setLoading(true,panendabaseguPanelPrincipal);
 	    		Ext.Ajax.request(
 	    		{
-	    			url       : panendabaseguUrlSave 
+	    			url       : panendabaseguUrlSave
 	    			,jsonData : json
 	    			,success  : function(response)
 		            {
 	    				_setLoading(false,panendabaseguPanelPrincipal);
 	    				json=Ext.decode(response.responseText);
-	    				debug('<<<response',json);
+	    				debug('response',json);
 	    				if(json.success==true)
 	    				{
 	    					Ext.getCmp('panEndAltBajAseBotConfirmar').hide();
-	    					
-	    					var callbackRemesa = function()
-	    					{
-	    					    //////////////////////////////////
-                                ////// usa codigo del padre //////
-                                /*//////////////////////////////*/
-                                marendNavegacion(2);
-                                /*//////////////////////////////*/
-                                ////// usa codigo del padre //////
-                                //////////////////////////////////
-                            };
-                            if(json.endosoConfirmado==true){
-                            	//Si viene verdadero, entonces no se manda a autorizar
-                            	mensajeCorrecto('Confirmar endoso',json.mensaje,function()
-                            {
-                                _generarRemesaClic(
-                                    true
-                                    ,panendabaseguInputSmap1.CDUNIECO
-                                    ,panendabaseguInputSmap1.CDRAMO
-                                    ,panendabaseguInputSmap1.ESTADO
-                                    ,panendabaseguInputSmap1.NMPOLIZA
-                                    ,callbackRemesa
-                                );
-                            });
-                            }else if (json.endosoConfirmado==false){
-                            	//Si viene en false, entonces se manda autorizar
-                            	mensajeCorrecto('Tr&aacute;mite Turnado',json.mensaje, callbackRemesa);
-                            }
-                            
+	    					mensajeCorrecto('Confirmar endoso',json.mensaje);
+	    					//////////////////////////////////
+                            ////// usa codigo del padre //////
+                            /*//////////////////////////////*/
+                            marendNavegacion(2);
+                            /*//////////////////////////////*/
+                            ////// usa codigo del padre //////
+                            //////////////////////////////////
 	    				}
 	    				else
 	    				{
@@ -1124,45 +1020,6 @@ Ext.onReady(function()
 	///////////////////////
 	////// contenido //////
 	/*///////////////////*/
-    function respuestaNoSocioFamilia(_window,varSocio,varFamilia) {
-    	var error = '0';
-        var mensajeError = 'Los campos : <br/>';
-        if(+varSocio == 0){
-            error = '1';
-            mensajeError+="No. de Socio/Empleado no corresponde al Titular. <br/>";
-        }
-        if(+varFamilia >=1){
-            error = '1';
-            mensajeError+="Clave Familiar duplicado. <br/>";
-        }
-        if(error == 1){
-            mensajeError+='no son validos.'
-            centrarVentanaInterna(mensajeWarning(mensajeError));
-        }else{
-            panEndAltBajAseStoreAltas.removeAll();
-            var parentescoName = _fieldById('_3_formNuevo').down('[fieldLabel=PARENTESCO]').name;
-            var sexoName       = _fieldById('_3_formNuevo').down('[fieldLabel=SEXO]').name;
-            var nacimientoName = _fieldById('_3_formNuevo').down('[fieldLabel*=NACIMIENTO]').name;
-            panEndAltBajAseStoreAltas.add(
-            {
-                nmsituac          : panEndAltBajAseNmsituac
-                ,nombre           : panEndAltBajAseValues['nombre']
-                ,segundo_nombre   : panEndAltBajAseValues['nombre2']
-                ,Apellido_Paterno : panEndAltBajAseValues['apat']
-                ,Apellido_Materno : panEndAltBajAseValues['amat']
-                ,cdrol            : 2
-                ,Parentesco       : panEndAltBajAseValues[parentescoName]
-                ,cdrfc            : panEndAltBajAseValues['rfc']
-                ,tpersona         : panEndAltBajAseValues['tpersona']
-                ,sexo             : panEndAltBajAseValues[sexoName]
-                ,fenacimi         : panEndAltBajAseValues[nacimientoName]
-                ,numsoc           : panEndAltBajAseValues['aux.otvalor49']
-                ,clvfam           : panEndAltBajAseValues['aux.otvalor50']
-            });
-            _window.hide();
-        }
-    }
-    
 	if(panEndAltBajAseWindowAsegu)
 	{
 		debug('destroy panEndAltBajAseWindowAsegu anterior');
@@ -1188,6 +1045,5 @@ Ext.onReady(function()
 	//////////////////////
 	
 });
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="panendabaseDivPri" style="height:1500px;"></div>

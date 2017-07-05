@@ -10,44 +10,43 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.opensymphony.xwork2.ActionContext;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.model.FlujoVO;
-import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
-import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
+import mx.com.gseguros.portal.general.util.CausaSiniestro;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoPago;
+import mx.com.gseguros.portal.general.util.TipoPrestadorServicio;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
+import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
+import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.opensymphony.xwork2.ActionContext;
+
 public class MesaControlAction extends PrincipalCoreAction
 {
 	
-	private static final long serialVersionUID = -3398140781812652316L;
-	
-	private static Logger logger = LoggerFactory.getLogger(MesaControlAction.class);
-	
+	private static final long              serialVersionUID = -3398140781812652316L;
+	private static org.apache.log4j.Logger log              = org.apache.log4j.Logger.getLogger(MesaControlAction.class);
 	private static SimpleDateFormat        renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
 	private static final String IMPORTE_WS_IMPORTE = "importe";
 	private static final String IMPORTE_WS_IVA     = "iva";
@@ -81,49 +80,43 @@ public class MesaControlAction extends PrincipalCoreAction
 	private ServiciosManager serviciosManager;
 	
 	@Autowired
-	private FlujoMesaControlManager flujoMesaControlManager;
-	
-	@Autowired
-	private DespachadorManager despachadorManager;
-	
-	@Autowired
     private EndososAutoManager endososAutoManager;
 	
 	public String principal()
 	{
-		logger.debug(Utils.log(
-				"\n#######################################",
-				"\n#######################################",
-				"\n###### mesa de control principal ######",
-				"\n######                           ######"
-				));
+		log.debug(""
+				+ "\n#######################################"
+				+ "\n#######################################"
+				+ "\n###### mesa de control principal ######"
+				+ "\n######                           ######"
+				);
 		if(smap1==null)
 		{
 			smap1=new HashMap<String,String>(0);
 		}
 		if((!smap1.containsKey("pv_status_i")))
 		{
-			logger.debug("pv_status_i: "+smap1.get("pv_status_i"));
+			log.debug("pv_status_i: "+smap1.get("pv_status_i"));
 			smap1.put("pv_status_i","-1");//valor default
 		}
-		logger.debug(Utils.log(
-				"\n######                           ######",
-				"\n###### mesa de control principal ######",
-				"\n#######################################",
-				"\n#######################################"
-				));
+		log.debug(""
+				+ "\n######                           ######"
+				+ "\n###### mesa de control principal ######"
+				+ "\n#######################################"
+				+ "\n#######################################"
+				);
 		return SUCCESS;
 	}
 	
 	public String loadTareas()
 	{
-		logger.debug(Utils.log(
-				"\n########################################",
-				"\n########################################",
-				"\n###### mesa de control loadTareas ######",
-				"\n######                            ######"
-				));
-		logger.debug("smap1: "+smap1);
+		log.debug(""
+				+ "\n########################################"
+				+ "\n########################################"
+				+ "\n###### mesa de control loadTareas ######"
+				+ "\n######                            ######"
+				);
+		log.debug("smap1: "+smap1);
 		try
 		{
 			//obtener el rol activo
@@ -135,7 +128,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			{
 			    cdrol=usu.getRolActivo().getClave();
 			}
-			logger.debug("rol activo: "+cdrol);
+			log.debug("rol activo: "+cdrol);
 			//!obtener el rol activo
 			
 			/////////////////////////////////////////////////////////
@@ -184,14 +177,14 @@ public class MesaControlAction extends PrincipalCoreAction
 		catch(Exception ex)
 		{
 			success=false;
-			logger.error("error al load tareas",ex);
+			log.error("error al load tareas",ex);
 		}
-		logger.debug(Utils.log(
-				"\n######                            ######",
-				"\n###### mesa de control loadTareas ######",
-				"\n########################################",
-				"\n########################################"
-				));
+		log.debug(""
+				+ "\n######                            ######"
+				+ "\n###### mesa de control loadTareas ######"
+				+ "\n########################################"
+				+ "\n########################################"
+				);
 		return SUCCESS;
 	}
 	
@@ -212,13 +205,13 @@ public class MesaControlAction extends PrincipalCoreAction
 	/*////////////////////////////*/
 	public String loadTareasDinamico()
 	{
-		logger.debug(Utils.log(
-				"\n################################################",
-				"\n################################################",
-				"\n###### mesa de control loadTareasDinamico ######",
-				"\n######                                    ######"
-				));
-		logger.debug("smap1: "+smap1);
+		log.debug(""
+				+ "\n################################################"
+				+ "\n################################################"
+				+ "\n###### mesa de control loadTareasDinamico ######"
+				+ "\n######                                    ######"
+				);
+		log.debug("smap1: "+smap1);
 		try
 		{
 			UserVO usu=(UserVO) session.get("USUARIO");
@@ -239,8 +232,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			}
 			else
 			{
-//				slist1=kernelManager.loadMesaControl(smap1);
-			    slist1 = mesaControlManager.loadMesaControl(smap1);
+				slist1=kernelManager.loadMesaControl(smap1);
 			}
 			olist1=new ArrayList<Map<String,Object>>();
 			
@@ -302,14 +294,14 @@ public class MesaControlAction extends PrincipalCoreAction
 		catch(Exception ex)
 		{
 			success=false;
-			logger.error("error al load tareas dinamico",ex);
+			log.error("error al load tareas dinamico",ex);
 		}
-		logger.debug(Utils.log(
-				"\n######                                    ######",
-				"\n###### mesa de control loadTareasDinamico ######",
-				"\n################################################",
-				"\n################################################"
-				));
+		log.debug(""
+				+ "\n######                                    ######"
+				+ "\n###### mesa de control loadTareasDinamico ######"
+				+ "\n################################################"
+				+ "\n################################################"
+				);
 		return SUCCESS;
 	}
 	/*////////////////////////////*/
@@ -317,12 +309,12 @@ public class MesaControlAction extends PrincipalCoreAction
 	////////////////////////////////
 	
 	public String guardarTramiteManual() {
-		logger.debug(Utils.log(
-				"\n##################################################",
-				"\n##################################################",
-				"\n###### guardarTramiteManual                 ######",
-				"\n######                                      ######"
-				));
+		log.debug(""
+				+ "\n##################################################"
+				+ "\n##################################################"
+				+ "\n###### guardarTramiteManual                 ######"
+				+ "\n######                                      ######"
+				);
 		try
 		{
 			UserVO user = (UserVO)session.get("USUARIO");
@@ -344,7 +336,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			kernelManager.validaUsuarioSucursal(omap.get("pv_cdsucdoc_i").toString(), null, null, user.getUser());
 			
 			//WrapperResultados res = kernelManager.PMovMesacontrol(omap);
-			String ntramiteGenerado = mesaControlManager.movimientoTramite (
+			String ntramiteGenerado = mesaControlManager.movimientoTramite(
 					(String)omap.get("pv_cdsucdoc_i")
 					,(String)omap.get("pv_cdramo_i")
 					,(String)omap.get("pv_estado_i")
@@ -367,15 +359,15 @@ public class MesaControlAction extends PrincipalCoreAction
 					,null //swimpres
 					,null //cdtipflu
 					,null //cdflujomc
-					,smap1, null, null, null, null
+					,smap1, null
 					);
 			//if(res.getItemMap() == null)log.error("Sin mensaje respuesta de nmtramite!!");
-			if(ntramiteGenerado==null)logger.error("Sin mensaje respuesta de nmtramite!!");
+			if(ntramiteGenerado==null)log.error("Sin mensaje respuesta de nmtramite!!");
 			//else msgResult = (String) res.getItemMap().get("ntramite");
 			else msgResult = ntramiteGenerado;
-					logger.debug("TRAMITE RESULTADO: "+msgResult);
+					log.debug("TRAMITE RESULTADO: "+msgResult);
 					
-			logger.debug("se inserta detalle nuevo");
+			log.debug("se inserta detalle nuevo");
         	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
         	parDmesCon.put("pv_ntramite_i"   , ntramiteGenerado);
         	parDmesCon.put("pv_feinicio_i"   , new Date());
@@ -394,24 +386,22 @@ public class MesaControlAction extends PrincipalCoreAction
 					,null//cdmotivo
 					,user.getRolActivo().getClave()
 					,"S"
-					,EstatusTramite.PENDIENTE.getCodigo()
-					,false
 					);
 					
 			success=true;
 			
 		} catch(ApplicationException ae) {
-			logger.error("Error al guardar tramite manual", ae);
+			log.error("Error al guardar tramite manual", ae);
 			errorMessage = ae.getMessage();
 		} catch(Exception ex) {
-			logger.error("error al guardar tramite manual",ex);
+			log.error("error al guardar tramite manual",ex);
 		}
-		logger.debug(Utils.log(
-				"\n######                                      ######",
-				"\n###### guardarTramiteManual                 ######",
-				"\n##################################################",
-				"\n##################################################"
-				));
+		log.debug(""
+				+ "\n######                                      ######"
+				+ "\n###### guardarTramiteManual                 ######"
+				+ "\n##################################################"
+				+ "\n##################################################"
+				);
 		return SUCCESS;
 	}
 	
@@ -420,13 +410,13 @@ public class MesaControlAction extends PrincipalCoreAction
 	/*////////////////////////////////////////////*/
 	public String actualizarStatusTramite()
 	{
-		logger.debug(Utils.log(
-				"\n#####################################",
-				"\n#####################################",
-				"\n###### actualizarStatusTramite ######",
-				"\n######                         ######"
-				));
-		logger.debug("smap1: "+smap1);
+		log.debug(""
+				+ "\n#####################################"
+				+ "\n#####################################"
+				+ "\n###### actualizarStatusTramite ######"
+				+ "\n######                         ######"
+				);
+		log.debug("smap1: "+smap1);
 		try
 		{
 			//Se obtienen los datos del usuario:
@@ -441,22 +431,23 @@ public class MesaControlAction extends PrincipalCoreAction
 			String rolDestino     = smap1.get("rol_destino");
 			String usuarioDestino = smap1.get("usuario_destino");
 			//boolean paraUsuario = StringUtils.isNotBlank(rolDestino);
-			String cdusuariSesion = StringUtils.isNotBlank(smap1.get("usuario_inicial"))?smap1.get("usuario_inicial"):usu.getUser();
-			String cdsisrolSesion = StringUtils.isNotBlank(smap1.get("rol_inicial"))?smap1.get("rol_inicial"):usu.getRolActivo().getClave();
+			
+			String cdusuariSesion = usu.getUser();
+			String cdsisrolSesion = usu.getRolActivo().getClave();
 			String cdclausu       = null;
 			
 			Map<String,Object> res = siniestrosManager.moverTramite(
 					ntramite
 					,statusNuevo
 					,comments
-						,cdusuariSesion
-						,cdsisrolSesion
+					,cdusuariSesion
+					,cdsisrolSesion
 					,usuarioDestino
 					,rolDestino
 					,cdmotivo
 					,cdclausu
 					,mostrarAgente
-					,null, false
+					,null
 					);
 			
 			Boolean escalado  = (Boolean)res.get("ESCALADO");
@@ -474,49 +465,6 @@ public class MesaControlAction extends PrincipalCoreAction
 			if(escalado)
 			{
 				smap1.put("status" , statusEsc);
-			} else {
-				// JTEZVA 2016-09-01
-				// SI APROBAMOS GUARDAMOS EL EVENTO [MESADECONTROL - APROBCOTCOL] CON NUMERO DE COTIZACION
-				if (EstatusTramite.COTIZACION_APROBADA.getCodigo().equals(statusNuevo)) {
-					logger.debug("Recuperando tramite");
-					FlujoVO flujo = new FlujoVO();
-					flujo.setNtramite(ntramite);
-					Map<String,Object> datosTramite = flujoMesaControlManager.recuperarDatosTramiteValidacionCliente(flujo);
-					Map<String,String> tramite = (Map<String,String>)datosTramite.get("TRAMITE");
-					logger.debug(Utils.log("Tramite recuperado: ", tramite));
-					String cdunieco = tramite.get("CDUNIECO"),
-					       cdramo   = tramite.get("CDRAMO"),
-					       estado   = tramite.get("ESTADO"),
-					       nmsolici = tramite.get("NMSOLICI"),
-					       cdagente = tramite.get("CDAGENTE"),
-					       cdmodulo = Constantes.MODULO_MESA_CONTROL,
-					       cdevento = Constantes.EVENTO_APROBACION_COT_COL;
-					StringBuilder sb = new StringBuilder("\nSe confirma una cotizacion colectiva");
-					serviciosManager.grabarEvento(
-						sb,
-	            	    cdmodulo,
-	            	    cdevento,
-	            	    new Date(),
-	            	    cdusuariSesion,
-	            	    cdsisrolSesion,
-	            	    ntramite,
-	            	    cdunieco,
-	            	    cdramo,
-	            	    estado,
-	            	    nmsolici,
-	            	    nmsolici,
-	            	    cdagente,
-	            	    null,
-	            	    null
-	            	);
-					logger.debug(Utils.log(sb.toString()));
-					mesaControlManager.concatenarAlInicioDelUltimoDetalle(
-							ntramite,
-							Utils.join("Se aprob\u00f3 la cotizaci\u00f3n ",nmsolici," con las siguientes observaciones: "),
-							cdmodulo,
-							cdevento
-							);
-				}
 			}
 			
 			/*
@@ -534,17 +482,17 @@ public class MesaControlAction extends PrincipalCoreAction
 			String comentarioPrevio = "";
 	    	switch(enumEstatusTramite) {
 	    		case EN_REVISION_MEDICA:
-	    			comentarioPrevio = "<p>El tr\u00e1mite fue turnado a revisi\u00f3n m\u00e9dica con las siguientes observaciones:</p>";
+	    			comentarioPrevio = "<p>El tr&aacute;mite fue turnado a revisi&oacute;n m&eacute;dica con las siguientes observaciones:</p>";
 	    			break;
 	    		case RECHAZADO:
-	    			comentarioPrevio = "<p>La p\u00f3liza fue rechazada con los siguientes detalles:</p>";
+	    			comentarioPrevio = "<p>La p&oacute;liza fue rechazada con los siguientes detalles:</p>";
 	    			break;
 	    		case VO_BO_MEDICO:
 	    		case SOLICITUD_MEDICA:
-	    			comentarioPrevio = "<p>El m\u00e9dico revis\u00f3 el tr\u00e1mite con las siguientes observaciones:</p>";
+	    			comentarioPrevio = "<p>El m&eacute;dico revis&oacute; el tr&aacute;mite con las siguientes observaciones:</p>";
 	    			break;
 	    		case EN_ESPERA_DE_AUTORIZACION:
-	    			comentarioPrevio = "<p>El coordinador m\u00e9dico multiregional remiti\u00f3 las siguientes observaciones:</p>";
+	    			comentarioPrevio = "<p>El coordinador m&eacute;dico multiregional remiti&oacute; las siguientes observaciones:</p>";
 	    			break;
 				default:
 					break;
@@ -570,82 +518,16 @@ public class MesaControlAction extends PrincipalCoreAction
 			
 		} catch(Exception ex) {
 			success=false;
-			logger.error("error al actualizar status de tramite de mesa de control",ex);
+			log.error("error al actualizar status de tramite de mesa de control",ex);
 			mensaje=ex.getMessage();
 		}
-		logger.debug(Utils.log(
-				"\n######                         ######",
-				"\n###### actualizarStatusTramite ######",
-				"\n#####################################",
-				"\n#####################################"
-				));
+		log.debug(""
+				+ "\n######                         ######"
+				+ "\n###### actualizarStatusTramite ######"
+				+ "\n#####################################"
+				+ "\n#####################################"
+				);
 		return SUCCESS;
-	}
-
-
-	public String reasignarTramiteIndividual()
-	{
-	    logger.debug(Utils.log(
-	            "\n########################################",
-	            "\n########################################",
-	            "\n###### reasignarTramiteIndividual ######",
-	            "\n######                            ######"
-	            ));
-	    logger.debug("smap1: "+smap1);
-	    try
-	    {
-	        
-	        Utils.validate(smap1, "No hay datos para reasignar tramite");
-	        
-            UserVO usuario = Utils.validateSession(session);
-            String cdusuari = usuario.getUser(),
-                   cdsisrol = usuario.getRolActivo().getClave();
-            Date fechaHoy = new Date();
-            
-	        String statusNuevo=smap1.get("status");
-	        String ntramite=smap1.get("ntramite");
-	        String comments=smap1.get("comments");
-	        String cdmotivo=smap1.get("cdmotivo");
-	        String mostrarAgente=smap1.get("swagente");
-	        
-	        String rolDestino     = smap1.get("rol_destino");
-	        String usuarioDestino = smap1.get("usuario_destino");
-	        //boolean paraUsuario = StringUtils.isNotBlank(rolDestino);
-	        
-            
-            RespuestaTurnadoVO reasignado = despachadorManager.turnarTramite(
-                    cdusuari, 
-                    cdsisrol, 
-                    ntramite, 
-                    statusNuevo, 
-                    comments, 
-                    cdmotivo,  // cdrazrecha 
-                    usuarioDestino,  // cdusuariDes 
-                    rolDestino,  // cdsisrolDes 
-                    Constantes.SI.equalsIgnoreCase(mostrarAgente), // permisoAgente 
-                    false, // porEscalamiento 
-                    fechaHoy, 
-                    false  // sinGrabarDetalle
-                    );
-            
-            logger.debug(Utils.log("Tr\u00e1mite reasignado. ", reasignado.getMessage()));
-            
-            smap1.put("nombreUsuarioDestino" , reasignado.getMessage());
-	        
-	        success=true;
-	        
-	    } catch(Exception ex) {
-	        success=false;
-	        logger.error("error al actualizar status de tramite de mesa de control",ex);
-	        mensaje=ex.getMessage();
-	    }
-	    logger.debug(Utils.log(
-	            "\n######                            ######",
-	            "\n###### reasignarTramiteIndividual ######",
-	            "\n########################################",
-	            "\n########################################"
-	            ));
-	    return SUCCESS;
 	}
 
 	////////////////////////////////////////////////
@@ -653,13 +535,13 @@ public class MesaControlAction extends PrincipalCoreAction
 	/*////////////////////////////////////////////*/
 	public String turnarAutorizacionServicio()
 	{
-		logger.debug(Utils.log(
-				"\n########################################",
-				"\n########################################",
-				"\n###### turnarAutorizacionServicio ######",
-				"\n######                            ######"
-				));
-		logger.debug("smap1: "+smap1);
+		log.debug(""
+				+ "\n########################################"
+				+ "\n########################################"
+				+ "\n###### turnarAutorizacionServicio ######"
+				+ "\n######                            ######"
+				);
+		log.debug("smap1: "+smap1);
 		try
 		{
 			UserVO usu=(UserVO)session.get("USUARIO");
@@ -681,15 +563,15 @@ public class MesaControlAction extends PrincipalCoreAction
 			
 		} catch(Exception ex) {
 			success=false;
-			logger.error("error al actualizar status de tramite de mesa de control",ex);
+			log.error("error al actualizar status de tramite de mesa de control",ex);
 			mensaje=ex.getMessage();
 		}
-		logger.debug(Utils.log(
-				"\n######                            ######",
-				"\n###### turnarAutorizacionServicio ######",
-				"\n########################################",
-				"\n########################################"
-				));
+		log.debug(""
+				+ "\n######                            ######"
+				+ "\n###### turnarAutorizacionServicio ######"
+				+ "\n########################################"
+				+ "\n########################################"
+				);
 		return SUCCESS;
 	}
 	////////////////////////////////////////////////
@@ -697,13 +579,13 @@ public class MesaControlAction extends PrincipalCoreAction
 	/*////////////////////////////////////////////*/
 	public String turnarAOperadorReclamacion()
 	{
-		logger.debug(Utils.log(
-				"\n################################################",
-				"\n################################################",
-				"\n###### turnar a Operador de Reclamaciones ######",
-				"\n######                         		   ######"
-				));
-		logger.debug("smap1: "+smap1);
+		log.debug(""
+				+ "\n################################################"
+				+ "\n################################################"
+				+ "\n###### turnar a Operador de Reclamaciones ######"
+				+ "\n######                         		   ######"
+				);
+		log.debug("smap1: "+smap1);
 		try
 		{
 			UserVO usu=(UserVO)session.get("USUARIO");
@@ -719,31 +601,31 @@ public class MesaControlAction extends PrincipalCoreAction
 			String cdusuariSesion = usu.getUser();
 			String cdsisrolSesion = "COORDINASINI";
 			String cdclausu       = null;
-			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu,null,null, false);
+			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu,null,null);
 			success=true;
 			
 		} catch(Exception ex) {
 			success=false;
-			logger.error("error al actualizar status de tramite de mesa de control",ex);
+			log.error("error al actualizar status de tramite de mesa de control",ex);
 			mensaje=ex.getMessage();
 		}
-		logger.debug(Utils.log(
-				"\n######                         		   ######",
-				"\n###### Turnar a operador de Reclamaciones ######",
-				"\n################################################",
-				"\n################################################"
-				));
+		log.debug(""
+				+ "\n######                         		   ######"
+				+ "\n###### Turnar a operador de Reclamaciones ######"
+				+ "\n################################################"
+				+ "\n################################################"
+				);
 		return SUCCESS;
 	}
 	public String actualizaComentariosTramite()
 	{
-		logger.debug(Utils.log(
-				"\n#########################################",
-				"\n#########################################",
-				"\n###### actualizaComentariosTramite ######",
-				"\n######                             ######"
-				));
-		logger.debug("params: "+params);
+		log.debug(""
+				+ "\n#########################################"
+				+ "\n#########################################"
+				+ "\n###### actualizaComentariosTramite ######"
+				+ "\n######                             ######"
+				);
+		log.debug("params: "+params);
 		try
 		{
 			HashMap<String,Object> temp =  new HashMap<String, Object>();
@@ -754,15 +636,15 @@ public class MesaControlAction extends PrincipalCoreAction
 			
 		} catch(Exception ex) {
 			success=false;
-			logger.error("error al actualizar status de tramite de mesa de control",ex);
+			log.error("error al actualizar status de tramite de mesa de control",ex);
 			mensaje=ex.getMessage();
 		}
-		logger.debug(Utils.log(
-				"\n######                             ######",
-				"\n###### actualizaComentariosTramite ######",
-				"\n#########################################",
-				"\n#########################################"
-				));
+		log.debug(""
+				+ "\n######                             ######"
+				+ "\n###### actualizaComentariosTramite ######"
+				+ "\n#########################################"
+				+ "\n#########################################"
+				);
 		
 		success=true;
 		return SUCCESS;
@@ -776,43 +658,28 @@ public class MesaControlAction extends PrincipalCoreAction
 	/*////////////////////////////////////////////*/
 	public String obtenerDetallesTramite()
 	{
-		logger.debug(Utils.log(
-				"\n####################################",
-				"\n###### obtenerDetallesTramite ######",
-				"\n###### smap1 = ", smap1
-				));
-		try {
-			slist1  = kernelManager.obtenerDetalleMC(smap1);
-			
-			if (slist1 != null && slist1.size() > 0) {
-				logger.debug("Voy a ver si el primer detalle tiene usuario distinto de inicio y fin para mostrar el de inicio");
-				for (Map<String, String> detalle : slist1) {
-					if ("1".equals(detalle.get("NMORDINA"))) {
-						logger.debug("Procesamos detalle = {}", detalle);
-						if (!detalle.get("DSUSUARI_INI").equals(detalle.get("DSUSUARI_FIN"))) {
-							detalle.put("DSUSUARI_FIN", detalle.get("DSUSUARI_INI"));
-							detalle.put("DSSISROL_FIN", detalle.get("DSSISROL_INI"));
-						}
-					}
-					// Si no tengo usuario fin pero tengo usuario destino
-					if (StringUtils.isBlank(detalle.get("CDUSUARI_FIN")) && StringUtils.isNotBlank(detalle.get("CDUSUARI_DEST"))) {
-					    detalle.put("CDUSUARI_FIN", detalle.get("CDUSUARI_DEST"));
-					    detalle.put("DSUSUARI_FIN", detalle.get("DSUSUARI_DEST"));
-					    detalle.put("CDSISROL_FIN", detalle.get("CDSISROL_DEST"));
-					    detalle.put("DSSISROL_FIN", detalle.get("DSSISROL_DEST"));
-					}
-				}
-			}
-			
-			success = true;
-		} catch (Exception ex) {
-			logger.error("error al obtener el detalle de mesa de control",ex);
+		log.debug(""
+				+ "\n################################################"
+				+ "\n################################################"
+				+ "\n###### obtener los detalles de un tramite ######"
+				+ "\n######                                    ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			slist1=kernelManager.obtenerDetalleMC(smap1);
 		}
-		logger.debug(Utils.log(
-				"\n###### success = ", success,
-				"\n###### obtenerDetallesTramite ######",
-				"\n####################################"
-				));
+		catch(Exception ex)
+		{
+			log.error("error al obtener el detalle de mesa de control",ex);
+		}
+		log.debug(""
+				+ "\n######                                    ######"
+				+ "\n###### obtener los detalles de un tramite ######"
+				+ "\n################################################"
+				+ "\n################################################"
+				);
+		success=true;
 		return SUCCESS;
 	}
 	/*////////////////////////////////////////////*/
@@ -824,33 +691,32 @@ public class MesaControlAction extends PrincipalCoreAction
 	/*////////////////////////////////////////////////////////////*/
 	public String finalizarDetalleTramiteMC()
 	{
-		logger.debug(Utils.log(
-				"\n################################################################",
-				"\n################################################################",
-				"\n###### finalizar un detalle de tramite de mesa de control ######",
-				"\n######                                                    ######"
-				));
-		logger.debug("smap1: "+smap1);
+		log.debug(""
+				+ "\n################################################################"
+				+ "\n################################################################"
+				+ "\n###### finalizar un detalle de tramite de mesa de control ######"
+				+ "\n######                                                    ######"
+				);
+		log.debug("smap1: "+smap1);
 		try
 		{
 			UserVO usu=(UserVO)session.get("USUARIO");
 			smap1.put("pv_cdusuari_fin_i",usu.getUser());
-			smap1.put("pv_cdsisrol_fin_i",usu.getRolActivo().getClave());
 			smap1.put("pv_cdmotivo_i", null);
 			kernelManager.mesaControlFinalizarDetalle(smap1);
 			success=true;
 		}
 		catch(Exception ex)
 		{
-			logger.error("error al finalizar detalle de tramite de mesa de control",ex);
+			log.error("error al finalizar detalle de tramite de mesa de control",ex);
 			success=false;
 		}
-		logger.debug(Utils.log(
-				"\n######                                                    ######",
-				"\n###### finalizar un detalle de tramite de mesa de control ######",
-				"\n################################################################",
-				"\n################################################################"
-				));
+		log.debug(""
+				+ "\n######                                                    ######"
+				+ "\n###### finalizar un detalle de tramite de mesa de control ######"
+				+ "\n################################################################"
+				+ "\n################################################################"
+				);
 		return SUCCESS;
 	}
 	/*////////////////////////////////////////////////////////////*/
@@ -863,13 +729,13 @@ public class MesaControlAction extends PrincipalCoreAction
 	/*/////////////////////////////////////////*/
 	public String loadTareasSuper()
 	{
-		logger.debug(Utils.log(
-				"\n###################################################",
-				"\n###################################################",
-				"\n###### mesa de control loadTareas supervisor ######",
-				"\n######                                       ######"
-				));
-		logger.debug("smap1: "+smap1);
+		log.debug(""
+				+ "\n###################################################"
+				+ "\n###################################################"
+				+ "\n###### mesa de control loadTareas supervisor ######"
+				+ "\n######                                       ######"
+				);
+		log.debug("smap1: "+smap1);
 		try
 		{
 			slist1=kernelManager.loadMesaControlSuper(smap1);
@@ -900,14 +766,14 @@ public class MesaControlAction extends PrincipalCoreAction
 		catch(Exception ex)
 		{
 			success=false;
-			logger.error("error al load tareas",ex);
+			log.error("error al load tareas",ex);
 		}
-		logger.debug(Utils.log(
-				"\n######                                       ######",
-				"\n###### mesa de control loadTareas supervisor ######",
-				"\n###################################################",
-				"\n###################################################"
-				));
+		log.debug(""
+				+ "\n######                                       ######"
+				+ "\n###### mesa de control loadTareas supervisor ######"
+				+ "\n###################################################"
+				+ "\n###################################################"
+				);
 		return SUCCESS;
 	}
 	/*/////////////////////////////////////////*/
@@ -937,14 +803,14 @@ public class MesaControlAction extends PrincipalCoreAction
 	/*/////////////////////////////////////////////*/
 	public String mcdinamica()
 	{
-		logger.debug(Utils.log(
-				"\n######################################",
-				"\n######################################",
-				"\n###### mesa de control dinamica ######",
-				"\n######                          ######"
-				));
-		logger.debug("smap1: "+smap1);
-		logger.debug("smap2: "+smap2);
+		log.debug(""
+				+ "\n######################################"
+				+ "\n######################################"
+				+ "\n###### mesa de control dinamica ######"
+				+ "\n######                          ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("smap2: "+smap2);
 		
 		try
 		{
@@ -1055,15 +921,15 @@ public class MesaControlAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			logger.error("error al cargar mesa de control dinamica",ex);
+			log.error("error al cargar mesa de control dinamica",ex);
 		}
 		
-		logger.debug(Utils.log(
-				"\n######                          ######",
-				"\n###### mesa de control dinamica ######",
-				"\n######################################",
-				"\n######################################"
-				));
+		log.debug(""
+				+ "\n######                          ######"
+				+ "\n###### mesa de control dinamica ######"
+				+ "\n######################################"
+				+ "\n######################################"
+				);
 		return SUCCESS;
 		
 		
@@ -1077,12 +943,12 @@ public class MesaControlAction extends PrincipalCoreAction
 	/*/////////////////////////////////////////*/
 	public String guardarTramiteDinamico()
 	{
-		logger.debug(Utils.log(
-				"\n####################################",
-				"\n####################################",
-				"\n###### guardarTramiteDinamico ######",
-				"\n######                        ######"
-				));
+		log.debug(""
+				+ "\n####################################"
+				+ "\n####################################"
+				+ "\n###### guardarTramiteDinamico ######"
+				+ "\n######                        ######"
+				);
 		try
 		{
 			//////////////////////////////////
@@ -1112,7 +978,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			omap.put("cdsisrol" , user.getRolActivo().getClave());
 			
 			//WrapperResultados res = kernelManager.PMovMesacontrol(omap);
-			String ntramiteGenerado = mesaControlManager.movimientoTramite (
+			String ntramiteGenerado = mesaControlManager.movimientoTramite(
 					(String)omap.get("pv_cdsucdoc_i")
 					,(String)omap.get("pv_cdramo_i")
 					,(String)omap.get("pv_estado_i")
@@ -1135,7 +1001,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,null //swimpres
 					,null //cdtipflu
 					,null //cdflujomc
-					,smap1, null, null, null, null
+					,smap1, null
 					);
 			////// Se guarda el tramite //////
 			//////////////////////////////////
@@ -1145,21 +1011,21 @@ public class MesaControlAction extends PrincipalCoreAction
 			//if(res.getItemMap() == null)
 			if(ntramiteGenerado==null)
 			{
-				logger.error("Sin mensaje respuesta de nmtramite!!");
+				log.error("Sin mensaje respuesta de nmtramite!!");
 			}
 			else
 			{
 				//msgResult = (String) res.getItemMap().get("ntramite");
 				msgResult = ntramiteGenerado;
 			}
-			logger.debug("TRAMITE RESULTADO: "+msgResult);
+			log.debug("TRAMITE RESULTADO: "+msgResult);
 			////// se verifica que se guarde bien //////
 			////////////////////////////////////////////
 
 			//////////////////////////////////
 			////// se guarda el detalle //////
 			UserVO usu=(UserVO)session.get("USUARIO");
-			logger.debug("se inserta detalle nuevo");
+			log.debug("se inserta detalle nuevo");
         	/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
         	//parDmesCon.put("pv_ntramite_i"   , res.getItemMap().get("ntramite"));
         	parDmesCon.put("pv_ntramite_i"   , ntramiteGenerado);
@@ -1179,8 +1045,6 @@ public class MesaControlAction extends PrincipalCoreAction
 					,null
 					,usu.getRolActivo().getClave()
 					,"S"
-					,EstatusTramite.PENDIENTE.getCodigo()
-					,false
 					);
 			////// se guarda el detalle //////
         	//////////////////////////////////
@@ -1188,8 +1052,8 @@ public class MesaControlAction extends PrincipalCoreAction
         	try
             {
             	serviciosManager.grabarEvento(new StringBuilder("\nNuevo tramite")
-            	    ,Constantes.MODULO_GENERAL
-            	    ,Constantes.EVENTO_NUEVO_TRAMITE
+            	    ,"GENERAL"
+            	    ,"NUETRAMITMC"
             	    ,new Date()
             	    ,((UserVO)session.get("USUARIO")).getUser()
             	    ,((UserVO)session.get("USUARIO")).getRolActivo().getClave()
@@ -1214,19 +1078,19 @@ public class MesaControlAction extends PrincipalCoreAction
 			
 		} catch(ApplicationException ae) {
 			
-			logger.error("Error al guardar tramite dinamico", ae);
+			log.error("Error al guardar tramite dinamico", ae);
 			errorMessage = ae.getMessage();
 			
 	    } catch(Exception ex) {
-			logger.error("error al guardar tramite dinamico",ex);
+			log.error("error al guardar tramite dinamico",ex);
 			success=false;
 		}
-		logger.debug(Utils.log(
-				"\n######                        ######",
-				"\n###### guardarTramiteDinamico ######",
-				"\n####################################",
-				"\n####################################"
-				));
+		log.debug(""
+				+ "\n######                        ######"
+				+ "\n###### guardarTramiteDinamico ######"
+				+ "\n####################################"
+				+ "\n####################################"
+				);
 		return SUCCESS;
 	}
 	/*/////////////////////////////////////////*/
@@ -1236,68 +1100,72 @@ public class MesaControlAction extends PrincipalCoreAction
 	public String regresarEmisionEnAutori()
 	{
 		this.session=ActionContext.getContext().getSession();
-		logger.debug(Utils.log(
-				"\n#####################################",
-				"\n###### regresarEmisionEnAutori ######",
-				"\n###### smap1 = ", smap1
-				));
-		try {
-		    Utils.validate(smap1, "No hay datos");
-    		String ntramiteAuto = smap1.get("ntramiteAuto"),
-    		       ntramiteEmi  = smap1.get("ntramiteEmi"),
-    		       comentario   = smap1.get("comentario");
-    		UserVO usuario = Utils.validateSession(session);
-    		String cdusuari = usuario.getUser(),
-                   cdsisrol = usuario.getRolActivo().getClave();
-			Date fechaHoy = new Date();
-			RespuestaTurnadoVO despachoAutoriz = despachadorManager.turnarTramite(
-			        cdusuari, 
-			        cdsisrol, 
-			        ntramiteAuto, 
-			        EstatusTramite.CONFIRMADO.getCodigo(), 
-			        Utils.join("El gerente regres\u00f3 el tr\u00e1mite con las siguientes observaciones: ", comentario), 
-			        null,  // cdrazrecha 
-			        null,  // cdusuariDes 
-			        null,  // cdsisrolDes 
-			        false, // permisoAgente 
-			        false, // porEscalamiento 
-			        fechaHoy, 
-			        false  // sinGrabarDetalle
-			        );
-			RespuestaTurnadoVO despachoEmisi = despachadorManager.turnarTramite(
-                    cdusuari, 
-                    cdsisrol, 
-                    ntramiteEmi, 
-                    EstatusTramite.EN_SUSCRIPCION.getCodigo(), 
-                    Utils.join("El gerente regres\u00f3 el tr\u00e1mite con las siguientes observaciones: ", comentario), 
-                    null,  // cdrazrecha 
-                    null,  // cdusuariDes 
-                    null,  // cdsisrolDes 
-                    false, // permisoAgente 
-                    false, // porEscalamiento 
-                    fechaHoy, 
-                    false  // sinGrabarDetalle
-                    );
-        	mensaje = Utils.join("Tr\u00e1mite regresado. ", despachoEmisi.getMessage());
-        	success = true;
-		} catch (Exception ex) {
-			mensaje = Utils.manejaExcepcion(ex);
+		log.info(""
+				+ "\n#####################################"
+				+ "\n###### regresarEmisionEnAutori ######"
+				);
+		log.info("smap1: "+smap1);
+		String ntramiteAuto = smap1.get("ntramiteAuto");
+		String ntramiteEmi  = smap1.get("ntramiteEmi");
+		String comentario   = smap1.get("comentario");
+		log.info("ntramiteAuto:"+ntramiteAuto);
+		log.info("ntramiteEmi:"+ntramiteEmi);
+		log.info("comentario:"+comentario);
+		String cdusuari;
+		String cdsisrol;
+		{
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			cdusuari = usuario.getUser();
+			cdsisrol = usuario.getRolActivo().getClave();
 		}
-		logger.debug(Utils.log(
-		        "\n###### success = " , success,
-		        "\n###### mensaje = " , mensaje,
-				"\n###### regresarEmisionEnAutori ######",
-				"\n#####################################"
-				));
+		log.info("cdusuari:"+cdusuari);
+		try
+		{
+			kernelManager.mesaControlUpdateStatus(ntramiteEmi  , EstatusTramite.PENDIENTE.getCodigo());
+			kernelManager.mesaControlUpdateStatus(ntramiteAuto , EstatusTramite.CONFIRMADO.getCodigo());
+			/*Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+        	parDmesCon.put("pv_ntramite_i"   , ntramiteEmi);
+        	parDmesCon.put("pv_feinicio_i"   , new Date());
+        	parDmesCon.put("pv_cdclausu_i"   , null);
+        	parDmesCon.put("pv_comments_i"   , "El gerente regres&oacute; el tr&aacute;mite con las siguientes observaciones:<br/>"+comentario);
+        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+        	parDmesCon.put("pv_cdmotivo_i"   , null);
+        	parDmesCon.put("pv_cdsisrol_i"   , cdsisrol);
+        	kernelManager.movDmesacontrol(parDmesCon);*/
+			
+			mesaControlManager.movimientoDetalleTramite(
+					ntramiteEmi
+					,new Date()
+					,null
+					,"El gerente regres\u00f3 el tr\u00e1mite con las siguientes observaciones:<br/>"+comentario
+					,cdusuari
+					,null
+					,cdsisrol
+					,"N"
+					);
+			
+        	mensaje = "Tr&aacute;mite regresado";
+        	success = true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al regresar emision de autorizacion",ex);
+			success = false;
+			mensaje = ex.getMessage();
+		}
+		log.info(""
+				+ "\n###### regresarEmisionEnAutori ######"
+				+ "\n#####################################"
+				);
 		return SUCCESS;
 	}
 	
 	public String movimientoDetalleTramite()
 	{
-		logger.debug(Utils.join(
-				"\n######################################",
-				"\n###### movimientoDetalleTramite ######",
-				"\n###### smap1=",smap1
+		log.info(Utils.join(
+				 "\n######################################"
+				,"\n###### movimientoDetalleTramite ######"
+				,"\n###### smap1=",smap1
 				));
 		
 		try
@@ -1306,29 +1174,21 @@ public class MesaControlAction extends PrincipalCoreAction
 			
 			Utils.validate(smap1 , "No se recibieron datos");
 			
-			String ntramite  = smap1.get("ntramite")
-			       ,dscoment = smap1.get("dscoment")
-			       ,status   = smap1.get("status")
-			       ,cerrado  = smap1.get("cerrado")
-			       ,swagente = smap1.get("swagente");
+			String ntramite = smap1.get("ntramite");
+			String dscoment = smap1.get("dscoment");
 			
 			Utils.validate(ntramite , "No se recibio el numero de tramite");
 			
-			mesaControlManager.movimientoDetalleTramite(
-					ntramite, new Date(), null
-					,dscoment, user.getUser(), null
-					,user.getRolActivo().getClave(),swagente
-					,status,"S".equals(cerrado)
-					);
+			mesaControlManager.movimientoDetalleTramite(ntramite, new Date(), null, dscoment, user.getUser(), null, user.getRolActivo().getClave(),null);
 		}
 		catch(Exception ex)
 		{
 			mensaje = Utils.manejaExcepcion(ex);
 		}
 		
-		logger.debug(Utils.join(
-				"\n###### movimientoDetalleTramite ######",
-				"\n######################################"
+		log.info(Utils.join(
+				 "\n###### movimientoDetalleTramite ######"
+				,"\n######################################"
 				));
 		return SUCCESS;
 	}
@@ -1336,9 +1196,9 @@ public class MesaControlAction extends PrincipalCoreAction
 	public String validarAntesDeTurnar()
 	{
 		logger.debug(Utils.log(
-				"\n##################################",
-				"\n###### validarAntesDeTurnar ######",
-				"\n###### smap1=",smap1
+				 "\n##################################"
+				,"\n###### validarAntesDeTurnar ######"
+				,"\n###### smap1=",smap1
 				));
 		
 		try
@@ -1360,8 +1220,8 @@ public class MesaControlAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(Utils.log(
-				"\n###### validarAntesDeTurnar ######",
-				"\n##################################"
+				 "\n###### validarAntesDeTurnar ######"
+				,"\n##################################"
 				));
 		return SUCCESS;
 	}
@@ -1370,9 +1230,9 @@ public class MesaControlAction extends PrincipalCoreAction
 	public String regenerarReverso()
 	{
 		logger.debug(Utils.log(
-				"\n####################################",
-				"\n###### Validar Reversar ######",
-				"\n###### smap1=",smap1
+				 "\n####################################"
+				,"\n###### Validar Reversar ######"
+				,"\n###### smap1=",smap1
 				));
 		
 		try
@@ -1396,144 +1256,11 @@ public class MesaControlAction extends PrincipalCoreAction
 		}
 		
 		logger.debug(Utils.log(
-				"\n###### Validar Reversar ######",
-				"\n####################################"
+				 "\n###### Validar Reversar ######"
+				,"\n####################################"
 				));
 		return SUCCESS;
 	}
-	
-	public String reasignarTramitesBloque()
-    {
-        logger.debug(Utils.log(
-                "\n########################################",
-                "\n########################################",
-                "\n######   reasignarTramitesBloque  ######",
-                "\n######                            ######"
-                ));
-        logger.debug("smap1:  "+smap1);
-        logger.debug("slist1: "+slist1);
-        try
-        {
-            this.session = ActionContext.getContext().getSession();
-            UserVO usuario = Utils.validateSession(session);
-            
-            Utils.validate(smap1, "No hay datos para reasignar tramite");
-            Utils.validate(smap1, "No hay lista de tramites para reasignar");
-            
-            String zonaReasig=smap1.get("ZONA_REASIG");
-            Utils.validate(zonaReasig, "No hay zona para reasingar");
-
-            String resultadosReasignacion = "";
-            
-            for(Map<String,String> tramite : slist1){
-                String ntramite = tramite.get("NTRAMITE");
-                String mensaje = despachadorManager.despacharPorZona(ntramite, zonaReasig, usuario.getUser(),
-                        usuario.getRolActivo().getClave());
-                
-                resultadosReasignacion = Utils.join(resultadosReasignacion, "<br/>* ", mensaje);
-            }
-            
-            logger.debug(Utils.log("Resultado final de Reasignacion de tramites: ", resultadosReasignacion));
-            
-            smap1.put("resultadosReasignacion" , resultadosReasignacion);
-            
-            success=true;
-            
-        } catch(Exception ex) {
-            success=false;
-            logger.error("error al actualizar status de tramite de mesa de control",ex);
-            mensaje = Utils.manejaExcepcion(ex);
-        }
-        logger.debug(Utils.log(
-                "\n######                            ######",
-                "\n######   reasignarTramitesBloque  ######",
-                "\n########################################",
-                "\n########################################"
-                ));
-        return SUCCESS;
-    }
-	
-	public String recuperacionClaveAutosFlujo(){
-        logger.debug(Utils.log(
-                "\n############################################",
-                "\n############################################",
-                "\n######   recuperacionClaveAutosFlujo  ######",
-                "\n######                            ##########"
-                ));
-        logger.debug("smap1:  "+smap1);
-        //logger.debug("slist1: "+slist1);
-        try
-        {
-            this.session = ActionContext.getContext().getSession();
-            UserVO usuario = Utils.validateSession(session);
-            
-            Utils.validate(smap1, "No hay datos para reasignar tramite");
-            Utils.validate(smap1, "No hay lista de tramites para reasignar");
-            
-            String ntramite = smap1.get("ntramite");
-
-           
-            slist1 = despachadorManager.claveAutoFlujo(ntramite);
-            logger.debug("slist1{}"+slist1);
-            
-            success=true;
-            
-        } catch(Exception ex) {
-            success=false;
-            logger.error("error",ex);
-            mensaje = Utils.manejaExcepcion(ex);
-        }
-        logger.debug(Utils.log(
-                "\n######                            ###########",
-                "\n######   recuperacionClaveAutosFlujo  #######",
-                "\n#############################################",
-                "\n#############################################"
-                ));
-        return SUCCESS;
-    }
-	
-	/**
-	 * @return
-	 */
-	public String guardaClaveAutosFlujo(){
-        logger.debug(Utils.log(
-                "\n######################################",
-                "\n######################################",
-                "\n######   guardaClaveAutosFlujo  ######",
-                "\n######                          ######"
-                ));
-        logger.debug("smap1:  "+smap1);
-        logger.debug("slist1: "+slist1);
-        try
-        {
-            this.session = ActionContext.getContext().getSession();
-            UserVO usuario = Utils.validateSession(session);
-            
-          //  Utils.validate(smap1, "No hay datos para reasignar tramite");
-            //Utils.validate(smap1, "No hay lista de tramites para reasignar");
-            
-            String ntramite = smap1.get("ntramite");
-
-           
-            despachadorManager.guardaClaveAutoFlujo(ntramite, slist1);
-            logger.debug("slist1{}"+slist1);
-            
-            success=true;
-            
-        } catch(Exception ex) {
-            success=false;
-            logger.error("error",ex);
-            mensaje = Utils.manejaExcepcion(ex);
-        }
-        logger.debug(Utils.log(
-                "\n######                          #############",
-                "\n######   guardaClaveAutosFlujo  #############",
-                "\n#############################################",
-                "\n#############################################"
-                ));
-        return SUCCESS;
-    }
-	
 	/////////////////////////////////
 	////// getters ans setters //////
 	/*/////////////////////////////*/
