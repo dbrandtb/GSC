@@ -224,7 +224,7 @@ Ext.onReady(function()
                         items: [Ext.create('Ext.grid.Panel', {
                             border: false,
                             autoScroll: false,
-                            minHeight : 110,
+                            height : 110,
                             disableSelection: true,
                             viewConfig: {
                                 stripeRows: false,
