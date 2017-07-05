@@ -121,6 +121,68 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+
+	@Override
+	public void movimientoTvalogarFormFlexCopago(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsit
+			,String cdgrupo
+			,String cdgarant
+			,String status
+			,String cdatribu
+			,String formatoCop
+			)throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdtipsit" , cdtipsit);
+		params.put("cdgrupo"  , cdgrupo);
+		params.put("cdgarant" , cdgarant);
+		params.put("status"   , status);
+
+		params.put("cdatribu" , cdatribu);
+		params.put("formatoCop", formatoCop);
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n**************************************")
+				.append("\n****** P_GUARDA_FORM_ATR_COPAGO ******")
+				.append("\n****** params=").append(params)
+				.append("\n**************************************")
+				.toString()
+				);
+		ejecutaSP(new MovimientoTvalogarFormFlexCopago(getDataSource()), params);
+	}
+	
+	protected class MovimientoTvalogarFormFlexCopago extends StoredProcedure
+	{
+		protected MovimientoTvalogarFormFlexCopago(DataSource dataSource)
+		{
+			super(dataSource,"P_GUARDA_FORM_ATR_COPAGO");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgrupo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdatribu"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("formatoCop"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public void movimientoTvalogarGrupo(

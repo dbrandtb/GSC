@@ -10655,6 +10655,42 @@ public class CotizacionAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+
+	public String cargarDatosGrupoLineaGpo2()
+	{
+		logger.debug(""
+				+ "\n#######################################"
+				+ "\n###### cargarDatosGrupoLineaGpo2 ######"
+				+ "\n smap1: "+smap1
+				);
+		success = true;
+		try
+		{
+			slist2 = cotizacionManager.obtieneFormatosAtribsCobsGrupo(
+					smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("estado")
+					,smap1.get("nmpoliza")
+					,smap1.get("letra"));
+			
+			exito           = true;
+			respuesta       = "Todo OK";
+			respuestaOculta = "Todo OK";
+		}
+		catch(Exception ex)
+		{
+			long timestamp=System.currentTimeMillis();
+			logger.error("error al obtener datos de grupo de linea "+timestamp,ex);
+			exito           = false;
+			respuesta       = "Error inesperado #"+timestamp;
+			respuestaOculta = ex.getMessage();
+		}
+		logger.debug(""
+				+ "\n###### cargarDatosGrupoLineaGpo2 ######"
+				+ "\n#######################################"
+				);
+		return SUCCESS;
+	}
 	
 	public String cargarTvalogarsGrupo()
 	{

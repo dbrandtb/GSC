@@ -64,6 +64,7 @@ var _p25_urlMesaControl                 = '<s:url namespace="/flujomesacontrol" 
 var _p25_urlViewDoc                     = '<s:url namespace="/documentos"      action="descargaDocInline"                />';
 var _p25_urlCargarDatosCotizacion       = '<s:url namespace="/emision"         action="cargarDatosCotizacionGrupo2"      />';
 var _p25_urlCargarGrupos                = '<s:url namespace="/emision"         action="cargarGruposCotizacion2"          />';
+var _p25_urlObtenerDatosAdicionalesGrupo= '<s:url namespace="/emision"         action="cargarDatosGrupoLineaGpo2"        />';
 var _p25_urlObtenerTvalogarsGrupo       = '<s:url namespace="/emision"         action="cargarTvalogarsGrupo"             />';
 var _p25_urlCargarAseguradosExtraprimas = '<s:url namespace="/emision"         action="cargarAseguradosExtraprimas2"     />';
 var _p25_urlGuardarSituaciones          = '<s:url namespace="/emision"         action="guardarValoresSituaciones"        />';
@@ -2406,11 +2407,68 @@ Ext.onReady(function()
                             _p25_setActiveConcepto();
                             var aux=resp.slist1.length;
                             var aux2=0;
+                            _p25_tabpanel().setLoading(true);
+                            
                             for(var i=0;i<aux;i++)
                             {
-                                _p25_storeGrupos.add(new _p25_modeloGrupo(resp.slist1[i]));
-                                _p25_storeGrupos.sort('letra','ASC');
-                                _p25_storeGrupos.commitChanges();
+                            	
+                            	Ext.Ajax.request(
+                                        {
+                                            url      : _p25_urlObtenerDatosAdicionalesGrupo
+                                            ,params  :
+                                            {
+                                                'smap1.cdunieco'  : _p25_smap1.cdunieco
+                                                ,'smap1.cdramo'   : _p25_smap1.cdramo
+                                                ,'smap1.estado'   : _p25_smap1.estado
+                                                ,'smap1.nmpoliza' : _p25_smap1.nmpoliza
+                                                ,'smap1.letra'    : resp.slist1[i].letra
+                                                ,'smap1.i'        : i
+                                            }
+                                            ,success : function(response)
+                                            {
+                                                var datosAdic=Ext.decode(response.responseText);
+                                                debug('datosAdic:',datosAdic);
+                                                if(datosAdic.exito)
+                                                {
+                                                    aux2=aux2+1;
+                                                    var grupo=new _p25_modeloGrupo(new _p25_modeloGrupo(resp.slist1[i]));
+                                                    
+                                                    try{
+                                                    	var mapaAtrbGar = new Array();
+                                                    	Ext.Array.each(datosAdic.slist2,function(elFormatoAtrGarantia, indexEl){
+                                                    		mapaAtrbGar[elFormatoAtrGarantia.CDGARANT + '_' + elFormatoAtrGarantia.CDATRIBU] = elFormatoAtrGarantia.FORMAT;
+                                                    	});
+                                                    	
+                                                    	debug('<<<<<<>>>>>> mapaAtrbGar <<<<<<>>>>>>::::::',mapaAtrbGar);
+                                                    	
+                                                    	grupo.mapaAtrbsGarsGrupo = mapaAtrbGar;
+                                                    }catch(exp){
+                                                    	debugError('Error al obtener formatos para atributos coberturas',exp);
+                                                    }
+                                                    
+                                                    _p25_storeGrupos.add(grupo);
+                                                    _p25_storeGrupos.sort('letra','ASC');
+                                                    _p25_storeGrupos.commitChanges();
+                                                   
+                                                    if(aux2==aux)//tenemos todas las respuestas
+                                                    {
+                                                    	_p25_tabpanel().setLoading(false);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                	_p25_tabpanel().setLoading(false);
+                                                    mensajeError(datosAdic.respuesta);
+                                                }
+                                            }
+                                            ,failure : function()
+                                            {
+                                            	_p25_tabpanel().setLoading(false);
+                                                errorComunicacion();
+                                            }
+                                        });
+                            	
+                                
                             }
                         });
                         debug('<cargar linea');
@@ -2464,6 +2522,20 @@ Ext.onReady(function()
                                             var grupo=new _p25_modeloGrupo(resp.slist1[tvalogars.smap1.i]);
                                             grupo.tvalogars=tvalogars.slist1;
                                             grupo.valido=true;
+                                            
+                                            try{
+                                            	var mapaAtrbGar = new Array();
+                                            	Ext.Array.each(tvalogars.slist2,function(elFormatoAtrGarantia, indexEl){
+                                            		mapaAtrbGar[elFormatoAtrGarantia.CDGARANT + '_' + elFormatoAtrGarantia.CDATRIBU] = elFormatoAtrGarantia.FORMAT;
+                                            	});
+                                            	
+                                            	debug('<<<<<<>>>>>> mapaAtrbGar <<<<<<>>>>>>::::::',mapaAtrbGar);
+                                            	
+                                            	grupo.mapaAtrbsGarsGrupo = mapaAtrbGar;
+                                            }catch(exp){
+                                            	debugError('Error al obtener formatos para atributos coberturas',exp);
+                                            }
+                                            
                                             _p25_storeGrupos.add(grupo);
                                             _p25_storeGrupos.sort('letra','ASC');
                                             _p25_storeGrupos.commitChanges();
@@ -3204,7 +3276,19 @@ function _p25_borrarGrupoClic(grid,rowIndex)
 function _p25_editarGrupoClic(grid,rowIndex)
 {
     var record = grid.getStore().getAt(rowIndex);
+    var gridGrupos  = grid.up();
+	var recordGrupo = gridGrupos.getStore().getAt(rowIndex);
+    
     debug('>_p25_editarGrupoClic:',record);
+    
+    var modeloTipoCopago = Ext.create('Ext.data.Store', {
+        fields: ['key', 'value'],
+        data : [
+            {"key":"N", "value":"(MONTO)"},
+            {"key":"P", "value":"(%)"}
+            //{"key":"NA", "value":"N/A"}
+        ]
+    });
     
     var valido = true;
     
@@ -3318,14 +3402,159 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                     });
                                                 }
                                             } 
+                                            
+                                            
+                                            var hijosCheckPorcentaje = [];
+                                            var _puedeFlex = ('|COTIZADOR|SUPTECSALUD|SUBDIRSALUD|COTIESPE|DIRECSALUD|'.indexOf('|'+_p25_smap1.cdsisrol+'|') != -1)? true:false;
+                                            
+                                            //Se crea mapa de formatos de atributos de Coberturas a valores default, cuando se crean los grupos por primer vez
+                                            
+                                            debug('record.mapaAtrbsGarsGrupo<<<<:',record.mapaAtrbsGarsGrupo);
+                                            if(record.mapaAtrbsGarsGrupo == undefined || record.mapaAtrbsGarsGrupo == 'undefined' || !(record.mapaAtrbsGarsGrupo)){
+                                            	
+                                            	try{
+                                                	var mapaAtrsbGars = new Array();
+                                                	
+                                                	Ext.Array.each(hijos,function(elementoHijo, indexElCob){
+    	                                            	var formatoDefault = new String(elementoHijo.tipoCampoFormat);
+    	                                            	mapaAtrsbGars[json.slist1[j].CDGARANT + '_' + elementoHijo.cdatribu] = formatoDefault;
+    	                                           	});
+                                                	record.mapaAtrbsGarsGrupo = mapaAtrsbGars;
+
+                                                	debug('<<<<<<>>>>>> mapaAtrsbGars <<<<<<>>>>>>::::::',mapaAtrsbGars);
+                                                }catch(exp){
+                                                	debugError('Error al obtener formatos para atributos coberturas',exp);
+                                                }
+                                            }
+                                            
+                                            Ext.Array.each(hijos,function(elementoCobertura, indexElCob){
+                                            	
+                                            	var formatoCargar = new String(elementoCobertura.tipoCampoFormat);
+                                            	var fieldSinTipoCopago = '';
+                                            	
+                                            	if(!Ext.isEmpty(elementoCobertura.auxiliar) && elementoCobertura.auxiliar == 'C'){
+                                            		elementoCobertura.fieldLabel = new String(elementoCobertura.fieldLabel).replace('(MONTO)','').trim();
+                                            		elementoCobertura.fieldLabel = new String(elementoCobertura.fieldLabel).replace('(%)','').trim();
+                                            		
+                                            		fieldSinTipoCopago = new String(elementoCobertura.fieldLabel);
+                                            		
+                                            		elementoCobertura.fieldLabel = '';
+                                            		elementoCobertura.labelWidth = 0; 
+                                                	elementoCobertura.width = 100;
+                                                	
+                                                	elementoCobertura.on({
+                                                		beforerender: function(cmb){
+                                        	        		cmb.labelWidth= 0;
+                                        	        	}
+                                                	});
+                                            	}else{
+                                            		elementoCobertura.labelWidth = 215; 
+                                                	elementoCobertura.width = 310;
+                                                	
+                                            		elementoCobertura.on({
+                                                		beforerender: function(cmb){
+                                        	        		cmb.labelWidth= 215;
+                                        	        	}
+                                                	});
+                                            	}
+                                            	
+                                            	
+                                            	//Si el campo trae definido un campo tipo y ademas hay tipo formato ya guardado para este atributo de garantia se cambia al del formato guardado si es distinto al default
+                                            	if( !Ext.isEmpty(elementoCobertura.tipoCampoFormat) && !Ext.isEmpty(record.mapaAtrbsGarsGrupo[json.slist1[j].CDGARANT + '_' + elementoCobertura.cdatribu]) ){
+                                            		
+                                            		var formatoGuardado = record.mapaAtrbsGarsGrupo[json.slist1[j].CDGARANT + '_' + elementoCobertura.cdatribu];
+                            	        			var vieneConFormatoDefault = (elementoCobertura.tipoCampoFormat == formatoGuardado) ? true : false;
+                            	        			
+                            	        			// si no viene formato default se formatea el campo con los valores alternos
+                                	        		if(!vieneConFormatoDefault){
+                                	        			elementoCobertura.minValue = elementoCobertura.valorAux5;
+                                	        			elementoCobertura.maxValue = elementoCobertura.valorAux6;
+                                    	        		elementoCobertura.value    = elementoCobertura.valorAux4;
+                                    	        		formatoCargar = formatoGuardado;
+                                	        		}
+                                            	}
+                                            	
+                                            	if(!Ext.isEmpty(elementoCobertura.auxiliar) && elementoCobertura.auxiliar == 'C'){
+                                            		//&& !Ext.isEmpty(elementoCobertura.tipoCampoFormat) && elementoCobertura.tipoCampoFormat == 'C'){
+                                            		var nuevoCheck = Ext.create('Ext.form.ComboBox', {
+                                            	        fieldLabel: fieldSinTipoCopago,
+                                            	        labelWidth: 215,
+                                            	        width: 310,
+                                            			store: modeloTipoCopago,
+                                            	        style : 'margin:5px;',
+                                            	        displayField: 'value',
+                                            	        valueField: 'key',
+                                            	        value: formatoCargar,
+                                            	        name:  'TipoValor_'+elementoCobertura.name,
+                                            	        garantAtribu: json.slist1[j].CDGARANT + '_' + elementoCobertura.cdatribu,
+                                            	        readOnly : !_puedeFlex,
+                                            	        editable: false,
+                                            	        listeners:{
+                                            	        	select: function(cmb, recordsCmb, optsCmb){
+                                            	        		try{
+                                            	        			var nombreAtrCmb = new String(cmb.name).replace("TipoValor_","").trim();
+	                                            	        		var campoCopago = cmb.up('form').down('[name='+nombreAtrCmb+']');
+	                                            	        		
+                                            	        			var esFormatoAlterno = (!Ext.isEmpty(campoCopago.formatoAlterno) && campoCopago.formatoAlterno == cmb.getValue()) ? true : false;
+                                            	        			
+	                                            	        		//valor default para que al cambiar al nuevo valor default tome como si fuera un cambio
+	                                            	        		//en caso de que solo se cambie el tipo de valor Porcentaje/Monto
+	                                            	        		campoCopago.setValue(0); 
+	                                            	        		
+	                                            	        		if(esFormatoAlterno){
+	                                            	        			campoCopago.setMinValue(campoCopago.valorAux5);
+		                                            	        		campoCopago.setMaxValue(campoCopago.valorAux6);
+		                                            	        		campoCopago.setValue(campoCopago.valorAux4);
+	                                            	        		}else{
+	                                            	        			campoCopago.setMinValue(campoCopago.valorAux2);
+		                                            	        		campoCopago.setMaxValue(campoCopago.valorAux3);
+		                                            	        		campoCopago.setValue(campoCopago.valorAux1);
+	                                            	        		}
+	                                            	        		
+	                                            	        		record.mapaAtrbsGarsGrupo[cmb.garantAtribu] = cmb.getValue();
+	                                            	        		
+                                            	        		}catch(ex){
+                                            	        			debugError('Error al fijar minimo y maximo para campo de copago',ex);
+                                            	        		}
+                                            	        	},
+                                            	        	beforerender: function(cmb){
+                                            	        		cmb.labelWidth= 215;
+                                            	        	}
+                                            	        }
+                                    		    	});
+                                            		
+                                            		hijosCheckPorcentaje.push(nuevoCheck);
+                                            		hijosCheckPorcentaje.push(elementoCobertura);
+                                            	}else{
+                                            			hijosCheckPorcentaje.push(elementoCobertura);
+                                            			
+	                                            		var nuevoCheck = Ext.create('Ext.form.Label', {
+	                                            	        html:'<br/>',
+	                                            	        width: 0,
+	                                            	        listeners: {
+	                                            	        	beforerender: function(cmb){
+	                                            	        		cmb.width= 0;
+	                                            	        	}
+	                                            	        }
+	                                    		    	});
+	                                            		
+	                                            		hijosCheckPorcentaje.push(nuevoCheck);
+                                            	}
+                                           	});
+                                            
+                                            
                                             var item = Ext.create('Ext.form.Panel',
                                             {
                                                 width       : 470
                                                 ,frame      : true
                                                 ,height     : 140
                                                 ,autoScroll : true
-                                                ,defaults   : { style : 'margin:5px;', labelWidth : 100 }
-                                                ,items      : hijos
+                                                ,layout: {
+                                                    type: 'table',
+                                                    columns: 2
+                                                }
+                                                //,defaults   : { style : 'margin:5px;', labelWidth : 100 }
+                                                ,items      : hijosCheckPorcentaje
                                                 ,cdgarant   : json.slist1[j].CDGARANT
                                                 ,tbar       :
                                                 [
@@ -3372,7 +3601,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                         }
                                                                         catch(e)
                                                                         {
-                                                                            debugError('Error cachado:',e);
+                                                                            debugError('Error cachado, se encontro campo sin metodo reset:',e);
                                                                         }
                                                                     }
                                                                 }
@@ -3400,19 +3629,22 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                {
                                                                    if(me.getValue()+'x'!='x')
                                                                    {
-                                                                   	   //alert('2');
-                                                                       var val=me.getValue().toLowerCase().replace(/s/g,'');
-                                                                       //alert('3');
-                                                                       if(item.fieldLabel.toLowerCase().replace(/s/g,'').lastIndexOf(val)!=-1)
-                                                                       {
-                                                                           //item.show();
-                                                                           item.removeCls('tatrigarHide');
-                                                                       }
-                                                                       else
-                                                                       {
-                                                                           //item.hide();
-                                                                           item.addCls('tatrigarHide');
-                                                                       }
+                                                                	   
+                                                                	   if(!Ext.isEmpty(item.fieldLabel)){
+	                                                                   	   //alert('2');
+	                                                                       var val=me.getValue().toLowerCase().replace(/s/g,'');
+	                                                                       //alert('3');
+	                                                                       if(item.fieldLabel.toLowerCase().replace(/s/g,'').lastIndexOf(val)!=-1)
+	                                                                       {
+	                                                                           //item.show();
+	                                                                           item.removeCls('tatrigarHide');
+	                                                                       }
+	                                                                       else
+	                                                                       {
+	                                                                           //item.hide();
+	                                                                           item.addCls('tatrigarHide');
+	                                                                       }
+                                                                	   }
                                                                    }
                                                                    else
                                                                    {
@@ -4059,7 +4291,9 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                 {
                                                     text     : 'Guardar'
                                                     ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-                                                    ,handler : function(button){_p25_guardarGrupo(button.up().up());}
+                                                    ,handler : function(button){
+                                                    	_p25_guardarGrupo(button.up().up(), gridGrupos, recordGrupo, rowIndex);
+                                                    }
                                                     ,hidden  : _p25_smap1.COBERTURAS=='N'||_p25_smap1.COBERTURAS_BOTON=='N'
                                                 }
                                             ]
@@ -4139,9 +4373,11 @@ function _p25_editarGrupoClic(grid,rowIndex)
     debug('<_p25_editarGrupoClic');
 }
 
-function _p25_guardarGrupo(panelGrupo)
+function _p25_guardarGrupo(panelGrupo, gridGrupos, recordGrupoEdit, rowIndex)
 {
      debug('>_p25_guardarGrupo:',panelGrupo);
+     
+     debug('valores >>>>:',recordGrupoEdit.mapaAtrbsGarsGrupo);
      
      var letraGrupo  = panelGrupo.letraGrupo;
      debug('letraGrupo:',letraGrupo);
@@ -4151,6 +4387,9 @@ function _p25_guardarGrupo(panelGrupo)
      
      var tvalogars = [];
      var valido    = true;
+     
+     var mapaAtrbsGarsCopago = recordGrupoEdit.mapaAtrbsGarsGrupo;
+     
      if(_p25_clasif==_p25_TARIFA_MODIFICADA||_p25_smap1.LINEA_EXTENDIDA=='N')
      {
          for(var i=0;i<formsTatrigar.length;i++)
@@ -4181,9 +4420,12 @@ function _p25_guardarGrupo(panelGrupo)
      {
          debug('tvalogars:',tvalogars);
          var recordGrupo=_p25_obtenerGrupoPorLetra(letraGrupo);
+         
          recordGrupo['tvalogars'] = tvalogars;
+         recordGrupo.mapaAtrbsGarsGrupo = mapaAtrbsGarsCopago;
          recordGrupo['valido']    = true;
          debug('recordGrupo:',recordGrupo);
+         
          if(_p25_smap1.FACTORES=='S')
          {
              var storeFactores = panelGrupo.down('grid[title=FACTORES DEL SUBGRUPO]').getStore();
@@ -7223,293 +7465,6 @@ function _p25_agentes()
         }
     }).show());
     debug('<_p25_agentes');
-}
-
-function _p25_mostrarVentanaComplementoCotizacion(complemento,callback)
-{
-    debug('>_p25_mostrarVentanaComplementoCotizacion');
-    centrarVentanaInterna(Ext.create('Ext.window.Window',
-    {
-        title           : 'Complemento de '+(complemento=='C'?'cotizaci&oacute;n':'emisi&oacute;n')
-        ,width          : 500
-        ,minHeight      : 100
-        ,maxHeight      : 400
-        ,modal          : true
-        ,closeOperation : 'destroy'
-        ,items          :
-        [
-            {
-                xtype     : 'form'
-                ,url      : _p25_urlComplementoCotizacion
-                ,border   : 0
-                ,defaults : { style : 'margin:5px;' }
-                ,items    :
-                [
-                    {
-                        xtype  : 'displayfield'
-                        ,value : 'Puede subir un complemento para agregar asegurados a la '+(complemento=='C'?'cotizaci&oacute;n':'emisi&oacute;n')
-                    }
-                    ,{
-                        xtype       : 'filefield'
-                        ,fieldLabel : 'Censo de asegurados'
-                        ,name       : 'censo'
-                        ,buttonText : 'Examinar...'
-                        ,allowBlank : false
-                        ,buttonOnly : false
-                        ,width      : 450
-                        ,cAccept    : ['xls','xlsx']
-                        ,msgTarget  : 'side'
-                        ,listeners  :
-                        {
-                            change : function(me)
-                            {
-                                //alert('5');
-                                var indexofPeriod = me.getValue().lastIndexOf("."),
-                                uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
-                                if (!Ext.Array.contains(this.cAccept, uploadedExtension))
-                                {
-                                    centrarVentanaInterna(Ext.MessageBox.show(
-                                    {
-                                        title   : 'Error de tipo de archivo',
-                                        msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
-                                        buttons : Ext.Msg.OK,
-                                        icon    : Ext.Msg.WARNING
-                                    }));
-                                    me.reset();
-                                }
-                            }
-                        }
-                    }
-                ]
-                ,buttonAlign : 'center'
-                ,buttons     :
-                [
-                    {
-                        text     : 'Complementar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-                        ,handler : function(me)
-                        {
-                            debug('>complemento cotizacion button click');
-                            var form = me.up('form');
-                            
-                            var params =
-                            {
-                                'smap1.cdunieco'     : _p25_smap1.cdunieco
-                                ,'smap1.cdramo'      : _p25_smap1.cdramo
-                                ,'smap1.cdtipsit'    : _p25_smap1.cdtipsit
-                                ,'smap1.estado'      : _p25_smap1.estado
-                                ,'smap1.nmpoliza'    : _p25_smap1.nmpoliza
-                                ,'smap1.complemento' : complemento
-                                ,'smap1.ntramite'    : _p25_smap1.ntramite
-                                ,'smap1.cdagente'    : _fieldByName('cdagente').getValue()
-                                ,'smap1.codpostal'   : _fieldByName('codpostal').getValue()
-                                ,'smap1.cdestado'    : _fieldByName('cdedo').getValue()
-                                ,'smap1.cdmunici'    : _fieldByName('cdmunici').getValue()
-                            };
-                            for(var i=0;i<5;i++)
-                            {
-                                try
-                                {
-                                    params['smap1.cdplan'+(i+1)] = _p25_storeGrupos.getAt(i).get('cdplan');
-                                }
-                                catch(e)
-                                {
-                                    params['smap1.cdplan'+(i+1)] = '';
-                                    debug('Error inofensivo','No hay grupo '+(i+1));
-                                }
-                            }
-                            
-                            if(form.isValid())
-                            {
-                                form.setLoading(true);
-                                form.submit(
-                                {
-                                    params   : params
-                                    ,success : function(form2,action)
-                                    {
-                                        form.setLoading(false);
-                                        var ck = 'Procesando respuesta al subir complemento';
-                                        try
-                                        {
-                                            var json = Ext.decode(action.response.responseText);
-                                            debug('### submit:',json);
-                                            if(json.exito)
-                                            {
-                                                form.up('window').destroy();
-                                                var despues = function()
-                                                {
-	                                                var numRand      = Math.floor((Math.random() * 100000) + 1);
-	                                                var nombreModelo = '_modelo'+numRand;
-	                                                var fields  = [];
-	                                                var columns = [];
-	                                                
-	                                                if(Number(json.smap1.filasProcesadas)>0)
-	                                                {
-	                                                    var record = json.slist1[0];
-	                                                    debug('record:',record);
-	                                                    for(var att in record)
-	                                                    {
-	                                                        if(att.substring(0,1)=='_')
-	                                                        {
-	                                                            var col =
-	                                                            {
-	                                                                dataIndex : att.substring(att.lastIndexOf('_')+1)
-	                                                                ,text     : record[att]
-	                                                                ,orden    : ''+att
-	                                                            };
-	                                                            columns.push(col);
-	                                                        }
-	                                                        else
-	                                                        {
-	                                                            fields.push(att);
-	                                                        }
-	                                                    }
-	                                                }
-	                                                
-	                                                for(var i=0;i<columns.length-1;i++)
-	                                                {
-	                                                    for(var j=i+1;j<columns.length;j++)
-	                                                    {
-	                                                        if(columns[i].orden>columns[j].orden)
-	                                                        {
-	                                                            var aux    = columns[i];
-	                                                            columns[i] = columns[j];
-	                                                            columns[j] = aux;
-	                                                        }
-	                                                    }
-	                                                }
-	                                                
-	                                                debug('fields:',fields,'columns:',columns);
-	                                                
-	                                                Ext.define(nombreModelo,
-	                                                {
-	                                                    extend  : 'Ext.data.Model'
-	                                                    ,fields : fields
-	                                                });
-	                                                
-	                                                var store = Ext.create('Ext.data.Store',
-	                                                {
-	                                                    model : nombreModelo
-	                                                    ,data : json.slist1
-	                                                });
-	                                                
-	                                                debug('store.getRange():',store.getRange());
-	                                                
-	                                                centrarVentanaInterna(Ext.create('Ext.window.Window',
-	                                                {
-	                                                    width     : 600
-	                                                    ,height   : 500
-	                                                    ,title    : 'Revisar asegurados del complemento'
-	                                                    ,closable : false
-	                                                    ,items    :
-	                                                    [
-	                                                        Ext.create('Ext.panel.Panel',
-	                                                        {
-	                                                            layout    : 'hbox'
-	                                                            ,border   : 0
-	                                                            ,defaults : { style : 'margin:5px;' }
-	                                                            ,height   : 40
-	                                                            ,items    :
-	                                                            [
-	                                                                {
-	                                                                    xtype       : 'displayfield'
-	                                                                    ,fieldLabel : 'Filas leidas'
-	                                                                    ,value      : json.smap1.filasLeidas
-	                                                                }
-	                                                                ,{
-	                                                                    xtype       : 'displayfield'
-	                                                                    ,fieldLabel : 'Filas procesadas'
-	                                                                    ,value      : json.smap1.filasProcesadas
-	                                                                }
-	                                                                ,{
-	                                                                    xtype       : 'displayfield'
-	                                                                    ,fieldLabel : 'Filas con error'
-	                                                                    ,value      : json.smap1.filasErrores
-	                                                                }
-	                                                                ,{
-	                                                                    xtype    : 'button'
-	                                                                    ,text    : 'Ver errores'
-	                                                                    ,hidden  : Number(json.smap1.filasErrores)==0
-	                                                                    ,handler : function()
-	                                                                    {
-	                                                                        centrarVentanaInterna(Ext.create('Ext.window.Window',
-	                                                                        {
-	                                                                            modal        : true
-	                                                                            ,closeAction : 'destroy'
-	                                                                            ,title       : 'Errores al procesar censo'
-	                                                                            ,width       : 800
-	                                                                            ,height      : 500
-	                                                                            ,items       :
-	                                                                            [
-	                                                                                {
-	                                                                                    xtype       : 'textarea'
-	                                                                                    ,fieldStyle : 'font-family: monospace'
-	                                                                                    ,value      : json.smap1.erroresCenso
-	                                                                                    ,readOnly   : true
-	                                                                                    ,width      : 780
-	                                                                                    ,height     : 440
-	                                                                                }
-	                                                                            ]
-	                                                                        }).show());
-	                                                                    }
-	                                                                }
-	                                                            ]
-	                                                        })
-	                                                        ,Ext.create('Ext.grid.Panel',
-	                                                        {
-	                                                            height      : 350
-	                                                            ,columns    : columns
-	                                                            ,store      : store
-	                                                            ,viewConfig : viewConfigAutoSize
-	                                                        })
-	                                                    ]
-	                                                    ,buttonAlign : 'center'
-	                                                    ,buttons     :
-	                                                    [
-	                                                        {
-	                                                            text     : 'Aceptar y continuar'
-	                                                            ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-	                                                            ,handler : function(){ callback(); }
-	                                                        }
-	                                                        ,{
-	                                                            text     : 'Agregar m&aacute;s'
-	                                                            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
-	                                                            ,handler : function(me){ me.up('window').destroy(); }
-	                                                        }
-	                                                    ]
-	                                                }).show());
-	                                            };
-	                                            
-	                                            _p25_generarTramiteClic(despues,false,false,true);
-                                            }
-                                            else
-                                            {
-                                                mensajeError(json.respuesta);
-                                            }
-                                        }
-                                        catch(e)
-                                        {
-                                            manejaException(e,ck);
-                                        }
-                                    }
-                                    ,failure : function()
-                                    {
-                                        form.setLoading(false);
-                                        errorComunicacion(null,'Error al subir archivo de complemento');
-                                    }
-                                })
-                            }
-                            else
-                            {
-                                datosIncompletos();
-                            }
-                        }
-                    }
-                ]
-            }
-        ]
-    }).show());
-    
 }
 
 function _p25_desbloqueoBotonRol(boton)
