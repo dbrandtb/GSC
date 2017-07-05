@@ -1230,6 +1230,52 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+
+	@Override
+	public List<Map<String,String>> obtieneGruposTramiteClonar(Map<String, String> params) throws Exception
+	{
+		List<Map<String,String>> lista = null;
+		
+		logger.debug(
+				new StringBuilder()
+				.append("\n******************************************************")
+				.append("\n****** PKG_CONSULTA2.P_OBTIENE_GRUPOS_PLANES  ******")
+				.append("\n****** params=").append(params)
+				.append("\n*****************************************************")
+				.toString()
+				);
+		try{
+			
+			Map<String,Object> result = this.ejecutaSP(new ObtieneGruposTramiteClonar(this.getDataSource()), params);
+			lista = (List<Map<String,String>>) result.get("pv_registro_o");
+			
+		}catch(Exception e){
+			logger.error("Error", e);
+		}
+		return lista;
+	}
+	
+	protected class ObtieneGruposTramiteClonar extends StoredProcedure
+	{
+		
+		String[] columnas=new String[]{
+				"CDGRUPO" 
+				,"DSGRUPO"
+				,"CDPLAN"
+				,"DSPLAN"
+				,"DSPLAN_VARIABLE"
+		};
+		
+		protected ObtieneGruposTramiteClonar(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA2.P_OBTIENE_GRUPOS_PLANES");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(columnas)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public boolean clonaGrupoReexp(Map<String, String> params) throws Exception

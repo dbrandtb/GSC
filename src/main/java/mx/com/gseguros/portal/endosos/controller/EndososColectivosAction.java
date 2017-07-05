@@ -488,6 +488,37 @@ public class EndososColectivosAction extends PrincipalCoreAction
 
 		return result;
 	}
+
+	@Action(value   = "obtieneGruposTramiteClonar",
+			results = { @Result(name="success", type="json") }
+			)
+	public String obtieneGruposTramiteClonar() {
+		logger.debug(Utils.log("########################################\n",
+							   "########################################\n",
+							   "###### obtieneGruposTramiteClonar######\n",
+							   "######                    		  ######\n"));
+		logger.debug(Utils.log("params: ",params,"\n"));
+		
+		String result = ERROR;
+		
+		try {
+			Utils.validate(params, "No se recibieron datos");
+			
+			slist1 = endososManager.obtieneGruposTramiteClonar(params);
+			success =  true;
+			result = SUCCESS;
+		} catch (Exception ex) {
+			logger.error(Utils.log("Error al obtener detalles de  grupos del tramite a clonar", ex,"\n"));
+			error = Utils.manejaExcepcion(ex);
+		}
+		
+		logger.debug(Utils.log("######                    		  ######\n",
+							   "###### obtieneGruposTramiteClonar######\n",
+							   "########################################\n",
+							   "########################################\n"));
+		
+		return result;
+	}
 	
 	/*////////////////////////////*/
 	////// cargaPantallaClonacion //////
