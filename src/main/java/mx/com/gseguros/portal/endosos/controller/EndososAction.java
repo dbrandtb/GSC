@@ -3075,7 +3075,7 @@ public class EndososAction extends PrincipalCoreAction
 						String cdperpag       = smap1.get("CDPERPAG");
 						String p_plan         = smap1.get("CDMEJRED");
 						
-						if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla)){
+						if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla)|| TipoFlotilla.Tipo_Flotilla.getCdtipsit().equals(tipoFlotilla) ){
 							nombreReporte = getText("rdf.endosos.nombre.auto.pymes");
 						}
 						
@@ -10768,7 +10768,7 @@ public String retarificarEndosos()
 					logger.debug("tipoFlotilla: "+tipoFlotilla);
 					String nombreReporte = getText("rdf.endosos.nombre.auto.individual");
 					
-					if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla)){
+					if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoFlotilla) || TipoFlotilla.Tipo_Flotilla.getCdtipsit().equals(tipoFlotilla)){
 						paso = "Tomando rdf de Pymes";
 						logger.debug(paso);
 						nombreReporte = getText("rdf.endosos.nombre.auto.pymes");

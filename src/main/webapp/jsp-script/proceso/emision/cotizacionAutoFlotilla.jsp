@@ -6137,6 +6137,7 @@ function _p30_confirmarEndoso()
                                         			itemId    : '_p3_botonEnviar'
 			                                        ,xtype    : 'button'
 			                                        ,text     : 'Enviar'
+			                                        ,name    : 'enviarButton'
 			                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
 			                                        ,hidden   : Ext.isEmpty(_p30_flujo)
 			                                        ,handler  : function(){
@@ -6301,7 +6302,7 @@ function _p30_confirmarEndoso()
 													        }
 													      }}).show());
 													}
-													,hidden   : _p30_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
+													//,hidden   : _p30_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
 			                                        } ]
 								     }).show();
 			                } else {
