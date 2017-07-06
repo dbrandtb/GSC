@@ -46,7 +46,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class CreaEditaRolSistema extends StoredProcedure {
 		
 		protected CreaEditaRolSistema(DataSource dataSource){
-			super(dataSource, "PKG_GENERA_USUARIO.P_MOV_TSISROL");
+			super(dataSource, "PKG_GENERA_USUARIO_PRE.P_MOV_TSISROL");
 			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dssisrol_i", OracleTypes.VARCHAR));
@@ -99,7 +99,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class GuardaUsuario extends StoredProcedure {
 		
 		protected GuardaUsuario(DataSource dataSource){
-			super(dataSource, "PKG_GENERA_USUARIO.P_MOV_USUARIO");
+			super(dataSource, "PKG_GENERA_USUARIO_PRE.P_MOV_USUARIO");
 			// Respetar el orden de declaracion de los parametros:
 			declareParameter(new SqlParameter("PV_CDUSUARI_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_DSNOMBRE_I", OracleTypes.VARCHAR));
@@ -143,7 +143,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class CambiaEstatusUsuario extends StoredProcedure {
 		
 		protected CambiaEstatusUsuario(DataSource dataSource){
-			super(dataSource, "PKG_GENERA_USUARIO.P_CAMBIA_ESTATUS");
+			super(dataSource, "PKG_GENERA_USUARIO_PRE.P_CAMBIA_ESTATUS");
 			declareParameter(new SqlParameter("PV_CDUSUARI_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_SWACTIVO_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
@@ -257,7 +257,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class ObtieneUsuarios extends StoredProcedure {
 
 		protected ObtieneUsuarios(DataSource dataSource) {
-			super(dataSource, "PKG_GENERA_USUARIO.P_GET_USUARIOS_POR_PRIVILEGIOS");
+			super(dataSource, "PKG_GENERA_USUARIO_PRE.P_GET_USUARIOS_POR_PRIVILEGIOS");
 			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDUSUARI_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_NOMBRE_I", OracleTypes.VARCHAR));
@@ -321,7 +321,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	
 	protected class ObtienerRolesPorPrivilegio extends StoredProcedure {
 		protected ObtienerRolesPorPrivilegio(DataSource dataSource) {
-			super(dataSource, "PKG_GENERA_USUARIO.P_BUSCA_ROL_POR_PRIVILEGIOS");
+			super(dataSource, "PKG_GENERA_USUARIO_PRE.P_BUSCA_ROL_POR_PRIVILEGIOS");
 			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new ObtieneRolesSistemaMapper()));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
@@ -346,7 +346,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
     protected class ObtieneRolesUsuario extends StoredProcedure {
     	
     	protected ObtieneRolesUsuario(DataSource dataSource) {
-    		super(dataSource, "PKG_GENERA_USUARIO.P_GET_ROLES_SIST_USUARIO");
+    		super(dataSource, "PKG_GENERA_USUARIO_PRE.P_GET_ROLES_SIST_USUARIO");
     		declareParameter(new SqlParameter("PV_CDUSUARIO_I", OracleTypes.VARCHAR));
     		String[] cols = new String[]{
     				"CDSISROL" , "DSSISROL" , "EXISTE_ROL"
@@ -370,7 +370,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class GuardaRolUsuario extends StoredProcedure {
 
 		protected GuardaRolUsuario(DataSource dataSource) {
-			super(dataSource, "PKG_GENERA_USUARIO.P_MOV_SISROL_USUARIO");
+			super(dataSource, "PKG_GENERA_USUARIO_PRE.P_MOV_SISROL_USUARIO");
 			
 			declareParameter(new SqlParameter("PV_ACCION_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDUSUARI_I", OracleTypes.VARCHAR));
@@ -408,7 +408,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class GuardaImpresorasUsuario extends StoredProcedure {
 
 		protected GuardaImpresorasUsuario(DataSource dataSource) {
-			super(dataSource, "Pkg_Tabapoyo.P_INSERTA_IMPRESORA_USUARIO");
+			super(dataSource, "PKG_TABAPOYO_PRE.P_INSERTA_IMPRESORA_USUARIO");
 			
 			declareParameter(new SqlParameter("PV_CDUSUARIO_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_IP_I", OracleTypes.VARCHAR));
@@ -442,7 +442,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class HabilitaDeshabilitaImpresora extends StoredProcedure {
 
 		protected HabilitaDeshabilitaImpresora(DataSource dataSource) {
-			super(dataSource, "Pkg_Tabapoyo.P_HABILITA_IMPRESORA");
+			super(dataSource, "PKG_TABAPOYO_PRE.P_HABILITA_IMPRESORA");
 			
 			declareParameter(new SqlParameter("pv_habilita", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_impresora_i", OracleTypes.VARCHAR));
@@ -476,7 +476,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class InsertaActualizaImpresora extends StoredProcedure {
 
 		protected InsertaActualizaImpresora(DataSource dataSource) {
-			super(dataSource, "Pkg_Tabapoyo.P_INSERTA_ACTUALIZA_IMPRESORA");
+			super(dataSource, "PKG_TABAPOYO_PRE.P_INSERTA_ACTUALIZA_IMPRESORA");
 			
 			declareParameter(new SqlParameter("pv_nombre_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ip_i", OracleTypes.VARCHAR));
@@ -499,7 +499,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class ObtieneProductosAgente extends StoredProcedure {
 		
 		protected ObtieneProductosAgente(DataSource dataSource) {
-			super(dataSource, "PKG_GENERA_USUARIO.P_GET_RAMOS_AGENTE");
+			super(dataSource, "PKG_GENERA_USUARIO_PRE.P_GET_RAMOS_AGENTE");
 			declareParameter(new SqlParameter("PV_CDAGENTE_I", OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDRAMO" , "DSRAMO" , "TIENE_CDRAMO"
@@ -523,7 +523,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	
 	protected class ObtieneImpresorasUsuario extends StoredProcedure{
 		protected ObtieneImpresorasUsuario(DataSource dataSource){
-			super(dataSource, "Pkg_Tabapoyo.P_GET_IMPRESORAS_USR");
+			super(dataSource, "PKG_TABAPOYO_PRE.P_GET_IMPRESORAS_USR");
 			declareParameter(new SqlParameter("pv_cdusuario_i", OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"IMPRESORA" ,"IP","TIPO", "DESCRIPCION" , "DISPONIBLE","ALTA"
@@ -548,7 +548,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	protected class GuardaProductoAgente extends StoredProcedure {
 		
 		protected GuardaProductoAgente(DataSource dataSource) {
-			super(dataSource, "PKG_GENERA_USUARIO.P_MOV_MAGECOM");
+			super(dataSource, "PKG_GENERA_USUARIO_PRE.P_MOV_MAGECOM");
 			
 			declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_CDAGENTE_I", OracleTypes.VARCHAR));
@@ -576,7 +576,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 
 		protected GuardarSesion(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.P_INSERTA_SESION");
+			super(dataSource, "PKG_SATELITES_PRE.P_INSERTA_SESION");
 			
 			declareParameter(new SqlParameter("idSesion"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
@@ -608,7 +608,7 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 		
 		protected ValidaEdadAseguradosSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_CONSULTA.P_VALIDA_EDAD_ASEGURADOS");
+			super(dataSource, "PKG_CONSULTA_PRE.P_VALIDA_EDAD_ASEGURADOS");
             
 			String[] cols = new String[]{"NOMBRE","PARENTESCO","EDAD","EDADMINI","EDADMAXI","SUPERAMINI","SUPERAMAXI"};
             

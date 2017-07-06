@@ -2613,17 +2613,6 @@ function _p25_subirArchivoCompleto(button,nombreCensoParaConfirmar)
                             }
                             else
                             {
-                                if (!Ext.isEmpty(_cotcol_flujo) && _cotcol_flujo.aux === 'RSTN') {
-                                    mensajeCorrecto(
-                                        'Censo cargado',
-                                        'Se est\u00e1 procesando el censo de asegurados',
-                                        function () {
-                                            _mask();
-                                            location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?empty';
-                                        }
-                                    );
-                                    return;
-                                }
                                 callback();
                             }
                         }
@@ -2689,7 +2678,6 @@ function _p25_borrarDetalleGrupoClic (grid,rowIndex) {
 
 function _p21_RefrescarCensoColectivo(){
 	debug("_p21_smap1 ==>",_p21_smap1);
-	_mask('Espere un momento...');
     Ext.Ajax.request( {
         url      : _p21_urlRefrescarCensoColectivo
         ,params  : {
@@ -2700,19 +2688,17 @@ function _p21_RefrescarCensoColectivo(){
             ,'smap1.ntramite' : _p21_smap1.ntramite
         }
         ,success : function(response) {
+            _unmask();
             try {
                 var jsonCensoCol = Ext.decode(response.responseText);
                 debug('### _p21_RefrescarCensoColectivo resp:',jsonCensoCol);
                 if(jsonCensoCol.success==true) {
-                	_unmask();
                     centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','Se actualizo el censo de renovaci&oacute;n'));
                 }
                 else {
-                	_unmask();
                     centrarVentanaInterna(mensajeError(jsonBorr.respuesta));
                 }
             }catch(e){
-            	_unmask();
                 manejaException(e,ck);
             }
         }
@@ -2724,7 +2710,6 @@ function _p21_RefrescarCensoColectivo(){
 }
 
 function _p25_RefrescarCensoColectivo(){
-	_mask('Espere un momento...');
     Ext.Ajax.request( {
         url      : _p25_urlRefrescarCensoColectivo
         ,params  : {
@@ -2735,21 +2720,19 @@ function _p25_RefrescarCensoColectivo(){
             ,'smap1.ntramite' : _p25_smap1.ntramite
         }
         ,success : function(response) {
+            _unmask();
             try {
                 var jsonCensoCol = Ext.decode(response.responseText);
                 debug('### _p25_urlRefrescarCensoColectivo resp:',jsonCensoCol);
                 if(jsonCensoCol.success==true)
                 {
-                    _unmask();
                     centrarVentanaInterna(mensajeCorrecto('&Eacute;XITO','Se actualizo el censo de renovaci&oacute;n'));
                 }
                 else
                 {
-                    _unmask();
                     centrarVentanaInterna(mensajeError(jsonBorr.respuesta));
                 }
             }catch(e){
-            	_unmask();
                 manejaException(e,ck);
             }
         }
@@ -2878,7 +2861,6 @@ function _p21_editarExclusiones(grid,row)
     debug('<_p21_editarExclusiones');
 }
 
-
 function _p21_editarMorbilidad()
 {
     debug('>_p21_editarMorbilidad record:');
@@ -2938,8 +2920,6 @@ function _p21_AgregarMorbilidad()
         
     debug('<_p21_AgregarMorbilidad');
 }
-
-
 
 function _verificaAprueba(){
     

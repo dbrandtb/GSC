@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.mesacontrol.dao.impl.FlujoMesaControlDAOImpl;
-import mx.com.gseguros.mesacontrol.model.FlujoVO;
 
 public interface FlujoMesaControlDAO {
 
@@ -256,15 +255,13 @@ public interface FlujoMesaControlDAO {
 	 * @param timewrn2
 	 * @param swescala
 	 * @param cdtipasig
-	 * @param cdestacion
-	 * @param cdtrazabilidad
 	 * @param accion
 	 * @throws Exception
 	 */
 	public void movimientoTfluest(String cdtipflu, String cdflujomc,
 			String cdestadomc, String webid, String xpos, String ypos,
 			String timemax, String timewrn1, String timewrn2,
-			String cdtipasig, String statusout, String swfinnode, String cdetapa, String cdestacion, String cdtrazabilidad,
+			String cdtipasig, String statusout, String swfinnode, String cdetapa,
 			String accion)
 			throws Exception;
 
@@ -984,8 +981,6 @@ public interface FlujoMesaControlDAO {
     public void cambiarTipoEndosoTramite (String ntramite, String cdtipsup) throws Exception;
     
     public String recuperarCorreoAgenteTramite (String ntramite) throws Exception;
-    
-    public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception;
     
     public String obtenerSuplementoTramite(String ntramite)throws Exception;
 }
