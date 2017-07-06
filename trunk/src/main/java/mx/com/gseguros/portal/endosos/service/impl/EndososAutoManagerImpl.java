@@ -6151,7 +6151,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						paso = "Realizando PDF de Vista Previa de Autos";
 						logger.debug(paso);
 						String reporteEndosoPrevia = rdfEndosoPreviewIndi;
-						if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoflot)){
+						//if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoflot)){
+						if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoflot) || TipoFlotilla.Tipo_Flotilla.getCdtipsit().equals(tipoflot) ){
 							reporteEndosoPrevia = rdfEndosoPreview;
 						}
 						
