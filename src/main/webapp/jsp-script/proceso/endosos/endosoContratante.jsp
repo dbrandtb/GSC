@@ -398,6 +398,20 @@ function _35_confirmar()
         {
             datosIncompletos();
         }
+        
+        var contratanteValido = true;
+        if(valido){
+        	_35_storeContratantes.each(function(record){
+        		if(datosContr.cdperson == record.get('CDPERSON')){
+        			contratanteValido = false;
+        		}
+    	    });
+        	if(!contratanteValido){
+        		mensajeWarning('El cliente seleccionado es el mismo que se encuentra actualmente registrado en la p&oacute;liza. Seleccione uno distinto');
+        		return false;
+        	}
+        }
+        
     }
     
     if(valido)
