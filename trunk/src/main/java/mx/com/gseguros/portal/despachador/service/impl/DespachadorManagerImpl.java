@@ -994,9 +994,11 @@ K                   ENCOLAR CON DATOS ORIGINALES
                             Map<String,String> detalleTramite=  siniestrosManager.obtenerTramiteCompleto(ntramite);
                             String cdtipflu = detalleTramite.get("CDTIPFLU");
                             logger.debug("Determinando si es flujo SICAPS o NO SICAPS cdtipflu: "+ cdtipflu + " ntramite: " + ntramite);
-            				if (documentoCotizacionCdtipfluNosicaps.equals(cdtipflu)){// si es no sicaps envio la notificacion
+                            flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,correosRecibidos);
+                            
+            				/*if (documentoCotizacionCdtipfluNosicaps.equals(cdtipflu)){// si es no sicaps envio la notificacion
             					flujoMesaControlManager.mandarCorreosStatusTramite(ntramite, cdsisrolSes, porEscalamiento, soloCorreosRecibidos,correosRecibidos);
-            				}
+            				}*/
                         } catch (Exception ex) {
                             logger.error("Error al enviar correos de estatus al turnar", ex);
                         }
