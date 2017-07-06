@@ -259,7 +259,7 @@ Ext.onReady(function()
                                                                         ,handler : 
                                                                             function (me){
                                                                                 me.up('window').destroy();
-                                                                                confirmar();
+                                                                                confirmar('no');
                                                                            }
                                                                            
                                                                        },
@@ -275,31 +275,31 @@ Ext.onReady(function()
                                                                         ,name    : 'documentoButton'
                                                                         ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
                                                                         ,handler  :function(){
-                                                                     var numRand=Math.floor((Math.random()*100000)+1);
-                                                                     debug(numRand);
-                                                                     centrarVentanaInterna(Ext.create('Ext.window.Window', {
-                                                                        title          : 'Vista previa'
-                                                                        ,width         : 700
-                                                                        ,height        : 500
-                                                                        ,collapsible   : true
-                                                                        ,titleCollapse : true
-                                                                        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-                                                                                         +'src="'+_p30_urlViewDoc+"?&path="+_RUTA_DOCUMENTOS_TEMPORAL+"&filename="+json2.smap2.pdfEndosoNom_o+"\">"
-                                                                                         +'</iframe>'
-                                                                        ,listeners     : {
-                                                                            resize : function(win,width,height,opt){
-                                                                                debug(width,height);
-                                                                                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-                                                                        }
-                                                                      }}).show());
-                                                                }
-                                                                        ,hidden   : _p44_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
+		                                                                     var numRand=Math.floor((Math.random()*100000)+1);
+		                                                                     debug(numRand);
+		                                                                     centrarVentanaInterna(Ext.create('Ext.window.Window', {
+		                                                                        title          : 'Vista previa'
+		                                                                        ,width         : 700
+		                                                                        ,height        : 500
+		                                                                        ,collapsible   : true
+		                                                                        ,titleCollapse : true
+		                                                                        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+		                                                                                         +'src="'+_p30_urlViewDoc+"?&path="+_RUTA_DOCUMENTOS_TEMPORAL+"&filename="+json2.smap2.pdfEndosoNom_o+"\">"
+		                                                                                         +'</iframe>'
+		                                                                        ,listeners     : {
+		                                                                            resize : function(win,width,height,opt){
+		                                                                                debug(width,height);
+		                                                                                $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+		                                                                        }
+		                                                                      }}).show());
+		                                                                }
+                                                                        //,hidden   : _p44_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
                                                                         } ]
                                                          });
                                             win.show();
                                         } else {
                                             debug('confirmando directamente');
-                                            confirmar();
+                                            confirmar('si');
                                         }
 		                        	} else {
 		                        		debug('Entrando a respuesta de error: ',json2.respuesta);
@@ -315,7 +315,7 @@ Ext.onReady(function()
 		                        
 		                    }); 
 		                    
-		                    function confirmar(){
+		                    function confirmar(confirmando){
 		                    	
 		                    	// Se crea variable para turnar cuando sea un endoso con autorizacion
 				            	var _p44_flujoAux = {};
@@ -341,6 +341,10 @@ Ext.onReady(function()
 					            	
 					            	json.smap1['confirmar'] = 'si';  
 					            }
+					            
+					            if(confirmando='si'){
+					            	json.smap1['confirmar'] = 'si';  
+					            }
 					            	    
                                                         
                                    
@@ -360,11 +364,7 @@ Ext.onReady(function()
                                             debug('### confirmar json3:',json3);
                                             if(json3.success){
                                             	//Se agrega condicion para Emitir endoso DIrectamente
-                                            	
-                                            	if(Ext.isEmpty(_p44_flujo)
-								                    ||Ext.isEmpty(_p44_flujo.aux)
-								                    ||_p44_flujo.aux.indexOf('onComprar')==-1){ 
-                                            		//
+                                            	function confirmaEndoso(){
                                             		var callbackRemesa = function(){
 	                                                    marendNavegacion(2);
 	                                                };
@@ -378,7 +378,15 @@ Ext.onReady(function()
 	                                                        ,callbackRemesa
 	                                                    );
 	                                                });
-                                            	}else{// if(_p3_flujoAux.endosoAutorizar==='onComprar_160'){
+                                            	
+                                            	}
+                                            	if(Ext.isEmpty(_p44_flujo)
+								                    ||Ext.isEmpty(_p44_flujo.aux)
+								                    ||_p44_flujo.aux.indexOf('onComprar')==-1){
+								                    	
+								                    	confirmaEndoso();
+								                    
+								                    }else{// if(_p3_flujoAux.endosoAutorizar==='onComprar_160'){
 								                    //si el flujo tiene este comodin ejecutaremos un turnado con el status indicado
 							                    	debug('_p44_flujoAux.endosoAutorizar: ',_p44_flujoAux.endosoAutorizar);
 								                    var ck = 'Turnando tr\u00e1mite';
@@ -387,78 +395,77 @@ Ext.onReady(function()
 								                        var status = _p44_flujoAux.endosoAutorizar.split('_')[1];
 								                        debug('status para turnar onComprar:',status,'.');
 								                        
-								                        _mask(ck);
-								                        Ext.Ajax.request(
-								                        {
-								                            url      : _GLOBAL_COMP_URL_TURNAR
-								                            ,params  :
-								                            {
-								                                'params.CDTIPFLU'   : _p44_flujo.cdtipflu
-								                                ,'params.CDFLUJOMC' : _p44_flujo.cdflujomc
-								                                ,'params.NTRAMITE'  : _p44_flujo.ntramite
-								                                ,'params.STATUSOLD' : _p44_flujo.status
-								                                ,'params.STATUSNEW' : status
-								                                ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
-								                                ,'params.SWAGENTE'  : 'S'
-								                            }
-								                            ,success : function(response)
-								                            {
-								                                _unmask();
-								                                var ck = '';
-								                                try
-								                                {
-								                                    var json = Ext.decode(response.responseText);
-								                                    debug('### turnar:',json);
-								                                    if(json.success)
-								                                    {
-								                                        mensajeCorrecto
-								                                        (
-								                                            'Tr\u00e1mite turnado'
-								                                            //,json.message
-								                                            ,'El tr\u00e1mite fue turnado para aprobaci\u00f3n del agente/promotor'
-								                                            ,function()
-								                                            {
-								                                                _mask('Redireccionando');
-								                                                Ext.create('Ext.form.Panel').submit(
-								                                                {
-								                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
-								                                                    ,standardSubmit : true
-								                                                });
-								                                            }
-								                                        );
-								                                       
-								                                    }
-								                                    else
-								                                    {
-								                                        mensajeError(json.message);
-								                                    }
-								                                }
-								                                catch(e)
-								                                {
-								                                    manejaException(e,ck);
-								                                }
-								                            }
-								                            ,failure : function()
-								                            {
-								                                _unmask();
-								                                errorComunicacion(null,'Error al turnar tr\u00e1mite');
-								                            }
-								                        });
+								                        if(!Ext.isEmpty(json3) && !Ext.isEmpty(json3.smap2) && !Ext.isEmpty(json3.smap2.pv_tarifica) && json3.smap2.pv_tarifica == 'SI'){
+								                        	
+								                        	_mask(ck);
+									                        Ext.Ajax.request( {
+									                            url      : _GLOBAL_COMP_URL_TURNAR
+									                            ,params  :{
+									                                'params.CDTIPFLU'   : _p44_flujo.cdtipflu
+									                                ,'params.CDFLUJOMC' : _p44_flujo.cdflujomc
+									                                ,'params.NTRAMITE'  : _p44_flujo.ntramite
+									                                ,'params.STATUSOLD' : _p44_flujo.status
+									                                ,'params.STATUSNEW' : status
+									                                ,'params.COMMENTS'  : 'Tr\u00e1mite cotizado'
+									                                ,'params.SWAGENTE'  : 'S'
+									                            }
+									                            ,success : function(response) {
+									                                _unmask();
+									                                var ck = '';
+									                                try{
+									                                    var json = Ext.decode(response.responseText);
+									                                    debug('### turnar:',json);
+									                                    if(json.success) {
+									                                        mensajeCorrecto(
+									                                            'Tr\u00e1mite turnado'
+									                                            //,json.message
+									                                            ,'El tr\u00e1mite fue turnado para aprobaci\u00f3n del agente/promotor'
+									                                            ,function(){
+									                                                _mask('Redireccionando');
+									                                                Ext.create('Ext.form.Panel').submit( {
+									                                                    url             : _GLOBAL_COMP_URL_MCFLUJO
+									                                                    ,standardSubmit : true
+									                                                });
+									                                            }
+									                                        );
+									                                       
+									                                    } else {
+									                                        mensajeError(json.message);
+									                                    }
+									                                }catch(e) {
+									                                    manejaException(e,ck);
+									                                }
+									                            }
+									                            ,failure : function() {
+									                                _unmask();
+									                                errorComunicacion(null,'Error al turnar tr\u00e1mite');
+									                            }
+									                        });
+								                        	
+									                        //Sacaendoso
+								                    
+										                    sacaEndoso(_p44_smap1.CDUNIECO,
+										                               _p44_smap1.CDRAMO,
+										                               _p44_smap1.ESTADO,
+										                               _p44_smap1.NMPOLIZA,
+										                               json3.smap2.pv_nmsuplem_o,
+										                               json3.smap2.pv_nsuplogi_o);
+						                
+								                        
+								                        }else{
+								                        	//Function para enviar a confirmar endoso directo ya que es un endoso B 
+															//no es necesario mandar Endoso con Autorizacion
+								                        	confirmaEndoso();
+								                        }
+								                        
+								                        
 								                    }
 								                    catch(e)
 								                    {
 								                        manejaException(e,ck);
 								                    }
 								               
-								               //Sacaendoso
-								                    
-							                    sacaEndoso(_p44_smap1.CDUNIECO,
-							                               _p44_smap1.CDRAMO,
-							                               _p44_smap1.ESTADO,
-							                               _p44_smap1.NMPOLIZA,
-							                               json3.smap2.pv_nmsuplem_o,
-							                               json3.smap2.pv_nsuplogi_o);
-						                
+								               
 						                    }
                                                 
                                             }
