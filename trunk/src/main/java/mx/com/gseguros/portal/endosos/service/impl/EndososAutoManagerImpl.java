@@ -3625,9 +3625,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paso = "Realizando PDF de Vista Previa de Autos";
 				logger.debug(paso);
 				String reporteEndosoPrevia = rdfEndosoPreviewIndi;
-				/*if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoGrupoInciso)){
+				if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoGrupoInciso)|| TipoFlotilla.Tipo_Flotilla.getCdtipsit().equals(tipoGrupoInciso)){
 					reporteEndosoPrevia = rdfEndosoPreview;
-				}*/
+				}
 				
 				String pdfEndosoNom = renderFechaHora.format(fechaHoy)+nmpoliza+"CotizacionPrevia.pdf";
 				
@@ -5427,7 +5427,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paso = "Realizando PDF de Vista Previa de Autos";
 				logger.debug(paso);
 				String reporteEndosoPrevia = rdfEndosoPreviewIndi;
-				if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoGrupoInciso)){
+				if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoGrupoInciso) ||TipoFlotilla.Tipo_Flotilla.getCdtipsit().equals(tipoGrupoInciso)){
 					reporteEndosoPrevia = rdfEndosoPreview;
 				}
 				
@@ -6793,7 +6793,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				paso = "Realizando PDF de Vista Previa de Autos";
 				logger.debug(paso);
 				String reporteEndosoPrevia = rdfEndosoPreviewIndi;
-				if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoflot)){
+				if(TipoFlotilla.Tipo_PyMES.getCdtipsit().equals(tipoflot)|| TipoFlotilla.Tipo_Flotilla.getCdtipsit().equals(tipoflot)){
 					reporteEndosoPrevia = rdfEndosoPreview;
 				}
 				

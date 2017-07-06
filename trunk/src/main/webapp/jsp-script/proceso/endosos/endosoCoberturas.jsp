@@ -379,6 +379,7 @@ function endcobSumit(form,confirmar)
                                                 			itemId    : '_p3_botonEnviar'
 					                                        ,xtype    : 'button'
 					                                        ,text     : 'Enviar'
+					                                        ,name    : 'enviarButton'
 					                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
 					                                        ,hidden   : Ext.isEmpty(_p3_flujo)
 		                                                    ,handler  : function(){
@@ -435,7 +436,7 @@ function endcobSumit(form,confirmar)
                                                                     }
                                                                   }}).show());
                                                             }
-                                                            ,hidden   : _p3_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
+                                                           // ,hidden   : _p3_smap1.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
                                                             } ]
                                              }).show();
                                             

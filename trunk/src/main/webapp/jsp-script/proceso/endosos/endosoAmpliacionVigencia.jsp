@@ -339,7 +339,7 @@ var _CONTEXT = '${ctx}';
 															        }
 															      }}).show());
 															}
-															,hidden   : paramsEntrada.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
+															//,hidden   : paramsEntrada.TIPOFLOT!= TipoFlotilla.Flotilla? false :true
 					                                        } ]
 										     }).show();
 										     

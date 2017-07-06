@@ -242,6 +242,7 @@ Ext.onReady(function()
 			                                                			itemId    : '_p3_botonEnviar'
 								                                        ,xtype    : 'button'
 								                                        ,text     : 'Enviar'
+								                                        ,name    : 'enviarButton'
 								                                        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
 								                                        ,hidden   : Ext.isEmpty(_p44_flujo)
 								                                        ,handler  : function(){
