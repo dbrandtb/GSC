@@ -198,7 +198,7 @@ Ext.onReady(function()
                             {
                                 json.flujo = _p44_flujo;
                             }*/
-                            
+                            debug('json a enviar:',json);
 		                    Ext.Ajax.request(
 		                    {
 		                        url       : _p44_urlConfirmar
@@ -259,7 +259,14 @@ Ext.onReady(function()
                                                                         ,handler : 
                                                                             function (me){
                                                                                 me.up('window').destroy();
-                                                                                confirmar('no');
+                                                                                if(Ext.isEmpty(_p44_flujo)
+																                    ||Ext.isEmpty(_p44_flujo.aux)
+																                    ||_p44_flujo.aux.indexOf('onComprar')==-1){
+																	            	
+																	            	confirmar('si'); 
+																	            }else{
+																	            	 confirmar('no');
+																	            }
                                                                            }
                                                                            
                                                                        },
@@ -316,7 +323,7 @@ Ext.onReady(function()
 		                    }); 
 		                    
 		                    function confirmar(confirmando){
-		                    	
+		                    	debug('confirmando***',confirmando);
 		                    	// Se crea variable para turnar cuando sea un endoso con autorizacion
 				            	var _p44_flujoAux = {};
 				            	
@@ -342,18 +349,21 @@ Ext.onReady(function()
 					            	json.smap1['confirmar'] = 'si';  
 					            }
 					            
-					            if(confirmando='si'){
+					            if(confirmando==='si'){
 					            	json.smap1['confirmar'] = 'si';  
 					            }
+					            if(confirmando==='no'){
+					            	json.smap1['confirmar'] = 'no';  
+					            }
 					            	    
-                                                        
+                                debug('json Confirmando***',json);                 
                                    
                                                         
                                 if(!Ext.isEmpty(_p44_flujo))
                                 {
                                     json.flujo = _p44_flujo;
                                 }
-                                
+                                debug('json Confirmando***',json);  
                                 Ext.Ajax.request(
                                     {
                                         url       : _p44_urlConfirmar
@@ -396,7 +406,6 @@ Ext.onReady(function()
 								                        debug('status para turnar onComprar:',status,'.');
 								                        
 								                        if(!Ext.isEmpty(json3) && !Ext.isEmpty(json3.smap2) && !Ext.isEmpty(json3.smap2.pv_tarifica) && json3.smap2.pv_tarifica == 'SI'){
-								                        	
 								                        	_mask(ck);
 									                        Ext.Ajax.request( {
 									                            url      : _GLOBAL_COMP_URL_TURNAR
@@ -451,11 +460,15 @@ Ext.onReady(function()
 										                               json3.smap2.pv_nmsuplem_o,
 										                               json3.smap2.pv_nsuplogi_o);
 						                
-								                        
+								                        	
+								                        	
 								                        }else{
 								                        	//Function para enviar a confirmar endoso directo ya que es un endoso B 
 															//no es necesario mandar Endoso con Autorizacion
 								                        	confirmaEndoso();
+								                        	
+								                        	
+								                        
 								                        }
 								                        
 								                        
