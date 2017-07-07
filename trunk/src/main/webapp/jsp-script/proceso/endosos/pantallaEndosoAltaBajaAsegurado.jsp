@@ -687,12 +687,14 @@ Ext.onReady(function()
                                                 Ext.Ajax.request({
                                                     url     : pvalidaSocioFamilia
                                                     ,params : {
-                                                        'smap1.cdunieco': panendabaseguInputSmap1.CDUNIECO,
-                                                        'smap1.cdramo'  : panendabaseguInputSmap1.CDRAMO,
-                                                        'smap1.estado'  : panendabaseguInputSmap1.ESTADO,
-                                                        'smap1.nmpoliza': panendabaseguInputSmap1.NMPOLIZA,
-                                                        'smap1.noSocio' : panEndAltBajAseValues['aux.otvalor49'],
-                                                        'smap1.familia' : panEndAltBajAseValues['aux.otvalor50'] 
+                                                        'smap1.cdunieco' : panendabaseguInputSmap1.CDUNIECO,
+                                                        'smap1.cdramo'   : panendabaseguInputSmap1.CDRAMO,
+                                                        'smap1.estado'   : panendabaseguInputSmap1.ESTADO,
+                                                        'smap1.nmpoliza' : panendabaseguInputSmap1.NMPOLIZA,
+                                                        'smap1.noSocio'  : panEndAltBajAseValues['aux.otvalor49'],
+                                                        'smap1.familia'  : panEndAltBajAseValues['aux.otvalor50'],
+                                                        'smap1.nmgrupo'  : null,
+                                                        'smap1.nmfamilia': null
                                                     }
                                                     ,success : function (response){
                                                         var resEspera  = Ext.decode(response.responseText).slist1[0];
@@ -732,7 +734,9 @@ Ext.onReady(function()
                                                         'smap1.estado'  : panendabaseguInputSmap1.ESTADO,
                                                         'smap1.nmpoliza': panendabaseguInputSmap1.NMPOLIZA,
                                                         'smap1.noSocio' : panEndAltBajAseValues['aux.otvalor49'],
-                                                        'smap1.familia' : panEndAltBajAseValues['aux.otvalor50'] 
+                                                        'smap1.familia' : panEndAltBajAseValues['aux.otvalor50'],
+                                                        'smap1.nmgrupo'  : null,
+                                                        'smap1.nmfamilia': null
                                                     }
                                                     ,success : function (response){
                                                         var resEspera  = Ext.decode(response.responseText).slist1[0];

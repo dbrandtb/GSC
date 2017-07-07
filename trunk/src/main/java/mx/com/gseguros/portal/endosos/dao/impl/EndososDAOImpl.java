@@ -6725,10 +6725,12 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsocio_i" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_familia_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsocio_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_familia_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmgrupo_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmfamilia_i", OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"SOCIO"  , "FAMILIA"
+					"SOCIO"  , "FAMILIA", "SOCIOTITULAR"
 			};
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));

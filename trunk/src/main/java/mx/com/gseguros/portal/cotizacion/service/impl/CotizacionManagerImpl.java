@@ -5155,7 +5155,13 @@ public class CotizacionManagerImpl implements CotizacionManager
 					codigosPostales = new HashMap<String, String>();
 				}
 				
-	            while (rowIterator.hasNext()&&resp.isExito()) 
+				String requeridoSucursal 	= "0";
+				String existeNoSocio    	= "0";
+				String existeCveFamilia 	= "0";
+				String valorNoSocioTitular 	= null;
+				Map<String,String> valores  = null;
+				int contador 				= 0;
+				while (rowIterator.hasNext()&&resp.isExito()) 
 	            {
 	                Row           row            = rowIterator.next();
 	                Date          auxDate        = null;
@@ -5172,6 +5178,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                String cveAsegurado    =  null;
 	                String fecanti         =  null;
 	                String feingreso       =  null;
+	                String identidad       =  null;
 	                
 	                if(Utils.isRowEmpty(row))
 	                {
@@ -5835,47 +5842,108 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                try
                 	{
 		                auxCell=row.getCell(19);
-		                if(pideNumCliemte&&
-		                		(auxCell==null||auxCell.getStringCellValue()==null||StringUtils.isBlank(auxCell.getStringCellValue()))
-		                )
-		                {
-		                	throw new ApplicationException("Necesito el numero de empleado");
-		                }
-		                logger.debug("IDENTIDAD: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                
-		                if(cdunieco.equalsIgnoreCase("1403")){
-		                	if(auxCell!=null){
-		                		//Validamos que en verdad
-		                		String identidad = auxCell.getStringCellValue();
-		                		String identidadModificada[] = identidad.split("\\-");
-		                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
-		                		logger.debug("Seccion 1 IDENTIDAD : {}",seccion1);
-		                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
-		                		logger.debug("Seccion 2 IDENTIDAD : {}",seccion2);
-		                		
-		                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
-		                			bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
-		                		}else{
-		                			//mandamos excepcion
-			                		throw new ApplicationException("No es numero");
-		                		}		                		
-		                	}else{
-		                		//mandamos excepcion
-		                		throw new ApplicationException("La identidad no puede ser null");
-		                	}
-		                }else{
-		                	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-		                }
-                	}
-	                catch(Exception ex)
-	                {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (T) de la fila ",fila," "));
-	                }
-	                finally
-	                {
+		                identidad = auxCell!=null?auxCell.getNumericCellValue()+"":"";
+		                if(pideNumCliemte&& (auxCell==null||identidad ==null||StringUtils.isBlank(identidad))){
+                			requeridoSucursal = "1";
+                			throw new ApplicationException("Necesito el numero de empleado");
+                		}
+
+	                	if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                		String identidadModificada[] = identidad.split("\\-");
+	                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
+	                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
+	                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
+	                			//Validacion para el No. de Socio y Clave Familiar
+	                			if(parentesco.equalsIgnoreCase("T")){
+	                				valorNoSocioTitular = seccion1;
+	                				contador = 0;
+	                				valores  = new LinkedHashMap<String,String>();
+	                				valores.put(seccion2 , seccion2);
+	                				bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                			}else{
+	                				if(!valorNoSocioTitular.equalsIgnoreCase(seccion1)){
+	                					existeNoSocio = "1";
+	                					throw new ApplicationException("Es diferente No. de Socio Empleado es diferente al del Titular.");
+	                				}else{
+	                					contador  = contador+1;
+	                					if (valores.containsKey(seccion2)){
+	                						existeCveFamilia = "1";
+	                						throw new ApplicationException("Se encuentra repetido la Cve Familiar.");
+	                					}
+	                					else{
+	                						valores.put(seccion2,seccion2);
+	                					}
+	                					bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                				}
+	                			}
+	                		}else{
+	                			requeridoSucursal = "1";
+	                			throw new ApplicationException("No es numero");
+	                		}
+                		}else{
+                			bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");    
+                		}
+                	}catch(Exception e) {
+	                	try {
+	                		logger.warn("error al leer identidad como numero, se intentara como string:",e);
+	                		auxCell=row.getCell(19);
+	                		identidad = auxCell!=null?auxCell.getStringCellValue():"";
+	                		//Validamos si es obligatorio
+	                		if(pideNumCliemte&& (auxCell==null||identidad ==null||StringUtils.isBlank(identidad))){
+                				requeridoSucursal = "1";
+                				throw new ApplicationException("La identidad no puede ir en blanco");
+                			}
+	                	
+	                		if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                			String identidadModificada[] = identidad.split("\\-");
+	                			String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
+	                			String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
+
+	                			if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
+	                				if(parentesco.equalsIgnoreCase("T")){
+	                					valorNoSocioTitular = seccion1;
+	                					contador = 0;
+	                					valores  = new LinkedHashMap<String,String>();
+	                					valores.put(seccion2 , seccion2);
+	                					bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                				}else{
+	                					if(!valorNoSocioTitular.equalsIgnoreCase(seccion1)){
+	                						existeNoSocio ="1";
+	                						throw new ApplicationException("Es diferente No. de Socio Empleado es diferente al del Titular.");
+	                					}else{
+	                						contador  = contador+1;
+	                						if (valores.containsKey(seccion2)){
+	                							existeCveFamilia = "1";
+	                							throw new ApplicationException("Se encuentra repetido la Cve Familiar.");
+	                						}else{
+	                							valores.put(seccion2 , seccion2);
+	                						}
+	                						bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                					}
+	                				}
+	                			}else{
+	                				requeridoSucursal = "1";
+	                				throw new ApplicationException("No es numero");
+	                			}
+	                		}else{
+	                			bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getStringCellValue())+"|":"|");    
+	                		}
+	                	}catch(Exception ex) {
+	                		filaBuena = false;
+	                		if(existeNoSocio.equalsIgnoreCase("1")){
+	                			bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' - El No. de Socio/Empleado no corresponde al titular. (T) de la fila ",fila," "));
+	                		}else if(existeCveFamilia.equalsIgnoreCase("1")){
+	                			bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' - Clave Familiar Duplicado. (T) de la fila ",fila," "));
+	                		}else if(requeridoSucursal.equalsIgnoreCase("1")){
+	                			bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' - Es requerido o no cumple el formato. (T) de la fila ",fila," "));
+	                		}
+	                		else{
+	                			bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' no cumple el formato. (T) de la fila ",fila," "));
+	                		}	                        
+	                	}
+                	} finally {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
-	                }
+                	}
 	                
 	              //FECHA DE RECONOCIMIENTO DE ANTIGUEDAD
 	                try
