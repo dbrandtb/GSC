@@ -1285,13 +1285,13 @@ public class AutosSIGSDAOImpl extends AbstractManagerDAO implements AutosSIGSDAO
     @Override
     public Map<String, String> cargaEndososB (String cdunieco, String cdramo, String nmpoliza, String cdusuari,
 			String cdtipsit, String cdsisrol, String cduniext, String ramo, String nmpoliex, String renuniext,
-			String renramo, String renpoliex, String feefect, String feproren) throws Exception 
+			String renramo, String renpoliex, String feefect, String feproren, String motend) throws Exception 
     {
     	Map<String,String>params=new LinkedHashMap<String,String>();
 			params.put("inNumsuc " , renuniext);
 			params.put("inNumram " , renramo);
 			params.put("inNumpol " , renpoliex);
-			params.put("inMotivo " , "75");
+			params.put("inMotivo " , motend);
 		logger.debug(
 				new StringBuilder()
 				.append("\n********************************")

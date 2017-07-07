@@ -2125,7 +2125,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String caseIdRstn      = null;
 		Date fechaHoy          = new Date();
 		boolean esFlotilla     = false;
-		boolean endososB=false;
+		//boolean endososB       = false;
 		
 		tipoGrupoInciso = "I";
 		
@@ -2619,20 +2619,34 @@ public class ComplementariosAction extends PrincipalCoreAction
                     Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
                     try
                		{
-                    	String[] idEndosos = null; 
+                    	//String[] idEndososLibres = null;
+                    	//List<String> idEndososLibres = null;
                     	if(!slist1.isEmpty())
                        	{
-                       		idEndosos = new String[slist1.size()];
-                       		int i=0;
+                       		//idEndososLibres = new String[slist1.size()];
+                    		List<String> idEndososLibres = new ArrayList<String>();
+                       		int i=0, motend=0;
                        		for(Map<String,String>endoso:slist1)
-                     		    {
-                       			idEndosos[i]=endoso.get("id");
+                     		{
+                       			motend = Integer.parseInt(endoso.get("id").split("-")[1]);
+                       			
+                       			if(motend == 75){
+                       				//idEndososLibres[i]=endoso.get("id").split("-")[0];
+                       				idEndososLibres.add(endoso.get("id").split("-")[0]);
+                       			}
+                       			else if(motend == 76){
+                       				//tipsup27
+                       				
+                       				//endososManager.guardarEndosoBeneficiarios(cdunieco, cdramo, estado, nmpolizaEmitida, nmsituac, mpoliperMpersona, cdelemen, cdusuari, cdtipsup, ntramite, cdsisrol, usuarioSesion, flujo, feefecto)
+                       			}
+                       			
                        			i++;
-                     		    }
-                       	}
-                    	String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&endosos=",Arrays.toString(idEndosos).replace("[", "").replace("]", ""));
-                    	HttpUtil.sendPost(sigsRenovarEndososB,params);
-                    	endososB = true;
+                     		}
+                       		//String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&endosos=",Arrays.toString(idEndososLibres).replace("[", "").replace("]", ""));
+                        	String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&ntramite=",ntramite,"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&endosos=",idEndososLibres.toString().replace("[", "").replace("]", ""));
+                        	HttpUtil.sendPost(sigsRenovarEndososB,params);
+                        	//endososB = true;
+                       	}                    	                    	
                		}
                		catch (Exception ex)
                		{
@@ -3000,45 +3014,64 @@ public class ComplementariosAction extends PrincipalCoreAction
 								);
 					}
 					
-					if(endososB){
-						/**
-						 * Para Endosos B renovados inciso 1
-						 */
-						Map<String,String> endososBrenovados = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,"",sucursalGS,cdRamoGS,this.nmpolAlt,sucursalGS,cdRamoGS,this.nmpolAlt,"","");
+					/*if(endososB){
+	
+						int[] motend = {75,76};
 						
-						if(endososBrenovados != null && !endososBrenovados.isEmpty()){
-							Iterator it = endososBrenovados.entrySet().iterator();
-							while(it.hasNext()){
-								Map.Entry entry = (Map.Entry) it.next();
-								String idEndosoB = (String)entry.getKey();
-								
-								parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,"+idEndosoB;
-								logger.debug("URL Generada para Endosos B Inciso 1: "+ urlEndoB + parametros);
-								this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlEndoB + parametros+"\">Endoso B Libre</a>";
-								
-								documentosManager.guardarDocumento(
-										cdunieco
-										,cdramo
-										,"M"
-										,nmpolizaEmitida
-										,nmsuplemEmitida
-										,new Date()
-										,urlEndoB + parametros
-										,"Endoso B Libre"
-										,nmpoliza
-										,ntramite
-										,TipoEndoso.ENDOSO_B_LIBRE.getCdTipSup().toString()
-										,Constantes.SI
-										,null
-										,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-										,"0"
-										,Documento.EXTERNO_CARATULA_B
-										,null
-										,null, false
-										);
+						for(int i = 0; i < motend.length; i++){
+							Map<String,String> endososBrenovados = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,"",sucursalGS,cdRamoGS,this.nmpolAlt,sucursalGS,cdRamoGS,this.nmpolAlt,"","",motend[i]+"");							
+							
+							if(endososBrenovados != null && !endososBrenovados.isEmpty()){
+								Iterator it = endososBrenovados.entrySet().iterator();
+								while(it.hasNext()){
+									Map.Entry entry = (Map.Entry) it.next();
+									String idEndosoB = (String)entry.getKey();
+									
+									String destipend = "";
+									String enumtipend = "";
+									
+									switch(motend[i]){
+									case 75:
+										destipend = "Car\u00e1tula Endoso B";
+										enumtipend = TipoEndoso.ENDOSO_B_LIBRE.getCdTipSup().toString();
+										break;
+										
+									case 76:
+										destipend = "Beneficiario";
+										enumtipend = TipoEndoso.BENEFICIARIO_AUTO.getCdTipSup().toString();
+										break;
+									}
+									
+									parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,"+idEndosoB;
+									logger.debug("URL Generada para Endosos B Inciso 1: "+ urlEndoB + parametros);
+									this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlEndoB + parametros+"\">" + destipend + "</a>";
+									
+									documentosManager.guardarDocumento(
+											cdunieco
+											,cdramo
+											,"M"
+											,nmpolizaEmitida
+											,nmsuplemEmitida
+											,new Date()
+											,urlEndoB + parametros
+											,destipend
+											,nmpoliza
+											,ntramite
+											,enumtipend
+											,Constantes.SI
+											,null
+											//,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+											,TipoTramite.ENDOSO.getCdtiptra()
+											,"0"
+											,Documento.EXTERNO_CARATULA_B
+											,null
+											,null, false
+											);
+								}
 							}
 						}						
-					}
+						
+					}*/
 					
 					if("C".equalsIgnoreCase(tipoGrupoInciso)){
 						/**
@@ -4778,22 +4811,26 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			if(StringUtils.isNotBlank(infoPoliza.get("RENUNIEXT")) && StringUtils.isNotBlank(infoPoliza.get("RENRAMO")) && StringUtils.isNotBlank(infoPoliza.get("RENPOLIEX")) && (infoPoliza.get("RENRAMO").contains("711") || infoPoliza.get("RENRAMO").contains("721")))
 			{
-				map2  = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,infoPoliza.get("cdsisrol"),infoPoliza.get("cduniext"),infoPoliza.get("ramo"),infoPoliza.get("nmpoliex"),infoPoliza.get("RENUNIEXT"),infoPoliza.get("RENRAMO"),infoPoliza.get("RENPOLIEX"),infoPoliza.get("feefecto"),infoPoliza.get("feproren"));
-				if(map2!=null && !map2.isEmpty())
-				{	
-					Iterator It = map2.entrySet().iterator();
-					slist1 = new ArrayList<Map<String, String>>();
-			        while (It.hasNext()) {
-			        	Map.Entry entry = (Map.Entry) It.next();
-			        	String idEndosoB = (String)entry.getKey();
-			        	String descEndosoB = (String)entry.getValue();
-			        	HashMap<String, String> agregar = new HashMap<String, String>();
-			        	agregar.put("renovar","false");
-			        	agregar.put("id",idEndosoB.trim());
-			        	agregar.put("descripcion",descEndosoB.trim());
-			        	slist1.add(agregar);
-			        }
-				}
+				int[] motend = {75,76};
+				slist1 = new ArrayList<Map<String, String>>();
+				
+				for(int i = 0; i < motend.length; i++){
+					map2  = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,infoPoliza.get("cdsisrol"),infoPoliza.get("cduniext"),infoPoliza.get("ramo"),infoPoliza.get("nmpoliex"),infoPoliza.get("RENUNIEXT"),infoPoliza.get("RENRAMO"),infoPoliza.get("RENPOLIEX"),infoPoliza.get("feefecto"),infoPoliza.get("feproren"),motend[i]+"");
+					if(map2!=null && !map2.isEmpty())
+					{	
+						Iterator It = map2.entrySet().iterator();						
+				        while (It.hasNext()) {
+				        	Map.Entry entry = (Map.Entry) It.next();
+				        	String idEndosoB = (String)entry.getKey()+"-"+motend[i];
+				        	String descEndosoB = (String)entry.getValue();
+				        	HashMap<String, String> agregar = new HashMap<String, String>();
+				        	agregar.put("renovar","false");
+				        	agregar.put("id",idEndosoB.trim());
+				        	agregar.put("descripcion",descEndosoB.trim());
+				        	slist1.add(agregar);
+				        }
+					}
+				}				
 			}
 	    }
 		catch(Exception ex)

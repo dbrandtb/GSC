@@ -74,5 +74,5 @@ public interface AutosSIGSDAO {
     
     public Map<String, String> cargaEndososB(String cdunieco, String cdramo, String nmpoliza, String cdusuari,
 			String cdtipsit, String cdsisrol, String cduniext, String ramo, String nmpoliex, String renuniext,
-			String renramo, String renpoliex, String feefect, String feproren)throws Exception;
+			String renramo, String renpoliex, String feefect, String feproren, String motend)throws Exception;
 }
