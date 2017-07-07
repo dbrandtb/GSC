@@ -24,9 +24,7 @@
 <!--<script src="${ctx}/resources/jsp-script/extjs4/complementarios.js"></script>-->
 <script>
             var contexto='${ctx}';
-            var saveList = null;
-            var storeDocumentos;
-            var ventanaEndoso;
+            
             
             var panDatComMap1 = <s:property value="%{convertToJSON('map1')}" escapeHtml="false" />;
             debug('panDatComMap1:',panDatComMap1,'.');
@@ -49,7 +47,6 @@
             var urlCargarCatalogos           = '<s:url namespace="/catalogos"       action="obtieneCatalogo"             />';
             var urlRecotizar                 = '<s:url namespace="/"                action="recotizar"                   />';
             var urlEmitir                    = '<s:url namespace="/"                action="emitir"                      />';
-            var urlEmitirAutos               = '<s:url namespace="/"                action="emitirAutosInd"                      />';
             var urlReintentarWS              = '<s:url namespace="/"                action="reintentaWSautos"            />';
             var panDatComUrlDoc              = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza"     />';
             var panDatComUrlDoc2             = '<s:url namespace="/documentos"      action="ventanaDocumentosPolizaClon" />';
@@ -67,8 +64,8 @@
             var _URL_CONSULTA_CLAUSU         = '<s:url namespace="/catalogos"       action="consultaClausulas"           />';
             var _URL_ObtieneValNumeroSerie   = '<s:url namespace="/emision" 		action="obtieneValNumeroSerie"       />';
             var urlEditarAsegurados = '${ctx}<s:property value="map1.urlAsegurados" />?now=${now}';
-            var urlServidorReports  = '<s:property value="rutaServidorReports"         />';
-            var complerepSrvUsr     = '<s:property value="passServidorReports"         />';
+            var urlServidorReports  = '<s:text name="ruta.servidor.reports"         />';
+            var complerepSrvUsr     = '<s:text name="pass.servidor.reports"         />';
             var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarValoresSituacion"               />';
             var urlPantallaBeneficiarios = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
             
@@ -76,8 +73,7 @@
             var urlCargar                    = '<s:url namespace="/"                action="cargarDatosComplementarios"  />';
             var url_guarda_empleado         = '<s:url namespace="/emision"                action="guardaEmpleados"  />';
             var url_admin_ret                           = '<s:url namespace="/emision"                action="obtieneAdminRet"  />';
-            var cargaEndososB						= '<s:url namespace="/"           action="cargaEndososB" />';
-            
+
             if(!Ext.isEmpty(panDatComFlujo))
             {
                 datComUrlMC = _GLOBAL_COMP_URL_MCFLUJO;
@@ -100,8 +96,6 @@
             	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ms.nombre" />';
             }else if(inputCdtipsit == 'RI'){
             	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ri.nombre" />';
-            }else if(inputCdtipsit == 'GMPI'){
-                _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.gmpi.nombre" />';
             }
             
             if(Ext.isEmpty(_NOMBRE_REPORTE_CARATULA)){
@@ -451,7 +445,7 @@ function _p29_guardarComplementario(callback)
     {
         form.setLoading(true);
         //dxn
-        if( inputCdtipsit!='MC' && inputCdtipsit!='AT' && inputCdtipsit!='GMPI'){
+        if( inputCdtipsit!='MC' && inputCdtipsit!='AT'){
             
             guardaEmpleado();
         }
@@ -709,38 +703,11 @@ function _p29_emitirClicComplementarios()
 	                                                                {
 	                                                                    var me=this;
 	                                                                    me.up().up().setLoading(true);
-	                                                                    var urlEmision = "";
-	                                                                    var paramsEmi = "";
-	                                                                    var jsonparams = "";
-	                                                                    
-	                                                                    if(inputCdtipsit=='AF' && saveList != null){	
-	                                                                    	//console.log("savelist: " + JSON.stringify(saveList));
-	                                                                    	urlEmision = urlEmitirAutos;
-	                                                                    	jsonparams = 
-	                                                                    	{
-    	                                                                    	panel1 :
-    	                                                                        {
-    	                                                                         	  pv_nmpoliza : inputNmpoliza
-    	                                                                             ,pv_ntramite : inputNtramite	                                                                             
-    	                                                                        }
-    	                                                                	    ,panel2 :
-    	                                                                	    {
-    	                                                                	           pv_estado  : inputEstado
-    	                                                                	         ,pv_cdtipsit : inputCdtipsit
-    	                                                                	         ,pv_nmpoliza : inputNmpoliza
-    	                                                                	         ,pv_cdramo   : inputCdramo
-    	                                                                	         ,pv_cdunieco : inputCdunieco
-    	                                                                	         ,caseIdRstn  : _NVL(panDatComMap1.caseIdRstn)
-    	                                                                	    }
-    	                                                                        ,slist1 : saveList
-    	                                                                    };
-	                                                                    	
-	                                                                    	console.log("jsonparams: " + JSON.stringify(jsonparams));
-	                                                                    }
-	                                                                    else{	   
-	                                                                    	urlEmision = urlEmitir;	                                                                    
-	                                                                    	paramsEmi = 
-	                                                                    	{
+	                                                                    Ext.Ajax.request(
+	                                                                    {
+	                                                                        url     : urlEmitir
+	                                                                        ,params :
+	                                                                        {
 	                                                                            'panel1.pv_nmpoliza'  : inputNmpoliza
 	                                                                            ,'panel1.pv_ntramite' : inputNtramite
 	                                                                            ,'panel2.pv_cdramo'   : inputCdramo
@@ -748,14 +715,7 @@ function _p29_emitirClicComplementarios()
 	                                                                            ,'panel2.pv_estado'   : inputEstado
 	                                                                            ,'panel2.pv_nmpoliza' : inputNmpoliza
 	                                                                            ,'panel2.pv_cdtipsit' : inputCdtipsit
-	                                                                            ,'panel2.caseIdRstn'  : _NVL(panDatComMap1.caseIdRstn)
-	                                                                        };
-	                                                                    }
-	                                                                    Ext.Ajax.request(
-	                                                                    {
-	                                                                        url     : urlEmision
-	                                                                        ,params : paramsEmi
-	                                                                        ,jsonData: jsonparams
+	                                                                        }
 	                                                                        ,success:function(response)
 	                                                                        {
 	                                                                            me.up().up().setLoading(false);
@@ -763,18 +723,6 @@ function _p29_emitirClicComplementarios()
 	                                                                            debug(json);
 	                                                                            if(json.success==true)
 		                                                            	    	{
-		                                                            	    	    if ((!Ext.isEmpty(panDatComFlujo)) && 'RSTN' === panDatComFlujo.aux) {
-		                                                            	    	        mensajeCorrecto(
-		                                                            	    	            'P\u00f3liza emitida',
-		                                                            	    	            'Se ha emitido la p\u00f3liza ' + json.panel2.nmpoliex,
-		                                                            	    	            function () {
-		                                                            	    	                _mask();
-		                                                            	    	                location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?nmpoliex=' + json.panel2.nmpoliex;
-		                                                            	    	            }
-		                                                            	    	        );
-		                                                            	    	        return;
-		                                                            	    	    }
-		                                                            	    	    
 		                                                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
 		                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
 		                                                            	    		
@@ -785,7 +733,6 @@ function _p29_emitirClicComplementarios()
 			                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 			                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
 			                                                            	    		Ext.getCmp('botonPagar').setDisabled(false);
-			                                                            	    		_fieldById('venDocVenEmiBotEndososB').hide();
 			                                                            	    		
 			                                                            	    		Ext.Msg.show({
 		                                                                                    title    :'Aviso'
@@ -835,7 +782,6 @@ function _p29_emitirClicComplementarios()
 		                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 		                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
 		                                                            	    		Ext.getCmp('botonPagar').setDisabled(false);
-		                                                            	    		_fieldById('venDocVenEmiBotEndososB').hide();
 		                                                            	    		
 	    																			Ext.getCmp('botonReenvioWS').hide();
 	                                                                                
@@ -1158,24 +1104,6 @@ function _p29_emitirClicComplementarios()
 	                                                                    me.up().up().destroy();
 	                                                                }
 	                                                            }
-	                                                            ,{
-	                                                                itemId   : 'venDocVenEmiBotEndososB'
-                                                                    ,xtype   : 'button'
-                                                                    ,text    : 'Renovar endosos B'
-                                                                    ,icon    : '${ctx}/resources/fam3icons/icons/application_edit.png'
-                                                                    ,hidden : !Ext.isEmpty(panDatComFlujo) ? (panDatComFlujo.cdflujomc != 220) : true
-                                                                   	,handler      : function()
-                                                                   	{	                                                                   			                                                                  
-                                                                		if(storeDocumentos==null)
-                                    									{
-                                                                			cargaStoreB(mostrarVentanaEndoso);
-                                    									}
-                                                                		else
-                                                                   	    {    
-                                                                			mostrarVentanaEndoso();
-                                                                   	    }
-                                                                   	}
-                                                                }
 	                                                        ],
 	                                                        listeners : {
 	                                                            afterrender : function(me){
@@ -1270,16 +1198,6 @@ function _p29_emitirClicComplementarios()
                     ]
                 });
                 
-                Ext.define('modeloRenovarEndososB'
-          		    ,{extend: 'Ext.data.Model'
-                      ,fields:
-                        [
-             	   		       {type:'string' ,name:'id'         }
-                            ,{type:'string' ,name:'descripcion'}
-                            ,{type:'boolean',name:'renovar'    }
-           		       ]
-                  });
-                
                 accordion=Ext.create('Ext.tab.Panel',
                 {
                 	title:'Tr&aacute;mite '+inputNtramite,
@@ -1320,21 +1238,6 @@ function _p29_emitirClicComplementarios()
                                 {
                                     window.parent.scrollTo(0,150+p.y);
                                 }*/
-                            	activate: function(){
-                        			try{
-                        		        if(inputCdramo==Ramo.ServicioPublico){
-                        		        	Ext.ComponentQuery
-                        		        	.query("[fieldLabel*='(FRONTERIZO)'],[fieldLabel*='TIPO DE CAMBIO AL D'],[fieldLabel*='PAQUETE'],[fieldLabel*='NOMBRE CLIENTE'],[fieldLabel*='TIPO PERSONA'],[fieldLabel*='FECHA DE NACIMIENTO DEL CONTRATANTE']")
-                        		        	.forEach(function(it){ 
-                        		    	    		it.allowBlank=true; 
-                        		    	    		it.hide();
-                        		        		}
-                        		        	);
-                        		    	}
-                        		    }catch(e){
-                        		    	debugError(e);
-                        		    }
-                        		},
                                 afterrender:function(tab)
                                 {
                                 	debug('afterrender tabPanelValosit');
@@ -1709,7 +1612,7 @@ function _p29_emitirClicComplementarios()
 		                                    
 		                                        try{
 		                                          
-		                                            if(inputCdtipsit=='MC' || inputCdtipsit=='AT' || inputCdtipsit=='GMPI'){
+		                                            if(inputCdtipsit=='MC' || inputCdtipsit=='AT'){
                                                        
                                                         return;
                                                     }
@@ -2662,9 +2565,6 @@ function _p29_emitirClicComplementarios()
                                                                                         cmt_modificado = replaceAll(cmt_modificado,'Ú','UUUUU');
                                                                                         cmt_modificado = replaceAll(cmt_modificado,'Ñ','NNNNN');
                                                                                         cmt_modificado = replaceAll(cmt_modificado,',','ccccc');
-                                                                                        cmt_modificado = replaceAll(cmt_modificado,'&','qqq');
-                                                                                        cmt_modificado = replaceAll(cmt_modificado,'ü','rrrrr');
-                                                                                        cmt_modificado = replaceAll(cmt_modificado,'Ü','RRRRR');
                                                                                         Ext.Ajax.request(
                                                                                         {
                                                                                             url     : compleUrlGuardarCartoRechazo
@@ -2890,7 +2790,7 @@ function _p29_emitirClicComplementarios()
 			            {
 			                itemId       : '_datcom_panelFlujo'
 			                ,title       : 'ACCIONES'
-			                ,hidden      : Ext.isEmpty(panDatComFlujo) || 'RSTN' === panDatComFlujo.aux
+			                ,hidden      : Ext.isEmpty(panDatComFlujo)
 			                ,buttonAlign : 'left'
 			                ,buttons     : []
 			                ,listeners   :
@@ -3024,7 +2924,6 @@ function _p29_emitirClicComplementarios()
                                 	    		Ext.getCmp('botonPagar').setDisabled(false);
                                 	    		Ext.getCmp('botonReenvioWS').setDisabled(true);
                                 	    		Ext.getCmp('botonReenvioWS').hide();
-                                	    		_fieldById('venDocVenEmiBotEndososB').hide();
                                 	    		
                                 	    		_mensajeEmail = json.mensajeEmail;
 												Ext.getCmp('botonEnvioEmail').enable();
@@ -3168,9 +3067,6 @@ function _p29_emitirClicComplementarios()
 		            }
 		        }).showAt(500,0);
                 venDocuTramite.collapse();
-                if ((!Ext.isEmpty(panDatComFlujo)) && 'RSTN' === panDatComFlujo.aux) {
-                    venDocuTramite.hide();
-                }
                 //para ver documentos en vivo
                 
                 //codigo dinamico recuperado de la base de datos
@@ -3786,140 +3682,6 @@ function _p30_cargarCorreos(ntramite)
             errorComunicacion();
          }
     })
-}
-
-//Renovacion de Endosos B
-function cargaStoreB(callback)
-{
-	var json =
-    {
-         map1  : panDatComMap1
-        ,flujo : panDatComFlujo
-    };
-		  Ext.Ajax.request(
-	    {
-	         url      : cargaEndososB
-	        ,jsonData : json 
-	        ,success:function(response)
-	        {
-	            var json=Ext.decode(response.responseText);
-	            var testStoreEndososB= json.slist1;
-	            debug('### emitir:',json.slist1);
-	            if(json.success==true)
-	            { 
-		            storeDocumentos = Ext.create('Ext.data.Store'
-		            ,{
-				       	 model:'modeloRenovarEndososB'
-				        ,data : testStoreEndososB
-			         });
-					callback();
-	            }
-	            else
-	            {
-	            	 mensajeError(json.message);
-	            }
-	        }
-	        ,failure:function()
-	        {
-	            errorComunicacion();
-	        }
-	    });
-}
-
-function mostrarVentanaEndoso()
-{
-    if(storeDocumentos!=null)
-    {
-    	ventanaEndoso =
-        centrarVentanaInterna(
-		Ext.create('Ext.window.Window' 
-    	      	,{
-    	      	     xtype    : 'grid'
-    				,title    : 'Endosos B'
-    	      	   	,closable : false
-    	      	    ,modal    : true
-    	      	    ,height   : 200
-    	      	    ,width    : 400
-    	      	    ,layout   : 'fit'
-    	      	    ,renderTo : 'maindiv'
-    	      	    ,items    : 
-    	      	    {
-    	      	      xtype   : 'grid'
-    	      	     ,border  : false
-    	      	     ,columns :
-    	      	      [ 
-    		                  { 
-    		                     header      : 'Renovar'
-    		                    ,dataIndex   : 'renovar'
-    		                    ,xtype       : 'checkcolumn'
-    		                    ,menuDisabled: true
-    		                    ,width       : 80
-    		                  }
-    		                 ,{ 
-    		                      header      : 'No.Endoso'
-    			                 ,dataIndex   : 'id'
-    			                 ,hidden      : false
-    			                 ,width       : 40
-    			              }
-    		                 ,{
-    		                	 header      :'Detalle'
-    		                	,dataIndex   :'descripcion'
-    		                	,flex        : 1
-    		                  }
-    					  ]
-    	      		      ,store      : storeDocumentos
-    					  ,buttonAlign: 'center' 
-    					  ,buttons    :
-    					   [
-    						   {
-    								 text    : 'Guardar'
-    								,icon    :'${ctx}/resources/fam3icons/icons/accept.png'
-    								,handler : function() 
-    								{
-    									if(storeDocumentos.getUpdatedRecords().length==0)
-    									{ventanaEndoso.close();}
-
-    									seteoListaEndosos();
-    								}
-    						    }
-    						]
-    					}
-    	           	,listeners:
-    	           	{
-    	           		af: function(me)
-    			        {
-    	           			me.load();
-    			        }
-    	           	}
-    	      	}).show()
-        );
-    }
-}
-
-function seteoListaEndosos()
-{
-	if(storeDocumentos!=null)
-    {
-	    saveList = []; var i=0;
-		storeDocumentos.data.items.forEach
-		(
-			function(record)
-		    {
-				if(record.data.renovar)
-				{
-					saveList.push(record.data);
-				}
-				if((i+1) == storeDocumentos.getUpdatedRecords().length)
-				{
-					if(ventanaEndoso!=undefined)
-					{
-						ventanaEndoso.close();
-					}
-				}
-				i++;
-			}
-		);
-    }
 }
 
         <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>

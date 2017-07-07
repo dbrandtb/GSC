@@ -28,7 +28,7 @@ public class WebServicesDAOImpl extends AbstractManagerDAO implements WebService
     protected class ObtieneOpcionesLiga extends StoredProcedure {
     	
     	protected ObtieneOpcionesLiga(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_WS_GET_TBITACOBROS_ALL");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_WS_GET_TBITACOBROS_ALL");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
@@ -54,7 +54,7 @@ public class WebServicesDAOImpl extends AbstractManagerDAO implements WebService
     protected class ObtieneDetallePeticionWS extends StoredProcedure {
     	
     	protected ObtieneDetallePeticionWS(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_WS_GET_TBITACOBROS_X_SEQ");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_WS_GET_TBITACOBROS_X_SEQ");
     		declareParameter(new SqlParameter("pv_seqidws_i", OracleTypes.VARCHAR));
     		String[] cols = new String[]{
     				"CDUNIECO" , "CDRAMO" , "ESTADO" , "NMPOLIZA" , "NMSUPLEM" , "NTRAMITE" , "CDURLWS" , "METODOWS" , "XMLIN"
@@ -79,7 +79,7 @@ public class WebServicesDAOImpl extends AbstractManagerDAO implements WebService
 	protected class EliminaPeticionWS extends StoredProcedure {
 
 		protected EliminaPeticionWS(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_WS_ELIMINA_TBITACOBROS");
+			super(dataSource, "PKG_SATELITES_PRE.P_WS_ELIMINA_TBITACOBROS");
 			
 			declareParameter(new SqlParameter("pv_seqidws_i", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));

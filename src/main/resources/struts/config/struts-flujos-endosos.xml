@@ -973,10 +973,6 @@
         <action name="includes/claveAutoFlujo" class="EndososAction" >
             <result name="success">/jsp/extjs4/ventanaClaveAuto.jsp</result>
         </action>
-        
-        <action name="validaSocioFamilia" class="EndososAction" method="validaSocioFamilia">
-            <result name="success" type="json" />
-        </action>
     
 </package>
 

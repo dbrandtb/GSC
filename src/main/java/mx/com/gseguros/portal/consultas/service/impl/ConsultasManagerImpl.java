@@ -1139,13 +1139,6 @@ public class ConsultasManagerImpl implements ConsultasManager
         return consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
                 
     }
-    
-    @Override
-    public List<Map<String,String>> obtieneRangoPeriodoGracia(String pv_cdramo_i, String pv_cdtipsit_i, String pv_cdagente_i)
-    		throws Exception{
-        return consultasDAO.obtieneRangoPeriodoGracia(pv_cdramo_i, pv_cdtipsit_i, pv_cdagente_i);
-                
-    }
 
     @Override
     public boolean esDxn(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception{
@@ -1168,15 +1161,5 @@ public class ConsultasManagerImpl implements ConsultasManager
             Utils.generaExcepcion(ex, paso);
         }
         return esDXN;
-    }
-    
-    @Override
-	public Map<String,String>cargarDatosClonacion (String nmtramite)throws Exception {
-	    return consultasDAO.cargarDatosClonacion(nmtramite);
-	}
-
-    @Override
-    public String obtienePermisoEdicionClonacion (String cdsisrol)throws Exception {
-    	return consultasDAO.obtienePermisoEdicionClonacion(cdsisrol);
     }
 }
