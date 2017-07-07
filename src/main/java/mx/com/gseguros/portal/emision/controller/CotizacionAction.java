@@ -4897,6 +4897,14 @@ public class CotizacionAction extends PrincipalCoreAction
 					codigosPostales = new HashMap<String, String>();
 				}
 				
+				String requeridoSucursal 	= "0";
+				String existeNoSocio    	= "0";
+				String existeCveFamilia 	= "0";
+				String noSocioTitular    	= "0";
+				String valorNoSocioTitular 	= null;
+				Map<String,String> valores  = null;
+				int contador 				= 0;
+				
 	            while (rowIterator.hasNext()&&exito) {
 	                Row           row            = rowIterator.next();
 	                Date          auxDate        = null;
@@ -4914,6 +4922,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                
 	                String parentesco      = null;
 	                String dependiente     = null;
+	                String existeDepend    = null;
 	                String nombre          = "";
 	                double cdgrupo         = -1d;
 	                int total              = 1;
@@ -4925,6 +4934,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                String fechaNacAfectad = null;
 	                int errorSubcobertura  = 0;
 	                String banCertificado  = "0";
+	                String identidad       = null;
 	                //GRUPO
 	                try {
 	                	cdgrupo = row.getCell(0).getNumericCellValue();
@@ -4940,7 +4950,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	                //CERTIFICADO
 	                try {
 	                    auxCell=row.getCell(1);
-	                    dependiente = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|";
+	                    dependiente  = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"0|";
+	                    existeDepend = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"":"";
 	                    if(auxCell!=null){
 	                        HashMap<String, Object> paramCertificado = new HashMap<String, Object>();
                             paramCertificado.put("pv_cdunieco_i", cdunieco);
@@ -4966,6 +4977,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                    logger.error("error al leer dependiente como numero, se intentara como string:",ex);
 	                    try {
 	                        dependiente = row.getCell(1).getStringCellValue()+"|";
+	                        existeDepend = row.getCell(1).getStringCellValue();
 	                        if("|".equals(dependiente)) {
 	                            dependiente = "0|";
 	                            logger.debug("CERTIFICADO: "+dependiente);
@@ -5302,39 +5314,150 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
 	                
-                    //IDENTIDAD NO.DE EMPLEADO
+                    //IDENTIDAD NO.DE EMPLEADO NUEVA VERSION
 	                try {
-		                auxCell=row.getCell(19);
-		                logger.debug("IDENTIDAD: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-		                
-		                if(cdunieco.equalsIgnoreCase("1403")){
-		                	if(auxCell!=null){
-		                		//Validamos que en verdad
-		                		String identidad = auxCell.getStringCellValue();
-		                		String identidadModificada[] = identidad.split("\\-");
-		                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
-		                		logger.debug("Seccion 1 IDENTIDAD : {}",seccion1);
-		                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
-		                		logger.debug("Seccion 2 IDENTIDAD : {}",seccion2);
-		                		
-		                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
-		                			bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
-		                		}else{
-		                			//mandamos excepcion
-			                		throw new ApplicationException("No es numero");
-		                		}		                		
-		                	}else{
-		                		//mandamos excepcion
-		                		throw new ApplicationException("La identidad no puede ser null");
-		                	}
-		                }else{
-		                	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-		                }
-                	} catch(Exception ex) {
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (T) de la fila ",fila," "));
+	                    auxCell=row.getCell(19);
+	                    identidad = auxCell!=null?auxCell.getNumericCellValue()+"":"";
+	                    
+	                    if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                        String identidadModificada[] = identidad.split("\\-");
+	                        String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
+	                        String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
+	                        if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
+	                            //Validacion para el No. de Socio y Clave Familiar
+	                        	if(!parentesco.equalsIgnoreCase("T") && StringUtils.isNotBlank(existeDepend)){
+	                                //Validamos el No. de Socio y clave familiar con la familia 
+	                        		logger.debug("1.- {}",cdunieco);
+	                        		logger.debug("2.- {}",cdramo);
+                    				logger.debug("3.- {}", estado);
+            						logger.debug("4.- {}", nmpoliza);
+    								logger.debug("5.- {}", seccion1);
+									logger.debug("6.- {}", seccion2);
+									logger.debug("7.- {}",String.valueOf(cdgrupo));
+									logger.debug("8.- {}",existeDepend);
+	                        		List<Map<String,String>> slist1=endososManager.obtenerSocioFamilia(cdunieco, cdramo, estado, nmpoliza, seccion1, seccion2,String.valueOf(cdgrupo),existeDepend);
+	                        		logger.debug("9.- {}",slist1);
+	                                if(slist1.get(0).get("SOCIO").equalsIgnoreCase("0")){
+	                                	existeNoSocio = "1";
+	                                	noSocioTitular = slist1.get(0).get("SOCIOTITULAR");
+	                                    throw new ApplicationException("Es diferente No. de Socio Empleado es diferente al del Titular.");
+	                                }else{
+	                                	if(Integer.parseInt(slist1.get(0).get("FAMILIA")) >=  1){
+	                                		existeCveFamilia = "1";
+                                            throw new ApplicationException("Se encuentra repetido la Cve Familiar.");
+		                                }else{
+		                                	bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+		                                }
+	                                }
+	                            }else if(parentesco.equalsIgnoreCase("T")){
+	                                valorNoSocioTitular = seccion1;
+	                                contador = 0;
+	                                valores  = new LinkedHashMap<String,String>();
+	                                valores.put(seccion2 , seccion2);
+	                                bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                            }else{
+	                                if(!valorNoSocioTitular.equalsIgnoreCase(seccion1)){
+	                                    existeNoSocio = "1";
+	                                    throw new ApplicationException("Es diferente No. de Socio Empleado es diferente al del Titular.");
+	                                }else{
+	                                    contador  = contador+1;
+	                                    if (valores.containsKey(seccion2)){
+	                                        existeCveFamilia = "1";
+	                                        throw new ApplicationException("Se encuentra repetido la Cve Familiar.");
+	                                    }
+	                                    else{
+	                                        valores.put(seccion2,seccion2);
+	                                    }
+	                                    logger.debug("VALOR :{}",valores);
+	                                    bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                                }
+	                            }
+	                        }else{
+	                            requeridoSucursal = "1";
+	                            throw new ApplicationException("No es numero");
+	                        }
+	                    }else{
+	                        bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");    
+	                    }
+	                }catch(Exception e) {
+	                    try {
+	                        logger.warn("error al leer identidad como numero, se intentara como string:",e);
+	                        auxCell=row.getCell(19);
+	                        identidad = auxCell!=null?auxCell.getStringCellValue():"";
+	                        
+	                        if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                            String identidadModificada[] = identidad.split("\\-");
+	                            String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
+	                            String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
+
+	                            if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
+	                            	if(!parentesco.equalsIgnoreCase("T") && StringUtils.isNotBlank(existeDepend)){
+		                                //Validamos el No. de Socio y clave familiar con la familia 
+		                        		logger.debug("1.- {}",cdunieco);
+		                        		logger.debug("2.- {}",cdramo);
+	                    				logger.debug("3.- {}", estado);
+	            						logger.debug("4.- {}", nmpoliza);
+	    								logger.debug("5.- {}", seccion1);
+										logger.debug("6.- {}", seccion2);
+										logger.debug("7.- {}",String.valueOf(cdgrupo));
+										logger.debug("8.- {}",existeDepend);
+		                        		List<Map<String,String>> slist1=endososManager.obtenerSocioFamilia(cdunieco, cdramo, estado, nmpoliza, seccion1, seccion2,String.valueOf(cdgrupo),existeDepend);
+		                        		logger.debug("9.- {}",slist1);
+		                        		if(slist1.get(0).get("SOCIO").equalsIgnoreCase("0")){
+		                                	existeNoSocio  = "1";
+		                                	noSocioTitular = slist1.get(0).get("SOCIOTITULAR");
+		                                    throw new ApplicationException("Es diferente No. de Socio Empleado es diferente al del Titular.");
+		                                }else{
+		                                	if(Integer.parseInt(slist1.get(0).get("FAMILIA")) >=  1){
+		                                		existeCveFamilia = "1";
+	                                            throw new ApplicationException("Se encuentra repetido la Cve Familiar.");
+			                                }else{
+			                                	bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+			                                }
+		                                }
+		                            }else if(parentesco.equalsIgnoreCase("T")){
+	                                    valorNoSocioTitular = seccion1;
+	                                    contador = 0;
+	                                    valores  = new LinkedHashMap<String,String>();
+	                                    valores.put(seccion2 , seccion2);
+	                                    bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                                }else{
+	                                    if(!valorNoSocioTitular.equalsIgnoreCase(seccion1)){
+	                                        existeNoSocio ="1";
+	                                        throw new ApplicationException("Es diferente No. de Socio Empleado es diferente al del Titular.");
+	                                    }else{
+	                                        contador  = contador+1;
+	                                        if (valores.containsKey(seccion2)){
+	                                            existeCveFamilia = "1";
+	                                            throw new ApplicationException("Se encuentra repetido la Cve Familiar.");
+	                                        }else{
+	                                            valores.put(seccion2 , seccion2);
+	                                        }
+	                                        bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                                    }
+	                                }
+	                            }else{
+	                                requeridoSucursal = "1";
+	                                throw new ApplicationException("No es numero");
+	                            }
+	                        }else{
+	                            bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getStringCellValue())+"|":"|");    
+	                        }
+	                    }catch(Exception ex) {
+	                        filaBuena = false;
+	                        if(existeNoSocio.equalsIgnoreCase("1")){
+	                            bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' - El No. de Socio/Empleado no corresponde al titular "+noSocioTitular+". (T) de la fila ",fila," "));
+	                        }else if(existeCveFamilia.equalsIgnoreCase("1")){
+	                            bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' - Clave Familiar Duplicado. (T) de la fila ",fila," "));
+	                        }else if(requeridoSucursal.equalsIgnoreCase("1")){
+	                            bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' - Es requerido o no cumple el formato. (T) de la fila ",fila," "));
+	                        }
+	                        else{
+	                            bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' no cumple el formato. (T) de la fila ",fila," "));
+	                        }
+	                    }
 	                } finally {
-	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
+	                    bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
 	                
 	                //FECHA DE RECONOCIMIENTO DE ANTIGUEDAD
@@ -5977,7 +6100,13 @@ public class CotizacionAction extends PrincipalCoreAction
 					e1.printStackTrace();
 				}
 				
-	            while (rowIterator.hasNext()&&exito) 
+				String requeridoSucursal 	= "0";
+				String existeNoSocio    	= "0";
+				String existeCveFamilia 	= "0";
+				String valorNoSocioTitular 	= null;
+				Map<String,String> valores  = null;
+				int contador 				= 0;
+				while (rowIterator.hasNext()&&exito) 
 	            {
 	                Row           row            = rowIterator.next();
 	                Date          auxDate        = null;
@@ -6523,71 +6652,114 @@ public class CotizacionAction extends PrincipalCoreAction
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
 	                }
 
-		            //IDENTIDAD NO.DE EMPLEADO
-		            try {
-		                auxCell=row.getCell(19);
-		                identidad = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue()):"";
-		                if(Constantes.SI.equalsIgnoreCase(configCampo.get(19).get("OBLIGATORIO"))){
-		                	if(StringUtils.isBlank(identidad)){
-		                		throw new ApplicationException("La identidad no puede ir en blanco");
-		                	}
-		                }
-		                
-		                if(cdunieco.equalsIgnoreCase("1403")){
-		                	if(StringUtils.isNotBlank(identidad)){
-		                		String identidadModificada[] = identidad.split("\\-");
-		                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
-		                		logger.debug("Seccion 1 IDENTIDAD : {}",seccion1);
-		                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
-		                		logger.debug("Seccion 2 IDENTIDAD : {}",seccion2);
-		                		
-		                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
-		                			bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
-		                		}else{
-		                			//mandamos excepcion
-			                		throw new ApplicationException("No es numero");
-		                		}
-		                	}
-		                }
-		                logger.debug("IDENTIDAD: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
-		                bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");		                
-                	} catch(Exception ex){
+	                //IDENTIDAD NO.DE EMPLEAD
+	                try {
+	                	auxCell=row.getCell(19);
+	                	identidad = auxCell!=null?auxCell.getNumericCellValue()+"":"";
+	                	if(Constantes.SI.equalsIgnoreCase(configCampo.get(19).get("OBLIGATORIO"))){
+	                		if(StringUtils.isBlank(identidad) || identidad.equalsIgnoreCase("0.0")){
+	                			requeridoSucursal = "1";
+	                			throw new ApplicationException("La identidad no puede ir en blanco");
+	                		}
+	                	}
+
+	                	if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                		String identidadModificada[] = identidad.split("\\-");
+	                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
+	                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
+	                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
+	                			//Validacion para el No. de Socio y Clave Familiar
+	                			if(parentesco.equalsIgnoreCase("T")){
+	                				valorNoSocioTitular = seccion1;
+	                				contador = 0;
+	                				valores  = new LinkedHashMap<String,String>();
+	                				valores.put(seccion2 , seccion2);
+	                				bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                			}else{
+	                				if(!valorNoSocioTitular.equalsIgnoreCase(seccion1)){
+	                					existeNoSocio = "1";
+	                					throw new ApplicationException("Es diferente No. de Socio Empleado es diferente al del Titular.");
+	                				}else{
+	                					contador  = contador+1;
+	                					if (valores.containsKey(seccion2)){
+	                						existeCveFamilia = "1";
+	                						throw new ApplicationException("Se encuentra repetido la Cve Familiar.");
+	                					}
+	                					else{
+	                						valores.put(seccion2,seccion2);
+	                					}
+	                					logger.debug("VALOR :{}",valores);
+	                					bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                				}
+	                			}
+	                		}else{
+	                			requeridoSucursal = "1";
+	                			throw new ApplicationException("No es numero");
+	                		}
+                		}else{
+                			bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");    
+                		}
+                	}catch(Exception e) {
 	                	try {
-	                		logger.warn("error al leer telefono como numero, se intentara como string:",ex);
+	                		logger.warn("error al leer identidad como numero, se intentara como string:",e);
 	                		auxCell=row.getCell(19);
 	                		identidad = auxCell!=null?auxCell.getStringCellValue():"";
-			                if(Constantes.SI.equalsIgnoreCase(configCampo.get(19).get("OBLIGATORIO"))){
-			                	if(StringUtils.isBlank(identidad)){
-			                		throw new ApplicationException("La identidad no puede ir en blanco");
-			                	}
-			                }
-			                
-			                if(cdunieco.equalsIgnoreCase("1403")){
-			                	if(StringUtils.isNotBlank(identidad)){
-			                		String identidadModificada[] = identidad.split("\\-");
-			                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
-			                		logger.debug("Seccion 1 IDENTIDAD : {}",seccion1);
-			                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
-			                		logger.debug("Seccion 2 IDENTIDAD : {}",seccion2);
-			                		
-			                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
-			                			bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
-			                		}else{
-			                			//mandamos excepcion
-				                		throw new ApplicationException("No es numero");
-			                		}
-			                	}
-			                }
-			                
-			                logger.debug("IDENTIDAD: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-			                bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-			                
-	                	} catch(Exception e){
-		                	filaBuena = false;
-		                	logger.debug("Valor de e:{}",e);
-		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' (T) de la fila ",fila," "));
-		                }
-	                } finally {
+	                		//Validamos si es obligatorio
+	                		if(Constantes.SI.equalsIgnoreCase(configCampo.get(19).get("OBLIGATORIO"))){
+	                			if(StringUtils.isBlank(identidad) || identidad.equalsIgnoreCase("0.0")){
+	                				requeridoSucursal = "1";
+	                				throw new ApplicationException("La identidad no puede ir en blanco");
+	                			}
+	                		}
+	                	
+	                		if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                			String identidadModificada[] = identidad.split("\\-");
+	                			String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
+	                			String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
+
+	                			if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
+	                				if(parentesco.equalsIgnoreCase("T")){
+	                					valorNoSocioTitular = seccion1;
+	                					contador = 0;
+	                					valores  = new LinkedHashMap<String,String>();
+	                					valores.put(seccion2 , seccion2);
+	                					bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                				}else{
+	                					if(!valorNoSocioTitular.equalsIgnoreCase(seccion1)){
+	                						existeNoSocio ="1";
+	                						throw new ApplicationException("Es diferente No. de Socio Empleado es diferente al del Titular.");
+	                					}else{
+	                						contador  = contador+1;
+	                						if (valores.containsKey(seccion2)){
+	                							existeCveFamilia = "1";
+	                							throw new ApplicationException("Se encuentra repetido la Cve Familiar.");
+	                						}else{
+	                							valores.put(seccion2 , seccion2);
+	                						}
+	                						bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+	                					}
+	                				}
+	                			}else{
+	                				requeridoSucursal = "1";
+	                				throw new ApplicationException("No es numero");
+	                			}
+	                		}else{
+	                			bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getStringCellValue())+"|":"|");    
+	                		}
+	                	}catch(Exception ex) {
+	                		filaBuena = false;
+	                		if(existeNoSocio.equalsIgnoreCase("1")){
+	                			bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' - El No. de Socio/Empleado no corresponde al titular. (T) de la fila ",fila," "));
+	                		}else if(existeCveFamilia.equalsIgnoreCase("1")){
+	                			bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' - Clave Familiar Duplicado. (T) de la fila ",fila," "));
+	                		}else if(requeridoSucursal.equalsIgnoreCase("1")){
+	                			bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' - Es requerido o no cumple el formato. (T) de la fila ",fila," "));
+	                		}
+	                		else{
+	                			bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' no cumple el formato. (T) de la fila ",fila," "));
+	                		}
+	                	}
+                	} finally {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
 	                }
 		            
@@ -14363,8 +14535,8 @@ public class CotizacionAction extends PrincipalCoreAction
     {
         this.session=ActionContext.getContext().getSession();
         logger.debug(Utils.log(
-                 "\n################################"
-                ,"\n###### subirCensoCompleto ######"
+                 "\n######################################"
+                ,"\n###### tratamientoLayoutEmision ######"
                 ,"\n###### smap1="  , smap1
                 ,"\n###### olist1=" , olist1
                 ));
@@ -14488,8 +14660,8 @@ public class CotizacionAction extends PrincipalCoreAction
         }
         
         logger.debug(""
-                + "\n###### subirCensoCompleto ######"
-                + "\n################################"
+                + "\n###### tratamientoLayoutEmision ######"
+                + "\n######################################"
                 );
         return SUCCESS;
     }

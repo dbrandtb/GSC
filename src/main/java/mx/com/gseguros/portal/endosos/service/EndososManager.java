@@ -704,5 +704,7 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			,String noSocio
-			,String familia) throws Exception;
+			,String familia
+			,String nmgrupo
+			,String nmfamilia) throws Exception;
 }

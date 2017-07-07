@@ -14455,17 +14455,19 @@ public String retarificarEndosos()
 				+ "\n###### 	validaSocioFamilia 	 ######"
 				+ "\n######                 		 ######"
 				);
-		logger.debug("smap1 XXX: "+smap1);
+		logger.debug("smap1 validaSocioFamilia: "+smap1);
 		try
 		{
-			String cdunieco = smap1.get("cdunieco");
-			String cdramo   = smap1.get("cdramo");
-			String estado   = smap1.get("estado");
-			String nmpoliza = smap1.get("nmpoliza");
-			String noSocio = smap1.get("noSocio");
-			String familia = smap1.get("familia");
-			
-			slist1=endososManager.obtenerSocioFamilia(cdunieco, cdramo, estado, nmpoliza, noSocio, familia);
+			String cdunieco  = smap1.get("cdunieco");
+			String cdramo    = smap1.get("cdramo");
+			String estado    = smap1.get("estado");
+			String nmpoliza  = smap1.get("nmpoliza");
+			String noSocio   = smap1.get("noSocio");
+			String familia   = smap1.get("familia");
+			String nmgrupo   = smap1.get("nmgrupo");
+			String nmfamilia = smap1.get("nmfamilia");
+            
+			slist1=endososManager.obtenerSocioFamilia(cdunieco, cdramo, estado, nmpoliza, noSocio, familia,nmgrupo,nmfamilia);
 			success=true;
 		}
 		catch(Exception ex)

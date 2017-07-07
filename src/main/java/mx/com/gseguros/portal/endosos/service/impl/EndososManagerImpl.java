@@ -4528,15 +4528,20 @@ public class EndososManagerImpl implements EndososManager
 			,String estado
 			,String nmpoliza
 			,String noSocio
-			,String familia) throws Exception
+			,String familia
+			,String nmgrupo
+			,String nmfamilia) throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
-		params.put("pv_cdunieco_i" , cdunieco);
-		params.put("pv_cdramo_i"   , cdramo);
-		params.put("pv_estado_i"   , estado);
-		params.put("pv_nmpoliza_i" , nmpoliza);
-		params.put("pv_nmsocio_i" , noSocio);
-		params.put("pv_familia_i" , familia);
+		params.put("pv_cdunieco_i"  , cdunieco);
+		params.put("pv_cdramo_i"    , cdramo);
+		params.put("pv_estado_i"    , estado);
+		params.put("pv_nmpoliza_i"  , nmpoliza);
+		params.put("pv_nmsocio_i"   , noSocio);
+		params.put("pv_familia_i"   , familia);
+		params.put("pv_nmgrupo_i"   , nmgrupo);
+		params.put("pv_nmfamilia_i" , nmfamilia);
+	            
 		List<Map<String,String>>lista=endososDAO.obtenerSocioFamilia(params);
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>();
 		
