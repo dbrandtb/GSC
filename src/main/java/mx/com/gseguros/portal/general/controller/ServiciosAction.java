@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.general.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -352,7 +353,9 @@ public class ServiciosAction extends PrincipalCoreAction
 			
 			cdsucdoc = cdsucadm;
 			
-			String ntramite = flujoMesaControlManager.registrarTramite(
+			//String ntramite = 
+			Map<String,String> resp = new HashMap<String,String>();
+			resp = flujoMesaControlManager.registrarTramite(
 					cdsucdoc
 					,cdramo
 					,estado
@@ -384,7 +387,7 @@ public class ServiciosAction extends PrincipalCoreAction
 					,true
 					);
 			
-			respuesta = Utils.join("OK,",ntramite);
+			respuesta = Utils.join("OK,",resp.get("ntramite"));
 		}
 		catch(Exception ex)
 		{

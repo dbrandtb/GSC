@@ -1970,7 +1970,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public String registrarTramite (
+	public Map<String,String> registrarTramite ( 
 			String cdunieco , String cdramo    , String estado     , String nmpoliza,
 			String nmsuplem , String cdsucadm  , String cdsucdoc   , String cdtiptra,
 			Date ferecepc   , String cdagente  , String referencia , String nombre,
@@ -2014,6 +2014,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
                 "\n@@@@@@ inyectadoDesdeSigs = " , inyectadoDesdeSigs
 		));
 		
+		Map<String,String> respuesta = new HashMap<String,String>();
 		String paso = null, ntramite = null;
 		try {
 			String renuniext  = null,
@@ -2176,6 +2177,13 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			       cdsisrolDestino = cdsisrol;
 			
 			boolean turnarAOtraPersona = false;
+			
+			if(cdtipflu.equals("1") && (cdflujomc.equals("180") || cdflujomc.equals("181"))
+			   && status.equals("200") ){
+				paso = "Entrando a Asignar verdadero para turnar al ROL Indicado ";
+				turnarAOtraPersona = true;
+				logger.debug(paso);
+			}
 			        //userSinPermisoEndoso = false;
 			
 			// Si el sistema genera el tramite o el tramite viene de sigs, hay que turnarlo
@@ -2265,17 +2273,21 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
                     false,  // sinGrabarDetalle
                     turnarAOtraPersona
                     );
-            logger.debug(despacho.getMessage());			
+		    logger.debug(ntramite);
+            logger.debug(despacho.getMessage());		
+            respuesta.put("ntramite", ntramite);
+            respuesta.put("asignado", despacho.getMessage());
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.debug(Utils.log(
-				"\n@@@@@@ ntramite = ", ntramite,
+				"\n@@@@@@ ntramite  = ", ntramite,
+				"\n@@@@@@ respuesta = ", respuesta, 
 				"\n@@@@@@ registrarTramite @@@@@@",
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 		));
-		return ntramite;
+		return respuesta;
 	}
 	
 	@Override
