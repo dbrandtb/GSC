@@ -1509,7 +1509,9 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			    }
 			}
 			
-			String ntramite = flujoMesaControlManager.registrarTramite(
+			//String ntramite
+			Map<String,String> respuesta = null;
+			respuesta = flujoMesaControlManager.registrarTramite(
 					cdsucdoc
 					,cdramo
 					,estado
@@ -1545,21 +1547,22 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 				logger.debug("Guardando clave y descripci\u00f3n de tipo de endoso en valores adicionales");
 				
 				cotizacionManager.actualizarOtvalorTramitePorDsatribu(
-						ntramite
+						respuesta.get("ntramite")
 						,"CDTIPSUP"
 						,cdtipsup
 						,"U"
 						);
 				
 				cotizacionManager.actualizarOtvalorTramitePorDsatribu(
-						ntramite
+						respuesta.get("ntramite")
 						,"DSTIPSUP"
 						,endososManager.obtieneDescripcionEndoso(cdtipsup)
 						,"U"
 						);
 			}
 			
-			params.put("ntramite" , ntramite);
+			params.put("ntramite" , respuesta.get("ntramite"));
+			params.put("asignado", respuesta.get("asignado"));
 			
 			success = true;
 			

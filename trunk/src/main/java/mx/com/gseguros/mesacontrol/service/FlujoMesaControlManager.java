@@ -218,7 +218,7 @@ public interface FlujoMesaControlManager
 			,String nmpoliza
 			)throws Exception;
 	
-	public String registrarTramite(
+	public Map<String,String> registrarTramite(
             String cdunieco , String cdramo    , String estado     , String nmpoliza,
             String nmsuplem , String cdsucadm  , String cdsucdoc   , String cdtiptra,
             Date ferecepc   , String cdagente  , String referencia , String nombre,

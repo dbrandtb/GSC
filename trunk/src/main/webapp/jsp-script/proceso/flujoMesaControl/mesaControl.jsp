@@ -1631,6 +1631,18 @@ function _p54_registrarTramite(bot)
         
         debug('values:',values,'.');
         
+        if(values.CDTIPFLU=='1' && values.CDFLUJOMC=='180' && values.STATUS!=='2'){
+           debug('Esntro a a validar');
+           values.STATUS = '200';
+           debug('values***',values);
+        	
+        }if(values.CDTIPFLU=='1' && values.CDFLUJOMC=='181' && values.STATUS!=='2'){
+        	debug('Esntro a a validar');
+            values.STATUS = '200';
+            debug('values***',values);
+        
+        }
+        
         mask = _maskLocal();
         Ext.Ajax.request(
         {
@@ -1651,29 +1663,57 @@ function _p54_registrarTramite(bot)
                     		if (bandera==false)	{
                     			mensajeError('No se pudo grabar numero de tr\u00e1mite en sistema sigs',function(){callbackRegistar(true)});
                     		}else{
-                    			
-	                            mensajeCorrecto
-	                            ('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
-	                             {
-	                                 bot.up('window').hide();
-	                                 var form  = _fieldById('_p54_filtroForm');
-	                                 var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
-	                                 form.getForm().reset();
-	                                 form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
-	                                 form.down('[name=STATUS]').setValue('0');
-	                                 _fieldById('_p54_filtroCmp').reset();
-	                                 
-	                                 var callbackCheck = function(store, records, success) {
-	                                     store.removeListener('load', callbackCheck);
-	                                     _p54_mostrarCheckDocumentosInicial(json.params.ntramite);
-	                                 };
-	                                 
-	                                 _p54_store.on({
-	                                     load : callbackCheck  
-	                                 });
-	                                 boton.handler(boton);
-	                             }
-	                            );
+                    			  if((json.params.CDTIPFLU=='1' && json.params.CDFLUJOMC=='180' && json.params.STATUS=='200') 
+                    			   ||  (json.params.CDTIPFLU=='1' && json.params.CDFLUJOMC=='181' && json.params.STATUS=='200')){
+						           	
+						           debug(json.params.asignado);
+						        	mensajeCorrecto('Tr\u00e1mite Turnado',json.params.asignado,function()
+		                             {
+		                                 bot.up('window').hide();
+		                                 var form  = _fieldById('_p54_filtroForm');
+		                                 var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
+		                                 form.getForm().reset();
+		                                 //form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
+		                                 form.down('[name=STATUS]').setValue('-1');
+		                                 _fieldById('_p54_filtroCmp').reset();
+		                                 
+		                                 var callbackCheck = function(store, records, success) {
+		                                     store.removeListener('load', callbackCheck);
+		                                     //_p54_mostrarCheckDocumentosInicial(json.params.ntramite);
+		                                 };
+		                                 
+		                                 _p54_store.on({
+		                                     load : callbackCheck  
+		                                 });
+		                                 boton.handler(boton);
+		                             });
+						        }else{
+                    				//Inicia el proceso normal de crear tramite
+                    				debug(json.params.asignado);
+                    				mensajeCorrecto
+		                            ('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
+		                             {
+		                                 bot.up('window').hide();
+		                                 var form  = _fieldById('_p54_filtroForm');
+		                                 var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
+		                                 form.getForm().reset();
+		                                 form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
+		                                 form.down('[name=STATUS]').setValue('0');
+		                                 _fieldById('_p54_filtroCmp').reset();
+		                                 
+		                                 var callbackCheck = function(store, records, success) {
+		                                     store.removeListener('load', callbackCheck);
+		                                     _p54_mostrarCheckDocumentosInicial(json.params.ntramite);
+		                                 };
+		                                 
+		                                 _p54_store.on({
+		                                     load : callbackCheck  
+		                                 });
+		                                 boton.handler(boton);
+		                             }
+		                            );
+                    			}
+	                            
                             }
                         }
                     	
