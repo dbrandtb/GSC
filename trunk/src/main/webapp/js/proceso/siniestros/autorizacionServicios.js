@@ -18,10 +18,10 @@ Ext.onReady(function() {
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
     
-	/*Ext.selection.CheckboxModel.override( {
+	Ext.selection.CheckboxModel.override( {
 		mode: 'SINGLE',
 		allowDeselect: true
-	});*/
+	});
 	// Conversi�n para el tipo de moneda
 	Ext.util.Format.thousandSeparator = ',';
 	Ext.util.Format.decimalSeparator = '.';
@@ -55,11 +55,11 @@ Ext.onReady(function() {
 					{type:'string',    name:'feinicio'},			{type:'string',    name:'fefinal'},					{type:'string',    name:'dssucursal'},
 					{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
 					{type:'string',    name:'nmsuplem'},			{type:'string',    name:'cdtipsit'},				{type:'string',    name:'estatusCliente'},
-					{type:'string',    name:'faltaAsegurado'},		{type:'date',      name:'fcancelacionAfiliado'},	{type:'string',    name:'mtoBeneficioMax'},
+					{type:'string',    name:'faltaAsegurado'},		{type:'date',    name:'fcancelacionAfiliado'},	{type:'string',    name:'mtoBeneficioMax'},
 					{type:'string',    name:'zonaContratada'},		{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'desEstatusCliente'},
 					{type:'string',    name:'numPoliza'},			{type:'string',    name:'dsplan'},					{type:'string',    name:'mesesAsegurado'},
 					{type:'string',    name:'dsTipsit'},			{type:'string',	   name:'genero'},					{type:'string',	   name:'fenacimi'},
-					{type:'string',    name:'cirHosp'},             {type:'string',    name:'genero'},                  {type:'string',    name:'genero'}
+					{type:'string',    name:'cirHosp'}
 					] // (EGS) genero, fenacimi
 	});
 
@@ -231,31 +231,6 @@ Ext.onReady(function() {
 			}
 		}
 	});
-	
-   var storeTiposICDSec = Ext.create('Ext.data.Store', {
-        model:'Generic',
-        autoLoad:false,
-        proxy: {
-            type: 'ajax',
-            url: _URL_LISTA_ICD, // (EGS)
-            reader: {
-                type: 'json',
-                root: 'listaCPTICD'
-            }
-        },
-        listeners: { // se agrega listener (EGS)
-            'beforeload' : function(store, operation) {
-                store.removeAll();
-                store.proxy.extraParams = {
-                        'params.cdicd'      : Ext.getCmp('idComboICD').getValue(),
-                        'params.cdramo'     : Ext.getCmp('idcdRamo').getValue(),
-                        'params.cdtipsit'   : Ext.getCmp('idcdtipsit').getValue(),
-                        'params.edad'       : calculaAniosTranscurridos(Ext.getCmp('edad').getValue(),new Date()),
-                        'params.genero'     : Ext.getCmp('genero').getValue()
-                };
-            }
-        }
-    });
 
 	var storeTiposCPT = Ext.create('Ext.data.Store', {
 		model:'Generic',
@@ -540,8 +515,8 @@ Ext.onReady(function() {
 						Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
 						Ext.getCmp('cveTipoAutorizaG').setValue(closedStatusSelectedID);
 						Ext.getCmp('idEstatusTramite').setValue('0');
-						Ext.getCmp('idaplicaCirHosp').setValue('N');
-						Ext.getCmp('idaplicaZona').setValue('N');
+						Ext.getCmp('idaplicaCirHosp').setValue('S');
+						Ext.getCmp('idaplicaZona').setValue('S');
 						Ext.getCmp('idCopagoPrevio').hide();
 						Ext.getCmp('idTipoEvento').hide();
 						
@@ -630,7 +605,7 @@ Ext.onReady(function() {
 			}
 		}
 	});
-	
+
 	gridDatosPoliza= Ext.create('Ext.grid.Panel',{
 		id            : 'polizaGridId',
 		store         : storeListadoPoliza,
@@ -651,10 +626,7 @@ Ext.onReady(function() {
 			{   header : 'Modalidad',							dataIndex : 'dsTipsit',				width   : 150        },
 			{   header : 'Sucursal',							dataIndex : 'dssucursal',			width   : 150        },
 			{   header : 'Estado',								dataIndex : 'estado',				width	: 100        },
-			{   header : 'N&uacute;mero de Situaci&oacute;n',	dataIndex : 'nmsituac',		        width	: 150        },
-			{   header : 'C&oacute;digo Postal',                value : '02730',             width   : 150        },
-			{   header : 'Estado',                              dataIndex : 'xxxxx',             width   : 150        },
-			{   header : 'Municipio',                           dataIndex : 'xxxxx',             width   : 150        }
+			{   header : 'N&uacute;mero de Situaci&oacute;n',	dataIndex : 'nmsituac',		        width	: 150        }
 		],
 		bbar : {
 			displayInfo : true,
@@ -868,20 +840,6 @@ Ext.onReady(function() {
 		,store : storePlazas
 	});
 	
-    estado = Ext.create('Ext.form.field.ComboBox',{
-        colspan     :2, fieldLabel   : 'Estado',    id: 'idEdoSiniestro',               allowBlank: false,          width:400   
-        ,editable   : false,            displayField : 'value',         valueField:'key',               forceSelection : true
-        ,labelWidth : 170,              queryMode    :'local',          editable:false,                 name:'idEdoSiniestro'
-        ,store : storePlazas
-    });
-    
-    municipio = Ext.create('Ext.form.field.ComboBox',{
-        colspan     :2,  fieldLabel   : 'Municipio',    id: 'idMunSiniestro',             allowBlank: false,          width:400   
-        ,editable   : false,            displayField : 'value',         valueField:'key',               forceSelection : true
-        ,labelWidth : 170,              queryMode    :'local',          editable:false,                 name:'idMunSiniestro'
-        ,store : storePlazas
-    });
-	
     tipoEvento = Ext.create('Ext.form.field.ComboBox',{
         colspan     :2,                 fieldLabel   : 'Tipo Evento',   id: 'idTipoEvento',             allowBlank: false,          width:500
         ,editable   : false,            displayField : 'value',         valueField:'key',               forceSelection : true
@@ -1024,50 +982,6 @@ Ext.onReady(function() {
 			}
 		}
 	});
-	
-	comboSecundario = Ext.create('Ext.form.field.ComboBox', {
-        colspan:2,                      fieldLabel : 'ICD Secundario',      allowBlank: false,              displayField : 'value',     width:500,  //displayField : 'value',
-        id:'idComboICDSec',             labelWidth: 170,                    valueField   : 'key',           forceSelection : true,
-        matchFieldWidth: false,         queryMode :'remote',                queryParam: 'params.otclave1',  store : storeTiposICDSec,  // queryParam: 'params.otclave' (EGS)
-        minChars  : 2,                  name:'cdicdSec',   editable:true,      triggerAction: 'all',           hideTrigger:true,
-        listeners : {
-            'select':function(field,value){
-                Ext.Ajax.request({
-                    url     : _URL_NUM_MESES_TIEMPO_ESPERA
-                    ,params : {
-                        'params.otvalor01':this.getValue(), // 'params.otvalor':this.getValue() (EGS)
-                        'params.cdtabla':'TAPERESP'
-                    }
-                    ,success : function (response){
-                        var resEspera = Ext.decode(response.responseText);
-                        var tiempoEsperaICD = resEspera.mesesTiempoEspera;
-                        if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
-                            if(Ext.getCmp('idCausaSiniestro').getValue()!= _CODIGO_CAUSA_ACCIDENTE){
-                                Ext.getCmp('idComboICD').setValue('');
-                                notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + resEspera.mensaje;
-                                //Ext.getCmp('notaInterna').setValue(notasInternas);
-                                centrarVentanaInterna(Ext.Msg.show({
-                                    title: 'Error',
-                                    msg: resEspera.mensaje,
-                                    buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.WARNING
-                                }));
-                            }
-                        }
-                    },
-                    failure : function (){
-                        me.up().up().setLoading(false);
-                        centrarVentanaInterna(Ext.Msg.show({
-                            title:'Error',
-                            msg: 'Error de comunicaci&oacute;n',
-                            buttons: Ext.Msg.OK,
-                            icon: Ext.Msg.ERROR
-                        }));
-                    }
-                });
-            }
-        }
-    });
 
 	causaSiniestro = Ext.create('Ext.form.field.ComboBox',{
 		colspan	   :2,				fieldLabel   : 'Causa siniestro',	id		  : 'idCausaSiniestro',			allowBlank		: false,			width:500,
@@ -1759,26 +1673,24 @@ Ext.onReady(function() {
 		extend: 'Ext.grid.Panel',
 		collapsible   : true,
 		titleCollapse : true,
-		selType     :   'checkboxmodel',
-		/*requires: [
+		requires: [
 			'Ext.selection.CellModel',
 			'Ext.grid.*',
 			'Ext.data.*',
 			'Ext.util.*',
 			'Ext.form.*'
 		],
-		xtype: 'cell-editing',*/
+		xtype: 'cell-editing',
 		title: 'Tabulaci&oacute;n Base Equipo quir&uacute;rgico',
 		frame: false,
 		initComponent: function(){
-			/*this.cellEditing = new Ext.grid.plugin.CellEditing({
+			this.cellEditing = new Ext.grid.plugin.CellEditing({
 				clicksToEdit: 1
-			});*/
+			});
 			Ext.apply(this, {
 				height: 250,
-				//plugins: [this.cellEditing],
+				plugins: [this.cellEditing],
 				store: storeQuirugicoBase,
-				selType     :   'checkboxmodel',
 				columns: [
 					{	header: 'CPT',			dataIndex: 'desccpt',			width:350   	},
 					{	header: 'Precio',		dataIndex: 'precio',			width:100,				renderer: Ext.util.Format.usMoney   	},
@@ -1793,9 +1705,9 @@ Ext.onReady(function() {
 						}]
 					}
 				],
-				/*selModel: {
+				selModel: {
 					selType: 'rowmodel'	//'cellmodel' (EGS)
-				},*/
+				},
 				tbar: [{
 					icon:_CONTEXT+'/resources/fam3icons/icons/add.png',
 					text: 'Agregar base equipo quir&uacute;gico',
@@ -2098,519 +2010,429 @@ Ext.onReady(function() {
 			{	 xtype       : 'textfield',			fieldLabel : 'Genero'				,	id       : 'genero', 				name:'genero',
 				labelWidth: 170,					hidden:true
 			},
-			
-			{    colspan:2   ,   border: true
-                ,bodyPadding: 5
-                ,title        : 'Autorizaci&oacute;n y Producto:'
-                ,startCollapsed : true
-                ,layout      : {
-                    type     : 'table'
-                    ,columns : 2
-                },
-                items    :[
-                    {   colspan:2
-                        ,border: false
-                        ,layout      :  {
-                            type     : 'table'
-                            ,columns : 3
-                        },
-                        items    : [
-                            {   xtype       : 'textfield',          fieldLabel : 'No. de autorizaci&oacute;n',              id  : 'idNoAutorizacion',
-                                name        : 'nmautser',           labelWidth  : 170,                  readOnly   : true
-                            },
-                            {   xtype       : 'textfield',          fieldLabel : 'No. de autorizaci&oacute;n anterior',     id  : 'idNumeroAnterior',   
-                                name       : 'nmautant',            labelWidth  : 170,      readOnly   : true
-                            },
-                            Ext.create('Ext.Button', {
-                                text: 'Buscar',
-                                id:'btnBuscar',
-                                icon : _CONTEXT + '/resources/fam3icons/icons/folder.png',
-                                handler: function() {
-                                    Ext.create('Ext.window.Window',{
-                                        title         : 'Autorizaci&oacute;n de servicio'
-                                        ,buttonAlign  : 'center'
-                                        ,width        : 750
-                                        ,height       : 400
-                                        ,autoScroll   : true
-                                        ,loader       : {
-                                            url       : _VER_AUTORIZACION_SERVICIO
-                                            ,scripts  : true
-                                            ,autoLoad : true
-                                            ,params   : {
-                                                'params.nmautser':Ext.getCmp('idNumeroAnterior').getValue()
-                                            }
-                                        }
-                                    }).showAt(150,150);
-                                }
-                            })
-                        ]
-                    }
-                    , cmbRamos
-                ]
-            },
-			
-	        {   colspan:2                               ,border: true
-                ,bodyPadding: 5
-                ,title        : 'Informaci&oacute;n Asegurado :'
-                ,layout      : {
-                    type     : 'table'
-                    ,columns : 2
-                },
-                items    :[
-                    {   colspan:2                               ,border: false
-                        ,layout      : {
-                            type     : 'table'
-                            ,columns : 2
-                        },
-                        items    :[
-                            asegurado,
-                            {   xtype   : 'button',
-                                text    : 'Siniestralidad',
-                                id      : 'btnSiniestralidad',
-                                disabled: true,
-                                icon    : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
-                                handler : function() {
-                                    var windowHistSinies = Ext.create('Ext.window.Window',{
-                                        modal       : true,
-                                        buttonAlign : 'center',
-                                        width       : 800,
-                                        height      : 500,
-                                        autoScroll  : true,
-                                        loader      : {
-                                            url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
-                                            params  : {
-                                                'params.cdperson'  : panelInicialPrincipal.down('[name=cdperson]').getValue(),
-                                                'params.cdramo'    : null,
-                                                'params.nmpoliza'  : null,
-                                                'params.cdunieco'  : null,
-                                                'params.proceso'  : '0'
-                                                
-                                            },
-                                            scripts  : true,
-                                            loadMask : true,
-                                            autoLoad : true,
-                                            ajaxOptions: {
-                                                method: 'POST'
-                                            }
-                                        },
-                                        buttons: [{
-                                            icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-                                            text: 'Cerrar',
-                                            handler: function() {
-                                                windowHistSinies.close();
-                                            }
-                                        }]
-                                    }).show();
-                                    centrarVentana(windowHistSinies);
-                                }
-                            }
-                        ]
-                    }
-                    ,{  xtype       : 'textfield',         fieldLabel : 'Modalidad',              id  : 'idModalidad',    width   : 500,
-                        name        : 'idModalidad',       labelWidth  : 170,                     readOnly   : true,      colspan:2
-                    },
-                	{  xtype       : 'textfield',          fieldLabel : 'Plan',                   id  : 'idPlan',         width   : 500,
-                        name        : 'idPlan',            labelWidth  : 170,                     readOnly   : true,      colspan:2
-                    }
-                    ,
-                	{  xtype       : 'textfield',          fieldLabel : 'Vigencia P&oacute;liza', id  : 'idVigenciaPoliza',//    width   : 500,
-                        name        : 'idVigPoliza',       labelWidth  : 170,                     readOnly   : true//,      colspan:1
-                    }
-                    ,
-                    {  xtype       : 'textfield',          fieldLabel : 'Antigüedad en GSS', id  : 'idAntiguedad',//,    width   : 500,
-                        name        : 'idAntiguedad',       labelWidth  : 170,                     readOnly   : true//,      colspan:1
-                    }
-                    ,//3.- Fecha de Solicitud
-                    {   id: 'fechaSolicitud'        ,xtype      : 'datefield'               ,fieldLabel : 'Fecha Solicitud',
-                        name:'fesolici'             ,labelWidth : 170                       ,id         : 'fechaSolicitud',         format      : 'd/m/Y',
-                        editable: true              ,value      : new Date()                ,readOnly   : true
-                    },//4.- Fecha de Autorizacion
-                    {   id: 'fechaAutorizacion'     ,xtype      : 'datefield'               ,fieldLabel : 'Fecha Autorizaci&oacute;n',
-                        labelWidth : 170            ,format     : 'd/m/Y',
-                        editable: true              ,name       : 'feautori',
-                        listeners:{
-                            change:function(field,value){
-                                Ext.Ajax.request({
-                                    url     : _URL_NUMERO_DIAS
-                                    ,params:{
-                                        'params.cdramo' : Ext.getCmp('idcdRamo').getValue(),
-                                        'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue()
-                                    }
-                                    ,success : function (response){
-                                        Ext.getCmp('fechaVencimiento').setValue(Ext.Date.add(value, Ext.Date.DAY, Ext.decode(response.responseText).diasMaximos));
-                                    },
-                                    failure : function (){
-                                        me.up().up().setLoading(false);
-                                        centrarVentanaInterna(Ext.Msg.show({
-                                            title:'Error',
-                                            msg: 'Error de comunicaci&oacute;n',
-                                            buttons: Ext.Msg.OK,
-                                            icon: Ext.Msg.ERROR
-                                        }));
-                                    }
-                                });
-                            }
-                        }
-                    },//5.- Fecha de Vencimiento
-                    {   id: 'fechaVencimiento'                  ,xtype      : 'datefield'                               ,fieldLabel : 'Fecha de vencimiento',
-                        labelWidth : 170                        ,format     : 'd/m/Y',                                  name:'fevencim',
-                        editable: false                         ,readOnly   : true
-                    },//6.- Fecha de Ingreso
-                    {   id: 'fechaIngreso'                      ,xtype      : 'datefield'                               ,fieldLabel : 'Fecha de Ingreso',
-                        labelWidth : 170                        ,format     : 'd/m/Y',                                  name:'feingres',
-                        editable: true                          ,allowBlank : false
-                    },
-                    {   colspan:2                               ,border: false
-                        ,bodyPadding: 5
-                        ,layout      : {
-                            type     : 'table'
-                            ,columns : 6
-                        },
-                        items    :[
-                            //7.- Poliza Afectada NMPOLIEX
-                            {    xtype       : 'textfield',         fieldLabel : 'P&oacute;liza afectada'               ,id       : 'polizaAfectadaCom'
-                                ,allowBlank : false,                labelWidth: 170,                name:'nmpolizaCom', readOnly   : true, Width: 1100
-                            },
-                            //7.- Poliza Afectada corto
-                            {    xtype       : 'textfield',         fieldLabel : 'P&oacute;liza afectada'               ,id       : 'polizaAfectada'
-                                ,allowBlank : false,                labelWidth: 170,                name:'nmpoliza',    readOnly   : true,  hidden:true
-                            },
-                            Ext.create('Ext.Button', {
-                                text    : 'Ver coberturas',
-                                id      : 'btnVerCoberturas',
-                                disabled: true,
-                                icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
-                                handler: function() {
-                                    centrarVentanaInterna(Ext.create('Ext.window.Window',{
-                                        title        : 'COBERTURA'
-                                        ,buttonAlign : 'center'
-                                        ,width       : 620
-                                        ,height      : 400
-                                        ,autoScroll  : true
-                                        ,loader      :  {
-                                            url       : _VER_COBERTURAS
-                                            ,scripts  : true
-                                            ,autoLoad : true
-                                            ,params:{
-                                                'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
-                                                'params.estado':Ext.getCmp('idEstado').getValue(),
-                                                'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
-                                                'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
-                                                'params.suplemento':Ext.getCmp('idNmsuplem').getValue(),
-                                                'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
-                                            }
-                                        }
-                                    }).show());
-                                }
-                            }),
-                            {   xtype  : 'button',
-                                text   : 'Detalle p&oacute;liza',
-                                id      : 'btnDetallePoliza',
-                                disabled: true,
-                                icon   : _CONTEXT + '/resources/fam3icons/icons/application_add.png',
-                                handler: function() {
-                                    var windowDetPol = Ext.create('Ext.window.Window', {
-                                    title       : 'Detalle de la p&oacute;liza',
-                                    modal       : true,
-                                    buttonAlign : 'center',
-                                    width       : 830,
-                                    height      : 500,
-                                    autoScroll  : true,
-                                    items: [
-                                        Ext.create('Ext.tab.Panel',
-                                        {
-                                            width: 830,
-                                            items: [
-                                                {
-                                                    title : 'DATOS DE LA POLIZA',
-                                                    loader: {
-                                                        url: _URL_LOADER_DATOS_POLIZA,
-                                                        scripts: true,
-                                                        loadMask : true,
-                                                        autoLoad: false,
-                                                        ajaxOptions: {
-                                                            method: 'POST'
-                                                        }
-                                                    },
-                                                    listeners: {
-                                                        activate: function(tab) {
-                                                            tab.loader.load({
-                                                                params : {
-                                                                    'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
-                                                                    'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
-                                                                    'params.estado'  : Ext.getCmp('idEstado').getValue(),
-                                                                    'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
-                                                                    'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                },
-                                                {   title: 'ASEGURADOS',
-                                                    loader: {
-                                                        url: _URL_LOADER_ASEGURADOS_POLIZA,
-                                                        scripts: true,
-                                                        loadMask : true,
-                                                        autoLoad: false,
-                                                        ajaxOptions: {
-                                                            method: 'POST'
-                                                        }
-                                                    },
-                                                    listeners: {
-                                                        activate: function(tab) {
-                                                            tab.loader.load({
-                                                                params : {
-                                                                    'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
-                                                                    'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
-                                                                    'params.estado'    : Ext.getCmp('idEstado').getValue(),
-                                                                    'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
-                                                                    'params.suplemento': Ext.getCmp('idNmsuplem').getValue()
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                   title : 'DOCUMENTACION',
-                                                   width: '350',
-                                                   loader : {
-                                                       url : _URL_CONSULTA_DOCUMENTOS,
-                                                       scripts : true,
-                                                       autoLoad : false
-                                                   },
-                                                   listeners : {
-                                                       activate : function(tab) {
-                                                           tab.loader.load({
-                                                               params : {
-                                                                   'smap1.readOnly': true,
-                                                                   'smap1.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
-                                                                   'smap1.cdunieco': Ext.getCmp('idUnieco').getValue(),
-                                                                   'smap1.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
-                                                                   'smap1.estado'  : Ext.getCmp('idEstado').getValue(),
-                                                                   'smap1.nmsuplem': Ext.getCmp('idNmsuplem').getValue(),
-                                                                   'smap1.ntramite': null,
-                                                                   'smap1.tipomov' : '0'
-                                                               }
-                                                           });
+			{	colspan:2
+				,border: false
+				,layout      :	{
+					type     : 'table'
+					,columns : 3
+				},
+				items    : [
+					{	xtype       : 'textfield',			fieldLabel : 'No. de autorizaci&oacute;n',				id  : 'idNoAutorizacion',
+						name        : 'nmautser',			labelWidth	: 170,					readOnly   : true
+					},
+					{	xtype       : 'textfield',			fieldLabel : 'No. de autorizaci&oacute;n anterior',		id	: 'idNumeroAnterior',	
+						name       : 'nmautant',			labelWidth	: 170,		readOnly   : true
+					},
+					Ext.create('Ext.Button', {
+						text: 'Buscar',
+						id:'btnBuscar',
+						icon : _CONTEXT + '/resources/fam3icons/icons/folder.png',
+						handler: function() {
+							Ext.create('Ext.window.Window',{
+								title         : 'Autorizaci&oacute;n de servicio'
+								,buttonAlign  : 'center'
+								,width        : 750
+								,height       : 400
+								,autoScroll   : true
+								,loader       : {
+									url       : _VER_AUTORIZACION_SERVICIO
+									,scripts  : true
+									,autoLoad : true
+									,params   : {
+										'params.nmautser':Ext.getCmp('idNumeroAnterior').getValue()
+									}
+								}
+							}).showAt(150,150);
+						}
+					})
+				]
+			}
+			, cmbRamos		//1.- Producto
+			,{	colspan:2								,border: false
+				,layout      : {
+					type     : 'table'
+					,columns : 2
+				},
+				items    :[
+					asegurado,
+					{	xtype   : 'button',
+						text    : 'Siniestralidad',
+						id      : 'btnSiniestralidad',
+                        disabled: true,
+						icon    : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+						handler : function() {
+							var windowHistSinies = Ext.create('Ext.window.Window',{
+								modal       : true,
+								buttonAlign : 'center',
+								width       : 800,
+								height      : 500,
+								autoScroll  : true,
+								loader      : {
+									url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
+									params  : {
+										'params.cdperson'  : panelInicialPrincipal.down('[name=cdperson]').getValue(),
+										'params.cdramo'    : null,
+										'params.nmpoliza'  : null,
+										'params.cdunieco'  : null,
+										'params.proceso'  : '0'
+										
+									},
+									scripts  : true,
+									loadMask : true,
+									autoLoad : true,
+									ajaxOptions: {
+										method: 'POST'
+									}
+								},
+								buttons: [{
+									icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+									text: 'Cerrar',
+									handler: function() {
+										windowHistSinies.close();
+									}
+								}]
+							}).show();
+							centrarVentana(windowHistSinies);
+						}
+					}
+				]
+			}
+			,{	xtype       : 'textfield',			fieldLabel : 'Modalidad',			id  : 'idModalidad',	width	: 500,
+				name        : 'idModalidad',		labelWidth	: 170,					readOnly   : true,		colspan:2
+			}
+			,//3.- Fecha de Solicitud
+			{	id: 'fechaSolicitud'		,xtype		: 'datefield'				,fieldLabel	: 'Fecha Solicitud',
+				name:'fesolici'				,labelWidth : 170						,id 		: 'fechaSolicitud',			format		: 'd/m/Y',
+				editable: true				,value		: new Date()				,readOnly   : true
+			},//4.- Fecha de Autorizacion
+			{	id: 'fechaAutorizacion'		,xtype		: 'datefield'				,fieldLabel	: 'Fecha Autorizaci&oacute;n',
+				labelWidth : 170			,format		: 'd/m/Y',
+				editable: true				,name		: 'feautori',
+				listeners:{
+					change:function(field,value){
+						Ext.Ajax.request({
+							url     : _URL_NUMERO_DIAS
+							,params:{
+								'params.cdramo' : Ext.getCmp('idcdRamo').getValue(),
+								'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue()
+							}
+							,success : function (response){
+								Ext.getCmp('fechaVencimiento').setValue(Ext.Date.add(value, Ext.Date.DAY, Ext.decode(response.responseText).diasMaximos));
+							},
+							failure : function (){
+								me.up().up().setLoading(false);
+								centrarVentanaInterna(Ext.Msg.show({
+									title:'Error',
+									msg: 'Error de comunicaci&oacute;n',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								}));
+							}
+						});
+					}
+				}
+			},//5.- Fecha de Vencimiento
+			{	id: 'fechaVencimiento'					,xtype		: 'datefield'								,fieldLabel	: 'Fecha de vencimiento',
+				labelWidth : 170						,format		: 'd/m/Y',									name:'fevencim',
+				editable: false							,readOnly   : true
+			},//6.- Fecha de Ingreso
+			{	id: 'fechaIngreso'						,xtype		: 'datefield'								,fieldLabel	: 'Fecha de Ingreso',
+				labelWidth : 170						,format		: 'd/m/Y',									name:'feingres',
+				editable: true							,allowBlank : false
+			},
+			{	colspan:2								,border: false
+				,layout      : {
+					type     : 'table'
+					,columns : 6
+				},
+				items    :[
+					//7.- Poliza Afectada NMPOLIEX
+					{	 xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectadaCom'
+						,allowBlank : false,				labelWidth: 170,				name:'nmpolizaCom',	readOnly   : true, Width: 1100
+					},
+					//7.- Poliza Afectada corto
+					{	 xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectada'
+						,allowBlank : false,				labelWidth: 170,				name:'nmpoliza',	readOnly   : true,  hidden:true
+					},
+					Ext.create('Ext.Button', {
+						text    : 'Ver coberturas',
+						id      : 'btnVerCoberturas',
+                        disabled: true,
+						icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+						handler: function() {
+							centrarVentanaInterna(Ext.create('Ext.window.Window',{
+								title        : 'COBERTURA'
+								,buttonAlign : 'center'
+								,width       : 620
+								,height      : 400
+								,autoScroll  : true
+								,loader      :	{
+									url       : _VER_COBERTURAS
+									,scripts  : true
+									,autoLoad : true
+									,params:{
+										'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
+										'params.estado':Ext.getCmp('idEstado').getValue(),
+										'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
+										'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
+										'params.suplemento':Ext.getCmp('idNmsuplem').getValue(),
+										'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
+									}
+								}
+							}).show());
+						}
+					}),
+					{	xtype  : 'button',
+						text   : 'Detalle p&oacute;liza',
+						id      : 'btnDetallePoliza',
+                        disabled: true,
+						icon   : _CONTEXT + '/resources/fam3icons/icons/application_add.png',
+						handler: function() {
+							var windowDetPol = Ext.create('Ext.window.Window', {
+							title       : 'Detalle de la p&oacute;liza',
+							modal       : true,
+							buttonAlign : 'center',
+							width       : 830,
+							height      : 500,
+							autoScroll  : true,
+							items: [
+								Ext.create('Ext.tab.Panel',
+								{
+									width: 830,
+									items: [
+										{
+											title : 'DATOS DE LA POLIZA',
+											loader: {
+												url: _URL_LOADER_DATOS_POLIZA,
+												scripts: true,
+												loadMask : true,
+												autoLoad: false,
+												ajaxOptions: {
+													method: 'POST'
+												}
+											},
+											listeners: {
+												activate: function(tab) {
+													tab.loader.load({
+														params : {
+															'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
+															'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+															'params.estado'  : Ext.getCmp('idEstado').getValue(),
+															'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+															'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
+														}
+													});
+												}
+											}
+										},
+										{	title: 'ASEGURADOS',
+											loader: {
+												url: _URL_LOADER_ASEGURADOS_POLIZA,
+												scripts: true,
+												loadMask : true,
+												autoLoad: false,
+												ajaxOptions: {
+													method: 'POST'
+												}
+											},
+											listeners: {
+												activate: function(tab) {
+													tab.loader.load({
+														params : {
+															'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
+															'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
+															'params.estado'    : Ext.getCmp('idEstado').getValue(),
+															'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
+															'params.suplemento': Ext.getCmp('idNmsuplem').getValue()
+														}
+													});
+												}
+											}
+										},
+										{
+                                           title : 'DOCUMENTACION',
+                                           width: '350',
+                                           loader : {
+                                               url : _URL_CONSULTA_DOCUMENTOS,
+                                               scripts : true,
+                                               autoLoad : false
+                                           },
+                                           listeners : {
+                                               activate : function(tab) {
+                                                   tab.loader.load({
+                                                       params : {
+                                                           'smap1.readOnly': true,
+                                                           'smap1.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+                                                           'smap1.cdunieco': Ext.getCmp('idUnieco').getValue(),
+                                                           'smap1.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+                                                           'smap1.estado'  : Ext.getCmp('idEstado').getValue(),
+                                                           'smap1.nmsuplem': Ext.getCmp('idNmsuplem').getValue(),
+                                                           'smap1.ntramite': null,
+                                                           'smap1.tipomov' : '0'
                                                        }
-                                                   }
-                                               },
-                                                {   title: 'RECIBOS',
-                                                    loader: {
-                                                        url: _URL_LOADER_RECIBOS,
-                                                        scripts: true,
-                                                        loadMask : true,
-                                                        autoLoad: false,
-                                                        ajaxOptions: {
-                                                            method: 'POST'
-                                                        }
-                                                    },
-                                                    listeners: {
-                                                        activate: function(tab) {
-                                                            tab.loader.load({
-                                                                params : {
-                                                                    'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
-                                                                    'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
-                                                                    'params.estado'  : Ext.getCmp('idEstado').getValue(),
-                                                                    'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
-                                                                    'params.nmsuplem': Ext.getCmp('idNmsuplem').getValue()
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        })]
-                                    }).show();
-                                    centrarVentanaInterna(windowDetPol);
+                                                   });
+                                               }
+                                           }
+                                       },
+										{	title: 'RECIBOS',
+											loader: {
+												url: _URL_LOADER_RECIBOS,
+												scripts: true,
+												loadMask : true,
+												autoLoad: false,
+												ajaxOptions: {
+													method: 'POST'
+												}
+											},
+											listeners: {
+												activate: function(tab) {
+													tab.loader.load({
+														params : {
+															'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
+															'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+															'params.estado'  : Ext.getCmp('idEstado').getValue(),
+															'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+															'params.nmsuplem': Ext.getCmp('idNmsuplem').getValue()
+														}
+													});
+												}
+											}
+										}
+									]
+								})]
+							}).show();
+							centrarVentanaInterna(windowDetPol);
+						}
+					},
+					{	xtype   : 'button',
+						text    : 'Exclusi&oacute;n p&oacute;liza',
+						id      : 'btnExclusionPoliza',
+						disabled: true,
+						icon    : _CONTEXT + '/resources/fam3icons/icons/application_delete.png',
+						handler : function() {
+							centrarVentanaInterna(Ext.create('Ext.window.Window', {
+								title       : 'Exclusiones de la p&oacute;liza',
+								modal       : true,
+								buttonAlign : 'center',
+								autoScroll  : true,
+								width       : 450,
+								height      : 455,
+								loader      : {
+									url     : _URL_LOADER_VER_EXCLUSIONES,
+									scripts : true,
+									autoLoad: true,
+									params  : {
+										'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
+										'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+										'params.estado'  : Ext.getCmp('idEstado').getValue(),
+										'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+										'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
+									}
+								}
+							}).show());
+						}
+					},
+                    {   xtype   : 'button',
+                        text    : 'Exclusi&oacute;n ICD',
+                        id      : 'btnExclusionICD',
+                        disabled: true,
+                        icon    : _CONTEXT + '/resources/fam3icons/icons/application_form_delete.png',
+                        handler : function() {
+                            centrarVentanaInterna(Ext.create('Ext.window.Window', {
+                                title       : 'Exclusiones ICD',
+                                modal       : true,
+                                buttonAlign : 'center',
+                                autoScroll  : true,
+                                width       : 800,
+                                height      : 500,
+                                loader      : {
+                                    url     : _URL_LOADER_EXLUSION_ICD_ASEGURADOS,
+                                    scripts : true,
+                                    autoLoad: true,
+                                    params  : {
+                                        'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
+                                        'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+                                        'params.estado'  : Ext.getCmp('idEstado').getValue(),
+                                        'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+                                        'params.nmsuplem': Ext.getCmp('idNmsuplem').getValue(),
+                                        'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
+                                    }
                                 }
-                            },
-                            {   xtype   : 'button',
-                                text    : 'Exclusi&oacute;n p&oacute;liza',
-                                id      : 'btnExclusionPoliza',
-                                disabled: true,
-                                icon    : _CONTEXT + '/resources/fam3icons/icons/application_delete.png',
-                                handler : function() {
-                                    centrarVentanaInterna(Ext.create('Ext.window.Window', {
-                                        title       : 'Exclusiones de la p&oacute;liza',
-                                        modal       : true,
-                                        buttonAlign : 'center',
-                                        autoScroll  : true,
-                                        width       : 450,
-                                        height      : 455,
-                                        loader      : {
-                                            url     : _URL_LOADER_VER_EXCLUSIONES,
-                                            scripts : true,
-                                            autoLoad: true,
-                                            params  : {
-                                                'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
-                                                'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
-                                                'params.estado'  : Ext.getCmp('idEstado').getValue(),
-                                                'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
-                                                'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
-                                            }
-                                        }
-                                    }).show());
-                                }
-                            },
-                            {   xtype   : 'button',
-                                text    : 'Exclusi&oacute;n ICD',
-                                id      : 'btnExclusionICD',
-                                disabled: true,
-                                icon    : _CONTEXT + '/resources/fam3icons/icons/application_form_delete.png',
-                                handler : function() {
-                                    centrarVentanaInterna(Ext.create('Ext.window.Window', {
-                                        title       : 'Exclusiones ICD',
-                                        modal       : true,
-                                        buttonAlign : 'center',
-                                        autoScroll  : true,
-                                        width       : 800,
-                                        height      : 500,
-                                        loader      : {
-                                            url     : _URL_LOADER_EXLUSION_ICD_ASEGURADOS,
-                                            scripts : true,
-                                            autoLoad: true,
-                                            params  : {
-                                                'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
-                                                'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
-                                                'params.estado'  : Ext.getCmp('idEstado').getValue(),
-                                                'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
-                                                'params.nmsuplem': Ext.getCmp('idNmsuplem').getValue(),
-                                                'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
-                                            }
-                                        }
-                                    }).show());
-                                }
-                            }
-                        ]
-                    },{  xtype       : 'textfield',         fieldLabel : 'C&oacute;digo Postal',      id  : 'idCodPostal',    width   : 300,
-                        name        : 'idModalidad',        labelWidth  : 170,                 readOnly   : true,      colspan:2
-                    },{  xtype       : 'textfield',         fieldLabel : 'Estado',             id  : 'idEstado',       width   : 450,
-                        name        : 'idModalidad',        labelWidth  : 170,                 readOnly   : true,      colspan:2
-                    },{  xtype       : 'textfield',         fieldLabel : 'Municipio',          id  : 'idMunicipio',    width   : 450,
-                        name        : 'idModalidad',        labelWidth  : 170,                 readOnly   : true,      colspan:2
-                    }
-                    
-                ]
-            },
-            {   colspan:2                               ,border: true
-                ,bodyPadding: 5
-                ,title        : 'Atenci&oacute;n del siniestro : '
-                ,layout      : {
-                    type     : 'table'
-                    ,columns : 2 
-                },
-                items    :[
-                    //sucursal,
-                    estado,
-                    municipio,
-                    coberturaAfectada,      //9.- Cobertura Afectada
-                    subCobertura,           //10.- SubCobertura
-                    tipoEvento
-                ]
-            },
-            
-            {   colspan:2                               ,border: true
-                ,bodyPadding: 5
-                ,title        : 'Informaci&oacute;n Proveedor - M&eacute;dico :'
-                ,layout      : {
-                    type     : 'table'
-                    ,columns : 2
-                },
-                items    :[
-                    proveedor,              //11.- Proveedor
-                    medico,                 //12.- Medico           
-                    //12.- Medico si no se encuentra en red
-                    {   colspan:2,          id    : 'medicoPExt',       xtype  : 'textfield',           fieldLabel  : 'Nombre M&eacute;dico',
-                        labelWidth: 170,    width :350,                 width  :500,                    name   :'medicoPExt',                   hidden: false,
-                        listeners:{
-                            afterrender: function(){
-                                this.hide();
-                            }
+                            }).show());
                         }
-                    },
-                    //13.- Especialidad en red
-                    {   colspan:2,          id  : 'especialidadPExt',   xtype  : 'textfield',           fieldLabel  : 'Especialidad',       labelWidth: 170,
-                        width   :350,       width:500,                  name   :'especialidadPExt',     hidden: false,
-                        listeners:{
-                            afterrender: function(){
-                                this.hide();
-                            }
-                        }
-                    },
-                    //13.- Especialidad sin red
-                    {   colspan:2,xtype   : 'textfield'         ,fieldLabel : 'Especialidad'        ,id       : 'idEspecialidad',       name:'idEspecialidad'
-                        ,labelWidth: 170                        ,readOnly   : true
                     }
-                ]
-            },			
-			
-            
-            {   colspan:2                               ,border: true
-                ,bodyPadding: 5
-                ,title       : 'Informaci&oacute;n Deducible - Copago - Penalizaciones :'
-                ,layout      : {
-                    type     : 'table'
-                    ,columns : 2
-                },
-                items    :[
-                    //14.- Deducible
-                    {   colspan:2,  xtype : 'textfield'         ,fieldLabel : 'Deducible'           ,id       : 'idDeducible'
-                        ,labelWidth: 170                        ,readOnly   : true
-                    },
-                    //15.- Copago
-                    {   colspan:2, xtype  : 'textfield'         ,fieldLabel : 'Copago original'     ,id       : 'idCopago'
-                        ,labelWidth: 170                        ,readOnly   : true,  width: 670
-                    },
-                    //16.- Copago Final Previo
-                    {   colspan:2, xtype  : 'textfield'         ,fieldLabel : 'Copago final'        ,id       : 'idCopagoPrevio'
-                        ,labelWidth: 170                        ,readOnly   : true,                 name:'copagoPrevio',        width: 670
-                    },
-                    //16.- Copago Final Total
-                    {   colspan:2, xtype  : 'textfield'         ,fieldLabel : 'Copago final'        ,id       : 'idCopagoFin'
-                        ,labelWidth: 170                        ,readOnly   : true,                 name:'copagoTotal',         width: 670
-                    },
-                    aplicaCirHosp,
-                    //17.- P. Circulo Hospitalario
-                    {   colspan:2, xtype  : 'textfield'         ,fieldLabel : 'Penalizaci&oacuten circulo hospitalario'         ,id       : 'idPenalCircHospitalario'
-                        ,labelWidth: 170                        ,readOnly   : true, name: 'idPenalCircHospitalario'
-                    },
-                    aplicaZona,
-                    //18.- P. Cambio de zona
-                    {   colspan:2, xtype  : 'textfield'         ,fieldLabel : 'Penalizaci&oacuten por cambio de zona'           ,id       : 'idPenalCambioZona'
-                        ,labelWidth: 170                        ,readOnly   : true,         name       : 'idPenalCambioZona'
-                    }
-                ]
-            },
-
-
-            {   colspan:2                               ,border: true
-                ,bodyPadding: 5
-                ,title        : 'Informaci&oacute;n General :'
-                ,layout      : {
-                    type     : 'table'
-                    ,columns : 2
-                },
-                items    :[
-                    comboICD,                   //19.- ICD
-                    comboSecundario,
-                    causaSiniestro,             //20.- Causa Siniestro
-                    //21.- Suma Disponible
-                    {   colspan:2,          xtype : 'numberfield',              id:'sumDisponible',           fieldLabel: 'Suma disponible proveedor',
-                        labelWidth: 170,    allowBlank: false,                  allowDecimals :true,          decimalSeparator :'.',                 allowBlank:false,
-                        name:'mtsumadp',    minValue: 0
-                    },
-                    tratamiento,                //22.- Tratamiento
-                    //23.- Observaciones
-                    {   colspan:2                   ,xtype : 'textareafield'                ,fieldLabel : 'Observaciones'       ,id       : 'observaciones'
-                        ,labelWidth  : 170          ,name  :'dsobserv'                      ,width      : 700                   ,height   : 70
-                    },
-                    //24.- Notas Internas
-                    {   colspan:2                   ,xtype       : 'textareafield'          ,fieldLabel : 'Notas internas'      ,id       : 'notaInterna'
-                        ,labelWidth: 170            ,name:'dsnotas'                         ,width      : 700                   ,height: 100
-                    }
-                ]
-            },
+				]
+			},
+			sucursal,				//8.- Plazas
+			coberturaAfectada,		//9.- Cobertura Afectada
+			subCobertura,			//10.- SubCobertura
+			tipoEvento,
+			proveedor,				//11.- Proveedor
+			medico,					//12.- Medico
+			//12.- Medico si no se encuentra en red
+			{	colspan:2, 			id    : 'medicoPExt',		xtype  : 'textfield',			fieldLabel 	: 'Nombre M&eacute;dico',
+				labelWidth: 170,	width :350,					width  :500,					name   :'medicoPExt', 					hidden: false,
+				listeners:{
+					afterrender: function(){
+						this.hide();
+					}
+				}
+			},
+			//13.- Especialidad en red
+			{	colspan:2, 			id	: 'especialidadPExt',	xtype  : 'textfield',			fieldLabel 	: 'Especialidad',		labelWidth: 170,
+				width	:350,		width:500,					name   :'especialidadPExt', 	hidden: false,
+				listeners:{
+					afterrender: function(){
+						this.hide();
+					}
+				}
+			},
+			//13.- Especialidad sin red
+			{	colspan:2,xtype   : 'textfield'			,fieldLabel : 'Especialidad'		,id       : 'idEspecialidad',		name:'idEspecialidad'
+				,labelWidth: 170						,readOnly   : true
+			},
+			//14.- Deducible
+			{	colspan:2,  xtype : 'textfield'			,fieldLabel : 'Deducible'			,id       : 'idDeducible'
+				,labelWidth: 170						,readOnly   : true
+			},
+			//15.- Copago
+			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago original'		,id       : 'idCopago'
+				,labelWidth: 170						,readOnly   : true,  width: 670
+			},
+			//16.- Copago Final Previo
+			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago final'		,id       : 'idCopagoPrevio'
+				,labelWidth: 170						,readOnly   : true,					name:'copagoPrevio',  		width: 670
+			},
+			//16.- Copago Final Total
+			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago final'		,id       : 'idCopagoFin'
+				,labelWidth: 170						,readOnly   : true,					name:'copagoTotal',  		width: 670
+			},
+			aplicaCirHosp,
+			//17.- P. Circulo Hospitalario
+			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Penalizaci&oacuten circulo hospitalario'			,id       : 'idPenalCircHospitalario'
+				,labelWidth: 170						,readOnly   : true, name: 'idPenalCircHospitalario'
+			},
+			aplicaZona,
+			//18.- P. Cambio de zona
+			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Penalizaci&oacuten por cambio de zona'			,id       : 'idPenalCambioZona'
+				,labelWidth: 170						,readOnly   : true,			name       : 'idPenalCambioZona'
+			},
+			comboICD,					//19.- ICD
+			causaSiniestro,				//20.- Causa Siniestro
+			//21.- Suma Disponible
+			{	colspan:2,			xtype : 'numberfield',              id:'sumDisponible',           fieldLabel: 'Suma disponible proveedor',
+				labelWidth: 170,    allowBlank: false,	                allowDecimals :true,          decimalSeparator :'.',                 allowBlank:false,
+				name:'mtsumadp',	minValue: 0
+			},
+			tratamiento,				//22.- Tratamiento
+			//23.- Observaciones
+			{	colspan:2					,xtype : 'textareafield'				,fieldLabel : 'Observaciones'		,id       : 'observaciones'
+				,labelWidth	 : 170			,name  :'dsobserv'						,width      : 700					,height   : 70
+			},
+			//24.- Notas Internas
+			{	colspan:2					,xtype       : 'textareafield'			,fieldLabel : 'Notas internas'		,id       : 'notaInterna'
+				,labelWidth: 170			,name:'dsnotas'							,width      : 700					,height: 100
+			},
 			{	colspan:2,
 				items    : [
 					gridIncisos
@@ -3359,12 +3181,12 @@ Ext.onReady(function() {
 				Ext.getCmp('botonVoBo').setDisabled(false);
         		Ext.getCmp('idcdtipsit').setValue(json);
 				if(json.aplicaCirHos == null ||json.aplicaCirHos ==''){
-					Ext.getCmp('idaplicaCirHosp').setValue('N');
+					Ext.getCmp('idaplicaCirHosp').setValue('S');
 				}else{
 					Ext.getCmp('idaplicaCirHosp').setValue(json.aplicaCirHos);
 				}
 				if(json.idaplicaZona == null ||json.idaplicaZona ==''){
-					Ext.getCmp('idaplicaZona').setValue('N');
+					Ext.getCmp('idaplicaZona').setValue('S');
 				}else{
 					Ext.getCmp('idaplicaZona').setValue(json.aplicaZonaHosp);
 				}
