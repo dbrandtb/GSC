@@ -5,6 +5,8 @@
 	<head>
 		<title>Afiliados Afectados</title>
 		<script type="text/javascript">
+			extjs_custom_override_mayusculas = false;
+			
 			var _CONTEXT 								= '${ctx}';
 			var _11_params								= <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
 			var numAutServ								= null;
