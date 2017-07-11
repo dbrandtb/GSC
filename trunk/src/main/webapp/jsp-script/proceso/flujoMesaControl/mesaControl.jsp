@@ -7,7 +7,7 @@
 <script type="text/javascript" src="${ctx}/resources/extjs4/plugins/pagingpersistence/pagingselectionpersistence.js?${now}"></script>
 
 <script>
-////// urls //////
+// //// urls //////
 var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramites"             />'
     ,_p54_urlRecuperarPoliza          = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnica"          />'
     ,_p54_urlRegistrarTramite         = '<s:url namespace="/flujomesacontrol" action="registrarTramite"              />'
@@ -17,9 +17,9 @@ var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" ac
     ,_p54_urlRecuperarChecklist       = '<s:url namespace="/flujomesacontrol" action="recuperarChecklistInicial"     />'
     ,_p54_urlactulizaNumFolioMcSigs   = '<s:url namespace="/consultasPoliza"  action="actualizaEstatusTramiteMCsigs" />'
     ,_p54_urlCargarParametrosCoti     = '<s:url namespace="/emision"          action="obtenerParametrosCotizacion"   />';
-////// urls //////
+// //// urls //////
 
-////// variables //////
+// //// variables //////
 var _p54_params = <s:property value="%{convertToJSON('params')}"  escapeHtml="false" />;
 debug('_p54_params:',_p54_params);
 
@@ -34,11 +34,12 @@ var _p54_formularios = [];
 
 var _p54_btnReasigna = _p54_params.BTN_REASIGNAR == 'S'? true:false;
 
-////// variables //////
+// //// variables //////
 
-////// overrides //////
+// //// overrides //////
 
-//Se repara que combos con 'forceSelection' dejen pasar cadena mientras se carga su lista'
+// Se repara que combos con 'forceSelection' dejen pasar cadena mientras se
+// carga su lista'
 Ext.define('ComboBox', {
     override: 'Ext.form.ComboBox',
     
@@ -54,9 +55,9 @@ Ext.define('ComboBox', {
         return valido || 'No se encuentra el registro';
     }
 });
-////// overrides //////
+// //// overrides //////
 
-////// componentes dinamicos //////
+// //// componentes dinamicos //////
 var _p54_filtroItemsDin = [ <s:property value="items.filtroItems"    escapeHtml="false" /> ];
 var _p54_formBaseItems  = [ <s:property value="items.formBaseItems"  escapeHtml="false" /> ];
 var _p54_formFlujoItems = [ <s:property value="items.formFlujoItems" escapeHtml="false" /> ];
@@ -102,28 +103,23 @@ _p54_gridButtons.push(
 });
 
 /*
-/////////////////////////////
-//No hay filtrado en paginado
-/////////////////////////////
-
-_p54_gridButtons.push('->');
-_p54_gridButtons.push(
-{
-    xtype       : 'textfield'
-    ,fieldLabel : '<span style="color:white;">Filtro (pend.):</span>'
-    ,labelWidth : 60
-});
-*/
-////// componentes dinamicos //////
+ * ///////////////////////////// //No hay filtrado en paginado
+ * /////////////////////////////
+ * 
+ * _p54_gridButtons.push('->'); _p54_gridButtons.push( { xtype : 'textfield'
+ * ,fieldLabel : '<span style="color:white;">Filtro (pend.):</span>'
+ * ,labelWidth : 60 });
+ */
+// //// componentes dinamicos //////
 
 Ext.onReady(function()
 {
-    Ext.Ajax.timeout = 1*60*60*1000; //1 hr
+    Ext.Ajax.timeout = 1*60*60*1000; // 1 hr
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
 
-    ////// stores //////
+    // //// stores //////
     _p54_store = Ext.create('Ext.data.Store',
     {
         fields    : [ <s:property value="items.gridFields" escapeHtml="false" /> ]
@@ -148,9 +144,9 @@ Ext.onReady(function()
             }
         }
     });
-    ////// stores //////
+    // //// stores //////
     
-    ////// componentes //////
+    // //// componentes //////
     _p54_windowNuevo = Ext.create('Ext.window.Window',
     {
         title        : 'Registrar nuevo tr\u00e1mite'
@@ -183,7 +179,7 @@ Ext.onReady(function()
                         text     : 'Limpiar'
                         ,icon    : '${icons}control_repeat_blue.png'
                         ,handler : function (me) {
-                            //_p54_windowNuevo.showNew();
+                            // _p54_windowNuevo.showNew();
                             me.up('window').close();
                             _p54_nuevoTramiteClic();
                         } 
@@ -304,7 +300,8 @@ Ext.onReady(function()
                         _fieldByName('CDAGENTEEND',me).allowBlank = true;
                         _hide(_fieldByName('CDAGENTEEND',me));
                         
-                        if (Number(cdtipram) === Number(TipoRamo.Salud)) { // Para salud
+                        if (Number(cdtipram) === Number(TipoRamo.Salud)) { // Para
+																			// salud
                             _fieldByName('CDSUCDOC',me).forceSelection = true;
                             _show(_fieldByName('CDSUCDOC',me));
                         } else { // Para danios
@@ -312,7 +309,10 @@ Ext.onReady(function()
                             _hide(_fieldByName('CDSUCDOC',me));
                         }
                     }
-                    else if(Number(cdtiptra) === 15 || Number(cdtiptra) === 21) // para endoso o renovacion
+                    else if(Number(cdtiptra) === 15 || Number(cdtiptra) === 21) // para
+																				// endoso
+																				// o
+																				// renovacion
                     {
                         // indistinto salud y danios
                         
@@ -492,9 +492,9 @@ Ext.onReady(function()
             debugError(e, ck);
         }
     })();
-    ////// componentes //////
+    // //// componentes //////
     
-    ////// contenido //////
+    // //// contenido //////
     Ext.create('Ext.panel.Panel',
     {
         itemId    : '_p54_panelpri'
@@ -617,8 +617,10 @@ Ext.onReady(function()
                 {
                  cellclick : function ( cellsel, td, cellIndex, record, tr, rowIndex, e, eOpts )
                     {
-                     //Se cambia evento a Cellclick en vez de select y solo se permite seleccionar a la primer fila
-                     // se carga ventana de tranite en el evento de cellclick fuera del checkbox
+                     // Se cambia evento a Cellclick en vez de select y solo
+						// se permite seleccionar a la primer fila
+                     // se carga ventana de tranite en el evento de cellclick
+						// fuera del checkbox
                      if(cellIndex == 0){
                          return true;
                      }
@@ -683,19 +685,29 @@ Ext.onReady(function()
                                         xtype       : 'displayfield'
                                         ,fieldLabel : 'P\u00d3LIZA ANTERIOR'
                                         ,value      : _NVL(record.get('RENPOLIEX'), 0)
-                                        ,hidden     : record.get('CDTIPTRA') != 21 || record.get('CDTIPRAM') != 2 // Oculto si no es renovacion de auto
+                                        ,hidden     : record.get('CDTIPTRA') != 21 || record.get('CDTIPRAM') != 2 // Oculto
+																													// si
+																													// no
+																													// es
+																													// renovacion
+																													// de
+																													// auto
                                     }
                                     ,{
                                         xtype       : 'displayfield'
                                         ,fieldLabel : 'P\u00d3LIZA'
                                         ,value      : _NVL(record.get('NMPOLIZA'), 0)
-                                        ,hidden     : record.get('CDTIPRAM') == 2 // Oculto para autos
+                                        ,hidden     : record.get('CDTIPRAM') == 2 // Oculto
+																					// para
+																					// autos
                                     }
                                     ,{
                                         xtype       : 'displayfield'
                                         ,fieldLabel : 'P\u00d3LIZA'
                                         ,value      : _NVL(record.get('NMPOLIEX'), 0)
-                                        ,hidden     : record.get('CDTIPRAM') == 10 // Oculto para salud
+                                        ,hidden     : record.get('CDTIPRAM') == 10 // Oculto
+																					// para
+																					// salud
                                     }
                                     ,{
                                         xtype       : 'displayfield'
@@ -763,9 +775,9 @@ Ext.onReady(function()
     
     
     
-    ////// contenido //////
+    // //// contenido //////
     
-    ////// custom //////
+    // //// custom //////
     if (Ext.isEmpty(_p54_params.CDUNIECO)) {
         mensajeError('No se encuentra sucursal asociada al usuario y no se pueden crear tr\u00e1mites');
     }
@@ -837,7 +849,8 @@ Ext.onReady(function()
             cdsucdocCmp.store.proxy.extraParams['params.idPadre'] = cdflujomc;
             cdsucdocCmp.heredar();
             _p54_setearSucursalAgente();
-            if (Number(cdtiptraCmp.getValue()) !== 1) { // Para endosos y renovacion
+            if (Number(cdtiptraCmp.getValue()) !== 1) { // Para endosos y
+														// renovacion
                 cduniextCmp.store.proxy.extraParams['params.idPadre'] = cdtipram;
                 cduniextCmp.heredar();
             } else {
@@ -848,18 +861,11 @@ Ext.onReady(function()
     });
     
     /*
-    cdtiptraCmp.on({
-        change : function (me, val) {
-            if (_p54_params.CDSISROL === 'SUSCRIPTOR') {
-                if (Number(val) === 1) {
-                    estatusCmp.setValue('2'); // para SUSCRIPTOR para EMISION el status es PENDIENTE
-                } else {
-                    estatusCmp.reset();
-                }
-            }
-        }
-    });
-    */
+	 * cdtiptraCmp.on({ change : function (me, val) { if (_p54_params.CDSISROL
+	 * === 'SUSCRIPTOR') { if (Number(val) === 1) { estatusCmp.setValue('2'); //
+	 * para SUSCRIPTOR para EMISION el status es PENDIENTE } else {
+	 * estatusCmp.reset(); } } } });
+	 */
     
     if (!Ext.isEmpty(cdagenteCmp.store)) {
         cdagenteCmp.on({
@@ -871,7 +877,11 @@ Ext.onReady(function()
     
     cdtipsupCmp.on({
         change : function (me, val) {
-            if (!Ext.isEmpty(val) && Number(val) === 1) { // Para emision no se pueden modificar los numeros de poliza 0
+            if (!Ext.isEmpty(val) && Number(val) === 1) { // Para emision no
+															// se pueden
+															// modificar los
+															// numeros de poliza
+															// 0
                 nmpolizaCmp.setReadOnly(true);
                 nmpolizaCmp.setValue('0');
                 nmpolizaCmp.isValid();
@@ -879,7 +889,10 @@ Ext.onReady(function()
                 nmpoliexCmp.setReadOnly(true);
                 nmpoliexCmp.setValue('0');
                 nmpoliexCmp.isValid();
-            } else {                                      // Para endoso se pueden modificar los numeros de poliza
+            } else {                                      // Para endoso se
+															// pueden modificar
+															// los numeros de
+															// poliza
                 nmpolizaCmp.setReadOnly(false);
                 nmpolizaCmp.setValue('');
                 nmpolizaCmp.isValid();
@@ -930,9 +943,15 @@ Ext.onReady(function()
                                 debug('### poliza:', json);
                                 if (json.success === true) {
                                     
-                                    // Si la recuperada no es del agente de sesion
+                                    // Si la recuperada no es del agente de
+									// sesion
                                     if (!Ext.isEmpty(_p54_params.CDAGENTE) && Number(_p54_params.CDAGENTE) !== Number(json.params.CDAGENTE)) {
-                                        throw 'No tiene permisos para recuperar esta p\u00f3liza';//, pertenece al agente ' + json.params.CDAGENTE;
+                                        throw 'No tiene permisos para recuperar esta p\u00f3liza';// ,
+																									// pertenece
+																									// al
+																									// agente
+																									// ' +
+																									// json.params.CDAGENTE;
                                     }
                                     
                                     centrarVentanaInterna(Ext.create('Ext.window.Window', {
@@ -1129,9 +1148,15 @@ Ext.onReady(function()
 	                                debug('### poliza:',json);
 	                                if (json.success == true) {
 	                                    
-	                                    // Si la recuperada no es del agente de sesion
+	                                    // Si la recuperada no es del agente de
+										// sesion
                                         if (!Ext.isEmpty(_p54_params.CDAGENTE) && Number(_p54_params.CDAGENTE) !== Number(json.params.CDAGENTE)) {
-                                            throw 'No tiene permisos para recuperar esta p\u00f3liza';//, pertenece al agente ' + json.params.CDAGENTE;
+                                            throw 'No tiene permisos para recuperar esta p\u00f3liza';// ,
+																										// pertenece
+																										// al
+																										// agente
+																										// ' +
+																										// json.params.CDAGENTE;
                                         }
 	                                    
 	                                    centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -1211,11 +1236,16 @@ Ext.onReady(function()
                                                                 'params.cdramo'   : json.params.CDRAMO,
                                                                 'params.cdtipsit' : json.params.CDTIPSIT,
                                                                 'params.vigente'  : '*'
-                                                                /* JTEZVA 30 NOV 2016 RAFA PIDE MOSTRAR TODOS
-                                                                'params.vigente'  : json.params.STATUSPOL === 'VIGENTE'
-                                                                    ? 'S'
-                                                                    : 'N'
-                                                                */
+                                                                /*
+																 * JTEZVA 30 NOV
+																 * 2016 RAFA
+																 * PIDE MOSTRAR
+																 * TODOS
+																 * 'params.vigente' :
+																 * json.params.STATUSPOL
+																 * === 'VIGENTE' ?
+																 * 'S' : 'N'
+																 */
                                                             }
                                                         });
 	                                                }
@@ -1260,10 +1290,10 @@ Ext.onReady(function()
 	                        }
 	                    });
                     }
-                    else if(Number(cdtiptra) === 21)//renovacion
+                    else if(Number(cdtiptra) === 21)// renovacion
                     {
                         ck = 'Recuperando p\u00f3liza SIGS';
-                        //redirije mc
+                        // redirije mc
                         var cdflujoCmp = _p54_windowNuevo.down('[name=CDFLUJOMC]');
                         debug('cdflujoCmp:',cdflujoCmp,'.');
                         
@@ -1316,18 +1346,29 @@ Ext.onReady(function()
                                         var jsonSIGS = Ext.decode(json.smap1.valoresCampos);
                                         
                                         debug('jsonSIGS:',jsonSIGS);
-                                        // Si la recuperada no es del agente de sesion
+                                        // Si la recuperada no es del agente de
+										// sesion
                                         if (!Ext.isEmpty(_p54_params.CDAGENTE) && Number(_p54_params.CDAGENTE) !== Number(jsonSIGS.smap1.cdagente)) {
-                                            throw 'No tiene permisos para recuperar esta p\u00f3liza';//, pertenece al agente ' + jsonSIGS.smap1.cdagente;
+                                            throw 'No tiene permisos para recuperar esta p\u00f3liza';// ,
+																										// pertenece
+																										// al
+																										// agente
+																										// ' +
+																										// jsonSIGS.smap1.cdagente;
                                         }
-                                        //Si la recuperada ya fue registrada previamente o presenta errores en el proceso de registro
+                                        // Si la recuperada ya fue registrada
+										// previamente o presenta errores en el
+										// proceso de registro
                                         if (!Ext.isEmpty(jsonSIGS.smap1.mensajeError)){
                                             throw jsonSIGS.smap1.mensajeError;
                                         }
-                                        //Datos a resaltar de la recuperada cuando no corresponde al tipo fronterizo/residente individual/flotilla indicado
-//                                         if (!Ext.isEmpty(jsonSIGS.smap1.mensajeAviso)){
-//                                         	mensajeCorrecto('Aviso',jsonSIGS.smap1.mensajeAviso);
-//                                         }
+                                        // Datos a resaltar de la recuperada
+										// cuando no corresponde al tipo
+										// fronterizo/residente
+										// individual/flotilla indicado
+// if (!Ext.isEmpty(jsonSIGS.smap1.mensajeAviso)){
+// mensajeCorrecto('Aviso',jsonSIGS.smap1.mensajeAviso);
+// }
                                         
                                         centrarVentanaInterna(Ext.create('Ext.window.Window',
                                         {
@@ -1469,7 +1510,9 @@ Ext.onReady(function()
                                                                 debugError('error al contar camiones (1):', e);
                                                             }
                                                             
-                                                          //Validacion de nivel de siniestralidad
+                                                          // Validacion de
+															// nivel de
+															// siniestralidad
                                                             var mascaraSiniestralidad;
                                                             try {
                                                                 mascaraSiniestralidad = _maskLocal();
@@ -1587,13 +1630,13 @@ Ext.onReady(function()
             manejaException(e, ck);
         }
     })();
-    ////// custom //////
+    // //// custom //////
     
-    ////// loaders //////
-    ////// loaders //////
+    // //// loaders //////
+    // //// loaders //////
 });
 
-////// funciones //////
+// //// funciones //////
 function _p54_registrarTramite(bot)
 {
     debug('_p54_registrarTramite');
@@ -1633,12 +1676,12 @@ function _p54_registrarTramite(bot)
         
         if(values.CDTIPFLU=='1' && values.CDFLUJOMC=='180' && values.STATUS!=='2'){
            debug('Esntro a a validar');
-           values.STATUS = '200';
+           values.STATUS = '164';
            debug('values***',values);
         	
         }if(values.CDTIPFLU=='1' && values.CDFLUJOMC=='181' && values.STATUS!=='2'){
         	debug('Esntro a a validar');
-            values.STATUS = '200';
+            values.STATUS = '164';
             debug('values***',values);
         
         }
@@ -1663,8 +1706,8 @@ function _p54_registrarTramite(bot)
                     		if (bandera==false)	{
                     			mensajeError('No se pudo grabar numero de tr\u00e1mite en sistema sigs',function(){callbackRegistar(true)});
                     		}else{
-                    			  if((json.params.CDTIPFLU=='1' && json.params.CDFLUJOMC=='180' && json.params.STATUS=='200') 
-                    			   ||  (json.params.CDTIPFLU=='1' && json.params.CDFLUJOMC=='181' && json.params.STATUS=='200')){
+                    			  if((json.params.CDTIPFLU=='1' && json.params.CDFLUJOMC=='180' && json.params.STATUS=='164') 
+                    			   ||  (json.params.CDTIPFLU=='1' && json.params.CDFLUJOMC=='181' && json.params.STATUS=='164')){
 						           	
 						           debug(json.params.asignado);
 						        	mensajeCorrecto('Tr\u00e1mite Turnado',json.params.asignado,function()
@@ -1673,13 +1716,13 @@ function _p54_registrarTramite(bot)
 		                                 var form  = _fieldById('_p54_filtroForm');
 		                                 var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
 		                                 form.getForm().reset();
-		                                 //form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
+		                                 // form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
 		                                 form.down('[name=STATUS]').setValue('-1');
 		                                 _fieldById('_p54_filtroCmp').reset();
 		                                 
 		                                 var callbackCheck = function(store, records, success) {
 		                                     store.removeListener('load', callbackCheck);
-		                                     //_p54_mostrarCheckDocumentosInicial(json.params.ntramite);
+		                                     // _p54_mostrarCheckDocumentosInicial(json.params.ntramite);
 		                                 };
 		                                 
 		                                 _p54_store.on({
@@ -1688,7 +1731,7 @@ function _p54_registrarTramite(bot)
 		                                 boton.handler(boton);
 		                             });
 						        }else{
-                    				//Inicia el proceso normal de crear tramite
+                    				// Inicia el proceso normal de crear tramite
                     				debug(json.params.asignado);
                     				mensajeCorrecto
 		                            ('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
@@ -1749,8 +1792,7 @@ function _p54_registrarTramite(bot)
 }
 
 /*
- * Recupera la sucursal de un agente
- * ejecuta el callback enviandole ese cdunieco
+ * Recupera la sucursal de un agente ejecuta el callback enviandole ese cdunieco
  */
 function _p54_recuperarSucursalAgente(cdagente, cdtipram, callback)
 {
@@ -1868,7 +1910,7 @@ function _p54_mostrarCheckDocumentosInicial (ntramite) {
             debug('select', indexRecord, '.');
             
             _p54_grid.fireEvent('cellclick',null, null, 1, _p54_store.getAt(indexRecord));
-            //_p54_grid.getSelectionModel().select(indexRecord);
+            // _p54_grid.getSelectionModel().select(indexRecord);
             
             ck = 'Recuperando checklist de documentos';
             mask = _maskLocal(ck);
@@ -1903,7 +1945,7 @@ function _p54_mostrarCheckDocumentosInicial (ntramite) {
                                         record.get('NMSUPLEM'),
                                         _p54_params.CDUSUARI,
                                         _p54_params.CDSISROL,
-                                        null//callback
+                                        null// callback
                                 );
                             }
                         } else {
@@ -1929,8 +1971,8 @@ function _hide(comp)
     debug('_hide comp:',comp,'.');
     if(!Ext.isEmpty(comp) && typeof comp === 'object')
     {
-        //comp.addCls('red');
-        //comp.removeCls('green');
+        // comp.addCls('red');
+        // comp.removeCls('green');
         comp.hide();
     }
 }
@@ -1940,8 +1982,8 @@ function _show(comp)
     debug('_show comp:',comp,'.');
     if(!Ext.isEmpty(comp) && typeof comp === 'object')
     {
-        //comp.addCls('green');
-        //comp.removeCls('red');
+        // comp.addCls('green');
+        // comp.removeCls('red');
         comp.show();
     }
 }
@@ -1987,7 +2029,15 @@ function _p54_mostrarFormulario (boton, values) {
         if (Ext.isEmpty(window)) {
             if (['1_12'    , '1_141'   , '200_246' , '103_264',
                  '1_120'   , '1_180'   , '1_181'   , '200_202',
-                 '103_220' , '103_240' , '103_241'].indexOf(key) === -1) { // Si no es ninguno de los iniciales no hay
+                 '103_220' , '103_240' , '103_241'].indexOf(key) === -1) { // Si
+																			// no
+																			// es
+																			// ninguno
+																			// de
+																			// los
+																			// iniciales
+																			// no
+																			// hay
                 throw 'No se encuentra configurado el formulario [' + key + ']';
             }
             _p54_mostrarFormularioPrimeraVersion(values);
@@ -2182,7 +2232,7 @@ function _ventanaReasignarTramites(tramitesR){
 }
 
 
-////// funciones //////
+// //// funciones //////
 </script>
 
 <script type="text/javascript" src="${ctx}/js/proceso/flujoMesaControl/mesaControlScripts.js?now=${now}"></script>
