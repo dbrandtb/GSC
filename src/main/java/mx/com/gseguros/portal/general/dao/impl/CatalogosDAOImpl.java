@@ -189,7 +189,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor, String cdSisRol, String cdramo) throws Exception{
 		try{
 			HashMap<String,Object> params = new LinkedHashMap<String,Object>();
-			params.put("pv_cdramo_i", cdramo);
+			params.put("pv_cdramo_i", cdramo);//si se usa este parametro se usa el SP modificado por Angeles, de lo contrario se usa el sp original
 			params.put("pv_cdtipsit_i", cdTipSit);
 			params.put("pv_cdatribu_i", cdAtribu);
 			params.put("pv_otvalor_i", otValor);
@@ -205,6 +205,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
         protected ObtieneAtributosSitSP(DataSource dataSource) {
             super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_SIT");
+            declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
