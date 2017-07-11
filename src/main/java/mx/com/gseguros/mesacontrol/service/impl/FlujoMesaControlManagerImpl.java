@@ -2179,7 +2179,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			boolean turnarAOtraPersona = false;
 			
 			if(cdtipflu.equals("1") && (cdflujomc.equals("180") || cdflujomc.equals("181"))
-			   && status.equals("200") ){
+			   && status.equals("164") ){
 				paso = "Entrando a Asignar verdadero para turnar al ROL Indicado ";
 				turnarAOtraPersona = true;
 				logger.debug(paso);
