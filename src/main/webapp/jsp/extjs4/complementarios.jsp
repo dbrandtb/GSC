@@ -786,6 +786,8 @@ function _p29_emitirClicComplementarios()
 			                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
 			                                                            	    		Ext.getCmp('botonPagar').setDisabled(false);
 			                                                            	    		_fieldById('venDocVenEmiBotEndososB').hide();
+			                                                            	    		_fieldById('panDatComBotonRetarificar').setDisabled(true);
+			                                                            	    		_fieldById('panDatComBotonGuardar').setDisabled(true);
 			                                                            	    		
 			                                                            	    		Ext.Msg.show({
 		                                                                                    title    :'Aviso'
@@ -836,6 +838,8 @@ function _p29_emitirClicComplementarios()
 		                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
 		                                                            	    		Ext.getCmp('botonPagar').setDisabled(false);
 		                                                            	    		_fieldById('venDocVenEmiBotEndososB').hide();
+		                                                            	    		_fieldById('panDatComBotonRetarificar').setDisabled(true);
+		                                                            	    		_fieldById('panDatComBotonGuardar').setDisabled(true);
 		                                                            	    		
 	    																			Ext.getCmp('botonReenvioWS').hide();
 	                                                                                
@@ -1933,9 +1937,10 @@ function _p29_emitirClicComplementarios()
 		                    buttons:
 		                    [
 		                        {
-		                            text:'Guardar',
-		                            icon: contexto+'/resources/fam3icons/icons/accept.png',
-		                            handler: function(){ _p29_guardarComplementario(null);}	
+		                            text:'Guardar'
+		                            ,itemId  : 'panDatComBotonGuardar'
+		                            ,icon: contexto+'/resources/fam3icons/icons/accept.png'
+		                            ,handler: function(){ _p29_guardarComplementario(null);}	
 		                        },
 		                        {
 		                            text     : 'Turnar a suscripci&oacute;n',
@@ -2830,8 +2835,8 @@ function _p29_emitirClicComplementarios()
                                   						mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
                                   						_fieldById('panDatComBotonRetarificar').setDisabled(false);
                                   					}
-                                  				}else{
-                                  					_fieldById('panDatComBotonRetarificar').setDisabled(false);
+                                  				}else{                                  					
+                                  					_fieldById('panDatComBotonRetarificar').setDisabled(false);                                   					
                                   				}
                                   			}
                                   			,failure : errorComunicacion
@@ -3025,6 +3030,8 @@ function _p29_emitirClicComplementarios()
                                 	    		Ext.getCmp('botonReenvioWS').setDisabled(true);
                                 	    		Ext.getCmp('botonReenvioWS').hide();
                                 	    		_fieldById('venDocVenEmiBotEndososB').hide();
+                                	    		_fieldById('panDatComBotonRetarificar').setDisabled(true);
+                                	    		_fieldById('panDatComBotonGuardar').setDisabled(true);
                                 	    		
                                 	    		_mensajeEmail = json.mensajeEmail;
 												Ext.getCmp('botonEnvioEmail').enable();
