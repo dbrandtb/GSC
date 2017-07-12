@@ -2630,15 +2630,15 @@ public class ComplementariosAction extends PrincipalCoreAction
                      		{
                        			motend = Integer.parseInt(endoso.get("id").split("-")[1]);
                        			
-                       			if(motend == 75){
+                       			//if(motend == 75){
                        				//idEndososLibres[i]=endoso.get("id").split("-")[0];
                        				idEndososLibres.add(endoso.get("id").split("-")[0]);
-                       			}
-                       			else if(motend == 76){
+                       			//}
+                       			//else if(motend == 76){
                        				//tipsup27
                        				
                        				//endososManager.guardarEndosoBeneficiarios(cdunieco, cdramo, estado, nmpolizaEmitida, nmsituac, mpoliperMpersona, cdelemen, cdusuari, cdtipsup, ntramite, cdsisrol, usuarioSesion, flujo, feefecto)
-                       			}
+                       			//}
                        			
                        			i++;
                      		}
@@ -4811,7 +4811,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			if(StringUtils.isNotBlank(infoPoliza.get("RENUNIEXT")) && StringUtils.isNotBlank(infoPoliza.get("RENRAMO")) && StringUtils.isNotBlank(infoPoliza.get("RENPOLIEX")) && (infoPoliza.get("RENRAMO").contains("711") || infoPoliza.get("RENRAMO").contains("721")))
 			{
-				int[] motend = {75,76};
+				int[] motend = {44,75};
 				slist1 = new ArrayList<Map<String, String>>();
 				
 				for(int i = 0; i < motend.length; i++){
