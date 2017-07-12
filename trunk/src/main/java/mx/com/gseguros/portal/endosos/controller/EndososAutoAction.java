@@ -978,12 +978,19 @@ public class EndososAutoAction extends PrincipalCoreAction
 			Utils.validate(cdramo   , "No se recibio el producto");
 			Utils.validate(estado   , "No se recibio el estado de la poliza");
 			Utils.validate(nmpoliza , "No se recibio el numero de poliza");
-			Utils.validate(session                , "No hay sesion");
-			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			//Utils.validate(session                , "No hay sesion");
+			//Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
 			
-			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			//String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			//String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			//String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			
+			String cdusuari = session.get("USUARIO")==null?smap1.get("cdusuari"):((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = session.get("USUARIO")==null?smap1.get("cdsisrol"):((UserVO)session.get("USUARIO")).getRolActivo().getClave();
+			String cdelemen = session.get("USUARIO")==null?smap1.get("cdelemen"):((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			
+			Utils.validate(cdusuari,"No hay usuario en la sesion");
+			
 			String cdtipsup = TipoEndoso.ASEGURADO_ALTERNO.getCdTipSup().toString();
 			String fechaEndoso   = smap1.get("FEINIVAL");
 			Date   dFechaEndoso  = renderFechas.parse(fechaEndoso);
