@@ -205,7 +205,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
         protected ObtieneAtributosSitSP(DataSource dataSource) {
             super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_SIT");
-            //declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
