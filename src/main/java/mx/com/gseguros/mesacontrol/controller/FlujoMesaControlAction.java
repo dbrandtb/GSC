@@ -702,8 +702,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,statusout
 					,"S".equals(swfinnode)
 					,cdetapa
-					,cdestacion 
-					,cdtrazabilidad
 					);
 			
 			success = true;
