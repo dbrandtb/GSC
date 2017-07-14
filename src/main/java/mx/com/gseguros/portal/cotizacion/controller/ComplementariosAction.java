@@ -2628,11 +2628,12 @@ public class ComplementariosAction extends PrincipalCoreAction
                        		int i=0, motend=0;
                        		for(Map<String,String>endoso:slist1)
                      		{
-                       			motend = Integer.parseInt(endoso.get("id").split("-")[1]);
+                       			//motend = Integer.parseInt(endoso.get("id").split("-")[1]);
                        			
                        			//if(motend == 75){
                        				//idEndososLibres[i]=endoso.get("id").split("-")[0];
-                       				idEndososLibres.add(endoso.get("id").split("-")[0]);
+                       				//idEndososLibres.add(endoso.get("id").split("-")[0]);
+                       				idEndososLibres.add(endoso.get("id"));
                        			//}
                        			//else if(motend == 76){
                        				//tipsup27
@@ -4821,7 +4822,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						Iterator It = map2.entrySet().iterator();						
 				        while (It.hasNext()) {
 				        	Map.Entry entry = (Map.Entry) It.next();
-				        	String idEndosoB = (String)entry.getKey()+"-"+motend[i];
+				        	String idEndosoB = (String)entry.getKey();//+"-"+motend[i];
 				        	String descEndosoB = (String)entry.getValue();
 				        	HashMap<String, String> agregar = new HashMap<String, String>();
 				        	agregar.put("renovar","false");
