@@ -713,8 +713,7 @@ function _p29_emitirClicComplementarios()
 	                                                                    var paramsEmi = "";
 	                                                                    var jsonparams = "";
 	                                                                    
-	                                                                    if(inputCdtipsit=='AF' && saveList != null){	
-	                                                                    	//console.log("savelist: " + JSON.stringify(saveList));
+	                                                                    if((inputCdtipsit=='AF' || inputCdtipsit=='PU') && saveList != null){		                                                                    	
 	                                                                    	urlEmision = urlEmitirAutos;
 	                                                                    	jsonparams = 
 	                                                                    	{
@@ -733,9 +732,7 @@ function _p29_emitirClicComplementarios()
     	                                                                	         ,caseIdRstn  : _NVL(panDatComMap1.caseIdRstn)
     	                                                                	    }
     	                                                                        ,slist1 : saveList
-    	                                                                    };
-	                                                                    	
-	                                                                    	console.log("jsonparams: " + JSON.stringify(jsonparams));
+    	                                                                    };	                                                                    		                                                                    
 	                                                                    }
 	                                                                    else{	   
 	                                                                    	urlEmision = urlEmitir;	                                                                    
