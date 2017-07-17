@@ -117,6 +117,9 @@ var _TIPO_SITUACION_RENOVACION  = '<s:property value="@mx.com.gseguros.portal.ge
 var _EN_ESPERA_DE_COTIZACION    = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
 var _EN_EMISION_EN_REVISION_TECNICA  = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EMISION_EN_REVISION_TECNICA.codigo" />';
 
+var _ESTATUS_PENDIENTE       = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@PENDIENTE.codigo" />';
+var _ESTATUS_TRAMITE_AGENTE  = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@TRAMITE_AGENTE.codigo" />';
+
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 
 debug('_p25_smap1:',_p25_smap1);
@@ -1451,6 +1454,23 @@ Ext.onReady(function()
                         mensajeWarning('Hay cambios pendientes sin guardar');
                     }
                 }
+            },
+            render: function(){
+            	try{
+            		var arrBusqComp =  Ext.ComponentQuery.query('button[text=Guardar y recargar]', _p_25_panelPrincipal);
+            		var btnGuardarYrecargar = arrBusqComp[arrBusqComp.length-1];
+                	
+                	if(esTramiteClonado && (RolSistema.EjecutivoVenta == _p25_smap1.cdsisrol || RolSistema.MesaControl == _p25_smap1.cdsisrol ) && _p25_smap1.status == _ESTATUS_PENDIENTE){
+                		btnGuardarYrecargar.show();
+                	}else if(esTramiteClonado && (RolSistema.Agente == _p25_smap1.cdsisrol ) && _p25_smap1.status == _ESTATUS_TRAMITE_AGENTE){
+                		btnGuardarYrecargar.show();
+                	}else{
+                		btnGuardarYrecargar.hide();
+                	}
+                	
+                }catch(exClon){
+                	debugError('Error sin impacto al mostrar boton de Guardar para clonacion',exClon);
+                }
             }
         }
     });
@@ -2431,7 +2451,7 @@ Ext.onReady(function()
                                                 if(datosAdic.exito)
                                                 {
                                                     aux2=aux2+1;
-                                                    var grupo=new _p25_modeloGrupo(new _p25_modeloGrupo(resp.slist1[i]));
+                                                    var grupo=new _p25_modeloGrupo(resp.slist1[(datosAdic.smap1.i)*1]);
                                                     
                                                     try{
                                                     	var mapaAtrbGar = new Array();
