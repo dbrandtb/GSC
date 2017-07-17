@@ -384,8 +384,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,"-1"  //statusout
 						,"N"   //swfinnode
 						,"1"   //EN REGISTRO
-						,"MDC"//null
-						,"1"//null
 						,"I"
 						
 						);
@@ -554,8 +552,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,null //statusout
 						,null //swfinnode
 						,null //cdetapa
-						,null // cdestacion
-						,null // cdtrazabilidad
 						,"D"
 						);
 			}
@@ -920,8 +916,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String statusout
 			,boolean swfinnode
 			,String cdetapa
-			,String cdestacion 
-			,String cdtrazabilidad
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -945,8 +939,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ statusout="  , statusout
 				,"\n@@@@@@ swfinnode="  , swfinnode
 				,"\n@@@@@@ cdetapa="    , cdetapa
-				,"\n@@@@@@ cdestacion=" , cdestacion
-				,"\n@@@@@@ cdtrazabilidad=", cdtrazabilidad
 				,"\n@@@@@@ list="       , list
 				));
 		
@@ -970,8 +962,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,statusout
 					,swfinnode ? "S" : "N"
 					,cdetapa
-					,cdestacion
-					,cdtrazabilidad
 					,accion
 					);
 			
