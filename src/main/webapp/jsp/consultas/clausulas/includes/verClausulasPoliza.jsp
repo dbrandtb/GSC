@@ -53,23 +53,11 @@
 				storeClausulasPoliza.load({
                     callback: function(records, operation, success) {
                     	if (!success) {
-                            //centrarVentanaInterna(showMessage('Error', 'Error en la consulta, intente m&aacute;s tarde', Ext.Msg.OK, Ext.Msg.ERROR));
-                    		centrarVentanaInterna(Ext.Msg.show({
-                                title: 'Error',
-                                msg: 'Error en la consulta, intente m&aacute;s tarde',
-                                buttons: Ext.Msg.OK,
-                                icon: Ext.Msg.ERROR
-                            }));
+                            showMessage('Error', 'Error en la consulta, intente m&aacute;s tarde', Ext.Msg.OK, Ext.Msg.ERROR);
                             return;
                         }
                         if(records.length == 0){
-                            //centrarVentanaInterna(showMessage('No hay exclusiones', 'Este asegurado no tiene exclusiones', Ext.Msg.OK, Ext.Msg.INFO));
-                            centrarVentanaInterna(Ext.Msg.show({
-                                title: 'No hay exclusiones',
-                                msg: 'Este asegurado no tiene exclusiones',
-                                buttons: Ext.Msg.OK,
-                                icon: Ext.Msg.INFO
-                            }));
+                            showMessage('No hay exclusiones', 'Este asegurado no tiene exclusiones', Ext.Msg.OK, Ext.Msg.INFO);
                             return;
                         }
                     }

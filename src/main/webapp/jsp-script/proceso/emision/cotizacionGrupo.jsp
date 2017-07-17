@@ -124,14 +124,15 @@ var _p21_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol"
 var _p21_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
-var _p21_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p21_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p21_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p21_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _TIPO_SITUACION_RENOVACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
 var _EN_ESPERA_DE_COTIZACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
 var _EN_EMISION_EN_REVISION_TECNICA     = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EMISION_EN_REVISION_TECNICA.codigo" />';
 
 var _ESTATUS_PENDIENTE       = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@PENDIENTE.codigo" />';
 var _ESTATUS_TRAMITE_AGENTE  = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@TRAMITE_AGENTE.codigo" />';
+
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
@@ -326,7 +327,6 @@ var forzaCambiaCensoClon = (cambiaTamTramClon||cargaCensoRenovNuvo)? true : fals
 
 var cveDesSucursal = '';
 var mensajeCambioGrupos = 0;
-
 ////// variables //////
 
 Ext.onReady(function()
@@ -710,7 +710,7 @@ Ext.onReady(function()
 
         			setTimeout(function(){
         				if(grd.isVisible()){
-        					if(mensajeCambioGrupos == 0){
+            				if(mensajeCambioGrupos == 0){
         						mensajeCambioGrupos ++;
         						mensajeInfo('Si agrega o elimina Grupos para este Tr&aacute;mite Clonado debe volver a cargar el censo con las nuevas caracter&iacute;sticas.');
             				}
@@ -1615,12 +1615,12 @@ Ext.onReady(function()
     try
     {
     	if(_p21_cdtipsup  == _TIPO_SITUACION_RENOVACION){
-    		//Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
+    		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Complementar]')[0].hide();
     	}else{
-    		//Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].hide();
+    		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].hide();
     		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].hide();
     		Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].hide();
     		Ext.ComponentQuery.query('button[text=Complementar]')[0].show();
@@ -2700,13 +2700,10 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             	if(!Ext.isEmpty(elementoCobertura.auxiliar) && elementoCobertura.auxiliar == 'C'){
                                             		elementoCobertura.fieldLabel = new String(elementoCobertura.fieldLabel).replace('(MONTO)','').trim();
                                             		elementoCobertura.fieldLabel = new String(elementoCobertura.fieldLabel).replace('(%)','').trim();
-                                            		
                                             		fieldSinTipoCopago = new String(elementoCobertura.fieldLabel);
-                                            		
                                             		elementoCobertura.fieldLabel = '';
                                             		elementoCobertura.labelWidth = 0; 
                                                 	elementoCobertura.width = 100;
-                                                	
                                                 	elementoCobertura.on({
                                                 		beforerender: function(cmb){
                                         	        		cmb.labelWidth= 0;
@@ -2715,7 +2712,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             	}else{
                                             		elementoCobertura.labelWidth = 215; 
                                                 	elementoCobertura.width = 310;
-                                                	
                                             		elementoCobertura.on({
                                                 		beforerender: function(cmb){
                                         	        		cmb.labelWidth= 215;
@@ -2744,7 +2740,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             			fieldLabel: fieldSinTipoCopago,
                                             			labelWidth: 215,
                                             	        width: 310,
-                                            			store: modeloTipoCopago,
+                                            	        store: modeloTipoCopago,
                                             	        style : 'margin:5px;',
                                             	        displayField: 'value',
                                             	        valueField: 'key',
@@ -2791,7 +2787,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             		hijosCheckPorcentaje.push(elementoCobertura);
                                             	}else{
                                             		hijosCheckPorcentaje.push(elementoCobertura);
-                                        			
                                             		var nuevoCheck = Ext.create('Ext.form.Label', {
                                             	        html:'<br/>',
                                             	        width: 0,
@@ -2804,6 +2799,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             		
                                             		hijosCheckPorcentaje.push(nuevoCheck);
                                             	}
+                                            	
+                                            	
                                            	});
                                             
                                             //para factores menor a cero
