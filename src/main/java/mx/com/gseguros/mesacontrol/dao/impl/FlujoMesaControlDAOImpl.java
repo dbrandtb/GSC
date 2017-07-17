@@ -842,8 +842,6 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			,String swfinnode
 			,String cdetapa
 			,String cdestacion
-			,String cdtrazabilidad
-			,String accion
 			) throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
@@ -861,8 +859,6 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 		params.put("swfinnode"  , swfinnode);
 		params.put("cdetapa"    , cdetapa);
 		params.put("cdestacion"    , cdestacion);
-		params.put("cdtrazabilidad"    , cdtrazabilidad);
-		params.put("accion"     , accion);
 		ejecutaSP(new MovimientoTfluestSP(getDataSource()),params);
 	}
 	
@@ -884,8 +880,6 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			declareParameter(new SqlParameter("statusout"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swfinnode"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdetapa"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdestacion"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtrazabilidad"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("accion"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
