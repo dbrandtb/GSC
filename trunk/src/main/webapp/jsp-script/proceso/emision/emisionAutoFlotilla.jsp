@@ -14,6 +14,7 @@ var _p31_urlMovimientoMpoliper             = '<s:url namespace="/emision"    act
 var _p31_urlGuardar                        = '<s:url namespace="/emision"    action="guardarComplementariosAutoFlotilla" />';
 var _p31_urlRecotizar                      = '<s:url namespace="/emision"    action="recotizarAutoFlotilla"              />';
 var _p31_urlEmitir                         = '<s:url namespace="/"           action="emitir"                             />';
+var _p31_urlEmitirAutos                    = '<s:url namespace="/"           action="emitirAutosInd"                      />';
 var _p31_urlDocumentosPoliza               = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"            />';
 var _p31_urlDocumentosPolizaClon           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon"        />';
 var _p31_urlRecuperacionSimple             = '<s:url namespace="/emision"    action="recuperacionSimple"                 />';
@@ -25,6 +26,7 @@ var _p29_urlObtieneValNumeroSerie          = '<s:url namespace="/emision"    act
 var _p31_urlCargaMasiva                    = '<s:url namespace="/emision"    action="cargaMasivaFlotillaEmision"         />';
 var _p31_urlProcesaCargaMasiva             = '<s:url namespace="/emision"    action="procesarCargaMasivaFlotillaEmision" />';
 var _urlCargarCorreos                     = '<s:url namespace="/cotizacionautos"          action="cargarCorreos"              />';
+var _p31_cargaEndososB						= '<s:url namespace="/"           action="cargaEndososB"                        />';
 ////// urls //////
 
 ////// variables //////
@@ -53,6 +55,10 @@ var _p31_storeVersionesRamo5 = null;
 var _aplicaCobVida = !Ext.isEmpty(_p31_smap1.AplicaCobVida) && _p31_smap1.AplicaCobVida == "S" ? true : false ;
 var _FechaMinEdad  = _p31_smap1.FechaMinEdad;
 var _FechaMaxEdad  = _p31_smap1.FechaMaxEdad;
+
+var saveList;
+var storeDocumentos;
+var ventanaEndoso;
 ////// variables //////
 
 ////// dinamicos //////
@@ -166,6 +172,16 @@ Ext.onReady(function()
             ,'cdtipsit','nmsituac'
         ]
     });
+    
+    Ext.define('modeloRenovarEndososB'
+	    ,{extend: 'Ext.data.Model'
+	               ,fields:
+	                 [
+	      	   		       {type:'string' ,name:'id'         }
+	                     ,{type:'string' ,name:'descripcion'}
+	                     ,{type:'boolean',name:'renovar'    }
+	    		       ]
+	           });
     ////// modelos //////
     
     ////// stores //////
@@ -1364,6 +1380,24 @@ function _p31_mostrarVistaPrevia()
                                 		}); 	
                                 	} 
                             }
+							,{
+                                    itemId   : '_p31_botonEndososB'
+                                    ,xtype   : 'button'
+                                    ,text    : 'Renovar endosos B'
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/application_edit.png'
+                                   	,hidden : !Ext.isEmpty(_p31_flujo) ? (_p31_flujo.cdflujomc != 240) : true
+                                   	,handler      : function()
+                                   	{                                   		
+                                		if(storeDocumentos==null)
+    									{
+                                			cargaStoreB(mostrarVentanaEndoso);
+    									}
+                                		else
+                                   	    {    
+                                			mostrarVentanaEndoso();
+                                   	    }
+                                   	}
+                                }
                         ]
                     })
                 ]
@@ -1434,21 +1468,54 @@ function _p31_emitirFinal(me)
     panelpri.setLoading(true);
     
     debug('TIMEOUT ANTES DE EMITIR: ', Ext.Ajax.timeout);
+    
+    var urlEmision = "";
+    var paramsEmi = "";
+    var jsonparams = "";
+    
+    if(_p31_flujo.cdflujomc = 240 && saveList != null){
+    	urlEmision = _p31_urlEmitirAutos;
+    	
+    	jsonparams = 
+    	{
+        	panel1 :
+            {
+             	  pv_nmpoliza     : _p31_smap1.nmpoliza
+                 ,pv_ntramite     : _p31_smap1.ntramite	   
+                 ,flotilla        : _p31_smap1.cdtipsit2=='TL'?null:'si'
+                 ,tipoGrupoInciso : _p31_smap1.cdtipsit2=='TL'?null:'C'
+            }
+    	    ,panel2 :
+    	    {
+    	           pv_estado  : _p31_smap1.estado
+    	         ,pv_cdtipsit : _p31_smap1.cdtipsit
+    	         ,pv_nmpoliza : _p31_smap1.nmpoliza
+    	         ,pv_cdramo   : _p31_smap1.cdramo
+    	         ,pv_cdunieco : _p31_smap1.cdunieco
+    	    }
+            ,slist1 : saveList
+        };    	    	
+    }
+    else{
+    	urlEmision = _p31_urlEmitir;	                                                                    
+    	paramsEmi =
+    	{
+             'panel1.pv_ntramite'      : _p31_smap1.ntramite
+             ,'panel2.pv_cdunieco'     : _p31_smap1.cdunieco
+             ,'panel2.pv_cdramo'       : _p31_smap1.cdramo
+             ,'panel2.pv_estado'       : _p31_smap1.estado
+             ,'panel1.pv_nmpoliza'     : _p31_smap1.nmpoliza
+             ,'panel2.pv_nmpoliza'     : _p31_smap1.nmpoliza
+             ,'panel2.pv_cdtipsit'     : _p31_smap1.cdtipsit
+             ,'panel1.flotilla'        : _p31_smap1.cdtipsit2=='TL'?null:'si'
+             ,'panel1.tipoGrupoInciso' : _p31_smap1.cdtipsit2=='TL'?null:'C'
+         };
+    }
     Ext.Ajax.request(
     {
-        url      : _p31_urlEmitir
-        ,params  :
-        {
-            'panel1.pv_ntramite'      : _p31_smap1.ntramite
-            ,'panel2.pv_cdunieco'     : _p31_smap1.cdunieco
-            ,'panel2.pv_cdramo'       : _p31_smap1.cdramo
-            ,'panel2.pv_estado'       : _p31_smap1.estado
-            ,'panel1.pv_nmpoliza'     : _p31_smap1.nmpoliza
-            ,'panel2.pv_nmpoliza'     : _p31_smap1.nmpoliza
-            ,'panel2.pv_cdtipsit'     : _p31_smap1.cdtipsit
-            ,'panel1.flotilla'        : _p31_smap1.cdtipsit2=='TL'?null:'si'
-            ,'panel1.tipoGrupoInciso' : _p31_smap1.cdtipsit2=='TL'?null:'C'
-        }
+        url      : urlEmision
+        ,jsonData: jsonparams
+        ,params  : paramsEmi        
         ,success:function(response)
         {
             panelpri.setLoading(false);
@@ -1463,6 +1530,7 @@ function _p31_emitirFinal(me)
                     _fieldById('_p31_botonEmitirPolizaFinal').hide();
                     _fieldById('_p31_botonCancelarEmision').setDisabled(true);
                     _fieldById('_p31_botonNueva').setDisabled(false);
+                    _fieldById('_p31_botonEndososB').hide();                    
                     
                     Ext.Msg.show(
 	                {
@@ -1499,6 +1567,7 @@ function _p31_emitirFinal(me)
                 _fieldById('_p31_numerofinalpoliza').setValue(json.panel2.nmpoliex);
                 _fieldById('_p31_botonEmitirPolizaFinal').setDisabled(true);
                 _fieldById('_p31_botonDocumentosPolizaEmitida').setDisabled(false);
+                _fieldById('_p31_botonEndososB').hide();
                 _p31_ventanaDocs.destroy();
                 
                 _fieldById('botonReenvioWS').hide();
@@ -1544,6 +1613,7 @@ function _p31_emitirFinal(me)
                     _fieldById('_p31_botonEmitirPolizaFinal').hide();
                     _fieldById('_p31_botonCancelarEmision').setDisabled(true);
                     _fieldById('_p31_botonNueva').setDisabled(false);
+                    _fieldById('_p31_botonEndososB').hide();
                 }
                 Ext.Msg.show(
                 {
@@ -1973,6 +2043,139 @@ function _p30_cargarCorreos(ntramite)
             errorComunicacion();
          }
     })
+}
+
+function cargaStoreB(callback)
+{
+	var json =
+    {
+         map1  : _p31_smap1
+        ,flujo : _p31_flujo
+    };
+		  Ext.Ajax.request(
+	    {
+	         url      : _p31_cargaEndososB
+	        ,jsonData : json 
+	        ,success:function(response)
+	        {
+	            var json=Ext.decode(response.responseText);
+	            var testStoreEndososB= json.slist1;
+	            debug('### emitir:',json.slist1);
+	            if(json.success==true)
+	            { 
+		            storeDocumentos = Ext.create('Ext.data.Store'
+		            ,{
+				       	 model:'modeloRenovarEndososB'
+				        ,data : testStoreEndososB
+			         });
+					callback();
+	            }
+	            else
+	            {
+	            	 mensajeError(json.message);
+	            }
+	        }
+	        ,failure:function()
+	        {
+	            errorComunicacion();
+	        }
+	    });
+}
+
+function mostrarVentanaEndoso()
+{
+    if(storeDocumentos!=null)
+    {
+    	ventanaEndoso =
+        centrarVentanaInterna(
+		Ext.create('Ext.window.Window' 
+    	      	,{
+    	      	     xtype    : 'grid'
+    				,title    : 'Endosos B'
+    	      	   	,closable : false
+    	      	    ,modal    : true
+    	      	    ,height   : 200
+    	      	    ,width    : 400
+    	      	    ,layout   : 'fit'
+    	      	    ,renderTo : '_p31_divpri'
+    	      	    ,items    : 
+    	      	    {
+    	      	      xtype   : 'grid'
+    	      	     ,border  : false
+    	      	     ,columns :
+    	      	      [ 
+    		                  { 
+    		                     header      : 'Renovar'
+    		                    ,dataIndex   : 'renovar'
+    		                    ,xtype       : 'checkcolumn'
+    		                    ,menuDisabled: true
+    		                    ,width       : 80
+    		                  }
+    		                 ,{ 
+    		                      header      : 'No.Endoso'
+    			                 ,dataIndex   : 'id'
+    			                 ,hidden      : false
+    			                 ,width       : 40
+    			              }
+    		                 ,{
+    		                	 header      :'Detalle'
+    		                	,dataIndex   :'descripcion'
+    		                	,flex        : 1
+    		                  }
+    					  ]
+    	      		      ,store      : storeDocumentos
+    					  ,buttonAlign: 'center' 
+    					  ,buttons    :
+    					   [
+    						   {
+    								 text    : 'Guardar'
+    								,icon    :'${ctx}/resources/fam3icons/icons/accept.png'
+    								,handler : function() 
+    								{
+    									if(storeDocumentos.getUpdatedRecords().length==0)
+    									{ventanaEndoso.close();}
+
+    									seteoListaEndosos();
+    								}
+    						    }
+    						]
+    					}
+    	           	,listeners:
+    	           	{
+    	           		af: function(me)
+    			        {
+    	           			me.load();
+    			        }
+    	           	}
+    	      	}).show()
+        );
+    }
+}
+
+function seteoListaEndosos()
+{
+	if(storeDocumentos!=null)
+    {
+	    saveList = []; var i=0;
+		storeDocumentos.data.items.forEach
+		(
+			function(record)
+		    {
+				if(record.data.renovar)
+				{
+					saveList.push(record.data);
+				}
+				if((i+1) == storeDocumentos.getUpdatedRecords().length)
+				{
+					if(ventanaEndoso!=undefined)
+					{
+						ventanaEndoso.close();
+					}
+				}
+				i++;
+			}
+		);
+    }
 }
 ////// funciones //////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
