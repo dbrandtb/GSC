@@ -1460,14 +1460,15 @@ Ext.onReady(function()
             		var arrBusqComp =  Ext.ComponentQuery.query('button[text=Guardar y recargar]', _p_25_panelPrincipal);
             		var btnGuardarYrecargar = arrBusqComp[arrBusqComp.length-1];
                 	
-                	if(esTramiteClonado && (RolSistema.EjecutivoVenta == _p25_smap1.cdsisrol || RolSistema.MesaControl == _p25_smap1.cdsisrol ) && _p25_smap1.status == _ESTATUS_PENDIENTE){
-                		btnGuardarYrecargar.show();
-                	}else if(esTramiteClonado && (RolSistema.Agente == _p25_smap1.cdsisrol ) && _p25_smap1.status == _ESTATUS_TRAMITE_AGENTE){
-                		btnGuardarYrecargar.show();
-                	}else{
-                		btnGuardarYrecargar.hide();
-                	}
-                	
+            		if(!esTramiteClonado){
+            			if((RolSistema.EjecutivoVenta == _p25_smap1.cdsisrol || RolSistema.MesaControl == _p25_smap1.cdsisrol ) && _p25_smap1.status == _ESTATUS_PENDIENTE){
+            				btnGuardarYrecargar.hide();
+            			}
+            			if((RolSistema.Agente == _p25_smap1.cdsisrol ) && _p25_smap1.status == _ESTATUS_TRAMITE_AGENTE){
+            				btnGuardarYrecargar.hide();
+            			}
+            		}
+            		
                 }catch(exClon){
                 	debugError('Error sin impacto al mostrar boton de Guardar para clonacion',exClon);
                 }
