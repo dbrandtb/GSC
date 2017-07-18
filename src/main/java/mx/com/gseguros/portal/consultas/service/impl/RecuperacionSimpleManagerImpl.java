@@ -1315,7 +1315,17 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				
 				lista =  paged2.getRangeList();
 				
-			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_SUCURSAL) ) {
+			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_TRAZABILIDAD_LTS) ) {
+				
+				PagedMapList paged = indicadoresDAO.obtieneDetalleLineaTrazabilidad(params.get("idcierre"), params.get("cdetapa"),
+						params.get("cdunieco"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", "1");
+				
+				PagedMapList paged2 = indicadoresDAO.obtieneDetalleLineaTrazabilidad(params.get("idcierre"), params.get("cdetapa"),
+                        params.get("cdunieco"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", Long.toString(paged.getTotalItems()));
+				
+				lista =  paged2.getRangeList();
+				
+			}else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_SUCURSAL) ) {
 				
 				lista = indicadoresDAO.obtieneLineaNegocioPorSucursal(params.get("idcierre"), params.get("cdetapa"),
 						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
@@ -1456,6 +1466,12 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
                 
                 lista = indicadoresDAO.obtieneDetalleLineaNegocio(params.get("idcierre"), params.get("cdetapa"),
                         params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), start, limit);
+                
+            }else if( consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_TRAZABILIDAD) ) {
+                
+                lista = indicadoresDAO.obtieneDetalleLineaTrazabilidad(params.get("idcierre"), params.get("cdetapa"),
+                        params.get("cdunieco"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), start, limit);
+                
                 
             }
 	    }

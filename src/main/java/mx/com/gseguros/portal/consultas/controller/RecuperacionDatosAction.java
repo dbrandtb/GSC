@@ -133,6 +133,20 @@ public class RecuperacionDatosAction extends PrincipalCoreAction
 			        list=paged.getRangeList();
 			        total = paged.getTotalItems();
 			    }
+			}else if("LT".equals(rec.getTipo()))
+			{
+				logger.debug("Entro a trazabilidad");
+			    PagedMapList paged = recuperacionSimpleManager.recuperarListaPaginada(cdusuari,cdsisrol,rec,params, Integer.toString(start), Integer.toString(limit), usuario);
+			    if(paged != null ){
+			        list=paged.getRangeList();
+			        total = paged.getTotalItems();
+			    }
+			}
+			else if("LTS".equals(rec.getTipo()))
+			{logger.debug("Entro a cargar excel trazabilidad");
+			logger.debug("tipo traza",rec.getTipo());
+				list=recuperacionSimpleManager.recuperarLista(cdusuari,cdsisrol,rec,params,usuario);
+				
 			}
 			else
 			{

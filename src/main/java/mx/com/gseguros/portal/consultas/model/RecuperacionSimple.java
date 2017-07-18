@@ -128,6 +128,8 @@ public enum RecuperacionSimple
     ,RENOVAR_X_FECHAS_COLECTIVOS                             ("L")
     ,RECUPERAR_RANGO_DESCUENTO_RECARGO                       ("M")
     ,RECUPERAR_VALORES_MODELO                                ("L")
+    ,RECUPERAR_DETALLE_TRAZABILIDAD                          ("LT")
+    ,RECUPERAR_DETALLE_TRAZABILIDAD_LTS                          ("LTS")
 	;
 	 
 	private String tipo;

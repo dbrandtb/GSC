@@ -158,4 +158,20 @@ public interface IndicadoresDAO {
 	public PagedMapList obtieneTramitesPendientesPorDia(String idCierre,
 			String cdunieco, String lineaNegocio, String cdramo, String tipoTramite, String cdagente, String numDias, String start, String limit) throws Exception;
 	
+	/**
+	 * Obtiene el detalle de Indicadores Trazabilidad
+	 * @param idcierre TODO
+	 * @param cdetapa
+	 * @param cdunieco
+	 * @param lineaNegocio
+	 * @param cdramo
+	 * @param tipoTramite
+	 * @param cdagente
+	 * @param start TODO
+	 * @param limit TODO
+	 * @return
+	 * @throws Exception
+	 */
+	public PagedMapList obtieneDetalleLineaTrazabilidad(String idcierre, String cdetapa, String cdunieco,
+			String cdramo, String tipoTramite, String cdagente, String start, String limit) throws Exception;
 }
