@@ -2,6 +2,9 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 
 Ext.onReady(function() {
 	
+	var aseguradoSeleccionado         = '';
+    var nmsituacAseguradoSeleccionado = '';
+	
 	//Se establece un timeout de 2 min.
 	//Ext.Ajax.timeout = 60000;
 	Ext.Ajax.timeout = 120000;
@@ -1960,6 +1963,9 @@ Ext.onReady(function() {
                     formBusqueda.findField("params.cdperson").setValue(rowPolizaSelected.get('cdperson'));
                     formBusqueda.findField("params.nmsituac").setValue(rowPolizaSelected.get('nmsituac'));
                     
+                    aseguradoSeleccionado = rowPolizaSelected.get('cdperson');
+                    nmsituacAseguradoSeleccionado = rowPolizaSelected.get('nmsituac');
+                    
                     gridPolizasAsegurado.getStore().removeAll();
                                         
                     windowPolizas.close();
@@ -2384,7 +2390,35 @@ Ext.onReady(function() {
                     });
                 }
             }
-        }, {
+        },
+        {
+            itemId: 'tbMedicinaPreventiva',
+            title : 'Medicina Preventiva',
+            //width: '350',
+            loader : {
+                url : _URL_LOADER_MEDICINA_PREVENTIVA,
+                scripts  : true,
+		        loadMask : true,
+		        autoLoad : false,
+		        ajaxOptions: {
+		            method: 'POST'
+		        }
+            },
+            listeners : {
+                activate : function(tab) {
+                    tab.loader.load({
+                        params : {
+                            'smap1.cdunieco' :  panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
+                            'smap1.cdramo'   :  panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
+                            'smap1.estado'   :  panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
+                            'smap1.nmpoliza' :  panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
+                            'smap1.cdperson' :  aseguradoSeleccionado,
+                            'smap1.nmsituac' :  nmsituacAseguradoSeleccionado
+                        }
+                    });
+                }
+            }
+        },{
         	itemId: 'tbRecibos',
         	title: 'RECIBOS',
         	autoScroll: true,

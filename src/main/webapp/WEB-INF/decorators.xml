@@ -80,7 +80,8 @@
 		<pattern>/flujocotizacion/principal.action</pattern>
 		<pattern>/jsp/consultas/agentes/consultaAgentes.jsp</pattern>
 		<pattern>/jsp-script/proceso/emision/cotizaciontouch.jsp</pattern>
-       
+		<pattern>/consultasAsegurado/pantallaMedicinaPreventiva.action</pattern>
+        <pattern>/jsp/extjs4/ventanaMedicinaPreventiva.jsp</pattern>
         
 	</decorator>
     

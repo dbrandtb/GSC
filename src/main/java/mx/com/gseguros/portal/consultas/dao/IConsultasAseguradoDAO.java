@@ -1,7 +1,9 @@
 package mx.com.gseguros.portal.consultas.dao;
 
 import java.util.List;
+import java.util.Map;
 
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.consultas.model.AvisoHospitalizacionVO;
@@ -202,4 +204,24 @@ public interface IConsultasAseguradoDAO {
 	public void actualizaEstatusEnvio(String iCodAviso) throws Exception;
 
 	public List<SolicitudCxPVO> obtieneListadoSolicitudesCxp() throws Exception;
+
+	public List<GenericVO> obtieneCatalogoICDs() throws Exception;
+
+	public List<Map<String, String>> obtienePadecimientosAsegurado(Map<String, String> params) throws Exception;
+
+	public void actualizaPadecimientoAsegurado(Map<String, String> params) throws Exception;
+
+	public Map<String, String> obtieneDatosAsegurado(Map<String, String> params) throws Exception;
+
+	public Map<String, String> obtieneCopagoCobMedPrevPol(Map<String, String> params) throws Exception;
+
+	public List<GenericVO> obtieneCatalogoEstadosProvMedicos() throws Exception;
+
+	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos() throws Exception;
+
+	public List<GenericVO> obtieneCatalogoEspecialidadesMedicos() throws Exception;
+
+	public List<GenericVO> obtieneCatalogoFrecuenciaVisitas() throws Exception;
+
+	public List<GenericVO> obtieneCatalogoPeriodicidadVisitas() throws Exception;
 }

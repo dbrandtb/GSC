@@ -40,6 +40,8 @@
 
             var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             
+            var _URL_LOADER_MEDICINA_PREVENTIVA   = '<s:url namespace="/consultasAsegurado" action="pantallaMedicinaPreventiva" />';
+            
             var _MSG_ERROR                       = 'Error';
             var _MSG_INFO                        = 'Info';
             var _MSG_ERROR_HISTORICO_MOVIMIENTOS = 'Ocurri\u00F3 un error al obtener el hist\u00F3rico de movimientos';
