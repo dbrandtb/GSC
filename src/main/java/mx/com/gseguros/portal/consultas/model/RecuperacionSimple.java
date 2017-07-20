@@ -124,12 +124,8 @@ public enum RecuperacionSimple
     ,RECUPERAR_CORREOS_TRAMITE                               ("M")
     ,RECUPERAR_HISTORIAL_TRAMITE                             ("L")
     ,RECUPERAR_DETALLES_TRAMITE                              ("L")
-    ,VALIDA_RENOVACION_COLECTIVO                             ("L")
-    ,RENOVAR_X_FECHAS_COLECTIVOS                             ("L")
-    ,RECUPERAR_RANGO_DESCUENTO_RECARGO                       ("M")
     ,RECUPERAR_VALORES_MODELO                                ("L")
-    ,RECUPERAR_DETALLE_TRAZABILIDAD                          ("LT")
-    ,RECUPERAR_DETALLE_TRAZABILIDAD_LTS                          ("LTS")
+    ,RECUPERAR_RANGO_DESCUENTO_RECARGO                       ("M")
 	;
 	 
 	private String tipo;
