@@ -40,9 +40,6 @@
 
             var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             
-            var _URL_LOADER_MEDICINA_PREVENTIVA   = '<s:url namespace="/consultasAsegurado" action="pantallaMedicinaPreventiva" />';
-            var _ROL_COORDINADOR_MEDICINA_PREVENTIVA = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@COORDINADOR_MEDICINA_PREVENTIVA.cdsisrol" />';
-            
             var _MSG_ERROR                       = 'Error';
             var _MSG_INFO                        = 'Info';
             var _MSG_ERROR_HISTORICO_MOVIMIENTOS = 'Ocurri\u00F3 un error al obtener el hist\u00F3rico de movimientos';
@@ -58,9 +55,9 @@
             
             
             //Variables para la generacion de Reportes
-            var _urlViewReport      = '<s:property value="rutaServidorReports" />';
-            var _reportsServerUser  = '<s:property value="passServidorReports" />';
-            var _reporteEdoCtaSin   = '<s:text name="rdf.siniestro.estadocuenta.nombre" />';
+            var _urlViewReport      = '<s:text name="ruta.servidor.reports" />';
+            var _reportsServerUser  = '<s:text name="pass.servidor.reports" />';
+            var _reporteEdoCtaSin   = '<s:text name="rdf.siniestro.estadocuenta.nombreMod" />';
             var _urlViewDoc         = '<s:url namespace ="/documentos"     action="descargaDocInline"              />';
             
             var _botonesGrid = [

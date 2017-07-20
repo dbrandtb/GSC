@@ -4,14 +4,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
@@ -32,7 +30,6 @@ import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.PlanVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.SolicitudCxPVO;
@@ -68,7 +65,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	protected class ConsultaResultadosAseguradoSP extends StoredProcedure {
 		protected ConsultaResultadosAseguradoSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Resultados_Asegurado");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Resultados_Asegurado");
     		declareParameter(new SqlParameter("pv_cdrfc_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nombre_i", OracleTypes.VARCHAR));
@@ -118,7 +115,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	protected class ConsultaPolizaActualSP extends StoredProcedure {
 		protected ConsultaPolizaActualSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Suplem");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Suplem");
 			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosSuplementoMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -171,7 +168,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class ConsultaDatosComplementariosSP extends StoredProcedure{
 		protected ConsultaDatosComplementariosSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Aseg");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Aseg");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -215,7 +212,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 
 	public class ConsultaDatosPolizaSP extends StoredProcedure {
 		protected ConsultaDatosPolizaSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Poliza");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Poliza");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -293,7 +290,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	protected class ConsultaAseguradoDetalleSP extends StoredProcedure{
 		protected ConsultaAseguradoDetalleSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Aseg");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Aseg");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -343,7 +340,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class ConsultaDatosTitularSP extends StoredProcedure{
 		protected ConsultaDatosTitularSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Titular");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Titular");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -393,7 +390,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class ConsultaDatosContratanteSP extends StoredProcedure{
 		protected ConsultaDatosContratanteSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Contratante");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Contratante");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -443,7 +440,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 
 	public class ConsultaAseguradosSP extends StoredProcedure {
 		protected ConsultaAseguradosSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Familia");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Familia");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -493,7 +490,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class ConsultaEndososSP extends StoredProcedure {
 		protected ConsultaEndososSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Endosos_Asegurado");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Endosos_Asegurado");
 			declareParameter(new SqlParameter("pv_cdunieco", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado", OracleTypes.VARCHAR));
@@ -533,7 +530,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	public class ConsultaDatosPlanSP extends StoredProcedure{
 		protected ConsultaDatosPlanSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Plan");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Plan");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -581,7 +578,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	public class ConsultaCopagosPolizaSP extends StoredProcedure {
 		protected ConsultaCopagosPolizaSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_CONSULTA.P_GET_COPAGOS");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_COPAGOS");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -630,7 +627,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 
 	public class ConsultaCoberturasPolizaSP extends StoredProcedure {
 		protected ConsultaCoberturasPolizaSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Coberturas");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Coberturas");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
@@ -707,7 +704,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	protected class ConsultaHistoricoAseguradoSP extends StoredProcedure {
 		protected ConsultaHistoricoAseguradoSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Historico_Asegurado");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Historico_Asegurado");
 			
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
@@ -846,7 +843,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class ConsultaHospitalesSP extends StoredProcedure{
 		protected ConsultaHospitalesSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Catalogo_Hospitales");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Catalogo_Hospitales");
     		declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new HospitalesMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -876,7 +873,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class AvisosAnterioresSP extends StoredProcedure{
 		protected AvisosAnterioresSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Avisos_Hosp_Anteriores");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Avisos_Hosp_Anteriores");
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new AvisosAnterioresMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -913,7 +910,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class enviarAvisoHospitalizacionSP extends StoredProcedure{
 		protected enviarAvisoHospitalizacionSP(DataSource dataSource){
-			super(dataSource, "PKG_SATELITES2.P_Guarda_Aviso_Hosp");
+			super(dataSource, "PKG_SATELITES2_PRE.P_Guarda_Aviso_Hosp");
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdagente_i", OracleTypes.VARCHAR));
@@ -942,7 +939,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class actualizaEstatusEnvioSP extends StoredProcedure{
 		protected actualizaEstatusEnvioSP(DataSource dataSource){
-			super(dataSource, "PKG_SATELITES2.P_Actualiza_Estatus_Envio");
+			super(dataSource, "PKG_SATELITES2_PRE.P_Actualiza_Estatus_Envio");
 			declareParameter(new SqlParameter("pv_cdaviso_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -955,275 +952,4 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
-	@Override
-	public List<GenericVO> obtieneCatalogoICDs() throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneCatalogoICDs(getDataSource()), params);
-		List<GenericVO> lista = (List<GenericVO>) mapResult.get("pv_registro_o");
-		if (lista == null) {
-            lista = new ArrayList<GenericVO>();
-        }
-		
-		return lista;
-	}
-	
-	public class ObtieneCatalogoICDs extends StoredProcedure{
-		protected ObtieneCatalogoICDs(DataSource dataSource){
-			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_CATPADECIMIENTOS");
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatClavDescMapper()));
-    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	public class CatClavDescMapper implements RowMapper<GenericVO>{
-		public GenericVO mapRow(ResultSet rs, int rowNum) throws SQLException{
-			GenericVO generic=new GenericVO();
-            generic.setKey(rs.getString("clave"));
-            generic.setValue(rs.getString("descripcion"));
-			return generic;
-		}
-	}
-	
-	@Override
-	public Map<String,String> obtieneDatosAsegurado(Map<String, String> params) throws Exception {
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneDatosAsegurado(getDataSource()), params);
-		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
-		
-		Map<String,String> resultado = null;  
-		if (lista != null && !lista.isEmpty()) {
-			resultado = lista.get(0);
-		}else{
-			resultado = new HashMap<String, String>();
-		}
-		
-		return resultado;
-	}
-	
-	public class ObtieneDatosAsegurado extends StoredProcedure{
-		protected ObtieneDatosAsegurado(DataSource dataSource){
-			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_DATPERSONA");
-			declareParameter(new SqlParameter("cdperson", OracleTypes.VARCHAR));
-			String[] cols = new String[]{
-					"EDAD","RFC","NOMBRE"
-			};
-			
-			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-
-	@Override
-	public Map<String,String> obtieneCopagoCobMedPrevPol(Map<String, String> params) throws Exception {
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneCopagoCobMedPrevPol(getDataSource()), params);
-		
-		Map<String,String> resultado = new HashMap<String, String>();
-		resultado.put("COPAGO", (String) mapResult.get("pv_copago_o"));
-		resultado.put("FORMATO", (String) mapResult.get("pv_swformat_o"));
-		
-		return resultado;
-	}
-	
-	public class ObtieneCopagoCobMedPrevPol extends StoredProcedure{
-		protected ObtieneCopagoCobMedPrevPol(DataSource dataSource){
-			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_COPAGO");
-			declareParameter(new SqlParameter("pi_cdunieco", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_cdramo"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_estado"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_nmpoliza", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_nmsituac", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_copago_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_swformat_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-
-	@Override
-	public List<Map<String,String>> obtienePadecimientosAsegurado(Map<String, String> params) throws Exception {
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtienePadecimientosAsegurado(getDataSource()), params);
-		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
-		if (lista == null) {
-			lista = new ArrayList<Map<String,String>>();
-		}
-		
-		return lista;
-	}
-	
-	public class ObtienePadecimientosAsegurado extends StoredProcedure{
-		protected ObtienePadecimientosAsegurado(DataSource dataSource){
-			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_PADECIMIENTOS");
-			declareParameter(new SqlParameter("pi_cdunieco", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_cdramo"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_estado"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_nmpoliza", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_nmsituac", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_cdperson", OracleTypes.VARCHAR));
-			String[] cols = new String[]{
-					"CDUNIECO","CDRAMO","ESTADO","NMPOLIZA","NMSITUAC","CDTIPSIT","STATUS","NMSUPLEM",
-					"CDPERSON","CDICD","FEGENCART","CDFREC","CDPERIOD","CDPRESTA","DSPAD","DSPLANMED","SWGENCARTA","CDUSUARI","DSICD"
-			};
-			
-			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-
-	@Override
-	public void actualizaPadecimientoAsegurado(Map<String, String> params) throws Exception {
-		ejecutaSP(new ActualizaPadecimientoAsegurado(getDataSource()), params);
-	}
-	
-	public class ActualizaPadecimientoAsegurado extends StoredProcedure{
-		protected ActualizaPadecimientoAsegurado(DataSource dataSource){
-			super(dataSource, "PKG_PADMEDPREV.P_GUARDA_PADECIMIENTOS");
-			declareParameter(new SqlParameter("pi_cdunieco", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_cdramo"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_estado"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_nmpoliza", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_nmsituac", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_cdperson", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_cdicd", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_cdfrec", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_cdperiod", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_cdpresta", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_dspad", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_dsplanmed", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_swgencarta", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_cdusuari", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
-	public List<GenericVO> obtieneCatalogoEstadosProvMedicos() throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneCatalogoEstadosProvMedicos(getDataSource()), params);
-		List<GenericVO> lista = (List<GenericVO>) mapResult.get("pv_registro_o");
-		if (lista == null) {
-            lista = new ArrayList<GenericVO>();
-        }
-		
-		return lista;
-	}
-	
-	public class ObtieneCatalogoEstadosProvMedicos extends StoredProcedure{
-		protected ObtieneCatalogoEstadosProvMedicos(DataSource dataSource){
-			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_CATESTADOS");
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatClavDescMapper()));
-    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
-	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos() throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneCatalogoMunicipiosProvMedicos(getDataSource()), params);
-		List<GenericVO> lista = (List<GenericVO>) mapResult.get("pv_registro_o");
-		if (lista == null) {
-            lista = new ArrayList<GenericVO>();
-        }
-		
-		return lista;
-	}
-	
-	public class ObtieneCatalogoMunicipiosProvMedicos extends StoredProcedure{
-		protected ObtieneCatalogoMunicipiosProvMedicos(DataSource dataSource){
-			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_CATMUNICIPIOS");
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatClavDescMapper()));
-    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
-	public List<GenericVO> obtieneCatalogoEspecialidadesMedicos() throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneCatalogoEspecialidadesMedicos(getDataSource()), params);
-		List<GenericVO> lista = (List<GenericVO>) mapResult.get("pv_registro_o");
-		if (lista == null) {
-            lista = new ArrayList<GenericVO>();
-        }
-		
-		return lista;
-	}
-	
-	public class ObtieneCatalogoEspecialidadesMedicos extends StoredProcedure{
-		protected ObtieneCatalogoEspecialidadesMedicos(DataSource dataSource){
-			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_CATESPECIALIDADES");
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatClavDescMapper()));
-    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
-	public List<GenericVO> obtieneCatalogoFrecuenciaVisitas() throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneCatalogoFrecuenciaVisitas(getDataSource()), params);
-		List<GenericVO> lista = (List<GenericVO>) mapResult.get("pv_registro_o");
-		if (lista == null) {
-            lista = new ArrayList<GenericVO>();
-        }
-		
-		return lista;
-	}
-	
-	public class ObtieneCatalogoFrecuenciaVisitas extends StoredProcedure{
-		protected ObtieneCatalogoFrecuenciaVisitas(DataSource dataSource){
-			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_CATFRECUENCIAS");
-    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatClavDescMapper()));
-    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-
-	@Override
-	public List<GenericVO> obtieneCatalogoPeriodicidadVisitas() throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneCatalogoPeriodicidadVisitas(getDataSource()), params);
-		List<GenericVO> lista = (List<GenericVO>) mapResult.get("pv_registro_o");
-		if (lista == null) {
-			lista = new ArrayList<GenericVO>();
-		}
-		
-		return lista;
-	}
-	
-	public class ObtieneCatalogoPeriodicidadVisitas extends StoredProcedure{
-		protected ObtieneCatalogoPeriodicidadVisitas(DataSource dataSource){
-			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_PERIODICIDADES");
-			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatClavDescMapper()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	
 }
