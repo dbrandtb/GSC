@@ -2809,7 +2809,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
             StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
                     "<br>Estimado(a) cliente,<br/><br/>").append(
                     "Anexamos a este e-mail la documentaci\u00f3n del endoso con motivo'").append(dstipsup).append("' asociado a la p\u00f3liza ").append(CDUNIEXT+"/"+RAMO+"/"+NMPOLIEX).append(".<br/>").append(
-                    "Para visualizar los documentos favor de dar click en el link correspondiente.<br/>");
+                    "Puede revisar el detalle de este movimiento en el siguiente link.<br/>");
             
             mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlImpresionCaratulaEndosoB).append(parametros).append("\">Car\u00e1tula de p\u00f3liza</a>");
 			
@@ -3916,7 +3916,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
             StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
                     "<br>Estimado(a) cliente,<br/><br/>").append(
                     "Anexamos a este e-mail la documentaci\u00f3n del endoso con motivo'").append(dstipsup).append("' asociado a la p\u00f3liza ").append(CDUNIEXT+"/"+RAMO+"/"+NMPOLIEX).append(".<br/>").append(
-                    "Para visualizar los documentos favor de dar click en el link correspondiente.<br/>");
+                    "Puede revisar el detalle de este movimiento en el siguiente link.<br/>");
 			
 			for(Map<String,String> endosoIt : listaEndosos){
 				if(StringUtils.isNotBlank(endosoIt.get("IMPRIMIR")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("IMPRIMIR"))){
