@@ -232,6 +232,52 @@ Ext.onReady(function()
     });
     
     
+    function eliminarPadecimientoAseg(recordEditar, ventanaAgregarEditarPad){
+    	var datosResultado = {
+          		 'params.pi_cdunieco'    : recordEditar.get('CDUNIECO'),
+          		 'params.pi_cdramo'      : recordEditar.get('CDRAMO'),
+          		 'params.pi_estado'      : recordEditar.get('ESTADO'),
+          		 'params.pi_nmpoliza'    : recordEditar.get('NMPOLIZA'),
+          		 'params.pi_nmsituac'    : recordEditar.get('NMSITUAC'),
+          		 'params.pi_cdperson'    : recordEditar.get('CDPERSON'),
+          		 'params.pi_cdicd'       : recordEditar.get('CDICD'),
+          		 'params.pi_cdfrec'      : '',
+          		 'params.pi_cdperiod'    : '',
+          		 'params.pi_cdpresta'    : '',
+          		 'params.pi_dspad'       : '',
+          		 'params.pi_dsplanmed'   : '',
+          		 'params.pi_swgencarta'  : '',
+          		 'params.pi_swop'        : 'D'
+           };
+          	    
+           debug('Padecimiento a borrar: ',datosResultado);
+			
+           var maskGuarda = _maskLocal('Eliminando...');
+           
+           Ext.Ajax.request({
+               url: _urlActualizaPadecimientoAseg,
+               params: datosResultado,
+               success  : function(response, options){
+              	 maskGuarda.close();
+                   var json = Ext.decode(response.responseText);
+                   if(json.success){
+                   	
+                   	padecimientosGridStore.reload();
+                   	ventanaAgregarEditarPad.close();
+                   	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
+                   	
+                   }else{
+                       mensajeError(json.mensaje);
+                   }
+               }
+               ,failure  : function(response, options){
+              	 maskGuarda.close();
+                   var json = Ext.decode(response.responseText);
+                   mensajeError(json.mensaje);
+               }
+           });
+    }
+    
     function agregarEditarPadecimientoAseg(recordEditar){
     	var ventanaAgregarEditarPad;
     	var esNuevoRegistro = (!Ext.isEmpty(recordEditar) && recordEditar.phantom == false) ? false : true;
@@ -297,14 +343,48 @@ Ext.onReady(function()
             }],
             buttonAlign: 'center',
             buttons:[
-            	{
-                    text: 'Guardar',
+    			{
+    				text:'Eliminar este Padecimiento',
+    				icon:_CONTEXT+'/resources/fam3icons/icons/report_delete.png',
+    				hidden: esNuevoRegistro,
+    				handler:function(btn)
+    				{
+    					Ext.Msg.show({
+        		            title: 'Aviso',
+        		            msg: '&iquest;Esta seguro que desea eliminar este padecimiento del asegurado?',
+        		            buttons: Ext.Msg.YESNO,
+        		            fn: function(buttonId, text, opt) {
+        		            	if(buttonId == 'yes') {
+        		            		if(recordEditar.get('SWGENCARTA') == 'S'){
+        		            			Ext.Msg.show({
+        		        		            title: 'Aviso',
+        		        		            msg: 'Ya existe una Carta de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea eliminar este padecimiento?',
+        		        		            buttons: Ext.Msg.YESNO,
+        		        		            fn: function(buttonId, text, opt) {
+        		        		            	if(buttonId == 'yes') {
+        		        		            		eliminarPadecimientoAseg(recordEditar, ventanaAgregarEditarPad);
+        		        		            	}
+        		                			},
+        		        		            animateTarget: btn,
+        		        		            icon: Ext.Msg.WARNING
+        		    					});
+        		            		}else{
+        		            			eliminarPadecimientoAseg(recordEditar, ventanaAgregarEditarPad);
+        		            		}
+        		            	}
+                			},
+        		            animateTarget: btn,
+        		            icon: Ext.Msg.QUESTION
+    					});
+    				}
+    			},'->',
+    			{
+                    text: 'Guardar Datos del Padecimiento',
                     icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
                     handler: function(btn){
                     	var panelGuardar = btn.up('form');
                     	
                     	if(panelGuardar.getForm().isValid()){
-                    		
                     		var datosForma = panelGuardar.getValues();
 
                     		var datosResultado = {
@@ -325,31 +405,70 @@ Ext.onReady(function()
                             };
                            	    
                             debug('Padecimiento a guardar: ',datosResultado);
-							
-                            var maskGuarda = _maskLocal('Guardando...');
                             
-                            Ext.Ajax.request({
-                                url: _urlActualizaPadecimientoAseg,
-                                params: datosResultado,
-                                success  : function(response, options){
-                               	 maskGuarda.close();
-                                    var json = Ext.decode(response.responseText);
-                                    if(json.success){
-                                    	
-                                    	padecimientosGridStore.reload();
-                                    	ventanaAgregarEditarPad.close();
-                                    	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
-                                    	
-                                    }else{
+                    		if(!esNuevoRegistro && recordEditar.get('SWGENCARTA') == 'S'){
+                    			Ext.Msg.show({
+		        		            title: 'Aviso',
+		        		            msg: 'Ya existe una Carta de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea cambiar la informaci&oacute;n del padecimiento?',
+		        		            buttons: Ext.Msg.YESNO,
+		        		            fn: function(buttonId, text, opt) {
+		        		            	if(buttonId == 'yes') {
+		        		            		var maskGuarda = _maskLocal('Guardando...');
+		                                    
+		                                    Ext.Ajax.request({
+		                                        url: _urlActualizaPadecimientoAseg,
+		                                        params: datosResultado,
+		                                        success  : function(response, options){
+		                                       	 maskGuarda.close();
+		                                            var json = Ext.decode(response.responseText);
+		                                            if(json.success){
+		                                            	
+		                                            	padecimientosGridStore.reload();
+		                                            	ventanaAgregarEditarPad.close();
+		                                            	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
+		                                            	
+		                                            }else{
+		                                                mensajeError(json.mensaje);
+		                                            }
+		                                        }
+		                                        ,failure  : function(response, options){
+		                                       	 maskGuarda.close();
+		                                            var json = Ext.decode(response.responseText);
+		                                            mensajeError(json.mensaje);
+		                                        }
+		                                    });
+		        		            	}
+		                			},
+		        		            animateTarget: btn,
+		        		            icon: Ext.Msg.WARNING
+		    					});
+                    		}else{
+                    			var maskGuarda = _maskLocal('Guardando...');
+                                
+                                Ext.Ajax.request({
+                                    url: _urlActualizaPadecimientoAseg,
+                                    params: datosResultado,
+                                    success  : function(response, options){
+                                   	 maskGuarda.close();
+                                        var json = Ext.decode(response.responseText);
+                                        if(json.success){
+                                        	
+                                        	padecimientosGridStore.reload();
+                                        	ventanaAgregarEditarPad.close();
+                                        	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
+                                        	
+                                        }else{
+                                            mensajeError(json.mensaje);
+                                        }
+                                    }
+                                    ,failure  : function(response, options){
+                                   	 maskGuarda.close();
+                                        var json = Ext.decode(response.responseText);
                                         mensajeError(json.mensaje);
                                     }
-                                }
-                                ,failure  : function(response, options){
-                               	 maskGuarda.close();
-                                    var json = Ext.decode(response.responseText);
-                                    mensajeError(json.mensaje);
-                                }
-                            });
+                                });
+                    		}
+                    		
                     	}else{
                     		mensajeWarning('Capture todos los datos requeridos.');
                     	}
@@ -440,91 +559,107 @@ Ext.onReady(function()
 //    		}
 //    	});
     	
+    	var panelBuscarMedicos = Ext.create('Ext.form.Panel',{
+    		border:false,
+            defaults : {
+            	style : 'margin : 10px 10px 4px;'
+    		},
+    		layout: {
+                type: 'column',
+                columns: 3 
+            },
+            items: [{
+       			xtype: 'combobox',
+                fieldLabel: 'Estado',
+                name: 'EDO_DOM',
+                width: 210,
+                labelWidth: 50,
+                displayField: 'value',
+                valueField: 'key',
+                forceSelection: true,
+                anyMatch      : true,
+                queryMode     : 'local',
+                allowBlank    : false,
+                store       : Ext.create('Ext.data.Store', {
+                    model : 'Generic',
+                    autoLoad : true,
+                    proxy : {
+                        type : 'ajax',
+                        url : _URL_CatalogoEstadosProvMedicos,
+                        reader : {
+                            type : 'json',
+                            root : 'listaCatalogo'
+                        }
+                    }
+                })
+                },
+                {
+            	xtype: 'combobox',
+                fieldLabel: 'Municipio',
+                name: 'MUNICI_DOM',
+                width: 210,
+                labelWidth: 65,
+                displayField: 'value',
+                valueField: 'key',
+                forceSelection: true,
+                anyMatch      : true,
+                queryMode     : 'local',
+                allowBlank    : false,
+                store       : Ext.create('Ext.data.Store', {
+                    model : 'Generic',
+                    autoLoad : true,
+                    proxy : {
+                        type : 'ajax',
+                        url : _URL_CatalogoMunicipiosProvMedicos,
+                        reader : {
+                            type : 'json',
+                            root : 'listaCatalogo'
+                        }
+                    }
+                })
+                },
+                {
+        		xtype: 'combobox',
+                fieldLabel: 'Especialidad',
+                name: 'ESPECIALIDAD',
+                width: 250,
+                labelWidth: 75,
+                displayField: 'value',
+                valueField: 'key',
+                forceSelection: true,
+                anyMatch      : true,
+                queryMode     : 'local',
+                allowBlank    : false,
+                store       : Ext.create('Ext.data.Store', {
+                    model : 'Generic',
+                    autoLoad : true,
+                    proxy : {
+                        type : 'ajax',
+                        url : _URL_CatalogoEspecialidadesMedicos,
+                        reader : {
+                            type : 'json',
+                            root : 'listaCatalogo'
+                        }
+                    }
+                })}],
+                buttonAlign: 'center',
+            	buttons:[{
+	                xtype: 'button',
+	                text: 'Buscar',
+	                icon:_CONTEXT+'/resources/fam3icons/icons/zoom.png',
+	                handler: function(btn){
+	                	
+	                }
+                }]
+        });
+    	
     	var fieldsetMedicos = Ext.create('Ext.form.FieldSet',{
     		title: '<span style="font:bold 12px Calibri;">Seleccione un m&eacutedico tratante.</span>',
     		defaults : {
     			style : 'margin : 3px 2px 2px 2px;'
     		},
-    		hidden: true,
             items: [
-            		{
-           			xtype: 'combobox',
-                    fieldLabel: 'Estado',
-                    name: 'EDO_DOM',
-                    width: 300,
-                    displayField: 'value',
-                    valueField: 'key',
-                    forceSelection: true,
-                    anyMatch      : true,
-                    queryMode     : 'local',
-                    allowBlank    : false,
-                    store       : Ext.create('Ext.data.Store', {
-                        model : 'Generic',
-                        autoLoad : true,
-                        proxy : {
-                            type : 'ajax',
-                            url : _URL_CatalogoEstadosProvMedicos,
-                            reader : {
-                                type : 'json',
-                                root : 'listaCatalogo'
-                            }
-                        }
-                    })
-                    },
-                    {
-                	xtype: 'combobox',
-                    fieldLabel: 'Municipio',
-                    name: 'MUNICI_DOM',
-                    width: 300,
-                    displayField: 'value',
-                    valueField: 'key',
-                    forceSelection: true,
-                    anyMatch      : true,
-                    queryMode     : 'local',
-                    allowBlank    : false,
-                    store       : Ext.create('Ext.data.Store', {
-                        model : 'Generic',
-                        autoLoad : true,
-                        proxy : {
-                            type : 'ajax',
-                            url : _URL_CatalogoMunicipiosProvMedicos,
-                            reader : {
-                                type : 'json',
-                                root : 'listaCatalogo'
-                            }
-                        }
-                    })
-                    },
-                    {
-            		xtype: 'combobox',
-                    fieldLabel: 'Especialidad',
-                    name: 'ESPECIALIDAD',
-                    width: 300,
-                    displayField: 'value',
-                    valueField: 'key',
-                    forceSelection: true,
-                    anyMatch      : true,
-                    queryMode     : 'local',
-                    allowBlank    : false,
-                    store       : Ext.create('Ext.data.Store', {
-                        model : 'Generic',
-                        autoLoad : true,
-                        proxy : {
-                            type : 'ajax',
-                            url : _URL_CatalogoEspecialidadesMedicos,
-                            reader : {
-                                type : 'json',
-                                root : 'listaCatalogo'
-                            }
-                        }
-                    })
-                    },{
-                        xtype: 'button',
-                        text: 'Buscar',
-                        icon:_CONTEXT+'/resources/fam3icons/icons/zoom.png',
-                        handler: function(btn){
-                        }
-                    },
+            	panelBuscarMedicos,
             	Ext.create('Ext.grid.Panel', {
                 border: false,
                 autoScroll: false,
@@ -545,8 +680,9 @@ Ext.onReady(function()
     	
     	var panelGuardar = Ext.create('Ext.form.Panel',{
     		title: 'Informaci&oacute;n para Carta de Medicina Preventiva.',
+    		border: false,
             defaults : {
-            	style : 'margin : 15px 10px 15px;'
+            	style : 'margin : 10px 10px 4px;'
     		},
     		layout: {
                 type: 'column',
@@ -566,7 +702,7 @@ Ext.onReady(function()
                 allowBlank    : false,
                 store       : Ext.create('Ext.data.Store', {
                     model : 'Generic',
-                    autoLoad : false,
+                    autoLoad : true,
                     proxy : {
                         type : 'ajax',
                         url : _URL_CatalogoFrecuenciaVisitas,
@@ -590,7 +726,7 @@ Ext.onReady(function()
                 allowBlank    : false,
                 store       : Ext.create('Ext.data.Store', {
                     model : 'Generic',
-                    autoLoad : false,
+                    autoLoad : true,
                     proxy : {
                         type : 'ajax',
                         url : _URL_CatalogoPeriodicidadVisitas,
@@ -608,6 +744,17 @@ Ext.onReady(function()
                 name: 'COPAGO',
                 readOnly: true
                 
+            },
+            {
+                xtype: 'textfield',
+                fieldLabel: 'M&eacute;dico Tratante',
+                labelWidth: 120,
+                width: 460,
+                readOnly: true,
+                name: 'DSPRESTA'
+            },{
+                xtype: 'hidden',
+                name: 'CDPRESTA'
             }]
         });
     		
@@ -803,69 +950,6 @@ Ext.onReady(function()
                 //title: 'Medicina Preventiva',
                 items: [
                 	gridPadecimientosAsegurado,
-                    {
-                        xtype: 'panel',
-                        hidden: true,
-                        buttons: [
-                            {
-                                text: 'Asignar m&eacute;dicoseleccionado'
-                            }
-                        ],
-                        height: 357,
-                        layout: 'anchor',
-                        bodyPadding: 10,
-                        title: 'Seleccionar M&eacute;dico',
-                        items: [
-                            {
-                                xtype: 'form',
-                                buttons: [
-                                    {
-                                        text: 'Buscar',
-                                        buttonAlign: 'center'
-                                    }
-                                ],
-                                height: 156,
-                                layout: 'column',
-                                bodyPadding: 10,
-                                title: 'B&uacute;squeda',
-                                items: [
-                                    {
-                                        xtype: 'combobox',
-                                        fieldLabel: 'Estado'
-                                    },
-                                    {
-                                        xtype: 'combobox',
-                                        fieldLabel: 'Municipio'
-                                    },
-                                    {
-                                        xtype: 'combobox',
-                                        fieldLabel: 'Especialidad'
-                                    }
-                                ]
-                            },
-                            {
-                                xtype: 'gridpanel',
-                                title: 'M&eacute;dicos',
-                                columns: [
-                                    {
-                                        xtype: 'gridcolumn',
-                                        dataIndex: 'string',
-                                        text: 'Nombre'
-                                    },
-                                    {
-                                        xtype: 'gridcolumn',
-                                        dataIndex: 'string',
-                                        text: 'Direcci&oacute;n'
-                                    },
-                                    {
-                                        xtype: 'gridcolumn',
-                                        dataIndex: 'string',
-                                        text: 'Tel&eacute;fono'
-                                    }
-                                ]
-                            }
-                        ]
-                    },
                     {
                         xtype: 'panel',
                         hidden: true,
