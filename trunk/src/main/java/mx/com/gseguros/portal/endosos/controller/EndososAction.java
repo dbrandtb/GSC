@@ -13264,8 +13264,8 @@ public String retarificarEndosos()
             
             StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
                     "<br>Estimado(a) cliente,<br/><br/>").append(
-                    "Anexamos a este e-mail la documentaci\u00f3n del endoso con motivo'").append(dstipsup).append("' asociado a la p\u00f3liza ").append(CDUNIEXT+"/"+RAMO+"/"+NMPOLIEX).append(".<br/>").append(
-                    "Puede revisar el detalle de este movimiento en el siguiente link.<br/>");
+                    "Anexamos a este e-mail la documentaci\u00f3n del endoso con motivo '").append(dstipsup).append("' asociado a la p\u00f3liza ").append(CDUNIEXT+"/"+RAMO+"/"+NMPOLIEX).append(".<br/>").append(
+                    "Puede revisar el detalle de este movimiento con el link correspondiente.<br/>");
 			
 			mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlCaratula).append(parametros).append("\">Car\u00e1tula de p\u00f3liza</a>");
 			
@@ -13382,7 +13382,7 @@ public String retarificarEndosos()
             
             StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
                     "<br>Estimado(a) cliente,<br/><br/>").append(
-                    "Anexamos a este e-mail la documentaci\u00f3n del endoso con motivo'").append(dstipsup).append("' asociado a la p\u00f3liza ").append(CDUNIEXT+"/"+RAMO+"/"+NMPOLIEX).append(".<br/>").append(
+                    "Anexamos a este e-mail la documentaci\u00f3n del endoso con motivo '").append(dstipsup).append("' asociado a la p\u00f3liza ").append(CDUNIEXT+"/"+RAMO+"/"+NMPOLIEX).append(".<br/>").append(
                     "Puede revisar el detalle de este movimiento en el siguiente link.<br/>");
 			
 			for(Map<String,String> endosoIt : listaEndosos){
