@@ -109,8 +109,14 @@ Ext.onReady(function()
         	beforeload: function(){
         		gridPadecimientosAsegurado.setLoading(true);
         	},
-        	load: function(){
+        	load: function(str,records,success){
         		gridPadecimientosAsegurado.setLoading(false);
+        		
+        		if(success && records.length <= 0){
+        			mensajeInfo('No se encontraron datos de padecimientos para este asegurado');
+        		}else if(!success){
+        			mensajeError('Error al cargar los padecimientos para este asegurado');
+        		}
         	}
         }
     });
