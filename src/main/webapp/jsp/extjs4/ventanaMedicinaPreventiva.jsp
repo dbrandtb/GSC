@@ -267,7 +267,7 @@ Ext.onReady(function()
                    	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
                    	
                    }else{
-                       mensajeError(json.mensaje);
+                       mensajeError('Este padecimiento no puede ser borrado ya que tiene asociado un historial de tratamiento.');
                    }
                }
                ,failure  : function(response, options){

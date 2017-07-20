@@ -2394,7 +2394,7 @@ Ext.onReady(function() {
         {
             itemId: 'tbMedicinaPreventiva',
             title : 'MEDICINA PREVENTIVA',
-            hidden       : _GLOBAL_CDSISROL != _ROL_COORDINADOR_MEDICINA_PREVENTIVA?true:false,
+            hidden: _GLOBAL_CDSISROL != _ROL_COORDINADOR_MEDICINA_PREVENTIVA?true:false,
             //width: '350',
             loader : {
                 url : _URL_LOADER_MEDICINA_PREVENTIVA,
