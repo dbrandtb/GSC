@@ -1013,6 +1013,7 @@ Ext.onReady(function() {
                 xtype        : 'actioncolumn',
                 icon         : _CONTEXT+'/resources/fam3icons/icons/folder_heart.png',
                 tooltip      : 'Medicina Preventiva',
+                hidden       : _GLOBAL_CDSISROL != _ROL_COORDINADOR_MEDICINA_PREVENTIVA?true:false, 
                 width        : 22,
                 menuDisabled : true,
                 sortable     : false,
