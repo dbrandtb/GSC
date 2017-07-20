@@ -11238,12 +11238,13 @@ public String retarificarEndosos()
 			if(respConfirmacionEndoso.isConfirmado()) {
 				endosoConfirmado = true;
 	   			
-				// Regeneramos los documentos:
-	   			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
-	   			
 				String sucursal = cdunieco;
 				
 				if(esProductoSalud) {
+					// Regeneramos los documentos:
+		   			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite,cdusuari);
+		   			
+		   			
 					// Ejecutamos el Web Service de Recibos:
 		   			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 							estado, nmpoliza, 
@@ -13264,7 +13265,7 @@ public String retarificarEndosos()
             StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
                     "<br>Estimado(a) cliente,<br/><br/>").append(
                     "Anexamos a este e-mail la documentaci\u00f3n del endoso con motivo'").append(dstipsup).append("' asociado a la p\u00f3liza ").append(CDUNIEXT+"/"+RAMO+"/"+NMPOLIEX).append(".<br/>").append(
-                    "Para visualizar los documentos favor de dar click en el link correspondiente.<br/>");
+                    "Puede revisar el detalle de este movimiento en el siguiente link.<br/>");
 			
 			mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlCaratula).append(parametros).append("\">Car\u00e1tula de p\u00f3liza</a>");
 			
@@ -13382,10 +13383,11 @@ public String retarificarEndosos()
             StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
                     "<br>Estimado(a) cliente,<br/><br/>").append(
                     "Anexamos a este e-mail la documentaci\u00f3n del endoso con motivo'").append(dstipsup).append("' asociado a la p\u00f3liza ").append(CDUNIEXT+"/"+RAMO+"/"+NMPOLIEX).append(".<br/>").append(
-                    "Para visualizar los documentos favor de dar click en el link correspondiente.<br/>");
+                    "Puede revisar el detalle de este movimiento en el siguiente link.<br/>");
 			
 			for(Map<String,String> endosoIt : listaEndosos){
 				if(StringUtils.isNotBlank(endosoIt.get("IMPRIMIR")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("IMPRIMIR"))){
+					logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 
 					
 					String parametros = null;
@@ -13419,6 +13421,7 @@ public String retarificarEndosos()
 					 * Para Caratula
 					 */
 					parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
+					logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 					logger.debug("URL Generada para Caratula: "+ urlCaratula + parametros);
 					mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlCaratula).append(parametros).append("\">Car\u00e1tula de p\u00f3liza</a>");
 					
@@ -13472,7 +13475,7 @@ public String retarificarEndosos()
 							
 							//parametros = "?9999,0,"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",0,"+(StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+endosoIt.get("TIPOEND")+","+reciboIt.get("NUMREC"); // PARAMS RECIBO ANTERIORES
                             parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+(StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+reciboIt.get("NUMREC");
-							
+                            logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 							logger.debug("URL Generada para Recibo "+reciboIt.get("NUMREC")+": "+ urlRecibo + parametros);
 							
 							if(Constantes.SI.equalsIgnoreCase(visible)){
@@ -13510,6 +13513,7 @@ public String retarificarEndosos()
 					
 					if(StringUtils.isNotBlank(endosoIt.get("AP")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("AP"))){
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
+						logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 						logger.debug("URL Generada para AP Inciso 1: "+ urlAp + parametros);
 						
 						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlAp).append(parametros).append("\">Anexo cobertura de AP</a>");
@@ -13542,6 +13546,7 @@ public String retarificarEndosos()
 					
 					if(StringUtils.isNotBlank(endosoIt.get("CAIC")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("CAIC"))){
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
+						logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 						logger.debug("URL Generada para CAIC Inciso 1: "+ urlCaic + parametros);
 						
 						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlCaic).append(parametros).append("\">Anexo de cobertura RC USA</a>");
@@ -13574,6 +13579,7 @@ public String retarificarEndosos()
 					
 					if(StringUtils.isNotBlank(endosoIt.get("AEUA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("AEUA"))){
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
+						logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 						logger.debug("URL Generada para AEUA Inciso 1: "+ urlAeua + parametros);
 						
 						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlAeua).append(parametros).append("\">Asistencia en Estados Unidos y Canad\u00E1</a>");
@@ -13605,6 +13611,7 @@ public String retarificarEndosos()
 						 * Para Incisos Flotillas
 						 */
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"));
+						logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 						logger.debug("URL Generada para urlIncisosFlotillas: "+ urlIncisosFlot + parametros);
 						
 						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlIncisosFlot).append(parametros).append("\">Relaci\u00f3n de Incisos Flotillas</a>");
@@ -13635,6 +13642,7 @@ public String retarificarEndosos()
 						 */
 						if(StringUtils.isNotBlank(urlIncisosExcelFlot)){
 							parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+",0";
+							logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 							logger.debug("URL Generada para urlIncisosExcelFlot: "+ urlIncisosExcelFlot + parametros);
 							
 							mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlIncisosExcelFlot).append(parametros).append("\">Relaci\u00f3n de Incisos EXCEL</a>");
@@ -13670,7 +13678,7 @@ public String retarificarEndosos()
 						if(numeroIncisos > 0 && !soloUnInciso){
 							int numeroReportes =  numeroIncisos/Integer.parseInt(numIncisosReporte);
 							int reporteSobrante = numeroIncisos % Integer.parseInt(numIncisosReporte);
-							
+							logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 							logger.debug("Tarjeta de Identificacion ::: Numero de Reportes exactos: "+ numeroReportes);
 							logger.debug("Tarjeta de Identificacion ::: Numero de incisos sobrantes: "+ reporteSobrante);
 							
@@ -13708,6 +13716,7 @@ public String retarificarEndosos()
 								if(soloIncisosAfectados){
 									if(imprimirReporte){
 										parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
+										logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 										logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 										
 										mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlTarjIdent).append(parametros).append("\">Tarjeta de Identificaci\u00f3n. ").append(desdeInciso).append(" - ").append(hastaInciso).append(" de ").append(numeroIncisos).append("</a>");
@@ -13740,6 +13749,7 @@ public String retarificarEndosos()
 									//Se imprimen Todos los reportes
 									
 									parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+desdeInciso+","+hastaInciso;
+									logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 									logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 									
 									mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlTarjIdent).append(parametros).append("\">Tarjeta de Identificaci\u00f3n.").append("</a>");
@@ -13775,6 +13785,7 @@ public String retarificarEndosos()
 							logger.debug("Imprimiendo solo una caratula a de Tarjeta de Identificacion para el inciso: " + numeroInciso);
 							
 							parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+","+endosoIt.get("TIPOEND")+","+ (StringUtils.isBlank(endosoIt.get("NUMEND"))?"0":endosoIt.get("NUMEND"))+","+numeroInciso;
+							logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 							logger.debug("URL Generada para Tarjeta Identificacion: "+ urlTarjIdent + parametros);
 							
 							mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlTarjIdent).append(parametros).append("\">Tarjeta de Identificaci\u00f3n.").append("</a>");
@@ -13806,7 +13817,7 @@ public String retarificarEndosos()
 					 * Para cobertura de reduce GS
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("REDUCEGS")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("REDUCEGS"))){
-						
+						logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 					    mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.manualAgenteTxtinfocobredgs).append("\">Reduce GS</a>");
 					    
 						documentosManager.guardarDocumento(
@@ -13835,7 +13846,7 @@ public String retarificarEndosos()
 					 * Para cobertura de gestoria GS
 					 */
 					if(StringUtils.isNotBlank(endosoIt.get("GESTORIA")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("GESTORIA"))){
-						
+						logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 					    mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.manualAgenteTxtinfocobgesgs).append("\">Gestoria GS</a>");
 					    
 						documentosManager.guardarDocumento(
@@ -13905,7 +13916,7 @@ public String retarificarEndosos()
 								,null
 								,null, false
 								);
-						
+						logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(this.manualAgenteCondgralescobsegvida).append("\">Condiciones Generales Seguro de Vida</a>");
 
 						documentosManager.guardarDocumento(
@@ -13935,6 +13946,7 @@ public String retarificarEndosos()
 						 * Para documento Sanas Practicas
 						 */
 						parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",2";
+						logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 						logger.debug("URL Generada para Sanas Practicas: "+ urlDocsExtra + parametros);
 						mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlDocsExtra).append(parametros).append("\">Sanas Pr\u00e1cticas</a>");
 						
@@ -13965,6 +13977,7 @@ public String retarificarEndosos()
 						
 						if(TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString().equalsIgnoreCase(cdtipsup)){
 							parametros = "?"+emisionWS.getSucursal()+","+emisionWS.getSubramo()+","+emisionWS.getNmpoliex()+",1";
+							logger.debug("tipo endoso", endosoIt.get("TIPOEND"));
 							logger.debug("URL Generada para Constancia de Recepcion de Documentacion Contractual: "+ urlDocsExtra + parametros);
 							mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlDocsExtra).append(parametros).append("\">Constancia de Recepci\u00f3n de Documentaci\u00f3n Contractual</a>");
 							
