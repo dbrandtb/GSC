@@ -41,6 +41,7 @@
             var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             
             var _URL_LOADER_MEDICINA_PREVENTIVA   = '<s:url namespace="/consultasAsegurado" action="pantallaMedicinaPreventiva" />';
+            var _ROL_COORDINADOR_MEDICINA_PREVENTIVA = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@COORDINADOR_MEDICINA_PREVENTIVA.cdsisrol" />';
             
             var _MSG_ERROR                       = 'Error';
             var _MSG_INFO                        = 'Info';
