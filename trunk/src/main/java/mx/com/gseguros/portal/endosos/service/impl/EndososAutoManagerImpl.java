@@ -2784,9 +2784,31 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			
 			String dstipsup = consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup);
             
+			List<Map<String,String>>lista=consultasDAO.cargarMpolizasPorParametrosVariables(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,""//nmsuplem
+					,""//nmsolici
+					,""//cdramant
+					);
+			logger.debug("cargarMpolizasPorParametrosVariables{}");
+			logger.debug("lista{}",lista);
+			String CDUNIEXT=""
+				   ,RAMO = ""
+				   ,NMPOLIEX = "";
+			
+			for(Map<String,String> datoEndoso : lista){
+				CDUNIEXT = datoEndoso.get("CDUNIEXT");
+				RAMO     = datoEndoso.get("RAMO");
+				NMPOLIEX = datoEndoso.get("NMPOLIEX");
+			}
+			logger.debug("cargarMpolizasPorParametrosVariables{}");
+            
             StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
                     "<br>Estimado(a) cliente,<br/><br/>").append(
-                    "Anexamos a este e-mail la documentaci\u00f3n del endoso de '").append(dstipsup).append("' realizado con GENERAL DE SEGUROS.<br/>").append(
+                    "Anexamos a este e-mail la documentaci\u00f3n del endoso con motivo'").append(dstipsup).append("' asociado a la póliza ").append(CDUNIEXT+"/"+RAMO+"/"+NMPOLIEX).append(".<br/>").append(
                     "Para visualizar los documentos favor de dar click en el link correspondiente.<br/>");
             
             mensajeEmail.append("<br/><br/><a style=\"font-weight: bold\" href=\"").append(urlImpresionCaratulaEndosoB).append(parametros).append("\">Car\u00e1tula de p\u00f3liza</a>");
@@ -2825,7 +2847,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                 );
                 
                 logger.debug("Enviando correos configurados");
-                flujoMesaControlManager.mandarCorreosStatusTramite(ntramiteEndoso, RolSistema.SUSCRIPTOR_AUTO.getCdsisrol(), false);
+                flujoMesaControlManager.mandarCorreosStatusTramite(ntramiteEndoso, RolSistema.SUSCRIPTOR_AUTO.getCdsisrol(), false,false,null);
             } catch (Exception ex) {
                 logger.debug("Error al enviar correos de estatus al turnar", ex);
             }
@@ -3868,10 +3890,32 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			}
 			
 			String dstipsup = consultasDAO.recuperarDstipsupPorCdtipsup(cdtipsup);
+			
+			List<Map<String,String>>lista=consultasDAO.cargarMpolizasPorParametrosVariables(
+					cdunieco
+					,cdramo
+					,estado
+					,nmpoliza
+					,""//nmsuplem
+					,""//nmsolici
+					,""//cdramant
+					);
+			logger.debug("cargarMpolizasPorParametrosVariables{}");
+			logger.debug("lista{}",lista);
+			String CDUNIEXT=""
+				   ,RAMO = ""
+				   ,NMPOLIEX = "";
+			
+			for(Map<String,String> datoEndoso : lista){
+				CDUNIEXT = datoEndoso.get("CDUNIEXT");
+				RAMO     = datoEndoso.get("RAMO");
+				NMPOLIEX = datoEndoso.get("NMPOLIEX");
+			}
+			logger.debug("cargarMpolizasPorParametrosVariables{}");
             
             StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
                     "<br>Estimado(a) cliente,<br/><br/>").append(
-                    "Anexamos a este e-mail la documentaci\u00f3n del endoso de '").append(dstipsup).append("' realizado con GENERAL DE SEGUROS.<br/>").append(
+                    "Anexamos a este e-mail la documentaci\u00f3n del endoso con motivo'").append(dstipsup).append("' asociado a la póliza ").append(CDUNIEXT+"/"+RAMO+"/"+NMPOLIEX).append(".<br/>").append(
                     "Para visualizar los documentos favor de dar click en el link correspondiente.<br/>");
 			
 			for(Map<String,String> endosoIt : listaEndosos){
@@ -4456,15 +4500,16 @@ public class EndososAutoManagerImpl implements EndososAutoManager
                     "</span>");
             
             try {
+            	logger.debug("cdunieco cdramo estado  nmpoliza  nmsuplem{}",cdunieco, cdramo, estado, nmpoliza, nmsuplem);
                 String ntramiteEndoso =  consultasDAO.recuperarTramitePorNmsuplem(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
-                
+                logger.debug("ntramiteEndoso",ntramiteEndoso);
                 flujoMesaControlManager.guardarMensajeCorreoEmision(
                         ntramiteEndoso,
                         Utils.cambiaAcentosUnicodePorGuionesBajos(mensajeEmail.toString())
                 );
                 
                 logger.debug("Enviando correos configurados");
-                flujoMesaControlManager.mandarCorreosStatusTramite(ntramiteEndoso, RolSistema.SUSCRIPTOR_AUTO.getCdsisrol(), false);
+                flujoMesaControlManager.mandarCorreosStatusTramite(ntramiteEndoso, RolSistema.SUSCRIPTOR_AUTO.getCdsisrol(), false,false,null);
             } catch (Exception ex) {
                 logger.debug("Error al enviar correos de estatus al turnar", ex);
             }
