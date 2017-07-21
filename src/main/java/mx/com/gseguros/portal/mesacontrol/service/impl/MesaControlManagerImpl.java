@@ -1,14 +1,9 @@
 package mx.com.gseguros.portal.mesacontrol.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
@@ -17,6 +12,10 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Utils;
+
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MesaControlManagerImpl implements MesaControlManager
 {
@@ -51,8 +50,6 @@ public class MesaControlManagerImpl implements MesaControlManager
 			,String cdmotivo
 			,String cdsisrol
 			,String swagente
-			,String status
-			,boolean cerrado
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -66,13 +63,9 @@ public class MesaControlManagerImpl implements MesaControlManager
 				,"\n@@@@@@ cdmotivo=" , cdmotivo
 				,"\n@@@@@@ cdsisrol=" , cdsisrol
 				,"\n@@@@@@ swagente=" , swagente
-				,"\n@@@@@@ status="   , status
-				,"\n@@@@@@ cerrado="  , cerrado
 				));
 		
-		mesaControlDAO.movimientoDetalleTramite(ntramite, feinicio, cdclausu, comments, cdusuari
-				,cdmotivo, cdsisrol, swagente, null, null, status
-				,cerrado);
+		mesaControlDAO.movimientoDetalleTramite(ntramite, feinicio, cdclausu, comments, cdusuari, cdmotivo, cdsisrol, swagente, null, null);
 		
 		logger.debug(Utils.log(
 				 "\n@@@@@@ movimientoDetalleTramite @@@@@@"
@@ -130,11 +123,7 @@ public class MesaControlManagerImpl implements MesaControlManager
 			,String swimpres
 			,String cdtipflu
 			,String cdflujomc
-			,Map<String,String>valores
-			,String cdtipsup
-			,String renuniext
-			,String renramo
-			,String renpoliex
+			,Map<String,String>valores, String cdtipsup
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -164,9 +153,6 @@ public class MesaControlManagerImpl implements MesaControlManager
 				,"\n@@@@@@ cdflujomc="  , cdflujomc
 				,"\n@@@@@@ valores="    , valores
 				,"\n@@@@@@ cdtipsup="   , cdtipsup
-				,"\n@@@@@@ renuniext="  , renuniext
-				,"\n@@@@@@ renramo="    , renramo
-				,"\n@@@@@@ renpoliex="  , renpoliex
 				));
 		
 		String ntramite = mesaControlDAO.movimientoMesaControl(
@@ -194,9 +180,6 @@ public class MesaControlManagerImpl implements MesaControlManager
 				,cdflujomc
 				,valores
 				,cdtipsup
-				,renuniext
-				,renramo
-				,renpoliex, false, null
 				);
 		
 		logger.debug(Utils.log(
@@ -226,7 +209,6 @@ public class MesaControlManagerImpl implements MesaControlManager
 	}
 	
 	@Override
-	@Deprecated
 	public void borraDomicilioAsegSiCodposCambia(
 			String cdunieco
 			,String cdramo
@@ -298,16 +280,6 @@ public class MesaControlManagerImpl implements MesaControlManager
 		return mesaControlDAO.regeneraDocumentosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 	}
 	
-	public String marcarTramiteComoStatusTemporal(String ntramite, String statusTemporal) throws Exception{
-		return mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite, statusTemporal);
-	}
-	
-	@Override
-	@Deprecated
-	public void actualizarNmsuplemTramite(String ntramite, String nmsuplem) throws Exception
-	{
-		mesaControlDAO.actualizarNmsuplemTramite(ntramite, nmsuplem);
-	}
 	
 	@Override
 	public void regeneraReverso(String ntramite, String cdsisrol,String cdusuari) throws Exception{
@@ -323,12 +295,9 @@ public class MesaControlManagerImpl implements MesaControlManager
 		String paso = null;
 		try
 		{
-			//Se agrega interacion para llamar reverso de tramite por n numero de tramites
-			String ntramites[] = ntramite.split(",");
-			for(String nmtramite : ntramites){
-				logger.debug(nmtramite);
-				mesaControlDAO.regeneraReverso(nmtramite, cdsisrol, cdusuari) ;
-		    }
+			
+		 mesaControlDAO.regeneraReverso(ntramite, cdsisrol, cdusuari) ;
+	
 		}
 		catch(Exception ex)
 		{
@@ -339,99 +308,5 @@ public class MesaControlManagerImpl implements MesaControlManager
 				 "\n@@@@@@ regeneraReverso @@@@@@"
 				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 				));
-	}
-	
-	@Override
-	public void borrarNmsoliciTramite(String ntramite) throws Exception
-	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ borrarNmsoliciTramite @@@@@@"
-				,"\n@@@@@@ ntramite = " , ntramite
-				));
-		
-		String paso = "Borrando liga de solicitud";
-		
-		try
-		{
-			mesaControlDAO.borrarNmsoliciTramite(ntramite);
-		}
-		catch(Exception ex)
-		{
-			Utils.generaExcepcion(ex, paso);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ borrarNmsoliciTramite @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
-	}
-	
-	@Override
-	@Deprecated
-	public void concatenarAlInicioDelUltimoDetalle(String ntramite, String comentario, String cdmodulo, String cdevento) throws Exception {
-		mesaControlDAO.concatenarAlInicioDelUltimoDetalle(ntramite, comentario, cdmodulo, cdevento);
-	}
-	
-	@Override
-	public List<Map<String, String>> loadMesaControl(Map<String,String> params) throws Exception{
-	    String paso = null;
-	    List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-	    try{
-	        if(params!=null){
-	            if(!params.containsKey("cdtipram")){
-	                params.put("cdtipram" , null);
-	            }
-	            if(!params.containsKey("lote")){
-	                params.put("lote" , null);
-	            }
-	            if(!params.containsKey("tipolote")){
-	                params.put("tipolote" , null);
-	            }
-	            if(!params.containsKey("tipoimpr")){
-	                params.put("tipoimpr" , null);
-	            }
-	            if(!params.containsKey("cdusuari_busq")){
-	                params.put("cdusuari_busq" , null);
-	            }
-	            if(!params.containsKey("dscontra")){
-	                params.put("dscontra" , null);
-	            }
-	            String cdunieco         =   params.get("pv_cdunieco_i");
-	            String ntramite         =   params.get("pv_ntramite_i");
-	            String cdramo           =   params.get("pv_cdramo_i");
-	            String nmpoliza         =   params.get("pv_nmpoliza_i");
-	            String estado           =   params.get("pv_estado_i");
-	            String cdagente         =   params.get("pv_cdagente_i");    
-	            String status           =   params.get("pv_status_i");      
-	            String cdtipsit         =   params.get("pv_cdtipsit_i");    
-	            String fedesde          =   params.get("pv_fedesde_i");     
-	            String fehasta          =   params.get("pv_fehasta_i");     
-	            String cdrol            =   params.get("pv_cdrol_i");       
-	            String cdtiptra         =   params.get("pv_cdtiptra_i");    
-	            String contrarecibo     =   params.get("pv_contrarecibo_i");
-	            String tipoPago         =   params.get("pv_tipoPago_i");    
-	            String nfactura         =   params.get("pv_nfactura_i");    
-	            String cdpresta         =   params.get("pv_cdpresta_i");    
-	            String cdusuari         =   params.get("pv_cdusuari_i");    
-	            String cdtipram         =   params.get("cdtipram");         
-	            String lote             =   params.get("lote");             
-	            String tipolote         =   params.get("tipolote");         
-	            String tipoimpr         =   params.get("tipoimpr");         
-	            String cdusuari_busq    =   params.get("cdusuari_busq");    
-	            String dscontra         =   params.get("dscontra");
-	            lista = mesaControlDAO.obtenerMesaControl(cdunieco, ntramite, cdramo, nmpoliza, estado, cdagente, status, cdtipsit, fedesde, fehasta, cdrol, cdtiptra, contrarecibo, tipoPago, nfactura, cdpresta, cdusuari, cdtipram, lote, tipolote, tipoimpr, cdusuari_busq, dscontra);
-	        }	        
-	    }
-	    catch(Exception ex){
-	        Utils.generaExcepcion(ex, paso);
-	    }
-	    return lista;
-	}
-	
-	@Override
-	@Deprecated
-	public void validaDuplicidadTramiteEmisionPorNmsolici (String cdunieco, String cdramo, String estado, String nmsolici) throws Exception {
-	    mesaControlDAO.validaDuplicidadTramiteEmisionPorNmsolici(cdunieco, cdramo, estado, nmsolici);
-	}
+	}	
 }

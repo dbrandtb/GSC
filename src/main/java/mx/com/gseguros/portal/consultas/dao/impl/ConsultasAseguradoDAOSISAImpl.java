@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
@@ -578,7 +577,7 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 	public class CopagosPolizaMapper implements RowMapper<CopagoVO> {
 		public CopagoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
 			CopagoVO copago = new CopagoVO();
-			copago.setOrden(rs.getString("ORDEN"));
+			copago.setOrden(rs.getInt("ORDEN"));
 			copago.setDescripcion(rs.getString("descripcion"));
 			copago.setValor(rs.getString("valor"));
 			copago.setAgrupador("");
@@ -956,64 +955,5 @@ public class ConsultasAseguradoDAOSISAImpl extends AbstractManagerDAO implements
 			// TODO Auto-generated method stub
 			return null;
 		}
-
-		@Override
-		public List<GenericVO> obtieneCatalogoICDs() throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public List<Map<String, String>> obtienePadecimientosAsegurado(Map<String, String> params) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void actualizaPadecimientoAsegurado(Map<String, String> params) throws Exception {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public Map<String, String> obtieneDatosAsegurado(Map<String, String> params) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Map<String, String> obtieneCopagoCobMedPrevPol(Map<String, String> params) throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public List<GenericVO> obtieneCatalogoEstadosProvMedicos() throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos() throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public List<GenericVO> obtieneCatalogoEspecialidadesMedicos() throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public List<GenericVO> obtieneCatalogoFrecuenciaVisitas() throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public List<GenericVO> obtieneCatalogoPeriodicidadVisitas() throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
+		
 }

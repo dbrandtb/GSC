@@ -21,7 +21,6 @@ smap1:
     NTRAMITE: "678"
     PRIMA_TOTAL: "12207.37"
 */
-
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _35_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
@@ -44,10 +43,6 @@ var _p22_parentCallback = false;
 var _contratanteSaved = false;
 
 debug('_35_smap1:',_35_smap1);
-
-var _p35_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_p35_flujo:',_p35_flujo);
 ////// variables //////
 ///////////////////////
 
@@ -398,20 +393,6 @@ function _35_confirmar()
         {
             datosIncompletos();
         }
-        
-        var contratanteValido = true;
-        if(valido){
-        	_35_storeContratantes.each(function(record){
-        		if(datosContr.cdperson == record.get('CDPERSON')){
-        			contratanteValido = false;
-        		}
-    	    });
-        	if(!contratanteValido){
-        		mensajeWarning('El cliente seleccionado es el mismo que se encuentra actualmente registrado en la p&oacute;liza. Seleccione uno distinto');
-        		return false;
-        	}
-        }
-        
     }
     
     if(valido)
@@ -433,11 +414,6 @@ function _35_confirmar()
                 cdpersonNvoContr : datosContr.cdperson
             }
             ,slist1 : slist1
-        };
-        
-        if(!Ext.isEmpty(_p35_flujo))
-        {
-            json.flujo = _p35_flujo;
         }
         
         debug('datos que se enviaran:',json);
@@ -502,5 +478,4 @@ function _35_confirmar()
 ///////////////////////
 <%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
-
 <div id="_35_divPri" style="height:1000px;"></div>
