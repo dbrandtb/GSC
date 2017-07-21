@@ -305,12 +305,6 @@ public class ConsultasAseguradoDAOSIGSImpl extends AbstractManagerDAO implements
 	}
 
 	@Override
-	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<GenericVO> obtieneCatalogoEspecialidadesMedicos() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
@@ -326,5 +320,24 @@ public class ConsultasAseguradoDAOSIGSImpl extends AbstractManagerDAO implements
 	public List<GenericVO> obtieneCatalogoPeriodicidadVisitas() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos(Map<String, String> params) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneCatDireccionProvMedPorEspecialidad(Map<String, String> params)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean validaAsegCobMedicinaPreventiva(Map<String, String> params) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

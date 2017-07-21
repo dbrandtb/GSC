@@ -19,6 +19,8 @@ var _Edad       = '<s:property value="smap1.EDAD" />';
 var _Rfc        = '<s:property value="smap1.RFC" />';
 var _NombreAseg = '<s:property value="smap1.NOMBRE" />';
 
+var tieneCobMedicinaPrev = '<s:property value="smap1.COBMEDPREV" />';
+
 
 var _CONTEXT       = '${ctx}';
 
@@ -38,7 +40,7 @@ var _urlActualizaHistorialPadeciAseg     = '<s:url namespace="/consultasAsegurad
 
 var _urlObtieneCopagoCobMedPrevPol        = '<s:url namespace="/consultasAsegurado"  action="obtieneCopagoCobMedPrevPol" />';
 
-var _UrlConsultaMedicosTratantes        = '<s:url namespace="/consultasAsegurado"  action="obtieneMedicosTratantes" />';
+var _UrlConsultaMedicosTratantes        = '<s:url namespace="/consultasAsegurado"  action="obtieneCatDireccionProvMedPorEspecialidad" />';
 
 var gridPadecimientosAsegurado;
 
@@ -113,9 +115,9 @@ Ext.onReady(function()
         		gridPadecimientosAsegurado.setLoading(false);
         		
         		if(success && records.length <= 0){
-        			mensajeInfo('No se encontraron datos de padecimientos para este asegurado');
+        			mensajeInfo('No hay padecimientos registrados para este asegurado');
         		}else if(!success){
-        			mensajeError('Error al cargar los padecimientos para este asegurado');
+        			mensajeError('Error al cargar los padecimientos de este asegurado');
         		}
         	}
         }
@@ -145,7 +147,7 @@ Ext.onReady(function()
             ,reader     :
             {
                 type  : 'json'
-                ,root : 'slist1'
+                ,root : 'loadList'
             }
         }
     });
@@ -159,7 +161,7 @@ Ext.onReady(function()
     /*//////////////////////*/
     
     gridPadecimientosAsegurado = Ext.create('Ext.grid.Panel', {
-        title   : 'Padecimientos del Asegurado',
+        title   : 'Padecimientos del Asegurado: '+_NombreAseg,
         store   : padecimientosGridStore,
         //width   : 830,
         height  : 400 ,
@@ -223,7 +225,13 @@ Ext.onReady(function()
                         	nuevoRecConf.set('NMSITUAC',_Nmsituac);
                         	nuevoRecConf.set('CDPERSON',_Cdperson);
                         	
-                        	agregarEditarPadecimientoAseg(nuevoRecConf,btn);
+                        	if(!Ext.isEmpty(tieneCobMedicinaPrev) && tieneCobMedicinaPrev == 'S'){
+                        		agregarEditarPadecimientoAseg(nuevoRecConf,btn);
+                        	}else{
+                        		mensajeWarning('Este asegurado no tiene la cobertura de Medicina Preventiva en la p&oacute;liza actual.'
+                        							+'<br/>S&oacute;lo puede dar de alta un padecimiento desde una p&oacute;liza que tenga esta cobertura.');
+                        	}
+                        	
                         }
                     }
                 ]
@@ -551,14 +559,6 @@ Ext.onReady(function()
     function agregarEditarCartaPadecimientoAseg(recordEditar){
     	var ventanaCartaMedPrevPad;
     	
-//    	medicosTratantesStore.load({
-//    		params:{
-//    			'params.pi_cdedo':'',
-//    			'params.pi_cdmunici':'',
-//    			'params.pi_cdespeci':''
-//    		}
-//    	});
-    	
     	var panelBuscarMedicos = Ext.create('Ext.form.Panel',{
     		border:false,
             defaults : {
@@ -591,7 +591,17 @@ Ext.onReady(function()
                             root : 'listaCatalogo'
                         }
                     }
-                })
+                }),
+                listeners: {
+                	select: function(cmb, records){
+                		var comboMunici = cmb.up('form').down('[name=MUNICI_DOM]');
+                		comboMunici.getStore().load({
+                			params:{
+                				'params.pi_cdedo' : records[0].get('key')
+                			}
+                		});
+                	}
+                }
                 },
                 {
             	xtype: 'combobox',
@@ -607,7 +617,6 @@ Ext.onReady(function()
                 allowBlank    : false,
                 store       : Ext.create('Ext.data.Store', {
                     model : 'Generic',
-                    autoLoad : true,
                     proxy : {
                         type : 'ajax',
                         url : _URL_CatalogoMunicipiosProvMedicos,
@@ -649,6 +658,14 @@ Ext.onReady(function()
 	                icon:_CONTEXT+'/resources/fam3icons/icons/zoom.png',
 	                handler: function(btn){
 	                	
+	                    	medicosTratantesStore.load({
+		                		params:{
+		                			'params.pi_cdedo'   : panelBuscarMedicos.down('[name=EDO_DOM]').getValue(),
+		                			'params.pi_cdmunici': panelBuscarMedicos.down('[name=MUNICI_DOM]').getValue(),
+		                			'params.pi_cdespeci': panelBuscarMedicos.down('[name=ESPECIALIDAD]').getValue()
+		                		}
+		                	});
+	                	
 	                }
                 }]
         });
@@ -662,12 +679,10 @@ Ext.onReady(function()
             	panelBuscarMedicos,
             	Ext.create('Ext.grid.Panel', {
                 border: false,
-                autoScroll: false,
                 height : 120,
-                disableSelection: true,
                 viewConfig: {
                     stripeRows: false,
-                    trackOver : false
+                    trackOver : true
                 },
             	store: medicosTratantesStore,
                 columns: [

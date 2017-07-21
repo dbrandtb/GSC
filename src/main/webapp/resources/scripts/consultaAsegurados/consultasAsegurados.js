@@ -151,9 +151,11 @@ Ext.onReady(function() {
                                 	tabDatosGeneralesPoliza.child('#tabEndosos').tab.show();
                                 	if(gridSuplementos.getSelectionModel().getSelection()[0].get('origen') == 'SISA') {
                                 	   tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
+                                	   tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.hide();
                                 	   tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.show();
                                 	} else {
                                 	   tabDatosGeneralesPoliza.child('#tbDocumentos').tab.show();
+                                	   tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.show();
                                 	   tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.hide();
                                 	}
                                     tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.hide();
@@ -181,6 +183,7 @@ Ext.onReady(function() {
                                 tabDatosGeneralesPoliza.show();
                                 tabDatosGeneralesPoliza.child('#tabDatosGenerales').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
+                                tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.show();
                                 tabDatosGeneralesPoliza.child('#tabDatosCopagosPoliza').tab.show();
                                 /*if(gridSuplementos.getSelectionModel().getSelection()[0].get('origen') == 'SISA') {                                    
@@ -215,6 +218,7 @@ Ext.onReady(function() {
                                 	tabDatosGeneralesPoliza.child('#tbHistoricoFarmacia').tab.hide();
                                 }
                                 tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
+                                tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosCopagosPoliza').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosCoberturasBasicas').tab.hide();
@@ -237,6 +241,7 @@ Ext.onReady(function() {
                                 tabDatosGeneralesPoliza.child('#tbHistorico').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tbHistoricoFarmacia').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
+                                tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosCopagosPoliza').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosCoberturasBasicas').tab.hide();

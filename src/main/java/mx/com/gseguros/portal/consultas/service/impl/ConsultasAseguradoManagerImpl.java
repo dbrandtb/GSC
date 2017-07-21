@@ -487,8 +487,8 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 		return consultasAseguradoDAOICE.obtieneCatalogoEstadosProvMedicos();
 	}
 
-	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos() throws Exception{
-		return consultasAseguradoDAOICE.obtieneCatalogoMunicipiosProvMedicos();
+	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos(Map<String, String> params) throws Exception{
+		return consultasAseguradoDAOICE.obtieneCatalogoMunicipiosProvMedicos(params);
 	}
 
 	public List<GenericVO> obtieneCatalogoEspecialidadesMedicos() throws Exception{
@@ -501,5 +501,13 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 
 	public List<GenericVO> obtieneCatalogoPeriodicidadVisitas() throws Exception{
 		return consultasAseguradoDAOICE.obtieneCatalogoPeriodicidadVisitas();
+	}
+
+	public List<Map<String, String>> obtieneCatDireccionProvMedPorEspecialidad(Map<String, String> params) throws Exception{
+		return consultasAseguradoDAOICE.obtieneCatDireccionProvMedPorEspecialidad(params);
+	}
+	
+	public boolean validaAsegCobMedicinaPreventiva(Map<String, String> params) throws Exception{
+		return consultasAseguradoDAOICE.validaAsegCobMedicinaPreventiva(params);
 	}
 }
