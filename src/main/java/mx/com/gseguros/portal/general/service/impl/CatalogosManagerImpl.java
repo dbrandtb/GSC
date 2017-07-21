@@ -65,9 +65,9 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre, String cdSisRol, String cdramo) throws Exception{
+	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre, String cdSisRol) throws Exception{
 		String otValor = StringUtils.isNotBlank(idPadre) ? idPadre : null;
-		return catalogosDAO.obtieneAtributosSituacion(cdAtribu, cdTipSit, otValor, cdSisRol, cdramo);
+		return catalogosDAO.obtieneAtributosSituacion(cdAtribu, cdTipSit, otValor, cdSisRol);
 	}
 	
 	@Override
@@ -129,12 +129,6 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception
 	{
 		return catalogosDAO.obtieneStatusTramite(params);
-	}
-
-	@Override
-	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception
-	{
-		return catalogosDAO.obtieneTiposTramiteClonacion();
 	}
 	
 	@Override

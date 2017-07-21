@@ -30,7 +30,7 @@ public interface CatalogosManager {
 	 * @return Atributos de situacion
 	 * @throws Exception
 	 */
-	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre, String cdSisRol, String cdramo) throws Exception; // se utiliza para atributos situacion x rol (EGS)
+	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre, String cdSisRol) throws Exception; // se utiliza para atributos situacion x rol (EGS)
 	
 	public List<GenericVO> obtieneAtributosSiniestro(String cdAtribu, String cdTipSit, String idPadre) throws Exception;
 	
@@ -264,6 +264,4 @@ public interface CatalogosManager {
 	public List<GenericVO> obtieneComentariosNegocio(String cdramo, String cdtipsit, String negocio) throws Exception;
 
     public List<GenericVO> recuperarTiposEndosoPorTramite (String ntramite) throws Exception;
-
-	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception;
 }

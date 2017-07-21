@@ -68,6 +68,7 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
+import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -162,6 +163,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private DocumentosManager documentosManager;
 	
 	@Autowired
+	private MesaControlManager mesaControlManager;
+	
+	@Autowired
 	private FlujoMesaControlManager flujoMesaControlManager;
 	
 	@Autowired
@@ -178,66 +182,20 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public static final String SUCURSAL_SALUD_NOVA = "1403";
 
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-	
-	@Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-	
-	@Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-	
-	@Value("${recibo.impresion.autos.url}")
-    private String reciboImpresionAutosUrl;
-
-	@Value("${caic.impresion.autos.url}")
-    private String caicImpresionAutosUrl;	
-	
-	@Value("${aeua.impresion.autos.url}")
-    private String aeuaImpresionAutosUrl;	
-	
-	@Value("${ap.impresion.autos.url}")
-    private String apImpresionAutosUrl;
-
-	@Value("${incisos.flotillas.impresion.autos.url}")
-    private String incisosFlotillasImpresionAutosUrl;			
-
 	@Value("${incisos.flotillas.excel.impresion.autos.url}")
-	private String incisosFlotillasExcelImpresionAutosUrl;			
-				
-	@Value("${tarjeta.iden.impresion.autos.url}")
-    private String tarjetaIdenImpresionAutosUrl;				
-					
-	@Value("${numero.incisos.reporte}")
-    private String numeroIncisosReporte;	
-	
-	@Value("${caratula.impresion.autos.url}")
-    private String caratulaImpresionAutosUrl;
-	
-	@Value("${caratula.impresion.autos.serviciopublico.url}")
-    private String caratulaImpresionAutosServiciopublicoUrl;
-	
-	@Value("${caratula.impresion.autos.flotillas.url}")
-    private String caratulaImpresionAutosFlotillasUrl;
-	
-	@Value("${manual.agente.txtinfocobredgs}")
-    private String manualAgenteTxtinfocobredgs;
-	
-	@Value("${manual.agente.condgralescobsegvida}")
-    private String manualAgenteCondgralescobsegvida;
-	
-	@Value("${manual.agente.txtinfocobgesgs}")
-    private String manualAgenteTxtinfocobgesgs;
+	private String incisosFlotillasExcelImpresionAutosUrl;	
 	
 	@Value("${caratula.impresion.autos.docextra.url}")
     private String caratulaImpresionAutosDocExtra;
 	
-	@Value("${sigs.RenovarEndososB.url}")
-    private String sigsRenovarEndososB;
+	@Value("${caratula.impresion.autos.flotillas.url}")
+    private String caratulaImpresionAutosFlotillasUrl;
 	
 	@Value("${caratula.impresion.autos.endosob.url}")
 	private String caratulaImpresionAutosEndosobUrl;
 	
+	@Value("${sigs.RenovarEndososB.url}")
+    private String sigsRenovarEndososB;
 	public ComplementariosAction() {
 		this.session=ActionContext.getContext().getSession();
 	}
@@ -264,26 +222,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String result   = SUCCESS;
 		UserVO usuario  = null;
 		String cdsisrol = null;
-		String caseIdRstn = null;
-		
-		if (exito && map1 != null && "S".equals(map1.get("rstn")) && StringUtils.isNotBlank(map1.get("ntramite"))) { // para RSTN recuperar datos
-		    try {
-		        String paso = "Construyendo flujo RSTN";
-		        try {
-		            UserVO user = Utils.validateSession(session);
-		            String ntramite = map1.get("ntramite");
-		            Utils.validate(ntramite, "Falta ntramite");
-		            flujo = flujoMesaControlManager.generarYRecuperarFlujoRSTN(ntramite, user.getUser(), user.getRolActivo().getClave());
-		            caseIdRstn = map1.get("caseIdRstn");
-		            map1 = null;
-		        } catch (Exception ex) {
-		            Utils.generaExcepcion(ex, paso);
-		        }
-		    } catch (Exception ex) {
-		        exito = false;
-		        respuesta = Utils.manejaExcepcion(ex);
-		    }
-		}
 		
 		if(exito)
 		{
@@ -302,8 +240,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 					cdtipsit = tramite.get("CDTIPSIT");
 					map1 = new HashMap<String, String>();
 					map1.put("ntramite" , flujo.getNtramite());
-					
-					map1.put("caseIdRstn", caseIdRstn);
 					
 					if("RECUPERAR".equals(flujo.getAux()))
 					{
@@ -771,10 +707,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             parametros.putAll(map1);
             parametros.put("pv_status", "V");
             parametros.put("pv_nmsuplem", "0");
-            
-            if (!Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals(map1.get("pv_cdramo"))) {
-                kernelManager.pMovTvalopol(parametros);
-            }
+            kernelManager.pMovTvalopol(parametros);
             
 			success = true;
 		}
@@ -2125,8 +2058,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String caseIdRstn      = null;
 		Date fechaHoy          = new Date();
 		boolean esFlotilla     = false;
-		//boolean endososB       = false;
-		
+		boolean endososB=false;
 		tipoGrupoInciso = "I";
 		
 		////// obtener parametros
@@ -2147,23 +2079,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						&&panel1.get("tipoGrupoInciso").equals("C"))
 				{
 					tipoGrupoInciso = "C";
-				}
-				
-				if (success) {
-				    caseIdRstn = panel2.get("caseIdRstn");
-				    logger.debug(Utils.log("caseIdRstn: ", caseIdRstn));
-				    if (StringUtils.isNotBlank(caseIdRstn)) {
-				        try {
-				            cotizacionManager.actualizarOtvalorTramitePorDsatribu(
-			                        ntramite
-			                        ,"CASEIDRSTN"
-			                        ,caseIdRstn
-			                        ,"U"
-			                        );
-				        } catch (Exception ex) {
-				            logger.error("WARNING al guardar caseIdRstn en otvalor", ex);
-				        }
-				    }
 				}
 				
 				if(!success)
@@ -2400,7 +2315,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
-		rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+		rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 		
 		////// ws cliente y recibos
 		if(success)
@@ -2485,7 +2400,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						}catch(Exception ex)
 						{
 							logger.error("error en el pl de emitir",ex);
-							mensajeRespuesta = ex.getMessage()!=null?ex.getMessage().trim().equals("")?"Error en el Web Service para emitir":ex.getMessage():"Error en el Web Service para emitir";
+							mensajeRespuesta = ex.getMessage();
 							success          = false;
 						}
 						
@@ -2604,73 +2519,59 @@ public class ComplementariosAction extends PrincipalCoreAction
 		*/
 		
 		//Se actualiza valores en sigs de poliza original y emitida, renovacion endosos B
-		if (success) 
-        {
-            try 
-            {
-                Map<String,String>parame = siniestrosManager.obtenerTramiteCompleto(ntramite);
-                if(!parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null )
-                {
-                    logger.debug(Utils.log(
-                             "\nPoliza extraida del sigs"
-                            ,"\n datos originales: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
-                            ,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolizaEmitida
-                            ));
-                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
-                    try
-               		{
-                    	//String[] idEndososLibres = null;
-                    	//List<String> idEndososLibres = null;
-                    	if(!slist1.isEmpty())
-                       	{
-                       		//idEndososLibres = new String[slist1.size()];
-                    		List<String> idEndososLibres = new ArrayList<String>();
-                       		int i=0, motend=0;
-                       		for(Map<String,String>endoso:slist1)
-                     		{
-                       			//motend = Integer.parseInt(endoso.get("id").split("-")[1]);
-                       			
-                       			//if(motend == 75){
-                       				//idEndososLibres[i]=endoso.get("id").split("-")[0];
-                       				//idEndososLibres.add(endoso.get("id").split("-")[0]);
-                       				idEndososLibres.add(endoso.get("id"));
-                       			//}
-                       			//else if(motend == 76){
-                       				//tipsup27
-                       				
-                       				//endososManager.guardarEndosoBeneficiarios(cdunieco, cdramo, estado, nmpolizaEmitida, nmsituac, mpoliperMpersona, cdelemen, cdusuari, cdtipsup, ntramite, cdsisrol, usuarioSesion, flujo, feefecto)
-                       			//}
-                       			
-                       			i++;
-                     		}
-                       		//String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&endosos=",Arrays.toString(idEndososLibres).replace("[", "").replace("]", ""));
-                        	String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&ntramite=",ntramite,"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&endosos=",idEndososLibres.toString().replace("[", "").replace("]", ""));
-                        	HttpUtil.sendPost(sigsRenovarEndososB,params);
-                        	//endososB = true;
-                       	}                    	                    	
-               		}
-               		catch (Exception ex)
-               		{
-               		 logger.error("Error renovando endosos B", ex);
-               		 mensajeRespuesta = ex.getMessage();
-               		}
-                    
-                   consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
-               
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                    Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
-                    vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
-                    Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
-                }
-            } 
-            catch (Exception ex) 
-            {
-                logger.error("Error actualizando seguimiento de renovaciones SIGS", ex);                
-					 mensajeRespuesta = ex.getMessage();
-					 //success          = false;
-            }
-        }
-		
+				if (success) 
+		        {
+		            try 
+		            {
+		                Map<String,String>parame = siniestrosManager.obtenerTramiteCompleto(ntramite);
+		                if(!parame.isEmpty() && parame.size()>0 && parame.get("RENPOLIEX")!=null )
+		                {
+		                    logger.debug(Utils.log(
+		                             "\nPoliza extraida del sigs"
+		                            ,"\n datos originales: ",parame.get("RENUNIEXT"),"/", parame.get("RENRAMO"),"/", parame.get("RENPOLIEX")
+		                            ,"\n datos renovados : ",cdunieco,"/",cdramo,"/", nmpolizaEmitida
+		                            ));
+		                    Map<String, String> infoPoliza = consultasDAO.cargarInformacionPoliza(cdunieco, cdramo, "M", nmpolizaEmitida, cdusuari);
+		                    try
+		               		{
+		                    	String[] idEndosos = null; 
+		                    	if(!slist1.isEmpty())
+		                       	{
+		                       		idEndosos = new String[slist1.size()];
+		                       		int i=0;
+		                       		for(Map<String,String>endoso:slist1)
+		                     		    {
+		                       			idEndosos[i]=endoso.get("id");
+		                       			
+		                       			i++;
+		                     		    }
+		                       	}
+		                    	String params = Utils.join("cdunieco=",cdunieco,"&cdramo=",cdramo,"&nmpoliza=",nmpolizaEmitida,"&cdusuari=",cdusuari,"&cdtipsit=",cdtipsit,"&cdsisrol=",cdsisrol,"&cduniext=",infoPoliza.get("cduniext"),"&ramo=", infoPoliza.get("ramo"),"&nmpoliex=", infoPoliza.get("nmpoliex"),"&renuniext=",parame.get("RENUNIEXT"),"&renramo=", parame.get("RENRAMO"),"&renpoliex=", parame.get("RENPOLIEX"),"&feefecto=",infoPoliza.get("feefecto"),"&feproren=",infoPoliza.get("feproren"),"&endosos=",Arrays.toString(idEndosos).replace("[", "").replace("]", ""));
+		                    	HttpUtil.sendPost(sigsRenovarEndososB,params);
+		                    	endososB = true;
+		               		}
+		               		catch (Exception ex)
+		               		{
+		               		 logger.error("Error renovando endosos B", ex);
+		               		 mensajeRespuesta = ex.getMessage();
+		               		}
+		                    
+		                   consultasPolizaManager.actualizaTramiteEmisionMC(parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"), infoPoliza.get("cduniext"), infoPoliza.get("ramo"), infoPoliza.get("nmpoliex"), us.getUser());
+		               
+		                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		                    Date vInicioVigencia = sdf.parse(infoPoliza.get("feefecto")),
+		                    vFinVigencia   = sdf.parse(infoPoliza.get("feproren"));
+		                    Integer IdRenova = consultasPolizaManager.spIdentificaRenovacion(infoPoliza.get("CDUNIEXT"), infoPoliza.get("RAMO"), infoPoliza.get("nmpoliex"),  new Date(), vInicioVigencia, vFinVigencia , parame.get("RENUNIEXT"), parame.get("RENRAMO"), parame.get("RENPOLIEX"));
+		                }
+		            } 
+		            catch (Exception ex) 
+		            {
+		                logger.error("Error actualizando seguimiento de renovaciones SIGS", ex);                
+							 mensajeRespuesta = ex.getMessage();
+							 //success          = false;
+		            }
+		        }
+				
 		////// documentos
 		if(success)
 		{
@@ -2715,7 +2616,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	            	try
 	            	{
 	            		String origen  = Utils.join(rutaDocsBaseDatos,doc.get("CDDOCUME"));
-	            		String destino = Utils.join(rutaDocumentosPoliza,"/",ntramite,"/",doc.get("CDDOCUME"));
+	            		String destino = Utils.join(getText("ruta.documentos.poliza"),"/",ntramite,"/",doc.get("CDDOCUME"));
 	            		logger.debug(Utils.log("\nIntentando mover desde:",origen,",hacia:",destino));
 	            		FileUtils.moveFile(
 	            				new File(origen)
@@ -2745,10 +2646,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 					logger.debug("docu iterado: "+docu);
 					String descripc=docu.get("descripc");
 					String descripl=docu.get("descripl");
-					String url=this.rutaServidorReports
+					String url=this.getText("ruta.servidor.reports")
 							+ "?destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+this.passServidorReports
+							+ "&userid="+this.getText("pass.servidor.reports")
 							+ "&report="+descripl
 							+ "&paramform=no"
 							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -2791,25 +2692,24 @@ public class ComplementariosAction extends PrincipalCoreAction
 					if(Ramo.AUTOS_FRONTERIZOS.getCdramo().equalsIgnoreCase(cdramo) 
 				    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)
 				    	){
-						urlCaratula = this.caratulaImpresionAutosUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.url");
 					}else if(Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)){
-						urlCaratula = this.caratulaImpresionAutosServiciopublicoUrl;
+						urlCaratula = this.getText("caratula.impresion.autos.serviciopublico.url");
 					}
 					
 					if("C".equalsIgnoreCase(tipoGrupoInciso)){
 						urlCaratula = this.caratulaImpresionAutosFlotillasUrl;
 					}
 					
-					String urlRecibo = this.reciboImpresionAutosUrl;
-					String urlCaic = this.caicImpresionAutosUrl;
-					String urlAeua = this.aeuaImpresionAutosUrl;
-					String urlAp = this.apImpresionAutosUrl;
+					String urlRecibo = this.getText("recibo.impresion.autos.url");
+					String urlCaic = this.getText("caic.impresion.autos.url");
+					String urlAeua = this.getText("aeua.impresion.autos.url");
+					String urlAp = this.getText("ap.impresion.autos.url");
 					String urlEndoB = this.caratulaImpresionAutosEndosobUrl;
-					
-					String urlIncisosFlot = this.incisosFlotillasImpresionAutosUrl;
+					String urlIncisosFlot = this.getText("incisos.flotillas.impresion.autos.url");
 					String urlIncisosExcelFlot = this.incisosFlotillasExcelImpresionAutosUrl;
-					String urlTarjIdent = this.tarjetaIdenImpresionAutosUrl;
-					String numIncisosReporte = this.numeroIncisosReporte;
+					String urlTarjIdent = this.getText("tarjeta.iden.impresion.autos.url");
+					String numIncisosReporte = this.getText("numero.incisos.reporte");
 					
 					String urlDocsExtra = this.caratulaImpresionAutosDocExtra;
 					
@@ -3014,66 +2914,47 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,null, false
 								);
 					}
-					
-					/*if(endososB){
-	
-						int[] motend = {75,76};
+					if(endososB){
+						/**
+						 * Para Endosos B renovados inciso 1
+						 */
+						Map<String,String> endososBrenovados = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,"",sucursalGS,cdRamoGS,this.nmpolAlt,sucursalGS,cdRamoGS,this.nmpolAlt,"","");
 						
-						for(int i = 0; i < motend.length; i++){
-							Map<String,String> endososBrenovados = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,"",sucursalGS,cdRamoGS,this.nmpolAlt,sucursalGS,cdRamoGS,this.nmpolAlt,"","",motend[i]+"");							
-							
-							if(endososBrenovados != null && !endososBrenovados.isEmpty()){
-								Iterator it = endososBrenovados.entrySet().iterator();
-								while(it.hasNext()){
-									Map.Entry entry = (Map.Entry) it.next();
-									String idEndosoB = (String)entry.getKey();
-									
-									String destipend = "";
-									String enumtipend = "";
-									
-									switch(motend[i]){
-									case 75:
-										destipend = "Car\u00e1tula Endoso B";
-										enumtipend = TipoEndoso.ENDOSO_B_LIBRE.getCdTipSup().toString();
-										break;
-										
-									case 76:
-										destipend = "Beneficiario";
-										enumtipend = TipoEndoso.BENEFICIARIO_AUTO.getCdTipSup().toString();
-										break;
-									}
-									
-									parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,"+idEndosoB;
-									logger.debug("URL Generada para Endosos B Inciso 1: "+ urlEndoB + parametros);
-									this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlEndoB + parametros+"\">" + destipend + "</a>";
-									
-									documentosManager.guardarDocumento(
-											cdunieco
-											,cdramo
-											,"M"
-											,nmpolizaEmitida
-											,nmsuplemEmitida
-											,new Date()
-											,urlEndoB + parametros
-											,destipend
-											,nmpoliza
-											,ntramite
-											,enumtipend
-											,Constantes.SI
-											,null
-											//,TipoTramite.POLIZA_NUEVA.getCdtiptra()
-											,TipoTramite.ENDOSO.getCdtiptra()
-											,"0"
-											,Documento.EXTERNO_CARATULA_B
-											,null
-											,null, false
-											);
-								}
+						if(endososBrenovados != null && !endososBrenovados.isEmpty()){
+							Iterator it = endososBrenovados.entrySet().iterator();
+							while(it.hasNext()){
+								Map.Entry entry = (Map.Entry) it.next();
+								String idEndosoB = (String)entry.getKey();
+								
+								parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,"+idEndosoB;
+								logger.debug("URL Generada para Endosos B Inciso 1: "+ urlEndoB + parametros);
+								this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlEndoB + parametros+"\">Endoso B Libre</a>";
+								
+								documentosManager.guardarDocumento(
+										cdunieco
+										,cdramo
+										,"M"
+										,nmpolizaEmitida
+										,nmsuplemEmitida
+										,new Date()
+										,urlEndoB + parametros
+										,"Endoso B Libre"
+										,nmpoliza
+										,ntramite
+										,TipoEndoso.ENDOSO_B_LIBRE.getCdTipSup().toString()
+										,Constantes.SI
+										,null
+										,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+										,"0"
+										,Documento.EXTERNO_CARATULA_B
+										,null
+										,null, false
+										);
 							}
 						}						
-						
-					}*/
+					}
 					
+
 					if("C".equalsIgnoreCase(tipoGrupoInciso)){
 						/**
 						 * Para Incisos Flotillas
@@ -3106,6 +2987,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 						/**
 						 * Para Incisos Flotillas EXCEL
 						 */
+						parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
+						logger.debug("URL Generada para urlIncisosEXCELFlotillas: "+ urlIncisosExcelFlot + parametros);
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+urlIncisosExcelFlot + parametros+"\">Relaci\u00f3n de Incisos EXCEL</a>";
 						
 						if(StringUtils.isNotBlank(urlIncisosExcelFlot)){
 							parametros = "?"+sucursalGS+","+cdRamoGS+","+this.nmpolAlt+",,0,0";
@@ -3217,7 +3101,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de reduce GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteTxtinfocobredgs+"\">Reduce GS</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobredgs")+"\">Reduce GS</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3226,7 +3110,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteTxtinfocobredgs
+								,this.getText("manual.agente.txtinfocobredgs")
 								,"Reduce GS"
 								,nmpoliza
 								,ntramite
@@ -3245,7 +3129,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						 * Para cobertura de gestoria GS
 						 */
 						
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteTxtinfocobgesgs+"\">Gestoria GS</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.txtinfocobgesgs")+"\">Gestoria GS</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3254,7 +3138,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteTxtinfocobgesgs
+								,this.getText("manual.agente.txtinfocobgesgs")
 								,"Gestoria GS"
 								,nmpoliza
 								,ntramite
@@ -3276,10 +3160,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 						String reporteEspVida = this.getText("rdf.emision.nombre.esp.cobvida");
 						String pdfEspVidaNom = "SOL_VIDA_AUTO.pdf";
 						
-						String url=this.rutaServidorReports
+						String url=this.getText("ruta.servidor.reports")
 								+ "?destype=cache"
 								+ "&desformat=PDF"
-								+ "&userid="+this.passServidorReports
+								+ "&userid="+this.getText("pass.servidor.reports")
 								+ "&report="+reporteEspVida
 								+ "&paramform=no"
 								+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
@@ -3314,7 +3198,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,null, false
 								);
 
-						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.manualAgenteCondgralescobsegvida+"\">Condiciones Generales Seguro de Vida</a>";
+						this.mensajeEmail += "<br/><br/><a style=\"font-weight: bold\" href=\""+this.getText("manual.agente.condgralescobsegvida")+"\">Condiciones Generales Seguro de Vida</a>";
 						
 						documentosManager.guardarDocumento(
 								cdunieco
@@ -3323,7 +3207,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 								,nmpolizaEmitida
 								,nmsuplemEmitida
 								,new Date()
-								,this.manualAgenteCondgralescobsegvida
+								,this.getText("manual.agente.condgralescobsegvida")
 								,"Condiciones Generales Seguro de Vida"
 								,nmpoliza
 								,ntramite
@@ -3531,8 +3415,7 @@ public class ComplementariosAction extends PrincipalCoreAction
                 logger.error("Error actualizando segrenovaciones_renovada", ex);
             }
         }
-        */
-		
+		*/
 		logger.debug(
 				new StringBuilder()
 				.append("\n###### emitir ######")
@@ -3720,7 +3603,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 
-	rutaCarpeta=this.rutaDocumentosPoliza+"/"+ntramite;
+	rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 	
 	////// ws cliente y recibos
 	if(success)
@@ -3977,7 +3860,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 				success = ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, false, tipoMov, usuarioSesion);
 
 				Utils.validate(success, "No se regeneraron correctamente todos los recibos.");
-				
 				
 				if(success && (TipoEndoso.EMISION_POLIZA.getCdTipSup().toString().equalsIgnoreCase((tipoMov)) || TipoEndoso.RENOVACION.getCdTipSup().toString().equalsIgnoreCase((tipoMov)) )){
 					boolean esDxn = false;
@@ -4719,15 +4601,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			logger.debug("nombreRdf = {}", nombreRdf);
 			
-			String rutaCarpeta = Utils.join(this.rutaDocumentosPoliza, "/", ntramite);
+			String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"), "/", ntramite);
 			
 			String url = Utils.join(
-					this.rutaServidorReports,
+					this.getText("ruta.servidor.reports"),
 					"?destype=cache",
 					"&desformat=PDF",
 					"&paramform=no",
 					"&ACCESSIBLE=YES", //parametro que habilita salida en PDF
-					"&userid=", this.passServidorReports,
+					"&userid=", this.getText("pass.servidor.reports"),
 					"&report=", nombreRdf,
 					"&p_ntramite=", ntramite,
 					"&p_ramo=", cdramo,
@@ -4812,27 +4694,22 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			if(StringUtils.isNotBlank(infoPoliza.get("RENUNIEXT")) && StringUtils.isNotBlank(infoPoliza.get("RENRAMO")) && StringUtils.isNotBlank(infoPoliza.get("RENPOLIEX")) && (infoPoliza.get("RENRAMO").contains("711") || infoPoliza.get("RENRAMO").contains("721")))
 			{
-				//int[] motend = {44,75};
-				int[] motend = {75}; //SOLO ENDOSO LIBRE PARA PRODUCCIÓN
-				slist1 = new ArrayList<Map<String, String>>();
-				
-				for(int i = 0; i < motend.length; i++){
-					map2  = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,infoPoliza.get("cdsisrol"),infoPoliza.get("cduniext"),infoPoliza.get("ramo"),infoPoliza.get("nmpoliex"),infoPoliza.get("RENUNIEXT"),infoPoliza.get("RENRAMO"),infoPoliza.get("RENPOLIEX"),infoPoliza.get("feefecto"),infoPoliza.get("feproren"),motend[i]+"");
-					if(map2!=null && !map2.isEmpty())
-					{	
-						Iterator It = map2.entrySet().iterator();						
-				        while (It.hasNext()) {
-				        	Map.Entry entry = (Map.Entry) It.next();
-				        	String idEndosoB = (String)entry.getKey();//+"-"+motend[i];
-				        	String descEndosoB = (String)entry.getValue();
-				        	HashMap<String, String> agregar = new HashMap<String, String>();
-				        	agregar.put("renovar","false");
-				        	agregar.put("id",idEndosoB.trim());
-				        	agregar.put("descripcion",descEndosoB.trim());
-				        	slist1.add(agregar);
-				        }
-					}
-				}				
+				map2  = consultasPolizaManager.cargaEndososB(cdunieco,cdramo,nmpoliza,cdusuari,cdtipsit,infoPoliza.get("cdsisrol"),infoPoliza.get("cduniext"),infoPoliza.get("ramo"),infoPoliza.get("nmpoliex"),infoPoliza.get("RENUNIEXT"),infoPoliza.get("RENRAMO"),infoPoliza.get("RENPOLIEX"),infoPoliza.get("feefecto"),infoPoliza.get("feproren"));
+				if(map2!=null && !map2.isEmpty())
+				{	
+					Iterator It = map2.entrySet().iterator();
+					slist1 = new ArrayList<Map<String, String>>();
+			        while (It.hasNext()) {
+			        	Map.Entry entry = (Map.Entry) It.next();
+			        	String idEndosoB = (String)entry.getKey();
+			        	String descEndosoB = (String)entry.getValue();
+			        	HashMap<String, String> agregar = new HashMap<String, String>();
+			        	agregar.put("renovar","true");
+			        	agregar.put("id",idEndosoB.trim());
+			        	agregar.put("descripcion",descEndosoB.trim());
+			        	slist1.add(agregar);
+			        }
+				}
 			}
 	    }
 		catch(Exception ex)
@@ -4846,7 +4723,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 				));
 		return SUCCESS;
 	}
-	
 	public List<Map<String, Object>> getList1() {
 		return list1;
 	}
@@ -5102,14 +4978,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setParams(Map<String, String> params) {
 		this.params = params;
-	}
-
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
 	}
 
 }

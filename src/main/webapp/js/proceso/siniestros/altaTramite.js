@@ -7,10 +7,10 @@ Ext.onReady(function() {
     var retornaMC = "0";
     var facturaTemporal =null;
     var _11_aseguradoSeleccionado = null;
-    var origProd = null;	// para guardar el producto original, x validaci锟絥 de que no se modifique (EGS)
+    var origProd = null;	// para guardar el producto original, x validaci髇 de que no se modifique (EGS)
     Ext.selection.CheckboxModel.override( {
         mode: 'SINGLE',
-        allowDeselect: true  
+        allowDeselect: true
     });
 
 /*******    MODELOS     *******/
@@ -467,124 +467,17 @@ Ext.onReady(function() {
                 panelInicialPral.down('[name=idnombreAsegurado]').setValue(aseguradoAfectado.rawValue);
                 var params = {
                         'params.cdperson'   :   obtieneCDPerson,
-                        'params.cdramo'     :   panelInicialPral.down('combo[name=cmbRamos]').getValue(),
-                        'params.fe_ocurre'	:	panelInicialPral.down('[name=dtFechaOcurrencia]').getValue()	//(EGS)
+                        'params.cdramo'     :   panelInicialPral.down('combo[name=cmbRamos]').getValue()
                 };
-			        Ext.Ajax.request({	//(EGS) SE MODIFICA PARA OBTENER SOLO UNA POLIZA, Y MOSTRARLA EN EL ESPACIO CORRESPONDIENTE
-			            url     : _URL_CONSULTA_LISTADO_POLIZA
-			            ,params: params
-			            ,success : function (response) {
-			            	debug('Consultando una poliza para mostrar');
-			            	var jsonResponse = Ext.decode(response.responseText);
-			                if(jsonResponse.listaPoliza != null){
-			                	//(EGS) Si encuentra m谩s de una p贸liza, debe mostrar la lista
-							    if(jsonResponse.listaPoliza.length > 1){
-							    	debug('Muestra lista 2');
-							    	cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
-							    		if(success){
-							    			jsonResponse = Ext.decode(response.responseText);
-                                            if(jsonResponse.listaPoliza == null){
-                                            	Ext.Msg.show({title:    'Aviso',
-                                            		msg:    'No existen p&oacute;lizas para el asegurado elegido',
-                                                    buttons:Ext.Msg.OK,
-                                                    icon:    Ext.Msg.WARNING,
-                                                    fn: function() {
-                                                    	panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
-                                                    }
-                                                });
-                                            }else{
-                                            	centrarVentanaInterna(modPolizasAltaTramite.show());
-                                            }
-                                        }else{
-                                        	Ext.Msg.show({
-                                            	title: 'Aviso',
-                                                msg: 'Error al obtener los datos.',
-                                                buttons: Ext.Msg.OK,
-                                                icon: Ext.Msg.ERROR
-                                            });
-                                        }
-                                    });
-							    }else{
-							    	debug('No muestra lista 2');
-			                		eligePoliza(jsonResponse.listaPoliza[0]);
-							    }
-			                }
-			                else {
-								Ext.Msg.show(
-									{title:	'Aviso',
-									 msg:	'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',
-									 buttons:Ext.Msg.OKCANCEL,
-									 icon:	Ext.Msg.WARNING,
-                                fn: function(buttonId, text, opt) {	// (EGS) agregamos parametros a la funci贸n
-									if (buttonId == 'ok'){
-											cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA_ORIG, 'listaPoliza', params, function(options, success, response){
-												if(success){
-													jsonResponse = Ext.decode(response.responseText);
-													if(jsonResponse.listaPoliza == null){
-														Ext.Msg.show({
-															title:	'Aviso',
-															msg:	'No existen p&oacute;lizas para el asegurado elegido',
-															buttons:Ext.Msg.OK,
-															icon:	Ext.Msg.WARNING,
-							                                fn: function() {
-                            							        valorIndexSeleccionado.set('modCdperson','');
-                                    							valorIndexSeleccionado.set('modCdpersondesc','');
-							                                }
-														});
-													}else{
-														modPolizasAltaTramite.show();
-													}
-												}else{
-						                            Ext.Msg.show({
-                        					        title: 'Aviso',
-					                                msg: 'Error al obtener los datos.',
-                    					            buttons: Ext.Msg.OK,
-					                                icon: Ext.Msg.ERROR
-                    						        });
-												}
-											});
-									}
-									else{
-		                                panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-           			                    modPolizasAltaTramite.hide();
-                       			        return;
-									}
-                                }
-								});
-		                                //panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue(''); (EGS)
-                       			        //return; (EGS)
-			                }
-			            },
-			            failure : function (){
-			                me.up().up().setLoading(false);
-			                centrarVentanaInterna(Ext.Msg.show({
-			                    title:'Error',
-			                    msg: 'Error de comunicaci&oacute;n',
-			                    buttons: Ext.Msg.OK,
-			                    icon: Ext.Msg.ERROR
-			                }));
-			            }
-			        });
-                /*cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
+                cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
                     if(success){
                         var jsonResponse = Ext.decode(response.responseText);
                         if(jsonResponse.listaPoliza == null) {
                             Ext.Msg.show({
                                 title: 'Aviso',
-                                //msg: 'No existen p&oacute;lizas para el asegurado elegido.', (EGS)
-                                msg: 'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',	// (EGS)
-                                buttons: Ext.Msg.OKCANCEL, //Ext.Msg.OK, (EGS) cambiamos a OKCANCEL 
-                                icon: Ext.Msg.WARNING,
-								fn: function(buttonId, text, opt) {	// (EGS) agregamos function
-									if (buttonId == 'ok'){
-										Ext.Msg.show({
-											title: 'Te digo',
-											msg:	'Que programes1',	//caso reembolso edicion cuando fecha ocurrencia fuera de vigencia
-											buttons:Ext.Msg.OK,
-											icon:	Ext.Msg.QUESTION
-										});
-									}
-								}	// fin (EGS) agregamos function
+                                msg: 'No existen p&oacute;lizas para el asegurado elegido.',
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.Msg.WARNING
                             });
                             panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
                             modPolizasAltaTramite.hide();
@@ -599,7 +492,7 @@ Ext.onReady(function() {
                         });
                     }
                 });
-                modPolizasAltaTramite.show();*/
+                modPolizasAltaTramite.show();
             }
         }
     });
@@ -613,153 +506,26 @@ Ext.onReady(function() {
             'select' : function(combo, record) {
                 obtieneCDPerson = this.getValue();
                 var params = {
-                        'params.cdperson'   :   obtieneCDPerson,
-                        'params.cdramo'     :   panelInicialPral.down('combo[name=cmbRamos]').getValue(),
-                        'params.fe_ocurre'	:	valorIndexSeleccionado.get('modFechaOcurrencia')	//(EGS)
+                        'params.cdperson'   :   this.getValue(),
+                        'params.cdramo'     :   panelInicialPral.down('combo[name=cmbRamos]').getValue()
                 };
-			        Ext.Ajax.request({	//(EGS) SE MODIFICA PARA OBTENER SOLO UNA POLIZA, Y MOSTRARLA EN EL ESPACIO CORRESPONDIENTE
-			            url     : _URL_CONSULTA_LISTADO_POLIZA
-			            ,params: params/*{
-			                'params.cdperson' : obtieneCDPerson,
-			                'params.cdramo' : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
-			                'params.fe_ocurre' : valorIndexSeleccionado.get('modFechaOcurrencia')
-			            }*/
-			            ,success : function (response) {
-			            	debug('Consultando una poliza para mostrar');
-			            	var jsonResponse = Ext.decode(response.responseText);
-			                if(jsonResponse.listaPoliza != null){
-			                	//(EGS) Si encuentra m谩s de una p贸liza, debe mostrar la lista
-							    if(jsonResponse.listaPoliza.length > 1){
-							    	debug('Muestra lista 3');
-							    	cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
-							    		if(success){
-							    			jsonResponse = Ext.decode(response.responseText);
-                                            if(jsonResponse.listaPoliza == null){
-                                            	Ext.Msg.show({title:    'Aviso',
-                                            		msg:    'No existen p&oacute;lizas para el asegurado elegido',
-                                                    buttons:Ext.Msg.OK,
-                                                    icon:    Ext.Msg.WARNING,
-                                                    fn: function() {
-                                                    	panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
-                                                    }
-                                                });
-                                            }else{
-                                            	centrarVentanaInterna(modPolizasAltaTramite.show());
-                                            }
-                                        }else{
-                                        	Ext.Msg.show({
-                                            	title: 'Aviso',
-                                                msg: 'Error al obtener los datos.',
-                                                buttons: Ext.Msg.OK,
-                                                icon: Ext.Msg.ERROR
-                                            });
-                                        }
-                                    });
-							    }else{
-							    	debug('No muestra lista 3');
-			                		eligePoliza(jsonResponse.listaPoliza[0]);
-								}
-			                }
-			                else {
-								Ext.Msg.show(
-									{title:	'Aviso',
-									 msg:	'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',
-									 buttons:Ext.Msg.OKCANCEL,
-									 icon:	Ext.Msg.WARNING,
-                                fn: function(buttonId, text, opt) {	// (EGS) agregamos parametros a la funci贸n
-									if (buttonId == 'ok'){
-											cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA_ORIG, 'listaPoliza', params, function(options, success, response){
-												if(success){
-													jsonResponse = Ext.decode(response.responseText);
-													if(jsonResponse.listaPoliza == null){
-														Ext.Msg.show({
-															title:	'Aviso',
-															msg:	'No existen p&oacute;lizas para el asegurado elegido',
-															buttons:Ext.Msg.OK,
-															icon:	Ext.Msg.WARNING,
-							                                fn: function() {
-                            							        valorIndexSeleccionado.set('modCdperson','');
-                                    							valorIndexSeleccionado.set('modCdpersondesc','');
-							                                }
-														});
-													}else{
-														modPolizasAltaTramite.show();
-													}
-												}else{
-						                            Ext.Msg.show({
-                        					        title: 'Aviso',
-					                                msg: 'Error al obtener los datos.',
-                    					            buttons: Ext.Msg.OK,
-					                                icon: Ext.Msg.ERROR
-                    						        });
-												}
-											});
-									}
-									else{
-		                                panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-           			                    modPolizasAltaTramite.hide();
-                       			        return;
-									}
-                                }
-								});
-		                                panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-                       			        return;
-			                }
-			            },
-			            failure : function (){
-			                me.up().up().setLoading(false);
-			                centrarVentanaInterna(Ext.Msg.show({
-			                    title:'Error',
-			                    msg: 'Error de comunicaci&oacute;n',
-			                    buttons: Ext.Msg.OK,
-			                    icon: Ext.Msg.ERROR
-			                }));
-			            }
-			        });
-                /*cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
+                cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
                     if(success){
                         var jsonResponse = Ext.decode(response.responseText);
                         if(jsonResponse.listaPoliza == null) {
                             Ext.Msg.show({
                                 title: 'Aviso',
-                                //msg: 'No existen p&oacute;lizas para el asegurado elegido.', (EGS)
-                                msg: 'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',	// (EGS)
-                                buttons: Ext.Msg.OKCANCEL, //Ext.Msg.OK, (EGS) cambiamos a OKCANCEL 
+                                msg: 'No existen p&oacute;lizas para el asegurado elegido.',
+                                buttons: Ext.Msg.OK,
                                 icon: Ext.Msg.WARNING,
-                                fn: function(buttonId, text, opt) {	// (EGS) agregamos parametros a la funci贸n
-									if (buttonId == 'ok'){
-											cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA_ORIG, 'listaPoliza', params, function(options, success, response){
-												if(success){
-													jsonResponse = Ext.decode(response.responseText);
-													if(jsonResponse.listaPoliza == null){
-														Ext.Msg.show({
-															title:	'Aviso',
-															msg:	'No existen p&oacute;lizas para el asegurado elegido',
-															buttons:Ext.Msg.OK,
-															icon:	Ext.Msg.WARNING,
-							                                fn: function() {
-                            							        valorIndexSeleccionado.set('modCdperson','');
-                                    							valorIndexSeleccionado.set('modCdpersondesc','');
-							                                }
-														});
-													}
-												}else{
-						                            Ext.Msg.show({
-                        					        title: 'Aviso',
-					                                msg: 'Error al obtener los datos.',
-                    					            buttons: Ext.Msg.OK,
-					                                icon: Ext.Msg.ERROR
-                    						        });
-												}
-											});
-									}
-									else{
-		                                panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-           			                    modPolizasAltaTramite.hide();
-                       			        return;
-									}
+                                fn: function() {
+                                    valorIndexSeleccionado.set('modCdperson','');
+                                    valorIndexSeleccionado.set('modCdpersondesc','');
                                 }
                             });
+                            panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
+                            modPolizasAltaTramite.hide();
+                            return;
                         }
                     }else{
                         Ext.Msg.show({
@@ -770,7 +536,7 @@ Ext.onReady(function() {
                             });
                     }
                 });
-                modPolizasAltaTramite.show();*/
+                modPolizasAltaTramite.show();
             }
         }
     });
@@ -804,35 +570,23 @@ Ext.onReady(function() {
             itemclick: function(dv, record, item, index, e){
                 //1.- Validamos que el asegurado este vigente
             	debug("Valor del Record de la poliza ==> ",record);
-            	//(EGS) se agrega porque truena
-            	if (valorIndexSeleccionado == null){
-	            	valorIndexSeleccionado = gridFacturaReembolso.getView().getSelectionModel().getSelection()[0];
-            	}
                 if(record.get('desEstatusCliente')=="Vigente"){
                     var valorFechaOcurrencia;
-                    var rowSelected;	//(EGS)
-                    var cdperson;	//(EGS)
-                    var noFactura;	//(EGS)
                     if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
                         valorFechaOcurrencia = new Date(valorIndexSeleccionado.get('modFechaOcurrencia'));
-	                    rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];	//(EGS)
-	                    cdperson = valorIndexSeleccionado.get('modCdperson'); 	//(EGS)
-	                    noFactura = rowSelected.get('noFactura');	//(EGS)
                     }else{
                         valorFechaOcurrencia = panelInicialPral.down('[name=dtFechaOcurrencia]').getValue();
-                        rowSelected = panelInicialPral.down('[name=editorFacturaReembolso]').getSelectionModel().getSelection()[0];	//(EGS)
-                        cdperson = panelInicialPral.down('combo[name=cmbAseguradoAfectado]').getValue();	//(EGS)
                     }
                     var valorFechaInicial = new Date(record.get('feinicio').substring(6,10)+"/"+record.get('feinicio').substring(3,5)+"/"+record.get('feinicio').substring(0,2));
                     var valorFechaFinal =   new Date(record.get('fefinal').substring(6,10)+"/"+record.get('fefinal').substring(3,5)+"/"+record.get('fefinal').substring(0,2));
                     var valorFechaAltaAsegurado = new Date(record.get('faltaAsegurado').substring(6,10)+"/"+record.get('faltaAsegurado').substring(3,5)+"/"+record.get('faltaAsegurado').substring(0,2));
-                    //var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];	(EGS)
-                    //var noFactura= rowSelected.get('noFactura');	(EGS)
+                    var rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];
+                    var noFactura= rowSelected.get('noFactura');
                     
                     Ext.Ajax.request({
 	                    url     : _URL_VALIDA_STATUSASEG
 	                    ,params:{
-	                        'params.cdperson'  : cdperson,	//(EGS) valorIndexSeleccionado.get('modCdperson'),
+	                        'params.cdperson'  : valorIndexSeleccionado.get('modCdperson'),
 	                        'params.feoocurre' : valorFechaOcurrencia,
 	                        'params.nmpoliza'  : record.get('nmpoliza')
 	                    }
@@ -988,7 +742,7 @@ Ext.onReady(function() {
 		                                    valorIndexSeleccionado.set('modPolizaAfectada',record.get('nmpoliza'));
 		                                    valorIndexSeleccionado.set('modtxtAutEspecial',"1");
 		                                    banderaAsegurado = "1";
-		                                    //limpiarRegistros(); (EGS)
+		                                    limpiarRegistros();
 		                                    modPolizasAltaTramite.hide();
 		                                }else{
 		                                    valorIndexSeleccionado.set('modCdperson','');
@@ -1769,7 +1523,7 @@ Ext.onReady(function() {
                 tbar: [
                     {
                         text     : 'Agregar Documento'
-                        ,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+                        ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
                         ,handler : _p21_agregarFactura
                     }
                 ]
@@ -1917,7 +1671,7 @@ Ext.onReady(function() {
                 tbar: [
                     {
                         text     : 'Agregar Documento'
-                        ,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+                        ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
                         ,handler : _p21_agregarFactura
                     }
                 ]
@@ -2092,55 +1846,16 @@ Ext.onReady(function() {
                 listeners : {
                     'select' : function(combo, record) {
                         var params = {  'params.cdperson' : this.getValue(),
-                                        'params.cdramo' : panelInicialPral.down('combo[name=cmbRamos]').getValue(),
-				                        'params.fe_ocurre'	:	panelInicialPral.down('[name=dtFechaOcurrencia]').getValue()	//(EGS)
-                                        };
+                                        'params.cdramo' : panelInicialPral.down('combo[name=cmbRamos]').getValue()};
                         cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
                             if(success){
                                 var jsonResponse = Ext.decode(response.responseText);
                                 if(jsonResponse.listaPoliza == null) {
                                     Ext.Msg.show({
                                         title: 'Aviso',
-		                                //msg: 'No existen p&oacute;lizas para el asegurado elegido.', (EGS)
-                                		msg: 'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',	// (EGS)
-                                		buttons: Ext.Msg.OKCANCEL, //Ext.Msg.OK, (EGS) cambiamos a OKCANCEL 
-                                        icon: Ext.Msg.WARNING,
-										fn: function(buttonId, text, opt) {	// (EGS) agregamos function
-											if (buttonId == 'ok'){
-												debug("Pendiente saber donde se invoca!!!!");
-												cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA_ORIG, 'listaPoliza', params, function(options, success, response){
-													if(success){
-														jsonResponse = Ext.decode(response.responseText);
-														if(jsonResponse.listaPoliza == null){
-															Ext.Msg.show({
-																title:	'Aviso',
-																msg:	'No existen p&oacute;lizas para el asegurado elegido',
-																buttons:Ext.Msg.OK,
-																icon:	Ext.Msg.WARNING /*,
-							                                	fn: function() {
-                            							        	valorIndexSeleccionado.set('modCdperson','');
-                                    								valorIndexSeleccionado.set('modCdpersondesc','');
-							                                	}*/
-															});
-														}else{
-															modPolizasAltaTramite.show();
-														}
-													}else{
-						                            	Ext.Msg.show({
-                        					        	title: 'Aviso',
-					                                	msg: 'Error al obtener los datos.',
-                    					            	buttons: Ext.Msg.OK,
-					                                	icon: Ext.Msg.ERROR
-                    						        	});
-													}
-												});
-											}
-									else{
-		                                panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-           			                    modPolizasAltaTramite.hide();
-                       			        return;
-									}
-										}	// fin (EGS) agregamos function
+                                        msg: 'No existen p&oacute;lizas para el asegurado elegido.',
+                                        buttons: Ext.Msg.OK,
+                                        icon: Ext.Msg.WARNING
                                     });
                                     combo.clearValue();
                                     modPolizasAltaTramite.hide();
@@ -2260,6 +1975,7 @@ Ext.onReady(function() {
             {   xtype   : 'textfield',      fieldLabel : 'nmsolici',            name        : 'idNmsolici',         labelWidth: 170,    hidden:true     },
             {   xtype   : 'textfield',      fieldLabel : 'nmsuplem',            name        : 'idNmsuplem',         labelWidth: 170,    hidden:true     },
             {   xtype   : 'textfield',      fieldLabel : 'cdtipsit',            name        : 'idCdtipsit',         labelWidth: 170,    hidden:true     },
+            {   xtype   : 'textfield',      fieldLabel : 'numPolizaInt',        name        : 'idNumPolizaInt',     labelWidth: 170,    hidden:true     },
             {   xtype   : 'textfield',      fieldLabel : 'Asegurado',           name        : 'idnombreAsegurado',  labelWidth: 170,    hidden:true     },
             {   xtype   : 'textfield',      fieldLabel : 'NumTramite',          name        : 'idNumTramite',       labelWidth: 170,    hidden:true     },
             {   xtype   : 'textfield',      fieldLabel : 'ImporteFactura',      name        : 'ImporteIndFactura',  labelWidth: 170,    hidden:true     },
@@ -2291,9 +2007,6 @@ Ext.onReady(function() {
                     }
                 }
             },
-            {   xtype   : 'textfield',      fieldLabel : 'P&oacute;liza Afectada',        name        : 'idNumPolizaInt',     width       : 350,    
-            	hidden:true,				readOnly   : true    
-            }, //(EGS) movemos campo, cambiamos etiqueta, modificamos ancho
             {   xtype: 'numberfield',               fieldLabel: 'Tel&eacute;fono'           ,name       : 'txtTelefono' 
                 ,width       : 350
             },
@@ -2433,8 +2146,7 @@ Ext.onReady(function() {
                                     'paramsO.pv_cdtippag_i' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
                                     'paramsO.pv_cdtipate_i' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
                                     'paramsO.pv_tipmov_i'   : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
-                                    'paramsO.pv_pagoAut_i'  : "0" ,//pago Normal 
-                                    'paramsO.caseIdRstn'    : _NVL(valorAction.caseIdRstn) //pago Normal 
+                                    'paramsO.pv_pagoAut_i'  : "0" //pago Normal 
                                 },
                                 success: function(response, opt) {
                                     var jsonRes=Ext.decode(response.responseText);
@@ -2884,7 +2596,6 @@ Ext.onReady(function() {
                                     //PAGO POR REEMBOLSO
                                     storeProveedor.load();
                                     panelInicialPral.down('[name="nmsituac"]').setValue(json[0].nmsituac);
-                                    panelInicialPral.down('[name="idNumPolizaInt"]').setValue(json[0].nmpoliex); //(EGS) mostramos poliza
                                     panelInicialPral.down('[name="txtTelefono"]').setValue(json[0].telefono);
                                     panelInicialPral.down('[name="txtEmail"]').setValue(json[0].email);
                                     for(var i = 0; i < json.length; i++){
@@ -2909,7 +2620,6 @@ Ext.onReady(function() {
                                     //Indemnizacion
                                     storeProveedor.load();
                                     panelInicialPral.down('[name="nmsituac"]').setValue(json[0].nmsituac);
-                                    panelInicialPral.down('[name="idNumPolizaInt"]').setValue(json[0].nmpoliex); //(EGS) mostramos poliza
                                     panelInicialPral.down('[name="txtTelefono"]').setValue(json[0].telefono);
                                     panelInicialPral.down('[name="txtEmail"]').setValue(json[0].email);
                                     for(var i = 0; i < json.length; i++){
@@ -3240,7 +2950,6 @@ Ext.onReady(function() {
             
             submitValues['datosTablas']=datosTablas;
             panelInicialPral.setLoading(true);
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             procesaGuardaAltaTramite(submitValues,retornaMC);
         }
         else{ //PAGO POR INMEDIZACION
@@ -3333,7 +3042,6 @@ Ext.onReady(function() {
             
             submitValues['datosTablas']=datosTablas;
             panelInicialPral.setLoading(true);
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             procesaGuardaAltaTramite(submitValues,retornaMC);
         }
     }
@@ -3369,8 +3077,6 @@ Ext.onReady(function() {
             panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
             panelInicialPral.down('[name=dtFechaOcurrencia]').setValue('');
             panelInicialPral.down('combo[name=cmbProveedor]').show();
-            panelInicialPral.down('[name=idNumPolizaInt]').hide(); //(EGS)
-            panelInicialPral.down('[name=idNumPolizaInt]').setValue(''); //(EGS)
             panelInicialPral.down('[name=txtTelefono]').hide();
             panelInicialPral.down('[name=txtEmail]').hide();
         }else if(tipoPago == _TIPO_PAGO_REEMBOLSO){
@@ -3386,8 +3092,6 @@ Ext.onReady(function() {
             panelInicialPral.down('combo[name=cmbBeneficiario]').show();
             panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
             panelInicialPral.down('[name=dtFechaOcurrencia]').show();
-            panelInicialPral.down('[name=idNumPolizaInt]').show(); //(EGS)
-            panelInicialPral.down('[name=idNumPolizaInt]').setValue(''); //(EGS)
             panelInicialPral.down('[name=txtTelefono]').show();
             panelInicialPral.down('[name=txtEmail]').show();
         }else{
@@ -3404,8 +3108,6 @@ Ext.onReady(function() {
                 panelInicialPral.down('combo[name=cmbBeneficiario]').show();
                 panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
                 panelInicialPral.down('[name=dtFechaOcurrencia]').show();
-	            panelInicialPral.down('[name=idNumPolizaInt]').show(); //(EGS)
-    	        panelInicialPral.down('[name=idNumPolizaInt]').setValue(''); //(EGS)
                 panelInicialPral.down('[name=txtTelefono]').show();
                 panelInicialPral.down('[name=txtEmail]').show();
             }else{
@@ -3419,8 +3121,6 @@ Ext.onReady(function() {
                 panelInicialPral.down('combo[name=cmbBeneficiario]').show();
                 panelInicialPral.down('combo[name=cmbAseguradoAfectado]').show();
                 panelInicialPral.down('[name=dtFechaOcurrencia]').show();
-	            panelInicialPral.down('[name=idNumPolizaInt]').show(); //(EGS)
-    	        panelInicialPral.down('[name=idNumPolizaInt]').setValue(''); //(EGS)
                 panelInicialPral.down('[name=txtTelefono]').show();
                 panelInicialPral.down('[name=txtEmail]').show();
             }
@@ -3492,7 +3192,6 @@ Ext.onReady(function() {
                 });
             });
             submitValues['datosTablas']=datosTablas;
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             panelInicialPral.setLoading(true);
             Ext.Ajax.request(
             {
@@ -3576,7 +3275,6 @@ Ext.onReady(function() {
             });
             submitValues['datosTablas']=datosTablas;
             panelInicialPral.setLoading(true);
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             Ext.Ajax.request(
             {
                 url: _URL_GUARDA_FACTURA_TRAMITE,
@@ -3844,7 +3542,7 @@ Ext.onReady(function() {
                                                  + "&paramform=no",
                                     nombreArchivo : 'Contrarecibo_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf',
                                     asunto:'Contra-Recibo',
-                                    mensaje :'Estimado(a) cliente,anexamos a este e-mail el contrarecibo de su(s) factura(s)  y nos ponemos a sus apreciables 锟絩denes.'
+                                    mensaje :'Estimado(a) cliente,anexamos a este e-mail el contrarecibo de su(s) factura(s)  y nos ponemos a sus apreciables 髍denes.'
                                 },
                                 callback : function(options,success,response)
                                 {
@@ -4017,91 +3715,21 @@ Ext.onReady(function() {
                                                                                         }
                                                                                         ,success : function (response)
                                                                                         {
-                                                                                            if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="11"){
-                                                                                                var usuarioTurnadoSiniestro1 = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-                                                                                                ///mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
-                                                                                                debug("Usuario turnado1 ==>"+usuarioTurnadoSiniestro1);
-                                                                                                var fields = usuarioTurnadoSiniestro1.split('|');
-                                                                                                var Nombre = fields[0];
-                                                                                                var usuario = fields[1];
-                                                                                                
-                                                                                                Ext.Ajax.request(
+                                                                                            var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+                                                                                            debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
+                                                                                            mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
+                                                                                                windowLoader.close();
+                                                                                                Ext.create('Ext.form.Panel').submit(
                                                                                                 {
-                                                                                                    url: _URL_ActualizaStatusTramite,
-                                                                                                    params: {
-                                                                                                            'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(), 
-                                                                                                            'smap1.status'   : _STATUS_TRAMITE_EN_REVISION_MEDICA
-                                                                                                            ,'smap1.rol_destino'     : 'medajustador'
-                                                                                                            ,'smap1.usuario_destino' : ''
-                                                                                                            ,'smap1.rol_inicial'     : 'OPERADORSINI'
-                                                                                                            ,'smap1.usuario_inicial' :  usuario 
-                                                                                                    },
-                                                                                                    success:function(response,opts){
-                                                                                                        Ext.Ajax.request(
-                                                                                                        {
-                                                                                                            url     : _URL_NOMBRE_TURNADO
-                                                                                                            ,params : 
-                                                                                                            {           
-                                                                                                                'params.ntramite': panelInicialPral.down('[name=idNumTramite]').getValue(),
-                                                                                                                'params.rolDestino': 'medajustador'
-                                                                                                            }
-                                                                                                            ,success : function (response)
-                                                                                                            {
-                                                                                                                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-                                                                                                                debug("Usuario turnado2 ==>"+usuarioTurnadoSiniestro);
-                                                                                                                mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
-                                                                                                                    windowLoader.close();
-                                                                                                                    Ext.create('Ext.form.Panel').submit(
-                                                                                                                    {
-                                                                                                                        url     : _p12_urlMesaControl
-                                                                                                                        ,standardSubmit : true
-                                                                                                                        ,params         :
-                                                                                                                        {
-                                                                                                                            'smap1.gridTitle'      : 'Siniestros en espera'
-                                                                                                                            ,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
-                                                                                                                        }
-                                                                                                                    });
-                                                                                                                });
-                                                                                                            },
-                                                                                                            failure : function ()
-                                                                                                            {
-                                                                                                                me.up().up().setLoading(false);
-                                                                                                                centrarVentanaInterna(Ext.Msg.show({
-                                                                                                                    title:'Error',
-                                                                                                                    msg: 'Error de comunicaci&oacute;n',
-                                                                                                                    buttons: Ext.Msg.OK,
-                                                                                                                    icon: Ext.Msg.ERROR
-                                                                                                                }));
-                                                                                                            }
-                                                                                                        });
-                                                                                                    },
-                                                                                                    failure:function(response,opts)
+                                                                                                    url     : _p12_urlMesaControl
+                                                                                                    ,standardSubmit : true
+                                                                                                    ,params         :
                                                                                                     {
-                                                                                                        Ext.Msg.show({
-                                                                                                            title:'Error',
-                                                                                                            msg: 'Error de comunicaci&oacute;n',
-                                                                                                            buttons: Ext.Msg.OK,
-                                                                                                            icon: Ext.Msg.ERROR
-                                                                                                        });
+                                                                                                        'smap1.gridTitle'      : 'Siniestros en espera'
+                                                                                                        ,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
                                                                                                     }
                                                                                                 });
-                                                                                            }else{
-                                                                                                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-                                                                                                debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
-                                                                                                mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
-                                                                                                    windowLoader.close();
-                                                                                                    Ext.create('Ext.form.Panel').submit(
-                                                                                                    {
-                                                                                                        url     : _p12_urlMesaControl
-                                                                                                        ,standardSubmit : true
-                                                                                                        ,params         :
-                                                                                                        {
-                                                                                                            'smap1.gridTitle'      : 'Siniestros en espera'
-                                                                                                            ,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
-                                                                                                        }
-                                                                                                    });
-                                                                                                });
-                                                                                            }
+                                                                                            });
                                                                                         },
                                                                                         failure : function ()
                                                                                         {
@@ -4252,236 +3880,4 @@ Ext.onReady(function() {
         }
         });
     }
-    
-	// codigo se convierte en funcion (EGS)
-	function eligePoliza(record){
-                if(record.desEstatusCliente=="Vigente"){
-                    var valorFechaOcurrencia;
-                    var rowSelected;	//(EGS)
-                    var cdperson;	//(EGS)
-                    var noFactura;	//(EGS)
-                    if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
-                        valorFechaOcurrencia = new Date(valorIndexSeleccionado.get('modFechaOcurrencia'));
-	                    rowSelected = panelInicialPral.down('[name=editorFacturaDirecto]').getSelectionModel().getSelection()[0];	//(EGS)
-	                    cdperson = panelInicialPral.down('combo[name=cmbAseguradoPagoDirecto]').getValue();//valorIndexSeleccionado.get('modCdperson'); 	//(EGS)
-	                    noFactura= rowSelected.get('noFactura');	//(EGS)
-                    }else{
-                        valorFechaOcurrencia = panelInicialPral.down('[name=dtFechaOcurrencia]').getValue();
-                        rowSelected = panelInicialPral.down('[name=editorFacturaReembolso]').getSelectionModel().getSelection()[0];	//(EGS)
-                        cdperson = panelInicialPral.down('combo[name=cmbAseguradoAfectado]').getValue();	//(EGS)
-                    }
-                    var valorFechaInicial = new Date(record.feinicio.substring(6,10)+"/"+record.feinicio.substring(3,5)+"/"+record.feinicio.substring(0,2));
-                    var valorFechaFinal =   new Date(record.fefinal.substring(6,10)+"/"+record.fefinal.substring(3,5)+"/"+record.fefinal.substring(0,2));
-                    var valorFechaAltaAsegurado = new Date(record.faltaAsegurado.substring(6,10)+"/"+record.faltaAsegurado.substring(3,5)+"/"+record.faltaAsegurado.substring(0,2));
-                    //var noFactura= rowSelected.get('noFactura');	//(EGS)
-                    
-                    Ext.Ajax.request({
-	                    url     : _URL_VALIDA_STATUSASEG
-	                    ,params:{
-	                        'params.cdperson'  : cdperson,	//(EGS) valorIndexSeleccionado.get('modCdperson'),
-	                        'params.feoocurre' : valorFechaOcurrencia,
-	                        'params.nmpoliza'  : record.nmpoliza
-	                    }
-	                    ,success : function (response) {
-	                        json = Ext.decode(response.responseText);
-	                        debug("Valor de respuesta  ===> ",json);
-	                        
-	                        if(Ext.decode(response.responseText).validacionGeneral =="V"){
-			                    if( (valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
-			                        if( valorFechaOcurrencia >= valorFechaAltaAsegurado ){
-			                            //cumple la condicion la fecha de ocurrencia es menor igual a la fecha de alta de tramite
-			                            panelInicialPral.down('[name="cdunieco"]').setValue(record.cdunieco);
-			                            panelInicialPral.down('[name="estado"]').setValue(record.estado);
-			                            panelInicialPral.down('[name="cdramo"]').setValue(record.cdramo);
-			                            panelInicialPral.down('[name="nmsituac"]').setValue(record.nmsituac);
-			                            panelInicialPral.down('[name="polizaAfectada"]').setValue(record.nmpoliza);
-			                            panelInicialPral.down('[name="idNmsolici"]').setValue(record.nmsolici);
-			                            panelInicialPral.down('[name="idNmsuplem"]').setValue(record.nmsuplem);
-			                            panelInicialPral.down('[name="idCdtipsit"]').setValue(record.cdtipsit);
-			                            panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.numPoliza);
-			                            panelInicialPral.down('[name="txtTelefono"]').setValue(record.telefono);
-			                            panelInicialPral.down('[name="txtEmail"]').setValue(record.email);
-			                            // realizamos la asignacion de las variables JOSE
-			                            
-			                            valorIndexSeleccionado.set('modUnieco',record.cdunieco);
-			                            valorIndexSeleccionado.set('modEstado',record.estado);
-			                            valorIndexSeleccionado.set('modRamo',record.cdramo);
-			                            valorIndexSeleccionado.set('modNmsituac',record.nmsituac);
-			                            valorIndexSeleccionado.set('polizaAfectada',record.nmpoliza);
-			                            valorIndexSeleccionado.set('modNmsolici',record.nmsolici);
-			                            valorIndexSeleccionado.set('modNmsuplem',record.nmsuplem);
-			                            valorIndexSeleccionado.set('modCdtipsit',record.cdtipsit);
-			                            valorIndexSeleccionado.set('modNmautserv',null);
-			                            valorIndexSeleccionado.set('modCdpersondesc',record.nombAsegurado);
-			                            valorIndexSeleccionado.set('modnumPoliza',record.numPoliza);
-			                            valorIndexSeleccionado.set('modTelefono',record.telefono);
-			                            valorIndexSeleccionado.set('modEmail',record.email);
-			                            valorIndexSeleccionado.set('modFactura',noFactura);
-			                            valorIndexSeleccionado.set('modPolizaAfectada',record.nmpoliza);
-			                            valorIndexSeleccionado.set('modtxtAutEspecial',"0");
-			                            banderaAsegurado = "1";
-			                            limpiarRegistros();
-			                            modPolizasAltaTramite.hide();
-			                        }else{
-			                            // No se cumple la condicion la fecha de ocurrencia es mayor a la fecha de alta de tramite
-			                            Ext.Msg.show({
-			                                title:'Error',
-			                                msg: 'La fecha de ocurrencia es mayor a la fecha de alta del asegurado',
-			                                buttons: Ext.Msg.OK,
-			                                icon: Ext.Msg.ERROR,
-			                                fn: function() {
-			                                    valorIndexSeleccionado.set('modCdperson','');
-			                                    valorIndexSeleccionado.set('modCdpersondesc','');
-			                                }
-			                            });
-			                            modPolizasAltaTramite.hide();
-			                            limpiarRegistros();
-			                            if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
-			                                panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
-			                            }else{
-			                                panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-			                            }
-			                        }
-			                    }else{
-			                    // La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
-			                        centrarVentanaInterna(Ext.Msg.show({
-			                            title: 'Aviso',
-			                            msg: 'La fecha de ocurrencia se encuentra fuera del rango de la p&oacute;liza vigente.<br/> &iquest;Desea continuar ?',
-			                            buttons: Ext.Msg.YESNO,
-			                            icon: Ext.Msg.QUESTION,
-			                            fn: function(buttonId, text, opt){
-			                                if(buttonId == 'yes'){
-			                                    panelInicialPral.down('[name="cdunieco"]').setValue(record.cdunieco);
-			                                    panelInicialPral.down('[name="estado"]').setValue(record.estado);
-			                                    panelInicialPral.down('[name="cdramo"]').setValue(record.cdramo);
-			                                    panelInicialPral.down('[name="nmsituac"]').setValue(record.nmsituac);
-			                                    panelInicialPral.down('[name="polizaAfectada"]').setValue(record.nmpoliza);
-			                                    panelInicialPral.down('[name="idNmsolici"]').setValue(record.nmsolici);
-			                                    panelInicialPral.down('[name="idNmsuplem"]').setValue(record.nmsuplem);
-			                                    panelInicialPral.down('[name="idCdtipsit"]').setValue(record.cdtipsit);
-			                                    panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.numPoliza);
-			                                    panelInicialPral.down('[name="txtTelefono"]').setValue(record.telefono);
-			                                    panelInicialPral.down('[name="txtEmail"]').setValue(record.email);
-			                                    // realizamos la asignacion de las variables JOSE
-			                                    valorIndexSeleccionado.set('modUnieco',record.cdunieco);
-			                                    valorIndexSeleccionado.set('modEstado',record.estado);
-			                                    valorIndexSeleccionado.set('modRamo',record.cdramo);
-			                                    valorIndexSeleccionado.set('modNmsituac',record.nmsituac);
-			                                    valorIndexSeleccionado.set('polizaAfectada',record.nmpoliza);
-			                                    valorIndexSeleccionado.set('modNmsolici',record.nmsolici);
-			                                    valorIndexSeleccionado.set('modNmsuplem',record.nmsuplem);
-			                                    valorIndexSeleccionado.set('modCdtipsit',record.cdtipsit);
-			                                    valorIndexSeleccionado.set('modNmautserv',null);
-			                                    valorIndexSeleccionado.set('modCdpersondesc',record.nombAsegurado);
-			                                    valorIndexSeleccionado.set('modnumPoliza',record.numPoliza);
-			                                    valorIndexSeleccionado.set('modTelefono',record.telefono);
-			                                    valorIndexSeleccionado.set('modEmail',record.email);
-			                                    valorIndexSeleccionado.set('modFactura',noFactura);
-			                                    valorIndexSeleccionado.set('modPolizaAfectada',record.nmpoliza);
-			                                    valorIndexSeleccionado.set('modtxtAutEspecial',"1");
-			                                    banderaAsegurado = "1";
-			                                    limpiarRegistros();
-			                                    modPolizasAltaTramite.hide();
-			                                }else{
-			                                    valorIndexSeleccionado.set('modCdperson','');
-			                                    valorIndexSeleccionado.set('modCdpersondesc','');
-			                                    modPolizasAltaTramite.hide();
-			                                    limpiarRegistros();
-			                                    if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
-			                                        panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
-			                                    }else{
-			                                        panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-			                                    }
-			                                }
-			                                
-			                            }
-			                        }));
-		                    	}
-	                        }else{
-		                        centrarVentanaInterna(Ext.Msg.show({
-		                            title: 'Aviso',
-		                            msg: 'El asegurado de la p&oacute;liza seleccionado no se encuentra vigente.<br/> &iquest;Desea continuar ?',
-		                            buttons: Ext.Msg.YESNO,
-		                            icon: Ext.Msg.QUESTION,
-		                            fn: function(buttonId, text, opt){
-		                                if(buttonId == 'yes'){
-		                                    panelInicialPral.down('[name="cdunieco"]').setValue(record.cdunieco);
-		                                    panelInicialPral.down('[name="estado"]').setValue(record.estado);
-		                                    panelInicialPral.down('[name="cdramo"]').setValue(record.cdramo);
-		                                    panelInicialPral.down('[name="nmsituac"]').setValue(record.nmsituac);
-		                                    panelInicialPral.down('[name="polizaAfectada"]').setValue(record.nmpoliza);
-		                                    panelInicialPral.down('[name="idNmsolici"]').setValue(record.nmsolici);
-		                                    panelInicialPral.down('[name="idNmsuplem"]').setValue(record.nmsuplem);
-		                                    panelInicialPral.down('[name="idCdtipsit"]').setValue(record.cdtipsit);
-		                                    panelInicialPral.down('[name="idNumPolizaInt"]').setValue(record.numPoliza);
-		                                    panelInicialPral.down('[name="txtTelefono"]').setValue(record.telefono);
-		                                    panelInicialPral.down('[name="txtEmail"]').setValue(record.email);
-		                                    // realizamos la asignacion de las variables JOSE
-		                                    valorIndexSeleccionado.set('modUnieco',record.cdunieco);
-		                                    valorIndexSeleccionado.set('modEstado',record.estado);
-		                                    valorIndexSeleccionado.set('modRamo',record.cdramo);
-		                                    valorIndexSeleccionado.set('modNmsituac',record.nmsituac);
-		                                    valorIndexSeleccionado.set('polizaAfectada',record.nmpoliza);
-		                                    valorIndexSeleccionado.set('modNmsolici',record.nmsolici);
-		                                    valorIndexSeleccionado.set('modNmsuplem',record.nmsuplem);
-		                                    valorIndexSeleccionado.set('modCdtipsit',record.cdtipsit);
-		                                    valorIndexSeleccionado.set('modNmautserv',null);
-		                                    valorIndexSeleccionado.set('modCdpersondesc',record.nombAsegurado);
-		                                    valorIndexSeleccionado.set('modnumPoliza',record.numPoliza);
-		                                    valorIndexSeleccionado.set('modTelefono',record.telefono);
-		                                    valorIndexSeleccionado.set('modEmail',record.email);
-		                                    valorIndexSeleccionado.set('modFactura',noFactura);
-		                                    valorIndexSeleccionado.set('modPolizaAfectada',record.nmpoliza);
-		                                    valorIndexSeleccionado.set('modtxtAutEspecial',"1");
-		                                    banderaAsegurado = "1";
-		                                    limpiarRegistros();
-		                                    modPolizasAltaTramite.hide();
-		                                }else{
-		                                    valorIndexSeleccionado.set('modCdperson','');
-		                                    valorIndexSeleccionado.set('modCdpersondesc','');
-		                                    modPolizasAltaTramite.hide();
-		                                    limpiarRegistros();
-		                                    if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
-		                                        panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
-		                                    }else{
-		                                        panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-		                                    }
-		                                }
-		                                
-		                            }
-		                        }));
-	                        }
-	                    },
-	                    failure : function (){
-	                        me.up().up().setLoading(false);
-	                        centrarVentanaInterna(Ext.Msg.show({
-	                            title:'Error',
-	                            msg: 'Error de comunicaci&oacute;n',
-	                            buttons: Ext.Msg.OK,
-	                            icon: Ext.Msg.ERROR
-	                        }));
-	                    }
-	                });
-                }else{
-                    // El asegurado no se encuentra vigente
-                    Ext.Msg.show({
-                        title:'Error',
-                        msg: 'El asegurado de la p&oacute;liza seleccionado no se encuentra vigente',
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.Msg.ERROR,
-                        fn: function() {
-                            valorIndexSeleccionado.set('modCdperson','');
-                            valorIndexSeleccionado.set('modCdpersondesc','');
-                        }
-                    });
-                    modPolizasAltaTramite.hide();
-                    limpiarRegistros();
-                    if(panelInicialPral.down('combo[name=cmbTipoPago]').getValue() == _TIPO_PAGO_DIRECTO){
-                        panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
-                    }else{
-                        panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-                    }
-                }
-	}
-
 });
