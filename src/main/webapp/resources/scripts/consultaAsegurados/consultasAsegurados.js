@@ -2,9 +2,6 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 
 Ext.onReady(function() {
 	
-	var aseguradoSeleccionado         = '';
-    var nmsituacAseguradoSeleccionado = '';
-	
 	//Se establece un timeout de 2 min.
 	//Ext.Ajax.timeout = 60000;
 	Ext.Ajax.timeout = 120000;
@@ -151,11 +148,9 @@ Ext.onReady(function() {
                                 	tabDatosGeneralesPoliza.child('#tabEndosos').tab.show();
                                 	if(gridSuplementos.getSelectionModel().getSelection()[0].get('origen') == 'SISA') {
                                 	   tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
-                                	   tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.hide();
                                 	   tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.show();
                                 	} else {
                                 	   tabDatosGeneralesPoliza.child('#tbDocumentos').tab.show();
-                                	   tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.show();
                                 	   tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.hide();
                                 	}
                                     tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.hide();
@@ -183,7 +178,6 @@ Ext.onReady(function() {
                                 tabDatosGeneralesPoliza.show();
                                 tabDatosGeneralesPoliza.child('#tabDatosGenerales').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
-                                tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.show();
                                 tabDatosGeneralesPoliza.child('#tabDatosCopagosPoliza').tab.show();
                                 /*if(gridSuplementos.getSelectionModel().getSelection()[0].get('origen') == 'SISA') {                                    
@@ -218,7 +212,6 @@ Ext.onReady(function() {
                                 	tabDatosGeneralesPoliza.child('#tbHistoricoFarmacia').tab.hide();
                                 }
                                 tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
-                                tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosCopagosPoliza').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosCoberturasBasicas').tab.hide();
@@ -241,7 +234,6 @@ Ext.onReady(function() {
                                 tabDatosGeneralesPoliza.child('#tbHistorico').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tbHistoricoFarmacia').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tbDocumentos').tab.hide();
-                                tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosCopagosPoliza').tab.hide();
                                 tabDatosGeneralesPoliza.child('#tabDatosCoberturasBasicas').tab.hide();
@@ -1968,9 +1960,6 @@ Ext.onReady(function() {
                     formBusqueda.findField("params.cdperson").setValue(rowPolizaSelected.get('cdperson'));
                     formBusqueda.findField("params.nmsituac").setValue(rowPolizaSelected.get('nmsituac'));
                     
-                    aseguradoSeleccionado = rowPolizaSelected.get('cdperson');
-                    nmsituacAseguradoSeleccionado = rowPolizaSelected.get('nmsituac');
-                    
                     gridPolizasAsegurado.getStore().removeAll();
                                         
                     windowPolizas.close();
@@ -2395,36 +2384,7 @@ Ext.onReady(function() {
                     });
                 }
             }
-        },
-        {
-            itemId: 'tbMedicinaPreventiva',
-            title : 'MEDICINA PREVENTIVA',
-            hidden: _GLOBAL_CDSISROL != _ROL_COORDINADOR_MEDICINA_PREVENTIVA?true:false,
-            //width: '350',
-            loader : {
-                url : _URL_LOADER_MEDICINA_PREVENTIVA,
-                scripts  : true,
-		        loadMask : true,
-		        autoLoad : false,
-		        ajaxOptions: {
-		            method: 'POST'
-		        }
-            },
-            listeners : {
-                activate : function(tab) {
-                    tab.loader.load({
-                        params : {
-                            'smap1.cdunieco' :  panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
-                            'smap1.cdramo'   :  panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
-                            'smap1.estado'   :  panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
-                            'smap1.nmpoliza' :  panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
-                            'smap1.cdperson' :  aseguradoSeleccionado,
-                            'smap1.nmsituac' :  nmsituacAseguradoSeleccionado
-                        }
-                    });
-                }
-            }
-        },{
+        }, {
         	itemId: 'tbRecibos',
         	title: 'RECIBOS',
         	autoScroll: true,

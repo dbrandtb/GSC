@@ -985,7 +985,7 @@ Ext.onReady(function() {
     			//}]
 			},*/
             //Perfil Medico
-            {text:'Perfil',dataIndex:'perfilFinal', width:60 , align:'left',
+            {text:'Perfil',dataIndex:'perfilFinal', width:90 , align:'left',
             	renderer: function(value, metaData, record, rowIndex , colIndex, store, view) {
             		debug('entre en el renderer value ', value);
             		value2='Perfil '+value;
@@ -1008,45 +1008,6 @@ Ext.onReady(function() {
                     } 
             		debug('valor del perfil: ', value2);
                     return value2;
-                }
-            },{
-                xtype        : 'actioncolumn',
-                icon         : _CONTEXT+'/resources/fam3icons/icons/folder_heart.png',
-                tooltip      : 'Medicina Preventiva',
-                hidden       : _GLOBAL_CDSISROL != _ROL_COORDINADOR_MEDICINA_PREVENTIVA?true:false, 
-                width        : 22,
-                menuDisabled : true,
-                sortable     : false,
-                handler      : function(gridView, rowIndex, colIndex, item, e, record, row) {
-                	
-                	// Se crea ventana para mostrar Medicina Preventiva del asegurado:
-                	var windowMedPrev = Ext.create('Ext.window.Window', {
-                		title       : 'Medicina Preventiva',
-                        modal       : true,
-                        width       : 830,
-                        height      : 450,
-                        items: [{
-                            xtype  : 'panel',
-                            autoScroll  : true,
-                            loader: {
-                                url : _URL_LOADER_MEDICINA_PREVENTIVA,
-                                scripts  : true,
-                                loadMask : true,
-                                autoLoad : true,
-                                ajaxOptions : {
-                                    method: 'POST'
-                                },
-                                params: {
-                                	'smap1.cdunieco' :  storeAsegurados.getProxy().extraParams['params.cdunieco'],
-                                    'smap1.cdramo'   :  storeAsegurados.getProxy().extraParams['params.cdramo'],
-                                    'smap1.estado'   :  storeAsegurados.getProxy().extraParams['params.estado'],
-                                    'smap1.nmpoliza' :  storeAsegurados.getProxy().extraParams['params.nmpoliza'],
-                                    'smap1.cdperson' :  record.get('cdperson'),
-                                    'smap1.nmsituac' :  record.get('nmsituac')
-                                }
-                            }
-                        }]
-                    }).show();
                 }
             },
             {text:'Plan',flex: 1,dataIndex:'dsplan',width:90 , align:'left'},
