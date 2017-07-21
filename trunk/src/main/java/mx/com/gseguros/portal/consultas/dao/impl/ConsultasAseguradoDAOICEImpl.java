@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.consultas.dao.impl;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -1134,8 +1135,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	
 	@Override
-	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos() throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
+	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos(Map<String, String> params) throws Exception {
 		
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneCatalogoMunicipiosProvMedicos(getDataSource()), params);
 		List<GenericVO> lista = (List<GenericVO>) mapResult.get("pv_registro_o");
@@ -1149,6 +1149,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	public class ObtieneCatalogoMunicipiosProvMedicos extends StoredProcedure{
 		protected ObtieneCatalogoMunicipiosProvMedicos(DataSource dataSource){
 			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_CATMUNICIPIOS");
+			declareParameter(new SqlParameter("pi_cdedo", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatClavDescMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -1225,5 +1226,56 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 		}
 	}
 	
+	@Override
+	public List<Map<String,String>> obtieneCatDireccionProvMedPorEspecialidad(Map<String, String> params) throws Exception {
+		
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneCatDireccionProvMedPorEspecialidad(getDataSource()), params);
+		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
+		if (lista == null) {
+            lista = new ArrayList<Map<String,String>>();
+        }
+		
+		return lista;
+	}
+	
+	public class ObtieneCatDireccionProvMedPorEspecialidad extends StoredProcedure{
+		protected ObtieneCatDireccionProvMedPorEspecialidad(DataSource dataSource){
+			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_CATMEDICOS");
+			declareParameter(new SqlParameter("pi_cdedo", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdmunici", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdespeci", OracleTypes.VARCHAR));
+			String[] cols = new String[]{
+					"CDPRESTA","NOMBRE","DIRECCION","NMTELEFO"
+			};
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public boolean validaAsegCobMedicinaPreventiva(Map<String, String> params) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new ValidaAsegCobMedicinaPreventiva(getDataSource()), params);
+		BigDecimal registros = (BigDecimal) mapResult.get("pv_swmedprev_o");
+		return (registros.intValue() > 0) ?  true : false;
+	}
+	
+	protected class ValidaAsegCobMedicinaPreventiva extends StoredProcedure {
+	
+		protected ValidaAsegCobMedicinaPreventiva(DataSource dataSource) {
+			super(dataSource, "PKG_PADMEDPREV.P_VALIDA_MEDPREV");
+			declareParameter(new SqlParameter("cdunieco", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdperson", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_swmedprev_o", OracleTypes.NUMBER));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 }

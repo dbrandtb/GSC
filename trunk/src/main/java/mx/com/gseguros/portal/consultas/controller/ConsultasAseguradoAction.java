@@ -31,6 +31,7 @@ import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.service.MailServiceForSms;
 import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -169,6 +170,15 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
     	try {
     		smap1.putAll(consultasAseguradoManager.obtieneDatosAsegurado(smap1));
     		smap1.put("random", String.format("%.0f", Math.random()*10000d));
+
+    		boolean cobMedPrev = false;
+    		try{
+    			cobMedPrev = consultasAseguradoManager.validaAsegCobMedicinaPreventiva(smap1);
+    		}catch(Exception exp){
+    			logger.error("Error al obtener pantallaMedicinaPreventiva ",exp);
+    		}
+    		 
+    		smap1.put("COBMEDPREV", cobMedPrev?Constantes.SI:Constantes.NO);
     		
     		logger.debug("Valor de RAMDOM smap1 <<<<<<>>>>>> ::: "+ smap1);
     	}catch( Exception e){
@@ -248,7 +258,7 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 		logger.debug(" **** Entrando a obtieneCatalogoMunicipiosProvMedicos ****");
 		try {
 			
-			listaCatalogo = consultasAseguradoManager.obtieneCatalogoMunicipiosProvMedicos();
+			listaCatalogo = consultasAseguradoManager.obtieneCatalogoMunicipiosProvMedicos(params);
 			
 		}catch( Exception e){
 			logger.error("Error al obtener obtieneCatalogoMunicipiosProvMedicos ",e);
@@ -273,6 +283,27 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 			
 		}catch( Exception e){
 			logger.error("Error al obtener obtieneCatalogoEspecialidadesMedicos ",e);
+			success = false;
+			return SUCCESS;
+		}
+		
+		success = true;
+		return SUCCESS;
+		
+	}
+	
+	@Action(value   = "obtieneCatDireccionProvMedPorEspecialidad",
+			results = { @Result(name="success", type="json") }
+			)
+	public String obtieneCatDireccionProvMedPorEspecialidad() throws Exception {
+		
+		logger.debug(" **** Entrando a obtieneCatDireccionProvMedPorEspecialidad ****");
+		try {
+			
+			loadList = consultasAseguradoManager.obtieneCatDireccionProvMedPorEspecialidad(params);
+			
+		}catch( Exception e){
+			logger.error("Error al obtener obtieneCatDireccionProvMedPorEspecialidad ",e);
 			success = false;
 			return SUCCESS;
 		}

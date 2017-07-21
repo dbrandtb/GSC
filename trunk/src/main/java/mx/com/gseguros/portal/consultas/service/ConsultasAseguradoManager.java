@@ -88,11 +88,15 @@ public interface ConsultasAseguradoManager {
 	
 	public List<GenericVO> obtieneCatalogoEstadosProvMedicos() throws Exception;
 
-	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos() throws Exception;
+	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos(Map<String, String> params) throws Exception;
 
 	public List<GenericVO> obtieneCatalogoEspecialidadesMedicos() throws Exception;
 
 	public List<GenericVO> obtieneCatalogoFrecuenciaVisitas() throws Exception;
 
 	public List<GenericVO> obtieneCatalogoPeriodicidadVisitas() throws Exception;
+	
+	public List<Map<String, String>> obtieneCatDireccionProvMedPorEspecialidad(Map<String, String> params) throws Exception;
+	
+	public boolean validaAsegCobMedicinaPreventiva(Map<String, String> params) throws Exception;
 }
