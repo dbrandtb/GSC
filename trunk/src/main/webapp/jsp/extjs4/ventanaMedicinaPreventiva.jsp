@@ -59,7 +59,7 @@ Ext.onReady(function()
 				extend : 'Ext.data.Model'
 				,fields :
 				['CDUNIECO','CDRAMO','ESTADO','NMPOLIZA','NMSITUAC','CDTIPSIT','STATUS','NMSUPLEM',
-					'CDPERSON','CDICD','FEGENCART','CDFREC','CDPERIOD','CDPRESTA','DSPAD','DSPLANMED','SWGENCARTA','CDUSUARI','DSICD']
+					'CDPERSON','CDICD','FEGENCART','CDFREC','CDPERIOD','CDPRESTA','DSPRESTA','DSPAD','DSPLANMED','SWGENCARTA','CDUSUARI','DSICD','COPAGO','SWFORMAT']
 	});
     
     Ext.define('modelHistorialPadecimientoAseg',
@@ -184,7 +184,7 @@ Ext.onReady(function()
             {
                 xtype        : 'actioncolumn',
                 icon         : _CONTEXT+'/resources/fam3icons/icons/page.png',
-                tooltip      : 'Ver Carta de Medicina Preventiva',
+                tooltip      : 'Datos para Carta de Medicina Preventiva',
                 width        : 22,
                 menuDisabled : true,
                 sortable     : false,
@@ -251,6 +251,8 @@ Ext.onReady(function()
           		 'params.pi_cdicd'       : recordEditar.get('CDICD'),
           		 'params.pi_cdfrec'      : '',
           		 'params.pi_cdperiod'    : '',
+          		 'params.pi_copago'      : '',
+          		 'params.pi_swformat'    : '',
           		 'params.pi_cdpresta'    : '',
           		 'params.pi_dspad'       : '',
           		 'params.pi_dsplanmed'   : '',
@@ -405,6 +407,8 @@ Ext.onReady(function()
                            		 'params.pi_cdicd'       : datosForma.CDICD,
                            		 'params.pi_cdfrec'      : '',
                            		 'params.pi_cdperiod'    : '',
+                           		 'params.pi_copago'      : '',
+                           		 'params.pi_swformat'    : '',
                            		 'params.pi_cdpresta'    : '',
                            		 'params.pi_dspad'       : datosForma.DSPAD,
                            		 'params.pi_dsplanmed'   : datosForma.DSPLANMED,
@@ -558,6 +562,7 @@ Ext.onReady(function()
 
     function agregarEditarCartaPadecimientoAseg(recordEditar){
     	var ventanaCartaMedPrevPad;
+    	var panelGuardar;
     	
     	var panelBuscarMedicos = Ext.create('Ext.form.Panel',{
     		border:false,
@@ -579,7 +584,7 @@ Ext.onReady(function()
                 forceSelection: true,
                 anyMatch      : true,
                 queryMode     : 'local',
-                allowBlank    : false,
+                allowBlank    : true,
                 store       : Ext.create('Ext.data.Store', {
                     model : 'Generic',
                     autoLoad : true,
@@ -614,7 +619,7 @@ Ext.onReady(function()
                 forceSelection: true,
                 anyMatch      : true,
                 queryMode     : 'local',
-                allowBlank    : false,
+                allowBlank    : true,
                 store       : Ext.create('Ext.data.Store', {
                     model : 'Generic',
                     proxy : {
@@ -638,7 +643,7 @@ Ext.onReady(function()
                 forceSelection: true,
                 anyMatch      : true,
                 queryMode     : 'local',
-                allowBlank    : false,
+                allowBlank    : true,
                 store       : Ext.create('Ext.data.Store', {
                     model : 'Generic',
                     autoLoad : true,
@@ -667,11 +672,18 @@ Ext.onReady(function()
 		                	});
 	                	
 	                }
-                }]
+                },{
+                	text: 'Limpiar'
+                		,icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png'
+	                	,handler: function(btn){
+	                			var panelBusq = btn.up('form');
+	                			panelBusq.getForm().reset();
+	                	}	
+	             }]
         });
     	
     	var fieldsetMedicos = Ext.create('Ext.form.FieldSet',{
-    		title: '<span style="font:bold 12px Calibri;">Seleccione un m&eacutedico tratante.</span>',
+    		title: '<span style="font:bold 12px Calibri;">B&uacute;squeda y selecci&oacute;n de m&eacutedico tratante.</span>',
     		defaults : {
     			style : 'margin : 3px 2px 2px 2px;'
     		},
@@ -689,11 +701,17 @@ Ext.onReady(function()
                     { text: 'Nombre M&eacutedico', dataIndex: 'NOMBRE' , flex: 2 },
                     { text: 'Direcci&oacute;n M&eacutedico', dataIndex: 'DIRECCION', flex: 3 },
                     { text: 'Tel&eacute;fono', dataIndex: 'NMTELEFO', flex: 1 }
-                ]
+                ],
+                listeners: {
+                	select: function(grd,record){
+                		panelGuardar.down('[name=DSPRESTA]').setValue(record.get('CDPRESTA')+' - '+record.get('NOMBRE'));
+                		panelGuardar.down('[name=CDPRESTA]').setValue(record.get('CDPRESTA'));
+                	}
+                }
             })]
         });
     	
-    	var panelGuardar = Ext.create('Ext.form.Panel',{
+    	panelGuardar = Ext.create('Ext.form.Panel',{
     		title: 'Informaci&oacute;n para Carta de Medicina Preventiva.',
     		border: false,
             defaults : {
@@ -704,6 +722,48 @@ Ext.onReady(function()
                 columns: 3 
             },
             items: [{
+                xtype: 'textfield',
+                fieldLabel: 'Enfermedad ICD',
+                value: recordEditar.get('DSICD'),
+                labelWidth: 100,
+                width: 400,
+                readOnly: true
+            	},
+                {
+                    xtype: 'numberfield',
+                    fieldLabel: 'Copago',
+                    value: recordEditar.get('COPAGO'),
+                    labelWidth: 50,
+                    width: 200,
+                    allowBlank: false,
+                    name: 'COPAGO',
+                    minValue:0,
+                    negativeText : 'El valor no puede ser negativo'
+                    //readOnly: true
+                    
+                },
+                {
+                	xtype: 'combobox',
+                	value: recordEditar.get('SWFORMAT'),
+                    labelWidth: 0,
+                    width: 85,
+                    allowBlank: false,
+                    name: 'SWFORMAT',
+	            	displayField: 'value',
+	                valueField: 'key',
+	                forceSelection: true,
+	                anyMatch      : true,
+	                queryMode     : 'local',
+	                allowBlank    : false,
+	                store         : Ext.create('Ext.data.Store', {
+	                    fields: ['key', 'value'],
+	                    data : [
+	                        {"key":"N", "value":"(MONTO)"},
+	                        {"key":"P", "value":"(%)"}
+	                        //{"key":"NA", "value":"N/A"}
+	                    ]
+	                })
+                },{
                 xtype: 'combobox',
                 width: 220,
                 labelWidth: 120,
@@ -725,6 +785,11 @@ Ext.onReady(function()
                             type : 'json',
                             root : 'listaCatalogo'
                         }
+                    },
+                    listeners: {
+                    	load: function(){
+                    		panelGuardar.down('[name=CDFREC]').setValue(recordEditar.get('CDFREC'));
+                    	}
                     }
                 })
             },
@@ -749,32 +814,36 @@ Ext.onReady(function()
                             type : 'json',
                             root : 'listaCatalogo'
                         }
+                    },
+                    listeners: {
+                    	load: function(){
+                    		panelGuardar.down('[name=CDPERIOD]').setValue(recordEditar.get('CDPERIOD'));
+                    	}
                     }
                 })
-            },
-            {
-                xtype: 'textfield',
-                fieldLabel: 'Copago',
-                labelWidth: 80,
-                name: 'COPAGO',
-                readOnly: true
-                
             },
             {
                 xtype: 'textfield',
                 fieldLabel: 'M&eacute;dico Tratante',
                 labelWidth: 120,
                 width: 460,
+                allowBlank: false,
                 readOnly: true,
-                name: 'DSPRESTA'
+                name: 'DSPRESTA',
+                value: recordEditar.get('DSPRESTA')
             },{
                 xtype: 'hidden',
-                name: 'CDPRESTA'
+                name: 'CDPRESTA',
+                value: recordEditar.get('CDPRESTA')
+            },{
+                xtype: 'button',
+                hidden: true,
+                text: 'Asignar m&eacute;dico seleccionado en la b&uacute;squeda.'
             }]
         });
     		
     	ventanaCartaMedPrevPad = Ext.create('Ext.window.Window',{
-    		title   : 'Carta de Medicina Preventiva'
+    		title   : 'Datos para Carta de Medicina Preventiva'
     		,modal  : true
     		,width  : 790
     		,items : [{
@@ -844,17 +913,19 @@ Ext.onReady(function()
                                		 'params.pi_nmpoliza'    : recordEditar.get('NMPOLIZA'),
                                		 'params.pi_nmsituac'    : recordEditar.get('NMSITUAC'),
                                		 'params.pi_cdperson'    : recordEditar.get('CDPERSON'),
-                               		 'params.pi_cdicd'       : datosForma.CDICD,
-                               		 'params.pi_cdfrec'      : '',
-                               		 'params.pi_cdperiod'    : '',
-                               		 'params.pi_cdpresta'    : '',
-                               		 'params.pi_dspad'       : datosForma.DSPAD,
-                               		 'params.pi_dsplanmed'   : datosForma.DSPLANMED,
+                               		 'params.pi_cdicd'       : recordEditar.get('CDICD'),
+                               		 'params.pi_cdfrec'      : panelGuardar.down('[name=CDFREC]').getValue(),
+                               		 'params.pi_cdperiod'    : panelGuardar.down('[name=CDPERIOD]').getValue(),
+                               		 'params.pi_copago'      : panelGuardar.down('[name=COPAGO]').getValue(),
+                               		 'params.pi_swformat'    : panelGuardar.down('[name=SWFORMAT]').getValue(),
+                               		 'params.pi_cdpresta'    : panelGuardar.down('[name=CDPRESTA]').getValue(),
+                               		 'params.pi_dspad'       : '',
+                               		 'params.pi_dsplanmed'   : '',
                                		 'params.pi_swgencarta'  : '',
                                		 'params.pi_swop'        : 'U'
                                 };
                                	    
-                                debug('Padecimiento a guardar: ',datosResultado);
+                                debug('Datos de carta a guardar: ',datosResultado);
     							
                                 var maskGuarda = _maskLocal('Guardando...');
                                 
@@ -867,7 +938,6 @@ Ext.onReady(function()
                                         if(json.success){
                                         	
                                         	padecimientosGridStore.reload();
-                                        	ventanaCartaMedPrevPad.close();
                                         	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
                                         	
                                         }else{
@@ -885,74 +955,78 @@ Ext.onReady(function()
                         	}
                    			
                         }
-                    },{
-        				text:'Cancelar',
-        				icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-        				handler:function()
-        				{
-        					ventanaCartaMedPrevPad.close();
-        				}
-        			}
+                    }
                 ]
             }],
             dockedItems: [
                 {
                     xtype: 'toolbar',
                     dock: 'bottom',
-                    items: ['->',
+                    items: [
                         {
                             xtype: 'button',
+                            icon:_CONTEXT+'/resources/fam3icons/icons/zoom.png',
                             text: 'Vista Previa de Carta'
                         },
                         {
                             xtype: 'button',
-                            text: 'Confirmar/Generar Carta'
-                        }
+                            icon:_CONTEXT+'/resources/fam3icons/icons/page_go.png',
+                            text: 'Confirmar Generar Carta'
+                        },'->',{
+            				text:'Cerrar',
+            				icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+            				handler:function()
+            				{
+            					ventanaCartaMedPrevPad.close();
+            					medicosTratantesStore.removeAll();
+            				}
+            			}
                     ]
                 }
             ]
     	}).show();
     	
-    	centrarVentanaInterna(ventanaCartaMedPrevPad);
+    	//centrarVentanaInterna(ventanaCartaMedPrevPad);
     	
 //    	if(ventanaCartaMedPrevPad){
 //			ventanaCartaMedPrevPad.setLoading(true);
 //		}
     	
-    	Ext.Ajax.request({
-            url: _urlObtieneCopagoCobMedPrevPol,
-            params: {
-            	 'params.pi_cdunieco'    : recordEditar.get('CDUNIECO'),
-          		 'params.pi_cdramo'      : recordEditar.get('CDRAMO'),
-          		 'params.pi_estado'      : recordEditar.get('ESTADO'),
-          		 'params.pi_nmpoliza'    : recordEditar.get('NMPOLIZA'),
-          		 'params.pi_nmsituac'       : recordEditar.get('NMSITUAC'),
-            },
-            success  : function(response, options){
-                var json = Ext.decode(response.responseText);
-                if(json.success){
-                	
-                	var copago  = json.params.COPAGO;
-                	var formato = json.params.FORMATO;
-                	
-                	if(!Ext.isEmpty(formato)){
-                		if(formato == 'P' ){
-                			copago = copago+' %';
-                		}else if(formato == 'N' ){
-                			copago = '$ '+copago;
-                		}
-                	}
-                	
-                	var campoCopago = panelGuardar.down('[name=COPAGO]');
-                	campoCopago.setValue(copago);
-                }else{
-                	mensajeInfo('No se pudo obtener el Copago para este asegurado');
-                }
-            }
-            ,failure  : function(response, options){
-            	mensajeInfo('No se pudo obtener el Copago para este asegurado');
-            }
-        });
+    	//SE DESHABILITA CARGA DE COPAGO DE POLIZA
+//    	Ext.Ajax.request({
+//            url: _urlObtieneCopagoCobMedPrevPol,
+//            params: {
+//            	 'params.pi_cdunieco'    : recordEditar.get('CDUNIECO'),
+//          		 'params.pi_cdramo'      : recordEditar.get('CDRAMO'),
+//          		 'params.pi_estado'      : recordEditar.get('ESTADO'),
+//          		 'params.pi_nmpoliza'    : recordEditar.get('NMPOLIZA'),
+//          		 'params.pi_nmsituac'       : recordEditar.get('NMSITUAC'),
+//            },
+//            success  : function(response, options){
+//                var json = Ext.decode(response.responseText);
+//                if(json.success){
+//                	
+//                	var copago  = json.params.COPAGO;
+//                	var formato = json.params.FORMATO;
+//                	
+//                	if(!Ext.isEmpty(formato)){
+//                		if(formato == 'P' ){
+//                			copago = copago+' %';
+//                		}else if(formato == 'N' ){
+//                			copago = '$ '+copago;
+//                		}
+//                	}
+//                	
+//                	var campoCopago = panelGuardar.down('[name=COPAGO]');
+//                	campoCopago.setValue(copago);
+//                }else{
+//                	mensajeInfo('No se pudo obtener el Copago para este asegurado');
+//                }
+//            }
+//            ,failure  : function(response, options){
+//            	mensajeInfo('No se pudo obtener el Copago para este asegurado');
+//            }
+//        });
     }
     
     Ext.define('PanelPrincipalMedPRev',

@@ -1072,7 +1072,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 			declareParameter(new SqlParameter("pi_cdperson", OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDUNIECO","CDRAMO","ESTADO","NMPOLIZA","NMSITUAC","CDTIPSIT","STATUS","NMSUPLEM",
-					"CDPERSON","CDICD","FEGENCART","CDFREC","CDPERIOD","CDPRESTA","DSPAD","DSPLANMED","SWGENCARTA","CDUSUARI","DSICD"
+					"CDPERSON","CDICD","FEGENCART","CDFREC","CDPERIOD","CDPRESTA","DSPRESTA","DSPAD","DSPLANMED","SWGENCARTA","CDUSUARI","DSICD","COPAGO","SWFORMAT"
 			};
 			
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -1099,6 +1099,8 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 			declareParameter(new SqlParameter("pi_cdicd", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_cdfrec", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_cdperiod", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_copago", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_swformat", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_cdpresta", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_dspad", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_dsplanmed", OracleTypes.VARCHAR));
