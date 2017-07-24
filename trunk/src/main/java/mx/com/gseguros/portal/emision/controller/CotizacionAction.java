@@ -14989,6 +14989,28 @@ public class CotizacionAction extends PrincipalCoreAction
 		                filasLeidas 	= filasLeidas + 1;
 		                double cdgrupo	= -1d;
 		                String banEdad  = "0";
+		                String mpHombre  = "0";
+		                String mpMujer   = "0";
+		                String mpcHombre = "0";
+		                String mpcMujer  = "0";
+		                String matHombre = "0";
+		                String matMujer  = "0";
+		                String aymHombre = "0";
+		                String aymMujer  = "0";
+		                String sodHombre = "0";
+		                String sodMujer  = "0";
+		                String sadHombre = "0";
+		                String sadMujer  = "0";
+		                String MedHombre = "0";
+		                String MedMujer  = "0";
+		                String hosHombre = "0";
+		                String hosMujer  = "0";
+		                String aivHombre = "0";
+		                String aivMujer  = "0";
+		                String bqaHombre = "0";
+		                String bqaMujer  = "0";
+		                String bqbHombre = "0";
+		                String bqbMujer  = "0";
 		                
 		               if(fila > 4){
 		            	   edad			= edad + 1;
@@ -15014,370 +15036,667 @@ public class CotizacionAction extends PrincipalCoreAction
 			                	} catch(Exception ext) {
 				                	filaBuena = false;
 				                	if(banEdad.equalsIgnoreCase("1")){
-			                            bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Edad Promedio ' (A) de la fila",fila," "));
+			                            bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Edad Promedio ' (A) de la fila",fila,"\n"));
 			                        }else{
 			                        	bufferErroresCenso.append(Utils.join("Error en el campo 'Edad Promedio ' (A) de la fila ",fila,"\n"));
 			                        }
-				                	
-				                	
 				                }
 			                } finally {
 			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(0)),"-"));
 			                }
+			                
 			                //MEDICINA PREVENTIVA HOMBRE
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(1).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-			                	try {
-			                		logger.error("error al leer la medicina preventiva para hombre como numero, se intentara como string:",ex);
-				                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(1).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
+			                	short valor = row.getCell(1).getCellStyle().getDataFormat();
+			                	if(valor == 171){
+			                		try {
+					                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(1).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+					                	try {
+					                		logger.error("error al leer la medicina preventiva para hombre como numero, se intentara como string:",ex);
+						                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(1).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina Preventiva hombres' (B) de la fila ",fila,"\n"));
+						                }
+					                }
+			                	}else{
+			                		mpHombre = "1";
+			                	    throw new ApplicationException("No cumple con la secuencia.");
+			                	}			                	
+		                	} catch(Exception ext) {
 				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina Preventiva hombres' (B) de la fila ",fila,"\n"));
-				                }
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+			                	if(mpHombre.equalsIgnoreCase("1")){
+			                		bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Medicina Preventiva hombres' (B) de la fila",fila,"\n"));
+			                	}else{
+			                		bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(1)),"-"));
+			                	 }			                	
 			                }
 			                
 			                //MEDICINA PREVENTIVA MUJERES
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(2).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer la medicina preventiva para mujer como numero, se intentara como string:",ex);
-				                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(2).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina Preventiva Mujeres' (C) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(2).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+					                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(2).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer la medicina preventiva para mujer como numero, se intentara como string:",ex);
+						                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(2).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina Preventiva Mujeres' (C) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                        mpMujer = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(2)),"-"));
+			                    if(mpMujer.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Medicina Preventiva Mujeres' (C) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(2)),"-"));
+			                     }
 			                }
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                /////////////////////////////////////////////////////////////////////////////////
 			                
 			                //MEDICINA DE PRIMER CONTACTO HOMBRE
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(3).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-			                	try {
-			                		logger.error("error al leer la medicina de primer contacto para hombre como numero, se intentara como string:",ex);
-			                		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(3).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina de Primer Contato Hombres' (D) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(3).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(3).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer la medicina de primer contacto para hombre como numero, se intentara como string:",ex);
+					                		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(3).getStringCellValue()))+"|");						                	
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina de Primer Contato Hombres' (D) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	mpcHombre = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(3)),"-"));
+			                    if(mpcHombre.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Medicina de Primer Contato Hombres' (D) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(3)),"-"));
+			                     }
 			                }
+			                
 			                //MEDICINA DE PRIMER CONTACTO MUJER
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(4).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer la medicina de primer contacto para mujer como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(4).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina de Primer Contato Mujeres' (E) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(4).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(4).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer la medicina de primer contacto para mujer como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(4).getStringCellValue()))+"|");						                	
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicina de Primer Contato Mujeres' (E) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	mpcMujer = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(4)),"-"));
+			                    if(mpcMujer.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Medicina de Primer Contato Mujeres' (E) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(4)),"-"));
+			                     }
 			                }
+			                
 			                //MATERNIDAD HOMBRE
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(5).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer la maternidad hombre como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(5).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Maternidad Hombres' (F) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(5).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(5).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer la maternidad hombre como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(5).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Maternidad Hombres' (F) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	matHombre = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
+			                    if(matHombre.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Maternidad Hombres' (F) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
+			                     }
 			                }
+			                
 			                //MATERNIDAD MUJERES
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(6).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer la maternidad mujer como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(6).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Maternidad Mujeres' (G) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(6).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(6).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer la maternidad mujer como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(6).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Maternidad Mujeres' (G) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	matMujer = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
+			                    if(matMujer.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Maternidad Mujeres' (G) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
+			                     }
 			                }
+			                
 			                //AYUDA DE MATERNIDAD HOMBRE
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(7).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer Hombre Ayuda de Maternidad como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(7).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ayuda de Maternidad Hombres' (H) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(7).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(7).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer Hombre Ayuda de Maternidad como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(7).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ayuda de Maternidad Hombres' (H) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	aymHombre = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
+			                    if(aymHombre.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Ayuda de Maternidad Hombres' (H) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(7)),"-"));
+			                     }
 			                }
+			                
 			                //AYUDA DE MATERNIDAD MUJERES
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(8).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer Mujeres Ayuda de Maternidad como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(8).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ayuda de Maternidad Mujeres' (I) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(8).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(8).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer Mujeres Ayuda de Maternidad como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(8).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Ayuda de Maternidad Mujeres' (I) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	aymMujer = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
+			                    if(aymMujer.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Ayuda de Maternidad Mujeres' (I) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(8)),"-"));
+			                     }
 			                }
+			                
 			                //SERVICIOS ODONTOLOGICOS HOMBRE
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(9).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer servicios odontologicos hombre como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(9).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Odontologicos Hombres' (J) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(9).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(9).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer servicios odontologicos hombre como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(9).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Odontologicos Hombres' (J) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	sodHombre = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
+			                    if(sodHombre.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Servicios Odontologicos Hombres' (J) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(9)),"-"));
+			                     }
 			                }
 			                //SERVICIOS ODONTOLOGICOS MUJERES
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(10).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer servicios odontologicos mujeres como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(10).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Odontologicos Mujeres' (K) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(10).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(10).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer servicios odontologicos mujeres como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(10).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Odontologicos Mujeres' (K) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	sodMujer = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(10)),"-"));
+			                    if(sodMujer.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Servicios Odontologicos Mujeres' (K) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(10)),"-"));
+			                     }
 			                }
+			                
 			                //SERVICIOS AURXILIARES DE DIAGNOSTICO HOMBRE
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(11).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer Hombre Servicios Auxiliares de Diagnostico como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(11).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Auxiliares de Diagnostico Hombres' (L) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(11).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(11).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer Hombre Servicios Auxiliares de Diagnostico como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(11).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Auxiliares de Diagnostico Hombres' (L) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	sadHombre = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(11)),"-"));
+			                    if(sadHombre.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Servicios Auxiliares de Diagnostico Hombres' (L) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(11)),"-"));
+			                     }
 			                }
+			                
 			                //SERVICIOS AURXILIARES DE DIAGNOSTICO MUJERES
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(12).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer Mujer Servicios Auxiliares de Diagnostico como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(12).getStringCellValue()))+"|");
-			                	} catch(Exception extt) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Auxiliares de Diagnostico Mujeres' (M) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(12).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(12).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer Mujer Servicios Auxiliares de Diagnostico como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(12).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Servicios Auxiliares de Diagnostico Mujeres' (M) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	sadMujer = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(12)),"-"));
+			                    if(sadMujer.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Servicios Auxiliares de Diagnostico Mujeres' (M) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(12)),"-"));
+			                     }
 			                }
+			                
 			                //MEDICAMENTOS HOMBRE
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(13).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer Hombre Medicamentos como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(13).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicamentos Hombres' (N) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(13).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(13).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer Hombre Medicamentos como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(13).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicamentos Hombres' (N) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	MedHombre = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
+			                    if(MedHombre.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Medicamentos Hombres' (N) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(13)),"-"));
+			                     }
 			                }
+			                
 			                //MEDICAMENTOS MUJERES
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(14).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer Mujeres Medicamentos como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(14).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicamentos Mujeres' (O) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(14).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(14).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer Mujeres Medicamentos como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(14).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Medicamentos Mujeres' (O) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	MedMujer = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
+			                    if(MedMujer.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Medicamentos Mujeres' (O) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(14)),"-"));
+			                     }
 			                }
+			                
 			                //HOSPITALIZACION HOMBRE
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(15).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer la Hospitalizacion de Hombre como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(15).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Hospitalizacion Hombres' (P) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(15).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(15).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer la Hospitalizacion de Hombre como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(15).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Hospitalizacion Hombres' (P) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	hosHombre = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
+			                    if(hosHombre.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Hospitalizacion Hombres' (P) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(15)),"-"));
+			                     }
 			                }
+			                
 			                //HOSPITALIZACION MUJERES
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(16).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer la Hospitalizacion de Mujer como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(16).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Hospitalizacion Mujeres' (Q) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(16).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(16).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer la Hospitalizacion de Mujer como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(16).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Hospitalizacion Mujeres' (Q) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	hosMujer = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
+			                    if(hosMujer.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Hospitalizacion Mujeres' (Q) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(16)),"-"));
+			                     }
 			                }
 			                
-			                //HOMBRE ASISTENCIA INTERNACIONALEN VIAJE 
-			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(17).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer la asistencia Internacional en viaje de Hombre como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(17).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-			                		filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Asistencia Internacional en Viaje Hombres' (R) de la fila ",fila,"\n"));
-				                }
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(17)),"-"));
-			                }
 			                //HOMBRE ASISTENCIA INTERNACIONALEN VIAJE
 			                try {
-			                	bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(18).getNumericCellValue()))+"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer la asistencia Internacional en viaje de Mujer como numero, se intentara como string:",ex);
-		                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(18).getStringCellValue()))+"|");
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Asistencia Internacional en Viaje Mujeres' (S) de la fila ",fila,"\n"));
-				                }
+			                    short valor = row.getCell(17).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(17).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer la asistencia Internacional en viaje de Hombre como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(17).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Asistencia Internacional en Viaje Hombres' (R) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	aivHombre = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
 			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
+			                    if(aivHombre.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Asistencia Internacional en Viaje Hombres' (R) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(17)),"-"));
+			                     }
 			                }
 			                
+			                //HOMBRE ASISTENCIA INTERNACIONALEN VIAJE
+			                try {
+			                    short valor = row.getCell(18).getCellStyle().getDataFormat();
+			                    if(valor == 171){
+			                    	try {
+			                    		bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(18).getNumericCellValue()))+"|");
+				                	} catch(Exception ex) {
+				                		try {
+				                			logger.error("error al leer la asistencia Internacional en viaje de Mujer como numero, se intentara como string:",ex);
+				                			bufferLinea.append(fixFloatingPointPrecision(Double.valueOf(row.getCell(18).getStringCellValue()))+"|");
+					                	} catch(Exception ext) {
+						                	filaBuena = false;
+						                	bufferErroresCenso.append(Utils.join("Error en el campo 'Asistencia Internacional en Viaje Mujeres' (S) de la fila ",fila,"\n"));
+						                }
+					                }
+			                    }else{
+			                    	aivMujer = "1";
+			                        throw new ApplicationException("No cumple con la secuencia.");
+			                    }			                	
+			                } catch(Exception ext) {
+			                        filaBuena = false;
+			                } finally {
+			                    if(aivMujer.equalsIgnoreCase("1")){
+			                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Asistencia Internacional en Viaje Mujeres' (S) de la fila ",fila,"\n"));
+			                    }else{
+			                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(18)),"-"));
+			                     }
+			                }
 			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                
-			                ////////B L O Q U E S	E X T R A S
 			                //BLOQUE 1 HOMBRE
-			                try {
-			                	logger.debug("Bloque 1 HOMBRE: ");
-			                	auxCell=row.getCell(19);
-				                bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(19).getNumericCellValue()))+"|":"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer Bloque 1 Hombre como numero, se intentara como string:",ex);
-		                			auxCell=row.getCell(19);
-		                			bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(19).getStringCellValue()))+"|":"|");
-		                			
-			                	} catch(Exception ext) {
-			                		filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 1 HOMBRE' (T) de la fila ",fila,"\n"));
+			                if(row.getCell(19) != null){
+				                try {
+				                    short valor = row.getCell(19).getCellStyle().getDataFormat();
+				                    if(valor == 171){
+				                    	try {
+				                    		auxCell=row.getCell(19);
+							                bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(19).getNumericCellValue()))+"|":"|");
+					                	} catch(Exception ex) {
+					                		try {
+					                			logger.error("error al leer Bloque 1 Hombre como numero, se intentara como string:",ex);
+					                			auxCell=row.getCell(19);
+					                			bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(19).getStringCellValue()))+"|":"|");
+						                	} catch(Exception ext) {
+							                	filaBuena = false;
+							                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 1 HOMBRE' (T) de la fila ",fila,"\n"));
+							                }
+						                }
+				                    }else{
+				                    	bqaHombre = "1";
+				                        throw new ApplicationException("No cumple con la secuencia.");
+				                    }			                	
+				                } catch(Exception ext) {
+				                        filaBuena = false;
+				                } finally {
+				                    if(bqaHombre.equalsIgnoreCase("1")){
+				                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Bloque 1 HOMBRE' (T) de la fila ",fila,"\n"));
+				                    }else{
+				                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
+				                     }
 				                }
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
-			                }
-			                //BLOQUE 1 MUJER
-			                try {
-			                	logger.debug("Bloque 1 MUJER: ");
-			                	auxCell=row.getCell(20);
-			                	bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(20).getNumericCellValue()))+"|":"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer Bloque 1 MUJER como numero, se intentara como string:",ex);
-		                			auxCell=row.getCell(20);
-		                			bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(20).getStringCellValue()))+"|":"|");		                			
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 1 MUJER' (U) de la fila ",fila,"\n"));
-				                }
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(20)),"-"));
-			                }
-			                //BLOQUE 2 HOMBRE
-			                try {
-			                	logger.debug("Bloque 2 HOMBRE: ");
-			                	auxCell=row.getCell(21);
-				                bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(21).getNumericCellValue()))+"|":"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer Bloque 2 Hombre como numero, se intentara como string:",ex);
-		                			auxCell=row.getCell(21);
-		                			bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(21).getStringCellValue()))+"|":"|");		                			
-			                	} catch(Exception ext) {
-			                		filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 2 HOMBRE' (V) de la fila ",fila,"\n"));
-				                }
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(21)),"-"));
-			                }
-			                //BLOQUE 2 MUJER
-			                try {
-			                	logger.debug("Bloque 2 MUJER: ");
-			                	auxCell=row.getCell(22);
-			                	bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(22).getNumericCellValue()))+"|":"|");
-		                	} catch(Exception ex) {
-		                		try {
-		                			logger.error("error al leer Bloque 2 MUJER como numero, se intentara como string:",ex);
-		                			auxCell=row.getCell(22);
-		                			bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(22).getStringCellValue()))+"|":"|");		                			
-			                	} catch(Exception ext) {
-				                	filaBuena = false;
-				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 2 MUJER' (W) de la fila ",fila,"\n"));
-				                }
-			                } finally {
-			                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(22)),"-"));
 			                }
 			                
+			                //BLOQUE 1 MUJER
+			                if(row.getCell(20) != null){
+				                try {
+				                    short valor = row.getCell(20).getCellStyle().getDataFormat();
+				                    if(valor == 171){
+				                    	try {
+				                    		auxCell=row.getCell(20);
+						                	bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(20).getNumericCellValue()))+"|":"|");
+					                	} catch(Exception ex) {
+					                		try {
+					                			logger.error("error al leer Bloque 1 MUJER como numero, se intentara como string:",ex);
+					                			auxCell=row.getCell(20);
+					                			bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(20).getStringCellValue()))+"|":"|");
+						                	} catch(Exception ext) {
+							                	filaBuena = false;
+							                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 1 MUJER' (U) de la fila ",fila,"\n"));
+							                }
+						                }
+				                    }else{
+				                    	bqaMujer = "1";
+				                        throw new ApplicationException("No cumple con la secuencia.");
+				                    }			                	
+				                } catch(Exception ext) {
+				                        filaBuena = false;
+				                } finally {
+				                    if(bqaMujer.equalsIgnoreCase("1")){
+				                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Bloque 1 MUJER' (U) de la fila ",fila,"\n"));
+				                    }else{
+				                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(20)),"-"));
+				                     }
+				                }
+			                }
+			                
+			                //BLOQUE 2 HOMBRE
+			                if(row.getCell(21) != null){
+				                try {
+				                    short valor = row.getCell(21).getCellStyle().getDataFormat();
+				                    if(valor == 171){
+				                    	try {
+				                    		auxCell=row.getCell(21);
+							                bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(21).getNumericCellValue()))+"|":"|");
+					                	} catch(Exception ex) {
+					                		try {
+					                			logger.error("error al leer Bloque 2 Hombre como numero, se intentara como string:",ex);
+					                			auxCell=row.getCell(21);
+					                			bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(21).getStringCellValue()))+"|":"|");
+						                	} catch(Exception ext) {
+							                	filaBuena = false;
+							                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 2 HOMBRE' (V) de la fila ",fila,"\n"));
+							                }
+						                }
+				                    }else{
+				                    	bqbHombre = "1";
+				                        throw new ApplicationException("No cumple con la secuencia.");
+				                    }			                	
+				                } catch(Exception ext) {
+				                        filaBuena = false;
+				                } finally {
+				                    if(bqbHombre.equalsIgnoreCase("1")){
+				                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Bloque 2 HOMBRE' (V) de la fila ",fila,"\n"));
+				                    }else{
+				                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(21)),"-"));
+				                     }
+				                }
+			                }
+			              
+			                //BLOQUE 2 MUJER
+			                if(row.getCell(22) != null){
+				                try {
+				                    short valor = row.getCell(22).getCellStyle().getDataFormat();
+				                    if(valor == 171){
+				                    	try {
+				                    		auxCell=row.getCell(22);
+						                	bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(22).getNumericCellValue()))+"|":"|");
+					                	} catch(Exception ex) {
+					                		try {
+					                			logger.error("error al leer Bloque 2 MUJER como numero, se intentara como string:",ex);
+					                			auxCell=row.getCell(22);
+					                			bufferLinea.append(auxCell!=null?fixFloatingPointPrecision(Double.valueOf(row.getCell(22).getStringCellValue()))+"|":"|");
+						                	} catch(Exception ext) {
+							                	filaBuena = false;
+							                	bufferErroresCenso.append(Utils.join("Error en el campo 'Bloque 2 MUJER' (W) de la fila ",fila,"\n"));
+							                }
+						                }
+				                    }else{
+				                    	bqbMujer = "1";
+				                        throw new ApplicationException("No cumple con la secuencia.");
+				                    }			                	
+				                } catch(Exception ext) {
+				                        filaBuena = false;
+				                } finally {
+				                    if(bqbMujer.equalsIgnoreCase("1")){
+				                    	bufferErroresCenso.append(Utils.join("El archivo no coincide con el Layout definido. Error en el campo 'Bloque 2 MUJER' (W) de la fila ",fila,"\n"));
+				                    }else{
+				                    	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(22)),"-"));
+				                     }
+				                }
+			                }		                
 			                
 			                nConsulta++;
 		                	totalConsultasAseg.put(nConsulta,"");
