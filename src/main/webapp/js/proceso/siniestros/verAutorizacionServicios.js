@@ -10,7 +10,7 @@ Ext.onReady(function() {
 		allowDeselect: true
 	});
 	
-    // Conversión para el tipo de moneda
+    // Conversiï¿½n para el tipo de moneda
     Ext.util.Format.thousandSeparator = ',';
     Ext.util.Format.decimalSeparator = '.';
     
@@ -42,8 +42,8 @@ Ext.onReady(function() {
                     {type:'string',    name:'cdgarant'},         {type:'string',    name:'descGarantia'},       {type:'string',    name:'cdconval'},    {type:'string',    name:'descSubGarantia'},
                     {type:'string',    name:'cdprovee'},         {type:'string',    name:'nombreProveedor'},
                     {type:'string',    name:'cdmedico'},         {type:'string',    name:'nombreMedico'},
-                    {type:'string',    name:'porpenal'},//<-- Penalización Por circulo hospitalario
-                    {type:'string', name:'copagofi'},	//<-- Penalización Por cambio de zona
+                    {type:'string',    name:'porpenal'},//<-- Penalizaciï¿½n Por circulo hospitalario
+                    {type:'string', name:'copagofi'},	//<-- Penalizaciï¿½n Por cambio de zona
                     {type:'string',    name:'cdicd'},         {type:'string',    name:'descICD'},
                     {type:'string',    name:'mtsumadp'},
                     {type:'string',    name:'cdcausa'},         {type:'string',    name:'descCausa'},
@@ -91,7 +91,7 @@ Ext.onReady(function() {
     sucursalConsulta= Ext.create('Ext.form.field.ComboBox',
 	{
 		colspan		:2,					fieldLabel   : 'Plaza',			id: 'sucConsulta',				allowBlank: false,			width:500	
-		,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true
+		,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true, hidden: true
 		,labelWidth : 170,				queryMode    :'local',				editable:false,					name:'cduniecs', readOnly   : true
 		,store : Ext.create('Ext.data.Store', {
 			model:'Generic',
@@ -387,142 +387,194 @@ Ext.onReady(function() {
 						    xtype       : 'textfield',			fieldLabel : 'cveSucursal',				id  : 'cveSucursal1', 	hidden:true,
 						    name       : 'cduniecs',			labelWidth	: 170,					readOnly   : true
 						},
-						
-						{
-    	                    xtype       : 'textfield',			fieldLabel : 'No. de autorizaci&oacute;n',				id  : 'idNoAutorizacion1',
-    	                    name       : 'nmautser',			labelWidth	: 170,										readOnly   : true
-    	                },
-    	                {
-    	                    xtype       : 'textfield',			fieldLabel : 'No. de autorizaci&oacute;n anterior',		id	: 'idNumeroAnterior1',	
-    	                    name       : 'nmautant',			labelWidth	: 170,										readOnly   : true
-    	                }
-    				 	,
-    				 	cmbRamos2
-    				 	,
-    				 	{
-    				 		xtype       : 'textfield',			colspan:2,				fieldLabel : 'Asegurado',     	readOnly   : true,
-    	                    id:'idAsegurado1',					labelWidth: 170,		width:500,						name       : 'nombreCliente'
-    	                }
-    				 	,
-    				 	{
-    				 	    id: 'fechaSolic1'		,xtype		: 'datefield'								,fieldLabel	: 'Fecha Solicitud',
-    				 	    name:'fesolici'				,labelWidth : 170						,format		: 'd/m/Y',
-    				 	    editable: true				,readOnly   : true
-    				 	},
-    				 	{
-    				 	    id: 'fechaAutorizacion1'					,xtype		: 'datefield'								,fieldLabel	: 'Fecha Autorizaci&oacute;n',
-    				 	    labelWidth : 170						,format		: 'd/m/Y',
-    				 	    readOnly   : true,							name		: 'feautori'
-    				 	},
-    				 	{
-    				 	    id: 'fechaVencimiento1'					,xtype		: 'datefield'								,fieldLabel	: 'Fecha de vencimiento',
-    				 	    labelWidth : 170						,format		: 'd/m/Y',									name:'fevencim',
-    				 	    readOnly   : true
-    				 	},
-    				 	{
-    				 	    id: 'fechaIngreso1'						,xtype		: 'datefield'								,fieldLabel	: 'Fecha de Ingreso',
-    				 	    labelWidth : 170						,format		: 'd/m/Y',									name:'feingres',
-    				 	    readOnly   : true
-    				 	},
-    				 	{
-    				 		colspan:2,   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectadaCom1'
-		 					 ,allowBlank : false,				labelWidth: 170,				name:'nmpolizaCom',	readOnly   : true, Width: 1100
-			 			 }
-    				 	,
+						{    colspan:2   ,   border: true
+                            ,bodyPadding: 5
+                            ,title        : 'Autorizaci&oacute;n y Producto:'
+                            ,startCollapsed : true
+                            ,layout      : {
+                                type     : 'table'
+                                ,columns : 2
+                            },
+                            items    :[
+    						    {
+                                    xtype       : 'textfield',          fieldLabel : 'No. de autorizaci&oacute;n',             id  : 'idNoAutorizacion1',
+                                    name       : 'nmautser',            labelWidth  : 170,                                      readOnly   : true
+                                },
+                                {
+                                    xtype       : 'textfield',          fieldLabel : 'No. de autorizaci&oacute;n anterior',     id  : 'idNumeroAnterior1',  
+                                    name       : 'nmautant',            labelWidth  : 170,                                      readOnly   : true
+                                }
+                                ,
+                                cmbRamos2
+						    ]
+						},
+						{   colspan:2                               ,border: true
+                            ,bodyPadding: 5
+                            ,title        : 'Informaci&oacute;n Asegurado :'
+                            ,layout      : {
+                                type     : 'table'
+                                ,columns : 2
+                            },
+                            items    :[
+                                {
+                                    xtype       : 'textfield',          colspan:2,              fieldLabel : 'Asegurado',       readOnly   : true,
+                                    id:'idAsegurado1',                  labelWidth: 170,        width:500,                      name       : 'nombreCliente'
+                                },
+                                {
+                                    colspan:2,   xtype       : 'textfield',         fieldLabel : 'P&oacute;liza afectada'               ,id       : 'polizaAfectadaCom1'
+                                     ,allowBlank : false,               labelWidth: 170,                name:'nmpolizaCom', readOnly   : true, Width: 1100
+                                 }
+                                ,
+                                {
+                                    id: 'fechaSolic1'       ,xtype      : 'datefield'                               ,fieldLabel : 'Fecha Solicitud',
+                                    name:'fesolici'             ,labelWidth : 170                       ,format     : 'd/m/Y',
+                                    editable: true              ,readOnly   : true
+                                },
+                                {
+                                    id: 'fechaAutorizacion1'                    ,xtype      : 'datefield'                               ,fieldLabel : 'Fecha Autorizaci&oacute;n',
+                                    labelWidth : 170                        ,format     : 'd/m/Y',
+                                    readOnly   : true,                          name        : 'feautori'
+                                },
+                                {
+                                    id: 'fechaVencimiento1'                 ,xtype      : 'datefield'                               ,fieldLabel : 'Fecha de vencimiento',
+                                    labelWidth : 170                        ,format     : 'd/m/Y',                                  name:'fevencim',
+                                    readOnly   : true
+                                },
+                                {
+                                    id: 'fechaIngreso1'                     ,xtype      : 'datefield'                               ,fieldLabel : 'Fecha de Ingreso',
+                                    labelWidth : 170                        ,format     : 'd/m/Y',                                  name:'feingres',
+                                    readOnly   : true
+                                }
+						    ]
+						},
     				 	sucursalConsulta
     				 	,
-    				 	{
-    		                 colspan:2,   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectada1'
-    		                 ,allowBlank : false,				labelWidth: 170,				name:'nmpoliza', hidden:true
-    		             }
-    				 	,
-    				 	{
-    	                    colspan:2,   xtype       : 'textfield',			fieldLabel : 'Cobertura Afectada',				id  : 'cobertura1',
-    	                    name       : 'descGarantia',			labelWidth	: 170,										readOnly   : true
-    	                },
-    	                {
-    	                    colspan:2,   xtype       : 'textfield',			fieldLabel : 'Sucobertura',				id  : 'subcobertura1',
-    	                    name       : 'descGarantia',			labelWidth	: 170,										readOnly   : true, width:600
-    	                }
-    	               ,
-    	                {
-    	                    xtype       : 'textfield',			colspan:2,					fieldLabel : 'Proveedor',			id  : 'proveedor1',
-    	                    name       : 'nombreProveedor',		labelWidth	: 170,			width:500,							readOnly   : true
-    	                },
-    	                {
-    	                	colspan:2,	xtype       : 'textfield',			fieldLabel : 'Exclusion'		,id       : 'idExclusionPenalizacion1',
-    						labelWidth: 170,					hidden:true
-    		 			}
-    	                ,{
-    	                    xtype       : 'textfield',			colspan:2,					fieldLabel : 'Proveedor clave',			id  : 'cdproveedor1',
-    	                    name       : 'cdprovee',		labelWidth	: 170,			width:500,							readOnly   : true, hidden:true
-    	                },
-    	                {
-    	                	 colspan:2,	xtype       : 'textfield',			fieldLabel : 'zonaHospProv'		,id       : 'idzonaHospProv1',
-    						 labelWidth: 170,					hidden:true
-    		 			},
-    		 			{
-    		 				colspan:2,xtype       : 'textfield',			fieldLabel : 'zonaContratadaPoliza'		,id       : 'idZonaContratadaPoliza1',
-    						 labelWidth: 170,					hidden:true
-    		 			},
-    		 			{
-    		 				colspan:2,xtype       : 'textfield',			fieldLabel : 'dsplanPoliza'		,id       : 'iddsplanAsegurado1',
-    						 labelWidth: 170,					hidden:true
-    		 			},
-    				 	{
-    	                    colspan:2,xtype       : 'textfield',			fieldLabel : 'Medico',				id  : 'medico1',
-    	                    name       : 'nombreMedico',			labelWidth	: 170,										readOnly   : true
-    	                },
-    	                {
-    	                    colspan:2,xtype       : 'textfield',			fieldLabel : 'Especialidad',			id  : 'especialidad1',
-    	                   labelWidth	: 170,										readOnly   : true
-    	                },
-    				 	{
-    	                	colspan:2,   xtype       : 'textfield',			fieldLabel : 'Deducible',				id  : 'deducible1',
-    	                    labelWidth	: 170,										readOnly   : true
-    	                },
-    	                {
-    	                	colspan:2,   xtype       : 'textfield',			fieldLabel : 'Copago original',			id  : 'copago1',
-    	                    labelWidth	: 170,										readOnly   : true,		width:500
-    	                },
-    	                {
-    	                	colspan:2,   xtype       : 'textfield',			fieldLabel : 'TipoCopago',			id  : 'tipoCapago1',
-    	                    labelWidth	: 170,										readOnly   : true,		width:500,	hidden:true
-    	                },
-    	                {
-    	                	colspan:2,   xtype       : 'textfield',			fieldLabel : 'Copago final',			id  : 'copagofi',  name:'copagofiMS',
-    	                    labelWidth	: 170,										readOnly   : true,		width:500
-    	                },
-    	                {
-							colspan:2,   xtype       : 'textfield',			fieldLabel : 'Penalizaci&oacute;n circulo hospitalario',				id  : 'porpenal1',// 		hidden:true,
-						    name       : 'porpenal',			labelWidth	: 170,					readOnly   : true
-						},
-    				 	{
-    				 		colspan:2,   xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacute;n por cambio de zona'						,id       : 'idPenalCambioZona1'
-    			 			,labelWidth: 170						,readOnly   : true,			name       : 'idPenalCambioZona1'
-    				 	},
-    	                {
-    	                    xtype       : 'textfield',			colspan:2,					fieldLabel : 'ICD',			id  : 'icd1',
-    	                    name       : 'descICD',		labelWidth	: 170,			width:500,							readOnly   : true
-    	                },
-    	                causaSiniestro2
-    	                ,
-    	                {
-    	                    xtype       : 'textfield',			colspan:2,				fieldLabel : 'Suma disponible proveedor',			id  : 'sumdisponible1',
-    	                    name       : 'mtsumadp',			labelWidth	: 170,										readOnly   : true,	renderer: Ext.util.Format.usMoney
-    	                },
-    	                tratamientoInformacion
-    	                ,
-    				 	{
-    				 		colspan:2								,xtype       : 'textareafield'				,fieldLabel : 'Observaciones'				,id       : 'observaciones1'
-    			 			,labelWidth	 : 170						,name:'dsobserv',		readOnly   : true,
-    			 			width      : 700						,height		: 70
-    				 	},
-    				 	{
-    				 		colspan:2								,xtype       : 'textareafield'				,fieldLabel : 'Notas internas'				,id       : 'notaInterna1'
-    			 			,labelWidth: 170						,name:'dsnotas',		readOnly   : true,
-    			 			width      : 700						,height: 70
-    				 	},
+                        {   colspan:2                               ,border: true
+                            ,bodyPadding: 5
+                            ,title        : 'Atenci&oacute;n del siniestro : '
+                            ,layout      : {
+                                type     : 'table'
+                                ,columns : 2 
+                            },
+                            items    :[
+                                {
+                                    colspan:2,   xtype       : 'textfield',         fieldLabel : 'Cobertura Afectada',              id  : 'cobertura1',
+                                    name       : 'descGarantia',            labelWidth  : 170,                                      readOnly   : true
+                                },
+                                {
+                                    colspan:2,   xtype       : 'textfield',         fieldLabel : 'Sucobertura',             id  : 'subcobertura1',
+                                    name       : 'descGarantia',            labelWidth  : 170,                                      readOnly   : true, width:600
+                                }
+                            ]
+                        },
+                        {   colspan:2                               ,border: true
+                            ,bodyPadding: 5
+                            ,title       : 'Informaci&oacute;n Deducible - Copago - Penalizaciones :'
+                            ,layout      : {
+                                type     : 'table'
+                                ,columns : 2
+                            },
+                            items    :[
+                                {
+                                    xtype       : 'textfield',          colspan:2,                  fieldLabel : 'Proveedor',           id  : 'proveedor1',
+                                    name       : 'nombreProveedor',     labelWidth  : 170,          width:500,                          readOnly   : true
+                                },
+                                {
+                                    colspan:2,  xtype       : 'textfield',          fieldLabel : 'Exclusion'        ,id       : 'idExclusionPenalizacion1',
+                                    labelWidth: 170,                    hidden:true
+                                }
+                                ,{
+                                    xtype       : 'textfield',          colspan:2,                  fieldLabel : 'Proveedor clave',         id  : 'cdproveedor1',
+                                    name       : 'cdprovee',        labelWidth  : 170,          width:500,                          readOnly   : true, hidden:true
+                                },
+                                {
+                                     colspan:2, xtype       : 'textfield',          fieldLabel : 'zonaHospProv'     ,id       : 'idzonaHospProv1',
+                                     labelWidth: 170,                   hidden:true
+                                },
+                                {
+                                    colspan:2,xtype       : 'textfield',            fieldLabel : 'zonaContratadaPoliza'     ,id       : 'idZonaContratadaPoliza1',
+                                     labelWidth: 170,                   hidden:true
+                                },
+                                {
+                                    colspan:2,xtype       : 'textfield',            fieldLabel : 'dsplanPoliza'     ,id       : 'iddsplanAsegurado1',
+                                     labelWidth: 170,                   hidden:true
+                                },
+                                {
+                                    colspan:2,xtype       : 'textfield',            fieldLabel : 'Medico',              id  : 'medico1',    width:500,
+                                    name       : 'nombreMedico',            labelWidth  : 170,                                      readOnly   : true
+                                },
+                                {
+                                    colspan:2,xtype       : 'textfield',            fieldLabel : 'Especialidad',            id  : 'especialidad1',  width:500,
+                                   labelWidth   : 170,                                      readOnly   : true
+                                }
+                            ]
+                        },
+                        {   colspan:2                               ,border: true
+                            ,bodyPadding: 5
+                            ,title       : 'Informaci&oacute;n Deducible - Copago - Penalizaciones :'
+                            ,layout      : {
+                                type     : 'table'
+                                ,columns : 2
+                            },
+                            items    :[
+                                {
+                                    colspan:2,   xtype       : 'textfield',         fieldLabel : 'Deducible',               id  : 'deducible1',
+                                    labelWidth  : 170,                                      readOnly   : true
+                                },
+                                {
+                                    colspan:2,   xtype       : 'textfield',         fieldLabel : 'Copago original',         id  : 'copago1',
+                                    labelWidth  : 170,                                      readOnly   : true,      width:500
+                                },
+                                {
+                                    colspan:2,   xtype       : 'textfield',         fieldLabel : 'TipoCopago',          id  : 'tipoCapago1',
+                                    labelWidth  : 170,                                      readOnly   : true,      width:500,  hidden:true
+                                },
+                                {
+                                    colspan:2,   xtype       : 'textfield',         fieldLabel : 'Copago final',            id  : 'copagofi',  name:'copagofiMS',
+                                    labelWidth  : 170,                                      readOnly   : true,      width:500
+                                },
+                                {
+                                    colspan:2,   xtype       : 'textfield',         fieldLabel : 'Penalizaci&oacute;n circulo hospitalario',                id  : 'porpenal1',//        hidden:true,
+                                    name       : 'porpenal',            labelWidth  : 170,                  readOnly   : true
+                                },
+                                {
+                                    colspan:2,   xtype       : 'textfield'              ,fieldLabel : 'Penalizaci&oacute;n por cambio de zona'                      ,id       : 'idPenalCambioZona1'
+                                    ,labelWidth: 170                        ,readOnly   : true,         name       : 'idPenalCambioZona1'
+                                }
+                            ]
+                        },
+                        {   colspan:2                               ,border: true
+                            ,bodyPadding: 5
+                            ,title        : 'Informaci&oacute;n General :'
+                            ,layout      : {
+                                type     : 'table'
+                                ,columns : 2
+                            },
+                            items    :[
+                                {
+                                    xtype       : 'textfield',          colspan:2,                  fieldLabel : 'ICD',         id  : 'icd1',
+                                    name       : 'descICD',     labelWidth  : 170,          width:500,                          readOnly   : true
+                                },
+                                causaSiniestro2
+                                ,
+                                {
+                                    xtype       : 'textfield',          colspan:2,              fieldLabel : 'Suma disponible proveedor',           id  : 'sumdisponible1',
+                                    name       : 'mtsumadp',            labelWidth  : 170,                                      readOnly   : true,  renderer: Ext.util.Format.usMoney
+                                },
+                                tratamientoInformacion
+                                ,
+                                {
+                                    colspan:2                               ,xtype       : 'textareafield'              ,fieldLabel : 'Observaciones'               ,id       : 'observaciones1'
+                                    ,labelWidth  : 170                      ,name:'dsobserv',       readOnly   : true,
+                                    width      : 700                        ,height     : 70
+                                },
+                                {
+                                    colspan:2                               ,xtype       : 'textareafield'              ,fieldLabel : 'Notas internas'              ,id       : 'notaInterna1'
+                                    ,labelWidth: 170                        ,name:'dsnotas',        readOnly   : true,
+                                    width      : 700                        ,height: 70
+                                }
+                            ]
+                        },
     				 	// AQUI VAN LOS GRID
     				 	{
     				 	    colspan:2,
@@ -746,12 +798,12 @@ Ext.onReady(function() {
 																		        {
 																		            //asignamos el valor de la exclusion al campo para su posterior uso
 																		            Ext.getCmp('idExclusionPenalizacion1').setValue(Ext.decode(response.responseText).existePenalizacion);
-																		            // realizamos la validación del circulo hospitalario
+																		            // realizamos la validaciï¿½n del circulo hospitalario
 																				    if(Ext.getCmp('idExclusionPenalizacion1').getValue()=="S")
 																				    {
 																				        Ext.getCmp('idPenalCambioZona1').setValue("0");
 																				    }else{
-																				        //Mandamos a llamar la información del porcentaje que se tiene para idpenalizacion
+																				        //Mandamos a llamar la informaciï¿½n del porcentaje que se tiene para idpenalizacion
 																				        if(Ext.getCmp('idCausaSiniestro2').getValue() == _CODIGO_CAUSA_ACCIDENTE1 || Ext.getCmp('idCausaSiniestro2').getValue() == _CODIGO_CAUSA_MATERNIDAD1)
 																                        {
 																                            Ext.getCmp('idPenalCambioZona1').setValue("0");

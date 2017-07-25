@@ -84,6 +84,11 @@
             var _0_reporteVistaPreviaProv           = '<s:text name="rdf.siniestro.autorizacion.servicio.nombre.GNPEXP" />';
             var _reporteEdoCtaSin                   = '<s:text name="rdf.siniestro.estadocuenta.nombre" />';
             var valorAction                         = <s:property value='paramsJson' escapeHtml='false'/>;
+            var _CAT_PROVEEDOR_SINI                 = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORESINI"/>';
+            var _UR_LISTA_ESTADO_SINIESTRO          = '<s:url namespace="/siniestros"  action="consultaEstadoSiniestros"/>';
+            var _UR_LISTA_MUNICIPIO_SINIESTRO       = '<s:url namespace="/siniestros"  action="consultaMunicipioSiniestros" />';
+            var _URL_VALIDA_EXCLUSION               = '<s:url namespace="/siniestros"  action="obtenerValidacionExclusionICDGral" />';
+            var _URL_DATOS_ICD_OPCION_HOSP          = '<s:url namespace="/siniestros"  action="obtieneDatosICDGenerales" />';
             
             debug("valor d_SALUD_VITAL --->",_SALUD_VITAL);
         </script>
@@ -96,7 +101,7 @@
             <div id="div_clau"></div>
    </div>-->
     	<!-- <div style="height:1500px;">-->
-    	<div style="height:2000px;">
+    	<div style="height:2500px;">
             <div id="div_clau"></div>
             <!-- <div id="divResultados" style="margin-top:10px;"></div>-->
         </div> 

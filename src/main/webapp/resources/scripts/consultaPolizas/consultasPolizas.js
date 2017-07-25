@@ -520,8 +520,12 @@ Ext.onReady(function() {
 				text: 'Ver Siniestralidad',
 				icon:_CONTEXT+'/resources/fam3icons/icons/application_view_list.png',
 				handler: function(){
-					siniestralidad(panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(), panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
-                    	null,panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),"1");
+					siniestralidad(
+					panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(), 
+					panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
+                    null,
+                    panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
+                    "1");
 				}
 			}
 		]
@@ -2103,7 +2107,8 @@ Ext.onReady(function() {
 					'params.cdramo'    : cdramo,
 					'params.nmpoliza'  : nmpoliza,
 					'params.cdunieco'  : cdunieco,
-					'params.proceso'  : proceso
+					'params.proceso'   : proceso,
+					'params.cdicd'     : null
 					
 				},
 				scripts  : true,

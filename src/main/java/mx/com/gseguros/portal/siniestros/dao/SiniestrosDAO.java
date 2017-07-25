@@ -694,13 +694,11 @@ public interface SiniestrosDAO {
 	
 	public String obtieneMedicoEquipoQuirurgico(String numAutorizacion) throws Exception;
 	
-	public List<AutorizacionServicioVO> guardarAutorizacionServicioGNP(Map<String, Object> paramsR) throws Exception;
-	
-	public String obtieneDatosGeneralesICD(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson)throws Exception;
+	public String obtieneDatosICDGenerales(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson)throws Exception;
 	
 	public List<Map<String, String>> obtieneListaDatosSumaAseguradaGNP(HashMap<String, Object> params) throws Exception;
 	
-	public String obtenerValidacionExclusionICD(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String cdicd)throws Exception;
+	public String obtenerValidacionExclusionICDGral(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String cdicd)throws Exception;
 
 	public List<Map<String, String>> obtieneEstudiosCobAseg(HashMap<String, String> params)throws Exception;
 
@@ -734,4 +732,10 @@ public interface SiniestrosDAO {
 			throws Exception;
 	
 	public List<Map<String, String>> obtieneListaAutServPersonaCobertura(Map<String, Object> params) throws Exception;
+	
+	public List<GenericVO> obtieneListadoEstadoSiniestros()  throws Exception;
+	
+	public List<GenericVO> obtieneListadoMunicipioSiniestros(String edoSiniestro) throws Exception;
+	
+	public List<ConsultaProveedorVO> obtieneListadoProvMedico(String tipoprov,String cdpresta,String cdestado,String cdmunicipio) throws Exception;
 }
