@@ -149,6 +149,15 @@ Ext.onReady(function()
                 type  : 'json'
                 ,root : 'loadList'
             }
+        },
+        listeners: {
+        	load: function(str,records,success){
+        		if(success && records.length <= 0){
+        			mensajeInfo('No se encontraron m&eacute;dicos para los criterios seleccionados.');
+        		}else if(!success){
+        			mensajeError('Error al cargar la consulta de m&eacute;dicos.');
+        		}
+        	}
         }
     });
     
@@ -678,6 +687,8 @@ Ext.onReady(function()
 	                	,handler: function(btn){
 	                			var panelBusq = btn.up('form');
 	                			panelBusq.getForm().reset();
+	                			medicosTratantesStore.removeAll();
+	                			panelBuscarMedicos.down('[name=MUNICI_DOM]').getStore().removeAll();
 	                	}	
 	             }]
         });
@@ -903,6 +914,13 @@ Ext.onReady(function()
                         icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
                         handler: function(btn){
                         	if(panelGuardar.getForm().isValid()){
+                        		var valCopago = panelGuardar.down('[name=COPAGO]').getValue();
+                        		var forCopago = panelGuardar.down('[name=SWFORMAT]').getValue();
+                        		
+                        		if (forCopago == 'P' && (valCopago*1) > 100){
+                    				mensajeWarning('El valor del copago debe ser menor o igual a 100 para porcentaje.');
+                    				return;
+                    			}
                         		
                         		var datosForma = panelGuardar.getValues();
 
@@ -951,7 +969,16 @@ Ext.onReady(function()
                                     }
                                 });
                         	}else{
-                        		mensajeWarning('Capture todos los datos requeridos.');
+                        		var valCopago = panelGuardar.down('[name=COPAGO]').getValue();
+                        		if(Ext.isEmpty(valCopago)){
+                        			mensajeWarning('Capture correctamente todos los datos requeridos.');
+                        		}else{
+                        			if((valCopago*1) < 0){
+                        				mensajeWarning('Verif&iacute;que que el valor del copago sea un valor positivo.');
+                        			}else{
+                        				mensajeWarning('Capture correctamente todos los datos requeridos.');
+                        			}
+                        		}
                         	}
                    			
                         }
