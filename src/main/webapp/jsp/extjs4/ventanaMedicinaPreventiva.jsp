@@ -746,7 +746,7 @@ Ext.onReady(function()
                     value: recordEditar.get('COPAGO'),
                     labelWidth: 50,
                     width: 200,
-                    allowBlank: false,
+                    allowBlank: true,
                     name: 'COPAGO',
                     minValue:0,
                     negativeText : 'El valor no puede ser negativo'
