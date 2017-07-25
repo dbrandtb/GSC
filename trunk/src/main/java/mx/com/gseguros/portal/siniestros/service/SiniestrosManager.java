@@ -806,13 +806,11 @@ public interface SiniestrosManager {
 	
 	public String obtieneMedicoEquipoQuirurgico(String numAutorizacion) throws Exception;
 	
-	public List<AutorizacionServicioVO> guardarAutorizacionServicioGNP(HashMap<String, Object> paramsR) throws Exception;
-	
-	public String obtieneDatosGeneralesICD(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson)throws Exception;
+	public String obtieneDatosICDGenerales(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson)throws Exception;
 
 	public List<Map<String, String>> getConsultaDatosSumaAseguradaGNP(String cdunieco, String cdramo,String estado,String nmpoliza, String cdperson, String nmsinref) throws Exception;
 	
-	public String obtenerValidacionExclusionICD(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String cdicd )throws Exception;
+	public String obtenerValidacionExclusionICDGral(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac, String cdicd )throws Exception;
 
 	public List<Map<String, String>> obtieneEstudiosCobAseg(HashMap<String, String> params)throws Exception;
 
@@ -846,4 +844,10 @@ public interface SiniestrosManager {
 			throws Exception;
 	
 	public  List<Map<String, String>> getconsultaAutServPersonaCobertura(String cobertura, String subcobertura, String cdperson)throws Exception;
+	
+	public List<GenericVO> getConsultaEstadoSiniestros() throws Exception;
+	
+	public List<GenericVO> getConsultaMunicipioSiniestros(String edoSiniestro) throws Exception;
+	
+	public List<ConsultaProveedorVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta,String cdestado,String cdmunicipio) throws Exception;
 }

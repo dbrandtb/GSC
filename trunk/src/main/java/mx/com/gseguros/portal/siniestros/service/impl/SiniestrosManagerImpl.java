@@ -2997,19 +2997,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public List<AutorizacionServicioVO> guardarAutorizacionServicioGNP(HashMap<String, Object> paramsR)throws Exception {
-		try {
-			return siniestrosDAO.guardarAutorizacionServicioGNP(paramsR);			
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
 	//String tipoConcepto, String idProveedor, String idConceptoTipo
-	public String obtieneDatosGeneralesICD(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson) throws Exception {
+	public String obtieneDatosICDGenerales(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson) throws Exception {
 		try {
-			return siniestrosDAO.obtieneDatosGeneralesICD(cdunieco, cdramo, estado, nmpoliza, cdicd, cdperson);
+			return siniestrosDAO.obtieneDatosICDGenerales(cdunieco, cdramo, estado, nmpoliza, cdicd, cdperson);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -3030,9 +3021,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	
 	@Override
 	//String tipoConcepto, String idProveedor, String idConceptoTipo
-	public String obtenerValidacionExclusionICD(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,  String nmsituac,String cdicd) throws Exception {
+	public String obtenerValidacionExclusionICDGral(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,  String nmsituac,String cdicd) throws Exception {
 		try {
-			return siniestrosDAO.obtenerValidacionExclusionICD(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, cdicd);
+			return siniestrosDAO.obtenerValidacionExclusionICDGral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, cdicd);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -3146,6 +3137,40 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		params.put("pv_cdperson_i", cdperson);
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
 		return siniestrosDAO.obtieneListaAutServPersonaCobertura(params);
+	}
+	
+	@Override
+	public List<GenericVO> getConsultaEstadoSiniestros() throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoEstadoSiniestros();
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override	
+	public List<GenericVO> getConsultaMunicipioSiniestros(String edoSiniestro) throws Exception {
+		try {
+			List<GenericVO> lista = siniestrosDAO.obtieneListadoMunicipioSiniestros(edoSiniestro);
+			if(lista==null)
+			{
+				lista= new ArrayList<GenericVO>();
+			}
+			log.debug("getConsultaListaSubcobertura lista size: "+lista.size());
+			return lista;
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	@Override
+	public List<ConsultaProveedorVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta,String cdestado,String cdmunicipio)
+			throws Exception {
+		try {
+			return siniestrosDAO.obtieneListadoProvMedico(tipoprov,cdpresta,cdestado,cdmunicipio);
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
 	}
 	
 }

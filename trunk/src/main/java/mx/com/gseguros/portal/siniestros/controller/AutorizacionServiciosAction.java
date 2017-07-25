@@ -327,14 +327,13 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			paramsR.put("pv_idaplicaCirHosp_i",params.get("idaplicaCirHosp"));
 			paramsR.put("pv_idaplicaZona_i",params.get("idaplicaZona"));
 			paramsR.put("pv_swnegoci_i",params.get("idaplicaZona"));
-			paramsR.put("pv_tiposerv_i",params.get("idTipoEventoGNP"));
-			paramsR.put("pv_numrecla_i",params.get("idNumSubsecuente"));
+			paramsR.put("pv_tiposerv_i",params.get("idTipoEvento"));
+			paramsR.put("pv_numrecla_i",params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())?params.get("idNumSubsecuente"): null);
 			
 			//1.- Eliminacion de la tabla TDETAUTS ---> PKG_PRESINIESTRO.P_BORRA_TDETAUTS
 			siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
-			//2.- Agregar informacion PKG_PRESINIESTRO.P_GUARDA_MAUTSERV2
-			List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicioGNP(paramsR);  
-			//List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicio(paramsR);
+			//2.- Agregar informacion PKG_PRESINIESTRO.P_GUARDA_MAUTSERV2 
+			List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicio(paramsR);
 			if(lista!=null && !lista.isEmpty()) {
 				numeroAutorizacion = lista.get(0);
 				for(int i=0;i<datosTablas.size();i++) {
@@ -373,6 +372,10 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					valores.put("otvalor06" , params.get("copagoTotal"));
 					valores.put("otvalor07" , params.get("idHospitalPlus"));
 					valores.put("otvalor08" , params.get("idTipoEvento"));
+					valores.put("otvalor09" , params.get("idEdoSiniestro"));
+					valores.put("otvalor10" , params.get("idMunSiniestro"));
+					valores.put("otvalor11" , params.get("cdicdSec"));
+					valores.put("otvalor12" , params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())?params.get("idTipo"): null);
 					valores.put("otvalor16" , usuario.getUser());
 					valores.put("otvalor17" , usuario.getUser());
 					valores.put("otvalor18" , usuario.getUser());
@@ -430,6 +433,10 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					otvalor.put("pv_otvalor06_i",params.get("copagoTotal"));
 					otvalor.put("pv_otvalor07_i",params.get("idHospitalPlus"));
 					otvalor.put("pv_otvalor08_i",params.get("idTipoEvento"));
+					otvalor.put("pv_otvalor09_i",params.get("idEdoSiniestro"));
+					otvalor.put("pv_otvalor10_i",params.get("idMunSiniestro"));
+					otvalor.put("pv_otvalor11_i",params.get("cdicdSec"));
+					otvalor.put("pv_otvalor12_i" , params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())?params.get("idTipo"): null);
                     otvalor.put("pv_otvalor16_i",usuario.getUser());
 					otvalor.put("pv_otvalor17_i",usuario.getUser());
 					siniestrosManager.actualizaOTValorMesaControl(otvalor);
@@ -779,13 +786,15 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	public String obtieneMesesTiempoEspera(){
 		logger.debug("Entra a obtieneMesesTiempoEspera Params: {}", params);
 		try {
-			if(params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo()) || params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
+			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor01"),params.get("cdtabla"));
+			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
+			/*if(params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
 				mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEsperaICD(params.get("cdramo"),params.get("cdtipsit"),params.get("cdicd"),params.get("dsplan"));
 				mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
 			}else{
 				mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor01"),params.get("cdtabla"));
 				mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
-			}
+			}*/
 
 			logger.debug("mesesTiempoEspera: {} mensaje de respuesta : {}", mesesTiempoEspera,mensaje);
 		}catch( Exception e){
@@ -1037,24 +1046,24 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	public String obtieneDatosGeneralesICD(){
-		logger.debug("Entra a consultaPorcentajeQuirurgico Params: {}", params);
+	public String obtieneDatosICDGenerales(){
+		logger.debug("Entra a obtieneDatosICDGenerales Params: {}", params);
 		try {
-			msgResult = siniestrosManager.obtieneDatosGeneralesICD(params.get("cdunieco"), params.get("cdramo"),
+			msgResult = siniestrosManager.obtieneDatosICDGenerales(params.get("cdunieco"), params.get("cdramo"),
 					params.get("estado"),params.get("nmpoliza"),params.get("cdicd"),params.get("cdperson"));
 			logger.debug("msgResult : {}", msgResult);
 		}catch( Exception e){
-			logger.error("Error consultaPorcentajeQuirurgico :{}", e.getMessage(), e);
+			logger.error("Error obtieneDatosICDGenerales :{}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		success = true;
 		return SUCCESS;
 	}
 	
-	public String obtenerValidacionExclusionICD(){
+	public String obtenerValidacionExclusionICDGral(){
 		logger.debug("Entra a obtenerValidacionExclusionICD Params: {}", params);
 		try {
-			msgResult = siniestrosManager.obtenerValidacionExclusionICD(params.get("cdunieco"), params.get("cdramo"),
+			msgResult = siniestrosManager.obtenerValidacionExclusionICDGral(params.get("cdunieco"), params.get("cdramo"),
 					params.get("estado"),params.get("nmpoliza"),params.get("nmsuplem"),params.get("nmsituac"),params.get("cdicd"));
 			logger.debug("msgResult : {}", msgResult);
 		}catch( Exception e){

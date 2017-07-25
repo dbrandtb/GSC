@@ -470,6 +470,18 @@ public class CatalogosAction extends PrincipalCoreAction {
 						}
 					}
 					break;
+				case PROVEEDORESINI:
+					List<ConsultaProveedorVO> provSini = siniestrosManager.getConsultaListaProveedorMedico(
+							TipoPrestadorServicio.CLINICA.getCdtipo(), params != null ? params.get("cdpresta") : null, params.get("cdEstado"),params.get("cdMunicipio"));
+					if(catalogoGenerico) {
+						listaGenerica = provSini;
+					} else {
+						lista = new ArrayList<GenericVO>();
+						for(ConsultaProveedorVO prov : provSini) {
+							lista.add(new GenericVO(prov.getCdpresta(),prov.getNombre()));
+						}
+					}
+					break;
 				case TTIPOPAGO:
 					lista = siniestrosManager.getConsultaListaTipoPago(params.get("cdramo"));
 					break;

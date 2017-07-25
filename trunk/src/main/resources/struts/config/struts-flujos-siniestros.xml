@@ -1517,25 +1517,7 @@
 				</param>
 			</result>
 		</action>
-        <action name="obtieneDatosGeneralesICD" class="autorizacionServiciosAction" method="obtieneDatosGeneralesICD">
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    success,
-                    msgResult
-                </param>
-            </result>
-        </action>
-        <action name="obtenerValidacionExclusionICD" class="autorizacionServiciosAction" method="obtenerValidacionExclusionICD">
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    success,
-                    msgResult
-                </param>
-            </result>
-        </action>
-        
+     
         <action name="obtieneDatosEstCobAseg" class="detalleSiniestroAction" method="obtieneDatosEstudiosCoberturaAsegurado">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
@@ -1693,6 +1675,46 @@
 			</interceptor-ref>
 			<result name="success" type="json"/>
 		</action>
+		
+        <action name="consultaEstadoSiniestros" class="siniestrosAction" method="consultaEstadoSiniestros">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosValidacionGral.*,
+                    success
+                </param>
+            </result>
+        </action>
+        
+        <action name="consultaMunicipioSiniestros" class="siniestrosAction" method="consultaMunicipioSiniestros">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosValidacionGral.*,
+                    success
+                </param>
+            </result>
+        </action>
+        
+        <action name="obtenerValidacionExclusionICDGral" class="autorizacionServiciosAction" method="obtenerValidacionExclusionICDGral">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success,
+                    msgResult
+                </param>
+            </result>
+        </action>
+        
+        <action name="obtieneDatosICDGenerales" class="autorizacionServiciosAction" method="obtieneDatosICDGenerales">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success,
+                    msgResult
+                </param>
+            </result>
+        </action>
 		
     </package>
 

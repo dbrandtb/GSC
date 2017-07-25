@@ -61,6 +61,11 @@ public class AutorizacionServicioVO implements Serializable{
 	private String aplicaNeg;
 	private String tipoServ;
 	private String numrecla;
+	private String edoAtencion;
+	private String muniAtencion;
+	private String icdSecundario;
+	private String tipoSec;
+	private String nmreclamo;
 	
 	
 	public String getCopagofi() {
@@ -459,6 +464,46 @@ public class AutorizacionServicioVO implements Serializable{
 
 	public void setNumrecla(String numrecla) {
 		this.numrecla = numrecla;
+	}
+
+	public String getEdoAtencion() {
+		return edoAtencion;
+	}
+
+	public void setEdoAtencion(String edoAtencion) {
+		this.edoAtencion = edoAtencion;
+	}
+
+	public String getMuniAtencion() {
+		return muniAtencion;
+	}
+
+	public void setMuniAtencion(String muniAtencion) {
+		this.muniAtencion = muniAtencion;
+	}
+
+	public String getIcdSecundario() {
+		return icdSecundario;
+	}
+
+	public void setIcdSecundario(String icdSecundario) {
+		this.icdSecundario = icdSecundario;
+	}
+
+	public String getTipoSec() {
+		return tipoSec;
+	}
+
+	public void setTipoSec(String tipoSec) {
+		this.tipoSec = tipoSec;
+	}
+
+	public String getNmreclamo() {
+		return nmreclamo;
+	}
+
+	public void setNmreclamo(String nmreclamo) {
+		this.nmreclamo = nmreclamo;
 	}
 
 }

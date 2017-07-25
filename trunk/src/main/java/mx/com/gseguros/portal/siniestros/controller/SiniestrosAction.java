@@ -1295,11 +1295,9 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		logger.debug("Entra a solicitarPago Datos de Entrada :{}",params);
 		try {
 			UserVO usuario  = (UserVO)session.get("USUARIO");
-			//RespuestaVO res = ice2sigsService.ejecutaWSreclamosTramite(params.get("pv_ntramite_i"), Operacion.INSERTA, false, usuario);
-			//success = res.isSuccess();
-			success = true;
-			//mensaje = res.getMensaje();
-			mensaje = "Se omite temporalmente";
+			RespuestaVO res = ice2sigsService.ejecutaWSreclamosTramite(params.get("pv_ntramite_i"), Operacion.INSERTA, false, usuario);
+			success = res.isSuccess();
+			mensaje = res.getMensaje();
 			
 			logger.debug("Valor de success ==>: {}",success);
 			logger.debug("Valor de mensaje ==>: {}",mensaje);
@@ -1325,10 +1323,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					String nombreRdf = null;
 					if(siniestro.getCdramo().equalsIgnoreCase(Ramo.RECUPERA.getCdramo())){
 						nombreRdf = getText("rdf.siniestro.cartafiniquitoRecupera.nombre");
-					}else if(siniestro.getCdramo().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
-						nombreRdf = getText("rdf.siniestro.cartafiniquito.nombreGNP");
-					}
-					else{
+					}else{
 						nombreRdf = getText("rdf.siniestro.cartafiniquito.nombre");
 					}
 					
@@ -6430,35 +6425,58 @@ public String reservasTipPag(){
 		
 	}
 
-    public String consultaListaDetalleSiniestro(){
-	logger.debug("Entra a consultaListaDetalleSiniestro params de entrada :{}",params);
-	try {
-		String   pv_CdUniEco_i= params.get("pv_CdUniEco_i")
-				,pv_CdRamo_i  = params.get("pv_CdRamo_i")
-				,pv_nmpoliza_i= params.get("pv_nmpoliza_i")
-				,pv_cdperson  = params.get("pv_cdperson")
-				,pv_ntramite_i= params.get("pv_ntramite_i")
-				,pv_nmsinies  = params.get("pv_nmsinies")
-				,pv_fecdesde  = params.get("pv_fecdesde")
-				,pv_fechasta = params.get("pv_fechasta");
-		
-		datosValidacion  = siniestrosManager.getConsultaListaDetalleSiniestro(   pv_CdUniEco_i
-																				,pv_CdRamo_i  
-																				,pv_nmpoliza_i
-																				,pv_cdperson  
-																				,pv_ntramite_i
-																				,pv_nmsinies  
-																				,pv_fecdesde  
-																				,pv_fechasta );
-		//if(datosValidacion!=null && !datosValidacion.isEmpty())	datosValidacion = datosValidacion;
-	}catch( Exception e){
-		logger.error("Error al obtener la lista Detalle Siniestro : {}", e.getMessage(), e);
+	public String consultaListaDetalleSiniestro(){
+		logger.debug("Entra a consultaListaDetalleSiniestro params de entrada :{}",params);
+		try {
+			String   pv_CdUniEco_i= params.get("pv_CdUniEco_i")
+					,pv_CdRamo_i  = params.get("pv_CdRamo_i")
+					,pv_nmpoliza_i= params.get("pv_nmpoliza_i")
+					,pv_cdperson  = params.get("pv_cdperson")
+					,pv_ntramite_i= params.get("pv_ntramite_i")
+					,pv_nmsinies  = params.get("pv_nmsinies")
+					,pv_fecdesde  = params.get("pv_fecdesde")
+					,pv_fechasta = params.get("pv_fechasta");
+			
+			datosValidacion  = siniestrosManager.getConsultaListaDetalleSiniestro(   pv_CdUniEco_i
+																					,pv_CdRamo_i  
+																					,pv_nmpoliza_i
+																					,pv_cdperson  
+																					,pv_ntramite_i
+																					,pv_nmsinies  
+																					,pv_fecdesde  
+																					,pv_fechasta );
+			//if(datosValidacion!=null && !datosValidacion.isEmpty())	datosValidacion = datosValidacion;
+		}catch( Exception e){
+			logger.error("Error al obtener la lista Detalle Siniestro : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
 		return SUCCESS;
 	}
-	success = true;
-	return SUCCESS;
-}	
 		
+	public String consultaEstadoSiniestros(){
+		logger.debug("Entra a consultaEstadoSiniestros");
+		try {
+			datosValidacionGral = siniestrosManager.getConsultaEstadoSiniestros();
+		}catch( Exception e){
+			logger.error("Error al consultar Estado Siniestros: {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+
+	public String consultaMunicipioSiniestros(){
+		logger.debug("Entra a consultaEstadoSiniestros");
+		try {
+			datosValidacionGral = siniestrosManager.getConsultaMunicipioSiniestros(params.get("edoSiniestro"));
+		}catch( Exception e){
+			logger.error("Error al consultar Estado Siniestros: {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
     
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {

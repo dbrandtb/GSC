@@ -7,9 +7,12 @@ var extraParams='';
 var cdrol;
 var notasInternas ='';
 var selCPT = '';	// (EGS)
+var selCPTAnterior ='';
 //var mensajeInicial = ' Movimiento no procede por padecimiento de periodo de espera de ';
 var _Existe = "S";
 var _NExiste = "N";
+var _esSeleccion = '0';
+var _existeConfiguracion = '0';
 Ext.onReady(function() {
 	
     // Se aumenta el timeout para todas las peticiones:
@@ -19,8 +22,9 @@ Ext.onReady(function() {
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
     
 	Ext.selection.CheckboxModel.override( {
-		mode: 'SINGLE',
-		allowDeselect: true
+		mode: 'MULTI',
+		//allowDeselect: true,
+		showHeaderCheckbox: false
 	});
 	// Conversi�n para el tipo de moneda
 	Ext.util.Format.thousandSeparator = ',';
@@ -59,8 +63,9 @@ Ext.onReady(function() {
 					{type:'string',    name:'zonaContratada'},		{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'desEstatusCliente'},
 					{type:'string',    name:'numPoliza'},			{type:'string',    name:'dsplan'},					{type:'string',    name:'mesesAsegurado'},
 					{type:'string',    name:'dsTipsit'},			{type:'string',	   name:'genero'},					{type:'string',	   name:'fenacimi'},
-					{type:'string',    name:'cirHosp'}
-					] // (EGS) genero, fenacimi
+		            {type:'string',    name:'cirHosp'},             {type:'string',    name:'cpaseg'},                  {type:'string',    name:'estadoAseg'},              {type:'string',    name:'municipioAseg'},
+		            {type:'string',    name:'fantiguedadgs'}
+		        	] // (EGS) genero, fenacimi
 	});
 
 	Ext.define('modelListadoTmanteni',{
@@ -197,14 +202,26 @@ Ext.onReady(function() {
 			type: 'ajax',
 			url : _URL_CATALOGOS,
 			extraParams:{
-				catalogo         : _CAT_PROVEEDORES,
+				catalogo         : _CAT_PROVEEDOR_SINI,
 				catalogoGenerico : true
 			},
 			reader: {
 				type: 'json',
 				root: 'listaGenerica'
 			}
-		}
+		},
+        listeners: {
+            'beforeload' : function(store, operation) {
+                store.removeAll();
+                store.proxy.extraParams = {
+                	    'catalogo'          : _CAT_PROVEEDOR_SINI,
+                	    'catalogoGenerico'  : true,
+                        'params.cdpresta'   : Ext.getCmp('idProveedor').getValue(),
+                        'params.cdEstado'   : Ext.getCmp('idEdoSiniestro').getValue(),
+                        'params.cdMunicipio': Ext.getCmp('idMunSiniestro').getValue()
+                };
+            }
+        }
 	});
 
 	var storeTiposICD = Ext.create('Ext.data.Store', {
@@ -232,6 +249,31 @@ Ext.onReady(function() {
 		}
 	});
 
+   var storeTiposICDSec = Ext.create('Ext.data.Store', {
+        model:'Generic',
+        autoLoad:false,
+        proxy: {
+            type: 'ajax',
+            url: _URL_LISTA_ICD, // (EGS)
+            reader: {
+                type: 'json',
+                root: 'listaCPTICD'
+            }
+        },
+        listeners: { // se agrega listener (EGS)
+            'beforeload' : function(store, operation) {
+                store.removeAll();
+                store.proxy.extraParams = {
+                        'params.cdicd'      : Ext.getCmp('idComboICD').getValue(),
+                        'params.cdramo'     : Ext.getCmp('idcdRamo').getValue(),
+                        'params.cdtipsit'   : Ext.getCmp('idcdtipsit').getValue(),
+                        'params.edad'       : calculaAniosTranscurridos(Ext.getCmp('edad').getValue(),new Date()),
+                        'params.genero'     : Ext.getCmp('genero').getValue()
+                };
+            }
+        }
+    });
+    
 	var storeTiposCPT = Ext.create('Ext.data.Store', {
 		model:'Generic',
 		autoLoad:false,
@@ -286,6 +328,33 @@ Ext.onReady(function() {
 			}
 		}
 	});
+	
+    storeEstadoSiniestro = Ext.create('Ext.data.Store', {
+        model:'Generic',
+        autoLoad:true,
+        proxy: {
+            type: 'ajax',
+            url:_UR_LISTA_ESTADO_SINIESTRO,
+            reader: {
+                type: 'json',
+                root: 'datosValidacionGral'
+            }
+        }
+    });
+    storeEstadoSiniestro.load();
+    
+    var storeMunicipioSiniestro = Ext.create('Ext.data.Store', {
+        model:'Generic',
+        autoLoad:false,
+        proxy: {
+            type: 'ajax',
+            url : _UR_LISTA_MUNICIPIO_SINIESTRO,
+            reader: {
+                type: 'json',
+                root: 'datosValidacionGral'
+            }
+        }
+    });
 
 	//DATOS PARA EL PRIMER GRID --> CONCEPTOS AUTORIZADOS
 	storeConceptoAutorizados = new Ext.data.Store({
@@ -385,6 +454,48 @@ Ext.onReady(function() {
 		}
 	});
 	storeAplZona.load();
+	
+    var storeEstados = Ext.create('Ext.data.Store', {
+        model     : 'Generic',
+        proxy     : {
+            type  : 'ajax',
+            url   : _URL_CATALOGOS,
+            extraParams : {
+                catalogo : 'TATRISIT',
+                'params.cdatribu' : '4',
+                'params.cdtipsit' : 'SL'
+            },
+            reader     :
+            {
+                type  : 'json'
+                ,root : 'lista'
+            }
+        },
+        listeners: {
+            load: function (){}   
+        }
+    });
+    
+    var storeMunici = Ext.create('Ext.data.Store', {
+        model     : 'Generic',
+        proxy     : {
+            type  : 'ajax',
+            url   : _URL_CATALOGOS,
+            extraParams : {
+                catalogo : 'TATRISIT',
+                'params.cdatribu' : '17',
+                'params.cdtipsit' : 'SL'
+            },
+            reader     :
+            {
+                type  : 'json'
+                ,root : 'lista'
+            }
+        },
+        listeners: {
+            load: function (){}   
+        }
+    });
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	//1.- INCIO DEL PROCESO DEL MODO DE AUTORIZACION  							/////////////////////
 	gridDatos = Ext.create('Ext.grid.Panel',{
@@ -419,7 +530,7 @@ Ext.onReady(function() {
 				if(idTipoAutorizacion !=1){
 					if(Ext.getCmp('clausulasGridId').getSelectionModel().hasSelection()){
 						var rowSelected = Ext.getCmp('clausulasGridId').getSelectionModel().getSelection()[0];
-						debug("Valor Seleccionado : ",rowSelected);
+						//debug("Valor Seleccionado : ",rowSelected);
 						var nmautser= rowSelected.get('nmautser');
 						//debug("VALOR DE valorAction.cdrol -->"+valorAction.cdrol);
 						cargarInformacionAutorizacionServicio(nmautser,null,valorAction.cdrol);
@@ -511,12 +622,21 @@ Ext.onReady(function() {
 				listeners : {
 					'select' : function(combo, record) {
 						closedStatusSelectedID = this.getValue();
-						debug("Valor Seleccionado Inicial -->",closedStatusSelectedID);
+						//debug("Valor Seleccionado Inicial -->",closedStatusSelectedID);
 						Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
 						Ext.getCmp('cveTipoAutorizaG').setValue(closedStatusSelectedID);
 						Ext.getCmp('idEstatusTramite').setValue('0');
-						Ext.getCmp('idaplicaCirHosp').setValue('S');
-						Ext.getCmp('idaplicaZona').setValue('S');
+						Ext.getCmp('idaplicaCirHosp').setValue('N');
+						Ext.getCmp('idaplicaZona').setValue('N');
+						Ext.getCmp('idDeducible').setValue('0');
+                        Ext.getCmp('idCopago').setValue('0');
+                        Ext.getCmp('idCopagoFin').setValue('0');
+                        Ext.getCmp('idCopagoPrevio').setValue('0');
+                        Ext.getCmp('idPenalCircHospitalario').setValue('0');
+                        Ext.getCmp('idPenalCambioZona').setValue('0');
+                        Ext.getCmp('sumDisponible').setValue('0');
+                        
+						Ext.getCmp('idSucursal').setValue('27');
 						Ext.getCmp('idCopagoPrevio').hide();
 						Ext.getCmp('idTipoEvento').hide();
 						
@@ -574,13 +694,13 @@ Ext.onReady(function() {
 		});
 		
 		storeMedico.load();
-		storeProveedor.load();
+		//storeProveedor.load();
 		centrarVentanaInterna(modificacionClausula.show()); 
 	}else{
 		storeMedico.load();
 		storeTratamiento.load();
 		storePlazas.load();
-		storeProveedor.load();
+		//storeProveedor.load();
 		storeTipoMedico.load({
 			params:{
 				'params.codigo': null
@@ -602,9 +722,32 @@ Ext.onReady(function() {
 				Ext.getCmp('idAsegurado').setValue('');
 				panelInicialPrincipal.down('[name="cdperson"]').setReadOnly(false);
 				Ext.getCmp('polizaAfectadaCom').setValue('');
+				if(Ext.getCmp('cmbRamos').getValue() ==_GMMI){
+					Ext.getCmp('idTipo').show();
+                    Ext.getCmp('idNumSubsecuente').show();
+                    Ext.getCmp('btnVerCumulos').show();
+				}else{
+					Ext.getCmp('idTipo').hide();
+                    Ext.getCmp('idNumSubsecuente').hide();
+                    Ext.getCmp('btnVerCumulos').hide();
+				}
 			}
 		}
 	});
+	
+   edoAsegurado = Ext.create('Ext.form.field.ComboBox',{
+        colspan    :2,          fieldLabel   : 'Estado',        id        : 'idEstadoAseg',     allowBlank     : false, 
+        editable   : false,     displayField : 'value',         valueField: 'key',          forceSelection : false,
+        width      :450,        labelWidth   : 170,             queryMode :'local',         name           :'idEstadoAseg'
+        ,store : storeEstados,  readOnly   : true
+    });
+    
+   munAsegurado = Ext.create('Ext.form.field.ComboBox',{
+        colspan    :2,          fieldLabel   : 'Municipio',     id        : 'idMunAsegurado',     allowBlank     : false, 
+        editable   : false,     displayField : 'value',         valueField: 'key',          forceSelection : false,
+        width      :450,        labelWidth   : 170,             queryMode :'local',         name           :'idMunAsegurado'
+        ,store : storeMunici,   readOnly   : true
+    });
 
 	gridDatosPoliza= Ext.create('Ext.grid.Panel',{
 		id            : 'polizaGridId',
@@ -642,7 +785,25 @@ Ext.onReady(function() {
 				Ext.getCmp('polizaAfectada').setValue(record.get('nmpoliza'));
 				Ext.getCmp('polizaAfectadaCom').setValue(record.get('numPoliza'));
 				Ext.getCmp('iddsplanAsegurado').setValue(record.get('dsplan'));
-				Ext.getCmp('idModalidad').setValue(record.get('dsTipsit'));
+				
+				Ext.getCmp('idPlan').setValue(record.get('dsplan'));
+                Ext.getCmp('idVigenciaPoliza').setValue(record.get('vigenciaPoliza'));
+                Ext.getCmp('idCodPostal').setValue(record.get('cpaseg'));
+                storeEstados.load({
+                    params : {
+                        'params.idPadre' : record.get('cpaseg')
+                    }
+                });
+                Ext.getCmp('idEstadoAseg').setValue(record.get('estadoAseg'));
+                
+                storeMunici.load({
+                    params : {
+                        'params.idPadre' : record.get('estadoAseg')
+                    }
+                });
+                Ext.getCmp('idMunAsegurado').setValue(record.get('municipioAseg'));
+                Ext.getCmp('idAntiguedad').setValue(record.get('fantiguedadgs'));
+                Ext.getCmp('idModalidad').setValue(record.get('dsTipsit'));
 				if(record.get('mtoBase') == null || record.get('mtoBase')==''){
 					Ext.getCmp('idMontoBase').setValue("21000");
 				}else{
@@ -722,21 +883,15 @@ Ext.onReady(function() {
                             return;
                         }
                         if(records.length == 0){
-                            Ext.getCmp('btnExclusionPoliza').setDisabled(true);
+                            Ext.getCmp('btnExclusionICD').setDisabled(true);
                         }else{
-                            Ext.getCmp('btnExclusionPoliza').setDisabled(false);
+                            Ext.getCmp('btnExclusionICD').setDisabled(false);
                         }
                         return;
                     }
                 });
                 
-                debug("storeHistorialICD ==>",storeHistorialICD);
-                
-                
-                
-                
-                
-				storeCobertura.load({
+                storeCobertura.load({
 					params:{
 						'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
 						'params.estado':Ext.getCmp('idEstado').getValue(),
@@ -835,10 +990,49 @@ Ext.onReady(function() {
 
 	sucursal = Ext.create('Ext.form.field.ComboBox',{
 		colspan		:2,					fieldLabel   : 'Sucursales',	id: 'idSucursal',				allowBlank: false,			width:350	
-		,editable   : false,			displayField : 'value',			valueField:'key',			    forceSelection : true
+		,editable   : false,			displayField : 'value',			valueField:'key',			    forceSelection : true,       hidden: true
 		,labelWidth : 170,				queryMode    :'local',			editable:false,					name:'cduniecs'
 		,store : storePlazas
 	});
+	
+    estadoSiniestro = Ext.create('Ext.form.field.ComboBox',{
+        colspan     :2, fieldLabel   : 'Estado',    id: 'idEdoSiniestro',               allowBlank: false,          width:400   
+        ,editable   : false,            displayField : 'value',         valueField:'key',               forceSelection : true
+        ,labelWidth : 170,              queryMode    :'local',          editable:false,                 name:'idEdoSiniestro'
+        ,store : storeEstadoSiniestro,
+        listeners : {
+            'select' : function(combo, record) {
+                Ext.getCmp('idMunSiniestro').setValue('');
+                storeMunicipioSiniestro.removeAll();
+                storeMunicipioSiniestro.load({
+                    params:{
+                        'params.edoSiniestro' : Ext.getCmp('idEdoSiniestro').getValue()
+                    }
+                });
+            }
+        }
+    });
+    
+    municipioSiniestro = Ext.create('Ext.form.field.ComboBox',{
+        colspan     :2,  fieldLabel   : 'Municipio',    id: 'idMunSiniestro',             allowBlank: false,          width:400   
+        ,editable   : false,            displayField : 'value',         valueField:'key',               forceSelection : true
+        ,labelWidth : 170,              queryMode    :'local',          editable:false,                 name:'idMunSiniestro'
+        ,store : storeMunicipioSiniestro,
+        listeners : {
+            'select' : function(combo, record) {
+                storeProveedor.removeAll();
+                storeProveedor.load({
+                    params:{
+                    	'catalogo'          : _CAT_PROVEEDOR_SINI,
+                    	'catalogoGenerico'  : true,
+                    	'params.cdpresta'   : Ext.getCmp('idProveedor').getValue(),
+                        'params.cdEstado'   : Ext.getCmp('idEdoSiniestro').getValue(),
+                        'params.cdMunicipio': Ext.getCmp('idMunSiniestro').getValue()
+                    }
+                });
+            }
+        }
+    });
 	
     tipoEvento = Ext.create('Ext.form.field.ComboBox',{
         colspan     :2,                 fieldLabel   : 'Tipo Evento',   id: 'idTipoEvento',             allowBlank: false,          width:500
@@ -946,42 +1140,188 @@ Ext.onReady(function() {
 		minChars  : 2,					name:'cdicd',	editable:true,		triggerAction: 'all',			hideTrigger:true,
 		listeners : {
 			'select':function(field,value){
-				Ext.Ajax.request({
-					url     : _URL_NUM_MESES_TIEMPO_ESPERA
-					,params : {
-						'params.otvalor01':this.getValue(), // 'params.otvalor':this.getValue() (EGS)
-						'params.cdtabla':'TAPERESP'
-					}
-					,success : function (response){
-						var resEspera = Ext.decode(response.responseText);
-						var tiempoEsperaICD = resEspera.mesesTiempoEspera;
-						if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
-							if(Ext.getCmp('idCausaSiniestro').getValue()!= _CODIGO_CAUSA_ACCIDENTE){
-								Ext.getCmp('idComboICD').setValue('');
-								notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + resEspera.mensaje;
-								//Ext.getCmp('notaInterna').setValue(notasInternas);
-								centrarVentanaInterna(Ext.Msg.show({
-									title: 'Error',
-									msg: resEspera.mensaje,
-									buttons: Ext.Msg.OK,
-									icon: Ext.Msg.WARNING
-								}));
-							}
-						}
-					},
-					failure : function (){
-						me.up().up().setLoading(false);
-						centrarVentanaInterna(Ext.Msg.show({
-							title:'Error',
-							msg: 'Error de comunicaci&oacute;n',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						}));
-					}
-				});
+				    Ext.getCmp('btnVerCumulos').setDisabled(false);
+                    Ext.Ajax.request({
+                        url     : _URL_VALIDA_EXCLUSION
+                        ,params : {
+                            'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
+                            'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
+                            'params.estado'    : Ext.getCmp('idEstado').getValue(),
+                            'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
+                            'params.nmsuplem'  : Ext.getCmp('idNmsuplem').getValue(),
+                            'params.nmsituac'  : Ext.getCmp('idNmSituac').getValue(),
+                            'params.cdicd'     : Ext.getCmp('idComboICD').getValue()
+                        }
+                        ,success : function (response){
+                            var resEspera = Ext.decode(response.responseText).msgResult;
+                            //debug("Valor de respuesta ==> ",resEspera);
+                            if(resEspera =="S"){
+                                mensajeCorrecto('Atenci&oacute;n','El Diagn&oacutestico no procede por exclusi&oacute;n de ICD.');
+                                Ext.getCmp('idComboICD').setValue('');
+                                Ext.getCmp('btnVerCumulos').setDisabled(true);
+                            }else{
+                            	//Validamos el tiempo de Espera del ICD
+                            	Ext.Ajax.request({
+                                    url     : _URL_NUM_MESES_TIEMPO_ESPERA
+                                    ,params : {
+                                        'params.otvalor01':Ext.getCmp('idComboICD').getValue(), // 'params.otvalor':this.getValue() (EGS)
+                                        'params.cdtabla':'TAPERESP'
+                                    }
+                                    ,success : function (response){
+                                        var resEspera = Ext.decode(response.responseText);
+                                        var tiempoEsperaICD = resEspera.mesesTiempoEspera;
+                                        if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
+                                            if(Ext.getCmp('idCausaSiniestro').getValue()!= _CODIGO_CAUSA_ACCIDENTE){
+                                                Ext.getCmp('idComboICD').setValue('');
+                                                Ext.getCmp('btnVerCumulos').setDisabled(true);
+                                                notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + resEspera.mensaje;
+                                                //Ext.getCmp('notaInterna').setValue(notasInternas);
+                                                centrarVentanaInterna(Ext.Msg.show({
+                                                    title: 'Error',
+                                                    msg: resEspera.mensaje,
+                                                    buttons: Ext.Msg.OK,
+                                                    icon: Ext.Msg.WARNING
+                                                }));
+                                            }
+                                        }else{
+                                        	if(Ext.getCmp('cmbRamos').getValue() ==_GMMI){
+                                                Ext.Ajax.request({
+                                                    url     : _URL_DATOS_ICD_OPCION_HOSP
+                                                    ,params : {
+                                                        'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
+                                                        'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
+                                                        'params.estado'    : Ext.getCmp('idEstado').getValue(),
+                                                        'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
+                                                        'params.cdicd'     : Ext.getCmp('idComboICD').getValue(),
+                                                        'params.cdperson'  : Ext.getCmp('idAsegurado').getValue()
+                                                    }
+                                                    ,success : function (response){
+                                                        var resEspera = Ext.decode(response.responseText).msgResult;
+                                                        //debug("Valor de respuesta ==> ",resEspera);
+                                                        var fields = resEspera.split('|');
+                                                        var subsecuente = fields[0];
+                                                        var noReclamo   = fields[1];
+                                                        
+                                                        if(subsecuente =="N"){
+                                                             Ext.getCmp('idTipo').setValue("NUEVO");
+                                                        }else{
+                                                             Ext.getCmp('idTipo').setValue("SUBSECUENTE");
+                                                        }
+                                                        Ext.getCmp('idNumSubsecuente').setValue(noReclamo);
+                                                    },
+                                                    failure : function (){
+                                                        me.up().up().setLoading(false);
+                                                        centrarVentanaInterna(Ext.Msg.show({
+                                                            title:'Error',
+                                                            msg: 'Error de comunicaci&oacute;n',
+                                                            buttons: Ext.Msg.OK,
+                                                            icon: Ext.Msg.ERROR
+                                                        }));
+                                                    }
+                                                });
+                                        	}
+                                        }
+                                    },
+                                    failure : function (){
+                                        me.up().up().setLoading(false);
+                                        centrarVentanaInterna(Ext.Msg.show({
+                                            title:'Error',
+                                            msg: 'Error de comunicaci&oacute;n',
+                                            buttons: Ext.Msg.OK,
+                                            icon: Ext.Msg.ERROR
+                                        }));
+                                    }
+                                });
+                            }
+                        },
+                        failure : function (){
+                            me.up().up().setLoading(false);
+                            centrarVentanaInterna(Ext.Msg.show({
+                                title:'Error',
+                                msg: 'Error de comunicaci&oacute;n',
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.Msg.ERROR
+                            }));
+                        }
+                    });
 			}
 		}
 	});
+	
+	comboSecundario = Ext.create('Ext.form.field.ComboBox', {
+        colspan:2,                      fieldLabel : 'ICD Secundario',      allowBlank: false,              displayField : 'value',     width:500,  //displayField : 'value',
+        id:'idComboICDSec',             labelWidth: 170,                    valueField   : 'key',           forceSelection : true,
+        matchFieldWidth: false,         queryMode :'remote',                queryParam: 'params.otclave1',  store : storeTiposICDSec,  // queryParam: 'params.otclave' (EGS)
+        minChars  : 2,                  name:'cdicdSec',   editable:true,      triggerAction: 'all',           hideTrigger:true,
+        listeners : {
+            'select':function(field,value){
+                Ext.Ajax.request({
+                    url     : _URL_VALIDA_EXCLUSION
+                    ,params : {
+                        'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
+                        'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
+                        'params.estado'    : Ext.getCmp('idEstado').getValue(),
+                        'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
+                        'params.nmsuplem'  : Ext.getCmp('idNmsuplem').getValue(),
+                        'params.nmsituac'  : Ext.getCmp('idNmSituac').getValue(),
+                        'params.cdicd'     : Ext.getCmp('idComboICDSec').getValue()
+                    }
+                    ,success : function (response){
+                        var resEspera = Ext.decode(response.responseText).msgResult;
+                        //debug("Valor de respuesta ==> ",resEspera);
+                        if(resEspera =="S"){
+                            mensajeCorrecto('Atenci&oacute;n','El Diagn&oacutestico no procede por exclusi&oacute;n de ICD.');
+                            Ext.getCmp('idComboICDSec').setValue('');
+                        }else{
+                            //Validamos el tiempo de Espera del ICD
+                            Ext.Ajax.request({
+                                url     : _URL_NUM_MESES_TIEMPO_ESPERA
+                                ,params : {
+                                    'params.otvalor01':Ext.getCmp('idComboICDSec').getValue(), // 'params.otvalor':this.getValue() (EGS)
+                                    'params.cdtabla':'TAPERESP'
+                                }
+                                ,success : function (response){
+                                    var resEspera = Ext.decode(response.responseText);
+                                    var tiempoEsperaICD = resEspera.mesesTiempoEspera;
+                                    if(!(+Ext.getCmp('idMesesAsegurado').getValue() >= +tiempoEsperaICD)){
+                                        if(Ext.getCmp('idCausaSiniestro').getValue()!= _CODIGO_CAUSA_ACCIDENTE){
+                                            Ext.getCmp('idComboICDSec').setValue('');
+                                            notasInternas= Ext.getCmp('notaInterna').getValue() +" ICD :" +comboICD.rawValue + resEspera.mensaje;
+                                            //Ext.getCmp('notaInterna').setValue(notasInternas);
+                                            centrarVentanaInterna(Ext.Msg.show({
+                                                title: 'Error',
+                                                msg: resEspera.mensaje,
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.WARNING
+                                            }));
+                                        }
+                                    }
+                                },
+                                failure : function (){
+                                    me.up().up().setLoading(false);
+                                    centrarVentanaInterna(Ext.Msg.show({
+                                        title:'Error',
+                                        msg: 'Error de comunicaci&oacute;n',
+                                        buttons: Ext.Msg.OK,
+                                        icon: Ext.Msg.ERROR
+                                    }));
+                                }
+                            });
+                        }
+                    },
+                    failure : function (){
+                        me.up().up().setLoading(false);
+                        centrarVentanaInterna(Ext.Msg.show({
+                            title:'Error',
+                            msg: 'Error de comunicaci&oacute;n',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        }));
+                    }
+                });
+            }
+        }
+    });
 
 	causaSiniestro = Ext.create('Ext.form.field.ComboBox',{
 		colspan	   :2,				fieldLabel   : 'Causa siniestro',	id		  : 'idCausaSiniestro',			allowBlank		: false,			width:500,
@@ -1002,7 +1342,7 @@ Ext.onReady(function() {
 						var datosExtras = Ext.decode(response.responseText);
 						if(Ext.decode(response.responseText).datosInformacionAdicional != null){
 							var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
-							debug("cveCauSini ===>",cveCauSini);
+							//debug("cveCauSini ===>",cveCauSini);
 							Ext.getCmp('idCausaSini').setValue(cveCauSini.REQVALIDACION);
 							
 							if(cveCauSini.REQVALIDACION =="S"){
@@ -1013,9 +1353,11 @@ Ext.onReady(function() {
 								Ext.getCmp('idCopagoPrevio').setValue('0');
 								Ext.getCmp('idPenalCircHospitalario').setValue('0');
 								Ext.getCmp('idPenalCambioZona').setValue('0');
+								Ext.getCmp('idaplicaCirHosp').setValue('N');
+                                Ext.getCmp('idaplicaZona').setValue('N');
 							}
 							if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){
-								debug("1.- Entra a 1");
+								//debug("1.- Entra a 1");
 								var salarioMin = Ext.getCmp('idSalarioMin').getValue();
 								Ext.getCmp('sumDisponible').setValue(salarioMin);
 							}
@@ -1078,7 +1420,7 @@ Ext.onReady(function() {
 	});
 
 	cptConAutorizado = Ext.create('Ext.form.field.ComboBox',{
-		fieldLabel : 'CPT',				allowBlank: false,					displayField : 'value',			id:'cptConAutorizado',
+		fieldLabel : 'CPT CCC',				allowBlank: false,					displayField : 'value',			id:'cptConAutorizado',
 		width:450,						valueField   : 'key',				forceSelection : true,			matchFieldWidth: false,
 		queryMode :'remote',			queryParam: 'params.otclave',   	store : storeTiposCPT,			triggerAction: 'all',
 		minChars  : 2,					name:'cptConAutorizado',			hideTrigger:true,
@@ -1154,7 +1496,7 @@ Ext.onReady(function() {
 		listeners : {
 			'select' : function(combo, record) {
 				Ext.getCmp('precioQuirurgico').setValue('');
-				Ext.getCmp('porcentajeQuirurgico').setValue('');
+				//Ext.getCmp('porcentajeQuirurgico').setValue('');
 				Ext.getCmp('importeQuirurgico').setValue('');
 				Ext.Ajax.request({
 					url     : _URL_NUM_MESES_TIEMPO_ESPERA
@@ -1322,10 +1664,18 @@ Ext.onReady(function() {
 		[
 			cptQuirBase,
 			{	id		: 'precioQuirurgico',				xtype      	: 'textfield',			fieldLabel 	: 'Precio',				labelWidth: 100,
-				name    : 'precioQuirurgico',				allowBlank	: false,				allowDecimals :true,          		decimalSeparator :'.'
+				name    : 'precioQuirurgico',				allowBlank	: false,				allowDecimals :true,          		decimalSeparator :'.',
+				listeners:{
+                    change:function(field,value){
+                        try {
+                            var importeTotal= Ext.getCmp('precioQuirurgico').getValue() * (Ext.getCmp('porcentajeQuirurgico').getValue()/100);
+                            Ext.getCmp('importeQuirurgico').setValue(importeTotal);
+                        }catch(e){}
+                    }
+                }
 			},
 			{	id		: 'porcentajeQuirurgico',			xtype      	: 'numberfield',		fieldLabel 	: 'Porcentaje',			labelWidth: 100,
-				name    : 'porcentajeQuirurgico',			allowBlank	: false,				decimalSeparator :'.',
+				name    : 'porcentajeQuirurgico',			allowBlank	: false,				decimalSeparator :'.',              value :'100',
 				listeners:{
 					change:function(field,value){
 						try {
@@ -1426,7 +1776,7 @@ Ext.onReady(function() {
 							ptimport: datos.importeConAutorizado,
 							cdtipaut:'1'
 						});
-						debug("Entra a la opcion 2");
+						//debug("Entra a la opcion 2");
 						if(Ext.getCmp('idCausaSini').getValue() =="N"){
 						//if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){//2.-
 							Ext.getCmp('idCopagoPrevio').setValue("0");
@@ -1483,7 +1833,7 @@ Ext.onReady(function() {
 				if (panelEquipoQuirurgicoBase.form.isValid()){
 					var datos=panelEquipoQuirurgicoBase.form.getValues();
 					var rec = new modelListadoTablas({
-						cdcpt: datos.cptQuirBase,
+						cdcpt: pad (datos.cptQuirBase, 10),
 						desccpt:cptQuirBase.rawValue,
 						precio: datos.precioQuirurgico,
 						cantporc: datos.porcentajeQuirurgico,
@@ -1492,11 +1842,8 @@ Ext.onReady(function() {
 					});
 					storeQuirugicoBase.add(rec);
 					panelEquipoQuirurgicoBase.getForm().reset();
-					// aqui tenemos que recorrer el vector y obtener el VALOR BASE
-					//obtenerValorBase(storeQuirugicoBase); (EGS)
-					//ModificarEquipoQuirurguico(storeQuirurgico);	(EGS)
-					Ext.getCmp('idValorBase').setValue("");	//(EGS)
-					selCPT = "";		//(EGS)
+					//Ext.getCmp('idValorBase').setValue("");	//(EGS)
+					//selCPT = "";		//(EGS)
 					ventanaEqQuirurgicoBase.close();
 				} else {
 					centrarVentanaInterna(Ext.Msg.show({
@@ -1581,8 +1928,8 @@ Ext.onReady(function() {
 	***********************************************************************/
 	Ext.define('EditorIncisos', {
 		extend: 'Ext.grid.Panel',
-		collapsible   : true,
-		titleCollapse : true,
+		//collapsible   : true,
+		//titleCollapse : true,
 		requires: [
 			'Ext.selection.CellModel',
 			'Ext.grid.*',
@@ -1630,8 +1977,8 @@ Ext.onReady(function() {
 		},
 		onAddClick: function(btn, e){
 			Ext.getCmp('medicoExt').hide();
-			ventanaConceptosAutorizado.animateTarget=btn;
-			ventanaConceptosAutorizado.showAt(150,1100);
+			//ventanaConceptosAutorizado.animateTarget=btn;
+			centrarVentanaInterna(ventanaConceptosAutorizado.show());
 		},
 		onRemoveClick: function(grid, rowIndex){
 			var record=this.getStore().getAt(rowIndex);
@@ -1641,7 +1988,7 @@ Ext.onReady(function() {
 				var sumaDisponible = Ext.getCmp('sumDisponible').getValue();
 				Ext.getCmp('sumDisponible').setValue((+sumaDisponible) + (+importeEliminar));
 			}
-			debug("Entra a 3");
+			//debug("Entra a 3");
 			if(Ext.getCmp('idCausaSini').getValue() =="N"){
 			//if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){//3.-
 				Ext.getCmp('idCopagoPrevio').setValue("0");
@@ -1671,72 +2018,116 @@ Ext.onReady(function() {
 	***********************************************************************/
 	Ext.define('EditorIncisos2', {
 		extend: 'Ext.grid.Panel',
-		collapsible   : true,
-		titleCollapse : true,
-		requires: [
-			'Ext.selection.CellModel',
-			'Ext.grid.*',
-			'Ext.data.*',
-			'Ext.util.*',
-			'Ext.form.*'
-		],
-		xtype: 'cell-editing',
+		//collapsible   : true,
+		//titleCollapse : true,
+		allowDeselect : true,
 		title: 'Tabulaci&oacute;n Base Equipo quir&uacute;rgico',
 		frame: false,
+		id: 'idEditorIncisos2',
 		initComponent: function(){
-			this.cellEditing = new Ext.grid.plugin.CellEditing({
-				clicksToEdit: 1
-			});
 			Ext.apply(this, {
 				height: 250,
-				plugins: [this.cellEditing],
 				store: storeQuirugicoBase,
+				selType     :   'checkboxmodel',
+				autoScroll  : true,
 				columns: [
-					{	header: 'CPT',			dataIndex: 'desccpt',			width:350   	},
-					{	header: 'Precio',		dataIndex: 'precio',			width:100,				renderer: Ext.util.Format.usMoney   	},
+					{  xtype: 'actioncolumn',  width: 30,                      sortable: false,        menuDisabled: true,
+                        items: [{
+                            icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
+                            tooltip: 'Quitar base equipo quir&uacute;gico',
+                            scope: this,
+                            handler: this.onRemoveClick
+                        }]
+                    },
+                	{	header: 'CPT',			dataIndex: 'desccpt',			width:255   	},
+					{	header: 'Precio',		dataIndex: 'precio',			width:150,				renderer: Ext.util.Format.usMoney   	},
 					{	header: 'Porcentaje', 	dataIndex: 'cantporc',			width:100    	},
-					{	header: 'Importe', 		dataIndex: 'ptimport',		 	width:100,				renderer: Ext.util.Format.usMoney    	},
-					{	xtype: 'actioncolumn',	width: 30,						sortable: false,		menuDisabled: true,
-						items: [{
-							icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
-							tooltip: 'Quitar base equipo quir&uacute;gico',
-							scope: this,
-							handler: this.onRemoveClick
-						}]
-					}
+					{	header: 'Importe', 		dataIndex: 'ptimport',		 	width:200,				renderer: Ext.util.Format.usMoney    	}
+					
 				],
-				selModel: {
-					selType: 'rowmodel'	//'cellmodel' (EGS)
-				},
-				tbar: [{
+                tbar: [{
 					icon:_CONTEXT+'/resources/fam3icons/icons/add.png',
 					text: 'Agregar base equipo quir&uacute;gico',
 					scope: this,
 					handler: this.onAddClick
 				}],
-				listeners: {	//(EGS)
-					cellclick: function(grid, td,cellIndex, record, tr, rowIndex, e, eOpts){
-						debug("cellclick",cellIndex,rowIndex);
-						if(cellIndex < 4){
-							Ext.getCmp('idValorBase').setValue(record.get("ptimport"));
-							selCPT = record.get("cdcpt");
-						}
-					}
-				}	// fin (EGS)
+				listeners: {
+					beforeselect: function( grid, record, index, eOpts ){
+						var totalCPT         = selCPT.split('|');
+                        var totalCPTAnterior = selCPTAnterior.split('|');
+                        totalSeleccionGrid = gridIncisos2.getSelectionModel().getSelection();
+                        
+                        if(totalSeleccionGrid.length > 0){
+                        	selCPTAnterior ='';
+                        	selCPT         ='';
+                        	for(var i=0;i<totalSeleccionGrid.length;i++) {
+                                seleccionGrid=totalSeleccionGrid[i];
+                                totalSeleccionImp = +totalSeleccionImp + +seleccionGrid.get('ptimport');
+                                selCPT = selCPT +""+seleccionGrid.get('cdcpt');
+                                
+                                if(totalSeleccionGrid.length == 1){
+                                    selCPT = selCPT;
+                                }else if(i < totalSeleccionGrid.length-1){
+                                    selCPT = selCPT +"|";
+                                }else{
+                                    selCPT = selCPT;
+                                }                            
+                            }
+                            selCPTAnterior = selCPT;
+                            selCPT         = '';
+                        
+                        }else{
+                        	selCPT ='';
+                        	selCPTAnterior ='';
+                        }
+					},
+                    selectionchange: function( grid, selected, eOpts ){
+                        selCPT ='';
+                        totalSeleccionGrid = gridIncisos2.getSelectionModel().getSelection();
+                        totalSeleccionImp = 0;
+                        Ext.getCmp('idValorBase').setValue('');
+                        
+                        for(var i=0;i<totalSeleccionGrid.length;i++) {
+                            seleccionGrid=totalSeleccionGrid[i];
+                            totalSeleccionImp = +totalSeleccionImp + +seleccionGrid.get('ptimport');
+                            selCPT = selCPT +""+seleccionGrid.get('cdcpt');
+                            
+                            if(totalSeleccionGrid.length == 1){
+                                selCPT = selCPT;
+                            }else if(i < totalSeleccionGrid.length-1){
+                                selCPT = selCPT +"|";
+                            }else{
+                                selCPT = selCPT;
+                            }                            
+                        }
+                        Ext.getCmp('idValorBase').setValue(totalSeleccionImp);
+                        if(_esSeleccion !='1'){
+                        	ModificarEquipoQuirurguico(storeQuirurgico,selCPT,selCPTAnterior);	
+                        }
+                        selCPTAnterior =selCPT;
+                    }
+				}
 			});
 			this.callParent();
 		},
 		onAddClick: function(btn, e){
-			ventanaEqQuirurgicoBase.animateTarget=btn;
-			ventanaEqQuirurgicoBase.showAt(150,1300);
+			centrarVentanaInterna(ventanaEqQuirurgicoBase.show());
 		},
 		onRemoveClick: function(grid, rowIndex){
+			_existeConfiguracion = '0'
 			var record=this.getStore().getAt(rowIndex);
-			this.getStore().removeAt(rowIndex);
-			//obtenerValorBase(storeQuirugicoBase); (EGS)
-			//ModificarEquipoQuirurguico(storeQuirurgico);	(EGS)
-			Ext.getCmp('idValorBase').setValue("");	//(EGS)
-			selCPT = "";		//(EGS)
+			//Obtenemos el valor a remover
+			existeConfigEquipoQuirurgico(storeQuirurgico,record.data.cdcpt);
+			if(_existeConfiguracion =='1'){
+				centrarVentanaInterna(Ext.Msg.show({
+				    title: 'Equipo quir&uacute;rgico base', 
+				    msg: 'El CPT seleccionado tiene configuraci&oacute;n.</br>Favor de Desagrupar o eliminar el equipo quir&uacute;rgico.', 
+				    buttons: Ext.Msg.OK, 
+				    icon: Ext.Msg.WARNING
+			    }));
+			}else{
+				this.getStore().removeAt(rowIndex);
+			}
 		}
 	});
 	gridIncisos2=new EditorIncisos2();
@@ -1747,8 +2138,8 @@ Ext.onReady(function() {
 	***********************************************************************/
 	Ext.define('EditorIncisos3', {
 		extend: 'Ext.grid.Panel',
-		collapsible   : true,
-		titleCollapse : true,
+		//collapsible   : true,
+		//titleCollapse : true,
 		requires: [
 			'Ext.selection.CellModel',
 			'Ext.grid.*',
@@ -1767,19 +2158,23 @@ Ext.onReady(function() {
 				height: 250,
 				plugins: [this.cellEditing],
 				store: storeQuirurgico,
+				autoScroll  : true,
 				columns: [
+					
+					{  xtype: 'actioncolumn',              width: 30,                      sortable: false,        menuDisabled: true,
+                        items: [{
+                            icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
+                            tooltip: 'Quitar equipo quir&uacute;gico',
+                            scope: this,
+                            handler: this.onRemoveClick
+                        }]
+                    },
+                	{  header: 'cdcpt',        dataIndex: 'cdcpt',      width:250       },
 					{	header: 'M&eacute;dico',		dataIndex: 'nombreMedico',	 	width:250   	},
 					{	header: 'Porcentaje',			dataIndex: 'cantporc',			width:100	   	},
 					{	header: 'Tipo medico',			dataIndex: 'descTipMed',	 	width:150  		},
-					{	header: 'Importe',				dataIndex: 'ptimport',	 		width:100,			renderer: Ext.util.Format.usMoney  	},
-					{	xtype: 'actioncolumn',				width: 30,						sortable: false,		menuDisabled: true,
-						items: [{
-							icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
-							tooltip: 'Quitar equipo quir&uacute;gico',
-							scope: this,
-							handler: this.onRemoveClick
-						}]
-					}
+					{	header: 'Importe',				dataIndex: 'ptimport',	 		width:100,			renderer: Ext.util.Format.usMoney  	}
+					
 				],
 				selModel: {
 					selType: 'cellmodel'
@@ -1789,70 +2184,18 @@ Ext.onReady(function() {
 					text: 'Agregar equipo quir&uacute;gico',
 					scope: this,
 					handler: this.onAddClick
-				},{
-                    icon:_CONTEXT+'/resources/fam3icons/icons/add.png',
-                    text: 'Vista Previa Proveedor',
-                    scope: this,
-                    id:'btnVoBoProveedor',
-                    disabled  : true,
-                    handler: function() {
-                        if (panelInicialPrincipal.form.isValid()) {
-                            var urlRequestImpProveedores = _0_urlRutaReporte
-                                            + '?p_unieco='      + Ext.getCmp('idUnieco').getValue()
-                                            + '&p_ramo='        + Ext.getCmp('idcdRamo').getValue()
-                                            + '&p_estado='      + Ext.getCmp('idEstado').getValue()
-                                            + '&p_poliza='      + Ext.getCmp('polizaAfectada').getValue()
-                                            + '&P_AUTSER='      + Ext.getCmp('idNoAutorizacion').getValue()
-                                            + '&P_CDPERSON='    + Ext.getCmp('idAsegurado').getValue()
-                                            + '&destype=cache'
-                                            + "&desformat=PDF"
-                                            + "&userid="        + _0_reportsServerUser
-                                            + "&ACCESSIBLE=YES"
-                                            + "&report="        + _0_reporteVistaPreviaProv
-                                            + "&paramform=no";
-                                    debug(urlRequestImpProveedores);
-                                    var numRand = Math.floor((Math.random() * 100000) + 1);
-                                    debug(numRand);
-                                    var windowVerDocu = Ext.create('Ext.window.Window',
-                                    {
-                                        title          : 'Impresi&oacute;n Proveedores'
-                                        ,width         : 700
-                                        ,height        : 500
-                                        ,collapsible   : true
-                                        ,titleCollapse : true
-                                        ,html : '<iframe innerframe="'
-                                                + numRand
-                                                + '" frameborder="0" width="100" height="100"'
-                                                + 'src="'
-                                                + panDocUrlViewDoc
-                                                + "?contentType=application/pdf&url="
-                                                + encodeURIComponent(urlRequestImpCotiza)
-                                                + "\">"
-                                                + '</iframe>'
-                                        ,listeners :
-                                        {
-                                            resize : function(win,width,height,opt)
-                                            {
-                                                debug(width,height);
-                                                $('[innerframe="'+ numRand+ '"]').attr(
-                                                {
-                                                    'width'   : width - 20
-                                                    ,'height' : height - 60
-                                                });
-                                            }
-                                        }
-                                    }).show();
-                                    windowVerDocu.center();
-                        } else {
-                            centrarVentanaInterna(Ext.Msg.show({
-                                title: 'Aviso',
-                                msg: 'Complete la informaci&oacute;n requerida',
-                                buttons: Ext.Msg.OK,
-                                icon: Ext.Msg.WARNING
-                            }));
-                        }
-                    }
-                }]
+				}],
+                listeners: {
+                	cellclick: function ( grid, td, cellIndex, record, tr, rowIndex, e, eOpts ){
+                		_esSeleccion = '1';
+                		var totalCPT = record.get('cdcpt');
+                        selCPT         ='';
+                        selCPTAnterior ='';
+                        
+                        gridIncisos2.getSelectionModel().deselectAll();
+                        seleccionarEquipoQuirurguico(storeQuirugicoBase,totalCPT);
+                	}
+                }
 			});
 			this.callParent();
 		},
@@ -1862,8 +2205,9 @@ Ext.onReady(function() {
 				return false;
 			}	//(EGS) fin
 			Ext.getCmp('medicoExtEqQ').hide();
-			ventanaEqQuirurgico.animateTarget=btn;
-			ventanaEqQuirurgico.showAt(150,1550);
+			//ventanaEqQuirurgico.animateTarget=btn;
+			//ventanaEqQuirurgico.showAt(150,1550);
+			centrarVentanaInterna(ventanaEqQuirurgico.show());
 		},
 		onRemoveClick: function(grid, rowIndex){
 			var record=this.getStore().getAt(rowIndex);
@@ -2010,429 +2354,565 @@ Ext.onReady(function() {
 			{	 xtype       : 'textfield',			fieldLabel : 'Genero'				,	id       : 'genero', 				name:'genero',
 				labelWidth: 170,					hidden:true
 			},
-			{	colspan:2
-				,border: false
-				,layout      :	{
-					type     : 'table'
-					,columns : 3
-				},
-				items    : [
-					{	xtype       : 'textfield',			fieldLabel : 'No. de autorizaci&oacute;n',				id  : 'idNoAutorizacion',
-						name        : 'nmautser',			labelWidth	: 170,					readOnly   : true
-					},
-					{	xtype       : 'textfield',			fieldLabel : 'No. de autorizaci&oacute;n anterior',		id	: 'idNumeroAnterior',	
-						name       : 'nmautant',			labelWidth	: 170,		readOnly   : true
-					},
-					Ext.create('Ext.Button', {
-						text: 'Buscar',
-						id:'btnBuscar',
-						icon : _CONTEXT + '/resources/fam3icons/icons/folder.png',
-						handler: function() {
-							Ext.create('Ext.window.Window',{
-								title         : 'Autorizaci&oacute;n de servicio'
-								,buttonAlign  : 'center'
-								,width        : 750
-								,height       : 400
-								,autoScroll   : true
-								,loader       : {
-									url       : _VER_AUTORIZACION_SERVICIO
-									,scripts  : true
-									,autoLoad : true
-									,params   : {
-										'params.nmautser':Ext.getCmp('idNumeroAnterior').getValue()
-									}
-								}
-							}).showAt(150,150);
-						}
-					})
-				]
-			}
-			, cmbRamos		//1.- Producto
-			,{	colspan:2								,border: false
-				,layout      : {
-					type     : 'table'
-					,columns : 2
-				},
-				items    :[
-					asegurado,
-					{	xtype   : 'button',
-						text    : 'Siniestralidad',
-						id      : 'btnSiniestralidad',
-                        disabled: true,
-						icon    : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
-						handler : function() {
-							var windowHistSinies = Ext.create('Ext.window.Window',{
-								modal       : true,
-								buttonAlign : 'center',
-								width       : 800,
-								height      : 500,
-								autoScroll  : true,
-								loader      : {
-									url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
-									params  : {
-										'params.cdperson'  : panelInicialPrincipal.down('[name=cdperson]').getValue(),
-										'params.cdramo'    : null,
-										'params.nmpoliza'  : null,
-										'params.cdunieco'  : null,
-										'params.proceso'  : '0'
-										
-									},
-									scripts  : true,
-									loadMask : true,
-									autoLoad : true,
-									ajaxOptions: {
-										method: 'POST'
-									}
-								},
-								buttons: [{
-									icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-									text: 'Cerrar',
-									handler: function() {
-										windowHistSinies.close();
-									}
-								}]
-							}).show();
-							centrarVentana(windowHistSinies);
-						}
-					}
-				]
-			}
-			,{	xtype       : 'textfield',			fieldLabel : 'Modalidad',			id  : 'idModalidad',	width	: 500,
-				name        : 'idModalidad',		labelWidth	: 170,					readOnly   : true,		colspan:2
-			}
-			,//3.- Fecha de Solicitud
-			{	id: 'fechaSolicitud'		,xtype		: 'datefield'				,fieldLabel	: 'Fecha Solicitud',
-				name:'fesolici'				,labelWidth : 170						,id 		: 'fechaSolicitud',			format		: 'd/m/Y',
-				editable: true				,value		: new Date()				,readOnly   : true
-			},//4.- Fecha de Autorizacion
-			{	id: 'fechaAutorizacion'		,xtype		: 'datefield'				,fieldLabel	: 'Fecha Autorizaci&oacute;n',
-				labelWidth : 170			,format		: 'd/m/Y',
-				editable: true				,name		: 'feautori',
-				listeners:{
-					change:function(field,value){
-						Ext.Ajax.request({
-							url     : _URL_NUMERO_DIAS
-							,params:{
-								'params.cdramo' : Ext.getCmp('idcdRamo').getValue(),
-								'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue()
-							}
-							,success : function (response){
-								Ext.getCmp('fechaVencimiento').setValue(Ext.Date.add(value, Ext.Date.DAY, Ext.decode(response.responseText).diasMaximos));
-							},
-							failure : function (){
-								me.up().up().setLoading(false);
-								centrarVentanaInterna(Ext.Msg.show({
-									title:'Error',
-									msg: 'Error de comunicaci&oacute;n',
-									buttons: Ext.Msg.OK,
-									icon: Ext.Msg.ERROR
-								}));
-							}
-						});
-					}
-				}
-			},//5.- Fecha de Vencimiento
-			{	id: 'fechaVencimiento'					,xtype		: 'datefield'								,fieldLabel	: 'Fecha de vencimiento',
-				labelWidth : 170						,format		: 'd/m/Y',									name:'fevencim',
-				editable: false							,readOnly   : true
-			},//6.- Fecha de Ingreso
-			{	id: 'fechaIngreso'						,xtype		: 'datefield'								,fieldLabel	: 'Fecha de Ingreso',
-				labelWidth : 170						,format		: 'd/m/Y',									name:'feingres',
-				editable: true							,allowBlank : false
-			},
-			{	colspan:2								,border: false
-				,layout      : {
-					type     : 'table'
-					,columns : 6
-				},
-				items    :[
-					//7.- Poliza Afectada NMPOLIEX
-					{	 xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectadaCom'
-						,allowBlank : false,				labelWidth: 170,				name:'nmpolizaCom',	readOnly   : true, Width: 1100
-					},
-					//7.- Poliza Afectada corto
-					{	 xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectada'
-						,allowBlank : false,				labelWidth: 170,				name:'nmpoliza',	readOnly   : true,  hidden:true
-					},
-					Ext.create('Ext.Button', {
-						text    : 'Ver coberturas',
-						id      : 'btnVerCoberturas',
-                        disabled: true,
-						icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
-						handler: function() {
-							centrarVentanaInterna(Ext.create('Ext.window.Window',{
-								title        : 'COBERTURA'
-								,buttonAlign : 'center'
-								,width       : 620
-								,height      : 400
-								,autoScroll  : true
-								,loader      :	{
-									url       : _VER_COBERTURAS
-									,scripts  : true
-									,autoLoad : true
-									,params:{
-										'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
-										'params.estado':Ext.getCmp('idEstado').getValue(),
-										'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
-										'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
-										'params.suplemento':Ext.getCmp('idNmsuplem').getValue(),
-										'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
-									}
-								}
-							}).show());
-						}
-					}),
-					{	xtype  : 'button',
-						text   : 'Detalle p&oacute;liza',
-						id      : 'btnDetallePoliza',
-                        disabled: true,
-						icon   : _CONTEXT + '/resources/fam3icons/icons/application_add.png',
-						handler: function() {
-							var windowDetPol = Ext.create('Ext.window.Window', {
-							title       : 'Detalle de la p&oacute;liza',
-							modal       : true,
-							buttonAlign : 'center',
-							width       : 830,
-							height      : 500,
-							autoScroll  : true,
-							items: [
-								Ext.create('Ext.tab.Panel',
-								{
-									width: 830,
-									items: [
-										{
-											title : 'DATOS DE LA POLIZA',
-											loader: {
-												url: _URL_LOADER_DATOS_POLIZA,
-												scripts: true,
-												loadMask : true,
-												autoLoad: false,
-												ajaxOptions: {
-													method: 'POST'
-												}
-											},
-											listeners: {
-												activate: function(tab) {
-													tab.loader.load({
-														params : {
-															'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
-															'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
-															'params.estado'  : Ext.getCmp('idEstado').getValue(),
-															'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
-															'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
-														}
-													});
-												}
-											}
-										},
-										{	title: 'ASEGURADOS',
-											loader: {
-												url: _URL_LOADER_ASEGURADOS_POLIZA,
-												scripts: true,
-												loadMask : true,
-												autoLoad: false,
-												ajaxOptions: {
-													method: 'POST'
-												}
-											},
-											listeners: {
-												activate: function(tab) {
-													tab.loader.load({
-														params : {
-															'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
-															'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
-															'params.estado'    : Ext.getCmp('idEstado').getValue(),
-															'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
-															'params.suplemento': Ext.getCmp('idNmsuplem').getValue()
-														}
-													});
-												}
-											}
-										},
-										{
-                                           title : 'DOCUMENTACION',
-                                           width: '350',
-                                           loader : {
-                                               url : _URL_CONSULTA_DOCUMENTOS,
-                                               scripts : true,
-                                               autoLoad : false
-                                           },
-                                           listeners : {
-                                               activate : function(tab) {
-                                                   tab.loader.load({
-                                                       params : {
-                                                           'smap1.readOnly': true,
-                                                           'smap1.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
-                                                           'smap1.cdunieco': Ext.getCmp('idUnieco').getValue(),
-                                                           'smap1.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
-                                                           'smap1.estado'  : Ext.getCmp('idEstado').getValue(),
-                                                           'smap1.nmsuplem': Ext.getCmp('idNmsuplem').getValue(),
-                                                           'smap1.ntramite': null,
-                                                           'smap1.tipomov' : '0'
-                                                       }
-                                                   });
-                                               }
-                                           }
-                                       },
-										{	title: 'RECIBOS',
-											loader: {
-												url: _URL_LOADER_RECIBOS,
-												scripts: true,
-												loadMask : true,
-												autoLoad: false,
-												ajaxOptions: {
-													method: 'POST'
-												}
-											},
-											listeners: {
-												activate: function(tab) {
-													tab.loader.load({
-														params : {
-															'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
-															'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
-															'params.estado'  : Ext.getCmp('idEstado').getValue(),
-															'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
-															'params.nmsuplem': Ext.getCmp('idNmsuplem').getValue()
-														}
-													});
-												}
-											}
-										}
-									]
-								})]
-							}).show();
-							centrarVentanaInterna(windowDetPol);
-						}
-					},
-					{	xtype   : 'button',
-						text    : 'Exclusi&oacute;n p&oacute;liza',
-						id      : 'btnExclusionPoliza',
-						disabled: true,
-						icon    : _CONTEXT + '/resources/fam3icons/icons/application_delete.png',
-						handler : function() {
-							centrarVentanaInterna(Ext.create('Ext.window.Window', {
-								title       : 'Exclusiones de la p&oacute;liza',
-								modal       : true,
-								buttonAlign : 'center',
-								autoScroll  : true,
-								width       : 450,
-								height      : 455,
-								loader      : {
-									url     : _URL_LOADER_VER_EXCLUSIONES,
-									scripts : true,
-									autoLoad: true,
-									params  : {
-										'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
-										'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
-										'params.estado'  : Ext.getCmp('idEstado').getValue(),
-										'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
-										'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
-									}
-								}
-							}).show());
-						}
-					},
-                    {   xtype   : 'button',
-                        text    : 'Exclusi&oacute;n ICD',
-                        id      : 'btnExclusionICD',
-                        disabled: true,
-                        icon    : _CONTEXT + '/resources/fam3icons/icons/application_form_delete.png',
-                        handler : function() {
-                            centrarVentanaInterna(Ext.create('Ext.window.Window', {
-                                title       : 'Exclusiones ICD',
-                                modal       : true,
-                                buttonAlign : 'center',
-                                autoScroll  : true,
-                                width       : 800,
-                                height      : 500,
-                                loader      : {
-                                    url     : _URL_LOADER_EXLUSION_ICD_ASEGURADOS,
-                                    scripts : true,
-                                    autoLoad: true,
-                                    params  : {
-                                        'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
-                                        'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
-                                        'params.estado'  : Ext.getCmp('idEstado').getValue(),
-                                        'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
-                                        'params.nmsuplem': Ext.getCmp('idNmsuplem').getValue(),
-                                        'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
-                                    }
+			{    colspan:2   ,   border: true
+                ,bodyPadding: 5
+                ,title        : 'Autorizaci&oacute;n y Producto:'
+                ,startCollapsed : true
+                ,layout      : {
+                    type     : 'table'
+                    ,columns : 2
+                },
+                items    :[
+        			{	colspan:2
+        				,border: false
+        				,layout      :	{
+        					type     : 'table'
+        					,columns : 3
+        				},
+        				items    : [
+        					{	xtype       : 'textfield',			fieldLabel : 'No. de autorizaci&oacute;n',				id  : 'idNoAutorizacion',
+        						name        : 'nmautser',			labelWidth	: 170,					readOnly   : true
+        					},
+        					{	xtype       : 'textfield',			fieldLabel : 'No. de autorizaci&oacute;n anterior',		id	: 'idNumeroAnterior',	
+        						name       : 'nmautant',			labelWidth	: 170,		readOnly   : true
+        					},
+        					Ext.create('Ext.Button', {
+        						text: 'Buscar',
+        						id:'btnBuscar',
+        						icon : _CONTEXT + '/resources/fam3icons/icons/folder.png',
+        						handler: function() {
+        							Ext.create('Ext.window.Window',{
+        								title         : 'Autorizaci&oacute;n de servicio'
+        								,buttonAlign  : 'center'
+        								,width        : 750
+        								,height       : 400
+        								,autoScroll   : true
+        								,loader       : {
+        									url       : _VER_AUTORIZACION_SERVICIO
+        									,scripts  : true
+        									,autoLoad : true
+        									,params   : {
+        										'params.nmautser':Ext.getCmp('idNumeroAnterior').getValue()
+        									}
+        								}
+        							}).showAt(150,150);
+        						}
+        					})
+        				]
+        			}
+        			, cmbRamos
+    			]
+            },
+            {   colspan:2                               ,border: true
+                ,bodyPadding: 5
+                ,title        : 'Informaci&oacute;n Asegurado :'
+                ,layout      : {
+                    type     : 'table'
+                    ,columns : 2
+                },
+                items    :[
+                    {   colspan:2                               ,border: false
+                        ,layout      : {
+                            type     : 'table'
+                            ,columns : 2
+                        },
+                        items    :[
+                            asegurado,
+                            {   xtype   : 'button',
+                                text    : 'Siniestralidad',
+                                id      : 'btnSiniestralidad',
+                                disabled: true,
+                                icon    : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+                                handler : function() {
+                                    var windowHistSinies = Ext.create('Ext.window.Window',{
+                                        modal       : true,
+                                        buttonAlign : 'center',
+                                        width       : 800,
+                                        height      : 500,
+                                        autoScroll  : true,
+                                        loader      : {
+                                            url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
+                                            params  : {
+                                                'params.cdperson'  : panelInicialPrincipal.down('[name=cdperson]').getValue(),
+                                                'params.cdramo'    : null,
+                                                'params.nmpoliza'  : null,
+                                                'params.cdunieco'  : null,
+                                                'params.proceso'  : '0'
+                                                
+                                            },
+                                            scripts  : true,
+                                            loadMask : true,
+                                            autoLoad : true,
+                                            ajaxOptions: {
+                                                method: 'POST'
+                                            }
+                                        },
+                                        buttons: [{
+                                            icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+                                            text: 'Cerrar',
+                                            handler: function() {
+                                                windowHistSinies.close();
+                                            }
+                                        }]
+                                    }).show();
+                                    centrarVentana(windowHistSinies);
                                 }
-                            }).show());
-                        }
+                            }
+                        ]
                     }
-				]
-			},
-			sucursal,				//8.- Plazas
-			coberturaAfectada,		//9.- Cobertura Afectada
-			subCobertura,			//10.- SubCobertura
-			tipoEvento,
-			proveedor,				//11.- Proveedor
-			medico,					//12.- Medico
-			//12.- Medico si no se encuentra en red
-			{	colspan:2, 			id    : 'medicoPExt',		xtype  : 'textfield',			fieldLabel 	: 'Nombre M&eacute;dico',
-				labelWidth: 170,	width :350,					width  :500,					name   :'medicoPExt', 					hidden: false,
-				listeners:{
-					afterrender: function(){
-						this.hide();
-					}
-				}
-			},
-			//13.- Especialidad en red
-			{	colspan:2, 			id	: 'especialidadPExt',	xtype  : 'textfield',			fieldLabel 	: 'Especialidad',		labelWidth: 170,
-				width	:350,		width:500,					name   :'especialidadPExt', 	hidden: false,
-				listeners:{
-					afterrender: function(){
-						this.hide();
-					}
-				}
-			},
-			//13.- Especialidad sin red
-			{	colspan:2,xtype   : 'textfield'			,fieldLabel : 'Especialidad'		,id       : 'idEspecialidad',		name:'idEspecialidad'
-				,labelWidth: 170						,readOnly   : true
-			},
-			//14.- Deducible
-			{	colspan:2,  xtype : 'textfield'			,fieldLabel : 'Deducible'			,id       : 'idDeducible'
-				,labelWidth: 170						,readOnly   : true
-			},
-			//15.- Copago
-			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago original'		,id       : 'idCopago'
-				,labelWidth: 170						,readOnly   : true,  width: 670
-			},
-			//16.- Copago Final Previo
-			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago final'		,id       : 'idCopagoPrevio'
-				,labelWidth: 170						,readOnly   : true,					name:'copagoPrevio',  		width: 670
-			},
-			//16.- Copago Final Total
-			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago final'		,id       : 'idCopagoFin'
-				,labelWidth: 170						,readOnly   : true,					name:'copagoTotal',  		width: 670
-			},
-			aplicaCirHosp,
-			//17.- P. Circulo Hospitalario
-			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Penalizaci&oacuten circulo hospitalario'			,id       : 'idPenalCircHospitalario'
-				,labelWidth: 170						,readOnly   : true, name: 'idPenalCircHospitalario'
-			},
-			aplicaZona,
-			//18.- P. Cambio de zona
-			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Penalizaci&oacuten por cambio de zona'			,id       : 'idPenalCambioZona'
-				,labelWidth: 170						,readOnly   : true,			name       : 'idPenalCambioZona'
-			},
-			comboICD,					//19.- ICD
-			causaSiniestro,				//20.- Causa Siniestro
-			//21.- Suma Disponible
-			{	colspan:2,			xtype : 'numberfield',              id:'sumDisponible',           fieldLabel: 'Suma disponible proveedor',
-				labelWidth: 170,    allowBlank: false,	                allowDecimals :true,          decimalSeparator :'.',                 allowBlank:false,
-				name:'mtsumadp',	minValue: 0
-			},
-			tratamiento,				//22.- Tratamiento
-			//23.- Observaciones
-			{	colspan:2					,xtype : 'textareafield'				,fieldLabel : 'Observaciones'		,id       : 'observaciones'
-				,labelWidth	 : 170			,name  :'dsobserv'						,width      : 700					,height   : 70
-			},
-			//24.- Notas Internas
-			{	colspan:2					,xtype       : 'textareafield'			,fieldLabel : 'Notas internas'		,id       : 'notaInterna'
-				,labelWidth: 170			,name:'dsnotas'							,width      : 700					,height: 100
-			},
+                    ,{  xtype       : 'textfield',          fieldLabel : 'Modalidad',           id  : 'idModalidad',    width   : 500,
+                        name        : 'idModalidad',        labelWidth  : 170,                  readOnly   : true,      colspan:2
+                    },
+                	{  xtype       : 'textfield',          fieldLabel : 'Plan',                   id  : 'idPlan',         width   : 500,
+                        name        : 'idPlan',            labelWidth  : 170,                     readOnly   : true,      colspan:2
+                    },
+                    {  xtype       : 'textfield',          fieldLabel : 'Vigencia P&oacute;liza', id  : 'idVigenciaPoliza',    width   : 350,
+                        name        : 'idVigPoliza',       labelWidth  : 170,                     readOnly   : true//,      colspan:1
+                    }
+                    ,
+                    {   id: 'idAntiguedad'        ,xtype      : 'datefield'           ,fieldLabel : 'Antigüedad en GSS',
+                        name:'idAntiguedad'         ,labelWidth : 170 ,                
+                        editable: true              ,readOnly   : true
+                    },
+                    {   colspan:2                               ,border: false
+                        ,bodyPadding: 5
+                        ,layout      : {
+                            type     : 'table'
+                            ,columns : 6
+                        },
+                        items    :[
+                            //7.- Poliza Afectada NMPOLIEX
+                            {    xtype       : 'textfield',         fieldLabel : 'P&oacute;liza afectada'               ,id       : 'polizaAfectadaCom'
+                                ,allowBlank : false,                labelWidth: 170,                name:'nmpolizaCom', readOnly   : true, Width: 1100
+                            },
+                            //7.- Poliza Afectada corto
+                            {    xtype       : 'textfield',         fieldLabel : 'P&oacute;liza afectada'               ,id       : 'polizaAfectada'
+                                ,allowBlank : false,                labelWidth: 170,                name:'nmpoliza',    readOnly   : true,  hidden:true
+                            },
+                            Ext.create('Ext.Button', {
+                                text    : 'Ver coberturas',
+                                id      : 'btnVerCoberturas',
+                                disabled: true,
+                                icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+                                handler: function() {
+                                    centrarVentanaInterna(Ext.create('Ext.window.Window',{
+                                        title        : 'COBERTURA'
+                                        ,buttonAlign : 'center'
+                                        ,width       : 620
+                                        ,height      : 400
+                                        ,autoScroll  : true
+                                        ,loader      :  {
+                                            url       : _VER_COBERTURAS
+                                            ,scripts  : true
+                                            ,autoLoad : true
+                                            ,params:{
+                                                'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
+                                                'params.estado':Ext.getCmp('idEstado').getValue(),
+                                                'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
+                                                'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
+                                                'params.suplemento':Ext.getCmp('idNmsuplem').getValue(),
+                                                'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
+                                            }
+                                        }
+                                    }).show());
+                                }
+                            }),
+                            {   xtype  : 'button',
+                                text   : 'Detalle p&oacute;liza',
+                                id      : 'btnDetallePoliza',
+                                disabled: true,
+                                icon   : _CONTEXT + '/resources/fam3icons/icons/application_add.png',
+                                handler: function() {
+                                    var windowDetPol = Ext.create('Ext.window.Window', {
+                                    title       : 'Detalle de la p&oacute;liza',
+                                    modal       : true,
+                                    buttonAlign : 'center',
+                                    width       : 830,
+                                    height      : 500,
+                                    autoScroll  : true,
+                                    items: [
+                                        Ext.create('Ext.tab.Panel',
+                                        {
+                                            width: 830,
+                                            items: [
+                                                {
+                                                    title : 'DATOS DE LA POLIZA',
+                                                    loader: {
+                                                        url: _URL_LOADER_DATOS_POLIZA,
+                                                        scripts: true,
+                                                        loadMask : true,
+                                                        autoLoad: false,
+                                                        ajaxOptions: {
+                                                            method: 'POST'
+                                                        }
+                                                    },
+                                                    listeners: {
+                                                        activate: function(tab) {
+                                                            tab.loader.load({
+                                                                params : {
+                                                                    'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
+                                                                    'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+                                                                    'params.estado'  : Ext.getCmp('idEstado').getValue(),
+                                                                    'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+                                                                    'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                },
+                                                {   title: 'ASEGURADOS',
+                                                    loader: {
+                                                        url: _URL_LOADER_ASEGURADOS_POLIZA,
+                                                        scripts: true,
+                                                        loadMask : true,
+                                                        autoLoad: false,
+                                                        ajaxOptions: {
+                                                            method: 'POST'
+                                                        }
+                                                    },
+                                                    listeners: {
+                                                        activate: function(tab) {
+                                                            tab.loader.load({
+                                                                params : {
+                                                                    'params.cdunieco'  : Ext.getCmp('idUnieco').getValue(),
+                                                                    'params.cdramo'    : Ext.getCmp('idcdRamo').getValue(),
+                                                                    'params.estado'    : Ext.getCmp('idEstado').getValue(),
+                                                                    'params.nmpoliza'  : Ext.getCmp('polizaAfectada').getValue(),
+                                                                    'params.suplemento': Ext.getCmp('idNmsuplem').getValue()
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                   title : 'DOCUMENTACION',
+                                                   width: '350',
+                                                   loader : {
+                                                       url : _URL_CONSULTA_DOCUMENTOS,
+                                                       scripts : true,
+                                                       autoLoad : false
+                                                   },
+                                                   listeners : {
+                                                       activate : function(tab) {
+                                                           tab.loader.load({
+                                                               params : {
+                                                                   'smap1.readOnly': true,
+                                                                   'smap1.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+                                                                   'smap1.cdunieco': Ext.getCmp('idUnieco').getValue(),
+                                                                   'smap1.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+                                                                   'smap1.estado'  : Ext.getCmp('idEstado').getValue(),
+                                                                   'smap1.nmsuplem': Ext.getCmp('idNmsuplem').getValue(),
+                                                                   'smap1.ntramite': null,
+                                                                   'smap1.tipomov' : '0'
+                                                               }
+                                                           });
+                                                       }
+                                                   }
+                                               },
+                                                {   title: 'RECIBOS',
+                                                    loader: {
+                                                        url: _URL_LOADER_RECIBOS,
+                                                        scripts: true,
+                                                        loadMask : true,
+                                                        autoLoad: false,
+                                                        ajaxOptions: {
+                                                            method: 'POST'
+                                                        }
+                                                    },
+                                                    listeners: {
+                                                        activate: function(tab) {
+                                                            tab.loader.load({
+                                                                params : {
+                                                                    'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
+                                                                    'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+                                                                    'params.estado'  : Ext.getCmp('idEstado').getValue(),
+                                                                    'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+                                                                    'params.nmsuplem': Ext.getCmp('idNmsuplem').getValue()
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        })]
+                                    }).show();
+                                    centrarVentanaInterna(windowDetPol);
+                                }
+                            },
+                            {   xtype   : 'button',
+                                text    : 'Exclusi&oacute;n p&oacute;liza',
+                                id      : 'btnExclusionPoliza',
+                                disabled: true,
+                                icon    : _CONTEXT + '/resources/fam3icons/icons/application_delete.png',
+                                handler : function() {
+                                    centrarVentanaInterna(Ext.create('Ext.window.Window', {
+                                        title       : 'Exclusiones de la p&oacute;liza',
+                                        modal       : true,
+                                        buttonAlign : 'center',
+                                        autoScroll  : true,
+                                        width       : 455,
+                                        height      : 460,
+                                        loader      : {
+                                            url     : _URL_LOADER_VER_EXCLUSIONES,
+                                            scripts : true,
+                                            autoLoad: true,
+                                            params  : {
+                                                'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
+                                                'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+                                                'params.estado'  : Ext.getCmp('idEstado').getValue(),
+                                                'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+                                                'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
+                                            }
+                                        }
+                                    }).show());
+                                }
+                            },
+                            {   xtype   : 'button',
+                                text    : 'Exclusi&oacute;n ICD',
+                                id      : 'btnExclusionICD',
+                                disabled: true,
+                                icon    : _CONTEXT + '/resources/fam3icons/icons/application_form_delete.png',
+                                handler : function() {
+                                    centrarVentanaInterna(Ext.create('Ext.window.Window', {
+                                        title       : 'Exclusiones ICD',
+                                        modal       : true,
+                                        buttonAlign : 'center',
+                                        autoScroll  : true,
+                                        width       : 820,
+                                        height      : 360,
+                                        loader      : {
+                                            url     : _URL_LOADER_EXLUSION_ICD_ASEGURADOS,
+                                            scripts : true,
+                                            autoLoad: true,
+                                            params  : {
+                                                'params.cdunieco': Ext.getCmp('idUnieco').getValue(),
+                                                'params.cdramo'  : Ext.getCmp('idcdRamo').getValue(),
+                                                'params.estado'  : Ext.getCmp('idEstado').getValue(),
+                                                'params.nmpoliza': Ext.getCmp('polizaAfectada').getValue(),
+                                                'params.nmsuplem': Ext.getCmp('idNmsuplem').getValue(),
+                                                'params.nmsituac': Ext.getCmp('idNmSituac').getValue()
+                                            }
+                                        }
+                                    }).show());
+                                }
+                            }
+                        ]
+                    }
+                    ,{  xtype       : 'textfield',         fieldLabel : 'C&oacute;digo Postal',      id  : 'idCodPostal',    width   : 300,
+                        name        : 'idCodPostal',        labelWidth  : 170,                 readOnly   : true,      colspan:2
+                    }
+                    ,edoAsegurado
+                    ,munAsegurado
+                    ,//3.- Fecha de Solicitud
+                    {   id: 'fechaSolicitud'        ,xtype      : 'datefield'               ,fieldLabel : 'Fecha Solicitud',
+                        name:'fesolici'             ,labelWidth : 170                       ,id         : 'fechaSolicitud',         format      : 'd/m/Y',
+                        editable: true              ,value      : new Date()                ,readOnly   : true
+                    },//4.- Fecha de Autorizacion
+                    {   id: 'fechaAutorizacion'     ,xtype      : 'datefield'               ,fieldLabel  : 'Fecha Autorizaci&oacute;n',
+                        labelWidth : 170            ,format     : 'd/m/Y'                   ,allowBlank : false,
+                        editable: true              ,name       : 'feautori',
+                        listeners:{
+                            change:function(field,value){
+                                Ext.Ajax.request({
+                                    url     : _URL_NUMERO_DIAS
+                                    ,params:{
+                                        'params.cdramo' : Ext.getCmp('idcdRamo').getValue(),
+                                        'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue()
+                                    }
+                                    ,success : function (response){
+                                        Ext.getCmp('fechaVencimiento').setValue(Ext.Date.add(value, Ext.Date.DAY, Ext.decode(response.responseText).diasMaximos));
+                                    },
+                                    failure : function (){
+                                        me.up().up().setLoading(false);
+                                        centrarVentanaInterna(Ext.Msg.show({
+                                            title:'Error',
+                                            msg: 'Error de comunicaci&oacute;n',
+                                            buttons: Ext.Msg.OK,
+                                            icon: Ext.Msg.ERROR
+                                        }));
+                                    }
+                                });
+                            }
+                        }
+                    },//5.- Fecha de Vencimiento
+                    {   id: 'fechaVencimiento'                  ,xtype      : 'datefield'                               ,fieldLabel : 'Fecha de vencimiento',
+                        labelWidth : 170                        ,format     : 'd/m/Y',                                  name:'fevencim',
+                        editable: false                         ,readOnly   : true
+                    },//6.- Fecha de Ingreso
+                    {   id: 'fechaIngreso'                      ,xtype      : 'datefield'                               ,fieldLabel : 'Fecha de Ingreso',
+                        labelWidth : 170                        ,format     : 'd/m/Y',                                  name:'feingres',
+                        editable: true                          ,allowBlank : false
+                    }
+                 ]
+            },
+            {   colspan:2                               ,border: true
+                ,bodyPadding: 5
+                ,title        : 'Atenci&oacute;n del siniestro : '
+                ,layout      : {
+                    type     : 'table'
+                    ,columns : 2 
+                },
+                items    :[
+                     sucursal,				//8.- Plazas
+                     estadoSiniestro,
+                     municipioSiniestro,
+		             coberturaAfectada,		//9.- Cobertura Afectada
+			         subCobertura,			//10.- SubCobertura
+			         tipoEvento
+		        ]
+            },
+            {   colspan:2                               ,border: true
+                ,bodyPadding: 5
+                ,title        : 'Informaci&oacute;n Proveedor - M&eacute;dico :'
+                ,layout      : {
+                    type     : 'table'
+                    ,columns : 2
+                },
+                items    :[
+			         proveedor,				//11.- Proveedor
+			         medico,					//12.- Medico
+        			//12.- Medico si no se encuentra en red
+        			{	colspan:2, 			id    : 'medicoPExt',		xtype  : 'textfield',			fieldLabel 	: 'Nombre M&eacute;dico',
+        				labelWidth: 170,	width :350,					width  :500,					name   :'medicoPExt', 					hidden: false,
+        				listeners:{
+        					afterrender: function(){
+        						this.hide();
+        					}
+        				}
+        			},
+        			//13.- Especialidad en red
+        			{	colspan:2, 			id	: 'especialidadPExt',	xtype  : 'textfield',			fieldLabel 	: 'Especialidad',		labelWidth: 170,
+        				width	:350,		width:500,					name   :'especialidadPExt', 	hidden: false,
+        				listeners:{
+        					afterrender: function(){
+        						this.hide();
+        					}
+        				}
+        			},
+        			//13.- Especialidad sin red
+        			{	colspan:2,xtype   : 'textfield'			,fieldLabel : 'Especialidad'		,id       : 'idEspecialidad',		name:'idEspecialidad'
+        				,labelWidth: 170						,readOnly   : true
+        			}
+    			]
+            },
+            {   colspan:2                               ,border: true
+                ,bodyPadding: 5
+                ,title       : 'Informaci&oacute;n Deducible - Copago - Penalizaciones :'
+                ,layout      : {
+                    type     : 'table'
+                    ,columns : 2
+                },
+                items    :[
+        			//14.- Deducible
+        			{	colspan:2,  xtype : 'textfield'			,fieldLabel : 'Deducible'			,id       : 'idDeducible',          name:'idDeducible'
+        				,labelWidth: 170						,readOnly   : true
+        			},
+        			//15.- Copago
+        			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago original'		,id       : 'idCopago',             name: 'idCopago'
+        				,labelWidth: 170						,readOnly   : true,  width: 670
+        			},
+        			//16.- Copago Final Previo
+        			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago final'		,id       : 'idCopagoPrevio'
+        				,labelWidth: 170						,readOnly   : true,					name:'copagoPrevio',  		width: 670
+        			},
+        			//16.- Copago Final Total
+        			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Copago final'		,id       : 'idCopagoFin'
+        				,labelWidth: 170						,readOnly   : true,					name:'copagoTotal',  		width: 670
+        			},
+        			aplicaCirHosp,
+        			//17.- P. Circulo Hospitalario
+        			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Penalizaci&oacuten circulo hospitalario'			,id       : 'idPenalCircHospitalario'
+        				,labelWidth: 170						,readOnly   : true, name: 'idPenalCircHospitalario'
+        			},
+        			aplicaZona,
+        			//18.- P. Cambio de zona
+        			{	colspan:2, xtype  : 'textfield'			,fieldLabel : 'Penalizaci&oacuten por cambio de zona'			,id       : 'idPenalCambioZona'
+        				,labelWidth: 170						,readOnly   : true,			name       : 'idPenalCambioZona'
+        			}
+                ]
+            },
+            {   colspan:2                               ,border: true
+                ,bodyPadding: 5
+                ,title        : 'Informaci&oacute;n General :'
+                ,layout      : {
+                    type     : 'table'
+                    ,columns : 2
+                },
+                items    :[
+	                    {   colspan:2                               ,border: false
+                        ,layout      : {
+                            type     : 'table'
+                            ,columns : 3
+                        },
+                        items    :[
+                            comboICD,                   //19.- ICD
+                            Ext.create('Ext.Button', {
+                                text    : 'Ver cumulos ICD',
+                                id      : 'btnVerCumulos',
+                                disabled: true,
+                                icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+                                handler : function() {
+                                    var windowHistCumulo = Ext.create('Ext.window.Window',{
+                                        modal       : true,
+                                        buttonAlign : 'center',
+                                        width       : 800,
+                                        height      : 500,
+                                        autoScroll  : true,
+                                        loader      : {
+                                            url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
+                                            params  : {
+                                                'params.cdperson'  : panelInicialPrincipal.down('[name=cdperson]').getValue(),
+                                                'params.cdramo'    : null,
+                                                'params.nmpoliza'  : null,
+                                                'params.cdunieco'  : null,
+                                                'params.cdicd'     : Ext.getCmp('idComboICD').getValue(),
+                                                'params.proceso'   : '2'
+                                                
+                                            },
+                                            scripts  : true,
+                                            loadMask : true,
+                                            autoLoad : true,
+                                            ajaxOptions: {
+                                                method: 'POST'
+                                            }
+                                        },
+                                        buttons: [{
+                                            icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+                                            text: 'Cerrar',
+                                            handler: function() {
+                                                windowHistCumulo.close();
+                                            }
+                                        }]
+                                    }).show();
+                                    centrarVentana(windowHistCumulo);
+                                }
+                            })
+                        ]
+                    },
+        			comboSecundario,
+        			{    xtype       : 'textfield'               ,fieldLabel : 'Nuevo/Subsecuente'                      ,id             : 'idTipo',name             : 'idTipo'
+                        ,labelWidth: 170    ,align:'center',    readOnly   : true,                         renderer: Ext.util.Format.usMoney   
+                    },
+                    {   xtype       : 'textfield'               ,fieldLabel : 'No. reclamo principal'      ,id       : 'idNumSubsecuente' ,name       : 'idNumSubsecuente'
+                        ,labelWidth: 170,align:'center',    readOnly   : true,                              renderer: Ext.util.Format.usMoney   
+                    },
+        			causaSiniestro,				//20.- Causa Siniestro
+        			//21.- Suma Disponible
+        			{	colspan:2,			xtype : 'numberfield',              id:'sumDisponible',           fieldLabel: 'Suma disponible proveedor',
+        				labelWidth: 170,    allowBlank: false,	                allowDecimals :true,          decimalSeparator :'.',                 allowBlank:false,
+        				name:'mtsumadp',	minValue: 0
+        			},
+        			tratamiento,				//22.- Tratamiento
+        			//23.- Observaciones
+        			{	colspan:2					,xtype : 'textareafield'				,fieldLabel : 'Observaciones'		,id       : 'observaciones'
+        				,labelWidth	 : 170			,name  :'dsobserv'						,width      : 700					,height   : 70
+        			},
+        			//24.- Notas Internas
+        			{	colspan:2					,xtype       : 'textareafield'			,fieldLabel : 'Notas internas'		,id       : 'notaInterna'
+        				,labelWidth: 170			,name:'dsnotas'							,width      : 700					,height: 100
+        			}
+                ]
+            },
 			{	colspan:2,
 				items    : [
 					gridIncisos
@@ -2563,70 +3043,7 @@ Ext.onReady(function() {
 					}));
 				}
 			}
-		},
-		{
-            text:'Vista Previa',
-            icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
-            id:'botonVoBo',
-            disabled  : true,
-            handler: function() {
-            	if (panelInicialPrincipal.form.isValid()) {
-                    var urlRequestImpCotiza = _0_urlRutaReporte
-                                    + '?p_unieco='      + Ext.getCmp('idUnieco').getValue()
-                                    + '&p_ramo='        + Ext.getCmp('idcdRamo').getValue()
-                                    + '&p_estado='      + Ext.getCmp('idEstado').getValue()
-                                    + '&p_poliza='      + Ext.getCmp('polizaAfectada').getValue()
-                                    + '&P_AUTSER='      + Ext.getCmp('idNoAutorizacion').getValue()
-                                    + '&P_CDPERSON='    + Ext.getCmp('idAsegurado').getValue()
-                                    + '&destype=cache'
-                                    + "&desformat=PDF"
-                                    + "&userid="        + _0_reportsServerUser
-                                    + "&ACCESSIBLE=YES"
-                                    + "&report="        + _0_reporteVistaPreviaGral
-                                    + "&paramform=no";
-                            debug(urlRequestImpCotiza);
-                            var numRand = Math.floor((Math.random() * 100000) + 1);
-                            debug(numRand);
-                            var windowVerDocu = Ext.create('Ext.window.Window',
-                            {
-                                title          : 'Cotizaci&oacute;n'
-                                ,width         : 700
-                                ,height        : 500
-                                ,collapsible   : true
-                                ,titleCollapse : true
-                                ,html : '<iframe innerframe="'
-                                        + numRand
-                                        + '" frameborder="0" width="100" height="100"'
-                                        + 'src="'
-                                        + panDocUrlViewDoc
-                                        + "?contentType=application/pdf&url="
-                                        + encodeURIComponent(urlRequestImpCotiza)
-                                        + "\">"
-                                        + '</iframe>'
-                                ,listeners :
-                                {
-                                    resize : function(win,width,height,opt)
-                                    {
-                                        debug(width,height);
-                                        $('[innerframe="'+ numRand+ '"]').attr(
-                                        {
-                                            'width'   : width - 20
-                                            ,'height' : height - 60
-                                        });
-                                    }
-                                }
-                            }).show();
-                            windowVerDocu.center();
-                } else {
-                    centrarVentanaInterna(Ext.Msg.show({
-                        title: 'Aviso',
-                        msg: 'Complete la informaci&oacute;n requerida',
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.Msg.WARNING
-                    }));
-                }
-            }
-        }
+		}
 		]
 	});
 
@@ -2709,12 +3126,12 @@ Ext.onReady(function() {
     }
 
     function obtieneInformacion() {
-        Ext.getCmp('idDeducible').setValue('');
-        Ext.getCmp('idCopago').setValue('');
-        Ext.getCmp('idCopagoFin').setValue('');
-        Ext.getCmp('idTipoCopago').setValue('');
-        Ext.getCmp('idPenalCircHospitalario').setValue('');
-        Ext.getCmp('idPenalCambioZona').setValue('');
+        //Ext.getCmp('idDeducible').setValue('');
+        //Ext.getCmp('idCopago').setValue('');
+        //Ext.getCmp('idCopagoFin').setValue('');
+        //Ext.getCmp('idTipoCopago').setValue('');
+        //Ext.getCmp('idPenalCircHospitalario').setValue('');
+        //Ext.getCmp('idPenalCambioZona').setValue('');
         
         if(+Ext.getCmp('idValSesiones').getValue() > 0){
             Ext.getCmp('idCopagoPrevio').show();
@@ -2738,16 +3155,20 @@ Ext.onReady(function() {
             }
             ,success : function (response){
                 var respuesta= Ext.decode(response.responseText);
+                //debug("Valor de la _URL_CONSULTA_DEDUCIBLE_COPAGO  ==> ",respuesta);
                 if(respuesta.listaDatosSiniestro != null){
                     var json=Ext.decode(response.responseText).listaDatosSiniestro[0];
                     Ext.getCmp('idDeducible').setValue(json.deducible);
                     Ext.getCmp('idTipoCopago').setValue(json.tipoCopago);
                     Ext.getCmp('idCopago').setValue(json.copago);
-                    debug("VALOR idReqPenalizacion :",Ext.getCmp('idReqPenalizacion').getValue(),"cveTipoAutorizaG : ",Ext.getCmp('cveTipoAutorizaG').getValue());
+                    //debug("VALOR idReqPenalizacion :",Ext.getCmp('idReqPenalizacion').getValue(),"cveTipoAutorizaG : ",Ext.getCmp('cveTipoAutorizaG').getValue());
                     
                     if(Ext.getCmp('idReqPenalizacion').getValue() == "1" && Ext.getCmp('cveTipoAutorizaG').getValue() != "3"){
                         var idProv = ""+Ext.getCmp('idProveedor').getValue();
-                        if(idProv !="undefined"){
+                        //debug("valor de idProv ===> ",idProv);
+                        if(idProv !="undefined" && idProv!= 'null'&& idProv!= ''){
+                        	Ext.getCmp('idaplicaCirHosp').setValue('S');
+                            Ext.getCmp('idaplicaZona').setValue('S');
                             Ext.Ajax.request({
                                 url     : _URL_CATALOGOS
                                 ,params:{
@@ -2758,7 +3179,7 @@ Ext.onReady(function() {
                                 ,success : function (response){
                                     if(Ext.decode(response.responseText).listaGenerica != null){
                                         var json=Ext.decode(response.responseText).listaGenerica[0];
-                                        debug("VALOR DE RESPUESTA===========> ", json);
+                                        //debug("VALOR DE RESPUESTA===========> ", json);
                                         Ext.getCmp('idCirculoHospProv').setValue(json.circulo);
                                         Ext.getCmp('codPostalProv').setValue(json.codpos);
                                         Ext.getCmp('idzonaHospProv').setValue(json.zonaHospitalaria);
@@ -2777,20 +3198,22 @@ Ext.onReady(function() {
                             });
                         }
                     }else{
-                        debug("Entra a 4");
+                        //debug("Entra a 4");
                         if(Ext.getCmp('idCausaSini').getValue() =="N"){
                         //if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){//4.-
+                            Ext.getCmp('idaplicaCirHosp').setValue('N');
+                            Ext.getCmp('idaplicaZona').setValue('N');
                             Ext.getCmp('idCopagoFin').setValue('0');
                             Ext.getCmp('idCopagoPrevio').setValue('0');
                             Ext.getCmp('idPenalCircHospitalario').setValue('0');
                             Ext.getCmp('idPenalCambioZona').setValue('0');
                         }else{
                             if(Ext.getCmp('cveTipoAutorizaG').getValue() == "3"){
-                                debug("Entra a la validacion if");
+                                //debug("Entra a la validacion if");
                                 Ext.getCmp('idCopagoFin').setValue('0');
                                 Ext.getCmp('idCopagoPrevio').setValue('0');
                             }else{
-                                debug("Entra a la validacion else");
+                                //debug("Entra a la validacion else");
                                 if(Ext.getCmp('idCopago').getValue() =="NA"||Ext.getCmp('idCopago').getValue()=="NO"){
                                     Ext.getCmp('idCopagoFin').setValue('0');
                                 }else{
@@ -2801,6 +3224,8 @@ Ext.onReady(function() {
                                     Ext.getCmp('idCopagoPrevio').setValue('0');
                                 }
                             }
+                            Ext.getCmp('idaplicaCirHosp').setValue('N');
+                            Ext.getCmp('idaplicaZona').setValue('N');
                             Ext.getCmp('idPenalCircHospitalario').setValue('0');
                             Ext.getCmp('idPenalCambioZona').setValue('0');
                         }
@@ -2827,12 +3252,14 @@ Ext.onReady(function() {
         Ext.getCmp('idPenalCircHospitalario').setValue('');
         Ext.getCmp('idPenalCambioZona').setValue('');
         // === > Validacion de la causa del Siniestro
-        debug("Entra a 5");
+        //debug("Entra a 5");
         if(Ext.getCmp('idCausaSini').getValue() =="N"){
         //if(Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_ACCIDENTE || Ext.getCmp('idCausaSiniestro').getValue() == _CODIGO_CAUSA_MATERNIDAD){//5.-
             Ext.getCmp('idCopagoFin').setValue('0');
             Ext.getCmp('idPenalCircHospitalario').setValue('0');
             Ext.getCmp('idPenalCambioZona').setValue('0');
+            Ext.getCmp('idaplicaCirHosp').setValue('N');
+            Ext.getCmp('idaplicaZona').setValue('N');
         }else{
             if(validaRamoTramite (Ext.getCmp('idcdRamo').getValue()) == true){
                 // ===> Verificamos que tenga exclusion de penalizacion
@@ -2848,6 +3275,7 @@ Ext.onReady(function() {
                     ,success : function (response){
                         Ext.getCmp('idExclusionPenalizacion').setValue(Ext.decode(response.responseText).existePenalizacion);
                         if(Ext.getCmp('idExclusionPenalizacion').getValue()=="S"){
+                        	Ext.getCmp('idaplicaZona').setValue('N');
                             Ext.getCmp('idPenalCambioZona').setValue("0");
                             if(Ext.getCmp('idcdRamo').getValue() == _GMMPRUEBA){
                             	validacionCirculoHospitalario(Ext.getCmp('idcirculohosPoliza').getValue(),Ext.getCmp('idCirculoHospProv').getValue()); //-->1
@@ -2860,12 +3288,17 @@ Ext.onReady(function() {
                                 url     : _URL_PORCENTAJE_PENALIZACION
                                 ,params:{
                                     'params.zonaContratada': Ext.getCmp('idZonaContratadaPoliza').getValue(),
-                                    'params.zonaAtencion': Ext.getCmp('idzonaHospProv').getValue(),
-                                    'params.cdRamo': Ext.getCmp('idcdRamo').getValue()
+                                    'params.zonaAtencion'  : Ext.getCmp('idzonaHospProv').getValue(),
+                                    'params.cdRamo'        : Ext.getCmp('idcdRamo').getValue()
                                 }
                                 ,success : function (response){
-                                    //alert(3);
-                                    Ext.getCmp('idPenalCambioZona').setValue(Ext.decode(response.responseText).porcentajePenalizacion);
+                                	if(+Ext.decode(response.responseText).porcentajePenalizacion == 0){
+                                        Ext.getCmp('idaplicaZona').setValue('N');
+                                    }else{
+                                        Ext.getCmp('idaplicaZona').setValue('S');
+                                    }
+                                	Ext.getCmp('idPenalCambioZona').setValue(Ext.decode(response.responseText).porcentajePenalizacion);
+                                    
                                     if(Ext.getCmp('idcdRamo').getValue() == _GMMPRUEBA){
                                         validacionCirculoHospitalario(Ext.getCmp('idcirculohosPoliza').getValue(),Ext.getCmp('idCirculoHospProv').getValue()); //-->2
                                     }else{
@@ -2896,6 +3329,8 @@ Ext.onReady(function() {
                 });
             }else{
                 //2.- MULTISALUD O DIFERENTE DE MULTISALUD
+            	Ext.getCmp('idaplicaCirHosp').setValue('N');
+                Ext.getCmp('idaplicaZona').setValue('N');
                 Ext.getCmp('idPenalCircHospitalario').setValue('0');
                 Ext.getCmp('idPenalCambioZona').setValue("0");
                 obtieneCirHospitalarioMultisalud();
@@ -2905,7 +3340,7 @@ Ext.onReady(function() {
     }
 
     function validacionCirculoHospitalario(circuloHosPoliza,circuloHosProv){
-        debug("VALOR DE LOS DATOS validacionCirculoHospitalario ==> ",circuloHosPoliza,circuloHosProv);
+        //debug("VALOR DE LOS DATOS validacionCirculoHospitalario ==> ",circuloHosPoliza,circuloHosProv);
         Ext.Ajax.request({
             url     : _URL_CIRCULO_HOSPITALARIO
             ,params:{
@@ -2915,7 +3350,13 @@ Ext.onReady(function() {
                 'params.feautori': Ext.getCmp('fechaAutorizacion').getValue()
             }
             ,success : function (response){
-                Ext.getCmp('idPenalCircHospitalario').setValue(Ext.decode(response.responseText).porcentajePenalizacion);
+            	if(+Ext.decode(response.responseText).porcentajePenalizacion == 0){
+            		Ext.getCmp('idaplicaCirHosp').setValue('N');
+            	}else{
+            		Ext.getCmp('idaplicaCirHosp').setValue('S');
+            	}
+            	
+            	Ext.getCmp('idPenalCircHospitalario').setValue(Ext.decode(response.responseText).porcentajePenalizacion);
                 validacionCopagoTotal();
             },
             failure : function (){
@@ -2931,7 +3372,7 @@ Ext.onReady(function() {
     }
     
    function obtieneCirHospitalarioMultisalud(){
-        Ext.Ajax.request({
+   	    Ext.Ajax.request({
             url     : _URL_CIRCULO_HOSP_MULTISALUD
             ,params : {
                 'params.cdpresta': Ext.getCmp('idProveedor').getValue(),
@@ -3036,7 +3477,12 @@ Ext.onReady(function() {
                 }
                 if(tipoCopago =="$"){
                     if(+Ext.getCmp('idPorcIncremento').getValue() > 0){
-                        Ext.getCmp('idCopagoFin').setValue("$"+valorCopago +" y "+ Ext.getCmp('idPorcIncremento').getValue() +"%");
+                    	if(+valorCopago > 0){
+                    	   Ext.getCmp('idCopagoFin').setValue("$"+valorCopago +" y "+ Ext.getCmp('idPorcIncremento').getValue() +"%");	
+                    	}else{
+                    		Ext.getCmp('idCopagoFin').setValue(Ext.getCmp('idPorcIncremento').getValue());
+                    	}
+                        
                     }else{
                         Ext.getCmp('idCopagoFin').setValue(valorCopago);
                     }
@@ -3133,7 +3579,7 @@ Ext.onReady(function() {
 								cdtipaut	: json.listaConsultaTablas[i].cdtipaut,
 								cdmedico	: json.listaConsultaTablas[i].cdmedico,
 								nombreMedico: medicoCompleto,
-								desccpt		: cptCompleto,
+								desccpt		: cptCompleto.replace(/^0+/, ''),
 								precio		: json.listaConsultaTablas[i].precio,
 								cdtipmed	: json.listaConsultaTablas[i].cdtipmed,
 								cdcpt		: json.listaConsultaTablas[i].cdcpt,
@@ -3149,7 +3595,7 @@ Ext.onReady(function() {
 
 							if(json.listaConsultaTablas[i].cdtipaut == 3){
 								storeQuirurgico.add(rec);
-								Ext.getCmp('btnVoBoProveedor').setDisabled(false);
+								//Ext.getCmp('btnVoBoProveedor').setDisabled(false);
 							}
 						}
 					}
@@ -3176,9 +3622,9 @@ Ext.onReady(function() {
 			}
 			,success : function (response) {
 				var json=Ext.decode(response.responseText).datosAutorizacionEsp;
-				debug("Valor del json :) ==> ",json);
+				//debug("Valor del json :) ==> ",json);
 				var cdtipsitRe= json.cdtipsit;
-				Ext.getCmp('botonVoBo').setDisabled(false);
+				//Ext.getCmp('botonVoBo').setDisabled(false);
         		Ext.getCmp('idcdtipsit').setValue(json);
 				if(json.aplicaCirHos == null ||json.aplicaCirHos ==''){
 					Ext.getCmp('idaplicaCirHosp').setValue('S');
@@ -3203,7 +3649,7 @@ Ext.onReady(function() {
 				}else{
 					Ext.getCmp('idNoAutorizacion').setValue(json.nmautser);					// Valor de N�mero de autorizaci�n
 					Ext.getCmp('idNumeroAnterior').setValue(json.nmautant);					// Valor de N�mero de autorizacion Anterior
-					debug("Valor de json.cveTipoAutorizaG -->"+json.cveTipoAutorizaG);
+					//debug("Valor de json.cveTipoAutorizaG -->"+json.cveTipoAutorizaG);
 					if(json.cveTipoAutorizaG == "1"||json.cveTipoAutorizaG == "2" ||json.cveTipoAutorizaG == null ||json.cveTipoAutorizaG == ''){
 						Ext.getCmp('cveTipoAutorizaG').setValue("2");						// Asignacion de Cve Tipo autorizaG
 					}else{
@@ -3216,7 +3662,14 @@ Ext.onReady(function() {
 						'params.cdperson':json.cdperson
 					}
 				});
-				panelInicialPrincipal.down('[name=cdperson]').setValue(json.cdperson);		// Valor del asegurado
+				Ext.getCmp('idEdoSiniestro').setValue(json.edoAtencion);
+				storeMunicipioSiniestro.load({
+                    params:{
+                        'params.edoSiniestro' : json.edoAtencion
+                    }
+                });
+                Ext.getCmp('idMunSiniestro').setValue(json.muniAtencion);
+                panelInicialPrincipal.down('[name=cdperson]').setValue(json.cdperson);		// Valor del asegurado
 				var dsnom = json.cdperson+" "+json.nombreCliente;
 				Ext.getCmp('dsNombreAsegurado').setValue(dsnom);							// Valor del Nombre del asegurado
 				Ext.getCmp('fechaSolicitud').setValue(json.fesolici);						// Valor de Fecha Solicitud
@@ -3242,7 +3695,7 @@ Ext.onReady(function() {
 				Ext.getCmp('notaInterna').setValue(json.dsnotas);							// Valor de Nota Interna
 				Ext.getCmp('sumDisponible').setValue(json.mtsumadp);						// Valor de Suma Disponible
 				Ext.getCmp('idCopagoPrevio').setValue(json.copagofi);						// Valor de Copago Previo
-				debug("Valor del copago recuperado -->",json.copagofi);
+				//debug("Valor del copago recuperado -->",json.copagofi);
 				Ext.getCmp('idCopagoFin').setValue(json.copagofi); 							// Valor de Copago Fin
 				Ext.getCmp('idPenalCircHospitalario').setValue(json.porpenal);				// Valor de Penal. x Circulo hospitalario
 				storePlazas.load();
@@ -3268,6 +3721,33 @@ Ext.onReady(function() {
 				
 				});				
 				Ext.getCmp('idComboICD').setValue(json.cdicd);								// Valor de ICD
+				
+				if(Ext.getCmp('cmbRamos').getValue() ==_GMMI){
+                    Ext.getCmp('idTipo').setValue(json.tipoSec=='N'?'NUEVO':'SUBSECUENTE');
+                    Ext.getCmp('idNumSubsecuente').setValue(json.nmreclamo);
+                    Ext.getCmp('idTipo').show();
+                    Ext.getCmp('idNumSubsecuente').show();
+                    Ext.getCmp('btnVerCumulos').show();
+                    Ext.getCmp('btnVerCumulos').setDisabled(false);
+                }else{
+                    Ext.getCmp('idTipo').hide();
+                    Ext.getCmp('idNumSubsecuente').hide();
+                    Ext.getCmp('btnVerCumulos').hide();
+                }
+				
+				storeTiposICDSec.removeAll(); // (EGS)
+                storeTiposICDSec.load({ // consulta de catalogo (EGS)
+                    params:{
+                        'params.cdicd'      :  json.icdSecundario,
+                        'params.cdramo'     : json.cdramo,
+                        'params.cdtipsit'   : json.cdtipsit,
+                        'params.edad'       : calculaAniosTranscurridos(Ext.getCmp('edad').getValue(),new Date()),
+                        'params.genero'     : Ext.getCmp('genero').getValue()
+                    }
+                
+                });
+				Ext.getCmp('idComboICDSec').setValue(json.icdSecundario);
+				
 				//debug("<--- Valor de cdrol --->",cdrol);
 				if(cdrol == "COORDINAMED"){
 					Ext.getCmp('Autorizar').hide();
@@ -3326,40 +3806,7 @@ Ext.onReady(function() {
                     }
                 });
                 
-                var storeHistorialICD= new Ext.data.Store({
-                    model      : 'ModelHistorialICD',
-                    proxy     : {
-                        type        : 'ajax',
-                        url         : _URL_cargaHistorialSinies,
-                        extraParams : {
-                            'params.pv_cdunieco_i' : Ext.getCmp('idUnieco').getValue(),
-                            'params.pv_cdramo_i'   : Ext.getCmp('idcdRamo').getValue(),
-                            'params.pv_estado_i'   : Ext.getCmp('idEstado').getValue(),
-                            'params.pv_nmpoliza_i' : Ext.getCmp('polizaAfectada').getValue(),
-                            'params.pv_nmsuplem_i' : Ext.getCmp('idNmsuplem').getValue(),
-                            'params.pv_nmsituac_i' : Ext.getCmp('idNmSituac').getValue()
-                        },
-                        reader : {
-                            type : 'json',
-                            root : 'loadList'
-                        }
-                    }
-                });
-                storeHistorialICD.load({
-                    callback: function(records, operation, success) {
-                        if (!success) {
-                            return;
-                        }
-                        if(records.length == 0){
-                            Ext.getCmp('btnExclusionPoliza').setDisabled(true);
-                        }else{
-                            Ext.getCmp('btnExclusionPoliza').setDisabled(false);
-                        }
-                        return;
-                    }
-                });
-                
-                //Ext.getCmp('idTipoEvento').setValue(json.idTipoEvento);
+                Ext.getCmp('idTipoEvento').setValue(json.idTipoEvento);
 				
 				//**********************************************************************
 				//*  Obtenemos la informacion del proveedor, Asi como la informacion    *
@@ -3424,7 +3871,7 @@ Ext.onReady(function() {
 					,success : function (response){
 						if(Ext.decode(response.responseText).polizaUnica != null) {
 							var json=Ext.decode(response.responseText).polizaUnica[0];
-							debug("Valor de Poliza Unica ==>>>>> ",json);
+							//debug("Valor de Poliza Unica ==>>>>> ",json);
 							if(json.mtoBase == null ||json.mtoBase ==''){
 								Ext.getCmp('idMontoBase').setValue("21000");						// Valor del Monto Base si viene vacio
 							}else{
@@ -3438,6 +3885,56 @@ Ext.onReady(function() {
 							Ext.getCmp('idMesesAsegurado').setValue(json.mesesAsegurado);			// Valor del No. de Meses
 							Ext.getCmp('fechaAutorizacion').setValue(dateFechaAutorizacion);		// Valor de Fecha de autorizacion
 							Ext.getCmp('idcirculohosPoliza').setValue(json.cirHosp);
+							Ext.getCmp('idPlan').setValue(json.dsplan);
+							Ext.getCmp('idVigenciaPoliza').setValue(json.vigenciaPoliza);
+                            Ext.getCmp('idCodPostal').setValue(json.cpaseg);
+                            storeEstados.load({
+                                params : {
+                                    'params.idPadre' : json.cpaseg
+                                }
+                            });
+                            Ext.getCmp('idEstadoAseg').setValue(json.estadoAseg);
+                            
+                            storeMunici.load({
+                                params : {
+                                    'params.idPadre' : json.estadoAseg
+                                }
+                            });
+                            Ext.getCmp('idMunAsegurado').setValue(json.municipioAseg);
+                            Ext.getCmp('idAntiguedad').setValue(json.fantiguedadgs);
+                            
+                            var storeHistorialICD= new Ext.data.Store({
+                                model      : 'ModelHistorialICD',
+                                proxy     : {
+                                    type        : 'ajax',
+                                    url         : _URL_cargaHistorialSinies,
+                                    extraParams : {
+                                        'params.pv_cdunieco_i' : Ext.getCmp('idUnieco').getValue(),
+                                        'params.pv_cdramo_i'   : Ext.getCmp('idcdRamo').getValue(),
+                                        'params.pv_estado_i'   : Ext.getCmp('idEstado').getValue(),
+                                        'params.pv_nmpoliza_i' : Ext.getCmp('polizaAfectada').getValue(),
+                                        'params.pv_nmsuplem_i' : json.nmsuplem,
+                                        'params.pv_nmsituac_i' : Ext.getCmp('idNmSituac').getValue()
+                                    },
+                                    reader : {
+                                        type : 'json',
+                                        root : 'loadList'
+                                    }
+                                }
+                            });
+                            storeHistorialICD.load({
+                                callback: function(records, operation, success) {
+                                    if (!success) {
+                                        return;
+                                    }
+                                    if(records.length == 0){
+                                        Ext.getCmp('btnExclusionICD').setDisabled(true);
+                                    }else{
+                                        Ext.getCmp('btnExclusionICD').setDisabled(false);
+                                    }
+                                    return;
+                                }
+                            });                            
 						}
 					},
 					failure : function (){
@@ -3450,6 +3947,7 @@ Ext.onReady(function() {
 						}));
 					}
 				});
+
 
 				//Se llena la informacion de la Cobertura y se realiza la asignacion
 				storeCobertura.load({
@@ -3476,6 +3974,16 @@ Ext.onReady(function() {
 					}
 				});
 				Ext.getCmp('idSubcobertura').setValue(json.cdconval);							// Valor de la Sub-Cobertura
+				
+				storeProveedor.load({
+                    params:{
+                        'catalogo'          : _CAT_PROVEEDOR_SINI,
+                        'catalogoGenerico'  : true,
+                        'params.cdpresta'   : json.cdprovee,
+                        'params.cdEstado'   : Ext.getCmp('idEdoSiniestro').getValue(),
+                        'params.cdMunicipio': Ext.getCmp('idMunSiniestro').getValue()
+                    }
+                });
 				Ext.getCmp('idProveedor').setValue(json.cdprovee);								// Valor del Proveedor
 				storeCausaSinestro.load();
 				Ext.getCmp('idCausaSiniestro').setValue(json.cdcausa);							// Valor de la Causa del Siniestro
@@ -3492,7 +4000,7 @@ Ext.onReady(function() {
 						var datosExtras = Ext.decode(response.responseText);
 						if(Ext.decode(response.responseText).datosInformacionAdicional != null){
 							var cveCauSini=Ext.decode(response.responseText).datosInformacionAdicional[0];
-							debug("cveCauSini ===>",cveCauSini);
+							//debug("cveCauSini ===>",cveCauSini);
 							Ext.getCmp('idCausaSini').setValue(cveCauSini.REQVALIDACION);
 							obtieneInformacion();
 						}else{
@@ -3550,115 +4058,136 @@ Ext.onReady(function() {
 		return totalRegistro;
 	}
 
-	function ModificarEquipoQuirurguico(storeQuirurgico){
+
+	
+	function ModificarEquipoQuirurguico(storeQuirurgico,selCPT,selCPTAnterior){
 		var arr = [];
+		debug("ModificarEquipoQuirurguico selCPT         ===> ",selCPT);
+		debug("ModificarEquipoQuirurguico selCPTAnterior ===> ",selCPTAnterior);
 		if(storeQuirurgico != undefined){
 			storeQuirurgico.each(function(record) {
+			debug("RECORD ==> ",record);
 			arr.push(record.data);
 			});
-			storeQuirurgico.removeAll();
+			storeQuirurgico.loadData([],false);
 			for(var i = 0; i < arr.length; i++){
-				var rec = new modelListadoTablas({
-				cdmedico: arr[i].cdmedico,
-				cantporc: arr[i].cantporc,
-				cdcpt: arr[i].cdcpt,
-				cdmedico: arr[i].cdmedico,
-				cdtipaut: arr[i].cdtipaut,
-				cdtipmed: arr[i].cdtipmed,
-				descTipMed: arr[i].descTipMed,
-				desccpt: arr[i].desccpt,
-				nmautser: arr[i].nmautser,
-				nombreMedico: arr[i].nombreMedico,
-				precio: arr[i].precio,
-				ptimport: Ext.getCmp('idValorBase').getValue() *(arr[i].cantporc/100)
-				});
+				debug("selCPTAnterior ==> ",selCPTAnterior);
+				debug("arr[i].cdcpt   ==> ",arr[i].cdcpt);
+				if(selCPTAnterior == arr[i].cdcpt){
+    			    var rec = new modelListadoTablas({
+                        cdmedico: arr[i].cdmedico,
+                        cantporc: arr[i].cantporc,
+                        cdcpt: selCPT,
+                        cdmedico: arr[i].cdmedico,
+                        cdtipaut: arr[i].cdtipaut,
+                        cdtipmed: arr[i].cdtipmed,
+                        descTipMed: arr[i].descTipMed,
+                        desccpt: arr[i].desccpt,
+                        nmautser: arr[i].nmautser,
+                        nombreMedico: arr[i].nombreMedico,
+                        precio: arr[i].precio,
+                        ptimport: Ext.getCmp('idValorBase').getValue() *(arr[i].cantporc/100)
+                    });
+				}else{
+                    var rec = new modelListadoTablas({
+                        cdmedico: arr[i].cdmedico,
+                        cantporc: arr[i].cantporc,
+                        cdcpt: arr[i].cdcpt,
+                        cdmedico: arr[i].cdmedico,
+                        cdtipaut: arr[i].cdtipaut,
+                        cdtipmed: arr[i].cdtipmed,
+                        descTipMed: arr[i].descTipMed,
+                        desccpt: arr[i].desccpt,
+                        nmautser: arr[i].nmautser,
+                        nombreMedico: arr[i].nombreMedico,
+                        precio: arr[i].precio,
+                        ptimport: arr[i].ptimport
+                    });
+				}
 				storeQuirurgico.add(rec);
 			}
 		}
 		return true;
 	}
 
-	function  guardadoAutorizacionServicio(valor){
-		var respuesta=true;
-		var submitValues={};
-		
-		var formulario=panelInicialPrincipal.form.getValues();
-		submitValues['params']=formulario;
+   function  guardadoAutorizacionServicio(valor){
+        var respuesta=true;
+        var submitValues={};
+        
+        var formulario=panelInicialPrincipal.form.getValues();
+        submitValues['params']=formulario;
 
-		var datosTablas = [];
-		storeConceptoAutorizados.each(function(record,index){
-			datosTablas.push({
-				cdtipaut: record.get('cdtipaut'),
-				cdmedico: record.get('cdmedico'),
-				cdcpt: record.get('cdcpt'),
-				precio: record.get('precio'),
-				cantporc: record.get('cantporc'),
-				ptimport: record.get('ptimport'),
-				cdtipmed: record.get('cdtipmed'),
-				nombreMedico: record.get('nombreMedico')
-			});
-		});
-		storeQuirugicoBase.each(function(record,index){
-			datosTablas.push({
-				cdtipaut: record.get('cdtipaut'),
-				cdmedico: record.get('cdmedico'),
-				cdcpt: record.get('cdcpt'),
-				precio: record.get('precio'),
-				cantporc: record.get('cantporc')/100,
-				ptimport: record.get('ptimport'),
-				cdtipmed: record.get('cdtipmed'),
-				nombreMedico: record.get('nombreMedico')
-			});
-		});
-		storeQuirurgico.each(function(record,index){
-			datosTablas.push({
-				cdtipaut: record.get('cdtipaut'),
-				cdmedico: record.get('cdmedico'),
-				cdcpt: record.get('cdcpt'),
-				precio: record.get('precio'),
-				cantporc: record.get('cantporc')/100,
-				ptimport: record.get('ptimport'),
-				cdtipmed: record.get('cdtipmed'),
-				nombreMedico: record.get('nombreMedico')
-			});
-		});
+        var datosTablas = [];
+        storeConceptoAutorizados.each(function(record,index){
+            datosTablas.push({
+                cdtipaut: record.get('cdtipaut'),
+                cdmedico: record.get('cdmedico'),
+                cdcpt: record.get('cdcpt'),
+                precio: record.get('precio'),
+                cantporc: record.get('cantporc'),
+                ptimport: record.get('ptimport'),
+                cdtipmed: record.get('cdtipmed'),
+                nombreMedico: record.get('nombreMedico')
+            });
+        });
+        storeQuirugicoBase.each(function(record,index){
+            datosTablas.push({
+                cdtipaut: record.get('cdtipaut'),
+                cdmedico: record.get('cdmedico'),
+                cdcpt: record.get('cdcpt'),
+                precio: record.get('precio'),
+                cantporc: record.get('cantporc')/100,
+                ptimport: record.get('ptimport'),
+                cdtipmed: record.get('cdtipmed'),
+                nombreMedico: record.get('nombreMedico')
+            });
+        });
+        storeQuirurgico.each(function(record,index){
+            datosTablas.push({
+                cdtipaut: record.get('cdtipaut'),
+                cdmedico: record.get('cdmedico'),
+                cdcpt: record.get('cdcpt'),
+                precio: record.get('precio'),
+                cantporc: record.get('cantporc')/100,
+                ptimport: record.get('ptimport'),
+                cdtipmed: record.get('cdtipmed'),
+                nombreMedico: record.get('nombreMedico')
+            });
+        });
 
-		var valorIdEstatus= Ext.getCmp('idstatus').getValue();
-		submitValues['datosTablas']=datosTablas;
-		panelInicialPrincipal.setLoading(true);
-		Ext.Ajax.request( {
-			url: _URL_GUARDA_AUTORIZACION,
-			jsonData:Ext.encode(submitValues), // convierte a estructura JSON
-			success:function(response,opts){
-				panelInicialPrincipal.setLoading(false);
-				var jsonResp = Ext.decode(response.responseText);
-				if(jsonResp.success==true){
-					var numeroAutorizacion = Ext.decode(response.responseText).numeroAutorizacion.nmautser;
-					var ntramiteEntrada    = Ext.decode(response.responseText).numeroAutorizacion.ntramite;
-					Ext.getCmp('idNoAutorizacion').setValue(numeroAutorizacion);
-					var mensaje='';
-					// si el estatus es igual a 2 se va a autorizar
-					if(Ext.getCmp('idstatus').getValue() == "2"){
-						mensaje= 'Se gener&oacute; la carta para la autorizaci&oacute;n con el n&uacute;mero ';
-					}else{
-						if(Ext.getCmp('claveTipoAutoriza').getValue() == "1"){
-							mensaje = 'Se guard&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
-						}
-						if(Ext.getCmp('claveTipoAutoriza').getValue() == "2") {
-							mensaje = 'Se modific&oacute; la autorizaci&oacute;n con el n&uacute;mero ';
-						}
-						if(Ext.getCmp('claveTipoAutoriza').getValue() == "3") {
-							mensaje= 'Se complement&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
-						}
-					}
-					if(valor=="N") {
-						mensaje= mensaje+" : "+numeroAutorizacion +". Para autorizar se requiere al menos subir un documento.";
-					}else{
-						mensaje= mensaje+" : "+numeroAutorizacion +".";
-					}
-					
-					if(valor=="N"){
-						mensajeCorrecto('Datos guardados',mensaje,function(){
+        var valorIdEstatus= Ext.getCmp('idstatus').getValue();
+        submitValues['datosTablas']=datosTablas;
+        panelInicialPrincipal.setLoading(true);
+        Ext.Ajax.request( {
+            url: _URL_GUARDA_AUTORIZACION,
+            jsonData:Ext.encode(submitValues), // convierte a estructura JSON
+            success:function(response,opts){
+                panelInicialPrincipal.setLoading(false);
+                var jsonResp = Ext.decode(response.responseText);
+                if(jsonResp.success==true){
+                    var numeroAutorizacion = Ext.decode(response.responseText).numeroAutorizacion.nmautser;
+                    Ext.getCmp('idNoAutorizacion').setValue(numeroAutorizacion);
+                    var mensaje='';
+                    // si el estatus es igual a 2 se va a autorizar
+                    if(Ext.getCmp('idstatus').getValue() == "2"){
+                        mensaje= 'Se gener&oacute; la carta para la autorizaci&oacute;n con el n&uacute;mero ';
+                    }else{
+                        if(Ext.getCmp('claveTipoAutoriza').getValue() == "1"){
+                            mensaje = 'Se guard&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
+                        }
+                        if(Ext.getCmp('claveTipoAutoriza').getValue() == "2") {
+                            mensaje = 'Se modific&oacute; la autorizaci&oacute;n con el n&uacute;mero ';
+                        }
+                        if(Ext.getCmp('claveTipoAutoriza').getValue() == "3") {
+                            mensaje= 'Se complement&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
+                        }
+                    }
+                    if(valor=="N") {
+                        mensaje= mensaje+" : "+numeroAutorizacion +". Para autorizar se requiere al menos subir un documento.";
+                    }else{
+                        mensaje= mensaje+" : "+numeroAutorizacion +".";
+                    }
+                    mensajeCorrecto('Datos guardados',mensaje,function(){
                         Ext.create('Ext.form.Panel').submit({
                             url             : _p12_urlMesaControl
                             ,standardSubmit : true
@@ -3668,38 +4197,79 @@ Ext.onReady(function() {
                             }
                         });
                     });
-					}else{
-                        Ext.create('Ext.form.Panel').submit({
-                            standardSubmit : true
-                            ,params        : {
-                                'params.nmAutSer':numeroAutorizacion
-                                ,'params.ntramite':ntramiteEntrada
-                                ,'params.cdrol':valorAction.cdrol
-                            }
-                        });
-					}
-				}
-				else{
-					centrarVentanaInterna(Ext.Msg.show({
-						title:'Error',
-						msg: 'Error al modificar los registros',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.ERROR
-					}));
-					respuesta= false;
-				}
-			},
-			failure:function(response,opts){
-				panelInicialPrincipal.setLoading(false);
-				centrarVentanaInterna(Ext.Msg.show({
-					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				}));
-			respuesta=false;
-			}
-		});
-		return respuesta;
-	}
+                }
+                else{
+                    centrarVentanaInterna(Ext.Msg.show({
+                        title:'Error',
+                        msg: 'Error al modificar los registros',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    }));
+                    respuesta= false;
+                }
+            },
+            failure:function(response,opts){
+                panelInicialPrincipal.setLoading(false);
+                centrarVentanaInterna(Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                }));
+            respuesta=false;
+            }
+        });
+        return respuesta;
+    }
+    
+   function seleccionarEquipoQuirurguico(storeQuirugicoBase, totalCPT){
+        _esSeleccion = '1';
+        var arr = [];
+        var valorBase=0;
+        storeQuirugicoBase.each(function(record) {
+            arr.push(record.data);
+        });
+        var totalCPT  = totalCPT.split('|');
+        
+        for(var i = 0; i < totalCPT.length; i++){
+            for(var j = 0; j < arr.length; j++){
+                if(totalCPT[i] == arr[j].cdcpt){
+                    gridIncisos2.getSelectionModel().select(j,true);
+                }
+            }
+        }
+        _esSeleccion = '0';
+        return true;
+    }
+    
+    function existeConfigEquipoQuirurgico(storeQuirurgico,cptEliminar){
+        var arr = [];
+        if(storeQuirurgico != undefined){
+            storeQuirurgico.each(function(record) {
+                arr.push(record.data);
+            });
+            debug("existeConfigEquipoQuirurgico ===> ",cptEliminar);
+            for(var i = 0; i < arr.length; i++){
+                debug("arr[i].cdcpt   ==> ",i+":  "+arr[i].cdcpt);
+                var totalCPT  = arr[i].cdcpt.split('|');
+                debug("totalCPT.length ==> ",totalCPT.length);
+                for(var j = 0; j < totalCPT.length; j++){
+                	debug("totalCPT[i] ==>",totalCPT[j]);
+                	debug("cptEliminar ==>",cptEliminar);
+                	if(totalCPT[j] == cptEliminar){
+                        _existeConfiguracion = '1';
+                    }                	
+                }
+                	
+            }
+        }
+        return true;
+    }
+    
+    function pad (n, length) {
+        var  n = n.toString();
+        while(n.length < length)
+             n = "0" + n;
+        return n;
+    }
 });
