@@ -132,16 +132,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			items.put("comboEtapa" , gc.getItems());
 			
-			List<ComponenteVO> comboEstacion = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "FLUJOMC", "COMBO_ESTACION", null);
-			gc.generaComponentes(comboEstacion, true, false, true, false, false, false);
-			
-			items.put("comboEstacion" , gc.getItems());
-			
-			List<ComponenteVO> comboTrazabilidad = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "FLUJOMC", "COMBO_TRAZABILIDAD", null);
-			gc.generaComponentes(comboTrazabilidad, true, false, true, false, false, false);
-			
-			items.put("comboTrazabilidad" , gc.getItems());
-			
 		}
 		catch(Exception ex)
 		{
@@ -384,10 +374,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,"-1"  //statusout
 						,"N"   //swfinnode
 						,"1"   //EN REGISTRO
-						,"MDC"//null
-						,"1"//null
 						,"I"
-						
 						);
 			}
 			else if("S".equals(tipo))
@@ -554,8 +541,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,null //statusout
 						,null //swfinnode
 						,null //cdetapa
-						,null // cdestacion
-						,null // cdtrazabilidad
 						,"D"
 						);
 			}
@@ -920,8 +905,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String statusout
 			,boolean swfinnode
 			,String cdetapa
-			,String cdestacion 
-			,String cdtrazabilidad
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -945,8 +928,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ statusout="  , statusout
 				,"\n@@@@@@ swfinnode="  , swfinnode
 				,"\n@@@@@@ cdetapa="    , cdetapa
-				,"\n@@@@@@ cdestacion=" , cdestacion
-				,"\n@@@@@@ cdtrazabilidad=", cdtrazabilidad
 				,"\n@@@@@@ list="       , list
 				));
 		
@@ -970,8 +951,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,statusout
 					,swfinnode ? "S" : "N"
 					,cdetapa
-					,cdestacion
-					,cdtrazabilidad
 					,accion
 					);
 			
@@ -1970,7 +1949,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	}
 	
 	@Override
-	public Map<String,String> registrarTramite ( 
+	public String registrarTramite (
 			String cdunieco , String cdramo    , String estado     , String nmpoliza,
 			String nmsuplem , String cdsucadm  , String cdsucdoc   , String cdtiptra,
 			Date ferecepc   , String cdagente  , String referencia , String nombre,
@@ -2014,7 +1993,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
                 "\n@@@@@@ inyectadoDesdeSigs = " , inyectadoDesdeSigs
 		));
 		
-		Map<String,String> respuesta = new HashMap<String,String>();
 		String paso = null, ntramite = null;
 		try {
 			String renuniext  = null,
@@ -2177,7 +2155,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			       cdsisrolDestino = cdsisrol;
 			
 			boolean turnarAOtraPersona = false;
-			
 			        //userSinPermisoEndoso = false;
 			
 			// Si el sistema genera el tramite o el tramite viene de sigs, hay que turnarlo
@@ -2267,21 +2244,17 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
                     false,  // sinGrabarDetalle
                     turnarAOtraPersona
                     );
-		    logger.debug(ntramite);
-            logger.debug(despacho.getMessage());		
-            respuesta.put("ntramite", ntramite);
-            respuesta.put("asignado", despacho.getMessage());
+            logger.debug(despacho.getMessage());			
 		} catch (Exception ex) {
 			Utils.generaExcepcion(ex, paso);
 		}
 		
 		logger.debug(Utils.log(
-				"\n@@@@@@ ntramite  = ", ntramite,
-				"\n@@@@@@ respuesta = ", respuesta, 
+				"\n@@@@@@ ntramite = ", ntramite,
 				"\n@@@@@@ registrarTramite @@@@@@",
 				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 		));
-		return respuesta;
+		return ntramite;
 	}
 	
 	@Override
@@ -4165,26 +4138,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	    }
         logger.debug("{}", Utils.log("\n@@@@@@ cambiarTipoEndosoTramite @@@@@@",
                                      "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-	}
-	
-	@Override
-	public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception {
-	    logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-	                           "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-	                           "\n@@@@@@ ntramite = ", ntramite,
-	                           "\n@@@@@@ cdusuari = ", cdusuari,
-	                           "\n@@@@@@ cdsisrol = ", cdsisrol));
-	    FlujoVO flujo = null;
-	    String paso = "Construyendo flujo RSTN";
-	    try {
-	        flujo = flujoMesaControlDAO.generarYRecuperarFlujoRSTN(ntramite, cdusuari, cdsisrol);
-	    } catch (Exception ex) {
-	        Utils.generaExcepcion(ex, paso);
-	    }
-        logger.debug(Utils.log("\n@@@@@@ flujo = ", flujo,
-                               "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-                               "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-        return flujo;
 	}
 	
 	@Deprecated

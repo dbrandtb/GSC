@@ -31,22 +31,17 @@ import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.service.MailServiceForSms;
 import mx.com.gseguros.portal.general.util.RolSistema;
-import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import mx.com.aon.portal2.web.GenericVO;
+
 
 
 /**
@@ -134,14 +129,6 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	
 	private List<AvisoHospitalizacionVO> datosAvisosAnteriores;
 	
-	private Map<String,String> smap1;
-	
-	private List<GenericVO> listaCatalogo;
-
-	private List<Map<String,String>> loadList;
-
-	private String mensaje;
-	
 	/**
 	 * Metodo de entrada a consulta de polizas
 	 */
@@ -156,254 +143,6 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 		}
 		return SUCCESS;
 	}
-	
-
-	@Action(value   = "pantallaMedicinaPreventiva",
-    results = {
-	    @Result(name="error"   , location="/jsp-script/general/errorPantalla.jsp"),
-        @Result(name="success" , location="/jsp/extjs4/ventanaMedicinaPreventiva.jsp")
-    }
-	)
-	public String pantallaMedicinaPreventiva() throws Exception {
-		
-		logger.debug(" **** Entrando a pantallaMedicinaPreventiva ****");
-    	try {
-    		smap1.putAll(consultasAseguradoManager.obtieneDatosAsegurado(smap1));
-    		smap1.put("random", String.format("%.0f", Math.random()*10000d));
-
-    		boolean cobMedPrev = false;
-    		try{
-    			cobMedPrev = consultasAseguradoManager.validaAsegCobMedicinaPreventiva(smap1);
-    		}catch(Exception exp){
-    			logger.error("Error al obtener pantallaMedicinaPreventiva ",exp);
-    		}
-    		 
-    		smap1.put("COBMEDPREV", cobMedPrev?Constantes.SI:Constantes.NO);
-    		
-    		logger.debug("Valor de RAMDOM smap1 <<<<<<>>>>>> ::: "+ smap1);
-    	}catch( Exception e){
-    		logger.error("Error al obtener pantallaMedicinaPreventiva ",e);
-    		return SUCCESS;
-    	}
-    	
-    	success = true;
-    	return SUCCESS;
-	}
-
-	@Action(value   = "obtieneCopagoCobMedPrevPol",
-			results = { @Result(name="success", type="json") }
-			)
-	public String obtieneCopagoCobMedPrevPol() throws Exception {
-		
-		logger.debug(" **** Entrando a obtieneCopagoCobMedPrevPol ****");
-		try {
-			params.putAll(consultasAseguradoManager.obtieneCopagoCobMedPrevPol(params));
-			
-		}catch( Exception e){
-			logger.error("Error al obtener obtieneCopagoCobMedPrevPol ",e);
-			return SUCCESS;
-		}
-		
-		success = true;
-		return SUCCESS;
-	}
-	
-	@Action(value   = "obtieneCatalogoPadecimientos",
-			results = { @Result(name="success", type="json") }
-	)
-	public String obtieneCatalogoPadecimientos() throws Exception {
-		
-		logger.debug(" **** Entrando a obtieneCatalogoPadecimientos ****");
-    	try {
-    		
-    		listaCatalogo = consultasAseguradoManager.obtieneCatalogoICDs();
-    		
-    	}catch( Exception e){
-    		logger.error("Error al obtener obtieneCatalogoPadecimientos ",e);
-    		success = false;
-    		return SUCCESS;
-    	}
-    	
-    	success = true;
-    	return SUCCESS;
-		
-	}
-
-	@Action(value   = "obtieneCatalogoEstadosProvMedicos",
-			results = { @Result(name="success", type="json") }
-			)
-	public String obtieneCatalogoEstadosProvMedicos() throws Exception {
-		
-		logger.debug(" **** Entrando a obtieneCatalogoEstadosProvMedicos ****");
-		try {
-			
-			listaCatalogo = consultasAseguradoManager.obtieneCatalogoEstadosProvMedicos();
-			
-		}catch( Exception e){
-			logger.error("Error al obtener obtieneCatalogoEstadosProvMedicos ",e);
-			success = false;
-			return SUCCESS;
-		}
-		
-		success = true;
-		return SUCCESS;
-		
-	}
-
-	@Action(value   = "obtieneCatalogoMunicipiosProvMedicos",
-			results = { @Result(name="success", type="json") }
-			)
-	public String obtieneCatalogoMunicipiosProvMedicos() throws Exception {
-		
-		logger.debug(" **** Entrando a obtieneCatalogoMunicipiosProvMedicos ****");
-		try {
-			
-			listaCatalogo = consultasAseguradoManager.obtieneCatalogoMunicipiosProvMedicos(params);
-			
-		}catch( Exception e){
-			logger.error("Error al obtener obtieneCatalogoMunicipiosProvMedicos ",e);
-			success = false;
-			return SUCCESS;
-		}
-		
-		success = true;
-		return SUCCESS;
-		
-	}
-
-	@Action(value   = "obtieneCatalogoEspecialidadesMedicos",
-			results = { @Result(name="success", type="json") }
-			)
-	public String obtieneCatalogoEspecialidadesMedicos() throws Exception {
-		
-		logger.debug(" **** Entrando a obtieneCatalogoEspecialidadesMedicos ****");
-		try {
-			
-			listaCatalogo = consultasAseguradoManager.obtieneCatalogoEspecialidadesMedicos();
-			
-		}catch( Exception e){
-			logger.error("Error al obtener obtieneCatalogoEspecialidadesMedicos ",e);
-			success = false;
-			return SUCCESS;
-		}
-		
-		success = true;
-		return SUCCESS;
-		
-	}
-	
-	@Action(value   = "obtieneCatDireccionProvMedPorEspecialidad",
-			results = { @Result(name="success", type="json") }
-			)
-	public String obtieneCatDireccionProvMedPorEspecialidad() throws Exception {
-		
-		logger.debug(" **** Entrando a obtieneCatDireccionProvMedPorEspecialidad ****");
-		try {
-			
-			loadList = consultasAseguradoManager.obtieneCatDireccionProvMedPorEspecialidad(params);
-			
-		}catch( Exception e){
-			logger.error("Error al obtener obtieneCatDireccionProvMedPorEspecialidad ",e);
-			success = false;
-			return SUCCESS;
-		}
-		
-		success = true;
-		return SUCCESS;
-		
-	}
-
-	@Action(value   = "obtieneCatalogoFrecuenciaVisitas",
-			results = { @Result(name="success", type="json") }
-			)
-	public String obtieneCatalogoFrecuenciaVisitas() throws Exception {
-		
-		logger.debug(" **** Entrando a obtieneCatalogoFrecuenciaVisitas ****");
-		try {
-			
-			listaCatalogo = consultasAseguradoManager.obtieneCatalogoFrecuenciaVisitas();
-			
-		}catch( Exception e){
-			logger.error("Error al obtener obtieneCatalogoFrecuenciaVisitas ",e);
-			success = false;
-			return SUCCESS;
-		}
-		
-		success = true;
-		return SUCCESS;
-		
-	}
-
-	@Action(value   = "obtieneCatalogoPeriodicidadVisitas",
-			results = { @Result(name="success", type="json") }
-			)
-	public String obtieneCatalogoPeriodicidadVisitas() throws Exception {
-		
-		logger.debug(" **** Entrando a obtieneCatalogoPeriodicidadVisitas ****");
-		try {
-			
-			listaCatalogo = consultasAseguradoManager.obtieneCatalogoPeriodicidadVisitas();
-			
-		}catch( Exception e){
-			logger.error("Error al obtener obtieneCatalogoPeriodicidadVisitas ",e);
-			success = false;
-			return SUCCESS;
-		}
-		
-		success = true;
-		return SUCCESS;
-		
-	}
-	
-	
-	@Action(value   = "obtienePadecimientosAseg",
-			results = { @Result(name="success", type="json") }
-			)
-	public String obtienePadecimientosAseg() throws Exception {
-		
-		logger.debug(" **** Entrando a obtienePadecimientosAseg ****");
-		try {
-			
-			loadList = consultasAseguradoManager.obtienePadecimientosAsegurado(params);
-			
-		}catch( Exception e){
-			logger.error("Error al obtener obtienePadecimientosAseg ",e);
-			success = false;
-			return SUCCESS;
-		}
-		
-		success = true;
-		return SUCCESS;
-		
-	}
-
-	@Action(value   = "actualizaPadecimientoAseg",
-			results = { @Result(name="success", type="json") }
-			)
-	public String actualizaPadecimientoAsegurado() throws Exception {
-		
-		logger.debug(" **** Entrando a actualizaPadecimientoAsegurado ****");
-		try {
-			
-			UserVO usuario = (UserVO) session.get("USUARIO");
-			String usuarioSistema = usuario.getUser();
-			
-			params.put("pi_cdusuari", usuarioSistema);
-			
-			consultasAseguradoManager.actualizaPadecimientoAsegurado(params);
-			
-		}catch( Exception ex){
-			logger.error("Error al obtener actualizaPadecimientoAsegurado ",ex);
-			mensaje = Utils.manejaExcepcion(ex);
-	        success = false;
-	        return SUCCESS;
-		}
-		
-		success = true;
-		return SUCCESS;
-		
-	}
-	
 	
 	/**
      * Obtiene las coincidencias de asegurados
@@ -1005,20 +744,9 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	public Map<String, String> getParams() {
 		return params;
 	}
-	public void setParams(Map<String, String> params) {
-		this.params = params;
-	}
-	
+
 	public void setParam(Map<String, String> params) {
 		this.params = params;
-	}
-	public String getParamsJson() {
-		try {
-			return JSONUtil.serialize(params);
-		} catch (Exception e) {
-			logger.error("Error al generar JSON de params",e);
-			return null;
-		}
 	}
 
 	public List<?> getResultados() {
@@ -1220,35 +948,4 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	}
 	
 	
-	public Map<String, String> getSmap1() {
-		return smap1;
-	}
-
-	public void setSmap1(Map<String, String> smap1) {
-		this.smap1 = smap1;
-	}
-
-	public List<GenericVO> getListaCatalogo() {
-		return listaCatalogo;
-	}
-
-	public void setListaCatalogo(List<GenericVO> listaCatalogo) {
-		this.listaCatalogo = listaCatalogo;
-	}
-
-	public List<Map<String, String>> getLoadList() {
-		return loadList;
-	}
-
-	public void setLoadList(List<Map<String, String>> loadList) {
-		this.loadList = loadList;
-	}
-
-	public String getMensaje() {
-		return mensaje;
-	}
-
-	public void setMensaje(String mensaje) {
-		this.mensaje = mensaje;
-	}
 }

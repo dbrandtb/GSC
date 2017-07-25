@@ -168,8 +168,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case CONFLAYOUT:
 				case TIPO_RECIBOS_IMPRESION:
 				case ETAPAS_ESTADO_FLUJO:
-				case ESTACION_ESTADO_FLUJO:
-				case TRAZABILIDAD_ESTADO_FLUJO:
 				case TIPO_BUSQUEDA_RENOVACION_INDIVIDUAL:
 				case CRITERIOS_RENOVACION_INDIVIDUAL:	
 				case CATALOGO_TRAFUDOC_CDFUNCI:
@@ -178,13 +176,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ZONAS_SUCURSALES:
 				case NIVELES_SUCURSALES:
 				case TAPOYO:
-				case TESPECIALIDADES:
-				case ZONASHOSPITALARIA:
 					lista = catalogosManager.getTmanteni(cat);
-	                break;
-				case TIPOEVENTOGNP:
-					lista = catalogosManager.getTmanteni(cat);
-					logger.debug("Valor de la lista TIPOEVENTOGNP :"+lista);
 	                break;
 				case CVECOLUMNA:
 					lista = catalogosManager.obtieneAtributosExcel(cat);
@@ -211,14 +203,10 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case MC_ESTATUS_TRAMITE:
 					lista = catalogosManager.obtieneStatusTramite(params);
 					break;
-				case MC_ESTATUS_TRAMITE_EMI_RENOV:
-					lista = catalogosManager.obtieneTiposTramiteClonacion();
-					break;
 				case TATRISIT:
 					//lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					//para contemplar atributos situacion por rol (EGS)
-					logger.debug("****** Parametros a enviar al nuevo SP  obtieneAtributosSituacion = *******"   + params);
-					lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"),((UserVO) session.get("USUARIO")).getRolActivo().getClave(), params.get("cdramo"));
+					lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"),((UserVO) session.get("USUARIO")).getRolActivo().getClave());
 					break;
 				case TATRISIN:
 		            lista = catalogosManager.obtieneAtributosSiniestro(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
@@ -395,13 +383,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = siniestrosManager.getConsultaListaSubcobertura(cdunieco, cdramo, estado, nmpoliza, nmsituac, cdtipsit, cdgarant, cdsubcob,cdrol);
 					break;
-				case SUBCOBERTURAS_X_PRODUCTO_COBERTURA:
-					if(params==null)
-					{
-						params=new HashMap<String, String>();
-					}
-					lista = siniestrosManager.obtieneListadoSubcoberturaPorProdCob(params.get("cdramo"), params.get("cdtipsit"), params.get("cdgarant"));
-					break;
 					
 				case SUBCOBERTURASTOTALES:
 					lista = siniestrosManager.getConsultaListaSubcoberturaTotales();
@@ -413,16 +394,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case SUBCOBERTURAS4MSC:
 					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("MSC");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
-				case SUBCOBERTURASGMPI:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPI");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
-				case SUBCOBERTURASGMPC:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPC");
 					logger.debug("Valor de lista==>"+lista.size());
 					logger.debug(lista);
 					break;
@@ -1082,9 +1053,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				        lista = catalogosManager.recuperarTiposEndosoPorTramite(params.get("ntramite"));
 				    }
 				    break;
-				case TIPOPROVEEDOR:
-					lista = siniestrosManager.getConsultaListaTiposProveedores();
-					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

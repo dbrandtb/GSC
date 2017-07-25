@@ -26,12 +26,15 @@ var urlReintentarWS                        = '<s:url namespace="/"        action
 var _urlEnviarCorreo                       = '<s:url namespace="/general" action="enviaCorreo"      />';
 var _urlCargarCorreos                     = '<s:url namespace="/cotizacionautos"          action="cargarCorreos"              />';
 var _p29_urlRecuperacion                   = '<s:url namespace="/recuperacion"    action="recuperar"                       />';
+
 var url_buscar_empleado                     = '<s:url namespace="/emision"              action="buscarEmpleados"                       />';
 var urlCargar                               = '<s:url namespace="/"                     action="cargarDatosComplementarios"  />';
 var url_guarda_empleado                     = '<s:url namespace="/emision"                action="guardaEmpleados"  />';
 var url_admin_ret                           = '<s:url namespace="/emision"                action="obtieneAdminRet"  />';
-var _p29_urlRangoPeriodogracia              = '<s:url namespace="/emision"   action="obtieneRangoPeriodoGraciaAgente"              />';
-var _p29_cargaEndososB						= '<s:url namespace="/"           action="cargaEndososB"                        />';
+
+var _p29_cargaEndososB						= '<s:url namespace="/"           action="cargaEndososB"                        />';    
+
+
 ////// urls //////
 
 ////// variables //////
@@ -67,14 +70,11 @@ var poliza;
 var _p29_habilitarBotonEmitir  = "S";
 
 var _url_domiciliacion = '<s:text name="portal.agentes.domiciliacion.url" />';
-var _URL_IDUSULOGIN = '<s:property value="sigsObtenerDatosPorSucRamPolUrl" />';
+var _URL_IDUSULOGIN = '<s:text name="sigs.obtenerDatosPorSucRamPol.url" />';
 
 var panelDxnItems=[<s:property value="imap.panelDxnItems" />];
 
 var esDXN=false;
-var saveList;
-var storeDocumentos;
-var ventanaEndoso;
 
 ////// variables //////
 
@@ -125,16 +125,6 @@ Ext.onReady(function()
             ,{name : 'orden_parentesco'}
         ]
     });
-    
-    Ext.define('modeloRenovarEndososB'
-   		    ,{extend: 'Ext.data.Model'
-                    ,fields:
-                      [
-           	   		       {type:'string' ,name:'id'         }
-                          ,{type:'string' ,name:'descripcion'}
-                          ,{type:'boolean',name:'renovar'    }
-         		       ]
-                });
     ////// modelos //////
     
     ////// stores //////
@@ -169,9 +159,6 @@ Ext.onReady(function()
         }
         _p29_polizaAdicionalesItems = aux;
     </s:if>
-    <s:if test='%{getImap().get("customRamo6")!=null}'>
-	    _p29_polizaAdicionalesItems.push(<s:property value="imap.customRamo6" />);
-    </s:if>
     for(var i=0;i<_p29_polizaAdicionalesItems.length;i++)
     {
         _p29_polizaAdicionalesItems[i].labelWidth=295;
@@ -183,7 +170,6 @@ Ext.onReady(function()
     </s:if>
     
     var _p29_datosGeneralesItems = [<s:property value="imap.polizaItems" />];
-    	
     for(var i=0;i<_p29_datosGeneralesItems.length;i++)
     {
         _p29_datosGeneralesItems[i].labelWidth=295;
@@ -191,6 +177,9 @@ Ext.onReady(function()
     ////// componentes //////
     
     ////// contenido //////
+    
+    
+    
     panelDxnItems.splice(0, 0,
             
             {
@@ -221,13 +210,19 @@ Ext.onReady(function()
                       _fieldByName("aux.otvalor16").setValue('');
                   }
               }
+              
+            
+        
          );
+    
+    
+    
+    
     
     Ext.create('Ext.panel.Panel',
     {
         itemId    : '_p29_panelpri'
         ,renderTo : '_p29_divpri'
-        ,title    : _p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto?'Emisi&oacute;n Servicio P&uacute;blico Auto':_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoMicro?'Emisi&oacute;n Servicio P&uacute;blico Microbus':null
         ,border   : 0
         ,defaults : { style : 'margin:5px;' }
         ,items    :
@@ -398,7 +393,6 @@ Ext.onReady(function()
                                                            json.parametros.pv_otvalor08!=null 
                                                         && (json.parametros.pv_otvalor08+'').trim()!=''
                                                         && json.parametros.pv_otvalor08!='-1'
-                                                        && _p29_smap1.cdramo!=Ramo.ServicioPublico
                                                   ){
                                                     
                                                         esDXN=true;
@@ -431,13 +425,16 @@ Ext.onReady(function()
                                                             }        
                                                     );
                                                     
+                                                    
                                                     _fieldByName("aux.otvalor10").setValue(json.parametros.pv_otvalor10==null?"":json.parametros.pv_otvalor10);
                                                     _fieldByName("aux.otvalor11").setValue(json.parametros.pv_otvalor11==null?"":json.parametros.pv_otvalor11);
                                                     _fieldByName("aux.otvalor12").setValue(json.parametros.pv_otvalor12==null?"":json.parametros.pv_otvalor12);
                                                     _fieldByName("aux.otvalor13").setValue(json.parametros.pv_otvalor13==null?"":json.parametros.pv_otvalor13);
                                                     _fieldByName("aux.otvalor14").setValue(json.parametros.pv_otvalor14==null?"":json.parametros.pv_otvalor14);
                                                     _fieldByName("aux.otvalor15").setValue(json.parametros.pv_otvalor15==null?"":json.parametros.pv_otvalor15);
+                                                    
                                                     _fieldByName("aux.otvalor16").setValue(json.parametros.pv_otvalor16==null?"":json.parametros.pv_otvalor16);
+                                                   
                                                     _fieldByName("aux.otvalor08").setReadOnly(true);
                                                     _fieldByName("aux.otvalor09").setReadOnly(true);
                                                     _fieldByName("aux.otvalor09").focus();
@@ -459,9 +456,11 @@ Ext.onReady(function()
                                                         })
                                                     });
                                                     
+                                                    
                                                     _mask("cargando datos");
                                                     Ext.Ajax.request(
                                                             {
+                                                               
                                                                  url     : url_admin_ret 
                                                                 ,params :
                                                                 {
@@ -485,9 +484,13 @@ Ext.onReady(function()
                                                                                 name       :'aux.otvalor'+i
                                                                             });
                                                                             _fieldByName("aux.otvalor"+i).setValue(json.parametros['pv_otvalor'+i]==null?"":json['parametros.pv_otvalor'+i]);
+                                                                            
+                                                                           
                                                                         }
                                                                       }
+                                                                      
                                                                     });
+                                                                    
                                                                 }
                                                                 ,failure : function()
                                                                 {
@@ -495,12 +498,18 @@ Ext.onReady(function()
                                                                     errorComunicacion();
                                                                 }
                                                             });
+                                
+                                                    
+                                                    
+                                                    
                                                 }else{
                                                     esDXN=false;
                                                     me.destroy();
                                                 }
                                                 
+                                                
                                                 json.parametros.pv_otvalor08
+                                                
                                             }
                                             catch(e)
                                             {
@@ -520,6 +529,8 @@ Ext.onReady(function()
                                 });
                     }
                 }
+                    
+                 
             })
             ,Ext.create('Ext.panel.Panel',
             {
@@ -590,20 +601,8 @@ Ext.onReady(function()
     _fieldByLabel('AGENTE').hide();
     _fieldByName('porparti').setMaxValue(99);
     
-    if(_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
-	  //PERMITIMOS EDICION IGUAL QUE EN AF
-	    Ext.ComponentQuery
-	    .query('[fieldLabel="NUMERO DE SERIE"]')
-	    .forEach(function(it,idx){
-	        if(_fieldByLabel('TIPO DE UNIDAD').getValue()==TipoUnidad.Fronterizo)
-	            it.setReadOnly(!RolSistema.puedeSuscribirAutos(_0_smap1.cdsisrol));
-	            it.fireEvent('blur');
-	    });
-    }
     //codigo dinamico recuperado de la base de datos
     <s:property value="smap1.customCode" escapeHtml="false" />
-    
-    
     ////// custom //////
     
     ////// loaders //////
@@ -720,13 +719,6 @@ Ext.onReady(function()
                 }
 
                 _p29_loadCallback();
-                
-                if(_p29_smap1.cdramo==Ramo.ServicioPublico)
-                {
-                	cargaComentariosRamo6();
-                }
-              //RANGO PERIODO DE GRACIA
-        	    rangoPeriodoGracia()
             }
             else
             {
@@ -736,7 +728,6 @@ Ext.onReady(function()
         ,failure : errorComunicacion
     });
     ////// loaders //////
-   
     
     if(_p29_smap1.cdtipsit==TipoSituacion.ServicioPublicoAuto){
         var folio  = _fieldByName('parametros.pv_otvalor35');
@@ -745,53 +736,53 @@ Ext.onReady(function()
     }else{
         var folio  = _fieldByName('parametros.pv_otvalor37',null,true);
     }
-        
-	   
-	    debug("Valor del Folio --->",folio);
-	    if(_p29_smap1.cdtipsit!='TL')
-		    folio.on(
-		    {
-		        'change' : function(comp,val)
-		        {
-		            debug('folio change val:',val,'dummy');
-		        }
-		        ,'blur' : function()
-		        {
-		            debug("Valor 1 -->",!Ext.isEmpty(folio.getValue()));
-		            if(!Ext.isEmpty(folio.getValue())){
-		                Ext.Ajax.request(
-		                {
-		                    url     : _p29_urlObtieneValNumeroSerie
-		                    ,params :
-		                    {
-		                        'smap1.numSerie'  : folio.getValue()
-		                        ,'smap1.feini'   : _fieldByName('feini').getValue()
-		                    }
-		                    ,success : function(response)
-		                    {
-		                        var json=Ext.decode(response.responseText);
-		                        if(json.exito!=true)
-		                        {
-		                            if(!RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol))
-		                            {
-		                                mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
-		                                _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
-		                            }else{
-		                                mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
-		                                _fieldById('_p29_botonEmitir').setDisabled(false);
-		                            }
-		                        }else{
-		                            _fieldById('_p29_botonEmitir').setDisabled(false);
-		                        }
-		                    }
-		                    ,failure : errorComunicacion
-		                }); 
-		            }else{
-		                mensajeError("No se recibio el número de serie");
-		            }
-		        }
-		    });
-	    
+    
+    
+    
+    debug("Valor del Folio --->",folio);
+    if(_p29_smap1.cdtipsit!='TL')
+    folio.on(
+    {
+        'change' : function(comp,val)
+        {
+            debug('folio change val:',val,'dummy');
+        }
+        ,'blur' : function()
+        {
+            debug("Valor 1 -->",!Ext.isEmpty(folio.getValue()));
+            if(!Ext.isEmpty(folio.getValue())){
+                Ext.Ajax.request(
+                {
+                    url     : _p29_urlObtieneValNumeroSerie
+                    ,params :
+                    {
+                        'smap1.numSerie'  : folio.getValue()
+                        ,'smap1.feini'   : _fieldByName('feini').getValue()
+                    }
+                    ,success : function(response)
+                    {
+                        var json=Ext.decode(response.responseText);
+                        if(json.exito!=true)
+                        {
+                            if(!RolSistema.puedeSuscribirAutos(_p29_smap1.cdsisrol))
+                            {
+                                mensajeValidacionNumSerie("Error","${ctx}/resources/fam3icons/icons/exclamation.png", json.respuesta);
+                                _fieldById('_p29_botonEmitir').setDisabled(true);//Deshabilita el boton
+                            }else{
+                                mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
+                                _fieldById('_p29_botonEmitir').setDisabled(false);
+                            }
+                        }else{
+                            _fieldById('_p29_botonEmitir').setDisabled(false);
+                        }
+                    }
+                    ,failure : errorComunicacion
+                }); 
+            }else{
+                mensajeError("No se recibio el número de serie");
+            }
+        }
+    });
 	    debug("Si aplican para renovaciones, se cargan endosos de default");
 	    if(!Ext.isEmpty(_p29_flujo) && ( _p29_flujo.cdflujomc != 240 || _p29_flujo.cdtipflu != 103))
 		{
@@ -900,7 +891,7 @@ function _p29_loadCallback()
         ,failure : errorComunicacion
     });
     
-    if(_p29_smap1.cdramo==Ramo.ServicioPublico || _p29_smap1.cdramo==Ramo.AutosResidentes)
+    if(_p29_smap1.cdramo+'x'=='5x')
     {
         Ext.Ajax.request(
         {
@@ -1297,8 +1288,9 @@ function _p29_mostrarVistaPrevia()
                                     ,text  : 'Enviar Email'
                                     ,icon  : '${ctx}//resources/fam3icons/icons/email.png'
                                     ,disabled: true
-                                    ,handler  : function(){
+                                    ,handler:function(){
                                     	_p30_enviar()
+                                        
                                     }
                                     //REQ0040
                                 },{
@@ -1433,7 +1425,7 @@ function _p29_mostrarVistaPrevia()
                                    	    }
                                    	}
                                 }
-                                //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                            
                             ]//Fin Items. Ext.form.Panel
                         })//Fin Ext.form.Panel (Fin ext.create
                     ]//Fin Items. Ext.window.Window
@@ -1469,10 +1461,9 @@ function _p29_emitirFinal(me)
 	         ,pv_nmpoliza : _p29_smap1.nmpoliza
 	         ,pv_cdramo   : _p29_smap1.cdramo
 	         ,pv_cdunieco : _p29_smap1.cdunieco
-	    }
+        }
         ,slist1 : saveList
     };
-    
     Ext.Ajax.request(
     {
          url      : _p29_urlEmitir
@@ -1497,7 +1488,7 @@ function _p29_emitirFinal(me)
                     _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                     _fieldById('_p29_botonNueva').setDisabled(false);
                     _fieldById('_p29_botonEndososB').setDisabled(true);
-                   
+                    
                     
                     Ext.Msg.show(
                     {
@@ -1544,7 +1535,6 @@ function _p29_emitirFinal(me)
                 _fieldById('_p29_botonCancelarEmision').setDisabled(true);
                 _fieldById('_p29_botonNueva').setDisabled(false);
                 _fieldById('_p29_botonEndososB').setDisabled(true);
-                
                 if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
                 {
                     var ventanaTmp = Ext.Msg.show(
@@ -2164,73 +2154,6 @@ function buscarEmpleado(administradora,retenedora,ce,rfc,ap,am,nom){
             });
     
 }
-
-function cargaComentariosRamo6(){
-	try{
-		Ext.ComponentQuery.query('[name=aux.otvalor08]').forEach(function(it){
-			it.store.proxy.extraParams['params.negocio']=_fieldByLabel('NEGOCIO',null,true).getValue();
-			it.store.load();
-			it.store.on({
-                load      : function(store){
-                               store.insert(0,{"aux":null,"aux2":null,"aux3":null,"key":null,"value":"(NINGUNO)"})
-                            }
-});
-		});
-	}catch(e){
-		debugError(e);
-	}
-}
-
-function rangoPeriodoGracia(){
-	
-	try{
-		Ext.Ajax.request(
-			    {
-			        url     : _p29_urlRangoPeriodogracia
-			        ,params :
-			        {
-			            
-			             'smap1.cdramo'   : _p29_smap1.cdramo
-			            ,'smap1.cdtipsit' : _p29_smap1.cdtipsit
-			            ,'smap1.cdagente' : _fieldByLabel('AGENTE',null,true).getValue()
-			           
-			        }
-			        ,success : function(response)
-			        {
-			            var json=Ext.decode(response.responseText);
-			            debug('### respuesta periodo gracia:',json);
-			            if(json.exito)
-			            {
-			                if(!Ext.isEmpty(json.slist1)){
-			                	json.slist1.forEach(function(it){
-			                		_fieldByLabel('PERIODO GRACIA',null,true).getStore().filter(
-			                				[
-			                					{
-			                						filterFn: function(item) {
-			                							var val=parseInt(item.get("key"));
-			                							it.MINIMO=parseInt(it.MINIMO);
-			                							it.MAXIMO=parseInt(it.MAXIMO);
-			                							debug("test: ",item.get("key")," - ",it.MINIMO," ",it.MAXIMO," ",item.get("key") >= it.MINIMO," ",item.get("key") <= it.MAXIMO)
-			                							return val >= it.MINIMO && val <= it.MAXIMO ; 
-			                						}
-			                					}
-			                				]
-			                				);
-			                	});
-			                }
-			            }
-			            else
-			            {
-			                mensajeError(json.respuesta);
-			            }
-			        }
-			        ,failure : errorComunicacion
-			    });
-	}catch(e){
-		debugError(e)
-	}
-}
-
 function cargaStoreB(callback)
 {
 	var json =
@@ -2267,7 +2190,6 @@ function cargaStoreB(callback)
 	        }
 	    });
 }
-
 function mostrarVentanaEndoso()
 {
     if(storeDocumentos!=null)
@@ -2320,7 +2242,6 @@ function mostrarVentanaEndoso()
     								{
     									if(storeDocumentos.getUpdatedRecords().length==0)
     									{ventanaEndoso.close();}
-
     									seteoListaEndosos();
     								}
     						    }
@@ -2337,7 +2258,6 @@ function mostrarVentanaEndoso()
         );
     }
 }
-
 function seteoListaEndosos()
 {
 	if(storeDocumentos!=null)
@@ -2363,7 +2283,6 @@ function seteoListaEndosos()
 		);
     }
 }
-
 function _p30_enviar()
 {
     debug('>_p30_enviar');
@@ -2446,7 +2365,6 @@ function _p30_enviar()
                                              	,function(){}
                                              	,'S'
                                               	);
-                                              	
                                                 me.up().up().setLoading(false);
                                                 me.up().up().destroy();
                                             }
@@ -2457,9 +2375,7 @@ function _p30_enviar()
                                         mensajeError('Error al enviar');
                                         me.up().up().setLoading(false);
                                         me.up().up().destroy();
-                                        
                                     }
-                                
                                    }
                                    else
                                    {
@@ -2474,7 +2390,6 @@ function _p30_enviar()
                         mensajeWarning('Introduzca al menos un correo');
                         me.up().up().destroy();
                     }
-                    
                 }
             }
             ,{
@@ -2490,8 +2405,6 @@ function _p30_enviar()
     _fieldById('_p30_idInputCorreos').focus();
     debug('<_p30_enviar');
 }
-
-
 //REQ0040 envio de correos
 function _p30_cargarCorreos(ntramite)
 {
@@ -2506,7 +2419,6 @@ function _p30_cargarCorreos(ntramite)
         ,success : function(response) {
             var json = Ext.decode(response.responseText);
             debug('### json cargarCorreos:',json);
-            
             if(json.exito)
             {
             	  debug('>_p30_cargarCorreos 1 ', json.respuesta);
