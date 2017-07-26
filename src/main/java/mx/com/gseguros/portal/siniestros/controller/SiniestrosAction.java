@@ -5922,7 +5922,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}
 		return SUCCESS;
 	}
-		
+
 	public String procesarTramiteLayout(){
 		logger.debug("Entra a procesarTramiteLayout Datos de Entrada :{}",params);
 		success = true;
@@ -6475,6 +6475,33 @@ public String reservasTipPag(){
 			return SUCCESS;
 		}
 		success = true;
+		return SUCCESS;
+	}
+	public String crearTramitesLayout(){	/*EGS*/
+		logger.debug("Entra a crearTramitesLayout");
+		success = true;
+		try{
+			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
+			slist1 = siniestrosManager.crearTramitesLayout(cdusuari, null);
+			logger.debug("luego de crearTramitesLayoutttt",slist1.isEmpty());
+			if (!slist1.isEmpty()){
+				mensaje = "Se generaron los siguientes tramites: ";
+				for(int i = 0; i>slist1.size();i++){
+					logger.debug("Leyendo tramites: ",i,slist1.get(i).get("NTRAMITE"));
+					mensaje = mensaje + slist1.get(i).get("NTRAMITE");
+					if(i<slist1.size() - 1){
+						mensaje = mensaje + ",";
+					}
+				}
+			}else{
+				logger.debug("Sin tramites en crearTramitesLayout");
+				mensaje = "Sin datos de Layout a procesar";
+			}
+		}catch(Exception e){
+			logger.error("Error en crearTramitesLayout: {}",e.getMessage(),e);
+			success = false;
+			return SUCCESS;
+		}
 		return SUCCESS;
 	}
     

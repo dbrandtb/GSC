@@ -3138,7 +3138,17 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
 		return siniestrosDAO.obtieneListaAutServPersonaCobertura(params);
 	}
-	
+
+	@Override
+	public List<Map<String, String>> crearTramitesLayout(String usuario, String tipoProceso) throws Exception {
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("PV_CDPRESTA_I", null);
+		params.put("PV_NMCONSULT_I", null);
+		params.put("PV_CDUSUARI_I", usuario);
+		params.put("PV_TIPOPROC_I", tipoProceso);
+		return siniestrosDAO.creaTramitesLayout(params);
+	}
+
 	@Override
 	public List<GenericVO> getConsultaEstadoSiniestros() throws Exception {
 		try {

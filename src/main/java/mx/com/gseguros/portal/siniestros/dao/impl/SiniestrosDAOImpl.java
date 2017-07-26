@@ -5443,7 +5443,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
-
+	
 	@Override
 	public List<Map<String, String>> obtieneValidaconAranceleTramite(HashMap<String, Object> params) throws Exception {
 		Map<String, Object> result = ejecutaSP(new ObtieneValidaconAranceleTramite(this.getDataSource()), params);
@@ -7447,6 +7447,29 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 		
 		@Override
+		public List<Map<String, String>> creaTramitesLayout(HashMap<String,Object> params) throws Exception{	/*EGS*/
+			Map<String,Object> result = ejecutaSP(new CreaTramitesLayout(this.getDataSource()),params);
+			return (List<Map<String,String>>)result.get("PV_REGISTRO_O");
+		}
+		
+		protected class CreaTramitesLayout extends StoredProcedure{	/*EGS*/
+			protected CreaTramitesLayout(DataSource dataSource){
+				super(dataSource,"P_PROCESA_TCONLAYSIN");
+				String[] cols = new String[]{
+						"NTRAMITE"
+				};
+				declareParameter(new SqlParameter("PV_CDPRESTA_I",OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("PV_NMCONSULT_I",OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("PV_CDUSUARI_I",OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("PV_TIPOPROC_I",OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("PV_REGISTRO_O",OracleTypes.CURSOR, new GenericMapper(cols)));
+				declareParameter(new SqlOutParameter("PV_MSG_ID_O",OracleTypes.NUMERIC));
+				declareParameter(new SqlOutParameter("PV_TITLE_O",OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+
+		@Override
 		public List<GenericVO> obtieneListadoEstadoSiniestros() throws Exception {
 			Map<String,Object> resultadoMap=this.ejecutaSP(new ObtieneListadoEstadoSiniestros(this.getDataSource()), new HashMap<String,String>());
 			return (List<GenericVO>) resultadoMap.get("pv_registro_o");
@@ -7514,4 +7537,5 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				compile();
 			}
 		}
+
 }

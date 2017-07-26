@@ -733,9 +733,12 @@ public interface SiniestrosDAO {
 	
 	public List<Map<String, String>> obtieneListaAutServPersonaCobertura(Map<String, Object> params) throws Exception;
 	
+	public List<Map<String, String>> creaTramitesLayout(HashMap<String, Object> params) throws Exception;	/*EGS*/
+	
 	public List<GenericVO> obtieneListadoEstadoSiniestros()  throws Exception;
 	
 	public List<GenericVO> obtieneListadoMunicipioSiniestros(String edoSiniestro) throws Exception;
 	
 	public List<ConsultaProveedorVO> obtieneListadoProvMedico(String tipoprov,String cdpresta,String cdestado,String cdmunicipio) throws Exception;
+
 }
