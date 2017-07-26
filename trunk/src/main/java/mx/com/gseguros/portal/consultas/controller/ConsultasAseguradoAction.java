@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.consultas.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +28,17 @@ import mx.com.gseguros.portal.consultas.model.PeriodoVigenciaVO;
 import mx.com.gseguros.portal.consultas.model.PlanVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
+import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.service.MailServiceForSms;
+import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import mx.com.aon.portal2.web.GenericVO;
@@ -86,6 +94,9 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	@Autowired
 	@Qualifier("consultasAseguradoManagerImpl")
     private ConsultasAseguradoManager consultasAseguradoManager;
+	
+	@Autowired
+    private DocumentosManager documentosManager;
 	
 	/*
 	@Autowired
@@ -141,6 +152,15 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 	private List<Map<String,String>> loadList;
 
 	private String mensaje;
+	
+	@Value("${ruta.servidor.reports}")
+    private String rutaServidorReports;
+    
+    @Value("${pass.servidor.reports}")
+    private String passServidorReports;
+    
+    @Value("${ruta.documentos.poliza}")
+    private String rutaDocumentosPoliza;
 	
 	/**
 	 * Metodo de entrada a consulta de polizas
@@ -397,6 +417,95 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 			mensaje = Utils.manejaExcepcion(ex);
 	        success = false;
 	        return SUCCESS;
+		}
+		
+		success = true;
+		return SUCCESS;
+		
+	}
+
+	@SuppressWarnings("deprecation")
+	@Action(value   = "generaCartaMedicinaPreventiva",
+			results = { @Result(name="success", type="json") }
+			)
+	public String generaCartaMedicinaPreventiva() throws Exception {
+		
+		logger.debug(" **** Entrando a generaCartaMedicinaPreventiva ****");
+		try {
+			
+			UserVO usuario = (UserVO) session.get("USUARIO");
+			params.put("pi_cdusuari", usuario.getUser());
+			
+			try {
+				Map<String, String> datosNtramite = consultasAseguradoManager.obtenerNtramiteEmision(params.get("pi_cdunieco"), params.get("pi_cdramo"), params.get("pi_estado"), params.get("pi_nmpoliza"));
+				params.put("pi_ntramite", datosNtramite.get("NTRAMITE"));
+				params.put("pi_nmsuplem", datosNtramite.get("NMSUPLEM"));
+						
+	    	}catch( Exception ex){
+	    		logger.error("Error al obtener datos de Tramite para guardar Documento ",ex);
+	    		mensaje = "Error al obtener datos de Tramite para guardar Documento. "+Utils.manejaExcepcion(ex);
+				success = false;
+				return SUCCESS;
+	    	}
+			
+			
+			String reporteSeleccion = getText("rdf.medicinaprev.impresion.cartaMedPrev");
+			
+			String urlGenerarCartaMedPrev = ""
+				+ rutaServidorReports
+				+ "?P_UNIECO="   + params.get("pi_cdunieco")
+				+ "&P_RAMO="     + params.get("pi_cdramo")
+				+ "&P_POLIZA="   + params.get("pi_nmpoliza")
+				+ "&P_SITUAC="   + params.get("pi_nmsituac")
+				+ "&P_CDPERSON=" + params.get("pi_cdperson")
+				+ "&P_CDICD="    + params.get("pi_cdicd")
+				+ "&destype=cache"
+				+ "&desformat=PDF"
+				+ "&userid="+passServidorReports
+				+ "&ACCESSIBLE=YES"
+				+ "&report="+reporteSeleccion
+				+ "&paramform=no"
+				;
+			
+			logger.debug("urlAutorizacionServicio: {}", urlGenerarCartaMedPrev);
+			
+			String nombreArchivoModificado = "CartaMP_Aseg_"+params.get("pi_cdperson")+"_ICD_"+params.get("pi_cdicd")+"_t"+System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+".pdf";
+			String pathArchivo=""
+				+ rutaDocumentosPoliza
+				+ "/" + params.get("pi_ntramite")
+				+ "/" + nombreArchivoModificado
+				;
+			HttpUtil.generaArchivo(urlGenerarCartaMedPrev, pathArchivo);
+			
+			documentosManager.guardarDocumento(
+					params.get("pi_cdunieco"),
+					params.get("pi_cdramo"),
+					params.get("pi_estado"),
+					params.get("pi_nmpoliza"),
+					params.get("pi_nmsuplem")
+					,new Date()
+					,nombreArchivoModificado
+					,"Carta de Medicina Preventiva ASEG:"+ params.get("pi_cdperson")+" ICD:"+params.get("pi_cdicd")+"_"+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
+					,null
+					,params.get("pi_ntramite")
+					,TipoEndoso.APARTADO_DE_MEDICINA_PREVENTIVA.getCdTipSup().toString()
+					,null//visible
+					,null//codidocu
+					,TipoTramite.POLIZA_NUEVA.getCdtiptra()
+					,null//cdordoc
+					,null//documento
+					,usuario.getUser()
+					,usuario.getRolActivo().getClave(), false
+					);
+			
+					//PARA ACTUALIZAR EL SW CARTA DE MEDICINA PREVENTIVA GENERADA
+					consultasAseguradoManager.actualizaPadecimientoAsegurado(params);
+			
+		}catch( Exception ex){
+			logger.error("Error al obtener generaCartaMedicinaPreventiva ",ex);
+			mensaje = Utils.manejaExcepcion(ex);
+			success = false;
+			return SUCCESS;
 		}
 		
 		success = true;
@@ -1250,5 +1359,35 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
+	}
+
+
+	public String getRutaServidorReports() {
+		return rutaServidorReports;
+	}
+
+
+	public void setRutaServidorReports(String rutaServidorReports) {
+		this.rutaServidorReports = rutaServidorReports;
+	}
+
+
+	public String getPassServidorReports() {
+		return passServidorReports;
+	}
+
+
+	public void setPassServidorReports(String passServidorReports) {
+		this.passServidorReports = passServidorReports;
+	}
+
+
+	public String getRutaDocumentosPoliza() {
+		return rutaDocumentosPoliza;
+	}
+
+
+	public void setRutaDocumentosPoliza(String rutaDocumentosPoliza) {
+		this.rutaDocumentosPoliza = rutaDocumentosPoliza;
 	}
 }

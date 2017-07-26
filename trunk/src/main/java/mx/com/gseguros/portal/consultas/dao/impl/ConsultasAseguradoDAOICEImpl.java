@@ -7,12 +7,14 @@ import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
@@ -1275,6 +1277,54 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 			declareParameter(new SqlParameter("cdperson", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_swmedprev_o", OracleTypes.NUMBER));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String> obtenerNtramiteEmision(String cdunieco,String cdramo,String estado,String nmpoliza)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		
+		Map<String,String>resultado=new LinkedHashMap<String,String>();
+		String ntramite = null;
+		String nmsuplem = null;
+
+		Map<String,Object>procResult=this.ejecutaSP(new ObtenerNtramiteEmision(this.getDataSource()), params);
+		
+		ntramite = (String) procResult.get("pv_ntramite_o");
+		nmsuplem = (String) procResult.get("pv_nmsuplem_o");
+		
+		if(StringUtils.isBlank(ntramite))
+		{
+			throw new ApplicationException("No hay tramite de emision");
+		}
+		
+		resultado.put("NTRAMITE", ntramite);
+		resultado.put("NMSUPLEM", nmsuplem);
+		
+		return resultado;
+	}
+	
+	protected class ObtenerNtramiteEmision extends StoredProcedure
+	{
+
+		protected ObtenerNtramiteEmision(DataSource dataSource)
+		{
+			super(dataSource, "P_GET_NTRAMITE_EMISION02");
+
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
 		}

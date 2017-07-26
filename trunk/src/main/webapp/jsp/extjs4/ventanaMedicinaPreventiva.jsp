@@ -24,8 +24,8 @@ var tieneCobMedicinaPrev = '<s:property value="smap1.COBMEDPREV" />';
 
 var _CONTEXT       = '${ctx}';
 
-var _urlCargaPadecimientosAseg   = '<s:url namespace="/consultasAsegurado"  action="obtienePadecimientosAseg" />';
-var _urlCargaHistorialPadeciAseg = '<s:url namespace="/consultasAsegurado"  action="obtieneHistorialPadecimientoAseg" />';
+var _urlCargaPadecimientosAseg         = '<s:url namespace="/consultasAsegurado"  action="obtienePadecimientosAseg" />';
+var _urlCargaHistorialPadeciAseg       = '<s:url namespace="/consultasAsegurado"  action="obtieneHistorialPadecimientoAseg" />';
 
 var _URL_CatalogoPadecimientos         = '<s:url namespace="/consultasAsegurado" action="obtieneCatalogoPadecimientos" />';
 var _URL_CatalogoEstadosProvMedicos    = '<s:url namespace="/consultasAsegurado" action="obtieneCatalogoEstadosProvMedicos" />';
@@ -38,11 +38,19 @@ var _urlActualizaPadecimientoAseg        = '<s:url namespace="/consultasAsegurad
 var _urlActualizaCartaMPPadecimientoAseg = '<s:url namespace="/consultasAsegurado"  action="actualizaCartaMPPadecimientoAseg" />';
 var _urlActualizaHistorialPadeciAseg     = '<s:url namespace="/consultasAsegurado"  action="actualizaHistorialPadecimientoAseg" />';
 
-var _urlObtieneCopagoCobMedPrevPol        = '<s:url namespace="/consultasAsegurado"  action="obtieneCopagoCobMedPrevPol" />';
+var _urlObtieneCopagoCobMedPrevPol       = '<s:url namespace="/consultasAsegurado"  action="obtieneCopagoCobMedPrevPol" />';
 
-var _UrlConsultaMedicosTratantes        = '<s:url namespace="/consultasAsegurado"  action="obtieneCatDireccionProvMedPorEspecialidad" />';
+var _UrlConsultaMedicosTratantes         = '<s:url namespace="/consultasAsegurado"  action="obtieneCatDireccionProvMedPorEspecialidad" />';
+
+var _urlGeneraCartaMedicinaPreventiva         = '<s:url namespace="/consultasAsegurado"  action="generaCartaMedicinaPreventiva" />';
 
 var gridPadecimientosAsegurado;
+
+var _urlRutaReports                   = '<s:property value="rutaServidorReports" />';
+var _reportsServerUser                = '<s:property value="passServidorReports" />';
+
+var _reporteCartaMedicinaPreventiva   = '<s:text name="rdf.medicinaprev.impresion.cartaMedPrev" />';
+var panDocUrlViewDoc                  = '<s:url namespace ="/documentos" action="descargaDocInline" />';
 
 /*//////////////////////*/
 ////// variables    //////
@@ -340,7 +348,21 @@ Ext.onReady(function()
                     		}
                     	}
                     }
-                })
+                }),
+                listeners: {
+                	select: function(cmb,records){
+                		if(esNuevoRegistro){
+                			var recordSel = records[0];
+                    		padecimientosGridStore.each(function(recordPadIt){
+                    			if(recordPadIt.get('CDICD') == recordSel.get('key')){
+                    				mensajeInfo('Este padecimiento ya se encuentra registrado para este asegurado, seleccione otro padecimiento.');
+                    				cmb.clearValue();
+                    				return false;
+                    			}
+                    		});
+                		}
+                	}
+                }
             },
             {
                 xtype: 'textareafield',
@@ -377,7 +399,7 @@ Ext.onReady(function()
         		            		if(recordEditar.get('SWGENCARTA') == 'S'){
         		            			Ext.Msg.show({
         		        		            title: 'Aviso',
-        		        		            msg: 'Ya existe una Carta de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea eliminar este padecimiento?',
+        		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea eliminar este padecimiento?',
         		        		            buttons: Ext.Msg.YESNO,
         		        		            fn: function(buttonId, text, opt) {
         		        		            	if(buttonId == 'yes') {
@@ -430,7 +452,7 @@ Ext.onReady(function()
                     		if(!esNuevoRegistro && recordEditar.get('SWGENCARTA') == 'S'){
                     			Ext.Msg.show({
 		        		            title: 'Aviso',
-		        		            msg: 'Ya existe una Carta de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea cambiar la informaci&oacute;n del padecimiento?',
+		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea cambiar la informaci&oacute;n del padecimiento?',
 		        		            buttons: Ext.Msg.YESNO,
 		        		            fn: function(buttonId, text, opt) {
 		        		            	if(buttonId == 'yes') {
@@ -573,6 +595,8 @@ Ext.onReady(function()
     	var ventanaCartaMedPrevPad;
     	var panelGuardar;
     	
+    	var SinDatosCartaMedPrev = (Ext.isEmpty(recordEditar.get('CDPRESTA'))&& Ext.isEmpty(recordEditar.get('CDFREC'))&& Ext.isEmpty(recordEditar.get('CDPERIOD')));
+    		
     	var panelBuscarMedicos = Ext.create('Ext.form.Panel',{
     		border:false,
             defaults : {
@@ -755,7 +779,7 @@ Ext.onReady(function()
                 },
                 {
                 	xtype: 'combobox',
-                	value: recordEditar.get('SWFORMAT'),
+                	value: Ext.isEmpty(recordEditar.get('SWFORMAT'))?'N' : recordEditar.get('SWFORMAT'),
                     labelWidth: 0,
                     width: 85,
                     allowBlank: false,
@@ -765,7 +789,7 @@ Ext.onReady(function()
 	                forceSelection: true,
 	                anyMatch      : true,
 	                queryMode     : 'local',
-	                allowBlank    : false,
+	                allowBlank    : true,
 	                store         : Ext.create('Ext.data.Store', {
 	                    fields: ['key', 'value'],
 	                    data : [
@@ -942,32 +966,76 @@ Ext.onReady(function()
                                		 'params.pi_swgencarta'  : '',
                                		 'params.pi_swop'        : 'U'
                                 };
-                               	    
-                                debug('Datos de carta a guardar: ',datosResultado);
-    							
-                                var maskGuarda = _maskLocal('Guardando...');
-                                
-                                Ext.Ajax.request({
-                                    url: _urlActualizaPadecimientoAseg,
-                                    params: datosResultado,
-                                    success  : function(response, options){
-                                   	 maskGuarda.close();
-                                        var json = Ext.decode(response.responseText);
-                                        if(json.success){
-                                        	
-                                        	padecimientosGridStore.reload();
-                                        	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
-                                        	
-                                        }else{
+                        		
+                        		if(recordEditar.get('SWGENCARTA') == 'S'){
+                        			Ext.Msg.show({
+    		        		            title: 'Aviso',
+    		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea actualizar esta informaci&oacute;n?',
+    		        		            buttons: Ext.Msg.YESNO,
+    		        		            fn: function(buttonId, text, opt) {
+    		        		            	if(buttonId == 'yes') {
+    		        		            		debug('Datos de carta a guardar: ',datosResultado);
+    		        							
+    		                                    var maskGuarda = _maskLocal('Guardando...');
+    		                                    
+    		                                    Ext.Ajax.request({
+    		                                        url: _urlActualizaPadecimientoAseg,
+    		                                        params: datosResultado,
+    		                                        success  : function(response, options){
+    		                                       	 maskGuarda.close();
+    		                                            var json = Ext.decode(response.responseText);
+    		                                            if(json.success){
+    		                                            	
+    		                                            	padecimientosGridStore.reload();
+    		                                            	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
+    		                                            	SinDatosCartaMedPrev = false;
+    		                                            	
+    		                                            }else{
+    		                                                mensajeError(json.mensaje);
+    		                                            }
+    		                                        }
+    		                                        ,failure  : function(response, options){
+    		                                       	 maskGuarda.close();
+    		                                            var json = Ext.decode(response.responseText);
+    		                                            mensajeError(json.mensaje);
+    		                                        }
+    		                                    });
+    		        		            		
+    		        		            	}
+    		                			},
+    		        		            animateTarget: btn,
+    		        		            icon: Ext.Msg.WARNING
+    		    					});
+                        		}else{
+                        			
+                        			debug('Datos de carta a guardar: ',datosResultado);
+        							
+                                    var maskGuarda = _maskLocal('Guardando...');
+                                    
+                                    Ext.Ajax.request({
+                                        url: _urlActualizaPadecimientoAseg,
+                                        params: datosResultado,
+                                        success  : function(response, options){
+                                       	 maskGuarda.close();
+                                            var json = Ext.decode(response.responseText);
+                                            if(json.success){
+                                            	
+                                            	padecimientosGridStore.reload();
+                                            	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
+                                            	SinDatosCartaMedPrev = false;
+                                            	
+                                            }else{
+                                                mensajeError(json.mensaje);
+                                            }
+                                        }
+                                        ,failure  : function(response, options){
+                                       	 maskGuarda.close();
+                                            var json = Ext.decode(response.responseText);
                                             mensajeError(json.mensaje);
                                         }
-                                    }
-                                    ,failure  : function(response, options){
-                                   	 maskGuarda.close();
-                                        var json = Ext.decode(response.responseText);
-                                        mensajeError(json.mensaje);
-                                    }
-                                });
+                                    });
+                        		}
+                               	    
                         	}else{
                         		var valCopago = panelGuardar.down('[name=COPAGO]').getValue();
                         		if(Ext.isEmpty(valCopago)){
@@ -993,16 +1061,166 @@ Ext.onReady(function()
                         {
                             xtype: 'button',
                             icon:_CONTEXT+'/resources/fam3icons/icons/zoom.png',
-                            text: 'Vista Previa de Carta'
+                            text: 'Vista Previa de Carta',
+                            tooltip: 'Vista Previa con los datos actualmente guardados',
+                            handler: function(btn){
+                            	
+                            		if(SinDatosCartaMedPrev){
+                            			mensajeInfo('No hay datos para Carta de Medicina Preventiva. Guarde los datos.');
+                            			return;
+                            		}
+                            	
+	                                var urlServerReporteCartaMP = _urlRutaReports
+	                                
+	                                + '?P_UNIECO='   + recordEditar.get('CDUNIECO')
+	                                + '&P_RAMO='     + recordEditar.get('CDRAMO')
+	                                + '&P_POLIZA='   + recordEditar.get('NMPOLIZA')
+	                                + '&P_SITUAC='   + recordEditar.get('NMSITUAC')
+	                                + '&P_CDPERSON=' + recordEditar.get('CDPERSON')
+	                                + '&P_CDICD='    + recordEditar.get('CDICD')
+	                                + '&destype=cache'
+	                                + "&desformat=PDF"
+	                                + "&userid="        + _reportsServerUser
+	                                + "&ACCESSIBLE=YES"
+	                                + "&report="        + _reporteCartaMedicinaPreventiva
+	                                + "&paramform=no";
+	                                
+			                        debug(urlServerReporteCartaMP);
+			                        var numRand = Math.floor((Math.random() * 100000) + 1);
+			                        debug(numRand);
+			                        var windowVerDocu = Ext.create('Ext.window.Window',
+			                        {
+			                            title          : 'Vista Previa'
+			                            ,width         : 700
+			                            ,height        : 500
+			                            ,collapsible   : true
+			                            ,titleCollapse : true
+			                            ,html : '<iframe innerframe="'
+			                                    + numRand
+			                                    + '" frameborder="0" width="100" height="100"'
+			                                    + 'src="'
+			                                    + panDocUrlViewDoc
+			                                    + "?contentType=application/pdf&url="
+			                                    + encodeURIComponent(urlServerReporteCartaMP)
+			                                    + "\">"
+			                                    + '</iframe>'
+			                            ,listeners :
+			                            {
+			                                resize : function(win,width,height,opt)
+			                                {
+			                                    debug(width,height);
+			                                    $('[innerframe="'+ numRand+ '"]').attr(
+			                                    {
+			                                        'width'   : width - 20
+			                                        ,'height' : height - 60
+			                                    });
+			                                }
+			                            }
+			                        }).show();
+			                        windowVerDocu.center();
+				            }
                         },
                         {
                             xtype: 'button',
                             icon:_CONTEXT+'/resources/fam3icons/icons/page_go.png',
-                            text: 'Confirmar Generar Carta'
+                            text: 'Generar Carta',
+                            tooltip: 'Generar Carta de Medicina Preventiva en los documentos de p&oacute;liza',
+                            handler: function(btn){
+                            	
+                        		if(SinDatosCartaMedPrev){
+                        			mensajeInfo('No hay datos para Carta de Medicina Preventiva. Guarde los datos.');
+                        			return;
+                        		}
+                        	
+                        		var datosResultado = {
+                               		 'params.pi_cdunieco'    : recordEditar.get('CDUNIECO'),
+                               		 'params.pi_cdramo'      : recordEditar.get('CDRAMO'),
+                               		 'params.pi_estado'      : recordEditar.get('ESTADO'),
+                               		 'params.pi_nmpoliza'    : recordEditar.get('NMPOLIZA'),
+                               		 'params.pi_nmsituac'    : recordEditar.get('NMSITUAC'),
+                               		 'params.pi_cdperson'    : recordEditar.get('CDPERSON'),
+                               		 'params.pi_cdicd'       : recordEditar.get('CDICD'),
+                               		 'params.pi_cdfrec'      : '',
+                            		 'params.pi_cdperiod'    : '',
+                            		 'params.pi_copago'      : '',
+                            		 'params.pi_swformat'    : '',
+                            		 'params.pi_cdpresta'    : '',
+                            		 'params.pi_dspad'       : '',
+                            		 'params.pi_dsplanmed'   : '',
+                            		 'params.pi_swgencarta'  : 'S', //Para cambiar switch de carta generada
+                            		 'params.pi_swop'        : 'U', //Para cambiar switch de carta generada
+                               		 'params.pi_nombre'      : _NombreAseg
+                                };
+                               	    
+                        		if(recordEditar.get('SWGENCARTA') == 'S'){
+                        			Ext.Msg.show({
+    		        		            title: 'Aviso',
+    		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea crear una nueva carta?',
+    		        		            buttons: Ext.Msg.YESNO,
+    		        		            fn: function(buttonId, text, opt) {
+    		        		            	if(buttonId == 'yes') {
+    		        		            		debug('Datos de carta a guardar: ',datosResultado);
+    		        							
+    		                                    var maskGuarda = _maskLocal('Generando Carta de Medicina Preventiva...');
+    		                                    
+    		                                    Ext.Ajax.request({
+    		                                        url: _urlGeneraCartaMedicinaPreventiva,
+    		                                        params: datosResultado,
+    		                                        success  : function(response, options){
+    		                                       	 maskGuarda.close();
+    		                                            var json = Ext.decode(response.responseText);
+    		                                            if(json.success){
+    		                                            	
+    		                                            	padecimientosGridStore.reload();
+    		                                            	mensajeCorrecto('Aviso','Carta genarada correctamente.');
+    		                                            }else{
+    		                                                mensajeError(json.mensaje);
+    		                                            }
+    		                                        }
+    		                                        ,failure  : function(response, options){
+    		                                       	 maskGuarda.close();
+    		                                            var json = Ext.decode(response.responseText);
+    		                                            mensajeError(json.mensaje);
+    		                                        }
+    		                                    });
+    		        		            	}
+    		                			},
+    		        		            animateTarget: btn,
+    		        		            icon: Ext.Msg.WARNING
+    		    					});
+                        		}else{
+                        			
+                        			debug('Datos de carta a guardar: ',datosResultado);
+        							
+                                    var maskGuarda = _maskLocal('Generando Carta de Medicina Preventiva...');
+                                    
+                                    Ext.Ajax.request({
+                                        url: _urlGeneraCartaMedicinaPreventiva,
+                                        params: datosResultado,
+                                        success  : function(response, options){
+                                       	 maskGuarda.close();
+                                            var json = Ext.decode(response.responseText);
+                                            if(json.success){
+                                            	
+                                            	padecimientosGridStore.reload();
+                                            	mensajeCorrecto('Aviso','Carta genarada correctamente.');
+                                            }else{
+                                                mensajeError(json.mensaje);
+                                            }
+                                        }
+                                        ,failure  : function(response, options){
+                                       	 maskGuarda.close();
+                                            var json = Ext.decode(response.responseText);
+                                            mensajeError(json.mensaje);
+                                        }
+                                    });
+                        		}
+                        		
+			            }
                         },'->',{
             				text:'Cerrar',
             				icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-            				handler:function()
+            				handler:function(btn)
             				{
             					ventanaCartaMedPrevPad.close();
             					medicosTratantesStore.removeAll();

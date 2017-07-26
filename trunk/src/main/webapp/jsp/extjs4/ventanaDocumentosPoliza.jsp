@@ -961,7 +961,7 @@ Ext.onReady(function()
                             if(nom&&nom.length>4)
                             {
                                 var http=nom.substr(0,4);
-                                if( http != 'http' && record.get("tipmov") != "USUARIO" && !Ext.isEmpty(record.get("cdmoddoc")))
+                                if( http != 'http' && record.get("tipmov") != "USUARIO" && !Ext.isEmpty(record.get("cdmoddoc")) && record.get("cdmoddoc") != 0)
                                 {
                                     res='<img src="${ctx}/resources/fam3icons/icons/page_refresh.png" data-qtip="Regenerar" style="cursor:pointer;" />';
                                 }

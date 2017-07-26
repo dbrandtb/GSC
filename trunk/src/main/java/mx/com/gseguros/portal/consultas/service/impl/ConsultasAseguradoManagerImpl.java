@@ -510,4 +510,9 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public boolean validaAsegCobMedicinaPreventiva(Map<String, String> params) throws Exception{
 		return consultasAseguradoDAOICE.validaAsegCobMedicinaPreventiva(params);
 	}
+
+	public Map<String, String> obtenerNtramiteEmision(String cdunieco, String cdramo, String estado, String nmpoliza)
+			throws ApplicationException, Exception{
+		return consultasAseguradoDAOICE.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
+	}
 }
