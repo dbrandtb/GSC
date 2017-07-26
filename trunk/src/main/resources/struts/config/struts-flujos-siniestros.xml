@@ -666,6 +666,16 @@
 			</result>
 		</action>
 		
+		<action name="crearTramitesLayout" class="siniestrosAction" method="crearTramitesLayout">	<!--EGS-->
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+
 		<action name="generarTramiteSiniestro" class="siniestrosAction" method="generarTramiteSiniestro">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>

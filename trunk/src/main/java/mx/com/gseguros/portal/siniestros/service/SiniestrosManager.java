@@ -845,9 +845,13 @@ public interface SiniestrosManager {
 	
 	public  List<Map<String, String>> getconsultaAutServPersonaCobertura(String cobertura, String subcobertura, String cdperson)throws Exception;
 	
+	public List<Map<String, String>> crearTramitesLayout(String usuario, String tipoProceso) throws Exception;
+
+	
 	public List<GenericVO> getConsultaEstadoSiniestros() throws Exception;
 	
 	public List<GenericVO> getConsultaMunicipioSiniestros(String edoSiniestro) throws Exception;
 	
 	public List<ConsultaProveedorVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta,String cdestado,String cdmunicipio) throws Exception;
+
 }
