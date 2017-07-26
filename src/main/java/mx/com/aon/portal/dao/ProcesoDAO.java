@@ -290,7 +290,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class ActualizaCdIdeper extends CustomStoredProcedure {
 
 		protected ActualizaCdIdeper(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_ACTUALIZA_CODCLI_EXTERNO");
+			super(dataSource, "PKG_SATELITES_PRE.P_ACTUALIZA_CODCLI_EXTERNO");
 
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
@@ -314,7 +314,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class ValidaDatosAutos extends CustomStoredProcedure {
 		
 		protected ValidaDatosAutos(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_VALIDA_DAT_OBLIG_AUTOS");
+			super(dataSource, "PKG_SATELITES_PRE.P_VALIDA_DAT_OBLIG_AUTOS");
 			
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
@@ -338,7 +338,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class ActualizaPolizaExterna extends CustomStoredProcedure {
 		
 		protected ActualizaPolizaExterna(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_ACTUALIZA_NMPOLIEX_AUTOS");
+			super(dataSource, "PKG_SATELITES_PRE.P_ACTUALIZA_NMPOLIEX_AUTOS");
 			
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
@@ -365,7 +365,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class CargaCobranzaMasiva extends CustomStoredProcedure {
 		
 		protected CargaCobranzaMasiva(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_APLICA_COBRANZA_MASIVA");
+			super(dataSource, "PKG_SATELITES_PRE.P_APLICA_COBRANZA_MASIVA");
 			
 			declareParameter(new SqlParameter("pv_archivo_i", OracleTypes.VARCHAR));
 			
@@ -386,7 +386,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class EjecutarSIGSVALIPOL_EMI extends CustomStoredProcedure {
 
 		protected EjecutarSIGSVALIPOL_EMI(DataSource dataSource) {
-			super(dataSource, "PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_EMI");
+			super(dataSource, "PKG_COTIZA_PRE.P_EJECUTA_SIGSVALIPOL_EMI");
 
 			declareParameter(new SqlParameter("pv_cdusuari_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdelemen_i", OracleTypes.VARCHAR));
@@ -415,7 +415,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class CalculaNumeroPoliza extends CustomStoredProcedure {
 
 		protected CalculaNumeroPoliza(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_CALC_NUMPOLIZA");
+			super(dataSource, "PKG_SATELITES_PRE.P_CALC_NUMPOLIZA");
 
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
@@ -444,7 +444,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class PExisteDomicilio extends CustomStoredProcedure {
 		
 		protected PExisteDomicilio(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.P_EXISTE_DAT_MDOMICIL");
+			super(dataSource, "PKG_CONSULTA_PRE.P_EXISTE_DAT_MDOMICIL");
 			
 			declareParameter(new SqlParameter("pv_cdideper_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
@@ -478,7 +478,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class GeneraSuplementoFisico extends CustomStoredProcedure {
 		
 		protected GeneraSuplementoFisico(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_GENERA_SUPL_FISICO");
+			super(dataSource, "PKG_SATELITES_PRE.P_GENERA_SUPL_FISICO");
 			
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
@@ -513,7 +513,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class GeneraSuplementoLogico extends CustomStoredProcedure {
 		
 		protected GeneraSuplementoLogico(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_GENERA_SUPL_LOGICO");
+			super(dataSource, "PKG_SATELITES_PRE.P_GENERA_SUPL_LOGICO");
 			
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
@@ -546,7 +546,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class MovTDescSup extends CustomStoredProcedure {
 		
 		protected MovTDescSup(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_MOV_TDESCSUP");
+			super(dataSource, "PKG_SATELITES_PRE.P_MOV_TDESCSUP");
 			
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
@@ -581,7 +581,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class MovMsupleme extends CustomStoredProcedure {
 		
 		protected MovMsupleme(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_MOV_MSUPLEME");
+			super(dataSource, "PKG_SATELITES_PRE.P_MOV_MSUPLEME");
 			
 			
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
@@ -624,7 +624,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class MovMpoliage extends CustomStoredProcedure {
 		
 		protected MovMpoliage(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_MOV_MPOLIAGE");
+			super(dataSource, "PKG_SATELITES_PRE.P_MOV_MPOLIAGE");
 			
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
@@ -697,7 +697,7 @@ public class ProcesoDAO extends AbstractDAO {
 	protected class ObtenerTvalositCotiza extends CustomStoredProcedure {
 
         protected ObtenerTvalositCotiza(DataSource dataSource) {
-            super(dataSource,"PKG_COTIZA.P_OBTIENE_TVALOSIT_COTIZA");
+            super(dataSource,"PKG_COTIZA_PRE.P_OBTIENE_TVALOSIT_COTIZA");
             
             declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.NUMERIC));
@@ -737,7 +737,7 @@ public class ProcesoDAO extends AbstractDAO {
     protected class ClonaSituacion extends CustomStoredProcedure {
     	
     	protected ClonaSituacion(DataSource dataSource) {
-    		super(dataSource,"PKG_COTIZA.P_CLONAR_SITUACION");
+    		super(dataSource,"PKG_COTIZA_PRE.P_CLONAR_SITUACION");
     		
     		declareParameter(new SqlParameter("pv_cdelemen_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
@@ -834,7 +834,7 @@ public class ProcesoDAO extends AbstractDAO {
     protected class InsertaMaestroPolizas extends CustomStoredProcedure {
     	
     	protected InsertaMaestroPolizas(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES2.P_MOV_MPOLIZAS");
+    		super(dataSource,"PKG_SATELITES2_PRE.P_MOV_MPOLIZAS");
     		
     		declareParameter(new SqlParameter("pv_cdunieco"  , OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("pv_cdramo"    , OracleTypes.NUMERIC));
@@ -904,7 +904,7 @@ public class ProcesoDAO extends AbstractDAO {
 protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	protected ActualizaValoresSituaciones(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES.P_UPD_TVALOSIT");
+    		super(dataSource,"PKG_SATELITES_PRE.P_UPD_TVALOSIT");
     		
     		declareParameter(new SqlParameter("pv_cdunieco", OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("pv_cdramo", OracleTypes.NUMERIC));
@@ -941,7 +941,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class InsertaValoresSituaciones extends CustomStoredProcedure {
     	
     	protected InsertaValoresSituaciones(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES2.P_MOV_TVALOSIT");
+    		super(dataSource,"PKG_SATELITES2_PRE.P_MOV_TVALOSIT");
     		
     		declareParameter(new SqlParameter("pv_cdunieco", OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("pv_cdramo", OracleTypes.NUMERIC));
@@ -978,7 +978,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected InsertaMPolisit(DataSource dataSource)
         {
-            super(dataSource,"PKG_SATELITES.P_MOV_MPOLISIT");
+            super(dataSource,"PKG_SATELITES_PRE.P_MOV_MPOLISIT");
             declareParameter(new SqlParameter("pv_cdunieco_i",      OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_cdramo_i",        OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_estado_i",        OracleTypes.VARCHAR));
@@ -1014,7 +1014,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ClonaPersonas(DataSource dataSource)
         {
-            super(dataSource,"PKG_COTIZA.P_CLONAR_PERSONAS");
+            super(dataSource,"PKG_COTIZA_PRE.P_CLONAR_PERSONAS");
             declareParameter(new SqlParameter("pv_cdelemen_i",  OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.NUMERIC));
@@ -1049,7 +1049,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtieneResultadosCotiza(DataSource dataSource)
         {
-            super(dataSource,"PKG_COTIZA.P_GEN_TARIFICACION");
+            super(dataSource,"PKG_COTIZA_PRE.P_GEN_TARIFICACION");
             declareParameter(new SqlParameter("pv_cdusuari_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
@@ -1110,7 +1110,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtieneResultadosCotiza2(DataSource dataSource)
         {
-            super(dataSource,"PKG_COTIZA.P_GEN_TARIFICACION");
+            super(dataSource,"PKG_COTIZA_PRE.P_GEN_TARIFICACION");
             declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
@@ -1151,7 +1151,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtieneCoberturas(DataSource dataSource)
         {
-            super(dataSource,"PKG_COTIZA.P_COBERTURAS");
+            super(dataSource,"PKG_COTIZA_PRE.P_COBERTURAS");
             declareParameter(new SqlParameter("pv_usuario_i",   OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
@@ -1203,7 +1203,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtieneAyudaCoberturas(DataSource dataSource)
         {
-            super(dataSource,"PKG_COTIZA.P_AYUDA_COBERTURAS");
+            super(dataSource,"PKG_COTIZA_PRE.P_AYUDA_COBERTURAS");
             declareParameter(new SqlParameter("pv_ciaaseg_i",   OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_garant_i",    OracleTypes.VARCHAR));
@@ -1242,7 +1242,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtieneTatrisit(DataSource dataSource)
         {
-            super(dataSource,"PKG_LISTAS.P_GET_ATRI_SITUACION");
+            super(dataSource,"PKG_LISTAS_PRE.P_GET_ATRI_SITUACION");
             declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdusuari_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtieneTatrisitMapper()));
@@ -1270,7 +1270,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtieneTatripol(DataSource dataSource)
 		{
-			super(dataSource,"PKG_LISTAS.P_GET_ATRI_POLIZA");
+			super(dataSource,"PKG_LISTAS_PRE.P_GET_ATRI_POLIZA");
 			declareParameter(new SqlParameter("pv_cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtippol" , OracleTypes.VARCHAR));
@@ -1299,7 +1299,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtieneTatrigar(DataSource dataSource)
 		{
-			super(dataSource,"PKG_LISTAS.P_GET_ATRI_GARANTIA");
+			super(dataSource,"PKG_LISTAS_PRE.P_GET_ATRI_GARANTIA");
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdgarant_i"  , OracleTypes.VARCHAR));
@@ -1329,7 +1329,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtieneTatriper(DataSource dataSource)
 		{
-			super(dataSource,"PKG_LISTAS.P_GET_ATRI_ROL");
+			super(dataSource,"PKG_LISTAS_PRE.P_GET_ATRI_ROL");
 			declareParameter(new SqlParameter("pv_cdramo_i",      	OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdrol_i",         OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
@@ -1359,7 +1359,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtieneDatosUsuario(DataSource dataSource)
         {
-            super(dataSource,"pkg_satelites.p_get_info_usuario");
+            super(dataSource,"PKG_SATELITES_PRE.p_get_info_usuario");
             declareParameter(new SqlParameter(   "pv_cdusuari_i",   OracleTypes.VARCHAR));
             declareParameter(new SqlParameter(   "pv_cdtipsit_i",   OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtieneDatosUsuarioMapper()));
@@ -1403,7 +1403,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected InsertarDetalleSuplemen(DataSource dataSource)
         {
-            super(dataSource,"PKG_SATELITES.P_MOV_TDESCSUP");
+            super(dataSource,"PKG_SATELITES_PRE.P_MOV_TDESCSUP");
             declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
@@ -1441,7 +1441,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ComprarCotizacion(DataSource dataSource)
         {
-            super(dataSource,"PKG_COTIZA.P_PROC_INCISO_DEF");
+            super(dataSource,"PKG_COTIZA_PRE.P_PROC_INCISO_DEF");
             declareParameter(new SqlParameter("pv_cdunieco",	OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo",  	OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado",  	OracleTypes.VARCHAR));
@@ -1473,7 +1473,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected GetInfoMpolizas(DataSource dataSource)
         {
-            super(dataSource,"PKG_SATELITES.P_GET_INFO_MPOLIZAS");
+            super(dataSource,"PKG_SATELITES_PRE.P_GET_INFO_MPOLIZAS");
             declareParameter(new SqlParameter("pv_cdunieco",    OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_cdramo",      OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_estado",      OracleTypes.VARCHAR));
@@ -1543,7 +1543,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtieneValositSituac(DataSource dataSource)
         {
-            super(dataSource,"PKG_COTIZA.P_OBTIENE_TVALOSIT");
+            super(dataSource,"PKG_COTIZA_PRE.P_OBTIENE_TVALOSIT");
             declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
@@ -1599,7 +1599,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtenerTmanteni(DataSource dataSource)
         {
-            super(dataSource,"PKG_LISTAS.P_GET_TMANTENI");
+            super(dataSource,"PKG_LISTAS_PRE.P_GET_TMANTENI");
             declareParameter(new SqlParameter("pv_cdtabla",         OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerTmanteniMapper()));
             declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
@@ -1651,7 +1651,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtenerAsegurados(DataSource dataSource)
     	{
-    		super(dataSource,"PKG_SATELITES.P_OBT_DATOS_MPOLIPER");
+    		super(dataSource,"PKG_SATELITES_PRE.P_OBT_DATOS_MPOLIPER");
     		declareParameter(new SqlParameter("pv_cdunieco",    OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_cdramo",      OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_estado",      OracleTypes.VARCHAR));
@@ -1748,7 +1748,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtenerPolizaCompleta(DataSource dataSource)
     	{
-    		super(dataSource,"PKG_SATELITES.P_GET_INFO_MPOLIZAS");
+    		super(dataSource,"PKG_SATELITES_PRE.P_GET_INFO_MPOLIZAS");
     		declareParameter(new SqlParameter("pv_cdunieco",    OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_cdramo",      OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_estado",      OracleTypes.VARCHAR));
@@ -1802,7 +1802,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class PMovTvalopol extends CustomStoredProcedure {
     	
     	protected PMovTvalopol(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES.P_MOV_TVALOPOL");
+    		super(dataSource,"PKG_SATELITES_PRE.P_MOV_TVALOPOL");
     		
     		declareParameter(new SqlParameter("pv_cdunieco", OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("pv_cdramo", OracleTypes.NUMERIC));
@@ -1882,7 +1882,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PMovTvalogar extends CustomStoredProcedure {
 	
 		protected PMovTvalogar(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES.P_MOV_TVALOGAR");
+			super(dataSource,"PKG_SATELITES_PRE.P_MOV_TVALOGAR");
 	
 			declareParameter(new SqlParameter("pv_cdunieco",  OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo",    OracleTypes.NUMERIC));
@@ -1922,7 +1922,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PMovTvaloper extends CustomStoredProcedure {
 	
 		protected PMovTvaloper(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_MOV_TVALOPER");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_TVALOPER");
 	
 			declareParameter(new SqlParameter("pv_cdunieco",  OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo",    OracleTypes.NUMERIC));
@@ -2063,7 +2063,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected PGetTvalopol(DataSource dataSource)
 		{
-			super(dataSource,"PKG_COTIZA.P_GET_TVALOPOL");
+			super(dataSource,"PKG_COTIZA_PRE.P_GET_TVALOPOL");
 			declareParameter(new SqlParameter("pv_cdunieco",    OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo",      OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado",      OracleTypes.VARCHAR));
@@ -2111,7 +2111,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected PGetTvalogar(DataSource dataSource)
 		{
-			super(dataSource,"PKG_COTIZA.P_GET_TVALOGAR");
+			super(dataSource,"PKG_COTIZA_PRE.P_GET_TVALOGAR");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -2180,7 +2180,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
              pv_cdrol_i
              pv_cdperson_i
             */
-			super(dataSource,"PKG_COTIZA.P_GET_TVALOPER");
+			super(dataSource,"PKG_COTIZA_PRE.P_GET_TVALOPER");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -2233,7 +2233,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class GeneraMperson extends CustomStoredProcedure {
 
 		protected GeneraMperson(DataSource dataSource) {
-			super(dataSource, "PKG_COTIZA.P_GET_CDPERSON");
+			super(dataSource, "PKG_COTIZA_PRE.P_GET_CDPERSON");
 			declareParameter(new SqlOutParameter("pv_cdperson_o", OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -2262,7 +2262,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PMovMpersona extends CustomStoredProcedure {
     	
     	protected PMovMpersona(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES2.P_MOV_MPERSONA");
+    		super(dataSource,"PKG_SATELITES2_PRE.P_MOV_MPERSONA");
     		declareParameter(new SqlParameter("pv_cdperson_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipide_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdideper_i"    , OracleTypes.VARCHAR));
@@ -2310,7 +2310,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PMovMpoliper extends CustomStoredProcedure {
 	
 		protected PMovMpoliper(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES.P_MOV_MPOLIPER");
+			super(dataSource,"PKG_SATELITES_PRE.P_MOV_MPOLIPER");
 			declareParameter(new SqlParameter("pv_cdunieco_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.cdunieco%TYPE DEFAULT NULL,
 			declareParameter(new SqlParameter("pv_cdramo_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.cdramo%TYPE   DEFAULT NULL,
 			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.estado%TYPE   DEFAULT NULL,
@@ -2346,7 +2346,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PBorraMpoliper extends CustomStoredProcedure {
 		
 		protected PBorraMpoliper(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES.P_BORRA_MPOLIPER");
+			super(dataSource,"PKG_SATELITES_PRE.P_BORRA_MPOLIPER");
 			declareParameter(new SqlParameter("pv_cdunieco_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.cdunieco%TYPE DEFAULT NULL,
 			declareParameter(new SqlParameter("pv_cdramo_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.cdramo%TYPE   DEFAULT NULL,
 			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.estado%TYPE   DEFAULT NULL,
@@ -2382,7 +2382,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerCoberturasUsuario(DataSource dataSource)
 		{
-			super(dataSource,"PKG_COTIZA.P_GET_COBERTURAS");
+			super(dataSource,"PKG_COTIZA_PRE.P_GET_COBERTURAS");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -2438,7 +2438,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PMovMpoligar extends CustomStoredProcedure {
 	
 		protected PMovMpoligar(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES.P_MOV_MPOLIGAR");
+			super(dataSource,"PKG_SATELITES_PRE.P_MOV_MPOLIGAR");
 			declareParameter(new SqlParameter("pv_cdunieco_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));
@@ -2477,7 +2477,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PMovMpolicap extends CustomStoredProcedure {
 	
 		protected PMovMpolicap(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES.P_MOV_MPOLICAP");
+			super(dataSource,"PKG_SATELITES_PRE.P_MOV_MPOLICAP");
 			
 			declareParameter(new SqlParameter("pv_cdunieco_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", 		OracleTypes.VARCHAR));
@@ -2515,7 +2515,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class PMovMdomicil extends CustomStoredProcedure {
 	
 		protected PMovMdomicil(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_MOV_MDOMICIL");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_MDOMICIL");
 			/*
 			pv_cdperson_i smap1.pv_cdperson
 			pv_nmorddom_i smap1.NMORDDOM
@@ -2566,7 +2566,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*///////////////////////////*
 	protected class PMovMesacontrol extends CustomStoredProcedure {
 		protected PMovMesacontrol(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_MOV_MESACONTROL");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_MESACONTROL");
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
@@ -2659,7 +2659,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	
 	protected class PMovTvalosin extends CustomStoredProcedure {
 		protected PMovTvalosin(DataSource dataSource) {
-			super(dataSource,"PKG_SINIESTRO.P_MOV_TVALOSIN");
+			super(dataSource,"PKG_SINIESTRO_PRE.P_MOV_TVALOSIN");
 			declareParameter(new SqlParameter("pv_cdunieco", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_aaapertu", 		OracleTypes.VARCHAR));
@@ -2744,7 +2744,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*////////////////////////////////*/
 	protected class MovBitacobros extends CustomStoredProcedure {
 		protected MovBitacobros(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES.P_MOV_TBITACOBROS2");
+			super(dataSource,"PKG_SATELITES_PRE.P_MOV_TBITACOBROS2");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -2777,7 +2777,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*/////////////////////////////*
 	protected class PMovDmesacontrol extends CustomStoredProcedure {
 		protected PMovDmesacontrol(DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_MOV_DMESACONTROL");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_DMESACONTROL");
 			declareParameter(new SqlParameter("pv_ntramite_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feinicio_i", 		OracleTypes.TIMESTAMP));
 			declareParameter(new SqlParameter("pv_cdclausu_i", 		OracleTypes.VARCHAR));
@@ -2813,7 +2813,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerDetallesCotizacion(DataSource dataSource)
 		{
-			super(dataSource,"PKG_COTIZA.P_GET_DETALLE_COTI");
+			super(dataSource,"PKG_COTIZA_PRE.P_GET_DETALLE_COTI");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -2856,7 +2856,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerDomicilioGeneral(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_MDOMICIL_ART140");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_MDOMICIL_ART140");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -2884,7 +2884,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerDomicilio(DataSource dataSource)
 		{
-			super(dataSource,"PKG_COTIZA.P_GET_MDOMICIL");
+			super(dataSource,"PKG_COTIZA_PRE.P_GET_MDOMICIL");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -2940,7 +2940,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected Emitir(DataSource dataSource)
 		{
-			super(dataSource,"PKG_EMISION.P_PROCESO_EMISION_GENERAL");
+			super(dataSource,"PKG_EMISION_PRE.P_PROCESO_EMISION_GENERAL");
 			declareParameter(new SqlParameter("pv_cdusuari",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo",        OracleTypes.VARCHAR));
@@ -2992,7 +2992,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	
 		protected GuardarArchivoPoliza(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MOV_DOCUMENTOS");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_DOCUMENTOS");
 			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -3031,7 +3031,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	
 		protected GuardarArchivoPersona(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_MOV_DOCUMENTOS_PERSONA");
+			super(dataSource,"PKG_SATELITES_PRE.P_MOV_DOCUMENTOS_PERSONA");
 			declareParameter(new SqlParameter("cdperson"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cddocume"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("dsdocume"  , OracleTypes.VARCHAR));
@@ -3067,7 +3067,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			pv_title_o
 			 */
 			
-			super(dataSource,"PKG_CONSULTA_PRUEBA.P_Get_documentos_f");
+			super(dataSource,"PKG_CONSULTA_PRUEBA_PRE.P_Get_documentos_f");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -3138,7 +3138,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerListaDocPolizaNueva(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_Imp_documentos");
+			super(dataSource,"PKG_CONSULTA_PRE.P_Imp_documentos");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -3185,7 +3185,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerTiposClausulasExclusion(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_tipos_clausulas");
+			super(dataSource,"PKG_CONSULTA_PRE.P_tipos_clausulas");
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerTiposClausulasExclusionMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
@@ -3225,7 +3225,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerExclusionesXTipo(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_clausulas_x_tipo");
+			super(dataSource,"PKG_CONSULTA_PRE.P_clausulas_x_tipo");
 			declareParameter(new SqlParameter("pv_cdtipcla_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_descrip_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerExclusionesXTipoMapper()));
@@ -3266,7 +3266,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class ObtenerHtmlClausula extends CustomStoredProcedure {
 
 		protected ObtenerHtmlClausula(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.P_texto_clausula");
+			super(dataSource, "PKG_CONSULTA_PRE.P_texto_clausula");
 
 			declareParameter(new SqlParameter("pv_cdclausu_i", OracleTypes.VARCHAR));	
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerHtmlClausulaMapper()));
@@ -3308,7 +3308,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerMesaControl(DataSource dataSource)
 		{
-//			super(dataSource,"PKG_SATELITES2.P_OBTIENE_MESACONTROL");
+//			super(dataSource,"PKG_SATELITES2_PRE.P_OBTIENE_MESACONTROL");
 			super(dataSource,"P_OBTIENE_MESACONTROL1");
 			declareParameter(new SqlParameter("pv_cdunieco_i"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ntramite_i"     , OracleTypes.VARCHAR));
@@ -3391,7 +3391,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerMesaControlUsuario(DataSource dataSource)
 		{
-			super(dataSource,"PKG_PRESINIESTRO.P_GET_MESACONTROL_USUARIO2");
+			super(dataSource,"PKG_PRESINIESTRO_PRE.P_GET_MESACONTROL_USUARIO2");
 			declareParameter(new SqlParameter("pv_cdunieco_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ntramite_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",        OracleTypes.VARCHAR));
@@ -3488,7 +3488,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class ObtenDatosRecibos extends CustomStoredProcedure {
 		
 		protected ObtenDatosRecibos(DataSource dataSource) {
-			super(dataSource, "pkg_consulta.P_cons_recibo_pol");
+			super(dataSource, "PKG_CONSULTA_PRE.P_cons_recibo_pol");
 
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
@@ -3607,7 +3607,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ObtenDatosComisiones extends CustomStoredProcedure {
     	
     	protected ObtenDatosComisiones(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_WS_COMISIONES_X_AGENTE");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_WS_COMISIONES_X_AGENTE");
     		
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
@@ -3657,7 +3657,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ObtenDatosRecibosDxN extends CustomStoredProcedure {
     	
     	protected ObtenDatosRecibosDxN(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_CONS_DXN_RECIBOS");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_CONS_DXN_RECIBOS");
     		
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
@@ -3711,7 +3711,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class GuardaPeriodosDxN extends CustomStoredProcedure {
     	
     	protected GuardaPeriodosDxN(DataSource dataSource) {
-    		super(dataSource, "PKG_SATELITES.P_INSERTA_CALENDARIO_DXN");
+    		super(dataSource, "PKG_SATELITES_PRE.P_INSERTA_CALENDARIO_DXN");
     		
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
@@ -3766,7 +3766,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ObtenCatalogoColonias extends CustomStoredProcedure {
     	
     	protected ObtenCatalogoColonias(DataSource dataSource) {
-    		super(dataSource, "PKG_LISTAS.P_GET_COLONIAS");
+    		super(dataSource, "PKG_LISTAS_PRE.P_GET_COLONIAS");
     		
     		declareParameter(new SqlParameter("pv_codpostal_i", OracleTypes.VARCHAR));			
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ColoniasMapper()));
@@ -3800,7 +3800,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ObtenDatosCliente extends CustomStoredProcedure {
     	
     	protected ObtenDatosCliente(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_cons_sal_cli");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_cons_sal_cli");
     		
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
@@ -3894,7 +3894,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ObtenDatosClienteGeneralXcdperson extends CustomStoredProcedure {
     	
     	protected ObtenDatosClienteGeneralXcdperson(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_WS_CLIENTES_ART140");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_WS_CLIENTES_ART140");
     		
     		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));			
     		declareParameter(new SqlParameter("pv_compania_i", OracleTypes.VARCHAR));			
@@ -3916,7 +3916,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ObtenDatosDomicilioGeneralXcdperson extends CustomStoredProcedure {
     	
     	protected ObtenDatosDomicilioGeneralXcdperson(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_WS_CLIENTES_ART140DOMICI");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_WS_CLIENTES_ART140DOMICI");
     		
     		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));			
     		declareParameter(new SqlParameter("pv_compania_i", OracleTypes.VARCHAR));			
@@ -3939,7 +3939,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ObtenDatosClienteGeneral extends CustomStoredProcedure {
     	
     	protected ObtenDatosClienteGeneral(DataSource dataSource) {
-    		super(dataSource, "PKG_CONSULTA.P_cons_sal_cli");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_cons_sal_cli");
     		
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
@@ -4143,7 +4143,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	    pv_title_o 
         */
     	protected MesaControlUpdateSolici(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES.P_UPDATE_NMSOLICI");
+    		super(dataSource,"PKG_SATELITES_PRE.P_UPDATE_NMSOLICI");
     		
     		declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmsolici_i", OracleTypes.VARCHAR));
@@ -4173,7 +4173,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	    pv_title_o 
         */
     	protected MesaControlUpdateStatus(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES.P_UPDATE_STATUS_MC");
+    		super(dataSource,"PKG_SATELITES_PRE.P_UPDATE_STATUS_MC");
     		
     		declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
@@ -4197,7 +4197,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     /*///////////////////////////////////////////////////////*/
     protected class MesaControlFinalizarDetalle extends CustomStoredProcedure {
     	protected MesaControlFinalizarDetalle(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES2.P_UPDATE_TDMESA");
+    		super(dataSource,"PKG_SATELITES2_PRE.P_UPDATE_TDMESA");
     		
     		declareParameter(new SqlParameter("pv_nmordina_i",     OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_ntramite_i",     OracleTypes.VARCHAR));
@@ -4226,7 +4226,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     /*///////////////////////////////////////////////////////*/
     protected class DocumentosPrepararContrarecibo extends CustomStoredProcedure {
     	protected DocumentosPrepararContrarecibo(DataSource dataSource) {
-    		super(dataSource,"PKG_SATELITES.P_PREPARA_CONTRARECIBO");
+    		super(dataSource,"PKG_SATELITES_PRE.P_PREPARA_CONTRARECIBO");
     		
     		declareParameter(new SqlParameter("pv_cdconrec_i",     OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_ntramite_i",     OracleTypes.VARCHAR));
@@ -4260,7 +4260,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected BuscarRFC(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_VALIDA_RFC");
+			super(dataSource,"PKG_CONSULTA_PRE.P_VALIDA_RFC");
 			declareParameter(new SqlParameter("pv_rfc_i"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new BuscarRFCMapper()));
@@ -4287,7 +4287,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 					"SEXO", "TIPOPERSONA", "NACIONALIDAD",
 					"NOMBRE", "SNOMBRE", "APPAT",
 					"APMAT","CODPOSTAL","CDEDO","CDMUNICI","DSDOMICIL",
-					"NMNUMERO","NMNUMINT", "NMORDDOM", "CDESTCIV"
+					"NMNUMERO","NMNUMINT", "NMORDDOM"
 					};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
@@ -4315,7 +4315,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected BorrarMPoliper(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_BORRA_MPOLIPER");
+			super(dataSource,"PKG_SATELITES_PRE.P_BORRA_MPOLIPER");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
@@ -4344,7 +4344,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerRamos(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_OBT_RAMO_X_CDUNIECO");
+			super(dataSource,"PKG_CONSULTA_PRE.P_OBT_RAMO_X_CDUNIECO");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerRamosMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
@@ -4391,7 +4391,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerTipsit(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_OBTIENE_SITUACION");
+			super(dataSource,"PKG_CONSULTA_PRE.P_OBTIENE_SITUACION");
 			declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerTipsitMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
@@ -4438,7 +4438,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ValidaTitularMenorEdad(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_VALIDA_TITULAR_MENOR");
+			super(dataSource,"PKG_SATELITES2_PRE.P_VALIDA_TITULAR_MENOR");
 			declareParameter(new SqlParameter("pv_cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado"   , OracleTypes.VARCHAR));
@@ -4475,7 +4475,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected PValInfoPersonas(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_VAL_INFO_PERSONAS");
+			super(dataSource,"PKG_SATELITES_PRE.P_VAL_INFO_PERSONAS");
 			declareParameter(new SqlParameter("pv_cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado"   , OracleTypes.VARCHAR));
@@ -4524,7 +4524,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	protected ObtieneDatosPolizaAgente(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_SATELITES.P_OBTIENE_MPOLIAGE_PORCENTAJES");
+    		super(dataSource, "PKG_SATELITES_PRE.P_OBTIENE_MPOLIAGE_PORCENTAJES");
     		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
@@ -4569,7 +4569,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	protected ObtieneDatosPolizaAgentePorPuntos(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_SATELITES.P_OBTIENE_MPOLIAGE_PORCENTAJES");
+    		super(dataSource, "PKG_SATELITES_PRE.P_OBTIENE_MPOLIAGE_PORCENTAJES");
     		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
@@ -4641,7 +4641,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	protected ObtieneDatosGeneralAgente(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_LISTAS.P_OBTIENE_TTIPOAGE");
+    		super(dataSource, "PKG_LISTAS_PRE.P_OBTIENE_TTIPOAGE");
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosGeneralAgente()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o ", OracleTypes.VARCHAR));
@@ -4672,7 +4672,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	protected GuardarPorcentajePoliza(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_SATELITES2.P_MOV_MPOLIAGE_PORCENTAJES");
+    		super(dataSource, "PKG_SATELITES2_PRE.P_MOV_MPOLIAGE_PORCENTAJES");
     		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
@@ -4703,7 +4703,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	protected GuardarPorcentajePolizaPorPuntos(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_SATELITES2.P_MOV_MPOLIAGE_PORCENTAJES");
+    		super(dataSource, "PKG_SATELITES2_PRE.P_MOV_MPOLIAGE_PORCENTAJES");
     		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
@@ -4735,7 +4735,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	protected GuardarEliminarPorcentajePoliza(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_SATELITES2.P_MOV_MPOLIAGE_PORCENTAJES2");
+    		super(dataSource, "PKG_SATELITES2_PRE.P_MOV_MPOLIAGE_PORCENTAJES2");
     		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
@@ -4767,7 +4767,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	protected GuardarEliminarPorcentajePolizaPorPuntos(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_SATELITES2.P_MOV_MPOLIAGE_PORCENTAJES2");
+    		super(dataSource, "PKG_SATELITES2_PRE.P_MOV_MPOLIAGE_PORCENTAJES2");
     		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
@@ -4799,7 +4799,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ValidarExtraprima extends CustomStoredProcedure {
     	
     	protected ValidarExtraprima(DataSource dataSource) {
-    		super(dataSource, "pkg_satelites.valida_extraprima");
+    		super(dataSource, "PKG_SATELITES_PRE.valida_extraprima");
     		declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4823,7 +4823,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ObtenCdtipsitGS extends CustomStoredProcedure {
     	
     	protected ObtenCdtipsitGS(DataSource dataSource) {
-    		super(dataSource, "Pkg_Consulta.P_OBTIENE_SUBRAMO");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_OBTIENE_SUBRAMO");
     		declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4849,7 +4849,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ObtenSubramoGS extends CustomStoredProcedure {
     	
     	protected ObtenSubramoGS(DataSource dataSource) {
-    		super(dataSource, "Pkg_Consulta.P_OBTIENE_SUBRAMO_X_CDTIPSIT");
+    		super(dataSource, "PKG_CONSULTA_PRE.P_OBTIENE_SUBRAMO_X_CDTIPSIT");
     		declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdtipsit_i"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_cdsubram_o", OracleTypes.VARCHAR));
@@ -4871,7 +4871,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ValidarExtraprimaSituac extends CustomStoredProcedure {
     	
     	protected ValidarExtraprimaSituac(DataSource dataSource) {
-    		super(dataSource, "pkg_satelites.valida_extraprima_situac");
+    		super(dataSource, "PKG_SATELITES_PRE.valida_extraprima_situac");
     		declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4896,7 +4896,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ValidarExtraprimaSituacRead extends CustomStoredProcedure {
     	
     	protected ValidarExtraprimaSituacRead(DataSource dataSource) {
-    		super(dataSource, "pkg_satelites.valida_extraprima_situac_read");
+    		super(dataSource, "PKG_SATELITES_PRE.valida_extraprima_situac_read");
     		declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4922,7 +4922,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class HabilitaSigRecibo extends CustomStoredProcedure {
     	
     	protected HabilitaSigRecibo(DataSource dataSource) {
-    		super(dataSource, "PKG_SATELITES.P_HABILITAR_SIG_RECSUB");
+    		super(dataSource, "PKG_SATELITES_PRE.P_HABILITAR_SIG_RECSUB");
     		declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -4967,7 +4967,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
 		protected ObtenerMesaControlSuper(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_OBTIENE_MESACONTROL_SUPER");
+			super(dataSource,"PKG_SATELITES_PRE.P_OBTIENE_MESACONTROL_SUPER");
 			declareParameter(new SqlParameter("pv_cdunieco_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ntramite_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",        OracleTypes.VARCHAR));
@@ -4995,7 +4995,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ValidaUsuarioSucursal extends CustomStoredProcedure {
     	
     	protected ValidaUsuarioSucursal(DataSource dataSource) {
-    		super(dataSource, "PKG_SATELITES.P_VALIDA_USUARIO_SUCURSAL");
+    		super(dataSource, "PKG_SATELITES_PRE.P_VALIDA_USUARIO_SUCURSAL");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdtipsit"  , OracleTypes.VARCHAR));
@@ -5015,7 +5015,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtieneTatrisin(DataSource dataSource)
         {
-            super(dataSource,"PKG_LISTAS.P_GET_ATRI_SINIESTRO");
+            super(dataSource,"PKG_LISTAS_PRE.P_GET_ATRI_SINIESTRO");
             declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtieneTatrisinMapper()));
@@ -5037,7 +5037,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtieneTatrisinPoliza(DataSource dataSource)
         {
-            super(dataSource,"PKG_LISTAS.P_GET_ATRI_SINIESTRO_POL");
+            super(dataSource,"PKG_LISTAS_PRE.P_GET_ATRI_SINIESTRO_POL");
             declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -5136,7 +5136,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtieneCobranzaAplicada(DataSource dataSource)
         {
-            super(dataSource,"PKG_CONSULTA.P_GET_ZWORKREM");
+            super(dataSource,"PKG_CONSULTA_PRE.P_GET_ZWORKREM");
             String[] cols=new String[]{
             		"CDUNIECO" , "CDRAMO" , "ESTADO" , "NMPOLIZA" , "PTIMPORT"
             };
@@ -5160,7 +5160,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     {
     	protected ObtieneRemesaAplicada(DataSource dataSource)
         {
-            super(dataSource,"PKG_CONSULTA.P_GET_TREMEAPL");
+            super(dataSource,"PKG_CONSULTA_PRE.P_GET_TREMEAPL");
             String[] cols=new String[]{
             		"NMREMESA" , "FEAPLICA" , "CDUNIECO" , "CDRAMO" , "ESTADO" , "NMPOLIZA" , "NMRECIBO" , "PTIMPORT" , "TIPOPAGO" , "SALDO"
             };

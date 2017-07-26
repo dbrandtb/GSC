@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
@@ -462,52 +461,4 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 			}
 	}*/
 	
-	
-	public List<GenericVO> obtieneCatalogoICDs() throws Exception{
-		return consultasAseguradoDAOICE.obtieneCatalogoICDs();
-	}
-
-	public List<Map<String, String>> obtienePadecimientosAsegurado(Map<String, String> params) throws Exception{
-		return consultasAseguradoDAOICE.obtienePadecimientosAsegurado(params);
-	}
-	
-	public void actualizaPadecimientoAsegurado(Map<String, String> params) throws Exception{
-		consultasAseguradoDAOICE.actualizaPadecimientoAsegurado(params);
-	}
-	
-	public Map<String, String> obtieneDatosAsegurado(Map<String, String> params) throws Exception{
-		return consultasAseguradoDAOICE.obtieneDatosAsegurado(params);
-	}
-
-	public Map<String, String> obtieneCopagoCobMedPrevPol(Map<String, String> params) throws Exception{
-		return consultasAseguradoDAOICE.obtieneCopagoCobMedPrevPol(params);
-	}
-
-	public List<GenericVO> obtieneCatalogoEstadosProvMedicos() throws Exception{
-		return consultasAseguradoDAOICE.obtieneCatalogoEstadosProvMedicos();
-	}
-
-	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos(Map<String, String> params) throws Exception{
-		return consultasAseguradoDAOICE.obtieneCatalogoMunicipiosProvMedicos(params);
-	}
-
-	public List<GenericVO> obtieneCatalogoEspecialidadesMedicos() throws Exception{
-		return consultasAseguradoDAOICE.obtieneCatalogoEspecialidadesMedicos();
-	}
-
-	public List<GenericVO> obtieneCatalogoFrecuenciaVisitas() throws Exception{
-		return consultasAseguradoDAOICE.obtieneCatalogoFrecuenciaVisitas();
-	}
-
-	public List<GenericVO> obtieneCatalogoPeriodicidadVisitas() throws Exception{
-		return consultasAseguradoDAOICE.obtieneCatalogoPeriodicidadVisitas();
-	}
-
-	public List<Map<String, String>> obtieneCatDireccionProvMedPorEspecialidad(Map<String, String> params) throws Exception{
-		return consultasAseguradoDAOICE.obtieneCatDireccionProvMedPorEspecialidad(params);
-	}
-	
-	public boolean validaAsegCobMedicinaPreventiva(Map<String, String> params) throws Exception{
-		return consultasAseguradoDAOICE.validaAsegCobMedicinaPreventiva(params);
-	}
 }
