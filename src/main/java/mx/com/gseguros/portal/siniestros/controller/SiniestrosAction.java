@@ -6483,11 +6483,10 @@ public String reservasTipPag(){
 		try{
 			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
 			slist1 = siniestrosManager.crearTramitesLayout(cdusuari, null);
-			logger.debug("luego de crearTramitesLayoutttt",slist1.isEmpty());
+			logger.debug("luego de crearTramitesLayout slist1: ",slist1);
 			if (!slist1.isEmpty()){
 				mensaje = "Se generaron los siguientes tramites: ";
-				for(int i = 0; i>slist1.size();i++){
-					logger.debug("Leyendo tramites: ",i,slist1.get(i).get("NTRAMITE"));
+				for(int i = 0; i<slist1.size();i++){
 					mensaje = mensaje + slist1.get(i).get("NTRAMITE");
 					if(i<slist1.size() - 1){
 						mensaje = mensaje + ",";
