@@ -13383,7 +13383,7 @@ public String retarificarEndosos()
             StringBuilder mensajeEmail = new StringBuilder("<span style=\"font-family: Verdana, Geneva, sans-serif;\">").append(
                     "<br>Estimado(a) cliente,<br/><br/>").append(
                     "Anexamos a este e-mail la documentaci\u00f3n del endoso con motivo '").append(dstipsup).append("' asociado a la p\u00f3liza ").append(CDUNIEXT+"/"+RAMO+"/"+NMPOLIEX).append(".<br/>").append(
-                    "Puede revisar el detalle de este movimiento en el siguiente link.<br/>");
+                    "Puede revisar el detalle de este movimiento con el link correspondiente.<br/>");
 			
 			for(Map<String,String> endosoIt : listaEndosos){
 				if(StringUtils.isNotBlank(endosoIt.get("IMPRIMIR")) && Constantes.SI.equalsIgnoreCase(endosoIt.get("IMPRIMIR"))){

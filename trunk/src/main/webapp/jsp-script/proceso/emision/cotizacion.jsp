@@ -3982,7 +3982,12 @@ Ext.onReady(function()
 		                ,title       : 'ACCIONES'
 		                ,hidden      : Ext.isEmpty(_0_flujo) || !_0_smap1.SITUACION === 'AUTO'
 		                ,buttonAlign : 'left'
-		                ,buttons     : []
+			            ,buttons     : {
+			            	layout : {
+			                        type    : 'table'
+			                        ,align: 'left'
+			                        ,columns : 7
+			                    }}
 		                ,listeners   :
 		                {
 		                    afterrender : function(me)
