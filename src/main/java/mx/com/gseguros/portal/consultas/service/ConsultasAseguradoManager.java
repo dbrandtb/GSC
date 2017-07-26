@@ -99,4 +99,7 @@ public interface ConsultasAseguradoManager {
 	public List<Map<String, String>> obtieneCatDireccionProvMedPorEspecialidad(Map<String, String> params) throws Exception;
 	
 	public boolean validaAsegCobMedicinaPreventiva(Map<String, String> params) throws Exception;
+
+	public Map<String, String> obtenerNtramiteEmision(String cdunieco, String cdramo, String estado, String nmpoliza)
+			throws ApplicationException, Exception;
 }
