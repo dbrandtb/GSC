@@ -2814,15 +2814,25 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{
-			throw new Exception("No se encuentra el copago deducible");
+			HashMap<String, String> sinCopagoDef = new HashMap<String, String>();
+			sinCopagoDef.put("FORMATOCALCULO","0");
+			sinCopagoDef.put("PENALIZACIONES","0");
+			sinCopagoDef.put("DEDUCIBLE","NA");
+			sinCopagoDef.put("COPAGO","NA");
+			sinCopagoDef.put("TIPOCOPAGO","$");
+			return sinCopagoDef;
 		}
-		if(lista.size()>1)
+		else if(lista.size()>1)
 		{
-			throw new Exception("Copago y deducible duplicado");
+			//throw new Exception("Copago y deducible duplicado");
+			Map<String,String>copagoDeducible = lista.get(0);
+			logger.debug("Copago deducible: "+copagoDeducible);
+			return copagoDeducible;
+		}else{
+			Map<String,String>copagoDeducible = lista.get(0);
+			logger.debug("Copago deducible: "+copagoDeducible);
+			return copagoDeducible;
 		}
-		Map<String,String>copagoDeducible = lista.get(0);
-		logger.debug("Copago deducible: "+copagoDeducible);
-		return copagoDeducible;
 	}
 	
 	protected class ObtenerCopagoDeducible extends StoredProcedure
