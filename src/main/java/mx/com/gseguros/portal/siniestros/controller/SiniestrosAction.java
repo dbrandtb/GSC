@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -33,7 +32,6 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosGeneralesPolizaVO;
 import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasAseguradoManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.documentos.service.DocumentosManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
@@ -132,11 +130,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	private Map<String, String> map1;
 	private List<Map<String,String>>  datosInformacionAdicional;
 	private List<Map<String,String>>  datosValidacion;
-	private Map<String,List<Map<String,String>>> graficas;
-	
-	private boolean     exito            = false;
-	private String      respuesta;
-	private String      respuestaOculta  = null;
 	
 	@Autowired
 	@Qualifier("consultasAseguradoManagerImpl")
@@ -148,15 +141,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	@Autowired
 	private MesaControlManager mesaControlManager;
 
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-    
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-    
-    @Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-    
 	/**
 	* metodo para consultar la poliza en especifico
 	* @param unieco, Ramo, Estado, Nmpoliza, cdperson
@@ -819,7 +803,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				}
 			}
 			
-			File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
+			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
 			if(!carpeta.exists()){
 				logger.debug("no existe la carpeta : {}",paramsO.get("pv_ntramite_i"));
 				carpeta.mkdir();
@@ -832,19 +816,19 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				logger.debug("existe la carpeta :{}",paramsO.get("pv_ntramite_i"));
 			}
 			String urlContrareciboSiniestro = ""
-					+ rutaServidorReports
+					+ getText("ruta.servidor.reports")
 					+ "?p_usuario=" + usuario.getUser() 
 					+ "&p_ntramite=" + paramsO.get("pv_ntramite_i")
 					+ "&destype=cache"
 					+ "&desformat=PDF"
-					+ "&userid="+passServidorReports
+					+ "&userid="+getText("pass.servidor.reports")
 					+ "&ACCESSIBLE=YES"
 					+ "&report="+ nombreRdf
 					+ "&paramform=no"
 					;
 			String nombreArchivo = getText("pdf.siniestro.cartarechazo.nombre");
 			String pathArchivo=""
-					+ rutaDocumentosPoliza
+					+ getText("ruta.documentos.poliza")
 					+ "/" + paramsO.get("pv_ntramite_i")
 					+ "/" + nombreArchivo
 					;
@@ -1076,30 +1060,6 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	public String consultaListaCPTUnico(){
-		logger.debug("Entra a consultaListaCPTUnico params de entrada :{}",params);
-		try {
-			datosValidacionGral = siniestrosManager.getConsultaListaCPTUnico(params.get("cdicd"));
-		}catch( Exception e){
-			logger.error("Error al consultaListaCPTUnico la Lista de ICD's : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
-	
-	public String consultaListaTipoMedico(){
-		logger.debug("Entra a consultaListaTipoMedico params de entrada :{}",params);
-		try {
-			datosValidacionGral = siniestrosManager.getConsultaListaTipoMedicos(params.get("cdicd"),params.get("cdpts"));
-			logger.debug("Valor de respuesta del procedure ==> :{}",datosValidacionGral);
-		}catch( Exception e){
-			logger.error("Error al consultaListaTipoMedico la Lista de ICD's : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
 	/**
 	* Funcion que nos muestra la informacion de las pantalla principal de facturas y afiliados
 	* @param params
@@ -1307,7 +1267,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 				paramsO.putAll(params);
 				
 				//String nombreRdf = getText("rdf.siniestro.cartafiniquito.nombre");
-				File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
+				File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
 				if(!carpeta.exists()){
 					logger.debug("no existe la carpeta: {}",paramsO.get("pv_ntramite_i"));
 					carpeta.mkdir();
@@ -1328,7 +1288,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					}
 					
 					String urlFiniquitoSiniestro = ""
-							+ rutaServidorReports
+							+ getText("ruta.servidor.reports")
 							+ "?p_unieco=" + siniestro.getCdunieco() 
 							+ "&p_ramo="   + siniestro.getCdramo()
 							+ "&p_estado=" + siniestro.getEstado()
@@ -1340,14 +1300,14 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							+ "&p_sinies="+ siniestro.getNmsinies()
 							+ "&destype=cache"
 							+ "&desformat=PDF"
-							+ "&userid="+passServidorReports
+							+ "&userid="+getText("pass.servidor.reports")
 							+ "&ACCESSIBLE=YES"
 							+ "&report="+ nombreRdf
 							+ "&paramform=no"
 							;
 					String nombreArchivo = siniestro.getNmsinies() +"_"+ siniestro.getAapertu() +"_" + getText("pdf.siniestro.finiquito.nombre");
 					String pathArchivo=""
-							+ rutaDocumentosPoliza
+							+ getText("ruta.documentos.poliza")
 							+ "/" + paramsO.get("pv_ntramite_i")
 							+ "/" + nombreArchivo
 							;
@@ -1810,14 +1770,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 	public String consultaDatosSumaAsegurada(){
 		logger.debug("Entra a consultaDatosSumaAsegurada params de entrada :{}",params);
 		try {
-			if(params.get("cdramo").equalsIgnoreCase("11")){
-				datosValidacion = siniestrosManager.getConsultaDatosSumaAseguradaGNP(params.get("cdunieco"),		params.get("cdramo"),		params.get("estado"),
-						  params.get("nmpoliza"),		params.get("cdperson"),		params.get("nmsinref"));
-			}else{
-				datosValidacion = siniestrosManager.getConsultaDatosSumaAsegurada(params.get("cdunieco"),		params.get("cdramo"),		params.get("estado"),
-						  params.get("nmpoliza"),		params.get("cdperson"),		params.get("nmsinref"));
-			}
-			
+			datosValidacion = siniestrosManager.getConsultaDatosSumaAsegurada(params.get("cdunieco"),		params.get("cdramo"),		params.get("estado"),
+																			  params.get("nmpoliza"),		params.get("cdperson"),		params.get("nmsinref"));
 			logger.debug("Respuesta datosValidacion : {}", datosValidacion);
 		}catch( Exception e){
 			logger.error("Error al obtener las autorizaciones : {}", e.getMessage(), e);
@@ -1998,7 +1952,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		if(causaSiniestro != null){
 			if(!causaSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){
 				//1.- Verificamos el el Ramo
-				if(ramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || ramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())|| ramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){ //SALUD VITAL
+				if(ramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || ramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){ //SALUD VITAL
 					if(tipoCopago.equalsIgnoreCase("%")){
 						copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp + Double.parseDouble(""+copagoOriginalPoliza);
 						if(copagoPenaPorcentaje <= 0){
@@ -2223,7 +2177,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							
 							if(informacionGral.size()> 0){
 								aseguradoObj.put("CAUSASINIESTRO", informacionGral.get(0).get("CDCAUSA"));
-								if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) ||cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+								if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 									if(informacionGral.get(0).get("CDCAUSA").toString().equalsIgnoreCase(CausaSiniestro.ENFERMEDAD.getCodigo())){
 										// Verificamos la Cobertura que tiene el asegurado
 										HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
@@ -2269,7 +2223,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								paramExclusion.put("pv_nmpoliza_i",nmpoliza);
 								paramExclusion.put("pv_nmsituac_i",nmsituac);
 								
-								if(cdramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+								if(cdramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 									logger.debug("Valor de aplicaPenalZonaHosp : {} ",aplicaPenalZonaHosp);
 									logger.debug("Valor de aplicaPenalCircHosp : {} ",aplicaPenalCircHosp);
 									// Validacion por Cambio de Zona
@@ -2352,7 +2306,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								}
 							}
 							
-							if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) ||cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){//GMMI
+							if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){//GMMI
 								if(existeCobertura == true){
 									deducibleSiniestroIte = 0d;
 								}
@@ -2780,7 +2734,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){ // Diferente de Accidente
 									subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
 								}else{
-									if(cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) ||cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+									if(cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 										subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
 									}else{
 										subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP);
@@ -3788,13 +3742,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						mensaje = "";
 						success = true;
 					}else{
-						if(TipoPago.REEMBOLSO.getCodigo().equalsIgnoreCase(tipoPago)){
-							mensaje = "";
-							success = true;
-						}else{
-							mensaje = "Proveedor pendiente o la clave del proveedor es 0 - Favor de configurar la informaci\u00f3n.";
-							success = false;
-						}
+						mensaje = "Proveedor pendiente o la clave del proveedor es 0 - Favor de configurar la informaci\u00f3n.";
+						success = false;
 					}
 				}else{
 					mensaje = "Verifica los C\u00e1lculos - El importe total de las facturas es menor al total a pagar.";
@@ -3964,7 +3913,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 						
 						if(informacionGral.size()> 0){
 							aseguradoObj.put("CAUSASINIESTRO", informacionGral.get(0).get("CDCAUSA"));
-							if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+							if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 								if(informacionGral.get(0).get("CDCAUSA").toString().equalsIgnoreCase(CausaSiniestro.ENFERMEDAD.getCodigo())){
 									HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
 									paramCobertura.put("pv_ntramite_i",factura.get("NTRAMITE"));
@@ -4007,7 +3956,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							paramExclusion.put("pv_cdramo_i",cdramo);
 							paramExclusion.put("pv_nmpoliza_i",nmpoliza);
 							paramExclusion.put("pv_nmsituac_i",nmsituac);
-							if(cdramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())|| cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+							if(cdramo.equalsIgnoreCase(Ramo.SALUD_VITAL.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 								logger.debug("Valor de aplicaPenalZonaHosp : {} ",aplicaPenalZonaHosp);
 								logger.debug("Valor de aplicaPenalCircHosp : {} ",aplicaPenalCircHosp);
 								if(aplicaPenalZonaHosp.equalsIgnoreCase("N")){
@@ -4087,7 +4036,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							}
 						}
 						
-						if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){//GMMI
+						if(cdramo.toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){//GMMI
 							if(existeCobertura == true){
 								deducibleSiniestroIte = 0d;
 							}
@@ -4474,7 +4423,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 							if(!causadelSiniestro.equalsIgnoreCase(CausaSiniestro.ACCIDENTE.getCodigo())){ // Diferente de Accidente
 								subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
 							}else{
-								if(cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())||cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
+								if(cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 									subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP + deducibleSiniestroIte );
 								}else{
 									subttDesto = (hPTIMPORT + DESTOIMP) - (DESTOIMP);
@@ -5922,7 +5871,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}
 		return SUCCESS;
 	}
-
+		
 	public String procesarTramiteLayout(){
 		logger.debug("Entra a procesarTramiteLayout Datos de Entrada :{}",params);
 		success = true;
@@ -6220,240 +6169,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 		}
 		return SUCCESS;
 	}
-	
-	public String reservaSiniestralidad(){
-		logger.info(
-				new StringBuilder()
-				.append("\n#####################################")
-				.append("\n###### reservaSiniestralidad ########")
-				.append("\n###### smap1=").append(smap)
-				.toString()
-				);
-		
-		success = true;
-		
-		String cdsisrol = null;
-		
-		//datos completos
-		try
-		{
-			UserVO usuario = (UserVO)session.get("USUARIO");
-			cdsisrol = usuario.getRolActivo().getClave();
-			ManagerRespuestaImapVO managerResponse = siniestrosManager.pantallaReservaSiniestralidad(cdsisrol);
-			exito           = managerResponse.isExito();
-			respuesta       = managerResponse.getRespuesta();
-			respuestaOculta = managerResponse.getRespuestaOculta();
-			if(exito)
-			{
-				imap = managerResponse.getImap();
-			}
-		}
-		catch(Exception ex)
-		{
-			long timestamp  = System.currentTimeMillis();
-			success         = false;
-			respuesta       = new StringBuilder("Error al obtener atributos de pantalla #").append(timestamp).toString();
-			respuestaOculta = ex.getMessage();
-			logger.error(respuesta,ex);
-		}
-		logger.info(
-				new StringBuilder()
-				.append("\n###### slist1=").append(slist1)
-				.append("\n###### reservaSiniestralidad #########")
-				.append("\n#####################################")
-				.toString()
-				);
-		return SUCCESS;
-	}
-	
-	public String consultaRenovaSiniestralidad(){
-		logger.debug("Entra a consultaDatosAutEspecial params de entrada :{} ",params);
-		try {
-			String pv_CdUniEco_i = params.get("pv_CdUniEco_i")
-                  ,pv_CdRamo_i   = params.get("pv_CdRamo_i")
-                  ,pv_nmpoliza_i = params.get("pv_nmpoliza_i")
-                  ,pv_cdperson   = params.get("pv_cdperson")
-                  ,pv_nmsinies   = params.get("pv_nmsinies")
-                  ,pv_fecdesde   = params.get("pv_fecdesde")
-                  ,pv_fechasta   = params.get("pv_fechasta")
-                  ,pv_start_i    = params.get("pv_start_i")
-                  ,pv_limit_i    = params.get("pv_limit_i")
-                  ,pv_ntramite_i = params.get("pv_ntramite_i")
-					,pv_top=null;
-			datosValidacion = siniestrosManager.getDatosRenovaSiniestralidad(pv_CdUniEco_i 
-																			,pv_CdRamo_i  
-																			,pv_nmpoliza_i
-																			,pv_cdperson  
-																			,pv_nmsinies
-																			,pv_fecdesde  
-																			,pv_fechasta  
-																			,pv_start_i
-																			,pv_limit_i 
-																			,pv_ntramite_i);
-			
-			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
-		}catch( Exception e){
-			logger.error("Error al obtener consultaDatosAutEspecial : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		setSuccess(true);
-		return SUCCESS;
-	}
-	
-	public String listaProveedores(){
-		logger.debug("Entra a listaProveedores params de entrada :{} ",params);
-		try {
-			String pv_cdpresta_i = params.get("pv_cdpresta_i")
-                  ,pv_idespecialidad_i   = params.get("pv_idespecialidad_i")
-                  ,pv_tipoProveedor_i = params.get("pv_tipoProveedor_i")
-                  ,pv_idZonaHosp_i   = params.get("pv_idZonaHosp_i")
-                  ;
-			slist1 = siniestrosManager.obtieneListaProveedores(pv_cdpresta_i, pv_idespecialidad_i, pv_tipoProveedor_i, pv_idZonaHosp_i);
-			
-			logger.debug("Respuesta listaProveedores : {}",datosValidacion);
-		}catch( Exception e){
-			logger.error("Error al obtener listaProveedores : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		setSuccess(true);
-		return SUCCESS;
-	}
-	
-	public String topIcd(){
-		
-		logger.debug("Entra a topIcd params de entrada :{} ",params);
-		try {
-			String pv_CdUniEco_i = params.get("pv_CdUniEco_i")
-                  ,pv_CdRamo_i   = params.get("pv_CdRamo_i")
-                  ,pv_nmpoliza_i = params.get("pv_nmpoliza_i")
-                  ,pv_cdperson   = params.get("pv_cdperson")
-                  ,pv_nmsinies   = params.get("pv_nmsinies")
-                  ,pv_fecdesde   = params.get("pv_fecdesde")
-                  ,pv_fechasta   = params.get("pv_fechasta")
-                  ,pv_top 		 = params.get("pv_top");
-			
-		
-			slist1=siniestrosManager.obtieneListaTopIcd(pv_CdUniEco_i
-																	, pv_CdRamo_i
-																	, pv_nmpoliza_i
-																	, pv_cdperson
-																	, pv_nmsinies
-																	, pv_fecdesde
-																	, pv_fechasta
-																	, pv_top);
-			
-			
-			
-			
-			logger.debug("Respuesta datosValidacion : {}",datosValidacion);
-		}catch( Exception e){
-			logger.error("Error al obtener consultaDatosAutEspecial : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		setSuccess(true);
-		return SUCCESS;
-		
-	}
-	
-	public String reservas(){
-		
-		logger.debug("Entra a reservas params de entrada :{} ",params);
-		try {
-			String pv_CdUniEco_i = params.get("pv_CdUniEco_i")
-                  ,pv_CdRamo_i   = params.get("pv_CdRamo_i")
-                  ,pv_nmpoliza_i = params.get("pv_nmpoliza_i")
-                  ,pv_cdperson   = params.get("pv_cdperson")
-                  ,pv_nmsinies   = params.get("pv_nmsinies")
-                  ,pv_fecdesde   = params.get("pv_fecdesde")
-                  ,pv_fechasta   = params.get("pv_fechasta")
-                  ,pv_top 		 = params.get("pv_top");
-			
-		
-			slist1=siniestrosManager.obtieneListaReservasSolo(pv_CdUniEco_i
-					, pv_CdRamo_i
-					, pv_nmpoliza_i
-					, pv_cdperson
-					, pv_nmsinies
-					, pv_fecdesde
-					, pv_fechasta);
-			
-			
-			
-			
-			logger.debug("Respuesta reservas : {}",slist1);
-		}catch( Exception e){
-			logger.error("Error al obtener reservas : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		setSuccess(true);
-		return SUCCESS;
-		
-	}
-	
-public String reservasTipPag(){
-		
-		logger.debug("Entra a reservasTipPag params de entrada :{} ",params);
-		try {
-			String pv_CdUniEco_i = params.get("pv_CdUniEco_i")
-                  ,pv_CdRamo_i   = params.get("pv_CdRamo_i")
-                  ,pv_nmpoliza_i = params.get("pv_nmpoliza_i")
-                  ,pv_cdperson   = params.get("pv_cdperson")
-                  ,pv_nmsinies   = params.get("pv_nmsinies")
-                  ,pv_fecdesde   = params.get("pv_fecdesde")
-                  ,pv_fechasta   = params.get("pv_fechasta")
-                  ,pv_top 		 = params.get("pv_top");
-			
-		
-			slist1=siniestrosManager.obtieneListaReservas(pv_CdUniEco_i
-					, pv_CdRamo_i
-					, pv_nmpoliza_i
-					, pv_cdperson
-					, pv_nmsinies
-					, pv_fecdesde
-					, pv_fechasta);
-			
-			
-			
-			
-			logger.debug("Respuesta reservasTipPag : {}",slist1);
-		}catch( Exception e){
-			logger.error("Error al obtener reservasTipPag : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		setSuccess(true);
-		return SUCCESS;
-		
-	}
-
-	public String consultaListaDetalleSiniestro(){
-		logger.debug("Entra a consultaListaDetalleSiniestro params de entrada :{}",params);
-		try {
-			String   pv_CdUniEco_i= params.get("pv_CdUniEco_i")
-					,pv_CdRamo_i  = params.get("pv_CdRamo_i")
-					,pv_nmpoliza_i= params.get("pv_nmpoliza_i")
-					,pv_cdperson  = params.get("pv_cdperson")
-					,pv_ntramite_i= params.get("pv_ntramite_i")
-					,pv_nmsinies  = params.get("pv_nmsinies")
-					,pv_fecdesde  = params.get("pv_fecdesde")
-					,pv_fechasta = params.get("pv_fechasta");
-			
-			datosValidacion  = siniestrosManager.getConsultaListaDetalleSiniestro(   pv_CdUniEco_i
-																					,pv_CdRamo_i  
-																					,pv_nmpoliza_i
-																					,pv_cdperson  
-																					,pv_ntramite_i
-																					,pv_nmsinies  
-																					,pv_fecdesde  
-																					,pv_fechasta );
-			//if(datosValidacion!=null && !datosValidacion.isEmpty())	datosValidacion = datosValidacion;
-		}catch( Exception e){
-			logger.error("Error al obtener la lista Detalle Siniestro : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
-		
+    
 	public String consultaEstadoSiniestros(){
 		logger.debug("Entra a consultaEstadoSiniestros");
 		try {
@@ -6477,6 +6193,7 @@ public String reservasTipPag(){
 		success = true;
 		return SUCCESS;
 	}
+
 	public String crearTramitesLayout(){	/*EGS*/
 		logger.debug("Entra a crearTramitesLayout");
 		success = true;
@@ -6504,7 +6221,7 @@ public String reservasTipPag(){
 		}
 		return SUCCESS;
 	}
-    
+	
 	/****************************GETTER Y SETTER *****************************************/
 	public List<GenericVO> getListaTipoAtencion() {
 		return listaTipoAtencion;
@@ -7096,25 +6813,5 @@ public String reservasTipPag(){
 
 	public void setDatosValidacionGral(List<GenericVO> datosValidacionGral) {
 		this.datosValidacionGral = datosValidacionGral;
-	}
-	
-    public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
-	}
-	
-	public Map<String, List<Map<String, String>>> getGraficas() {
-		return graficas;
-	}
-
-	public void setGraficas(Map<String, List<Map<String, String>>> graficas) {
-		this.graficas = graficas;
 	}
 }
