@@ -707,7 +707,12 @@ Ext.onReady(function()
                 ,title       : 'ACCIONES'
                 ,hidden      : Ext.isEmpty(_p28_flujo)
                 ,buttonAlign : 'left'
-                ,buttons     : []
+	            ,buttons     : {
+	            	layout : {
+	                        type    : 'table'
+	                        ,align: 'left'
+	                        ,columns : 7
+	                    }}
                 ,listeners   :
                 {
                     afterrender : function(me)
