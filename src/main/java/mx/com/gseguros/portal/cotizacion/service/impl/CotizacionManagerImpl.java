@@ -8975,6 +8975,8 @@ public class CotizacionManagerImpl implements CotizacionManager
 
     			if(estatuRenovacion.equalsIgnoreCase(EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())){
     			    mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
+    			}else if(estatuRenovacion.equalsIgnoreCase(EstatusTramite.EMISION_EN_REVISION_TECNICA.getCodigo())){
+    			    mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EMISION_EN_REVISION_TECNICA.getCodigo());
     			}else{
     			    mesaControlDAO.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.TRAMITE_COMPLETO.getCodigo());
     			}
