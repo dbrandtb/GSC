@@ -14075,6 +14075,8 @@ public class CotizacionAction extends PrincipalCoreAction
     			
     			if(estatuRenovacion.equalsIgnoreCase(EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo())){
     				mesaControlManager.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EN_ESPERA_DE_COTIZACION.getCodigo());
+    			}else if(estatuRenovacion.equalsIgnoreCase(EstatusTramite.EMISION_EN_REVISION_TECNICA.getCodigo())){
+    				mesaControlManager.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.EMISION_EN_REVISION_TECNICA.getCodigo());
     			}else{
     				mesaControlManager.marcarTramiteComoStatusTemporal(ntramite,EstatusTramite.TRAMITE_COMPLETO.getCodigo());
     			}
