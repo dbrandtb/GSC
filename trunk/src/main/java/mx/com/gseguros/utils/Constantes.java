@@ -64,4 +64,14 @@ public interface Constantes {
                                EVENTO_GENERAR_TRAMITE_GRUPO = "GENTRAGRUP",
                                EVENTO_TURNAR                = "TURNATRA",
                                EVENTO_NUEVO_TRAMITE         = "NUETRAMITMC";
+    
+    public static final String  MULTISALUD 					= "MS",
+    							MULTISALUD_COLECTIVO 		= "MSC",
+    							SN 							= "SN",
+    							SALUD_VITAL 				= "SL",
+    							RECUPERA_INDIVIDUAL 		= "RI",
+    							RECUPERA_COLECTIVO 			= "RC",
+    							RAMO4 						= "4",
+    							RAMO2 						= "2",
+    							RAMO1 						= "1";
 }

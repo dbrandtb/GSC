@@ -215,8 +215,24 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista = catalogosManager.obtieneTiposTramiteClonacion();
 					break;
 				case TATRISIT:
-					//lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					//para contemplar atributos situacion por rol (EGS)
+					//validaciones codigos postales salud 
+					//4='MS', 'MSC', 
+					//2='SN', 'SL', 
+					//1='RI', 'RC'
+					if (params.get("cdramo") == null){
+						logger.debug("Asignando manualmente el ramo de salud");
+						if (params.get("cdtipsit").toString().equals(Constantes.MULTISALUD_COLECTIVO) || params.get("cdtipsit").toString().equals(Constantes.MULTISALUD)){
+							params.put("cdramo", Constantes.RAMO4);
+						}
+						else if (params.get("cdtipsit").toString().equals(Constantes.SN) || params.get("cdtipsit").toString().equals(Constantes.SALUD_VITAL)){
+								params.put("cdramo", Constantes.RAMO2);
+							} 
+							else if (params.get("cdtipsit").toString().equals(Constantes.RECUPERA_INDIVIDUAL) || params.get("cdtipsit").toString().equals(Constantes.RECUPERA_COLECTIVO)){
+								params.put("cdramo", Constantes.RAMO1);
+							}
+					}
+					//fin de validaciones codigos postales salud 
 					logger.debug("****** Parametros a enviar al nuevo SP  obtieneAtributosSituacion = *******"   + params);
 					lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"),((UserVO) session.get("USUARIO")).getRolActivo().getClave(), params.get("cdramo"));
 					break;
