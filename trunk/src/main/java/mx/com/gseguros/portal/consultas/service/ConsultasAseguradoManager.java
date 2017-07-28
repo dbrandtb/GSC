@@ -81,6 +81,10 @@ public interface ConsultasAseguradoManager {
 	public List<Map<String, String>> obtienePadecimientosAsegurado(Map<String, String> params) throws Exception;
 	
 	public void actualizaPadecimientoAsegurado(Map<String, String> params) throws Exception;
+
+	public List<Map<String, String>> obtieneTratamientosAsegurado(Map<String, String> params) throws Exception;
+	
+	public String actualizaTratamientoAsegurado(Map<String, String> params) throws Exception;
 	
 	public Map<String, String> obtieneDatosAsegurado(Map<String, String> params) throws Exception;
 	

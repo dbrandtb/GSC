@@ -262,7 +262,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
-            	logger.debug("no existe la carpeta::: "+rutaCarpeta);
+            	logger.debug("no existe la carpeta::: Se crea: "+rutaCarpeta);
             	carpeta.mkdir();
             	if(carpeta.exists())
             	{
@@ -347,6 +347,53 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         }
         success= true;
         return SUCCESS;
+    }
+
+    public String subirArchivoHistorialMedicinaPrev(){
+    	logger.debug("Subiendo Archivo de Medicina Preventiva ... ");
+    	logger.debug("<<<<<<>>>>> Parametros smap1 <<<<<<>>>>>"+smap1);
+    	logger.debug("file "+file);
+    	logger.debug("fileFileName "+fileFileName);
+    	logger.debug("fileContentType "+fileContentType);
+    	
+        try
+        {
+        	String nombreArchivo = "DocHistorialMed_Aseg_" + smap1.get("cdperson") + "_ICD_" + smap1.get("cdicd")+
+        							"_No_" + smap1.get("nmordtra") + "."+fileFileName.substring(fileFileName.indexOf(".")+1);
+        	
+        	String nuevaRuta=this.rutaDocumentosPersona+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson")+Constantes.SEPARADOR_ARCHIVO
+                +nombreArchivo;
+        	String antiguaRuta=file.getAbsolutePath();
+        	logger.debug("se movera desde::: "+antiguaRuta);
+            logger.debug("se movera a    ::: "+nuevaRuta);
+            
+            String rutaCarpeta=this.rutaDocumentosPersona+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson");
+            File carpeta = new File(rutaCarpeta);
+            if(!carpeta.exists()){
+            	logger.debug("no existe la carpeta::: Se crea: "+rutaCarpeta);
+            	carpeta.mkdir();
+            	if(carpeta.exists()){
+            		logger.debug("carpeta creada");
+            	}else{
+            		logger.debug("carpeta NO creada");
+            	}
+            }else{
+            	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
+            }
+            
+            try{
+            	FileUtils.copyFile(file, new File(nuevaRuta));
+            	logger.info("archivo movido");
+			} catch (Exception e) {
+				logger.error("archivo NO movido", e);
+			}
+        }catch(Exception ex){
+        	logger.error("error al mover el archivo",ex);
+        	success= false;
+        	return SUCCESS;
+        }
+    	success= true;
+    	return SUCCESS;
     }
     
     public String consultaCobranza(){

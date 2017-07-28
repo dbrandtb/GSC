@@ -474,6 +474,14 @@ public class ConsultasAseguradoManagerImpl implements ConsultasAseguradoManager 
 	public void actualizaPadecimientoAsegurado(Map<String, String> params) throws Exception{
 		consultasAseguradoDAOICE.actualizaPadecimientoAsegurado(params);
 	}
+
+	public List<Map<String, String>> obtieneTratamientosAsegurado(Map<String, String> params) throws Exception{
+		return consultasAseguradoDAOICE.obtieneTratamientosAsegurado(params);
+	}
+	
+	public String actualizaTratamientoAsegurado(Map<String, String> params) throws Exception{
+		return consultasAseguradoDAOICE.actualizaTratamientoAsegurado(params);
+	}
 	
 	public Map<String, String> obtieneDatosAsegurado(Map<String, String> params) throws Exception{
 		return consultasAseguradoDAOICE.obtieneDatosAsegurado(params);

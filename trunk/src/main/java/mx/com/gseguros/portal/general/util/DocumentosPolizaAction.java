@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,6 +132,47 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		
 		if(fileInputStream == null){
 			reintentaRegeneraReporte();
+		}
+		
+		success = true;
+		return SUCCESS;
+	}
+
+	public String verficiaExiteDocumentoExt() {
+		
+		logger.debug("Verificando existencia de archivo y regresando tipo de extension...");
+		
+		logger.debug("path: " + path);
+		logger.debug("subfolder: " + subfolder);
+		logger.debug("filename: " + filename);
+		
+		try {
+			
+			smap1 = new HashMap<String, String>();
+			
+			ArrayList<String> extensionesValidar = new ArrayList<String>(Arrays.asList(".pdf",".png",".jpg",".jpeg"));
+			
+			for(String extension:extensionesValidar){
+				
+				String rutaArchivo = generaRutaArchivo(path, subfolder, filename+extension);
+				logger.info("Se va a verificar el archivo: " + rutaArchivo);
+				File checkFile = new File(rutaArchivo);
+				
+				if(checkFile.exists() && checkFile.isFile()) { 
+					smap1.put("EXISTE_ARCHIVO", Constantes.SI);
+					smap1.put("EXTENSION", new String(extension));
+					break;
+				}else{
+					smap1.put("EXISTE_ARCHIVO", Constantes.NO);
+					smap1.put("EXTENSION", "");
+				}
+			}
+			
+		} catch (Exception e) {
+			logger.error("Error al verificar la existencia de archivo. ",e );
+			respuesta = "Error al verificar nombre de archivo.";
+			success = false;
+			return SUCCESS;
 		}
 		
 		success = true;

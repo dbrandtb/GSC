@@ -1074,7 +1074,8 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 			declareParameter(new SqlParameter("pi_cdperson", OracleTypes.VARCHAR));
 			String[] cols = new String[]{
 					"CDUNIECO","CDRAMO","ESTADO","NMPOLIZA","NMSITUAC","CDTIPSIT","STATUS","NMSUPLEM",
-					"CDPERSON","CDICD","FEGENCART","CDFREC","CDPERIOD","CDPRESTA","DSPRESTA","DSPAD","DSPLANMED","SWGENCARTA","CDUSUARI","DSICD","COPAGO","SWFORMAT"
+					"CDPERSON","CDICD","FEGENCART","CDFREC","CDPERIOD","CDPRESTA","DSPRESTA","DSPAD",
+					"DSPLANMED","SWGENCARTA","CDUSUARI","DSICD","COPAGO","SWFORMAT","NOMBRE","APELL1","APELL2"
 			};
 			
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
@@ -1109,6 +1110,90 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 			declareParameter(new SqlParameter("pi_swgencarta", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_cdusuari", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public List<Map<String,String>> obtieneTratamientosAsegurado(Map<String, String> params) throws Exception {
+		
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneTratamientosAsegurado(getDataSource()), params);
+		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
+		if (lista == null) {
+			lista = new ArrayList<Map<String,String>>();
+		}else{
+			for(Map<String,String> trata:lista){
+				String nomCompleto = trata.get("DSNOMMED")+" "+trata.get("DSAPELLMED1")+" "+trata.get("DSAPELLMED2");
+				trata.put("NOMBRE_COMPLETO", nomCompleto);
+			}
+		}
+		
+		return lista;
+	}
+	
+	public class ObtieneTratamientosAsegurado extends StoredProcedure{
+		protected ObtieneTratamientosAsegurado(DataSource dataSource){
+			super(dataSource, "PKG_PADMEDPREV.P_OBTIENE_TRATAMIENTOS");
+			declareParameter(new SqlParameter("pi_cdunieco", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdramo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_estado"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmpoliza", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmsituac", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdperson", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdicd"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmordtra", OracleTypes.VARCHAR));
+			
+			String[] cols = new String[]{
+					"NMORDTRA","CDUNIECO","CDRAMO","ESTADO","NMPOLIZA","NMSITUAC","CDTIPSIT","STATUS","NMSUPLEM",
+					"CDPERSON","CDICD","DSICD","FEREG","PESO","TALLA","CDPRESTA","DSNOMMED",
+					"DSAPELLMED1","DSAPELLMED2","COMENTARIOS","CDUSUARI","DSESPEC"
+			};
+			
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String actualizaTratamientoAsegurado(Map<String, String> params) throws Exception {
+		String ordinal = null;
+		
+		Map<String, Object> paramsProc = new HashMap<String, Object>();
+		paramsProc.putAll(params);
+		paramsProc.put("pi_fereg", renderFechas.parse(params.get("pi_fereg")));
+		
+		Map<String, Object> procResult = ejecutaSP(new ActualizaTratamientoAsegurado(getDataSource()), paramsProc);
+		ordinal = procResult.get("pi_nmordtra_o").toString();
+		
+		return ordinal;
+	}
+	
+	public class ActualizaTratamientoAsegurado extends StoredProcedure{
+		protected ActualizaTratamientoAsegurado(DataSource dataSource){
+			super(dataSource, "PKG_PADMEDPREV.P_GUARDA_TRATAMIENTOS");
+			declareParameter(new SqlParameter("pi_cdunieco", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdramo"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_estado"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmpoliza", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmsituac", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdperson", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdicd"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_nmordtra", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_fereg"   , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pi_peso"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_talla"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdpresta", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_dsnommed", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_dsapellmed1", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_dsapellmed2", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_comentarios", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_cdusuari", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pi_swop", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pi_nmordtra_o", OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();

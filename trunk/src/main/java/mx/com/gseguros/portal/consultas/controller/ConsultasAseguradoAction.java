@@ -424,6 +424,55 @@ public class ConsultasAseguradoAction extends PrincipalCoreAction {
 		
 	}
 
+	@Action(value   = "obtieneHistorialPadecimientoAseg",
+			results = { @Result(name="success", type="json") }
+			)
+	public String obtieneTratamientosAseg() throws Exception {
+		
+		logger.debug(" **** Entrando a obtieneTratamientosAseg ****");
+		try {
+			
+			loadList = consultasAseguradoManager.obtieneTratamientosAsegurado(params);
+			
+		}catch( Exception e){
+			logger.error("Error al obtener obtieneTratamientosAseg ",e);
+			success = false;
+			return SUCCESS;
+		}
+		
+		success = true;
+		return SUCCESS;
+		
+	}
+	
+	@Action(value   = "actualizaHistorialPadecimientoAseg",
+			results = { @Result(name="success", type="json") }
+			)
+	public String actualizaTratamientoAsegurado() throws Exception {
+		
+		logger.debug(" **** Entrando a actualizaTratamientoAsegurado ****");
+		try {
+			
+			UserVO usuario = (UserVO) session.get("USUARIO");
+			String usuarioSistema = usuario.getUser();
+			
+			params.put("pi_cdusuari", usuarioSistema);
+			
+			String nuevoOrdinal = consultasAseguradoManager.actualizaTratamientoAsegurado(params);
+			params.put("nuevoOrdinal", nuevoOrdinal);
+			
+		}catch( Exception ex){
+			logger.error("Error al obtener actualizaTratamientoAsegurado ",ex);
+			mensaje = Utils.manejaExcepcion(ex);
+			success = false;
+			return SUCCESS;
+		}
+		
+		success = true;
+		return SUCCESS;
+		
+	}
+
 	@SuppressWarnings("deprecation")
 	@Action(value   = "generaCartaMedicinaPreventiva",
 			results = { @Result(name="success", type="json") }
