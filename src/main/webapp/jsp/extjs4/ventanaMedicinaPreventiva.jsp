@@ -13,7 +13,7 @@ var _Cdramo    = '<s:property value="smap1.cdramo" />';
 var _Estado    = '<s:property value="smap1.estado" />';
 var _Nmpoliza  = '<s:property value="smap1.nmpoliza" />';
 var _Nmsituac  = '<s:property value="smap1.nmsituac" />';
-var _Cdperson   = '<s:property value="smap1.cdperson" />';
+var _Cdperson  = '<s:property value="smap1.cdperson" />';
 
 var _Edad       = '<s:property value="smap1.EDAD" />';
 var _Rfc        = '<s:property value="smap1.RFC" />';
@@ -39,10 +39,10 @@ var _urlActualizaCartaMPPadecimientoAseg = '<s:url namespace="/consultasAsegurad
 var _urlActualizaHistorialPadeciAseg     = '<s:url namespace="/consultasAsegurado"  action="actualizaHistorialPadecimientoAseg" />';
 
 var _urlObtieneCopagoCobMedPrevPol       = '<s:url namespace="/consultasAsegurado"  action="obtieneCopagoCobMedPrevPol" />';
-
 var _UrlConsultaMedicosTratantes         = '<s:url namespace="/consultasAsegurado"  action="obtieneCatDireccionProvMedPorEspecialidad" />';
-
 var _urlGeneraCartaMedicinaPreventiva         = '<s:url namespace="/consultasAsegurado"  action="generaCartaMedicinaPreventiva" />';
+
+var _UrlSubirArchivoHistPad    = '<s:url namespace="/documentos" action="subirArchivoHistorialMedicinaPrev" />';
 
 var gridPadecimientosAsegurado;
 
@@ -51,6 +51,11 @@ var _reportsServerUser                = '<s:property value="passServidorReports"
 
 var _reporteCartaMedicinaPreventiva   = '<s:text name="rdf.medicinaprev.impresion.cartaMedPrev" />';
 var panDocUrlViewDoc                  = '<s:url namespace ="/documentos" action="descargaDocInline" />';
+var _urlViewDocHist     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
+var _urlDownloadDocHist = '<s:url namespace ="/documentos" action="descargaDoc"       />';
+var _urlVerificaExisteDoc = '<s:url namespace ="/documentos" action="verficiaExiteDocumentoExt"       />';
+
+var _RUTA_DOCUMENTOS_PERSONA = '<s:text name="ruta.documentos.persona" />';
 
 /*//////////////////////*/
 ////// variables    //////
@@ -67,15 +72,17 @@ Ext.onReady(function()
 				extend : 'Ext.data.Model'
 				,fields :
 				['CDUNIECO','CDRAMO','ESTADO','NMPOLIZA','NMSITUAC','CDTIPSIT','STATUS','NMSUPLEM',
-					'CDPERSON','CDICD','FEGENCART','CDFREC','CDPERIOD','CDPRESTA','DSPRESTA','DSPAD','DSPLANMED','SWGENCARTA','CDUSUARI','DSICD','COPAGO','SWFORMAT']
+					'CDPERSON','CDICD','FEGENCART','CDFREC','CDPERIOD','CDPRESTA','DSPRESTA','DSPAD',
+					'DSPLANMED','SWGENCARTA','CDUSUARI','DSICD','COPAGO','SWFORMAT','NOMBRE','APELL1','APELL2']
 	});
     
     Ext.define('modelHistorialPadecimientoAseg',
 			{
 				extend : 'Ext.data.Model'
 				,fields :
-				['CDUNIECO','CDRAMO','ESTADO','NMPOLIZA','NMSITUAC','CDTIPSIT','STATUS','NMSUPLEM',
-					'CDPERSON','CDICD','FEREG','PESO','TALLA','CDPRESTA','DSNOMMED','DSAPELLMED1','DSAPELLMED2','COMENTARIOS','CDUSUARI']
+					['NMORDTRA','CDUNIECO','CDRAMO','ESTADO','NMPOLIZA','NMSITUAC','CDTIPSIT','STATUS','NMSUPLEM',
+						'CDPERSON','CDICD','DSICD','FEREG','PESO','TALLA','CDPRESTA','DSNOMMED',
+						'DSAPELLMED1','DSAPELLMED2','COMENTARIOS','CDUSUARI','DSESPEC','NOMBRE_COMPLETO']
 	});
 
     Ext.define('modelMedicosTratantes',
@@ -131,22 +138,6 @@ Ext.onReady(function()
         }
     });
 
-    var historialGridStore = Ext.create('Ext.data.Store',
-    {
-        model   : 'modelHistorialPadecimientoAseg'
-        ,autoLoad: true
-        ,proxy   :
-        {
-        	type        : 'ajax'
-            ,url        : _urlCargaHistorialPadeciAseg
-            ,reader     :
-            {
-                type  : 'json'
-                ,root : 'loadList'
-            }
-        }
-    });
-    
     var medicosTratantesStore = Ext.create('Ext.data.Store',{
         model   : 'modelMedicosTratantes'
         ,proxy  :{
@@ -187,7 +178,7 @@ Ext.onReady(function()
             {
                 xtype        : 'actioncolumn',
                 icon         : _CONTEXT+'/resources/fam3icons/icons/folder_magnify.png',
-                tooltip      : 'Detalle de Padecimiento',
+                tooltip      : 'Detalle del Padecimiento',
                 width        : 22,
                 menuDisabled : true,
                 sortable     : false,
@@ -201,7 +192,7 @@ Ext.onReady(function()
             {
                 xtype        : 'actioncolumn',
                 icon         : _CONTEXT+'/resources/fam3icons/icons/page.png',
-                tooltip      : 'Datos para Carta de Medicina Preventiva',
+                tooltip      : 'Carta de Medicina Preventiva',
                 width        : 22,
                 menuDisabled : true,
                 sortable     : false,
@@ -213,12 +204,13 @@ Ext.onReady(function()
             {
                 xtype        : 'actioncolumn',
                 icon         : _CONTEXT+'/resources/fam3icons/icons/page_paste.png',
-                tooltip      : 'Ver historial del padecimiento',
+                tooltip      : 'Historial del padecimiento',
                 width        : 22,
                 menuDisabled : true,
                 sortable     : false,
-                handler      : function(gridView, rowIndex, colIndex, item, e, record, row) {
-
+                handler      : function(grid,rowIndex) {
+                	var record = grid.getStore().getAt(rowIndex);
+                    historialPadecimientoAseg(record);
                 }
             },
         	{text:'Descripci&oacute;n ICD', dataIndex:'DSICD', flex: 2},
@@ -371,7 +363,7 @@ Ext.onReady(function()
                 height: 72,
                 width: 500,
                 allowBlank: false,
-                maxLength : 1500
+                maxLength : 2000
                 
             },
             {
@@ -379,7 +371,7 @@ Ext.onReady(function()
                 fieldLabel: 'Plan M&eacute;dico',
                 name: 'DSPLANMED',
                 allowBlank    : false,
-                maxLength : 1500,
+                maxLength : 2000,
                 width: 400
             }],
             buttonAlign: 'center',
@@ -399,7 +391,7 @@ Ext.onReady(function()
         		            		if(recordEditar.get('SWGENCARTA') == 'S'){
         		            			Ext.Msg.show({
         		        		            title: 'Aviso',
-        		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea eliminar este padecimiento?',
+        		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Desea eliminar este padecimiento?',
         		        		            buttons: Ext.Msg.YESNO,
         		        		            fn: function(buttonId, text, opt) {
         		        		            	if(buttonId == 'yes') {
@@ -452,7 +444,7 @@ Ext.onReady(function()
                     		if(!esNuevoRegistro && recordEditar.get('SWGENCARTA') == 'S'){
                     			Ext.Msg.show({
 		        		            title: 'Aviso',
-		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea cambiar la informaci&oacute;n del padecimiento?',
+		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Desea cambiar la informaci&oacute;n del padecimiento?',
 		        		            buttons: Ext.Msg.YESNO,
 		        		            fn: function(buttonId, text, opt) {
 		        		            	if(buttonId == 'yes') {
@@ -970,7 +962,7 @@ Ext.onReady(function()
                         		if(recordEditar.get('SWGENCARTA') == 'S'){
                         			Ext.Msg.show({
     		        		            title: 'Aviso',
-    		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea actualizar esta informaci&oacute;n?',
+    		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Desea actualizar esta informaci&oacute;n?',
     		        		            buttons: Ext.Msg.YESNO,
     		        		            fn: function(buttonId, text, opt) {
     		        		            	if(buttonId == 'yes') {
@@ -1061,7 +1053,7 @@ Ext.onReady(function()
                         {
                             xtype: 'button',
                             icon:_CONTEXT+'/resources/fam3icons/icons/zoom.png',
-                            text: 'Vista Previa de Carta',
+                            text: 'Vista Previa de la Carta',
                             tooltip: 'Vista Previa con los datos actualmente guardados',
                             handler: function(btn){
                             	
@@ -1155,7 +1147,7 @@ Ext.onReady(function()
                         		if(recordEditar.get('SWGENCARTA') == 'S'){
                         			Ext.Msg.show({
     		        		            title: 'Aviso',
-    		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Esta seguro que desea crear una nueva carta?',
+    		        		            msg: 'Ya existe una o mas cartas de Medicina Preventiva para el padecimiento de este asegurado.<br/>&iquest;Desea crear una nueva carta?',
     		        		            buttons: Ext.Msg.YESNO,
     		        		            fn: function(buttonId, text, opt) {
     		        		            	if(buttonId == 'yes') {
@@ -1273,6 +1265,659 @@ Ext.onReady(function()
 //            }
 //        });
     }
+
+    function historialPadecimientoAseg(recordEditar){
+    	var ventanaHistorialPad;
+    	
+    	var FormatoCopago = Ext.isEmpty(recordEditar.get('SWFORMAT'))?'N' : recordEditar.get('SWFORMAT');
+    	var ValorCopago   = Ext.isEmpty(recordEditar.get('COPAGO'))?'' : recordEditar.get('COPAGO');
+    	
+    	if(FormatoCopago == 'N'){
+    		ValorCopago = '$ '+ValorCopago;
+    	}else{
+    		ValorCopago = ValorCopago+' %';
+    	}
+    	
+    	var historialGridStore = Ext.create('Ext.data.Store',
+			    {
+			        model   : 'modelHistorialPadecimientoAseg'
+		        	,autoLoad: true
+			        ,proxy   :
+			        {
+			        	type        : 'ajax'
+			            ,url        : _urlCargaHistorialPadeciAseg
+			            ,extraParams : {
+			            	 'params.pi_cdunieco'    : recordEditar.get('CDUNIECO'),
+			          		 'params.pi_cdramo'      : recordEditar.get('CDRAMO'),
+			          		 'params.pi_estado'      : recordEditar.get('ESTADO'),
+			          		 'params.pi_nmpoliza'    : recordEditar.get('NMPOLIZA'),
+			          		 'params.pi_nmsituac'    : recordEditar.get('NMSITUAC'),
+			          		 'params.pi_cdperson'    : recordEditar.get('CDPERSON'),
+			          		 'params.pi_cdicd'       : recordEditar.get('CDICD'),
+			          		 'params.pi_nmordtra'    : ''
+			            }
+			            ,reader     :
+			            {
+			                type  : 'json'
+			                ,root : 'loadList'
+			            }
+			        }
+		    });
+    	
+    	ventanaHistorialPad = Ext.create('Ext.window.Window',{
+    		title   : 'Historial Medicina Preventiva'
+    			,modal  : true
+    			,width  : 790
+    			,items : [{
+    				xtype: 'form',
+    				defaults : {
+    					style : 'margin : 6px 10px 6px 10px;'
+    				},
+    				items: [
+    					Ext.create('Ext.form.FieldSet',{
+    						title: '<span style="font:bold 12px Calibri;">Datos del asegurado.</span>',
+    						defaults : {
+    							style : 'margin : 5px 20px;',
+    							labelWidth: 60
+    						},
+    						layout: {
+    							type: 'column',
+    							columns: 3 
+    						},
+    						items: [{
+    							xtype: 'textfield',
+    							fieldLabel: 'C&oacute;digo',
+    							labelWidth: 100,
+    							width: 210,
+    							readOnly : true,
+    							value: _Cdperson
+    						},
+    						{
+    							xtype: 'textfield',
+    							fieldLabel: 'Edad',
+    							width: 150,
+    							readOnly : true,
+    							value: _Edad
+    							
+    						},
+    						{
+    							xtype: 'textfield',
+    							fieldLabel: 'Identidad',
+    							width: 240,
+    							readOnly : true,
+    							value: _Rfc
+    						},
+    						{
+    							xtype: 'textfield',
+    							fieldLabel: 'Nombre',
+    							labelWidth: 100,
+    							width: 400,
+    							readOnly : true,
+    							value: _NombreAseg
+    						},{
+    							xtype: 'textfield',
+    							fieldLabel: 'Enfermedad ICD',
+    							value: recordEditar.get('DSICD'),
+    							labelWidth: 100,
+    							width: 400,
+    							readOnly: true
+    						},
+    						{
+    							xtype: 'textfield',
+    							fieldLabel: 'Copago',
+    							value: ValorCopago,
+    							labelWidth: 50,
+    							width: 240,
+    							name: 'COPAGO',
+    							readOnly: true
+    								
+    						},
+    						{
+    							xtype: 'textfield',
+    							fieldLabel: 'M&eacute;dico Tratante',
+    							labelWidth: 100,
+    							width: 400,
+    							readOnly: true,
+    							name: 'DSPRESTA',
+    							value: recordEditar.get('DSPRESTA')
+    						},{
+    							xtype: 'combobox',
+    							width: 240,
+    							labelWidth: 120,
+    							fieldLabel: 'Frecuencia de Visitas',
+    							name: 'CDFREC',
+    							displayField: 'value',
+    							valueField: 'key',
+    							forceSelection: true,
+    							anyMatch      : true,
+    							queryMode     : 'local',
+    							readOnly: true,
+    							store       : Ext.create('Ext.data.Store', {
+    								model : 'Generic',
+    								autoLoad : true,
+    								proxy : {
+    									type : 'ajax',
+    									url : _URL_CatalogoFrecuenciaVisitas,
+    									reader : {
+    										type : 'json',
+    										root : 'listaCatalogo'
+    									}
+    								},
+    								listeners: {
+    									load: function(){
+    										ventanaHistorialPad.down('[name=CDFREC]').setValue(recordEditar.get('CDFREC'));
+    									}
+    								}
+    							})
+    						},
+    						{
+    							xtype: 'combobox',
+    							fieldLabel: 'Periodicidad',
+    							labelWidth: 100,
+    							name: 'CDPERIOD',
+    							displayField: 'value',
+    							valueField: 'key',
+    							forceSelection: true,
+    							anyMatch      : true,
+    							queryMode     : 'local',
+    							readOnly: true,
+    							store       : Ext.create('Ext.data.Store', {
+    								model : 'Generic',
+    								autoLoad : true,
+    								proxy : {
+    									type : 'ajax',
+    									url : _URL_CatalogoPeriodicidadVisitas,
+    									reader : {
+    										type : 'json',
+    										root : 'listaCatalogo'
+    									}
+    								},
+    								listeners: {
+    									load: function(){
+    										ventanaHistorialPad.down('[name=CDPERIOD]').setValue(recordEditar.get('CDPERIOD'));
+    									}
+    								}
+    							})
+    						}
+    						]
+    					})
+    	    			,
+    	    			Ext.create('Ext.grid.Panel', {
+    	    				border: false,
+    	    				height : 200,
+    	    				viewConfig: {
+    	    					stripeRows: false,
+    	    					trackOver : true
+    	    				},
+    	    				store: historialGridStore,
+    	    				columns: [
+    	    					{ text: 'No', dataIndex: 'NMORDTRA' , width: 25 },
+    	    					{ text: 'Fecha', dataIndex: 'FEREG' , flex: 3 },
+    	    					{ text: 'M&eacutedico Tratante', dataIndex: 'NOMBRE_COMPLETO', flex: 6 },
+    	    					{ text: 'Especialidad', dataIndex: 'DSESPEC', flex: 6 },
+    	    					{ text: 'Peso', dataIndex: 'PESO', flex: 2 },
+    	    					{ text: 'Talla', dataIndex: 'TALLA', flex: 2 },
+    	    					{ text: 'Comentarios', dataIndex: 'COMENTARIOS', flex: 6 },
+    	    					{
+    	    		                xtype        : 'actioncolumn',
+    	    		                icon         : _CONTEXT+'/resources/fam3icons/icons/eye.png',
+    	    		                tooltip      : 'Ver Documento',
+    	    		                width        : 30,
+    	    		                hidden: true,
+    	    		                menuDisabled : true,
+    	    		                sortable     : false,
+    	    		                handler      : function(grid,rowIndex)
+    	    		                {
+    	    		                    var recordSel = grid.getStore().getAt(rowIndex);
+    	    		                    var nombreArchivo = "DocHistorialMed_Aseg_" + recordSel.get("CDPERSON") + "_ICD_" + recordSel.get("CDICD")+
+            							"_No_" + recordSel.get("NMORDTRA");
+    	    		                    
+    	    		                    Ext.Ajax.request({
+    	    		                        url: _urlVerificaExisteDoc,
+    	    		                        params:{
+						                    	'path'      : _RUTA_DOCUMENTOS_PERSONA,
+						                    	'subfolder' : recordSel.get("CDPERSON"),
+						                    	'filename'  : nombreArchivo
+						                    },
+    	    		                        success  : function(response, options){
+    	    		                       	 
+    	    		                            var json = Ext.decode(response.responseText);
+    	    		                            if(json.success){
+    	    		                            	
+    	    		                            	if(json.smap1.EXISTE_ARCHIVO == 'S'){
+    	    		                            		nombreArchivo = nombreArchivo + json.smap1.EXTENSION;
+    	    		                            		
+    	    		                            		var numRand=Math.floor((Math.random()*100000)+1);
+    	    	    	    		                    
+    	    	    	    		                    var windowVerDocu=Ext.create('Ext.window.Window',
+    	    	    	    		                    {
+    	    	    	    		                        title          : 'Informe M&eacute;dico ' + recordSel.get('NMORDTRA')
+    	    	    	    		                        ,width         : 700
+    	    	    	    		                        ,height        : 500
+    	    	    	    		                        ,collapsible   : true
+    	    	    	    		                        ,titleCollapse : true
+    	    	    	    		                        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" style="overflow: hidden; height: 100%;width: 100%; position: absolute;" height="100%" width="100%"'
+    	    	    	    		                                			+'src="'+_urlViewDocHist+'?path='+_RUTA_DOCUMENTOS_PERSONA+'&subfolder='+recordSel.get("CDPERSON")+'&filename='+nombreArchivo+'">'
+    	    	    	    		                                		+'</iframe>'
+    	    	    	    		                        ,listeners     :
+    	    	    	    		                        {
+    	    	    	    		                             resize : function(win,width,height,opt){
+    	    	    	    		                                 debug(width,height);
+    	    	    	    		                                 $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+    	    	    	    		                             }
+    	    	    	    		                        }
+    	    	    	    		                    }).show();
+    	    	    	    		                    centrarVentanaInterna(windowVerDocu);
+    	    	    	    		                    
+    	    		                            	}else{
+    	    		                            		mensajeInfo('No existe documento para este registro del historial.');
+    	    		                            	}
+    	    		                            }else{
+    	    		                                mensajeError(json.respuesta);
+    	    		                            }
+    	    		                        }
+    	    		                        ,failure  : function(response, options){
+    	    		                       	 
+    	    		                            var json = Ext.decode(response.responseText);
+    	    		                            mensajeError(json.respuesta);
+    	    		                        }
+    	    		                    });
+    	    		                    
+    	    		                }
+    	    		            },
+    	    		            {
+    	    		                xtype        : 'actioncolumn',
+    	    		                icon         : _CONTEXT+'/resources/fam3icons/icons/page_white_put.png',
+    	    		                tooltip      : 'Descargar Documento',
+    	    		                hidden: true,
+    	    		                width        : 30,
+    	    		                menuDisabled : true,
+    	    		                sortable     : false,
+    	    		                handler      : function(grid,rowIndex)
+    	    		                {
+    	    		                	 var recordSel = grid.getStore().getAt(rowIndex);
+     	    		                    var nombreArchivo = "DocHistorialMed_Aseg_" + recordSel.get("CDPERSON") + "_ICD_" + recordSel.get("CDICD")+
+             							"_No_" + recordSel.get("NMORDTRA");
+     	    		                    
+     	    		                    Ext.Ajax.request({
+     	    		                        url: _urlVerificaExisteDoc,
+     	    		                        params:{
+ 						                    	'path'      : _RUTA_DOCUMENTOS_PERSONA,
+ 						                    	'subfolder' : recordSel.get("CDPERSON"),
+ 						                    	'filename'  : nombreArchivo
+ 						                    },
+     	    		                        success  : function(response, options){
+     	    		                       	 
+     	    		                            var json = Ext.decode(response.responseText);
+     	    		                            if(json.success){
+     	    		                            	
+     	    		                            	if(json.smap1.EXISTE_ARCHIVO == 'S'){
+     	    		                            		nombreArchivo = nombreArchivo + json.smap1.EXTENSION;
+     	    		                            		
+     	    		                            		
+     	    		                            		Ext.create('Ext.form.Panel').submit({
+    		                            			        url              : _urlDownloadDocHist
+    		                            			        , standardSubmit : true
+    		                            			        , target         : '_blank'
+    		                            			        , params         :
+    		                            			        {
+    		                            			        	path      : _RUTA_DOCUMENTOS_PERSONA
+    		                            			            ,subfolder: recordSel.get("CDPERSON")
+    		                            			            ,filename : nombreArchivo
+    		                            			        }
+    		                            			    });
+     	    		                            		
+     	    		                            	}else{
+     	    		                            		mensajeInfo('No existe documento para este registro de historial.');
+     	    		                            	}
+     	    		                            }else{
+     	    		                                mensajeError(json.respuesta);
+     	    		                            }
+     	    		                        }
+     	    		                        ,failure  : function(response, options){
+     	    		                       	 
+     	    		                            var json = Ext.decode(response.responseText);
+     	    		                            mensajeError(json.respuesta);
+     	    		                        }
+     	    		                    });
+    	    		                }
+    	    		            }
+    	    					],
+	    					listeners: {
+	    						select: function(grd,record){}
+	    					},
+	    					dockedItems: [
+	                            {
+	                                xtype: 'toolbar',
+	                                dock: 'top',
+	                                items: [
+	                                    {
+	                                        xtype: 'button',
+	                                        text: 'Agregar nuevo registro',
+	                                        icon:_CONTEXT+'/resources/fam3icons/icons/page_add.png',
+	                                        handler: function(btn){
+	                                        	
+	                                        	var nuevoRecHist = new modelHistorialPadecimientoAseg();
+	                                        	nuevoRecHist.set('CDUNIECO', recordEditar.get('CDUNIECO'));
+	                                        	nuevoRecHist.set('CDRAMO'  , recordEditar.get('CDRAMO'));
+	                                        	nuevoRecHist.set('ESTADO'  , recordEditar.get('ESTADO'));
+	                                        	nuevoRecHist.set('NMPOLIZA', recordEditar.get('NMPOLIZA'));
+	                                        	nuevoRecHist.set('NMSITUAC', recordEditar.get('NMSITUAC'));
+	                                        	nuevoRecHist.set('CDPERSON', recordEditar.get('CDPERSON'));
+	                                        	nuevoRecHist.set('CDICD'   , recordEditar.get('CDICD'));
+	                                        	
+	                                        	agregarEditarRegistroHistorial(nuevoRecHist,recordEditar);
+	                                        }
+	                                    }
+	                                ]
+	                            }
+	                        ]
+    	    			})
+    					]
+    			}],
+    			dockedItems: [
+    				{
+    					xtype: 'toolbar',
+    					dock: 'bottom',
+    					items: ['->',{
+    							text:'Cerrar',
+    							icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+    							handler:function(btn)
+    							{
+    								ventanaHistorialPad.close();
+    							}
+    						}
+    						]
+    				}
+    				]
+    	}).show();
+    	
+    	
+    	function agregarEditarRegistroHistorial(recordEditarHist,recordPadeci){
+    		var ventanaAgregarEditarHist;
+    		var esNuevoRegistroHist = (!Ext.isEmpty(recordEditarHist) && recordEditarHist.phantom == false) ? false : true;
+    		
+    		var panelAgregarHistorialPad = Ext.create('Ext.form.Panel',{
+    			title: 'Datos del Informe M&eacute;dico',
+    			border:false,
+    			defaults : {
+    				style : 'margin : 10px 10px 4px;'
+    			},
+    			layout: {
+    				type: 'column',
+    				columns: 3 
+    			},
+    			items: [{
+    	                xtype: 'datefield',
+    	                fieldLabel: 'Fecha',
+    	                name: 'FECHA',
+    	                labelWidth: 60,
+    	                allowBlank: false,
+    	                width: 200
+    	        	},{
+    	              	xtype: 'checkbox',
+    	              	fieldLabel: 'Usar datos del M&eacute;dico Tratante Asignado por Default',
+    	              	name: 'ES_CDPRESTA',
+    	              	labelWidth: 350,
+    	              	labelPad: 20,
+    	              	labelAlign: 'right', 
+    	                value: false,
+    	                listeners: {
+    	                	change: function(ck, newValue){
+    	                		
+    	                		var nombreMed = panelAgregarHistorialPad.down('textfield[name=NOMBRE_MED]');
+    	                		var appatMed = panelAgregarHistorialPad.down('textfield[name=APPAT_MED]');
+    	                		var apmatMed = panelAgregarHistorialPad.down('textfield[name=APMAT_MED]');
+    	                		
+    	                		if(newValue){
+    	                			nombreMed.setValue(recordPadeci.get('NOMBRE'));
+    	                			appatMed.setValue(recordPadeci.get('APELL1'));
+    	                			apmatMed.setValue(recordPadeci.get('APELL2'));
+    	                			
+    	                			nombreMed.setReadOnly(true);
+    	                			appatMed.setReadOnly(true);
+    	                			apmatMed.setReadOnly(true);
+    	                			
+    	                		}else{
+    	                			nombreMed.reset();
+    	                			appatMed.reset();
+    	                			apmatMed.reset();
+    	                			
+    	                			nombreMed.setReadOnly(false);
+    	                			appatMed.setReadOnly(false);
+    	                			apmatMed.setReadOnly(false);
+    	                		}
+    	                	}
+    	                }
+    	            },
+    	            {
+    	                xtype: 'textfield',
+    	                fieldLabel: 'Nombre del M&eacute;dico Tratante',
+    	                name: 'NOMBRE_MED',
+    	                allowBlank: false,
+    	                labelWidth: 120,
+    	                width: 340
+    	            },
+    	            {
+    	                xtype: 'textfield',
+    	                fieldLabel: 'Apellido Paterno del M&eacute;dico Tratante',
+    	                name: 'APPAT_MED',
+    	                allowBlank: false,
+    	                labelWidth: 120,
+    	                width: 340
+    	            },
+    	            {
+    	                xtype: 'textfield',
+    	                fieldLabel: 'Apellido Materno del M&eacute;dico Tratante',
+    	                name: 'APMAT_MED',
+    	                allowBlank: false,
+    	                labelWidth: 120,
+    	                width: 340
+    	            },
+    	            {
+    	                xtype: 'numberfield',
+    	                fieldLabel: 'Peso del Asegurado',
+    	                name: 'PESO',
+    	                allowBlank: false,
+    	                labelWidth: 70,
+    	                allowDecimals: true,
+    	                minValue: 0,
+    	                negativeText : 'El valor no puede ser negativo',
+    	                width: 160
+    	            },
+    	            {
+    	                xtype: 'numberfield',
+    	                fieldLabel: 'Talla del Asegurado',
+    	                name: 'TALLA',
+    	                allowBlank: false,
+    	                labelWidth: 70,
+    	                allowDecimals: true,
+    	                minValue: 0,
+    	                negativeText : 'El valor no puede ser negativo',
+    	                width: 160
+    	            },
+    	            {
+    	                xtype: 'textareafield',
+    	                height: 80,
+    	                width: 340,
+    	                labelWidth: 120,
+    	                fieldLabel: 'Comentarios',
+    	                name: 'COMENTARIOS',
+    	                maxLength : 2000
+    	            },{
+    	    	        xtype: 'filefield',
+    	    	        fieldLabel: 'Subir Archivo',
+    	    	        hidden: true,
+    	    	        labelWidth: 70,
+    	    	        name: 'file',
+    	    	        width: 340,
+    	    	        msgTarget: 'side',
+    	    	        buttonText: 'Examinar...',
+    	    	        cAccept  : ['pdf','png','jpg','jpeg'],
+    	    	        listeners: {
+    	    	        	change: function(me, value, opts){
+    	    	        		
+    	    	        		var indexofPeriod = value.lastIndexOf(".");
+    	                        var uploadedExtension = value.substr(indexofPeriod + 1, value.length - indexofPeriod).toLowerCase();
+    	                        if (!Ext.Array.contains(this.cAccept, uploadedExtension)){
+    	                            Ext.MessageBox.show({
+    	                                title   : 'Error de tipo de archivo',
+    	                                msg     : 'Extensiones permitidas: ' + this.cAccept.join(),
+    	                                buttons : Ext.Msg.OK,
+    	                                icon    : Ext.Msg.WARNING
+    	                            });
+    	                            me.reset();
+    	                        }
+    	    	        	}
+    	    	        }
+    	    	    }
+    	        ],
+    				buttonAlign: 'center',
+    				buttons:[{
+    					xtype: 'button',
+    					text: 'Guardar Registro de Historial',
+    					icon:_CONTEXT+'/resources/fam3icons/icons/add.png',
+    					handler: function(btnH){
+
+    						var panelGuardarHist = btnH.up('form');
+    						
+    						if(panelGuardarHist.getForm().isValid()){
+    							
+    							var formaHist = panelGuardarHist.getValues();
+    							var esCdpresta = panelGuardarHist.down('[name=ES_CDPRESTA]').getValue();
+    							var codigoCdpresta   = '';
+    							
+    							if(esCdpresta){
+    								codigoCdpresta = recordPadeci.get('CDPRESTA');
+    							}
+
+    							var datosGuardHist = {
+    					       		 'params.pi_cdunieco'    : recordEditarHist.get('CDUNIECO'),
+    					       		 'params.pi_cdramo'      : recordEditarHist.get('CDRAMO'),
+    					       		 'params.pi_estado'      : recordEditarHist.get('ESTADO'),
+    					       		 'params.pi_nmpoliza'    : recordEditarHist.get('NMPOLIZA'),
+    					       		 'params.pi_nmsituac'    : recordEditarHist.get('NMSITUAC'),
+    					       		 'params.pi_cdperson'    : recordEditarHist.get('CDPERSON'),
+    					       		 'params.pi_cdicd'       : recordEditarHist.get('CDICD'),
+    					       		 'params.pi_nmordtra'    : recordEditarHist.get('NMORDTRA'),
+    					       		 'params.pi_fereg'       : formaHist.FECHA,
+    					       		 'params.pi_peso'        : formaHist.PESO,
+    					       		 'params.pi_talla'       : formaHist.TALLA,
+    					       		 'params.pi_cdpresta'    : codigoCdpresta,
+    					       		 'params.pi_dsnommed'    : formaHist.NOMBRE_MED,
+    					       		 'params.pi_dsapellmed1' : formaHist.APPAT_MED,
+    					       		 'params.pi_dsapellmed2' : formaHist.APMAT_MED,
+    					       		 'params.pi_comentarios' : formaHist.COMENTARIOS,
+    					       		 'params.pi_swop'        : 'U'
+    					        };
+    					       	    
+    					        debug('Tratamiento/Historial a guardar: ',datosGuardHist);
+    					        
+
+    							var maskGuarda = _maskLocal('Guardando...');
+    					        
+    					        Ext.Ajax.request({
+    					            url: _urlActualizaHistorialPadeciAseg,
+    					            params: datosGuardHist,
+    					            success  : function(response, options){
+    					           	 maskGuarda.close();
+    					                var json = Ext.decode(response.responseText);
+    					                if(json.success){
+    					                	
+    					                	historialGridStore.reload();
+    					                	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
+    					                	
+    					                	var ordinal = recordEditarHist.get('NMORDTRA');
+    					                	alert("Orig:" +ordinal);
+    					                	
+    					                	if(Ext.isEmpty(ordinal)){
+    					                		ordinal = json.params.nuevoOrdinal;
+    					                	}
+    					                	
+    					                	var subirArchivo = !Ext.isEmpty(panelGuardarHist.down('[name=file]').getRawValue());
+    					                	
+    					                	if(subirArchivo){
+    					                		panelGuardarHist.submit({
+        						                    url: _UrlSubirArchivoHistPad,
+        						        			params:{
+        						                    	'smap1.cdperson': recordEditarHist.get('CDPERSON'),
+        						                    	'smap1.cdicd'   : recordEditarHist.get('CDICD'),
+        						                    	'smap1.nmordtra': ordinal
+        						                    },
+        						                    waitMsg: 'Subiendo Archivo...',
+        						                    success: function(fp, o) {
+        						                        mensajeCorrecto('Exito', 'Se ha guardado correctamente. Archivo Cargado Correctamente');
+        						                        ventanaAgregarEditarHist.close();
+        						                    },
+        						                    failure: function(form, action) {
+        						                		switch (action.failureType) {
+        						                            case Ext.form.action.Action.CONNECT_FAILURE:
+        						                        	    Ext.Msg.show({title: 'Error', msg: 'Informaci&oacute;n guardada. Error de comunicaci&oacute;n al subir Archivo', buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+        						                                break;
+        						                            case Ext.form.action.Action.SERVER_INVALID:
+        						                            case Ext.form.action.Action.LOAD_FAILURE:
+        						                            	 var msgServer = Ext.isEmpty(action.result.mensajeRespuesta) ? 'Informaci&oacute;n guardada. Error interno del servidor al subir Archivo, consulte a soporte, ' : 'Informaci&oacute;n guardada. Error al subir archivo, ' + action.result.mensajeRespuesta;
+        						                                 Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+        						                                break;
+        						                        }
+        						        			}
+        						                });
+    					                	}else{
+    					                		ventanaAgregarEditarHist.close();
+    					                	}
+    					                }else{
+    					                    mensajeError(json.mensaje);
+    					                }
+    					            }
+    					            ,failure  : function(response, options){
+    					           	 maskGuarda.close();
+    					                var json = Ext.decode(response.responseText);
+    					                mensajeError(json.mensaje);
+    					            }
+    					        });
+    						
+    							
+    						}else{
+    							mensajeWarning('Capture todos los datos requeridos.');
+    						}
+}
+    				}]
+    		});
+    			
+    		ventanaAgregarEditarHist = Ext.create('Ext.window.Window',{
+    			title   : esNuevoRegistroHist ? 'Agregar registro de Historial M&eacute;dico.':'Editar registro de Historial M&eacute;dico.'
+    			,modal  : true
+    			,width  : 790
+    			,items : [{
+    	            xtype: 'form',
+    	            defaults : {
+    	    			style : 'margin : 6px 10px 6px 10px;'
+    	    		},
+    	            items: [panelAgregarHistorialPad]
+    	        }],
+    			dockedItems: [
+    				{
+    					xtype: 'toolbar',
+    					hidden: true,
+    					dock: 'bottom',
+    					items: ['->',{
+    							text:'Cerrar',
+    							icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+    							handler:function(btn)
+    							{
+    								ventanaAgregarEditarHist.close();
+    							}
+    						}
+    						]
+    				}
+    				]
+    		}).show();
+    		
+    		centrarVentanaInterna(ventanaAgregarEditarHist);
+    		
+    	}
+    	
+}
     
     Ext.define('PanelPrincipalMedPRev',
     {
@@ -1281,89 +1926,8 @@ Ext.onReady(function()
             {
                 xtype: 'panel',
                 height: 835,
-                //title: 'Medicina Preventiva',
                 items: [
-                	gridPadecimientosAsegurado,
-                    {
-                        xtype: 'panel',
-                        hidden: true,
-                        buttons: [
-                            {
-                                text: 'Aceptar'
-                            }
-                        ],
-                        height: 515,
-                        layout: 'anchor',
-                        bodyPadding: 10,
-                        title: 'Historial Medicina Preventiva',
-                        items: [
-                            {
-                                xtype: 'form',
-                                buttons: [
-                                    {
-                                        text: 'Agregar'
-                                    }
-                                ],
-                                height: 253,
-                                layout: 'column',
-                                bodyPadding: 10,
-                                title: 'M&eacute;dico tratante',
-                                items: [
-                                    {
-                                        xtype: 'textfield',
-                                        fieldLabel: 'Nombre'
-                                    },
-                                    {
-                                        xtype: 'textfield',
-                                        fieldLabel: 'Apellido Paterno'
-                                    },
-                                    {
-                                        xtype: 'textfield',
-                                        fieldLabel: 'Apellido Materno'
-                                    },
-                                    {
-                                        xtype: 'datefield',
-                                        fieldLabel: 'Fecha'
-                                    },
-                                    {
-                                        xtype: 'numberfield',
-                                        fieldLabel: 'Peso'
-                                    },
-                                    {
-                                        xtype: 'numberfield',
-                                        fieldLabel: 'Talla'
-                                    },
-                                    {
-                                        xtype: 'textareafield',
-                                        height: 91,
-                                        width: 293,
-                                        fieldLabel: 'Comentarios'
-                                    }
-                                ]
-                            },
-                            {
-                                xtype: 'gridpanel',
-                                title: 'M&eacute;dicos',
-                                columns: [
-                                    {
-                                        xtype: 'gridcolumn',
-                                        dataIndex: 'string',
-                                        text: 'Nombre'
-                                    },
-                                    {
-                                        xtype: 'gridcolumn',
-                                        dataIndex: 'string',
-                                        text: 'Direcci&oacute;n'
-                                    },
-                                    {
-                                        xtype: 'gridcolumn',
-                                        dataIndex: 'string',
-                                        text: 'Tel&eacute;fono'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
+                	gridPadecimientosAsegurado
                 ]
             }
         ]

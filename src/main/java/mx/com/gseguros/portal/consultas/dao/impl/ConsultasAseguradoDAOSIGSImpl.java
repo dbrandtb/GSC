@@ -348,4 +348,16 @@ public class ConsultasAseguradoDAOSIGSImpl extends AbstractManagerDAO implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<Map<String, String>> obtieneTratamientosAsegurado(Map<String, String> params) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String actualizaTratamientoAsegurado(Map<String, String> params) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
