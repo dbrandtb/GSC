@@ -2,9 +2,7 @@ package mx.com.gseguros.portal.consultas.service;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
@@ -75,31 +73,5 @@ public interface ConsultasAseguradoManager {
 	public void actualizaEstatusEnvio(String iCodAviso, PolizaVO poliza) throws ApplicationException;
 
 	public List<SolicitudCxPVO> obtieneListadoSolicitudesCxp() throws Exception;
-
-	public List<GenericVO> obtieneCatalogoICDs() throws Exception;
 	
-	public List<Map<String, String>> obtienePadecimientosAsegurado(Map<String, String> params) throws Exception;
-	
-	public void actualizaPadecimientoAsegurado(Map<String, String> params) throws Exception;
-	
-	public Map<String, String> obtieneDatosAsegurado(Map<String, String> params) throws Exception;
-	
-	public Map<String, String> obtieneCopagoCobMedPrevPol(Map<String, String> params) throws Exception;
-	
-	public List<GenericVO> obtieneCatalogoEstadosProvMedicos() throws Exception;
-
-	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos(Map<String, String> params) throws Exception;
-
-	public List<GenericVO> obtieneCatalogoEspecialidadesMedicos() throws Exception;
-
-	public List<GenericVO> obtieneCatalogoFrecuenciaVisitas() throws Exception;
-
-	public List<GenericVO> obtieneCatalogoPeriodicidadVisitas() throws Exception;
-	
-	public List<Map<String, String>> obtieneCatDireccionProvMedPorEspecialidad(Map<String, String> params) throws Exception;
-	
-	public boolean validaAsegCobMedicinaPreventiva(Map<String, String> params) throws Exception;
-
-	public Map<String, String> obtenerNtramiteEmision(String cdunieco, String cdramo, String estado, String nmpoliza)
-			throws ApplicationException, Exception;
 }

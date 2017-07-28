@@ -178,13 +178,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ZONAS_SUCURSALES:
 				case NIVELES_SUCURSALES:
 				case TAPOYO:
-				case TESPECIALIDADES:
-				case ZONASHOSPITALARIA:
 					lista = catalogosManager.getTmanteni(cat);
-	                break;
-				case TIPOEVENTOGNP:
-					lista = catalogosManager.getTmanteni(cat);
-					logger.debug("Valor de la lista TIPOEVENTOGNP :"+lista);
 	                break;
 				case CVECOLUMNA:
 					lista = catalogosManager.obtieneAtributosExcel(cat);
@@ -215,8 +209,25 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista = catalogosManager.obtieneTiposTramiteClonacion();
 					break;
 				case TATRISIT:
-					//lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					//para contemplar atributos situacion por rol (EGS)
+					//validaciones codigos postales salud 
+					//4='MS', 'MSC', 
+					//2='SN', 'SL', 
+					//1='RI', 'RC'
+					/*logger.debug("cdtipsit: "+params.get("cdtipsit"));
+					if (params.get("cdtipsit").toString().equals("MSC") || params.get("cdtipsit").toString().equals("MS")){
+						params.put("cdramo", "4");
+						logger.debug("if 1");
+					}
+					else if (params.get("cdtipsit").toString().equals("SN") || params.get("cdtipsit").toString().equals("SL")){
+						params.put("cdramo", "2");
+						logger.debug("if 2");
+					} 
+					else if (params.get("cdtipsit").toString().equals("RI") || params.get("cdtipsit").toString().equals("RC")){
+						params.put("cdramo", "1");
+						logger.debug("if 3");
+					}*/
+					//fin de validaciones codigos postales salud 
 					logger.debug("****** Parametros a enviar al nuevo SP  obtieneAtributosSituacion = *******"   + params);
 					lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"),((UserVO) session.get("USUARIO")).getRolActivo().getClave(), params.get("cdramo"));
 					break;
@@ -413,16 +424,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case SUBCOBERTURAS4MSC:
 					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("MSC");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
-				case SUBCOBERTURASGMPI:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPI");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
-				case SUBCOBERTURASGMPC:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPC");
 					logger.debug("Valor de lista==>"+lista.size());
 					logger.debug(lista);
 					break;
@@ -1094,9 +1095,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				        lista = catalogosManager.recuperarTiposEndosoPorTramite(params.get("ntramite"));
 				    }
 				    break;
-				case TIPOPROVEEDOR:
-					lista = siniestrosManager.getConsultaListaTiposProveedores();
-					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

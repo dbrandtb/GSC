@@ -770,8 +770,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				}
 				
 			    mapa .put("correoAgente",correos );
-			}else if (consulta.equals(RecuperacionSimple.RECUPERAR_RANGO_DESCUENTO_RECARGO)) {
-			    mapa = cotizacionDAO.recuperarRangoDescuentoRecargo(params.get("cdramo"), params.get("cdtipsit"), cdusuari, cdsisrol);
 			}
 		}
 		catch(Exception ex)
