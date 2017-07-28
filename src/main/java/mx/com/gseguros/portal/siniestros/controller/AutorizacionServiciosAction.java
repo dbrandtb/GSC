@@ -326,7 +326,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			paramsR.put("pv_tpautori_i",params.get("cveTipoAutorizaG"));
 			paramsR.put("pv_idaplicaCirHosp_i",params.get("idaplicaCirHosp"));
 			paramsR.put("pv_idaplicaZona_i",params.get("idaplicaZona"));
-			paramsR.put("pv_swnegoci_i",params.get("idaplicaZona"));
+			paramsR.put("pv_swnegoci_i",params.get("idaplicaZona"));  
 			paramsR.put("pv_tiposerv_i",params.get("idTipoEvento"));
 			paramsR.put("pv_numrecla_i",params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())?params.get("idNumSubsecuente"): null);
 			
