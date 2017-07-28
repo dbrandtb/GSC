@@ -122,9 +122,9 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setFenacimi(Utils.formateaFecha(rs.getString("FENACIMI"))); // (EGS)
         	consulta.setGenero(rs.getString("GENERO")); //(EGS)
         	consulta.setIdTipoEvento(rs.getString("TIPOEVENTO"));
-        	consulta.setAplicaNeg(rs.getString("SWNEGOCI"));
-        	consulta.setTipoServ(rs.getString("TIPOEVEN"));
-        	consulta.setNumrecla(rs.getString("NUMRECLA"));
+        	consulta.setAplicaNeg(rs.getString("SWNEGOCI"));     
+        	consulta.setTipoServ(rs.getString("TIPOEVEN"));     
+        	consulta.setNumrecla(rs.getString("NUMRECLA"));     
         	consulta.setEdoAtencion(rs.getString("EDOATENCION"));
         	consulta.setMuniAtencion(rs.getString("MUNIATENCION"));
         	consulta.setIcdSecundario(rs.getString("ICDSECUNDARIO"));
@@ -702,7 +702,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	AutorizacionServicioVO consulta = new AutorizacionServicioVO();
         	consulta.setNmautser(rs.getString("nmautser"));
-        	consulta.setNtramite(rs.getString("ntramite"));
+        	consulta.setNtramite(rs.getString("ntramite"));     
             return consulta;
         }
     }
@@ -967,7 +967,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setDsTipsit(rs.getString("DESCTIPSIT"));
         	consulta.setGenero(rs.getString("GENERO")); // (EGS)
         	consulta.setFenacimi(Utils.formateaFecha(rs.getString("FENACIMI"))); // (EGS)
-        	consulta.setCirHosp(rs.getString("CIRHOSP"));
+        	consulta.setCirHosp(rs.getString("CIRHOSP"));     
         	consulta.setCpaseg(rs.getString("CPASEGURADO"));
         	consulta.setEstadoAseg(rs.getString("EDOASEGURADO"));
         	consulta.setMunicipioAseg(rs.getString("MUNASEGURADO"));
