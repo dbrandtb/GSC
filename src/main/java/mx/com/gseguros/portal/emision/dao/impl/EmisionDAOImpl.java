@@ -13,8 +13,6 @@ import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
-import mx.com.gseguros.portal.emision.dao.impl.EmisionDAOImpl.InsertarMpoliimp;
-import mx.com.gseguros.portal.emision.dao.impl.EmisionDAOImpl.ObtieneDatosWsCotizacionServPublico;
 import mx.com.gseguros.portal.emision.model.EmisionVO;
 import mx.com.gseguros.utils.Utils;
 import oracle.jdbc.driver.OracleTypes;
@@ -69,7 +67,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		
 		protected ProcesoEmisionGeneralSP(DataSource dataSource) {
 			
-			super(dataSource,"PKG_EMISION.P_PROCESO_EMISION_GENERAL");
+			super(dataSource,"PKG_EMISION_PRE.P_PROCESO_EMISION_GENERAL");
 			declareParameter(new SqlParameter("pv_cdusuari",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo",        OracleTypes.VARCHAR));
@@ -134,7 +132,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	protected class EmisionRemotaRecuperaSP extends StoredProcedure {
 	    
 	    protected EmisionRemotaRecuperaSP(DataSource dataSource) {
-	        super(dataSource, "PKG_EMISION.P_EMISION_REMOTA_RECUPERA");
+	        super(dataSource, "PKG_EMISION_PRE.P_EMISION_REMOTA_RECUPERA");
             declareParameter(new SqlParameter("pv_cdusuari",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdunieco",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo",        OracleTypes.VARCHAR));
@@ -181,7 +179,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		
 		protected ActualizaPolizaExternaSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_SATELITES.P_ACTUALIZA_NMPOLIEX_AUTOS");
+			super(dataSource, "PKG_SATELITES_PRE.P_ACTUALIZA_NMPOLIEX_AUTOS");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
@@ -228,7 +226,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	{
 		protected InsertarMpoliimp(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_INSERTA_MPOLIIMP");
+			super(dataSource, "PKG_SATELITES2_PRE.P_INSERTA_MPOLIIMP");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
@@ -258,7 +256,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	{
 		protected MarcarTramiteImpreso(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_IMPRIMIR_TRAMITE");
+			super(dataSource, "PKG_SATELITES2_PRE.P_IMPRIMIR_TRAMITE");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swimpres" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
@@ -280,7 +278,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		params.put("peso"     , peso);
 		Map<String,Object> procRes = ejecutaSP(new SumarImpresiones(getDataSource()),params);
 		boolean            impreso = "S".equals((String)procRes.get("pv_impreso_o"));
-		logger.debug(Utils.log("PKG_SATELITES2.P_SUMA_IMPRESIONES impreso:",impreso));
+		logger.debug(Utils.log("PKG_SATELITES2_PRE.P_SUMA_IMPRESIONES impreso:",impreso));
 		return impreso;
 	}
 	
@@ -288,7 +286,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	{
 		protected SumarImpresiones(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_SUMA_IMPRESIONES");
+			super(dataSource, "PKG_SATELITES2_PRE.P_SUMA_IMPRESIONES");
 			declareParameter(new SqlParameter("lote"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tipolote" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("peso"     , OracleTypes.VARCHAR));
@@ -310,7 +308,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		}
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
 		params.put("array" , new SqlArrayValue(array));
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_MUESTRA_RECIBOS_IMPRESOS", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2_PRE.P_MUESTRA_RECIBOS_IMPRESOS", params);
 		ejecutaSP(new MostrarRecibosImpresosListaDeListas(getDataSource()),params);
 	}
 	
@@ -318,7 +316,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	{
 		protected MostrarRecibosImpresosListaDeListas(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MUESTRA_RECIBOS_IMPRESOS");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MUESTRA_RECIBOS_IMPRESOS");
 			declareParameter(new SqlParameter("array" , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
@@ -479,7 +477,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	{
 		protected RecuperarDocumentosGeneradosPorParametrizacionSP(DataSource dataSource)
 		{
-			super(dataSource, "PKG_EMISION.P_GET_DOCS_GENERADOS_X_PARAM");
+			super(dataSource, "PKG_EMISION_PRE.P_GET_DOCS_GENERADOS_X_PARAM");
 			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(new String[]{
 					"CDDOCUME", "DSDOCUME", "CDORDDOC", "CDMODDOC"
@@ -554,156 +552,6 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
             declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new GenericMapper(columnas)));
             declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
-            compile();
-        }
-    }
-    
-    @Override
-    public List<Map<String,String>> obtieneDatosWsCotizacionServPublico( String pv_cdunieco_i
-                                                    ,String pv_cdramo_i
-                                                    ,String pv_estado_i
-                                                    ,String pv_nmpoliza_i
-                                                    ,String pv_nmsuplem_i
-                                                    ,String pv_tipoend_i
-                                                    ,String pv_numend_i
-                                                    )throws Exception
-    {
-        Map<String,String> params = new LinkedHashMap<String,String>();
-        
-        params.put("pv_cdunieco_i" , pv_cdunieco_i);
-        params.put("pv_cdramo_i"   , pv_cdramo_i);
-        params.put("pv_estado_i" , pv_estado_i);
-        params.put("pv_nmpoliza_i"   , pv_nmpoliza_i);
-        params.put("pv_nmsuplem_i" , pv_nmsuplem_i);
-        params.put("pv_tipoend_i"     , pv_tipoend_i);
-        params.put("pv_numend_i" , pv_numend_i);
-        
-       
-        Map<String,Object>procResult     = ejecutaSP(new ObtieneDatosWsCotizacionServPublico(getDataSource()),params);
-        List<Map<String,String>>registro = (List<Map<String,String>>)procResult.get("pv_registro_o");
-        return registro;
-    }
-    
-    protected class ObtieneDatosWsCotizacionServPublico extends StoredProcedure
-    {
-        protected ObtieneDatosWsCotizacionServPublico(DataSource dataSource)
-        {
-            super(dataSource, "PKG_CONSULTA.P_WS_COTIZACION_SERV_PUBLICO");
-            declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_tipoend_i" , OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_numend_i"     , OracleTypes.VARCHAR));
-            String[] cols = new String[]{
-                    "idNegocio"
-                    ,"vigencia"
-                    ,"idAgente"
-                    ,"sucursal"
-                    ,"numPoliza"
-                    ,"ramo"
-                    ,"sucursalEmisora"
-                    ,"numEndoso"
-                    ,"tipoEndoso"
-                    ,"idMotivoEndoso"
-                    ,"cve_cli"
-                    ,"codigo"
-                    ,"idDireccion"
-                    ,"cveUsuarioCaptura"
-                    ,"descuentoAgente"
-                    ,"descuentoCliente"
-                    ,"descuentoFacultamiento"
-                    ,"porcentajeCesionComision"
-                    ,"idAgenteCompartido"
-                    ,"porcenComisionAgente2"
-                    ,"idEstatusCotizacion"
-                    ,"tipoProducto"
-                    ,"tipoProductoSpecified"
-                    ,"tipoServicio"
-                    ,"versionTarifa"
-                    ,"inicioVigencia"
-                    ,"inicioVigenciaSpecified"
-                    ,"finVigencia"
-                    ,"moneda"
-                    ,"renueva"
-                    ,"formaPago"
-                    ,"polizaTracto"
-                    ,"derechoPoliza"
-                    ,"iva"
-                    ,"pagoSubsecuente"
-                    ,"primaNeta"
-                    ,"primerPago"
-                    ,"recargoPagoFraccionado"
-                    ,"contarPAI"
-                    ,"nombreAlterno"
-                    ,"idTarifa"
-                    ,"udi"
-                    ,"multianual"
-                    ,"periodoGracia"
-                    ,"fondoEspecial"
-                    ,"nmsolici"
-                    ,"tipoCotizacion"
-                    ,"f1"
-                    ,"f2"
-                    ,"f3"
-                    ,"porcentajeBono"
-                    ,"idProveedorUdi"
-                    ,"tipoProveedorUdi"
-                    ,"idTipoValor"
-                    ,"modelo"
-                    ,"numMotor"
-                    ,"numSerie"
-                    ,"numPlacas"
-                    ,"numEconomico"
-                    ,"numOcupantes"
-                    ,"sarcvdias"
-                    ,"beneficiarioPref"
-                    ,"tipVehiCA"
-                    ,"tipoVehiculo"
-                    ,"tipoVehiculoSpecified"
-                    ,"valor"
-                    ,"conductor"
-                    ,"primaNetaInc"
-                    ,"aseguradoAlterno"
-                    ,"idTipoCarga"
-                    ,"adaptaciones"
-                    ,"equipoEspecial"
-                    ,"numSerieValido"
-                    ,"situacionRiesgo"
-                    ,"descripcion"
-                    ,"versionTarifaInc"
-                    ,"idConfiguracionPaquete"
-                    ,"seleccionado"
-                    ,"fechaFactura"
-                    ,"idCobertura"
-                    ,"idCoberturaSpecified"
-                    ,"seleccionadoCob"
-                    ,"deducible"
-                    ,"suma_asegurada"
-                    ,"prima_bruta"
-                    ,"prima_netaCob"
-                    ,"comision"
-                    ,"nmsituac"
-                    ,"numFolio"
-                    ,"vigencia"
-                    ,"idBanco"
-                    ,"mesesSinIntereses"
-                    ,"idOrigenSolicitud"
-                    ,"tipoUso"
-                    ,"clavegs"
-                    ,"amis"
-                    ,"derechoAgente"
-                    ,"derechoPromotor"
-                    ,"montoCedido"
-                    ,"cilindraje"
-                    ,"descuentoInciso"
-                    
-            };
-            
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(cols)));
-            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
             compile();
         }
     }

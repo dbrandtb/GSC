@@ -168,8 +168,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case CONFLAYOUT:
 				case TIPO_RECIBOS_IMPRESION:
 				case ETAPAS_ESTADO_FLUJO:
-				case ESTACION_ESTADO_FLUJO:
-				case TRAZABILIDAD_ESTADO_FLUJO:
 				case TIPO_BUSQUEDA_RENOVACION_INDIVIDUAL:
 				case CRITERIOS_RENOVACION_INDIVIDUAL:	
 				case CATALOGO_TRAFUDOC_CDFUNCI:
@@ -178,13 +176,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ZONAS_SUCURSALES:
 				case NIVELES_SUCURSALES:
 				case TAPOYO:
-				case TESPECIALIDADES:
-				case ZONASHOSPITALARIA:
 					lista = catalogosManager.getTmanteni(cat);
-	                break;
-				case TIPOEVENTOGNP:
-					lista = catalogosManager.getTmanteni(cat);
-					logger.debug("Valor de la lista TIPOEVENTOGNP :"+lista);
 	                break;
 				case CVECOLUMNA:
 					lista = catalogosManager.obtieneAtributosExcel(cat);
@@ -211,30 +203,10 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case MC_ESTATUS_TRAMITE:
 					lista = catalogosManager.obtieneStatusTramite(params);
 					break;
-				case MC_ESTATUS_TRAMITE_EMI_RENOV:
-					lista = catalogosManager.obtieneTiposTramiteClonacion();
-					break;
 				case TATRISIT:
+					//lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					//para contemplar atributos situacion por rol (EGS)
-					//validaciones codigos postales salud 
-					//4='MS', 'MSC', 
-					//2='SN', 'SL', 
-					//1='RI', 'RC'
-					if (params.get("cdramo") == null){
-						logger.debug("Asignando manualmente el ramo de salud");
-						if (params.get("cdtipsit").toString().equals(Constantes.MULTISALUD_COLECTIVO) || params.get("cdtipsit").toString().equals(Constantes.MULTISALUD)){
-							params.put("cdramo", Constantes.RAMO4);
-						}
-						else if (params.get("cdtipsit").toString().equals(Constantes.SN) || params.get("cdtipsit").toString().equals(Constantes.SALUD_VITAL)){
-								params.put("cdramo", Constantes.RAMO2);
-							} 
-							else if (params.get("cdtipsit").toString().equals(Constantes.RECUPERA_INDIVIDUAL) || params.get("cdtipsit").toString().equals(Constantes.RECUPERA_COLECTIVO)){
-								params.put("cdramo", Constantes.RAMO1);
-							}
-					}
-					//fin de validaciones codigos postales salud 
-					logger.debug("****** Parametros a enviar al nuevo SP  obtieneAtributosSituacion = *******"   + params);
-					lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"),((UserVO) session.get("USUARIO")).getRolActivo().getClave(), params.get("cdramo"));
+					lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"),((UserVO) session.get("USUARIO")).getRolActivo().getClave());
 					break;
 				case TATRISIN:
 		            lista = catalogosManager.obtieneAtributosSiniestro(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
@@ -432,16 +404,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					logger.debug("Valor de lista==>"+lista.size());
 					logger.debug(lista);
 					break;
-				case SUBCOBERTURASGMPI:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPI");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
-				case SUBCOBERTURASGMPC:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPC");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
 				case SUBCOBERTURASINFONAVIT:
 					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("SSI");
 					logger.debug("Valor de lista==>"+lista.size());
@@ -482,18 +444,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					} else {
 						lista = new ArrayList<GenericVO>();
 						for(ConsultaProveedorVO prov : provs) {
-							lista.add(new GenericVO(prov.getCdpresta(),prov.getNombre()));
-						}
-					}
-					break;
-				case PROVEEDORESINI:
-					List<ConsultaProveedorVO> provSini = siniestrosManager.getConsultaListaProveedorMedico(
-							TipoPrestadorServicio.CLINICA.getCdtipo(), params != null ? params.get("cdpresta") : null, params.get("cdEstado"),params.get("cdMunicipio"));
-					if(catalogoGenerico) {
-						listaGenerica = provSini;
-					} else {
-						lista = new ArrayList<GenericVO>();
-						for(ConsultaProveedorVO prov : provSini) {
 							lista.add(new GenericVO(prov.getCdpresta(),prov.getNombre()));
 						}
 					}
@@ -1110,9 +1060,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				        lista = catalogosManager.recuperarTiposEndosoPorTramite(params.get("ntramite"));
 				    }
 				    break;
-				case TIPOPROVEEDOR:
-					lista = siniestrosManager.getConsultaListaTiposProveedores();
-					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
