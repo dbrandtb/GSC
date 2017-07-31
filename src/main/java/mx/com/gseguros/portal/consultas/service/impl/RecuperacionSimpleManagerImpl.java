@@ -1180,7 +1180,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_EXCLUSION_TURNADOS))
 			{
-				lista = consultasDAO.recuperarExclusionTurnados();
+				lista = consultasDAO.recuperarExclusionTurnados(cdusuari);
 			}	
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_CLAVES_PLAN_RAMO4))
 			{
