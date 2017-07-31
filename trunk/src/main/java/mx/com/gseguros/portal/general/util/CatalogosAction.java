@@ -907,7 +907,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 					{
 						params=new HashMap<String,String>();
 					}
-					lista = catalogosManager.cargarCotizadoresActivos(params.get("cadena"));
+					UserVO usuario2 = (UserVO)session.get("USUARIO");
+					
+					lista = catalogosManager.cargarCotizadoresActivos(usuario2.getUser(), params.get("cadena"));
 					break;
 				case MOTIVOS_REEXPEDICION:
 					if(params==null)

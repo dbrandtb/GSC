@@ -4195,9 +4195,11 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	}
 	
 	@Override
-	public List<Map<String,String>> recuperarExclusionTurnados()throws Exception
+	public List<Map<String,String>> recuperarExclusionTurnados(String cdusuari)throws Exception
 	{
-		Map<String,Object>       procRes = ejecutaSP(new RecuperarExclusionTurnadosSP(getDataSource()),new HashMap<String,String>());
+		Map<String,String> params = new LinkedHashMap<String,String>();
+		params.put("pv_cdusuari_i" , cdusuari);
+		Map<String,Object>       procRes = ejecutaSP(new RecuperarExclusionTurnadosSP(getDataSource()),params);
 		List<Map<String,String>> list    = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		
 		return list;
@@ -4208,7 +4210,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		protected RecuperarExclusionTurnadosSP(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_GET_EXCLUSIONES_TURNADO");
-			
+			declareParameter(new SqlParameter("pv_cdusuari_i", OracleTypes.VARCHAR));
 			String[] cols = new String[]{ "cdusuari", "dsusuari" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -4218,10 +4220,12 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 	}
 	
 	@Override
-	public List<Map<String,String>> cargarCotizadoresActivos(String cadena)throws Exception
+	public List<Map<String,String>> cargarCotizadoresActivos(String usuario ,String cadena)throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cadena" , cadena);
+		params.put("pv_cdusuari_i",usuario);
+		
 		Map<String,Object> procRes = ejecutaSP(new cargarCotizadoresActivosSP(getDataSource()),params);
 		List<Map<String,String>> list    = (List<Map<String,String>>)procRes.get("pv_registro_o");
 		
@@ -4233,6 +4237,7 @@ public class ConsultasDAOImpl extends AbstractManagerDAO implements ConsultasDAO
 		protected cargarCotizadoresActivosSP(DataSource dataSource)
 		{
 			super(dataSource,"PKG_CONSULTA.P_GET_COTIZADORES_ACTIVOS");
+			declareParameter(new SqlParameter("pv_cdusuari_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cadena" , OracleTypes.VARCHAR));
 			String[] cols = new String[]{ "cdusuari", "dsusuari" };
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));

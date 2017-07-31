@@ -518,9 +518,9 @@ public interface ConsultasDAO
 	
 	public int recuperarConteoTbloqueoTramite(String ntramite)throws Exception;
 
-	public List<Map<String,String>> recuperarExclusionTurnados() throws Exception;
+	public List<Map<String,String>> recuperarExclusionTurnados(String cdusuari) throws Exception;
 	
-	public List<Map<String,String>> cargarCotizadoresActivos(String cadena) throws Exception;
+	public List<Map<String,String>> cargarCotizadoresActivos(String Usuario, String cadena) throws Exception;
 	
 	public List<Map<String,String>> obtieneMotivosReexp(String cdramo, String cdtipsit) throws Exception;
 	
