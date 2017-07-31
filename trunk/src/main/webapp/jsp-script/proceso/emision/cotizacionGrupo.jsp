@@ -112,6 +112,7 @@ var _p21_urlSubirCensoMorbilidad         = '<s:url namespace="/emision"         
 
 var _p21_urlCargarAseguradosFiltroGrupoPag     = '<s:url namespace="/emision"         action="cargarAseguradosFiltroGrupoPag"      />';
 var _p21_urlCargarAseguradosFiltroExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosFiltroExtraprimas"   />';
+var _CAT_TATRIPOL                              = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TATRIPOL"/>';
 var _p21_filtroGrupoPag     = 'NOMBRE ASEGURADO';
 
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp

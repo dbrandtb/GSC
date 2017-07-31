@@ -88,6 +88,7 @@ function _p21_subirArchivoMorbilidad(button,nombreCensoParaConfirmar){
     }
     
     if(valido){
+    	_mask('Espere un momento...');
         //Validamos si ya existe uno con el mismo nombre 
         Ext.Ajax.request( {
             url      : _p21_urlExisteMorbilidadExistente
@@ -98,10 +99,10 @@ function _p21_subirArchivoMorbilidad(button,nombreCensoParaConfirmar){
             ,success : function(response)
             {
                 var json = Ext.decode(response.responseText);
-                debug("RESPUESTA DE LA VALIDACION ==>",json);
                 
                 if(json.respuesta > 0){
                     mensajeWarning('Ya existe la morbilidad '+descMorbilidad+" dado de alta.");
+                    _unmask();
                 }else{
                     valido = true;
                     if(valido)
@@ -145,6 +146,7 @@ function _p21_subirArchivoMorbilidad(button,nombreCensoParaConfirmar){
                                         debug('### subir censo completo response:',json);
                                         if(json.exito)
                                         {
+                                           _unmask();
                                            centrarVentanaInterna(Ext.Msg.show({
                                                 title    : 'Morbilidad'
                                                 ,msg     : 'Se ha guardado la nueva morbilidad.'
@@ -152,24 +154,7 @@ function _p21_subirArchivoMorbilidad(button,nombreCensoParaConfirmar){
                                                 ,fn      : function()
                                                 {
                                                 	if(valorAction.morbilidadEx =='1'){
-                                                        Ext.create('Ext.form.Panel').submit(
-                                                        {
-                                                            standardSubmit : true
-                                                            ,url           : _p21_urlRefrescarPantallaCotizacion
-                                                            ,params        :
-                                                            {
-                                                                'smap1.cdunieco'  : valorAction.cdunieco
-                                                                ,'smap1.cdramo'   : valorAction.cdramo
-                                                                ,'smap1.cdtipsit' : valorAction.cdtipsit
-                                                                ,'smap1.estado'   : valorAction.estado
-                                                                ,'smap1.nmpoliza' : valorAction.nmpoliza
-                                                                ,'smap1.ntramite' : valorAction.ntramite
-                                                                ,'smap1.cdagente' : valorAction.cdagente
-                                                                ,'smap1.status'   : valorAction.status
-                                                                ,'smap1.cdtipsup' : valorAction.cdtipsup
-                                                                ,'smap1.nmpolant' : valorAction.nmpolant
-                                                            }
-                                                        });
+                                                		Ext.WindowMgr.getActive().close();
                                                 	}else{
                                                 		Ext.create('Ext.form.Panel').submit(
                                                     {
@@ -183,6 +168,7 @@ function _p21_subirArchivoMorbilidad(button,nombreCensoParaConfirmar){
                                         }
                                          else
                                          {
+                                         	 _unmask();
                                          	var mensajeRespuesta="";
                                          	var mensajeHoja   = json.respuesta+"";
                                          	var mensajeError  = json.smap1.erroresCenso+"";
@@ -213,6 +199,7 @@ function _p21_subirArchivoMorbilidad(button,nombreCensoParaConfirmar){
                                      }
                                      ,failure  : function()
                                      {
+                                     	 _unmask();
                                          form.setLoading(false);
                                          errorComunicacion();
                                      }
@@ -220,6 +207,7 @@ function _p21_subirArchivoMorbilidad(button,nombreCensoParaConfirmar){
                              }
                              ,failure : function()
                              {
+                             	 _unmask();
                                  if(!Ext.isEmpty(nombreCensoParaConfirmar))
                                  {
                                      debug('se quita allowblank');
