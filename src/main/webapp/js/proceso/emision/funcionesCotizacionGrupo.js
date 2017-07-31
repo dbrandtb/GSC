@@ -2688,7 +2688,6 @@ function _p25_borrarDetalleGrupoClic (grid,rowIndex) {
 }
 
 function _p21_RefrescarCensoColectivo(){
-	debug("_p21_smap1 ==>",_p21_smap1);
 	_mask('Espere un momento...');
     Ext.Ajax.request( {
         url      : _p21_urlRefrescarCensoColectivo
@@ -2932,7 +2931,27 @@ function _p21_AgregarMorbilidad()
                 }
                 ,scripts  : true
                 ,autoLoad : true
-            }
+            },
+            listeners:{
+                         close:function(){
+                             if(true){
+                             	//alert("se cierra");
+                             	debug("Valor ===>",_p_21_panelPrincipal);
+                             	//storeAseguradoFactura.removeAll();
+                             	
+                             	debug(_fieldByName('morbilidad'));
+                             	_fieldByName('morbilidad').getStore().removeAll();
+                             	_fieldByName('morbilidad').getStore().load({
+                                    params:{
+                                        'catalogo'         : _CAT_TATRIPOL,
+                                        'catalogoGenerico' : true,
+                                        'params.cdramo'    : _p21_smap1.cdramo,
+                                        'params.cdatribu'  : '19'
+                                    }
+                                });
+                             }
+                         }
+                    }
         }).show()
         centrarVentanaInterna(ventana);
         
