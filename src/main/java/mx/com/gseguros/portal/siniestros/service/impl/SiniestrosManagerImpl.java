@@ -9,27 +9,16 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
-import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
-import mx.com.gseguros.portal.consultas.model.AseguradoVO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
-import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
-import mx.com.gseguros.portal.general.dao.PantallasDAO;
-import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
-import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
-import mx.com.gseguros.portal.renovacion.dao.RenovacionDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
@@ -54,9 +43,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 {
 	private static Logger logger = Logger.getLogger(SiniestrosManagerImpl.class);
 	
-	@Autowired
-	private PantallasDAO  pantallasDAO;
-	
 	private SiniestrosDAO siniestrosDAO;
 	
 	@Autowired
@@ -72,10 +58,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	private FlujoMesaControlManager flujoMesaControlManager;
 	
 	private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(SiniestrosManagerImpl.class);
-	
-	@Autowired
-	@Qualifier("consultasDAOICEImpl")
-	private ConsultasPolizaDAO consultasPolizaDAOICE;
 	
 	@Override
 	public List<AutorizacionServicioVO> getConsultaAutorizacionesEsp(String nmautser) throws Exception {
@@ -399,15 +381,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo, String rolUsuario) throws Exception {
 		try {
 			return siniestrosDAO.obtieneListadoPoliza(cdperson,cdramo,rolUsuario);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-
-	@Override
-	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson,String cdramo, String rolUsuario, String feOcurre) throws Exception {//(EGS) se agrega parametro feOcurre
-		try {
-			return siniestrosDAO.obtieneListadoPoliza(cdperson,cdramo,rolUsuario,feOcurre); //(EGS) se agrega parámetro feOcurre
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -1727,17 +1700,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	public String obtieneMesesTiempoEspera(String valorICDCPT, String nomTabla) throws Exception {
 		// TODO Auto-generated method stub
 		try {
-			return siniestrosDAO.obtieneMesesTiempoEspera(valorICDCPT,nomTabla);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	public String obtieneMesesTiempoEsperaICD(String cdramo, String cdtipsit, String cdicd, String dsplan) throws Exception {
-		// TODO Auto-generated method stub
-		try {
-			return siniestrosDAO.obtieneMesesTiempoEsperaICDCPT(cdramo,cdtipsit,cdicd,dsplan);
+			return siniestrosDAO.obtieneMesesTiempoEsperaICDCPT(valorICDCPT,nomTabla);
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
 		}
@@ -2730,7 +2693,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 			throw new Exception(daoExc.getMessage(),daoExc);
 		}
 	}
-
+    
 	@Override
 	public String actualizarReqautes(String reqautes, String ntramite, String nfactura, String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String nmsituac, String aaapertu, String status,
@@ -2753,282 +2716,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	}
 	
 	@Override
-	public List<AseguradoVO> obtenerTramiteCompletoAsegurados(String ntramite, long start, long limit) throws Exception
-	{
-		Map<String,String> params = new HashMap<String,String>();
-		List<AseguradoVO> asegurados;
-		
-		params.put("pv_ntramite_i" , ntramite);
-		log.debug("obtenerTramiteCompleto params: "+params);
-		Map<String,String> tramite = siniestrosDAO.obtenerTramiteCompleto(params);
-		//logger.debug("tramite: "+tramite);
-		PolizaVO poliza = new PolizaVO();
-		poliza.setCdunieco(tramite.get("CDUNIECO"));
-		poliza.setCdramo(tramite.get("CDRAMO"));
-		poliza.setEstado(tramite.get("ESTADO"));
-		poliza.setNmpoliza(tramite.get("NMPOLIZA"));
-		poliza.setNmsuplem(tramite.get("NMSUPLEM"));
-		//logger.debug("poliza: "+ poliza);
-		asegurados = consultasPolizaDAOICE.obtieneAsegurados(poliza, start, limit);
-		//log.debug("obtenerTramiteCompleto tramite: "+asegurados);
-		return asegurados;
-	}
-	
-	@Override
-	public ManagerRespuestaImapVO pantallaReservaSiniestralidad(String cdsisrol) throws Exception
-	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ pantallaReservaSiniestralidad @@@@@@")
-				.append("\n@@@@@@ cdsisrol=").append(cdsisrol)
-				.toString());
-		ManagerRespuestaImapVO resp = new ManagerRespuestaImapVO(true);
-		String paso = "";
-		//obtener componentes
-		try
-		{
-			paso = "antes de obtener componentes busqueda";
-			List<ComponenteVO>componentesBusqueda=pantallasDAO.obtenerComponentes(
-					null,null,null,null,null,cdsisrol,"PANTALLA_RESERVA_SINIESTRALIDAD","BUSQUEDA",null);
-			
-			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			
-			gc.generaComponentes(componentesBusqueda, true, false, true, false, false, false);
-			
-			Map<String,Item> imap = new HashMap<String,Item>();
-			resp.setImap(imap);			
-			imap.put("busquedaItems" , gc.getItems());
-			
-			
-				
-		}
-		catch(Exception ex)
-		{
-			Utils.generaExcepcion(ex, ex.getMessage().toString());
-		}
-		
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@ ").append(resp)
-				.append("\n@@@@@@ pantallaReservaSiniestralidad @@@@@@")
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.toString());
-		return resp;
-	}
-	
-	@Override
-	public List<Map<String, String>> getDatosRenovaSiniestralidad(String pv_CdUniEco_i 
-																,String pv_CdRamo_i  
-																,String pv_nmpoliza_i
-																,String pv_cdperson  
-																,String pv_nmsinies
-																,String pv_fecdesde  
-																,String pv_fechasta  
-																,String pv_start_i
-																,String pv_limit_i 
-																,String pv_ntramite_i) throws Exception {
-		
-		
-		return siniestrosDAO.obtieneListaDatosRenovaSiniestralidad(pv_CdUniEco_i 
-				,pv_CdRamo_i  
-				,pv_nmpoliza_i
-				,pv_cdperson  
-				,pv_nmsinies
-				,Utils.formateaFecha(pv_fecdesde)  
-				,Utils.formateaFecha(pv_fechasta)  
-				,pv_start_i
-				,pv_limit_i 
-				,pv_ntramite_i);
-	}
-	
-	@Override
-	public List<Map<String, String>> obtieneListaTopIcd(String pv_CdUniEco_i 
-																,String pv_CdRamo_i  
-																,String pv_nmpoliza_i
-																,String pv_cdperson  
-																,String pv_nmsinies
-																,String pv_fecdesde  
-																,String pv_fechasta  
-																,String pv_top ) throws Exception {
-		
-		
-		return siniestrosDAO.obtieneListaTopIcd(pv_CdUniEco_i 
-				,pv_CdRamo_i  
-				,pv_nmpoliza_i
-				,pv_cdperson  
-				,pv_nmsinies
-				,Utils.formateaFecha(pv_fecdesde)  
-				,Utils.formateaFecha(pv_fechasta)  
-				,pv_top );
-	}
-	
-	@Override
-	public List<Map<String, String>> obtieneListaReservas(String pv_CdUniEco_i 
-																,String pv_CdRamo_i  
-																,String pv_nmpoliza_i
-																,String pv_cdperson  
-																,String pv_nmsinies
-																,String pv_fecdesde  
-																,String pv_fechasta  ) throws Exception {
-		
-		
-		return siniestrosDAO.obtieneListaReservas(pv_CdUniEco_i 
-				,pv_CdRamo_i  
-				,pv_nmpoliza_i
-				,pv_cdperson  
-				,pv_nmsinies
-				,Utils.formateaFecha(pv_fecdesde)  
-				,Utils.formateaFecha(pv_fechasta)  
-				);
-	}
-	
-	@Override
-	public List<Map<String, String>> obtieneListaReservasSolo(String pv_CdUniEco_i 
-																,String pv_CdRamo_i  
-																,String pv_nmpoliza_i
-																,String pv_cdperson  
-																,String pv_nmsinies
-																,String pv_fecdesde  
-																,String pv_fechasta  ) throws Exception {
-		
-		
-		return siniestrosDAO.obtieneListaReservasSolo(pv_CdUniEco_i 
-				,pv_CdRamo_i  
-				,pv_nmpoliza_i
-				,pv_cdperson  
-				,pv_nmsinies
-				,Utils.formateaFecha(pv_fecdesde)  
-				,Utils.formateaFecha(pv_fechasta)  
-				);
-	}
-	
-	@Override
-	public List<Map<String, String>> obtieneListaProveedores(String pv_cdpresta_i 
-																,String pv_idespecialidad_i  
-																,String pv_tipoProveedor_i
-																,String pv_idZonaHosp_i  ) throws Exception {
-		
-		
-		return siniestrosDAO.obtieneListaProveedores( pv_cdpresta_i, 
-				 pv_idespecialidad_i, 
-				 pv_tipoProveedor_i,
-				 pv_idZonaHosp_i);
-	}
-	@Override
-	public List<GenericVO> getConsultaListaCPTUnico(String cdicd) // (EGS)
-			throws Exception {
-		try {
-			return siniestrosDAO.obtieneListadoCPTUnico(cdicd);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	public List<GenericVO> getConsultaListaTipoMedicos(String cdicd, String cpts)
-			throws Exception {
-		String paso = "";
-		try {
-			paso = "cdicd,cpts ==> "+cdicd+""+cpts;
-			logger.debug("Valor de respuesta ==> "+paso);
-			return siniestrosDAO.obtieneListadoTipoMedicos(cdicd,cpts);			
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	//String tipoConcepto, String idProveedor, String idConceptoTipo
-	public String obtieneImporteArancelGNP(String cdpresta,String cpt) throws Exception {
-		try {
-			return siniestrosDAO.obtieneImporteArancelGNP(cdpresta,cpt);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	public List<GenericVO> getConsultaListaTiposProveedores() throws Exception {
-		try {
-			List<GenericVO> lista = siniestrosDAO.obtieneListadoTiposProveedores();
-			if(lista==null)
-			{
-				lista= new ArrayList<GenericVO>();
-			}
-			log.debug("getConsultaListaSubcoberturaTotales lista size: "+lista.size());
-			return lista;
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	public List<Map<String, String>> getConsultaListaDetalleSiniestro( String pv_CdUniEco_i
-																	,String pv_CdRamo_i  
-																	,String pv_nmpoliza_i
-																	,String pv_cdperson  
-																	,String pv_ntramite_i
-																	,String pv_nmsinies  
-																	,String pv_fecdesde  
-																	,String pv_fechasta ) throws Exception {
-		try {
-			return siniestrosDAO.obtieneListadoDetalleSiniestro( pv_CdUniEco_i
-																, pv_CdRamo_i  
-																, pv_nmpoliza_i
-																, pv_cdperson  
-																, pv_ntramite_i
-																, pv_nmsinies  
-																,Utils.formateaFecha(pv_fecdesde)  
-																,Utils.formateaFecha(pv_fechasta) );
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	//String tipoConcepto, String idProveedor, String idConceptoTipo
-	public String obtieneMedicoEquipoQuirurgico(String numAutorizacion) throws Exception {
-		try {
-			return siniestrosDAO.obtieneMedicoEquipoQuirurgico(numAutorizacion);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	//String tipoConcepto, String idProveedor, String idConceptoTipo
-	public String obtieneDatosICDGenerales(String cdunieco, String cdramo, String estado, String nmpoliza, String cdicd, String cdperson) throws Exception {
-		try {
-			return siniestrosDAO.obtieneDatosICDGenerales(cdunieco, cdramo, estado, nmpoliza, cdicd, cdperson);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-    
-	@Override
-	public List<Map<String, String>> getConsultaDatosSumaAseguradaGNP(String cdunieco, String cdramo,String estado,String nmpoliza, String cdperson, String nmsinref) throws Exception {
+	public List<Map<String, String>> getconsultaAutServPersonaCobertura(String cobertura, String subcobertura, String cdperson) throws Exception {
 		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_cdgarant_i", cobertura);
+		params.put("pv_cdconval_i", subcobertura);
 		params.put("pv_cdperson_i", cdperson);
-		params.put("pv_nmsinref_i", nmsinref);
 		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
-		return siniestrosDAO.obtieneListaDatosSumaAseguradaGNP(params);
-	}
-	
-	@Override
-	//String tipoConcepto, String idProveedor, String idConceptoTipo
-	public String obtenerValidacionExclusionICDGral(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem,  String nmsituac,String cdicd) throws Exception {
-		try {
-			return siniestrosDAO.obtenerValidacionExclusionICDGral(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, cdicd);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
+		return siniestrosDAO.obtieneListaAutServPersonaCobertura(params);
 	}
 
+	//Estudios Medicos
 	@Override
 	public List<Map<String, String>> obtieneEstudiosCobAseg(HashMap<String, String> params) throws Exception {
 		return siniestrosDAO.obtieneEstudiosCobAseg(params);
@@ -3122,65 +2819,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		}
 		return true;
 	}
-
+	
 	@Override
 	public List<GenericVO> obtieneListadoSubcoberturaPorProdCob(String cdramo, String cdtipsit, String cdgarant)
 			throws Exception {
 		return siniestrosDAO.obtieneListadoSubcoberturaPorProdCob(cdramo, cdtipsit, cdgarant);
 	}
-	
-	@Override
-	public List<Map<String, String>> getconsultaAutServPersonaCobertura(String cobertura, String subcobertura, String cdperson) throws Exception {
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("pv_cdgarant_i", cobertura);
-		params.put("pv_cdconval_i", subcobertura);
-		params.put("pv_cdperson_i", cdperson);
-		log.debug("obtenerDatosAdicionalesCobertura params: "+params);
-		return siniestrosDAO.obtieneListaAutServPersonaCobertura(params);
-	}
-
-	@Override
-	public List<Map<String, String>> crearTramitesLayout(String usuario, String tipoProceso) throws Exception {
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("PV_CDPRESTA_I", null);
-		params.put("PV_NMCONSULT_I", null);
-		params.put("PV_CDUSUARI_I", usuario);
-		params.put("PV_TIPOPROC_I", tipoProceso);
-		return siniestrosDAO.creaTramitesLayout(params);
-	}
-
-	@Override
-	public List<GenericVO> getConsultaEstadoSiniestros() throws Exception {
-		try {
-			return siniestrosDAO.obtieneListadoEstadoSiniestros();
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override	
-	public List<GenericVO> getConsultaMunicipioSiniestros(String edoSiniestro) throws Exception {
-		try {
-			List<GenericVO> lista = siniestrosDAO.obtieneListadoMunicipioSiniestros(edoSiniestro);
-			if(lista==null)
-			{
-				lista= new ArrayList<GenericVO>();
-			}
-			log.debug("getConsultaListaSubcobertura lista size: "+lista.size());
-			return lista;
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
-	@Override
-	public List<ConsultaProveedorVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta,String cdestado,String cdmunicipio)
-			throws Exception {
-		try {
-			return siniestrosDAO.obtieneListadoProvMedico(tipoprov,cdpresta,cdestado,cdmunicipio);
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
-	
 }

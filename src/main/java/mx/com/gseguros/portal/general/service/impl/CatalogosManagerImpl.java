@@ -65,9 +65,9 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre, String cdSisRol, String cdramo) throws Exception{
+	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String idPadre, String cdSisRol) throws Exception{
 		String otValor = StringUtils.isNotBlank(idPadre) ? idPadre : null;
-		return catalogosDAO.obtieneAtributosSituacion(cdAtribu, cdTipSit, otValor, cdSisRol, cdramo);
+		return catalogosDAO.obtieneAtributosSituacion(cdAtribu, cdTipSit, otValor, cdSisRol);
 	}
 	
 	@Override
@@ -129,12 +129,6 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception
 	{
 		return catalogosDAO.obtieneStatusTramite(params);
-	}
-
-	@Override
-	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception
-	{
-		return catalogosDAO.obtieneTiposTramiteClonacion();
 	}
 	
 	@Override
@@ -1527,7 +1521,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> cargarCotizadoresActivos(String usuario , String cadena) throws Exception
+	public List<GenericVO> cargarCotizadoresActivos(String cadena) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1543,7 +1537,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		{
 			paso = "Recuperando documentos";
 			logger.debug(Utils.log("\n@@@@@@ ",paso));
-			List<Map<String,String>> documentos = consultasDAO.cargarCotizadoresActivos(usuario, cadena);
+			List<Map<String,String>> documentos = consultasDAO.cargarCotizadoresActivos(cadena);
 			
 			for(Map<String,String>elemento:documentos)
 			{

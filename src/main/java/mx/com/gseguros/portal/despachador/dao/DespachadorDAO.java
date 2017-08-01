@@ -57,43 +57,6 @@ public interface DespachadorDAO {
     
     public List<Map<String, String>> recuperarLogDespachadorZona (String ntramite, String cdunieco, String estatus) throws Exception;
     
-
-	/**
-	 * Consulta de Clasificacion de Sucursales
-	 * @param cdunieco
-	 * @param cdunizon
-	 * @param cdnivel
-	 * @return
-	 * @throws Exception
-	 */
-    public List<Map<String, String>> recuperarClasifSucursalZonaNivel(String cdunieco, String cdunizon, String cdnivel) throws Exception;
-    
-    /**
-     * Guarda la configuracion de una sucursal para el despachador
-     * @param sucursal
-     * @throws Exception
-     */
-    public void guardaConfSucursales(Map<String, String> sucursal) throws Exception;
-    
-    
-    /**
-     * Carga la configuracion permisos de flujos
-     * @param cdtipflu
-     * @param cdunizon 
-     * @param cdramo
-     * @param cdtipsit
-     * @return
-     * @throws Exception
-     */
-    public List<Map<String, String>> recuperarPermisosFlujos(String cdtipflu, String cdflujomc, String cdramo, String cdtipsit) throws Exception;
-    
-    /**
-     * Guarda la configuracion de permisos de flujos
-     * @param sucursal
-     * @throws Exception
-     */
-    public void guardaConfPermisos(Map<String, String> permiso) throws Exception;
-    
     public List<Map<String, String>> recuperarDetallesMesaHora (String ntramite) throws Exception;
     
     public List<Map<String, String>> recuperarClaveAutoFlujo(String ntramite) throws Exception;
