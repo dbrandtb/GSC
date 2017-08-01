@@ -6,13 +6,16 @@ var storeQuirugico;
 var extraParams='';
 var cdrol;
 var notasInternas ='';
-var selCPT = '';	// (EGS)
+var selCPT = '';
 var selCPTAnterior ='';
+var selContador = '';
+var selContAnterior ='';
 //var mensajeInicial = ' Movimiento no procede por padecimiento de periodo de espera de ';
 var _Existe = "S";
 var _NExiste = "N";
 var _esSeleccion = '0';
 var _existeConfiguracion = '0';
+var contadorExterno = 0;
 Ext.onReady(function() {
 	
     // Se aumenta el timeout para todas las peticiones:
@@ -84,7 +87,7 @@ Ext.onReady(function() {
 			fields: [	{type:'string',    name:'nmautser'},		{type:'string',    name:'cdtipaut'},				{type:'string',    name:'cdmedico'},
 						{type:'string',    name:'nombreMedico'},	{type:'string',    name:'cdtipmed'},				{type:'string',    name:'cdcpt'},
 						{type:'string',    name:'desccpt'},			{type:'string',    name:'precio'},					{type:'string',    name:'cantporc'},
-						{type:'string',    name:'ptimport'},		{type:'string',    name:'descTipMed'}	]
+						{type:'string',    name:'ptimport'},		{type:'string',    name:'descTipMed'},              {type:'string',    name:'contadorExt'}	]
 	});
 
     Ext.define('ClausulaModelo', {
@@ -1766,6 +1769,7 @@ Ext.onReady(function() {
 						}else{
 							nombreProveedor = Ext.getCmp('idmedicoConAutorizado').getRawValue();
 						}
+						contadorExterno = contadorExterno+1;
 						var rec = new modelListadoTablas({
 							cdmedico: datos.idmedicoConAutorizado,
 							nombreMedico: nombreProveedor,
@@ -1774,7 +1778,8 @@ Ext.onReady(function() {
 							precio: datos.precioConAutorizado,
 							cantporc: datos.cantidadConAutorizado,
 							ptimport: datos.importeConAutorizado,
-							cdtipaut:'1'
+							cdtipaut:'1',
+							contadorExt: contadorExterno 
 						});
 						//debug("Entra a la opcion 2");
 						if(Ext.getCmp('idCausaSini').getValue() =="N"){
@@ -1832,13 +1837,15 @@ Ext.onReady(function() {
 			handler: function() {
 				if (panelEquipoQuirurgicoBase.form.isValid()){
 					var datos=panelEquipoQuirurgicoBase.form.getValues();
+					contadorExterno = contadorExterno +1;
 					var rec = new modelListadoTablas({
 						cdcpt: pad (datos.cptQuirBase, 10),
 						desccpt:cptQuirBase.rawValue,
 						precio: datos.precioQuirurgico,
 						cantporc: datos.porcentajeQuirurgico,
 						ptimport: datos.importeQuirurgico,
-						cdtipaut:'2'
+						cdtipaut:'2',
+						contadorExt: contadorExterno 
 					});
 					storeQuirugicoBase.add(rec);
 					panelEquipoQuirurgicoBase.getForm().reset();
@@ -1883,6 +1890,7 @@ Ext.onReady(function() {
 					}else{
 						nombreProveedor = Ext.getCmp('idmedicoEqQuirurg').getRawValue();
 					}
+					contadorExterno = contadorExterno + 1;
 					var rec = new modelListadoTablas({
 						cdmedico: datos.idmedicoEqQuirurg,
 						nombreMedico:nombreProveedor,
@@ -1891,7 +1899,8 @@ Ext.onReady(function() {
 						ptimport: datos.importeEqQuirurg,
 						cdtipmed:datos.idTipoMedico,
 						descTipMed:tipoMedico.rawValue,
-						cdtipaut:'3'
+						cdtipaut:'3',
+						contadorExt: selContador
 					});
 					if(Ext.getCmp('idValMaternidad').getValue() =="1" && Ext.getCmp('idReqValidacionMat').getValue() =="1" ){
 						var sumaDisponible = Ext.getCmp('sumDisponible').getValue();
@@ -2042,8 +2051,8 @@ Ext.onReady(function() {
                 	{	header: 'CPT',			dataIndex: 'desccpt',			width:255   	},
 					{	header: 'Precio',		dataIndex: 'precio',			width:150,				renderer: Ext.util.Format.usMoney   	},
 					{	header: 'Porcentaje', 	dataIndex: 'cantporc',			width:100    	},
-					{	header: 'Importe', 		dataIndex: 'ptimport',		 	width:200,				renderer: Ext.util.Format.usMoney    	}
-					
+					{	header: 'Importe', 		dataIndex: 'ptimport',		 	width:200,				renderer: Ext.util.Format.usMoney    	},
+					{   header: 'contadorExt',  dataIndex: 'contadorExt',       width:100       ,hidden: true}
 				],
                 tbar: [{
 					icon:_CONTEXT+'/resources/fam3icons/icons/add.png',
@@ -2055,34 +2064,49 @@ Ext.onReady(function() {
 					beforeselect: function( grid, record, index, eOpts ){
 						var totalCPT         = selCPT.split('|');
                         var totalCPTAnterior = selCPTAnterior.split('|');
+                        var totalContador     = selContador.split('|');
+                        var totalContAnterior = selContAnterior.split('|');
                         totalSeleccionGrid = gridIncisos2.getSelectionModel().getSelection();
                         
                         if(totalSeleccionGrid.length > 0){
-                        	selCPTAnterior ='';
-                        	selCPT         ='';
+                        	selCPTAnterior  ='';
+                        	selCPT          ='';
+                        	selContador     ='';
+                            selContAnterior ='';
                         	for(var i=0;i<totalSeleccionGrid.length;i++) {
                                 seleccionGrid=totalSeleccionGrid[i];
                                 totalSeleccionImp = +totalSeleccionImp + +seleccionGrid.get('ptimport');
                                 selCPT = selCPT +""+seleccionGrid.get('cdcpt');
+                                selContador = selContador+""+seleccionGrid.get('contadorExt');
                                 
                                 if(totalSeleccionGrid.length == 1){
                                     selCPT = selCPT;
+                                    selContador = selContador;
                                 }else if(i < totalSeleccionGrid.length-1){
                                     selCPT = selCPT +"|";
+                                    selContador = selContador +"|";
                                 }else{
                                     selCPT = selCPT;
+                                    selContador = selContador;
+                                    
                                 }                            
                             }
                             selCPTAnterior = selCPT;
                             selCPT         = '';
+                            
+                            selContAnterior = selContador;
+                            selContador     = '';
                         
                         }else{
                         	selCPT ='';
                         	selCPTAnterior ='';
+                        	selContador ='';
+                        	selContAnterior ='';
                         }
 					},
                     selectionchange: function( grid, selected, eOpts ){
                         selCPT ='';
+                        selContador ='';
                         totalSeleccionGrid = gridIncisos2.getSelectionModel().getSelection();
                         totalSeleccionImp = 0;
                         Ext.getCmp('idValorBase').setValue('');
@@ -2091,20 +2115,25 @@ Ext.onReady(function() {
                             seleccionGrid=totalSeleccionGrid[i];
                             totalSeleccionImp = +totalSeleccionImp + +seleccionGrid.get('ptimport');
                             selCPT = selCPT +""+seleccionGrid.get('cdcpt');
+                            selContador = selContador+""+seleccionGrid.get('contadorExt');
                             
                             if(totalSeleccionGrid.length == 1){
                                 selCPT = selCPT;
+                                selContador = selContador;
                             }else if(i < totalSeleccionGrid.length-1){
                                 selCPT = selCPT +"|";
+                                selContador = selContador +"|";
                             }else{
                                 selCPT = selCPT;
+                                selContador = selContador;
                             }                            
                         }
                         Ext.getCmp('idValorBase').setValue(totalSeleccionImp);
                         if(_esSeleccion !='1'){
-                        	ModificarEquipoQuirurguico(storeQuirurgico,selCPT,selCPTAnterior);	
+                        	ModificarEquipoQuirurguico(storeQuirurgico,selCPT,selCPTAnterior,selContador,selContAnterior);	
                         }
-                        selCPTAnterior =selCPT;
+                        selCPTAnterior  = selCPT;
+                        selContAnterior = selContador;
                     }
 				}
 			});
@@ -2115,9 +2144,9 @@ Ext.onReady(function() {
 		},
 		onRemoveClick: function(grid, rowIndex){
 			_existeConfiguracion = '0'
-			var record=this.getStore().getAt(rowIndex);
+			var record = this.getStore().getAt(rowIndex);
 			//Obtenemos el valor a remover
-			existeConfigEquipoQuirurgico(storeQuirurgico,record.data.cdcpt);
+			existeConfigEquipoQuirurgico(storeQuirurgico,record.data.cdcpt,record.data.contadorExt);
 			if(_existeConfiguracion =='1'){
 				centrarVentanaInterna(Ext.Msg.show({
 				    title: 'Equipo quir&uacute;rgico base', 
@@ -2169,11 +2198,12 @@ Ext.onReady(function() {
                             handler: this.onRemoveClick
                         }]
                     },
-                	{  header: 'cdcpt',        dataIndex: 'cdcpt',      width:250       },
+                	{  header: 'cdcpt',                 dataIndex: 'cdcpt',             width:250       },
 					{	header: 'M&eacute;dico',		dataIndex: 'nombreMedico',	 	width:250   	},
 					{	header: 'Porcentaje',			dataIndex: 'cantporc',			width:100	   	},
 					{	header: 'Tipo medico',			dataIndex: 'descTipMed',	 	width:150  		},
-					{	header: 'Importe',				dataIndex: 'ptimport',	 		width:100,			renderer: Ext.util.Format.usMoney  	}
+					{	header: 'Importe',				dataIndex: 'ptimport',	 		width:100,			renderer: Ext.util.Format.usMoney  	},
+					{   header: 'contador',             dataIndex: 'contadorExt',       width:150       ,hidden:true}
 					
 				],
 				selModel: {
@@ -2187,13 +2217,14 @@ Ext.onReady(function() {
 				}],
                 listeners: {
                 	cellclick: function ( grid, td, cellIndex, record, tr, rowIndex, e, eOpts ){
-                		_esSeleccion = '1';
-                		var totalCPT = record.get('cdcpt');
+                		_esSeleccion   = '1';
+                		var totalCPT   = record.get('cdcpt');
+                		var totalConta = record.get('contadorExt');
                         selCPT         ='';
                         selCPTAnterior ='';
                         
                         gridIncisos2.getSelectionModel().deselectAll();
-                        seleccionarEquipoQuirurguico(storeQuirugicoBase,totalCPT);
+                        seleccionarEquipoQuirurguico(storeQuirugicoBase,totalCPT,totalConta);
                 	}
                 }
 			});
@@ -2460,7 +2491,7 @@ Ext.onReady(function() {
                             }
                         ]
                     }
-                    ,{  xtype       : 'textfield',          fieldLabel : 'Modalidad',           id  : 'idModalidad',    width   : 500,
+                    ,{  xtype       : 'textfield',          fieldLabel : 'Producto',           id  : 'idModalidad',    width   : 500,
                         name        : 'idModalidad',        labelWidth  : 170,                  readOnly   : true,      colspan:2
                     },
                 	{  xtype       : 'textfield',          fieldLabel : 'Plan',                   id  : 'idPlan',         width   : 500,
@@ -2706,13 +2737,21 @@ Ext.onReady(function() {
                     ,//3.- Fecha de Solicitud
                     {   id: 'fechaSolicitud'        ,xtype      : 'datefield'               ,fieldLabel : 'Fecha Solicitud',
                         name:'fesolici'             ,labelWidth : 170                       ,id         : 'fechaSolicitud',         format      : 'd/m/Y',
-                        editable: true              ,value      : new Date()                ,readOnly   : true
+                        editable: true              ,
+                        listeners:{
+                            'blur':function(field,value){
+                                Ext.getCmp('fechaAutorizacion').setMinValue(new Date(Ext.getCmp('fechaSolicitud').getValue()));
+                                Ext.getCmp('fechaAutorizacion').setValue('');
+                            }
+                        }
+                        
                     },//4.- Fecha de Autorizacion
                     {   id: 'fechaAutorizacion'     ,xtype      : 'datefield'               ,fieldLabel  : 'Fecha Autorizaci&oacute;n',
                         labelWidth : 170            ,format     : 'd/m/Y'                   ,allowBlank : false,
                         editable: true              ,name       : 'feautori',
                         listeners:{
                             change:function(field,value){
+                            	Ext.getCmp('fechaIngreso').setValue('');
                                 Ext.Ajax.request({
                                     url     : _URL_NUMERO_DIAS
                                     ,params:{
@@ -2721,6 +2760,9 @@ Ext.onReady(function() {
                                     }
                                     ,success : function (response){
                                         Ext.getCmp('fechaVencimiento').setValue(Ext.Date.add(value, Ext.Date.DAY, Ext.decode(response.responseText).diasMaximos));
+                                        
+                                        Ext.getCmp('fechaIngreso').setMinValue(new Date(Ext.getCmp('fechaSolicitud').getValue()));
+                                        Ext.getCmp('fechaIngreso').setMaxValue(new Date(Ext.getCmp('fechaAutorizacion').getValue()));
                                     },
                                     failure : function (){
                                         me.up().up().setLoading(false);
@@ -3569,7 +3611,8 @@ Ext.onReady(function() {
 								cdcpt		: json.listaConsultaTablas[i].cdcpt,
 								cantporc	: json.listaConsultaTablas[i].cantporc,
 								ptimport	: json.listaConsultaTablas[i].ptimport,
-								descTipMed	: json.listaConsultaTablas[i].descTipMed
+								descTipMed	: json.listaConsultaTablas[i].descTipMed,
+								contadorExt : json.listaConsultaTablas[i].contadorExt
 							});
 							storeConceptoAutorizados.add(rec);
 						}
@@ -3585,7 +3628,8 @@ Ext.onReady(function() {
 								cdcpt		: json.listaConsultaTablas[i].cdcpt,
 								cantporc	: (json.listaConsultaTablas[i].cantporc) * 100,
 								ptimport	: json.listaConsultaTablas[i].ptimport,
-								descTipMed	: json.listaConsultaTablas[i].descTipMed
+								descTipMed	: json.listaConsultaTablas[i].descTipMed,
+								contadorExt : json.listaConsultaTablas[i].contadorExt
 							});
 
 							if(json.listaConsultaTablas[i].cdtipaut == 2){
@@ -4059,15 +4103,12 @@ Ext.onReady(function() {
 	}
 
 
-	
-	function ModificarEquipoQuirurguico(storeQuirurgico,selCPT,selCPTAnterior){
+	//modificado
+	function ModificarEquipoQuirurguico(storeQuirurgico,selCPT,selCPTAnterior,selContador,selContAnterior){
 		var arr = [];
-		debug("ModificarEquipoQuirurguico selCPT         ===> ",selCPT);
-		debug("ModificarEquipoQuirurguico selCPTAnterior ===> ",selCPTAnterior);
 		if(storeQuirurgico != undefined){
 			storeQuirurgico.each(function(record) {
-			debug("RECORD ==> ",record);
-			arr.push(record.data);
+                arr.push(record.data);
 			});
 			storeQuirurgico.loadData([],false);
 			for(var i = 0; i < arr.length; i++){
@@ -4086,7 +4127,8 @@ Ext.onReady(function() {
                         nmautser: arr[i].nmautser,
                         nombreMedico: arr[i].nombreMedico,
                         precio: arr[i].precio,
-                        ptimport: Ext.getCmp('idValorBase').getValue() *(arr[i].cantporc/100)
+                        ptimport: Ext.getCmp('idValorBase').getValue() *(arr[i].cantporc/100),
+                        contadorExt : selContador
                     });
 				}else{
                     var rec = new modelListadoTablas({
@@ -4101,7 +4143,8 @@ Ext.onReady(function() {
                         nmautser: arr[i].nmautser,
                         nombreMedico: arr[i].nombreMedico,
                         precio: arr[i].precio,
-                        ptimport: arr[i].ptimport
+                        ptimport: arr[i].ptimport,
+                        contadorExt :arr[i].contadorExt
                     });
 				}
 				storeQuirurgico.add(rec);
@@ -4127,7 +4170,8 @@ Ext.onReady(function() {
                 cantporc: record.get('cantporc'),
                 ptimport: record.get('ptimport'),
                 cdtipmed: record.get('cdtipmed'),
-                nombreMedico: record.get('nombreMedico')
+                nombreMedico: record.get('nombreMedico'),
+                contadorExt: record.get('contadorExt')
             });
         });
         storeQuirugicoBase.each(function(record,index){
@@ -4139,7 +4183,8 @@ Ext.onReady(function() {
                 cantporc: record.get('cantporc')/100,
                 ptimport: record.get('ptimport'),
                 cdtipmed: record.get('cdtipmed'),
-                nombreMedico: record.get('nombreMedico')
+                nombreMedico: record.get('nombreMedico'),
+                contadorExt: record.get('contadorExt')
             });
         });
         storeQuirurgico.each(function(record,index){
@@ -4151,7 +4196,8 @@ Ext.onReady(function() {
                 cantporc: record.get('cantporc')/100,
                 ptimport: record.get('ptimport'),
                 cdtipmed: record.get('cdtipmed'),
-                nombreMedico: record.get('nombreMedico')
+                nombreMedico: record.get('nombreMedico'),
+                contadorExt: record.get('contadorExt')
             });
         });
 
@@ -4222,7 +4268,8 @@ Ext.onReady(function() {
         return respuesta;
     }
     
-   function seleccionarEquipoQuirurguico(storeQuirugicoBase, totalCPT){
+   //modificado
+   function seleccionarEquipoQuirurguico(storeQuirugicoBase, totalCPT,totalConta){
         _esSeleccion = '1';
         var arr = [];
         var valorBase=0;
@@ -4230,10 +4277,11 @@ Ext.onReady(function() {
             arr.push(record.data);
         });
         var totalCPT  = totalCPT.split('|');
+        var totalConta = totalConta.split('|');
         
-        for(var i = 0; i < totalCPT.length; i++){
+        for(var i = 0; i < totalConta.length; i++){
             for(var j = 0; j < arr.length; j++){
-                if(totalCPT[i] == arr[j].cdcpt){
+                if(totalConta[i] == arr[j].contadorExt){
                     gridIncisos2.getSelectionModel().select(j,true);
                 }
             }
@@ -4242,21 +4290,19 @@ Ext.onReady(function() {
         return true;
     }
     
-    function existeConfigEquipoQuirurgico(storeQuirurgico,cptEliminar){
+   //modificado
+   function existeConfigEquipoQuirurgico(storeQuirurgico,cptEliminar,contadorExtEliminar){
         var arr = [];
         if(storeQuirurgico != undefined){
             storeQuirurgico.each(function(record) {
                 arr.push(record.data);
             });
-            debug("existeConfigEquipoQuirurgico ===> ",cptEliminar);
             for(var i = 0; i < arr.length; i++){
-                debug("arr[i].cdcpt   ==> ",i+":  "+arr[i].cdcpt);
                 var totalCPT  = arr[i].cdcpt.split('|');
-                debug("totalCPT.length ==> ",totalCPT.length);
-                for(var j = 0; j < totalCPT.length; j++){
-                	debug("totalCPT[i] ==>",totalCPT[j]);
-                	debug("cptEliminar ==>",cptEliminar);
-                	if(totalCPT[j] == cptEliminar){
+                var totalcontadorExt  = arr[i].contadorExt.split('|');
+                
+                for(var j = 0; j < totalcontadorExt.length; j++){
+                	if(totalcontadorExt[j] == contadorExtEliminar){
                         _existeConfiguracion = '1';
                     }                	
                 }
