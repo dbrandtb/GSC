@@ -628,6 +628,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setPrecio(rs.getString("PRECIO"));
         	consulta.setPtimport(rs.getString("PTIMPORT"));
         	consulta.setDescTipMed(rs.getString("DESCTIPMED"));
+        	consulta.setContadorExt(rs.getString("NMORDINA"));
             return consulta;
         }
     }
@@ -728,6 +729,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			declareParameter(new SqlParameter("pv_cantporc_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nombprov_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_contExt_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
