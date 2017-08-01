@@ -1304,6 +1304,203 @@ Ext.onReady(function()
 			        }
 		    });
     	
+    	
+    	var gridHistPanel = Ext.create('Ext.grid.Panel', {
+			border: false,
+			height : 200,
+			viewConfig: {
+				stripeRows: false,
+				trackOver : true
+			},
+			store: historialGridStore,
+			columns: [
+				{ text: 'No', dataIndex: 'NMORDTRA' , width: 25 },
+				{ text: 'Fecha', dataIndex: 'FEREG' , flex: 3 },
+				{ text: 'M&eacutedico Tratante', dataIndex: 'NOMBRE_COMPLETO', flex: 6 },
+				{ text: 'Especialidad', dataIndex: 'DSESPEC', flex: 6 },
+				{ text: 'Peso', dataIndex: 'PESO', flex: 2 },
+				{ text: 'Talla', dataIndex: 'TALLA', flex: 2 },
+				{ text: 'Comentarios', dataIndex: 'COMENTARIOS', flex: 6 },
+				{
+	                xtype        : 'actioncolumn',
+	                icon         : _CONTEXT+'/resources/fam3icons/icons/eye.png',
+	                tooltip      : 'Ver Documento',
+	                width        : 30,
+	                hidden: true,
+	                menuDisabled : true,
+	                sortable     : false,
+	                handler      : function(grid,rowIndex)
+	                {
+	                    var recordSel = grid.getStore().getAt(rowIndex);
+	                    var nombreArchivo = "DocHistorialMed_Aseg_" + recordSel.get("CDPERSON") + "_ICD_" + recordSel.get("CDICD")+
+						"_No_" + recordSel.get("NMORDTRA");
+	                    
+	                    Ext.Ajax.request({
+	                        url: _urlVerificaExisteDoc,
+	                        params:{
+		                    	'path'      : _RUTA_DOCUMENTOS_PERSONA,
+		                    	'subfolder' : recordSel.get("CDPERSON"),
+		                    	'filename'  : nombreArchivo
+		                    },
+	                        success  : function(response, options){
+	                       	 
+	                            var json = Ext.decode(response.responseText);
+	                            if(json.success){
+	                            	
+	                            	if(json.smap1.EXISTE_ARCHIVO == 'S'){
+	                            		nombreArchivo = nombreArchivo + json.smap1.EXTENSION;
+	                            		
+	                            		var numRand=Math.floor((Math.random()*100000)+1);
+    	    		                    
+    	    		                    var windowVerDocu=Ext.create('Ext.window.Window',
+    	    		                    {
+    	    		                        title          : 'Informe M&eacute;dico ' + recordSel.get('NMORDTRA')
+    	    		                        ,width         : 700
+    	    		                        ,height        : 500
+    	    		                        ,collapsible   : true
+    	    		                        ,titleCollapse : true
+    	    		                        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" style="overflow: hidden; height: 100%;width: 100%; position: absolute;" height="100%" width="100%"'
+    	    		                                			+'src="'+_urlViewDocHist+'?path='+_RUTA_DOCUMENTOS_PERSONA+'&subfolder='+recordSel.get("CDPERSON")+'&filename='+nombreArchivo+'">'
+    	    		                                		+'</iframe>'
+    	    		                        ,listeners     :
+    	    		                        {
+    	    		                             resize : function(win,width,height,opt){
+    	    		                                 debug(width,height);
+    	    		                                 $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+    	    		                             }
+    	    		                        }
+    	    		                    }).show();
+    	    		                    centrarVentanaInterna(windowVerDocu);
+    	    		                    
+	                            	}else{
+	                            		mensajeInfo('No existe documento para este registro del historial.');
+	                            	}
+	                            }else{
+	                                mensajeError(json.respuesta);
+	                            }
+	                        }
+	                        ,failure  : function(response, options){
+	                       	 
+	                            var json = Ext.decode(response.responseText);
+	                            mensajeError(json.respuesta);
+	                        }
+	                    });
+	                    
+	                }
+	            },
+	            {
+	                xtype        : 'actioncolumn',
+	                icon         : _CONTEXT+'/resources/fam3icons/icons/page_white_put.png',
+	                tooltip      : 'Descargar Documento',
+	                hidden: true,
+	                width        : 30,
+	                menuDisabled : true,
+	                sortable     : false,
+	                handler      : function(grid,rowIndex)
+	                {
+	                	 var recordSel = grid.getStore().getAt(rowIndex);
+		                    var nombreArchivo = "DocHistorialMed_Aseg_" + recordSel.get("CDPERSON") + "_ICD_" + recordSel.get("CDICD")+
+							"_No_" + recordSel.get("NMORDTRA");
+		                    
+		                    Ext.Ajax.request({
+		                        url: _urlVerificaExisteDoc,
+		                        params:{
+			                    	'path'      : _RUTA_DOCUMENTOS_PERSONA,
+			                    	'subfolder' : recordSel.get("CDPERSON"),
+			                    	'filename'  : nombreArchivo
+			                    },
+		                        success  : function(response, options){
+		                       	 
+		                            var json = Ext.decode(response.responseText);
+		                            if(json.success){
+		                            	
+		                            	if(json.smap1.EXISTE_ARCHIVO == 'S'){
+		                            		nombreArchivo = nombreArchivo + json.smap1.EXTENSION;
+		                            		
+		                            		
+		                            		Ext.create('Ext.form.Panel').submit({
+                        			        url              : _urlDownloadDocHist
+                        			        , standardSubmit : true
+                        			        , target         : '_blank'
+                        			        , params         :
+                        			        {
+                        			        	path      : _RUTA_DOCUMENTOS_PERSONA
+                        			            ,subfolder: recordSel.get("CDPERSON")
+                        			            ,filename : nombreArchivo
+                        			        }
+                        			    });
+		                            		
+		                            	}else{
+		                            		mensajeInfo('No existe documento para este registro de historial.');
+		                            	}
+		                            }else{
+		                                mensajeError(json.respuesta);
+		                            }
+		                        }
+		                        ,failure  : function(response, options){
+		                       	 
+		                            var json = Ext.decode(response.responseText);
+		                            mensajeError(json.respuesta);
+		                        }
+		                    });
+	                }
+	            }
+				],
+			listeners: {
+				select: function(grd,record){}
+			},
+			dockedItems: [
+                {
+                    xtype: 'toolbar',
+                    dock: 'top',
+                    items: [
+                        {
+                            xtype: 'button',
+                            text: 'Agregar nuevo registro',
+                            icon:_CONTEXT+'/resources/fam3icons/icons/page_add.png',
+                            handler: function(btn){
+                            	
+                            	var nuevoRecHist = new modelHistorialPadecimientoAseg();
+                            	nuevoRecHist.set('CDUNIECO', recordEditar.get('CDUNIECO'));
+                            	nuevoRecHist.set('CDRAMO'  , recordEditar.get('CDRAMO'));
+                            	nuevoRecHist.set('ESTADO'  , recordEditar.get('ESTADO'));
+                            	nuevoRecHist.set('NMPOLIZA', recordEditar.get('NMPOLIZA'));
+                            	nuevoRecHist.set('NMSITUAC', recordEditar.get('NMSITUAC'));
+                            	nuevoRecHist.set('CDPERSON', recordEditar.get('CDPERSON'));
+                            	nuevoRecHist.set('CDICD'   , recordEditar.get('CDICD'));
+                            	
+                            	agregarEditarRegistroHistorial(nuevoRecHist,recordEditar);
+                            }
+                        },{
+                            xtype: 'button',
+                            text: 'Editar ultimo registro',
+                            icon:_CONTEXT+'/resources/fam3icons/icons/page_edit.png',
+                            handler: function(btn){
+                            	
+                            	var maxOrd = -1;
+                            	var recordMax;
+                            	
+                            	gridHistPanel.getStore().each(function(recordIt){
+                            		var ordenAct = (recordIt.get('NMORDTRA'))*1;
+                            		if(ordenAct>maxOrd){
+                            			maxOrd = ordenAct;
+                            			recordMax = recordIt;
+                            		}
+                            	});
+                            	
+                            	if(maxOrd == -1){
+                            		mensajeInfo('No hay historial registrado para este padecimiento.');
+                            		return;
+                            	}
+                            	
+                            	agregarEditarRegistroHistorial(recordMax,recordEditar);
+                            }
+                        }
+                    ]
+                }
+            ]
+		});
+    	
     	ventanaHistorialPad = Ext.create('Ext.window.Window',{
     		title   : 'Historial Medicina Preventiva'
     			,modal  : true
@@ -1442,177 +1639,7 @@ Ext.onReady(function()
     						]
     					})
     	    			,
-    	    			Ext.create('Ext.grid.Panel', {
-    	    				border: false,
-    	    				height : 200,
-    	    				viewConfig: {
-    	    					stripeRows: false,
-    	    					trackOver : true
-    	    				},
-    	    				store: historialGridStore,
-    	    				columns: [
-    	    					{ text: 'No', dataIndex: 'NMORDTRA' , width: 25 },
-    	    					{ text: 'Fecha', dataIndex: 'FEREG' , flex: 3 },
-    	    					{ text: 'M&eacutedico Tratante', dataIndex: 'NOMBRE_COMPLETO', flex: 6 },
-    	    					{ text: 'Especialidad', dataIndex: 'DSESPEC', flex: 6 },
-    	    					{ text: 'Peso', dataIndex: 'PESO', flex: 2 },
-    	    					{ text: 'Talla', dataIndex: 'TALLA', flex: 2 },
-    	    					{ text: 'Comentarios', dataIndex: 'COMENTARIOS', flex: 6 },
-    	    					{
-    	    		                xtype        : 'actioncolumn',
-    	    		                icon         : _CONTEXT+'/resources/fam3icons/icons/eye.png',
-    	    		                tooltip      : 'Ver Documento',
-    	    		                width        : 30,
-    	    		                hidden: true,
-    	    		                menuDisabled : true,
-    	    		                sortable     : false,
-    	    		                handler      : function(grid,rowIndex)
-    	    		                {
-    	    		                    var recordSel = grid.getStore().getAt(rowIndex);
-    	    		                    var nombreArchivo = "DocHistorialMed_Aseg_" + recordSel.get("CDPERSON") + "_ICD_" + recordSel.get("CDICD")+
-            							"_No_" + recordSel.get("NMORDTRA");
-    	    		                    
-    	    		                    Ext.Ajax.request({
-    	    		                        url: _urlVerificaExisteDoc,
-    	    		                        params:{
-						                    	'path'      : _RUTA_DOCUMENTOS_PERSONA,
-						                    	'subfolder' : recordSel.get("CDPERSON"),
-						                    	'filename'  : nombreArchivo
-						                    },
-    	    		                        success  : function(response, options){
-    	    		                       	 
-    	    		                            var json = Ext.decode(response.responseText);
-    	    		                            if(json.success){
-    	    		                            	
-    	    		                            	if(json.smap1.EXISTE_ARCHIVO == 'S'){
-    	    		                            		nombreArchivo = nombreArchivo + json.smap1.EXTENSION;
-    	    		                            		
-    	    		                            		var numRand=Math.floor((Math.random()*100000)+1);
-    	    	    	    		                    
-    	    	    	    		                    var windowVerDocu=Ext.create('Ext.window.Window',
-    	    	    	    		                    {
-    	    	    	    		                        title          : 'Informe M&eacute;dico ' + recordSel.get('NMORDTRA')
-    	    	    	    		                        ,width         : 700
-    	    	    	    		                        ,height        : 500
-    	    	    	    		                        ,collapsible   : true
-    	    	    	    		                        ,titleCollapse : true
-    	    	    	    		                        ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" style="overflow: hidden; height: 100%;width: 100%; position: absolute;" height="100%" width="100%"'
-    	    	    	    		                                			+'src="'+_urlViewDocHist+'?path='+_RUTA_DOCUMENTOS_PERSONA+'&subfolder='+recordSel.get("CDPERSON")+'&filename='+nombreArchivo+'">'
-    	    	    	    		                                		+'</iframe>'
-    	    	    	    		                        ,listeners     :
-    	    	    	    		                        {
-    	    	    	    		                             resize : function(win,width,height,opt){
-    	    	    	    		                                 debug(width,height);
-    	    	    	    		                                 $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-    	    	    	    		                             }
-    	    	    	    		                        }
-    	    	    	    		                    }).show();
-    	    	    	    		                    centrarVentanaInterna(windowVerDocu);
-    	    	    	    		                    
-    	    		                            	}else{
-    	    		                            		mensajeInfo('No existe documento para este registro del historial.');
-    	    		                            	}
-    	    		                            }else{
-    	    		                                mensajeError(json.respuesta);
-    	    		                            }
-    	    		                        }
-    	    		                        ,failure  : function(response, options){
-    	    		                       	 
-    	    		                            var json = Ext.decode(response.responseText);
-    	    		                            mensajeError(json.respuesta);
-    	    		                        }
-    	    		                    });
-    	    		                    
-    	    		                }
-    	    		            },
-    	    		            {
-    	    		                xtype        : 'actioncolumn',
-    	    		                icon         : _CONTEXT+'/resources/fam3icons/icons/page_white_put.png',
-    	    		                tooltip      : 'Descargar Documento',
-    	    		                hidden: true,
-    	    		                width        : 30,
-    	    		                menuDisabled : true,
-    	    		                sortable     : false,
-    	    		                handler      : function(grid,rowIndex)
-    	    		                {
-    	    		                	 var recordSel = grid.getStore().getAt(rowIndex);
-     	    		                    var nombreArchivo = "DocHistorialMed_Aseg_" + recordSel.get("CDPERSON") + "_ICD_" + recordSel.get("CDICD")+
-             							"_No_" + recordSel.get("NMORDTRA");
-     	    		                    
-     	    		                    Ext.Ajax.request({
-     	    		                        url: _urlVerificaExisteDoc,
-     	    		                        params:{
- 						                    	'path'      : _RUTA_DOCUMENTOS_PERSONA,
- 						                    	'subfolder' : recordSel.get("CDPERSON"),
- 						                    	'filename'  : nombreArchivo
- 						                    },
-     	    		                        success  : function(response, options){
-     	    		                       	 
-     	    		                            var json = Ext.decode(response.responseText);
-     	    		                            if(json.success){
-     	    		                            	
-     	    		                            	if(json.smap1.EXISTE_ARCHIVO == 'S'){
-     	    		                            		nombreArchivo = nombreArchivo + json.smap1.EXTENSION;
-     	    		                            		
-     	    		                            		
-     	    		                            		Ext.create('Ext.form.Panel').submit({
-    		                            			        url              : _urlDownloadDocHist
-    		                            			        , standardSubmit : true
-    		                            			        , target         : '_blank'
-    		                            			        , params         :
-    		                            			        {
-    		                            			        	path      : _RUTA_DOCUMENTOS_PERSONA
-    		                            			            ,subfolder: recordSel.get("CDPERSON")
-    		                            			            ,filename : nombreArchivo
-    		                            			        }
-    		                            			    });
-     	    		                            		
-     	    		                            	}else{
-     	    		                            		mensajeInfo('No existe documento para este registro de historial.');
-     	    		                            	}
-     	    		                            }else{
-     	    		                                mensajeError(json.respuesta);
-     	    		                            }
-     	    		                        }
-     	    		                        ,failure  : function(response, options){
-     	    		                       	 
-     	    		                            var json = Ext.decode(response.responseText);
-     	    		                            mensajeError(json.respuesta);
-     	    		                        }
-     	    		                    });
-    	    		                }
-    	    		            }
-    	    					],
-	    					listeners: {
-	    						select: function(grd,record){}
-	    					},
-	    					dockedItems: [
-	                            {
-	                                xtype: 'toolbar',
-	                                dock: 'top',
-	                                items: [
-	                                    {
-	                                        xtype: 'button',
-	                                        text: 'Agregar nuevo registro',
-	                                        icon:_CONTEXT+'/resources/fam3icons/icons/page_add.png',
-	                                        handler: function(btn){
-	                                        	
-	                                        	var nuevoRecHist = new modelHistorialPadecimientoAseg();
-	                                        	nuevoRecHist.set('CDUNIECO', recordEditar.get('CDUNIECO'));
-	                                        	nuevoRecHist.set('CDRAMO'  , recordEditar.get('CDRAMO'));
-	                                        	nuevoRecHist.set('ESTADO'  , recordEditar.get('ESTADO'));
-	                                        	nuevoRecHist.set('NMPOLIZA', recordEditar.get('NMPOLIZA'));
-	                                        	nuevoRecHist.set('NMSITUAC', recordEditar.get('NMSITUAC'));
-	                                        	nuevoRecHist.set('CDPERSON', recordEditar.get('CDPERSON'));
-	                                        	nuevoRecHist.set('CDICD'   , recordEditar.get('CDICD'));
-	                                        	
-	                                        	agregarEditarRegistroHistorial(nuevoRecHist,recordEditar);
-	                                        }
-	                                    }
-	                                ]
-	                            }
-	                        ]
-    	    			})
+    	    			gridHistPanel
     					]
     			}],
     			dockedItems: [
@@ -1653,7 +1680,8 @@ Ext.onReady(function()
     	                name: 'FECHA',
     	                labelWidth: 60,
     	                allowBlank: false,
-    	                width: 200
+    	                width: 200,
+    	                value: !esNuevoRegistroHist? recordEditarHist.get('FEREG') : ''
     	        	},{
     	              	xtype: 'checkbox',
     	              	fieldLabel: 'Usar datos del M&eacute;dico Tratante Asignado por Default',
@@ -1661,7 +1689,7 @@ Ext.onReady(function()
     	              	labelWidth: 350,
     	              	labelPad: 20,
     	              	labelAlign: 'right', 
-    	                value: false,
+    	                checked: !esNuevoRegistroHist? (Ext.isEmpty(recordEditarHist.get('CDPRESTA'))? false : true ) : false,
     	                listeners: {
     	                	change: function(ck, newValue){
     	                		
@@ -1696,7 +1724,9 @@ Ext.onReady(function()
     	                name: 'NOMBRE_MED',
     	                allowBlank: false,
     	                labelWidth: 120,
-    	                width: 340
+    	                width: 340,
+    	                value: !esNuevoRegistroHist? recordEditarHist.get('DSNOMMED') : '',
+    	                readOnly: !esNuevoRegistroHist? (Ext.isEmpty(recordEditarHist.get('CDPRESTA'))? false : true ) : false
     	            },
     	            {
     	                xtype: 'textfield',
@@ -1704,7 +1734,9 @@ Ext.onReady(function()
     	                name: 'APPAT_MED',
     	                allowBlank: false,
     	                labelWidth: 120,
-    	                width: 340
+    	                width: 340,
+    	                value: !esNuevoRegistroHist? recordEditarHist.get('DSAPELLMED1') : '',
+    	    	        readOnly: !esNuevoRegistroHist? (Ext.isEmpty(recordEditarHist.get('CDPRESTA'))? false : true ) : false
     	            },
     	            {
     	                xtype: 'textfield',
@@ -1712,7 +1744,9 @@ Ext.onReady(function()
     	                name: 'APMAT_MED',
     	                allowBlank: false,
     	                labelWidth: 120,
-    	                width: 340
+    	                width: 340,
+    	                value: !esNuevoRegistroHist? recordEditarHist.get('DSAPELLMED2') : '',
+    	    	        readOnly: !esNuevoRegistroHist? (Ext.isEmpty(recordEditarHist.get('CDPRESTA'))? false : true ) : false
     	            },
     	            {
     	                xtype: 'numberfield',
@@ -1723,7 +1757,8 @@ Ext.onReady(function()
     	                allowDecimals: true,
     	                minValue: 0,
     	                negativeText : 'El valor no puede ser negativo',
-    	                width: 160
+    	                width: 160,
+    	                value: !esNuevoRegistroHist? recordEditarHist.get('PESO') : ''
     	            },
     	            {
     	                xtype: 'numberfield',
@@ -1734,7 +1769,8 @@ Ext.onReady(function()
     	                allowDecimals: true,
     	                minValue: 0,
     	                negativeText : 'El valor no puede ser negativo',
-    	                width: 160
+    	                width: 160,
+    	                value: !esNuevoRegistroHist? recordEditarHist.get('TALLA') : ''
     	            },
     	            {
     	                xtype: 'textareafield',
@@ -1743,7 +1779,8 @@ Ext.onReady(function()
     	                labelWidth: 120,
     	                fieldLabel: 'Comentarios',
     	                name: 'COMENTARIOS',
-    	                maxLength : 2000
+    	                maxLength : 2000,
+    	                value: !esNuevoRegistroHist? recordEditarHist.get('COMENTARIOS') : ''
     	            },{
     	    	        xtype: 'filefield',
     	    	        fieldLabel: 'Subir Archivo',
@@ -1789,6 +1826,8 @@ Ext.onReady(function()
     							
     							if(esCdpresta){
     								codigoCdpresta = recordPadeci.get('CDPRESTA');
+    							}else{
+    								
     							}
 
     							var datosGuardHist = {
@@ -1828,7 +1867,6 @@ Ext.onReady(function()
     					                	mensajeCorrecto('Aviso','Se ha guardado correctamente.');
     					                	
     					                	var ordinal = recordEditarHist.get('NMORDTRA');
-    					                	alert("Orig:" +ordinal);
     					                	
     					                	if(Ext.isEmpty(ordinal)){
     					                		ordinal = json.params.nuevoOrdinal;
