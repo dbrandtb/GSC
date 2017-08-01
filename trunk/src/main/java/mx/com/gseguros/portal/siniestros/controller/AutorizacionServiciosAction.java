@@ -347,6 +347,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					paramsTDeTauts.put("pv_cantporc_i",datosTablas.get(i).get("cantporc"));
 					paramsTDeTauts.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
 					paramsTDeTauts.put("pv_nombprov_i",datosTablas.get(i).get("nombreMedico"));
+					paramsTDeTauts.put("pv_contExt_i" ,datosTablas.get(i).get("contadorExt"));
 					//3.- Se guarda la informacion en PKG_PRESINIESTRO.P_GUARDA_TDETAUTS
 					siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
 				}

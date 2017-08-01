@@ -82,7 +82,7 @@ Ext.onReady(function() {
     
     cmbRamos2 = Ext.create('Ext.form.field.ComboBox',
 	{
-		colspan	   :2,			fieldLabel   : 'Producto',			id        : 'cmbRamos2',		allowBlank     : false,			width:500	
+		colspan	   :2,			fieldLabel   : 'Ramo',			id        : 'cmbRamos2',		allowBlank     : false,			width:500	
 	    ,editable   : false,		displayField : 'value',			valueField: 'key',			forceSelection : true,
 	    labelWidth   : 170,				queryMode :'local',			name           :'cmbRamos2', readOnly   : true
 	    ,store : storeRamos2
