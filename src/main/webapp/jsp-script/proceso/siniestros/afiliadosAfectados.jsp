@@ -176,6 +176,7 @@
 			var _genero				= "";	// (EGS)
 			var _edad				= "";	// (EGS)
 			var _11_fueraVigencia	= "0";	// (EGS)
+		    var feOcurreOrig = null;	//(EGS) 	para comparar si se modifico fecha de ocurrencia
 			
 			//iteramos el arreglos de loas Facturas para hacer la asignacion
 			<s:set name="contadorFactura" value="0" />
@@ -3705,6 +3706,32 @@
 						{
 							xtype      : 'datefield',		name       : 'dtfechaOcurrencias',		fieldLabel : 'Fecha ocurrencia',
 							maxValue   :  new Date(),		format		: 'd/m/Y'
+	                        ,listeners : { //(EGS)
+	                        	focus: function(e){
+	                        		feOcurreOrig = panelListadoAsegurado.form.getValues().dtfechaOcurrencias;
+	                        		feOcurreOrig = new Date(feOcurreOrig.substring(6,10) + "/" +
+	                        								feOcurreOrig.substring(3,5)  + "/" +
+	                        								feOcurreOrig.substring(0,2));
+	                        		debug('afiliadosAfectados - Fecha ocurrencia focus',feOcurreOrig);
+	                        	},
+	                        	blur:function(e){
+	                        		var feOcurre = panelListadoAsegurado.form.getValues().dtfechaOcurrencias;
+	                        		feOcurre = new Date(feOcurre.substring(6,10) + "/" + feOcurre.substring(3,5)  + "/" + feOcurre.substring(0,2));
+	                        		debug('afiliadosAfectados - Fecha ocurrencia blur ', feOcurre);
+	                        		if (feOcurre.getTime() != feOcurreOrig.getTime()) {
+	                        			//limpiamos datos de asegurado
+	                        			panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
+										panelListadoAsegurado.down('[name="cdRamoAsegurado"]').setValue('');
+										panelListadoAsegurado.down('[name="estadoAsegurado"]').setValue('');
+										panelListadoAsegurado.down('[name="nmPolizaAsegurado"]').setValue('');
+										panelListadoAsegurado.down('[name="nmSoliciAsegurado"]').setValue('');
+										panelListadoAsegurado.down('[name="nmSuplemAsegurado"]').setValue('');
+										panelListadoAsegurado.down('[name="nmSituacAsegurado"]').setValue('');
+										panelListadoAsegurado.down('[name="cdTipsitAsegurado"]').setValue('');
+		                        		debug('Fecha ocurrencia blur limpiarRegistros()');
+	                        		}
+	                        	}
+	                        }	//fin (EGS)
 						},
 						{	
 							xtype      : 'textfield',		name       : 'cdUniecoAsegurado',		fieldLabel : 'Unieco',
@@ -3751,6 +3778,7 @@
 												  'params.cdramo' : _11_params.CDRAMO,
 												  'params.fe_ocurre' : panelListadoAsegurado.form.getValues().dtfechaOcurrencias	//(EGS)
 												  };
+									_mask("Consulta poliza...");	//(EGS)
 							        Ext.Ajax.request({	//(EGS) SE MODIFICA PARA OBTENER SOLO UNA POLIZA, Y MOSTRARLA EN EL ESPACIO CORRESPONDIENTE
 							            url     : _URL_CONSULTA_LISTADO_POLIZA
 							            ,params: params
@@ -3761,6 +3789,7 @@
 							                	//(EGS) Si encuentra más de una póliza, debe mostrar la lista
 							                	if(jsonResponse.listaPoliza.length > 1){
 							                		debug('Muestra lista 1');
+							                		_unmask(); //(EGS)
 							                		cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
 							                			if(success){
 							                				jsonResponse = Ext.decode(response.responseText);
@@ -3789,9 +3818,11 @@
 							                	}else{
 							                		debug('No muestra lista 1');
 							                		eligePoliza(jsonResponse.listaPoliza[0],panelListadoAsegurado,modPolizasAsegurado);
+							                		_unmask();	//(EGS)
 							                	}
 							                }
 							                else {
+												_unmask();	//(EGS)
 												Ext.Msg.show({
 													title:	'Aviso',
 													//msg:	'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',

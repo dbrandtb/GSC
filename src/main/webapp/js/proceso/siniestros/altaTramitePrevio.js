@@ -8,6 +8,7 @@ Ext.onReady(function() {
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
     
     var valorIndexSeleccionado= null;
+    var feOcurreOrig = null;	//(EGS) 	para comparar si se modifico fecha de ocurrencia
     Ext.selection.CheckboxModel.override( {
         mode: 'SINGLE',
         allowDeselect: true 
@@ -441,6 +442,8 @@ Ext.onReady(function() {
 	                        'params.fe_ocurre'	: panelInicialPral.down('[name=dtFechaOcurrencia]').getValue()	//(EGS)
                     };
                     
+	                debug('altaTramitePrevio.js - 445 ...');	//(EGS)
+	                _mask("Consulta poliza...");	//(EGS)
 			        Ext.Ajax.request({	//(EGS) SE MODIFICA PARA OBTENER SOLO UNA POLIZA, Y MOSTRARLA EN EL ESPACIO CORRESPONDIENTE
 			            url     : _URL_CONSULTA_LISTADO_POLIZA
 			            ,params: params
@@ -478,6 +481,7 @@ Ext.onReady(function() {
 							    }else{
 							    	debug('No muestra lista 4');
 			                		validaStatusAseg(jsonResponse.listaPoliza[0]);
+					                _unmask();	//(EGS)
 							    }
 			                }
 			                else {
@@ -487,6 +491,7 @@ Ext.onReady(function() {
 									 buttons:Ext.Msg.OK,
 									 icon:	Ext.Msg.WARNING
 								});*/
+								_unmask();	//(EGS)
 								Ext.Msg.show(
 									{title:	'Aviso',
 									 msg:	'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',
@@ -1492,6 +1497,25 @@ Ext.onReady(function() {
                     },
                     {   xtype      : 'datefield',           fieldLabel  : 'Fecha ocurrencia',       name        : 'dtFechaOcurrencia',      maxValue   :  new Date(),
                         format     : 'd/m/Y',               editable    : true,                     width       : 300,                      allowBlank : false
+                        ,listeners : { //(EGS)
+                        	focus: function(e){
+                        		feOcurreOrig = panelInicialPral.down('[name=dtFechaOcurrencia]').getValue();
+                        		debug('Fecha ocurrencia focus',feOcurreOrig);
+                        	},
+                        	blur:function(e){
+                        		var feOcurre = panelInicialPral.down('[name=dtFechaOcurrencia]').getValue();
+                        		debug('Fecha ocurrencia blur ', feOcurre);
+                        		if (feOcurre.getTime() != feOcurreOrig.getTime()) {
+	                        		limpiarRegistros();
+                        			//limpiamos datos de asegurado y beneficiario
+	                        		panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
+                        			panelInicialPral.down('[name=idnombreAsegurado]').setValue('');
+                        			panelInicialPral.down('[name=idnombreBeneficiarioProv]').setValue('');
+                        			panelInicialPral.down('combo[name=cmbBeneficiario]').setValue('');
+	                        		debug('Fecha ocurrencia blur limpiarRegistros()');
+                        		}
+                        	}
+                        }	//fin (EGS)
                     },
                     aseguradoAfectado,
                     cmbBeneficiario,
