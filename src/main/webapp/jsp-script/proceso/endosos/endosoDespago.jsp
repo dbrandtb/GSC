@@ -9,10 +9,6 @@
 	
 	debug('paramsEntrada  -->:',paramsEntrada);
 	
-	var endDespFlujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-	
-	debug('endDespFlujo:',endDespFlujo);
-	
 	Ext.onReady(function() {
 		
 		
@@ -92,11 +88,6 @@
 				        				paramsEntrada.NMIMPRES = record.get('NMIMPRES');
 				        				submitValues['smap1']= paramsEntrada;
 				        				
-				        				if(!Ext.isEmpty(endDespFlujo))
-				        				{
-				        				    submitValues['flujo'] = endDespFlujo;
-				        				}
-				        				
 				        				var panelMask = new Ext.LoadMask('mainDivDespago', {msg:"Confirmando..."});
 										panelMask.show();
 					
@@ -106,23 +97,8 @@
 				   						    success:function(response,opts){
 				   						    	 panelMask.hide();
 				   						         var jsonResp = Ext.decode(response.responseText);
-				   						         
-				   						         var callbackRemesa = function()
-				   						         {
-				   						             marendNavegacion(2);
-				   						         };
-				   						         
-				   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,function()
-				   						      	 {
-				   						      	     _generarRemesaClic(
-				   						      	         true
-				   						      	         ,paramsEntrada.CDUNIECO
-				   						      	         ,paramsEntrada.CDRAMO
-				   						      	         ,paramsEntrada.ESTADO
-				   						      	         ,paramsEntrada.NMPOLIZA
-				   						      	         ,callbackRemesa
-				   						      	     );
-				   						      	 });
+				   						      	 mensajeCorrecto("Endoso",jsonResp.respuesta,null);
+				   						      	 marendNavegacion(2);
 				   						    },
 				   						    failure:function(response,opts){
 				   						        panelMask.hide();
@@ -158,6 +134,5 @@
             
 
     });
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 <div id="mainDivDespago" style="height:1000px;"></div>

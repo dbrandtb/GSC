@@ -9,16 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -26,13 +19,17 @@ import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
-import mx.com.gseguros.portal.general.util.Ramo;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utils;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 
@@ -61,7 +58,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 	private Map<String,Object> opanel1;
 	private Map<String,Object> opanel2;
 	private Map<String,Object> opanel3;
-	private final static Logger logger = LoggerFactory.getLogger(ComplementariosCoberturasAction.class);
+	private final static Logger logger=Logger.getLogger(ComplementariosCoberturasAction.class);
 	private boolean success;
 	private boolean exito  =false;
 	private Map<String,String>parametros;
@@ -121,13 +118,8 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	public String cargarPantallaCoberturas() 
+	public String cargarPantallaCoberturas()
 	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ cargarPantallaCoberturas @@@@@@"
-				,"\n@@@@@@ smap1=" , smap1, "\n",slist1
-				));
 		try
 		{
 			/*
@@ -147,20 +139,13 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			logger.error("error al cargar la pantalla de coberturas",ex);
 			success=false;
 		}
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ slist1=",slist1
-			    ,"\n@@@@@@ cargarPantallaCoberturas @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
-		
 		return SUCCESS;
 	}
 	
 	public String guardarCoberturasUsuario()
 	{
-		logger.debug("smap1: {}", smap1);
-		logger.debug("slist1: {}", Utils.log(slist1));
+		logger.debug(smap1);
+		logger.debug(slist1);
 		try
 		{
 			int i=1;
@@ -304,10 +289,12 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 	
 	public String obtenerCamposTatrigar()
 	{
-		logger.debug(Utils.log(
-		        "\n###################################",
-				"\n###### obtenerCamposTatrigar ######",
-				"\n###### smap1 = ", smap1));
+		logger.info(""
+				+ "\n###################################"
+				+ "\n###### obtenerCamposTatrigar ######"
+				+ "\nsmap1 "+smap1
+				);
+		logger.debug(smap1);
 		try
 		{
 			List<ComponenteVO>listTatri=kernelManager.obtenerTatrigar(smap1);
@@ -362,7 +349,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 				Entry<String,Object> entry=it.next();
 				parametros.put("pv_"+entry.getKey(), (String)entry.getValue());
 			}
-			logger.debug("parametros: {}", parametros);
+			logger.debug(parametros);
 			success=true;
 		}
 		catch(Exception ex)
@@ -639,11 +626,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			gc.setCdrol(smap1.get("pv_cdrol"));
 			gc.setCdramo(smap1.get("pv_cdramo"));
 			gc.setCdtipsit(smap1.get("cdtipsit"));
-			if(!smap1.get("pv_cdramo").equalsIgnoreCase("2") && !smap1.get("pv_cdramo").equalsIgnoreCase("4")){
-				gc.genera(tatriper);
-			}else{
-				gc.genera(null);
-			}
+			gc.genera(tatriper);
 			item1=gc.getFields();
 			item2=gc.getItems();
 			
@@ -745,7 +728,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 				}
 			}
 			
-			logger.debug("smap1: {}", smap1);
+			logger.debug(smap1);
 			/*
 			pv_cdunieco_i  smap1 ready!
             pv_cdramo_i    smap1 ready!
@@ -778,7 +761,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 				Entry<String,Object> entry=it.next();
 				parametros.put("pv_"+entry.getKey(), (String)entry.getValue());
 			}
-			logger.debug("parametros: {}", parametros);
+			logger.debug(parametros);
 			/*parametros=new HashMap<String,String>(0);//quitame
 			parametros.put("pv_otvalor01", "valor1");//quitame
 			parametros.put("pv_otvalor02", "valor2");//quitame
@@ -869,8 +852,8 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 		try
 		{
 			success=true;
-			logger.debug("smap1: {}", smap1);
-			logger.debug("parametros: {}", parametros);
+			logger.debug(smap1);
+			logger.debug(parametros);
 			UserVO usuSes=(UserVO)session.get("USUARIO");
 			
 			String usuarioCaptura =  null;
@@ -990,7 +973,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 		{
 			UserVO usuarioSesion=(UserVO) this.session.get("USUARIO");
             logger.debug("se inserta detalle nuevo");
-            logger.debug("omap1: {}", omap1);
+            logger.debug(omap1);
             
             Iterator<Entry<String,String >> it=smap1.entrySet().iterator();
             omap1= new HashMap<String,Object>(0);
@@ -1015,8 +998,6 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
             		,null//cdmotivo
             		,usuarioSesion.getRolActivo().getClave()
             		,"N"
-            		,null
-            		,false //TODO JTEZVA
             		);
             
 			success=true;
@@ -1305,206 +1286,292 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 	/////////////////////////////////////////////
 	////// guardar valosit situac o grupal //////
 	/*/////////////////////////////////////////*/
-	public String pantallaValositSave () {
-		logger.debug(Utils.log(
-		        "\n#################################",
-				"\n###### pantallaValositSave ######",
-				"\n###### smap1      = " , smap1,
-				"\n###### parametros = " , parametros));
-		try {
-			UserVO usuario = Utils.validateSession(session);
-			String usuarioCaptura = null,
-			       cdunieco       = smap1.get("cdunieco"),
-			       cdramo         = smap1.get("cdramo"),
-			       estado         = smap1.get("estado"),
-			       nmpoliza       = smap1.get("nmpoliza"),
-			       nmsituac       = smap1.get("nmsituac"),
-			       agrupado       = smap1.get("agrupado"),
-			       paso           = null,
-			       nmsuplem       = "0";
-			Utils.validate(cdunieco , "Falta cdunieco",
-			               cdramo   , "Falta cdramo",
-			               estado   , "Falta estado",
-			               nmpoliza , "Falta nmpoliza");
-			try {
-    			if (usuario != null) {
-    				if (StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())) {
-    					usuarioCaptura = usuario.getClaveUsuarioCaptura();
-    				} else {
-    					usuarioCaptura = usuario.getCodigoPersona();
-    				}
-    			}
-    			/**
-                 * Para borrar domicilio a asegurados cuando se cambia de la cotizacion
-                 */
-    			paso = "Verificando cambio de c\u00f3digo postal";
-    			logger.debug(paso);
-                if (consultasManager.esProductoSalud(cdramo)) {
-                    logger.debug(" <<<<>>>>>> Entrando a Borrando de domicilios de asegurados si cambia el codigo postal <<<<<>>>>> ");
-                    List<Map<String,String>> valositsPoliza = endososManager.obtenerValositUltimaImagen(cdunieco, cdramo, estado, nmpoliza, "0");
-                    if (valositsPoliza != null && !valositsPoliza.isEmpty()) {
-                        logger.debug(" <<<<>>>>>> Verificando vvalisit de 0 <<<<<>>>>> ");
-                        Map<String,String> valosit =  valositsPoliza.get(0);
-                        if (valosit!=null && valosit.containsKey("CDATRIBU") && StringUtils.isNotBlank(valosit.get("CDATRIBU"))) {
-                            /**PARA OBTENER EL NUMERO DE ATRIBUTO DEL CODIGO POSTAL PARA ESTE PRODUCTO**/
-                            String keyCodPostal = Utils.join("pv_otvalor", valosit.get("CDATRIBU"));
-                            logger.debug(" <<<<>>>>>> Obteniendo llave de codigo postal  <<<<<>>>>> :::: {}", keyCodPostal);
-                            if (StringUtils.isNotBlank(keyCodPostal)) {
-                                String valorCodPosPantalla = parametros.get(keyCodPostal);
-                                logger.debug(" <<<<>>>>>> Obteniendo VALOR de codigo postal de pantalla  <<<<<>>>>> :::: {}", valorCodPosPantalla);
-                                if (StringUtils.isNotBlank(valorCodPosPantalla)) {
-                                    logger.debug(" <<<<>>>>>> Borrando domicilios de asegurados si cambia el codigo postal <<<<<>>>>> ");
-                                    paso = "Ejecutando borrado de domicilios condicionado";
-                                    logger.debug(paso);
-                                    mesaControlManager.borraDomicilioAsegSiCodposCambia(cdunieco, cdramo, estado, nmpoliza, "0",
-                                            valorCodPosPantalla);
-                                }
-                            }
-                        }
-                    }
-                }
-                paso = "Recuperando incisos/asegurados";
-                logger.debug(paso);
-                List<Map<String, String>> incisos = consultasManager.cargarTvalosit(cdunieco, cdramo, estado, nmpoliza, "0");
-    			if ("SI".equalsIgnoreCase(agrupado)) { // ACTUALIZAR TODOS LOS REGISTROS
-    			    paso = "Actualizando todos los incisos/asegurados";
-    			    logger.debug(paso);
-    				// ACTUALIZAMOS TVALOSIT
-    				for (Map<String, String> inciso : incisos) {
-    				    this.procesoPantallaValosit(cdunieco, cdramo, estado, nmpoliza, inciso.get("NMSITUAC"), nmsuplem,
-    				            usuarioCaptura, inciso, parametros);
-    				}
-    			} else { // ACTUALIZAR SOLO UNO
-    				paso = Utils.join("Identificando inciso/asegurado ", nmsituac);
-    				logger.debug(paso);
-                    // ACTUALIZAMOS TVALOSIT
-    				Map<String, String> inciso = null;
-                    for (Map<String, String> ite: incisos) {
-                        if (nmsituac.equals(ite.get("NMSITUAC"))) {
-                            inciso = ite;
-                            break;
-                        }
-                    }
-                    if (inciso == null) {
-                        throw new ApplicationException("No se encuentra el inciso/asegurado");
-                    }
-                    paso = Utils.join("Actualizando inciso/asegurado ", nmsituac);
-                    logger.debug(paso);
-                    this.procesoPantallaValosit(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, usuarioCaptura, inciso, parametros);
-    			}
-    			success=true;
+	public String pantallaValositSave()
+	{
+		logger.debug(""
+				+ "\n###################################"
+				+ "\n###################################"
+				+ "\n###### pantalla valosit save ######"
+				+ "\n######                       ######"
+				);
+		try
+		{
+			logger.debug("smap1: "+smap1);
+			logger.debug("parametros: "+parametros);
+			
+			UserVO usuSes=(UserVO)session.get("USUARIO");
+			
+			String usuarioCaptura =  null;
+			
+			if(usuSes!=null){
+				if(StringUtils.isNotBlank(usuSes.getClaveUsuarioCaptura())){
+					usuarioCaptura = usuSes.getClaveUsuarioCaptura();
+				}else{
+					usuarioCaptura = usuSes.getCodigoPersona();
+				}
+				
 			}
-			catch (Exception ex) {
-			    Utils.generaExcepcion(ex, paso);
+			
+			if(smap1.get("agrupado").equalsIgnoreCase("si"))
+			//actualizar todos
+			{
+				
+				/**
+				 * Para Hererdar domicilio a asegurados cuando se cambia de la cotizacion
+				 */
+				if(consultasManager.esProductoSalud(smap1.get("cdramo"))){
+					logger.debug(" <<<<>>>>>> Entrando a Borrando de domicilios de asegurados si cambia el codigo postal <<<<<>>>>> ");
+					
+					List<Map<String,String>> valositsPoliza=endososManager.obtenerValositUltimaImagen(smap1.get("cdunieco"),smap1.get("cdramo"),smap1.get("estado"),smap1.get("nmpoliza"),"0");
+					
+					if(valositsPoliza != null && !valositsPoliza.isEmpty()){
+						
+						logger.debug(" <<<<>>>>>> Verificando vvalisit de 0 <<<<<>>>>> ");
+						
+						Map<String,String> valosit =  valositsPoliza.get(0);
+						if(valosit!=null && valosit.containsKey("CDATRIBU") && StringUtils.isNotBlank(valosit.get("CDATRIBU"))){
+							
+							/**PARA OBTENER EL NUMERO DE ATRIBUTO DEL CODIGO POSTAL PARA ESTE PRODUCTO**/
+							String keyCodPostal = "pv_otvalor"+valosit.get("CDATRIBU");
+							
+							logger.debug(" <<<<>>>>>> Obteniendo llave de codigo postal  <<<<<>>>>> ::::  "+keyCodPostal);
+							
+							if(StringUtils.isNotBlank(keyCodPostal)){
+								String valorCodPosPantalla = parametros.get(keyCodPostal);
+
+								logger.debug(" <<<<>>>>>> Obteniendo VALOR de codigo postal de pantalla  <<<<<>>>>> ::::  "+valorCodPosPantalla);
+								
+								if(StringUtils.isNotBlank(valorCodPosPantalla)){
+									logger.debug(" <<<<>>>>>> Borrando domicilios de asegurados si cambia el codigo postal <<<<<>>>>> ");
+									mesaControlManager.borraDomicilioAsegSiCodposCambia(smap1.get("cdunieco"), smap1.get("cdramo"),smap1.get("estado"),
+											smap1.get("nmpoliza"), "0", valorCodPosPantalla);
+								}
+							}
+							
+						}
+					}
+				}
+				
+				logger.debug("se tienen agrupados");
+				Map<String,String>paramsAsegurados=new LinkedHashMap<String,String>(0);
+				paramsAsegurados.put("pv_cdunieco", smap1.get("cdunieco"));
+				paramsAsegurados.put("pv_cdramo",   smap1.get("cdramo"));
+				paramsAsegurados.put("pv_estado",   smap1.get("estado"));
+				paramsAsegurados.put("pv_nmpoliza", smap1.get("nmpoliza"));
+				paramsAsegurados.put("pv_nmsuplem", "0");
+				logger.debug("paramsAsegurados: "+paramsAsegurados);
+				List<Map<String, Object>>asegurados=kernelManager.obtenerAsegurados(paramsAsegurados);
+				logger.debug("asegurados: "+asegurados);
+				int i=1;
+				for(Map<String,Object> asegurado:asegurados)
+				{
+					logger.debug("iterando asegurado "+i+": ");
+					logger.debug("asegurado: "+asegurado);
+					if((Integer)Integer.parseInt((String)asegurado.get("nmsituac"))>0)
+					{
+						logger.debug("es asegurado (situac>0)");
+						Map<String,String>paramsValositAseguradoIterado=new LinkedHashMap<String,String>(0);
+						paramsValositAseguradoIterado.put("pv_cdunieco_i", smap1.get("cdunieco"));
+						paramsValositAseguradoIterado.put("pv_nmpoliza_i", smap1.get("nmpoliza"));
+						paramsValositAseguradoIterado.put("pv_cdramo_i",   smap1.get("cdramo"));
+						paramsValositAseguradoIterado.put("pv_estado_i",   smap1.get("estado"));
+						paramsValositAseguradoIterado.put("pv_nmsituac_i", (String)asegurado.get("nmsituac"));
+						logger.debug("paramsValositAseguradoIterado: "+paramsValositAseguradoIterado);
+						Map<String,Object>valositAseguradoIterado=kernelManager.obtieneValositSituac(paramsValositAseguradoIterado);
+						logger.debug("valositAseguradoIterado: "+valositAseguradoIterado);
+						
+						Map<String,Object>valositAseguradoIteradoTemp=new LinkedHashMap<String,Object>(0);
+						//poner pv_ a los leidos
+						Iterator it=valositAseguradoIterado.entrySet().iterator();
+						while(it.hasNext())
+						{
+							Entry en=(Entry)it.next();
+							valositAseguradoIteradoTemp.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
+						}
+						valositAseguradoIterado=valositAseguradoIteradoTemp;
+						logger.debug("se puso pv_");
+						
+						try
+						{
+							if(smap1.get("cdramo").equals("2"))
+							{
+								String cpanterior = (String) valositAseguradoIterado.get("pv_otvalor03");
+								String cpnuevo    = parametros.get("pv_otvalor03");
+								logger.debug("compara "+cpanterior+" con "+cpnuevo
+										+" para cdperson "+asegurado.get("cdperson"));
+								if(!cpanterior.equalsIgnoreCase(cpnuevo))
+								{
+									String cdpersonAfectadoValosit = (String) asegurado.get("cdperson");
+									logger.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
+									
+									Map<String,String> paramBorrarDomicil=new LinkedHashMap<String,String>(0);
+									paramBorrarDomicil.put("pv_cdperson_i" , cdpersonAfectadoValosit);
+									paramBorrarDomicil.put("pv_nmorddom_i" , "1");//numero de domicilio default para asegurados
+									paramBorrarDomicil.put("pv_msdomici_i" , null);
+									paramBorrarDomicil.put("pv_nmtelefo_i" , null);
+									paramBorrarDomicil.put("pv_cdpostal_i" , null);
+									paramBorrarDomicil.put("pv_cdedo_i"    , null);
+									paramBorrarDomicil.put("pv_cdmunici_i" , null);
+									paramBorrarDomicil.put("pv_cdcoloni_i" , null);
+									paramBorrarDomicil.put("pv_nmnumero_i" , null);
+									paramBorrarDomicil.put("pv_nmnumint_i" , null);
+									paramBorrarDomicil.put("pv_cdtipdom_i" , "1");//tipdom default para domicilio unico de asegurados
+									paramBorrarDomicil.put("pv_cdusuario_i", usuarioCaptura);
+									paramBorrarDomicil.put("pv_swactivo_i",  Constantes.NO);
+									paramBorrarDomicil.put("pv_accion_i"   , "B");//borrar
+									kernelManager.pMovMdomicil(paramBorrarDomicil);
+								}
+							}
+							else if(smap1.get("cdramo").equals("4"))
+							{
+								String estadoanterior = (String) valositAseguradoIterado.get("pv_otvalor04");
+								String ciudadanterior = (String) valositAseguradoIterado.get("pv_otvalor05");
+								String estadonuevo    = parametros.get("pv_otvalor04");
+								String ciudadnueva    = parametros.get("pv_otvalor05");
+								logger.debug("compara estado"+estadoanterior+" con "+estadonuevo
+										+" para cdperson "+asegurado.get("cdperson"));
+								logger.debug("compara ciudad"+ciudadanterior+" con "+ciudadnueva
+										+" para cdperson "+asegurado.get("cdperson"));
+								if(!estadoanterior.equalsIgnoreCase(estadonuevo)
+										||!ciudadanterior.equalsIgnoreCase(ciudadnueva)
+										)
+								{
+									String cdpersonAfectadoValosit = (String) asegurado.get("cdperson");
+									logger.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
+									
+									Map<String,String> paramBorrarDomicil=new LinkedHashMap<String,String>(0);
+									paramBorrarDomicil.put("pv_cdperson_i" , cdpersonAfectadoValosit);
+									paramBorrarDomicil.put("pv_nmorddom_i" , null);
+									paramBorrarDomicil.put("pv_msdomici_i" , null);
+									paramBorrarDomicil.put("pv_nmtelefo_i" , null);
+									paramBorrarDomicil.put("pv_cdpostal_i" , null);
+									paramBorrarDomicil.put("pv_cdedo_i"    , null);
+									paramBorrarDomicil.put("pv_cdmunici_i" , null);
+									paramBorrarDomicil.put("pv_cdcoloni_i" , null);
+									paramBorrarDomicil.put("pv_nmnumero_i" , null);
+									paramBorrarDomicil.put("pv_nmnumint_i" , null);
+									paramBorrarDomicil.put("pv_cdtipdom_i" , null);
+									paramBorrarDomicil.put("pv_cdusuario_i", usuarioCaptura);
+									paramBorrarDomicil.put("pv_swactivo_i",  Constantes.NO);
+									paramBorrarDomicil.put("pv_accion_i"   , "B");//borrar
+									kernelManager.pMovMdomicil(paramBorrarDomicil);
+								}
+							}
+						}
+						catch(Exception ex)
+						{
+							logger.warn("Error sin impacto funcional al comparar codigos postales",ex);
+						}
+						
+						//agregar los del form a los leidos
+						Iterator it2=parametros.entrySet().iterator();
+						while(it2.hasNext())
+						{
+							Entry en=(Entry)it2.next();
+							valositAseguradoIterado.put((String)en.getKey(),en.getValue());//tienen pv_ los del form
+							//ya agregamos todos los nuevos en el mapa
+						}
+						logger.debug("se agregaron los nuevos");
+						
+						//convertir a string el total
+						Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
+						it=valositAseguradoIterado.entrySet().iterator();
+						while(it.hasNext())
+						{
+							Entry en=(Entry)it.next();
+							paramsNuevos.put((String)en.getKey(),(String)en.getValue());
+						}
+						logger.debug("se pasaron a string");
+						
+						paramsNuevos.put("pv_cdunieco", smap1.get("cdunieco"));
+						paramsNuevos.put("pv_nmpoliza", smap1.get("nmpoliza"));
+						paramsNuevos.put("pv_cdramo",   smap1.get("cdramo"));
+						paramsNuevos.put("pv_estado",   smap1.get("estado"));
+						paramsNuevos.put("pv_nmsituac", (String)asegurado.get("nmsituac"));
+						logger.debug("los actualizados seran: "+paramsNuevos);
+						
+						kernelManager.actualizaValoresSituaciones(paramsNuevos);
+						
+					}
+					else
+					{
+						logger.debug("no es asegurado (situac<=0)");
+					}
+					i++;
+				}
 			}
-		} catch (Exception ex) {
-			respuesta = Utils.manejaExcepcion(ex);
+			else
+			//actualizar uno
+			{
+				logger.debug("se tiene individual");
+				Map<String,String>paramsValositAsegurado=new LinkedHashMap<String,String>(0);
+				paramsValositAsegurado.put("pv_cdunieco_i", smap1.get("cdunieco"));
+				paramsValositAsegurado.put("pv_nmpoliza_i", smap1.get("nmpoliza"));
+				paramsValositAsegurado.put("pv_cdramo_i",   smap1.get("cdramo"));
+				paramsValositAsegurado.put("pv_estado_i",   smap1.get("estado"));
+				paramsValositAsegurado.put("pv_nmsituac_i", smap1.get("nmsituac"));
+				logger.debug("paramsValositAsegurado: "+paramsValositAsegurado);
+				Map<String,Object>valositAsegurado=kernelManager.obtieneValositSituac(paramsValositAsegurado);
+				logger.debug("valositAsegurado: "+valositAsegurado);
+				
+				Map<String,Object>valositAseguradoIterado=new LinkedHashMap<String,Object>(0);
+				//poner pv_ al leido
+				Iterator it=valositAsegurado.entrySet().iterator();
+				while(it.hasNext())
+				{
+					Entry en=(Entry)it.next();
+					valositAseguradoIterado.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
+				}
+				valositAsegurado=valositAseguradoIterado;
+				logger.debug("se puso pv_");
+				
+				//agregar los del form al leido
+				Iterator it2=parametros.entrySet().iterator();
+				while(it2.hasNext())
+				{
+					Entry en=(Entry)it2.next();
+					valositAsegurado.put((String)en.getKey(),en.getValue());//tienen pv_ los del form
+					//ya agregamos todos los nuevos en el mapa
+				}
+				logger.debug("se agregaron los nuevos");
+				
+				//convertir a string el total
+				Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
+				it=valositAsegurado.entrySet().iterator();
+				while(it.hasNext())
+				{
+					Entry en=(Entry)it.next();
+					paramsNuevos.put((String)en.getKey(),(String)en.getValue());
+				}
+				logger.debug("se pasaron a string");
+				
+				paramsNuevos.put("pv_cdunieco", smap1.get("cdunieco"));
+				paramsNuevos.put("pv_nmpoliza", smap1.get("nmpoliza"));
+				paramsNuevos.put("pv_cdramo",   smap1.get("cdramo"));
+				paramsNuevos.put("pv_estado",   smap1.get("estado"));
+				paramsNuevos.put("pv_nmsituac", smap1.get("nmsituac"));
+				logger.debug("los actualizados seran: "+paramsNuevos);
+				
+				kernelManager.actualizaValoresSituaciones(paramsNuevos);
+			}
+			success=true;
 		}
-		logger.debug(Utils.log(
-		        "\n###### pantallaValositSave ######",
-		        "\n#################################"));
+		catch(Exception ex)
+		{
+			logger.error("error al guardar valosit",ex);
+			success=false;
+		}
+		logger.debug(""
+				+ "\n######                       ######"
+				+ "\n###### pantalla valosit save ######"
+				+ "\n###################################"
+				+ "\n###################################"
+				);
 		return SUCCESS;
 	}
 	/*/////////////////////////////////////////*/
 	////// guardar valosit situac o grupal //////
 	/////////////////////////////////////////////
-	
-	private void procesoPantallaValosit (String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac,
-	        String nmsuplem, String usuarioCaptura, Map<String, String> inciso, Map<String, String> parametros) throws Exception {
-	    logger.debug(Utils.log(
-	            "\n####################################",
-	            "\n###### procesoPantallaValosit ######",
-	            "\n###### cdunieco       = " , cdunieco,
-	            "\n###### cdramo         = " , cdramo,
-	            "\n###### estado         = " , estado,
-	            "\n###### nmpoliza       = " , nmpoliza,
-	            "\n###### nmsituac       = " , nmsituac,
-	            "\n###### nmsuplem       = " , nmsuplem,
-	            "\n###### usuarioCaptura = " , usuarioCaptura,
-	            "\n###### inciso         = " , inciso,
-	            "\n###### parametros     = " , parametros));
-	    String paso = null;
-	    try {
-	        paso = Utils.join("Actualizando inciso/asegurado ", nmsituac);
-            logger.debug(paso);
-            Map<String, String> paramsActTvalosit = new LinkedHashMap<String, String>();
-            paramsActTvalosit.put("pv_cdunieco" , cdunieco);
-            paramsActTvalosit.put("pv_cdramo"   , cdramo);
-            paramsActTvalosit.put("pv_estado"   , estado);
-            paramsActTvalosit.put("pv_nmpoliza" , nmpoliza);
-            paramsActTvalosit.put("pv_nmsituac" , nmsituac);
-            paramsActTvalosit.put("pv_nmsuplem" , inciso.get("NMSUPLEM"));
-            paramsActTvalosit.put("pv_cdtipsit" , inciso.get("CDTIPSIT"));
-            paramsActTvalosit.put("pv_status"   , inciso.get("STATUS"));
-            
-            /*
-             * Dejamos todos en formato para insertar
-             * pv_otvalor01, pv_otvalor02...
-            */
-            for (Entry<String, String> en : inciso.entrySet()) {
-                String key = en.getKey();
-                if (key.contains("OTVALOR")) {
-                    String key2 = Utils.join("pv_otvalor", key.substring("OTVALOR".length())); // pv_otvalorXY (viene de OTVALORXY)
-                    paramsActTvalosit.put(key2, en.getValue());
-                }
-            }
-            // Agregamos los de pantalla
-            for (Entry<String, String> en : parametros.entrySet()) {
-                if (en.getKey().contains("otvalor")) {
-                    paramsActTvalosit.put(en.getKey(), en.getValue());
-                }
-            }
-            kernelManager.actualizaValoresSituaciones(paramsActTvalosit);
-            
-            if (Ramo.MULTISALUD.getCdramo().equals(cdramo)) {
-                paso = Utils.join("Verificando datos de multisalud de asegurado ", inciso.get("NMSITUAC"));
-                logger.debug(paso);
-                String estadoanterior = inciso.get("OTVALOR04");
-                String ciudadanterior = inciso.get("OTVALOR05");
-                String estadonuevo    = parametros.get("pv_otvalor04");
-                String ciudadnueva    = parametros.get("pv_otvalor05");
-                if(!estadoanterior.equalsIgnoreCase(estadonuevo)
-                        || !ciudadanterior.equalsIgnoreCase(ciudadnueva)
-                        ) {
-                    Map<String, String> persona = consultasManager.cargarMpoliperSituac(cdunieco, cdramo, estado, nmpoliza,
-                            nmsuplem, nmsituac);
-                    String swexiper = persona.get("SWEXIPER"),
-                           cdperson = persona.get("CDPERSON"),
-                           nmorddom = persona.get("NMORDDOM");
-                    if (StringUtils.isBlank(swexiper)) {
-                        swexiper = "N";
-                    }
-                    if (StringUtils.isBlank(nmorddom)) {
-                        nmorddom = "1";
-                    }
-                    if ("N".equals(swexiper) && cdperson.length() >= "10000000".length()) { // SOLO PARA PERSONAS WORKING CON CDPERSON >10,000,000
-                        logger.debug("mdomicil borrar para: {}", persona);
-                        Map<String,String> paramBorrarDomicil=new LinkedHashMap<String,String>(0);
-                        paramBorrarDomicil.put("pv_cdperson_i" , persona.get("CDPERSON"));
-                        paramBorrarDomicil.put("pv_nmorddom_i" , nmorddom);
-                        paramBorrarDomicil.put("pv_msdomici_i" , null);
-                        paramBorrarDomicil.put("pv_nmtelefo_i" , null);
-                        paramBorrarDomicil.put("pv_cdpostal_i" , null);
-                        paramBorrarDomicil.put("pv_cdedo_i"    , null);
-                        paramBorrarDomicil.put("pv_cdmunici_i" , null);
-                        paramBorrarDomicil.put("pv_cdcoloni_i" , null);
-                        paramBorrarDomicil.put("pv_nmnumero_i" , null);
-                        paramBorrarDomicil.put("pv_nmnumint_i" , null);
-                        paramBorrarDomicil.put("pv_cdtipdom_i" , null);
-                        paramBorrarDomicil.put("pv_cdusuario_i", usuarioCaptura);
-                        paramBorrarDomicil.put("pv_swactivo_i",  Constantes.NO);
-                        paramBorrarDomicil.put("pv_accion_i"   , "B");//borrar
-                        kernelManager.pMovMdomicil(paramBorrarDomicil);
-                    }
-                }
-            }
-	    } catch (Exception ex) {
-	        Utils.generaExcepcion(ex, paso);
-	    }
-        logger.debug(Utils.log(
-                "\n###### procesoPantallaValosit ######",
-                "\n####################################"));
-	}
 	
 	/////////////////////////////////
 	////// getters and setters //////

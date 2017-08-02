@@ -227,12 +227,12 @@ Ext.onReady(function() {
 			                 },
 			                 { header     : 'Impresora' ,dataIndex : 'IMPRESORA', flex: 1 }
 			                 ,{ header     : 'Descripción' ,dataIndex : 'DESCRIPCION', editor: 'textfield',flex: 1 }
-			               //  ,{ header     : 'Visible' ,dataIndex : 'DISPONIBLE', editor: comboSN, flex: 1 }
+			                 ,{ header     : 'Visible' ,dataIndex : 'DISPONIBLE', editor: comboSN, flex: 1 }
 
 			 			   ],
 			buttonAlign: 'center', 
 			buttons:[{
-					text: 'Actualizar',
+					text: 'Actualizar Impresoras',
 					icon    : _CONTEXT+'/resources/fam3icons/icons/disk.png',
 					handler: function() {
 							try{
