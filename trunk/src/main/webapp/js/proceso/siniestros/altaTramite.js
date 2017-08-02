@@ -8,6 +8,7 @@ Ext.onReady(function() {
     var facturaTemporal =null;
     var _11_aseguradoSeleccionado = null;
     var origProd = null;	// para guardar el producto original, x validaci�n de que no se modifique (EGS)
+    var feOcurreOrig = null;	//(EGS) 	para comparar si se modifico fecha de ocurrencia
     Ext.selection.CheckboxModel.override( {
         mode: 'SINGLE',
         allowDeselect: true  
@@ -470,6 +471,8 @@ Ext.onReady(function() {
                         'params.cdramo'     :   panelInicialPral.down('combo[name=cmbRamos]').getValue(),
                         'params.fe_ocurre'	:	panelInicialPral.down('[name=dtFechaOcurrencia]').getValue()	//(EGS)
                 };
+                debug('altaTramite.js - 474 ...');	//(EGS)
+                _mask("Consulta poliza...");	//(EGS)
 			        Ext.Ajax.request({	//(EGS) SE MODIFICA PARA OBTENER SOLO UNA POLIZA, Y MOSTRARLA EN EL ESPACIO CORRESPONDIENTE
 			            url     : _URL_CONSULTA_LISTADO_POLIZA
 			            ,params: params
@@ -507,6 +510,7 @@ Ext.onReady(function() {
 							    }else{
 							    	debug('No muestra lista 2');
 			                		eligePoliza(jsonResponse.listaPoliza[0]);
+					            	_unmask();	//(EGS)
 							    }
 			                }
 			                else {
@@ -617,6 +621,8 @@ Ext.onReady(function() {
                         'params.cdramo'     :   panelInicialPral.down('combo[name=cmbRamos]').getValue(),
                         'params.fe_ocurre'	:	valorIndexSeleccionado.get('modFechaOcurrencia')	//(EGS)
                 };
+                debug('altaTramite.js - 624...');	//(EGS)
+                _mask("Consulta poliza...");	//(EGS)
 			        Ext.Ajax.request({	//(EGS) SE MODIFICA PARA OBTENER SOLO UNA POLIZA, Y MOSTRARLA EN EL ESPACIO CORRESPONDIENTE
 			            url     : _URL_CONSULTA_LISTADO_POLIZA
 			            ,params: params/*{
@@ -631,6 +637,7 @@ Ext.onReady(function() {
 			                	//(EGS) Si encuentra más de una póliza, debe mostrar la lista
 							    if(jsonResponse.listaPoliza.length > 1){
 							    	debug('Muestra lista 3');
+							    	_unmask();	//(EGS)
 							    	cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
 							    		if(success){
 							    			jsonResponse = Ext.decode(response.responseText);
@@ -658,9 +665,11 @@ Ext.onReady(function() {
 							    }else{
 							    	debug('No muestra lista 3');
 			                		eligePoliza(jsonResponse.listaPoliza[0]);
+			                		_unmask();	//(EGS)
 								}
 			                }
 			                else {
+				            	_unmask();	//(EGS)
 								Ext.Msg.show(
 									{title:	'Aviso',
 									 msg:	'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',
@@ -716,6 +725,7 @@ Ext.onReady(function() {
 			                }));
 			            }
 			        });
+
                 /*cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
                     if(success){
                         var jsonResponse = Ext.decode(response.responseText);
@@ -1980,6 +1990,26 @@ Ext.onReady(function() {
                             xtype : 'datefield',
                             format : 'd/m/Y',
                             editable : true
+	                        ,listeners : { //(EGS)
+	                        	focus: function(e){
+	                        		feOcurreOrig = panelInicialPral.down('[name=modFechaOcurrencia]').getValue();//new Date(panelInicialPral.down('[name=modFechaOcurrencia]').getValue());
+	                        		debug('Focus - 1996 - feOcurreOrig ', feOcurreOrig);
+	                        	},
+	                        	blur:function(e){
+	                      			var feOcurre = panelInicialPral.down('[name=modFechaOcurrencia]').getValue();
+	                        		debug('Blur - 2000 - feOcurre ', feOcurre);
+	                        		//si se modifico la fecha, se limpian los campos para que otra vez capturen afiliado
+	                        		if (feOcurre.getTime() != feOcurreOrig.getTime()) {
+		                        		limpiarRegistros();
+	                        			//limpiamos datos de asegurado
+		                        		valorIndexSeleccionado.set('modCdperson','');
+				                        valorIndexSeleccionado.set('modCdpersondesc','');
+				                        valorIndexSeleccionado.set('modnumPoliza','');
+				                        valorIndexSeleccionado.set('modTelefono','');
+				                        valorIndexSeleccionado.set('modEmail','');
+	                        		}
+	                        	}
+	                        }	//fin (EGS)
                         }
                     },
                     {
