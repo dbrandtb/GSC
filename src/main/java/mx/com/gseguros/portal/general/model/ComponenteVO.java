@@ -20,7 +20,6 @@ public class ComponenteVO
 	public final static String TIPOCAMPO_FECHA        = "F";
 	public final static String TIPOCAMPO_TEXTAREA     = "T";
 	public final static String TIPOCAMPO_PORCENTAJE   = "P";
-	public final static String TIPOCAMPO_FECHA_HORA   = "H";
 	
 	public final static String RENDERER_MONEY = "MONEY";
 	public final static String RENDERER_MONEY_EXT = "Ext.util.Format.usMoney";
@@ -93,13 +92,6 @@ public class ComponenteVO
 	private String  swpresemiflot      = null;
 	private int     orden              = 0;
 	private String  auxiliar           = null;
-	private String  valorAuxiliar1     = null;
-	private String  valorAuxiliar2     = null;
-	private String  valorAuxiliar3     = null;
-	private String  valorAuxiliar4     = null;
-	private String  valorAuxiliar5     = null;
-	private String  valorAuxiliar6     = null;
-	private String  formatoAlterno     = null;
 	
 	public ComponenteVO(){}
 	
@@ -680,61 +672,5 @@ public class ComponenteVO
 
 	public void setAuxiliar(String auxiliar) {
 		this.auxiliar = auxiliar;
-	}
-
-	public String getValorAuxiliar1() {
-		return valorAuxiliar1;
-	}
-
-	public void setValorAuxiliar1(String valorAuxiliar1) {
-		this.valorAuxiliar1 = valorAuxiliar1;
-	}
-
-	public String getValorAuxiliar2() {
-		return valorAuxiliar2;
-	}
-
-	public void setValorAuxiliar2(String valorAuxiliar2) {
-		this.valorAuxiliar2 = valorAuxiliar2;
-	}
-
-	public String getValorAuxiliar3() {
-		return valorAuxiliar3;
-	}
-
-	public void setValorAuxiliar3(String valorAuxiliar3) {
-		this.valorAuxiliar3 = valorAuxiliar3;
-	}
-
-	public String getValorAuxiliar4() {
-		return valorAuxiliar4;
-	}
-
-	public void setValorAuxiliar4(String valorAuxiliar4) {
-		this.valorAuxiliar4 = valorAuxiliar4;
-	}
-
-	public String getValorAuxiliar5() {
-		return valorAuxiliar5;
-	}
-
-	public void setValorAuxiliar5(String valorAuxiliar5) {
-		this.valorAuxiliar5 = valorAuxiliar5;
-	}
-
-	public String getValorAuxiliar6() {
-		return valorAuxiliar6;
-	}
-
-	public void setValorAuxiliar6(String valorAuxiliar6) {
-		this.valorAuxiliar6 = valorAuxiliar6;
-	}
-
-	public String getFormatoAlterno() {
-		return formatoAlterno;
-	}
-
-	public void setFormatoAlterno(String formatoAlterno) {
-		this.formatoAlterno = formatoAlterno;
 	}
 }

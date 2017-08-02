@@ -5,9 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapSmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlist2SmapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistSmapVO;
@@ -19,15 +17,13 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 public interface CotizacionAutoManager
 {
 	
-	public Map<String,Object> cotizacionAutoIndividual(
+	public ManagerRespuestaImapSmapVO cotizacionAutoIndividual(
 			String ntramite
 			,String cdunieco
 			,String cdramo
 			,String cdtipsit
 			,String cdusuari
 			,String cdsisrol
-			,FlujoVO flujo
-			,boolean mostrarCamposComplementarios
 			)throws Exception;
 	public ManagerRespuestaSmapVO cargarRetroactividadSuplemento(
 			String cdunieco
@@ -124,8 +120,6 @@ public interface CotizacionAutoManager
 			,String ntramite
 			,String tipoflot
 			,boolean endoso
-			,FlujoVO flujo
-			,boolean renovacion
 			)throws Exception;
 	public ManagerRespuestaSlistSmapVO cotizarAutosFlotilla(
 			String cdusuari
@@ -140,7 +134,6 @@ public interface CotizacionAutoManager
 			,String fefin
 			,String cdagente
 			,String cdpersonCli
-			,String nmorddomCli
 			,String cdideperCli
 			,List<Map<String,String>> tvalosit
 			,List<Map<String,String>> baseTvalosit
@@ -148,20 +141,14 @@ public interface CotizacionAutoManager
 			,boolean noTarificar
 			,String tipoflot
 			,Map<String,String>tvalopol
-			,UserVO usuarioSesion
-			,String cduniext
-			,String renramo
-			,String nmpoliex
-			,String ntramite
 			);
 	public ManagerRespuestaVoidVO cargarValidacionTractocamionRamo5(String poliza,String rfc) throws Exception;
-	public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception;
+	   public ManagerRespuestaSlistVO procesarCargaMasivaFlotilla(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception;
 	public ManagerRespuestaSlist2SmapVO cargarCotizacionAutoFlotilla(
 			String cdramo
 			,String nmpoliza
 			,String cdusuari
 			,String cdsisrol
-			,String ntramiteIn
 			)throws Exception;
 	public ManagerRespuestaImapSmapVO emisionAutoFlotilla(
 			String cdunieco
@@ -219,7 +206,6 @@ public interface CotizacionAutoManager
 			,String nmsuplem
 			,String nmsituac
 			,List<Map<String,String>>mpoliperMpersona
-			,UserVO usuarioSesion
 			)throws Exception;
 	
 	public ManagerRespuestaSlistVO cargarParamerizacionConfiguracionCoberturasRol(
@@ -239,37 +225,4 @@ public interface CotizacionAutoManager
                              String cdsisrol, 
                              String cdusuarii,
                              String cdagente) throws Exception;
-	
-	public ManagerRespuestaImapSmapVO cotizacionMasivaIndividual(
-			String cdusuari
-			,String cdsisrol
-			,String cdunieco
-			,String cdramo
-			,String cdtipsit
-			,String ntramite
-			,String tipoflot
-			,boolean endoso
-			,FlujoVO flujo
-			,boolean renovacion
-			)throws Exception;
-	
-	public ManagerRespuestaSlistVO procesarCargaMasivaIndividual(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception;
-	
-	public ManagerRespuestaImapSmapVO cargaMasivaClientes(
-			String cdusuari
-			,String cdsisrol
-			,String cdunieco
-			,String cdramo
-			,String cdtipsit
-			,String ntramite
-			,String tipoflot
-			,boolean endoso
-			,FlujoVO flujo
-			,boolean renovacion
-			)throws Exception;
-	
-	public ManagerRespuestaSlistVO procesarCargaMasivaClientes(String cdramo,String cdtipsit,String respetar,File excel, String tipoflot)throws Exception;
-	
-	//REQ0040
-	public String cargarCorreosPorTramite (String ntramite) throws Exception;
 }

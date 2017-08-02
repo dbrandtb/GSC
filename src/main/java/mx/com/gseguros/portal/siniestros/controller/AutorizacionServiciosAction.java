@@ -9,13 +9,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -87,16 +85,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
-
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-    
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-    
-    @Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-    
+	
 	public String autorizacionServicios() {
 		logger.debug("Entra a autorizacionServicios Params: {}", params);
 		try {
@@ -116,19 +105,16 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			imap.put("panelbuttons",gc.getButtons());
 			String numero_aut = null;
 			String ntramite = null;
-			String caseIdRstn = null;
 
 			if(params != null){
 				numero_aut  = params.get("nmAutSer");
 				ntramite  =  params.get("ntramite");
-				caseIdRstn = params.get("caseIdRstn");
 			}
 
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("nmAutSer",numero_aut);
 			params.put("ntramite",ntramite);
 			params.put("cdrol",cdrol);
-			params.put("caseIdRstn",caseIdRstn);
 			setParamsJson(params);
 		} catch (Exception e) {
 			logger.error("Error en la autorizacion de Servicio : {}", e.getMessage(), e);
@@ -326,13 +312,10 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			paramsR.put("pv_tpautori_i",params.get("cveTipoAutorizaG"));
 			paramsR.put("pv_idaplicaCirHosp_i",params.get("idaplicaCirHosp"));
 			paramsR.put("pv_idaplicaZona_i",params.get("idaplicaZona"));
-			paramsR.put("pv_swnegoci_i",params.get("idaplicaZona"));  
-			paramsR.put("pv_tiposerv_i",params.get("idTipoEvento"));
-			paramsR.put("pv_numrecla_i",params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())?params.get("idNumSubsecuente"): null);
 			
 			//1.- Eliminacion de la tabla TDETAUTS ---> PKG_PRESINIESTRO.P_BORRA_TDETAUTS
 			siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
-			//2.- Agregar informacion PKG_PRESINIESTRO.P_GUARDA_MAUTSERV2 
+			//2.- Agregar informacion PKG_PRESINIESTRO.P_GUARDA_MAUTSERV2
 			List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicio(paramsR);
 			if(lista!=null && !lista.isEmpty()) {
 				numeroAutorizacion = lista.get(0);
@@ -347,7 +330,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					paramsTDeTauts.put("pv_cantporc_i",datosTablas.get(i).get("cantporc"));
 					paramsTDeTauts.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
 					paramsTDeTauts.put("pv_nombprov_i",datosTablas.get(i).get("nombreMedico"));
-					paramsTDeTauts.put("pv_contExt_i" ,datosTablas.get(i).get("contadorExt"));
 					//3.- Se guarda la informacion en PKG_PRESINIESTRO.P_GUARDA_TDETAUTS
 					siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
 				}
@@ -373,10 +355,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					valores.put("otvalor06" , params.get("copagoTotal"));
 					valores.put("otvalor07" , params.get("idHospitalPlus"));
 					valores.put("otvalor08" , params.get("idTipoEvento"));
-					valores.put("otvalor09" , params.get("idEdoSiniestro"));
-					valores.put("otvalor10" , params.get("idMunSiniestro"));
-					valores.put("otvalor11" , params.get("cdicdSec"));
-					valores.put("otvalor12" , params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())?params.get("idTipo"): null);
 					valores.put("otvalor16" , usuario.getUser());
 					valores.put("otvalor17" , usuario.getUser());
 					valores.put("otvalor18" , usuario.getUser());
@@ -404,7 +382,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 							,null //swimpres
 							,null //cdtipflu
 							,null //cdflujomc
-							,valores, null, null, null, null
+							,valores, null
 							);
 					
 					if(params.get("status").trim().equalsIgnoreCase("2")){
@@ -434,10 +412,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					otvalor.put("pv_otvalor06_i",params.get("copagoTotal"));
 					otvalor.put("pv_otvalor07_i",params.get("idHospitalPlus"));
 					otvalor.put("pv_otvalor08_i",params.get("idTipoEvento"));
-					otvalor.put("pv_otvalor09_i",params.get("idEdoSiniestro"));
-					otvalor.put("pv_otvalor10_i",params.get("idMunSiniestro"));
-					otvalor.put("pv_otvalor11_i",params.get("cdicdSec"));
-					otvalor.put("pv_otvalor12_i" , params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())?params.get("idTipo"): null);
                     otvalor.put("pv_otvalor16_i",usuario.getUser());
 					otvalor.put("pv_otvalor17_i",usuario.getUser());
 					siniestrosManager.actualizaOTValorMesaControl(otvalor);
@@ -455,7 +429,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 						String usuarioDestino = null;
 						String cdclausu       = null;
 						
-						siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu,null,null, false);
+						siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu,null,null);
 						
 						Map<String,Object>paramsO =new HashMap<String,Object>();
 						paramsO.put("pv_ntramite_i" , params.get("idNumtramiteInicial"));
@@ -486,12 +460,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 	private String generarAutoriServicio(Map<String, Object> paramsO){
 		logger.debug("Entra a generarAutoriServicio Valores para generarAutoriServicio: {}", paramsO);
 		try {
-			String caseIdRstn = null;
-			if (params != null && params.containsKey("caseIdRstn") && StringUtils.isNotBlank(params.get("caseIdRstn"))) {
-			    caseIdRstn = params.get("caseIdRstn");
-			}
-			
-			File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
+			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
 			if(!carpeta.exists()){
 				logger.debug("no existe la carpeta:::  {}", paramsO.get("pv_ntramite_i"));
 				carpeta.mkdir();
@@ -515,12 +484,9 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.GMMI");
 			}
-			if(paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
-				reporteSeleccion = getText("rdf.siniestro.autorizacion.servicio.nombre.GNP");
-			}
 			
 			String urlAutorizacionServicio = ""
-				+ rutaServidorReports
+				+ getText("ruta.servidor.reports")
 				+ "?p_unieco=" +  paramsO.get("pv_cdunieco_i")
 				+ "&p_ramo=" + paramsO.get("pv_cdramo_i")
 				+ "&p_estado=" + paramsO.get("pv_estado_i")
@@ -529,7 +495,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 				+ "&P_CDPERSON=" + paramsO.get("pv_cdperson_i")
 				+ "&destype=cache"
 				+ "&desformat=PDF"
-				+ "&userid="+passServidorReports
+				+ "&userid="+getText("pass.servidor.reports")
 				+ "&ACCESSIBLE=YES"
 				+ "&report="+reporteSeleccion
 				+ "&paramform=no"
@@ -540,7 +506,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			
 			String nombreArchivoModificado = nombreArchivo.substring(nombreArchivo.indexOf(".")+1)+System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+".pdf";
 			String pathArchivo=""
-				+ rutaDocumentosPoliza
+				+ getText("ruta.documentos.poliza")
 				+ "/" + paramsO.get("pv_ntramite_i")
 				+ "/" + nombreArchivoModificado
 				;
@@ -575,66 +541,9 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					,null
 					,null
 					,null
-					,null, false
+					,null
 					);
 			
-			String totalConcepto = siniestrosManager.obtieneMedicoEquipoQuirurgico((String) paramsO.get("pv_nmAutSer_i"));
-			if(Integer.parseInt(totalConcepto)> 0 && paramsO.get("pv_cdramo_i").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
-				String urlAutorizacionServicioMed = ""
-						+ rutaServidorReports
-						+ "?p_unieco=" +  paramsO.get("pv_cdunieco_i")
-						+ "&p_ramo=" + paramsO.get("pv_cdramo_i")
-						+ "&p_estado=" + paramsO.get("pv_estado_i")
-						+ "&p_poliza=" + paramsO.get("pv_nmpoliza_i")
-						+ "&P_AUTSER=" + paramsO.get("pv_nmAutSer_i")
-						+ "&P_CDPERSON=" + paramsO.get("pv_cdperson_i")
-						+ "&destype=cache"
-						+ "&desformat=PDF"
-						+ "&userid="+passServidorReports
-						+ "&ACCESSIBLE=YES"
-						+ "&report="+getText("rdf.siniestro.autorizacion.servicio.nombre.GNPEXP")
-						+ "&paramform=no"
-						;
-					logger.debug("urlAutorizacionServicio: {}", urlAutorizacionServicioMed);
-					//logger.debug(getText("siniestro.autorizacionServicio.nombre").substring(beginIndex));
-					String nombreArchivoMed = getText("siniestro.autorizacionServicio.nombreMed");
-					
-					String nombreArchivoModificadoMed = nombreArchivoMed.substring(nombreArchivoMed.indexOf(".")+1)+System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+".pdf";
-					String pathArchivoMed=""
-						+ rutaDocumentosPoliza
-						+ "/" + paramsO.get("pv_ntramite_i")
-						+ "/" + nombreArchivoModificadoMed
-						;
-					HttpUtil.generaArchivo(urlAutorizacionServicioMed, pathArchivoMed);
-					
-					documentosManager.guardarDocumento(
-						(String)paramsO.get("pv_cdunieco_i")
-						,(String)paramsO.get("pv_cdramo_i")
-						,(String)paramsO.get("pv_estado_i")
-						,(String)paramsO.get("pv_nmpoliza_i")
-						,(String)paramsO.get("pv_nmsuplem_i")
-						,new Date()
-						,nombreArchivoModificadoMed
-						,"Autorizacion Servicio Medico "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
-						,null
-						,(String)paramsO.get("pv_ntramite_i")
-						,TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra()
-						,null
-						,null
-						,TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra()
-						,null
-						,null
-						,null
-						,null, false
-					);
-			}
-			if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals((String)paramsO.get("pv_cdramo_i"))) {
-                HttpUtil.enviarArchivoRSTN(
-                        HttpUtil.RSTN_AUTORIZACION_PATH + caseIdRstn,
-                        pathArchivo, 
-                        "Autorizacion Servicio "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()),
-                        HttpUtil.RSTN_DOC_CLASS_SINIESTROS);
-            }
 		}catch( Exception e){
 			logger.error("Error generarAutoriServicio {}", e.getMessage(), e);
 			success =  false;
@@ -788,15 +697,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		logger.debug("Entra a obtieneMesesTiempoEspera Params: {}", params);
 		try {
 			mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor01"),params.get("cdtabla"));
-			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
-			/*if(params.get("cdramo").equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())){
-				mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEsperaICD(params.get("cdramo"),params.get("cdtipsit"),params.get("cdicd"),params.get("dsplan"));
-				mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
-			}else{
-				mesesTiempoEspera = siniestrosManager.obtieneMesesTiempoEspera(params.get("otvalor01"),params.get("cdtabla"));
-				mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" años";
-			}*/
-
+			mensaje = "Movimiento no procede por padecimiento de periodo de espera de "+(Integer.parseInt(mesesTiempoEspera)/12)+" a�os";
 			logger.debug("mesesTiempoEspera: {} mensaje de respuesta : {}", mesesTiempoEspera,mensaje);
 		}catch( Exception e){
 			logger.error("Error obtieneMesesTiempoEspera : {}", e.getMessage(), e);
@@ -917,27 +818,27 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		String comments    = map1.get("comments");
 		logger.debug("comments: {}", comments); 
 		String commentsM   = comments.replaceAll("\n", "%0A").
-                replaceAll("\u00E1", "%C3%A1").
-                replaceAll("\u00E9", "%C3%A9").
-                replaceAll("\u00ED", "%C3%AD").
-                replaceAll("\u00F3", "%C3%B3").
-                replaceAll("\u00FA", "%C3%BA").
-                replaceAll("\u00F1", "%C3%B1").
-                replaceAll("\u00C1", "%C3%81").
-                replaceAll("\u00C9", "%C3%89").
-                replaceAll("\u00CD", "%C3%8D").
-                replaceAll("\u00D3", "%C3%93").
-                replaceAll("\u00DA", "%C3%9A").
-                replaceAll("\u00D1", "%C3%91");
+                replaceAll("�", "%C3%A1").
+                replaceAll("�", "%C3%A9").
+                replaceAll("�", "%C3%AD").
+                replaceAll("�", "%C3%B3").
+                replaceAll("�", "%C3%BA").
+                replaceAll("�", "%C3%B1").
+                replaceAll("�", "%C3%81").
+                replaceAll("�", "%C3%89").
+                replaceAll("�", "%C3%8D").
+                replaceAll("�", "%C3%93").
+                replaceAll("�", "%C3%9A").
+                replaceAll("�", "%C3%91");
 		String cdsisrol    = map1.get("cdsisrol");
 		String cdunieco    = map1.get("cdunieco");
 		String cdramo      = map1.get("cdramo");
 		String estado      = map1.get("estado");
 		String nmpoliza    = map1.get("nmpoliza");
 		String nmsuplem    = map1.get("nmsuplem");
-		String rutaCarpeta = this.rutaDocumentosPoliza+"/"+ntramite;
+		String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
 
-		File carpeta=new File(this.rutaDocumentosPoliza+"/"+ntramite);
+		File carpeta=new File(this.getText("ruta.documentos.poliza")+"/"+ntramite);
 		if(!carpeta.exists()){
 			logger.debug("no existe la carpeta: {}", ntramite);
 			carpeta.mkdir();
@@ -949,10 +850,10 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 		} else {
 			logger.debug("existe la carpeta: {}", ntramite);
 		}
-		String url         = this.rutaServidorReports
+		String url         = this.getText("ruta.servidor.reports")
 						+ "?destype=cache"
 						+ "&desformat=PDF"
-						+ "&userid="+this.passServidorReports
+						+ "&userid="+this.getText("pass.servidor.reports")
 						+ "&report="+(cdsisrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())?
 						this.getText("rdf.emision.rechazo.medico.nombre"):
 						this.getText("rdf.emision.rechazo.admin.nombre"))
@@ -997,7 +898,7 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 					,null
 					,null
 					,null
-					,null, false
+					,null
 					);
 			
 		}
@@ -1027,48 +928,6 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 			logger.debug("Total datosInformacionAdicional: {}", datosInformacionAdicional.size());
 		}catch( Exception e){
 			logger.error("Error consultaInfCausaSiniestroProducto : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
-	
-	public String obtieneImporteArancelGNP(){
-		logger.debug("Entra a obtieneImporteArancelGNP params de entrada :{}",params);
-		try {
-			msgResult = siniestrosManager.obtieneImporteArancelGNP(params.get("cdpresta"),params.get("cpt"));
-			logger.debug("VALOR DE RESPUESTA ===>: {}", msgResult);
-			
-		}catch( Exception e){
-			logger.error("Error al obtieneImporteArancelGNP el monto del arancel : {}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
-	
-	public String obtieneDatosICDGenerales(){
-		logger.debug("Entra a obtieneDatosICDGenerales Params: {}", params);
-		try {
-			msgResult = siniestrosManager.obtieneDatosICDGenerales(params.get("cdunieco"), params.get("cdramo"),
-					params.get("estado"),params.get("nmpoliza"),params.get("cdicd"),params.get("cdperson"));
-			logger.debug("msgResult : {}", msgResult);
-		}catch( Exception e){
-			logger.error("Error obtieneDatosICDGenerales :{}", e.getMessage(), e);
-			return SUCCESS;
-		}
-		success = true;
-		return SUCCESS;
-	}
-	
-	public String obtenerValidacionExclusionICDGral(){
-		logger.debug("Entra a obtenerValidacionExclusionICD Params: {}", params);
-		try {
-			msgResult = siniestrosManager.obtenerValidacionExclusionICDGral(params.get("cdunieco"), params.get("cdramo"),
-					params.get("estado"),params.get("nmpoliza"),params.get("nmsuplem"),params.get("nmsituac"),params.get("cdicd"));
-			logger.debug("msgResult : {}", msgResult);
-		}catch( Exception e){
-			logger.error("Error obtenerValidacionExclusionICD :{}", e.getMessage(), e);
 			return SUCCESS;
 		}
 		success = true;
@@ -1311,17 +1170,5 @@ public class AutorizacionServiciosAction extends PrincipalCoreAction {
 
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
-	}
-	
-    public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
 	}
 }

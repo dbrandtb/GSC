@@ -21,7 +21,6 @@ var inputCdideperp4        = '<s:property value="smap1.cdideper" />';
 var inputCdrolp4           = '<s:property value="smap1.pv_cdrol" />';
 var inputNombreaseguradop4 = '<s:property value="smap1.nombreAsegurado" escapeHtml="false" />';
 var inputCdrfcp4           = '<s:property value="smap1.cdrfc" escapeHtml="false" />';
-var inputNmorddomp4        = '<s:property value="smap1.nmorddom" escapeHtml="false" />';//ordinal del domicilio del titular
 var urlRegresarp4          = '<s:url namespace="/" action="editarAsegurados" />';
 var urlCargarp4            = '<s:url namespace="/" action="cargarPantallaDomicilio" />';
 var urlGuardarp4           = '<s:url namespace="/" action="guardarPantallaDomicilio" />';
@@ -264,7 +263,7 @@ Ext.onReady(function(){
             <%--
             {
                 text:'Regresar',
-                icon: contexto+'/resources/extjs4/resources/my-custom-theme/images/toolbar/scroll-left.png',
+                icon: contexto+'/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
                 handler:function()
                 {
                     Ext.create('Ext.form.Panel').submit(
@@ -444,8 +443,7 @@ Ext.onReady(function(){
                 'smap1.pv_cdrol_i'      : inputCdrolp4,
                 'smap1.nombreAsegurado' : inputNombreaseguradop4,
                 'smap1.cdrfc'           : inputCdrfcp4,
-                'smap1.pv_cdtipsit_i'   : inputCdtipsit,
-                'smap1.pv_nmorddom_i'   : '1'
+                'smap1.pv_cdtipsit_i'   : inputCdtipsit
             },
             type:'ajax',
             url : urlCargarp4,
@@ -503,8 +501,7 @@ Ext.onReady(function(){
                                 'smap1.pv_cdrol_i'      : '2',
                                 'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
                                 'smap1.cdrfc'           : record.get('cdrfc'),
-                                'smap1.pv_cdtipsit_i'   : inputCdtipsit,
-                                'smap1.pv_nmorddom_i'   : record.get('estomador')==true? inputNmorddomp4 : '1'//Orddom del contratante si, el titular es contratante, si no se herada con el nmorddom 1 del titular, los asegurados solo tienen un domicilio
+                                'smap1.pv_cdtipsit_i'   : inputCdtipsit
                             },
                             type:'ajax',
                             url : urlCargarp4,
@@ -580,7 +577,7 @@ Ext.onReady(function(){
             Ext.Msg.show({
                 title:'Aviso',
                 icon: Ext.Msg.WARNING,
-                msg: 'No se encotr&oacute; domicilio anterior',
+                msg: 'No se encotr&oacute; domicilio anteior',
                 buttons: Ext.Msg.OK
             });
         }

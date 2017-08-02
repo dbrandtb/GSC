@@ -24,13 +24,13 @@ public interface CatalogosDAO {
 	 * @return Atributos de situacion
 	 * @throws Exception
 	 */
-	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor, String cdSisRol, String cdramo) throws Exception; //utilizado para atributos situacion x rol (EGS)
+	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit, String otValor, String cdSisRol) throws Exception; //utilizado para atributos situacion x rol (EGS)
 	
 	public List<GenericVO> obtieneAtributosSiniestro(String cdAtribu, String cdTipSit ,String otValor) throws Exception;
 	
 	public List<GenericVO> obtieneAtributosPoliza(String cdAtribu, String cdRamo, String otValor) throws Exception;
 
-	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String valAnt, String cdGarant, String cdSisrol) throws Exception; // se agrega par�metro cdSisrol para considerar restricciones por rol (EGS)
+	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String valAnt, String cdGarant, String cdSisrol) throws Exception; // se agrega parametro cdSisrol para considerar restricciones por rol (EGS)
 	
 	public List<GenericVO> obtieneAtributosRol(String cdAtribu, String cdTipSit ,String cdRamo, String valAnt, String cdRol) throws Exception;
 	
@@ -153,7 +153,7 @@ public interface CatalogosDAO {
 	
 	public List<GenericVO> recuperarTipsitPorRamoPorTipogrupo(String cdramo, String tipogrupo) throws Exception;
 	
-	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, String vigente) throws Exception;
+	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception;
 	
 	public List<GenericVO> recuperarMotivosRechazo (String ntramite) throws Exception;
 	
@@ -187,7 +187,5 @@ public interface CatalogosDAO {
     public List<GenericVO> recuperarListaFiltroPropiedadInciso(String cdramo,String cdtipsit,String nivel) throws Exception;
     
     public List<Map<String, String>> recuperarTiposEndosoPorTramite (String ntramite) throws Exception;
-
-	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception;
 	
 }

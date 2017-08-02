@@ -14,10 +14,6 @@ var _p40_urlRecuperacionSimpleLista = '<s:url namespace="/emision" action="recup
 var _p40_smap1  = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 debug('_p40_smap1:',_p40_smap1);
 
-var _p40_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
-debug('_p40_flujo:',_p40_flujo);
-debug('TipoEndoso',TipoEndoso.RecuperarEndososRehabilitables);
-
 var _p40_storeEndosos = null;
 ////// variables //////
 
@@ -54,7 +50,7 @@ Ext.onReady(function()
             ,url         : _p40_urlRecuperacionSimpleLista
             ,extraParams :
             {
-                'smap1.procedimiento' : !Ext.isEmpty(_p40_smap1.cdtipsup) && _p40_smap1.cdtipsup==TipoEndoso.RecuperarEndososRehabilitables?'RECUPERAR_ENDOSOS_REHABILITABLES':'RECUPERAR_ENDOSOS_SINIESTRALIDAD_REHA'
+                'smap1.procedimiento' : 'RECUPERAR_ENDOSOS_REHABILITABLES'
                 ,'smap1.cdunieco'     : _p40_smap1.CDUNIECO
                 ,'smap1.cdramo'       : _p40_smap1.CDRAMO
                 ,'smap1.estado'       : _p40_smap1.ESTADO
@@ -154,48 +150,27 @@ Ext.onReady(function()
                             me.disable();
                             me.setText('Cargando...');
                             var record = _fieldById('_p40_gridEndosos').getSelectionModel().getSelection()[0];
-                            
-                            var paramsConfirmar =
-                            {
-                                'smap1.cdunieco'  : _p40_smap1.CDUNIECO
-                                ,'smap1.cdramo'   : _p40_smap1.CDRAMO
-                                ,'smap1.estado'   : _p40_smap1.ESTADO
-                                ,'smap1.nmpoliza' : _p40_smap1.NMPOLIZA
-                                ,'smap1.cdtipsup' : _p40_smap1.cdtipsup
-                                ,'smap1.nsuplogi' : record.get('NSUPLOGI')
-                                ,'smap1.cddevcia' : record.get('CDDEVCIA')
-                                ,'smap1.cdgestor' : record.get('CDGESTOR')
-                                ,'smap1.feemisio' : record.raw['FEEMISIO']
-                                ,'smap1.feinival' : record.raw['FEINIVAL']
-                                ,'smap1.fefinval' : record.raw['FEFINVAL']
-                                ,'smap1.feefecto' : record.raw['FEEFECTO']
-                                ,'smap1.feproren' : record.raw['FEPROREN']
-                                ,'smap1.cdmoneda' : record.get('CDMONEDA')
-                                ,'smap1.nmsuplem' : record.get('NMSUPLEM')
-                            };
-                            
-                            if(!Ext.isEmpty(_p40_flujo))
-                            {
-                                paramsConfirmar['flujo.ntramite']  = _p40_flujo.ntramite;
-                                paramsConfirmar['flujo.status']    = _p40_flujo.status;
-                                paramsConfirmar['flujo.cdtipflu']  = _p40_flujo.cdtipflu;
-                                paramsConfirmar['flujo.cdflujomc'] = _p40_flujo.cdflujomc;
-                                paramsConfirmar['flujo.webid']     = _p40_flujo.webid;
-                                paramsConfirmar['flujo.tipoent']   = _p40_flujo.tipoent;
-                                paramsConfirmar['flujo.claveent']  = _p40_flujo.claveent;
-                                paramsConfirmar['flujo.cdunieco']  = _p40_flujo.cdunieco;
-                                paramsConfirmar['flujo.cdramo']    = _p40_flujo.cdramo;
-                                paramsConfirmar['flujo.estado']    = _p40_flujo.estado;
-                                paramsConfirmar['flujo.nmpoliza']  = _p40_flujo.nmpoliza;
-                                paramsConfirmar['flujo.nmsituac']  = _p40_flujo.nmsituac;
-                                paramsConfirmar['flujo.nmsuplem']  = _p40_flujo.nmsuplem;
-                                paramsConfirmar['flujo.aux']       = _p40_flujo.aux;
-                            }
-                            
                             Ext.Ajax.request(
                             {
                                 url      : _p40_urlConfirmarEndoso
-                                ,params  : paramsConfirmar
+                                ,params  :
+                                {
+                                    'smap1.cdunieco'  : _p40_smap1.CDUNIECO
+                                    ,'smap1.cdramo'   : _p40_smap1.CDRAMO
+                                    ,'smap1.estado'   : _p40_smap1.ESTADO
+                                    ,'smap1.nmpoliza' : _p40_smap1.NMPOLIZA
+                                    ,'smap1.cdtipsup' : _p40_smap1.cdtipsup
+                                    ,'smap1.nsuplogi' : record.get('NSUPLOGI')
+                                    ,'smap1.cddevcia' : record.get('CDDEVCIA')
+                                    ,'smap1.cdgestor' : record.get('CDGESTOR')
+                                    ,'smap1.feemisio' : record.raw['FEEMISIO']
+                                    ,'smap1.feinival' : record.raw['FEINIVAL']
+                                    ,'smap1.fefinval' : record.raw['FEFINVAL']
+                                    ,'smap1.feefecto' : record.raw['FEEFECTO']
+                                    ,'smap1.feproren' : record.raw['FEPROREN']
+                                    ,'smap1.cdmoneda' : record.get('CDMONEDA')
+                                    ,'smap1.nmsuplem' : record.get('NMSUPLEM')
+                                }
                                 ,success : function(response)
                                 {
                                     me.enable();
@@ -204,21 +179,8 @@ Ext.onReady(function()
                                     debug('### confirmar:',json);
                                     if(json.success)
                                     {
-                                        var callbackRemesa = function()
-                                        {
-                                            marendNavegacion(2);
-                                        };
-                                        mensajeCorrecto('Endoso generado','Endoso generado',function()
-                                        {
-                                            _generarRemesaClic(
-                                                true
-                                                ,_p40_smap1.CDUNIECO
-                                                ,_p40_smap1.CDRAMO
-                                                ,_p40_smap1.ESTADO
-                                                ,_p40_smap1.NMPOLIZA
-                                                ,callbackRemesa
-                                            );
-                                        });
+                                        marendNavegacion(2);
+                                        mensajeCorrecto('Endoso generado','Endoso generado');
                                     }
                                     else
                                     {
@@ -264,7 +226,6 @@ Ext.onReady(function()
 
 ////// funciones //////
 ////// funciones //////
-<%@ include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp"%>
 </script>
 </head>
 <body><div id="_p40_divpri" style="height:300px;border:1px solid #999999;"></div></body>

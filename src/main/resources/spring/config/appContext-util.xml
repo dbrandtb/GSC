@@ -47,24 +47,12 @@
             <value><![CDATA[ Cotización solicitada ]]></value>
         </property>
         <property name="text">
-        <!--    <value>
+            <value>
                 <![CDATA[
                     Estimado(a) cliente,
                     anexamos a este e-mail la cotización solicitada y nos ponemos a sus apreciables órdenes.
                     
                     Atte:
-                    General de Seguros
-                ]]>
-            </value>
-         -->
-         <value>
-                <![CDATA[
-                    Estimado(a) Agente,
-                    
-                    Se ha realizado la cotización solicitada en el trámite, la cual se anexa para su revisión y/o aprobación.
-                    
-                    Quedamos a sus ordenes para cualquier duda o aclaración
-                    
                     General de Seguros
                 ]]>
             </value>

@@ -74,13 +74,6 @@
             <result type="json" />
         </action>
         
-        <action name="iniciarPantallaTrafudoc" class="documentosPolizaAction" method="iniciarPantallaTrafudoc">
-            <result name="success">/jsp/consultas/consultaTrafudoc.jsp</result>
-        </action>
-        
-        <action name="obtenerCursorTrafudoc" class="documentosPolizaAction" method="obtenerCursorTrafudoc">
-            <result name="success" type="json" />
-        </action>
     </package>
 
 </struts>
