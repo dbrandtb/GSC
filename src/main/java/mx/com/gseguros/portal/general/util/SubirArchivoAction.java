@@ -34,7 +34,6 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -75,33 +74,6 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
     
     @Autowired
     private ConsultasManager consultasManager;
-    
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-    
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-    
-    @Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-    
-    @Value("${ruta.documentos.persona}")
-    private String rutaDocumentosPersona;
-    
-    @Value("${user.server.layouts}")
-    private String userServerLayouts;	
-
-    @Value("${pass.server.layouts}")
-    private String passServerLayouts;	
-
-    @Value("${directorio.server.layouts}")
-    private String directorioServerLayouts;	
-
-    @Value("${dominio.server.layouts}")
-    private String dominioServerLayouts;
-
-    @Value("${dominio.server.layouts2}")
-    private String dominioServerLayouts2;
     
     public String mostrarPanel()
     {
@@ -163,7 +135,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         			((long)(Math.random()*10000l)), ".", fileFileName.substring(fileFileName.indexOf(".")+1)
         			);
         	
-        	String nuevaRuta = Utils.join(this.rutaDocumentosPoliza, Constantes.SEPARADOR_ARCHIVO,
+        	String nuevaRuta = Utils.join(this.getText("ruta.documentos.poliza"), Constantes.SEPARADOR_ARCHIVO,
         			smap1.get("ntramite"), Constantes.SEPARADOR_ARCHIVO, nombreArchivo);
         	
         	String antiguaRuta = file.getAbsolutePath();
@@ -171,7 +143,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         	logger.debug("se movera desde {}", antiguaRuta);
             logger.debug("se movera a {}", nuevaRuta);
             
-            String rutaCarpeta = Utils.join(this.rutaDocumentosPoliza, Constantes.SEPARADOR_ARCHIVO, smap1.get("ntramite"));
+            String rutaCarpeta = Utils.join(this.getText("ruta.documentos.poliza"), Constantes.SEPARADOR_ARCHIVO, smap1.get("ntramite"));
             File carpeta = new File(rutaCarpeta);
             if (!carpeta.exists()) {
             	logger.info("no existe la carpeta::: "+rutaCarpeta);
@@ -252,17 +224,17 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         try
         {
         	String nombreArchivo=System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+"."+fileFileName.substring(fileFileName.indexOf(".")+1);
-        	String nuevaRuta=this.rutaDocumentosPersona+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson")+Constantes.SEPARADOR_ARCHIVO
+        	String nuevaRuta=this.getText("ruta.documentos.persona")+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson")+Constantes.SEPARADOR_ARCHIVO
                 +nombreArchivo;
         	String antiguaRuta=file.getAbsolutePath();
         	logger.debug("se movera desde::: "+antiguaRuta);
             logger.debug("se movera a    ::: "+nuevaRuta);
             
-            String rutaCarpeta=this.rutaDocumentosPersona+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson");
+            String rutaCarpeta=this.getText("ruta.documentos.persona")+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson");
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
-            	logger.debug("no existe la carpeta::: Se crea: "+rutaCarpeta);
+            	logger.debug("no existe la carpeta::: "+rutaCarpeta);
             	carpeta.mkdir();
             	if(carpeta.exists())
             	{
@@ -312,24 +284,24 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         
         try{
         	success = FTPSUtils.upload(
-        			this.dominioServerLayouts, 
-        			this.userServerLayouts, 
-        			this.passServerLayouts, 
+        			this.getText("dominio.server.layouts"), 
+        			this.getText("user.server.layouts"), 
+        			this.getText("pass.server.layouts"), 
         			file.getAbsolutePath(),
-        			this.directorioServerLayouts+Constantes.SEPARADOR_ARCHIVO+fileFileName)
+        			this.getText("directorio.server.layouts")+Constantes.SEPARADOR_ARCHIVO+fileFileName)
         			&&FTPSUtils.upload(
-                			this.dominioServerLayouts2, 
-                			this.userServerLayouts, 
-                			this.passServerLayouts, 
+                			this.getText("dominio.server.layouts2"), 
+                			this.getText("user.server.layouts"), 
+                			this.getText("pass.server.layouts"), 
                 			file.getAbsolutePath(),
-                			this.directorioServerLayouts+Constantes.SEPARADOR_ARCHIVO+fileFileName);
+                			this.getText("directorio.server.layouts")+Constantes.SEPARADOR_ARCHIVO+fileFileName);
         	
         	if(!success) {
         		mensajeRespuesta = "Error al subir archivo.";
         		return SUCCESS;
         	}
         }catch(Exception ex) {
-        	logger.error("Error al subir el archivo al servidor " + this.dominioServerLayouts2, ex);
+        	logger.error("Error al subir el archivo al servidor " + this.getText("dominio.server.layouts2"), ex);
         	mensajeRespuesta = "Error al subir archivo.";
         	success= false;
         	return SUCCESS;
@@ -347,53 +319,6 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         }
         success= true;
         return SUCCESS;
-    }
-
-    public String subirArchivoHistorialMedicinaPrev(){
-    	logger.debug("Subiendo Archivo de Medicina Preventiva ... ");
-    	logger.debug("<<<<<<>>>>> Parametros smap1 <<<<<<>>>>>"+smap1);
-    	logger.debug("file "+file);
-    	logger.debug("fileFileName "+fileFileName);
-    	logger.debug("fileContentType "+fileContentType);
-    	
-        try
-        {
-        	String nombreArchivo = "DocHistorialMed_Aseg_" + smap1.get("cdperson") + "_ICD_" + smap1.get("cdicd")+
-        							"_No_" + smap1.get("nmordtra") + "."+fileFileName.substring(fileFileName.indexOf(".")+1);
-        	
-        	String nuevaRuta=this.rutaDocumentosPersona+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson")+Constantes.SEPARADOR_ARCHIVO
-                +nombreArchivo;
-        	String antiguaRuta=file.getAbsolutePath();
-        	logger.debug("se movera desde::: "+antiguaRuta);
-            logger.debug("se movera a    ::: "+nuevaRuta);
-            
-            String rutaCarpeta=this.rutaDocumentosPersona+Constantes.SEPARADOR_ARCHIVO+smap1.get("cdperson");
-            File carpeta = new File(rutaCarpeta);
-            if(!carpeta.exists()){
-            	logger.debug("no existe la carpeta::: Se crea: "+rutaCarpeta);
-            	carpeta.mkdir();
-            	if(carpeta.exists()){
-            		logger.debug("carpeta creada");
-            	}else{
-            		logger.debug("carpeta NO creada");
-            	}
-            }else{
-            	logger.debug("existe la carpeta   ::: "+rutaCarpeta);
-            }
-            
-            try{
-            	FileUtils.copyFile(file, new File(nuevaRuta));
-            	logger.info("archivo movido");
-			} catch (Exception e) {
-				logger.error("archivo NO movido", e);
-			}
-        }catch(Exception ex){
-        	logger.error("error al mover el archivo",ex);
-        	success= false;
-        	return SUCCESS;
-        }
-    	success= true;
-    	return SUCCESS;
     }
     
     public String consultaCobranza(){
@@ -586,7 +511,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 				kernelManager.preparaContrarecibo(docu);
 			}*/
 			String filePath = Utils.join(
-				this.rutaDocumentosPoliza,
+				this.getText("ruta.documentos.poliza"),
 				Constantes.SEPARADOR_ARCHIVO,
 				smap1.get("ntramite"),
 				Constantes.SEPARADOR_ARCHIVO,
@@ -603,12 +528,12 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			}
 			
 			String requestUrl = Utils.join(
-				this.rutaServidorReports,
+				this.getText("ruta.servidor.reports"),
 				"?destype=cache",
 				"&desformat=PDF",
 				"&paramform=no",
 				"&ACCESSIBLE=YES",
-				"&userid="    , passServidorReports,
+				"&userid="    , this.getText("pass.servidor.reports"),
 				"&report="    , nombreRdf,
 				"&p_fecha="   , renderFechas.format(calendarHoy.getTime()),
 				"&p_tramite=" , smap1.get("ntramite"),
@@ -926,41 +851,6 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 		this.totalCount = totalCount;
 	}
 	
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
-	}
-
-	public String getRutaDocumentosPersona() {
-		return rutaDocumentosPersona;
-	}
-
-	public String getUserServerLayouts() {
-		return userServerLayouts;
-	}
-
-	public String getPassServerLayouts() {
-		return passServerLayouts;
-	}
-
-	public String getDirectorioServerLayouts() {
-		return directorioServerLayouts;
-	}
-
-	public String getDominioServerLayouts() {
-		return dominioServerLayouts;
-	}
-
-	public String getDominioServerLayouts2() {
-		return dominioServerLayouts2;
-	}
-
+	
     
 }
