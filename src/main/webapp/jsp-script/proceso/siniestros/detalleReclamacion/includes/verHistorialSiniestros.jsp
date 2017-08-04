@@ -16,7 +16,6 @@
             var _nmpoliza =  '<s:property value="params.nmpoliza" />';
             var _cdunieco =  '<s:property value="params.cdunieco" />';
             var _proceso  =  '<s:property value="params.proceso" />';
-            var _cdicd    =  '<s:property value="params.cdicd" />';
             
             var _URL_cargaHistorialSinies = '<s:url namespace="/siniestros" action="cargaHistorialSiniestros" />';
 		            
@@ -49,8 +48,7 @@
 				var params = {	'params.pv_cdperson_i' : _cdPerson,
 								'params.pv_cdramo_i'   : _cdramo,
 								'params.pv_nmpoliza_i' : _nmpoliza,
-								'params.pv_cdunieco_i' : _cdunieco,
-								'params.pv_cdicd_i'    : _cdicd
+								'params.pv_cdunieco_i' : _cdunieco
 				};
 				cargaStorePaginadoLocal(storeHistorial, _URL_cargaHistorialSinies, 'loadList', params, function(options, success, response){
 					if(success){
@@ -58,27 +56,10 @@
 						debug("Valor del Response ===> ",jsonResponse);
 						if(jsonResponse.loadList == null || jsonResponse.loadList.length == 0) {
 							var respuesta ="";
-							if(_proceso =='2'){
-								centrarVentanaInterna(Ext.Msg.show({
-                                    title:'Aviso',
-                                    msg: "El asegurado no tiene siniestralidad de cumulo para Opci&oacute;n Hospitalaria.",
-                                    buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.INFO
-                                }));
-							}else if(_proceso =='1'){
-                                centrarVentanaInterna(Ext.Msg.show({
-                                    title:'Aviso',
-                                    msg: "La p&oacute;liza no tiene siniestralidad.",
-                                    buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.INFO
-                                }));
-                            }else{
-								centrarVentanaInterna(Ext.Msg.show({
-                                    title:'Aviso',
-                                    msg: "Este asegurado no cuenta con siniestralidad.",
-                                    buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.INFO
-                                }));
+							if(_proceso =='1'){
+								showMessage("Aviso", "La p&oacute;liza no tiene siniestralidad.", Ext.Msg.OK, Ext.Msg.INFO);
+							}else{
+								showMessage("Aviso", "Este asegurado no cuenta con siniestralidad.", Ext.Msg.OK, Ext.Msg.INFO);
 							}
 							
 						}

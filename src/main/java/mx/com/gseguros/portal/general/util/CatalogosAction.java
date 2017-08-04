@@ -168,8 +168,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case CONFLAYOUT:
 				case TIPO_RECIBOS_IMPRESION:
 				case ETAPAS_ESTADO_FLUJO:
-				case ESTACION_ESTADO_FLUJO:
-				case TRAZABILIDAD_ESTADO_FLUJO:
 				case TIPO_BUSQUEDA_RENOVACION_INDIVIDUAL:
 				case CRITERIOS_RENOVACION_INDIVIDUAL:	
 				case CATALOGO_TRAFUDOC_CDFUNCI:
@@ -178,13 +176,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ZONAS_SUCURSALES:
 				case NIVELES_SUCURSALES:
 				case TAPOYO:
-				case TESPECIALIDADES:
-				case ZONASHOSPITALARIA:
 					lista = catalogosManager.getTmanteni(cat);
-	                break;
-				case TIPOEVENTOGNP:
-					lista = catalogosManager.getTmanteni(cat);
-					logger.debug("Valor de la lista TIPOEVENTOGNP :"+lista);
 	                break;
 				case CVECOLUMNA:
 					lista = catalogosManager.obtieneAtributosExcel(cat);
@@ -210,9 +202,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case MC_ESTATUS_TRAMITE:
 					lista = catalogosManager.obtieneStatusTramite(params);
-					break;
-				case MC_ESTATUS_TRAMITE_EMI_RENOV:
-					lista = catalogosManager.obtieneTiposTramiteClonacion();
 					break;
 				case TATRISIT:
 					//para contemplar atributos situacion por rol (EGS)
@@ -432,16 +421,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					logger.debug("Valor de lista==>"+lista.size());
 					logger.debug(lista);
 					break;
-				case SUBCOBERTURASGMPI:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPI");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
-				case SUBCOBERTURASGMPC:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPC");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
 				case SUBCOBERTURASINFONAVIT:
 					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("SSI");
 					logger.debug("Valor de lista==>"+lista.size());
@@ -482,18 +461,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					} else {
 						lista = new ArrayList<GenericVO>();
 						for(ConsultaProveedorVO prov : provs) {
-							lista.add(new GenericVO(prov.getCdpresta(),prov.getNombre()));
-						}
-					}
-					break;
-				case PROVEEDORESINI:
-					List<ConsultaProveedorVO> provSini = siniestrosManager.getConsultaListaProveedorMedico(
-							TipoPrestadorServicio.CLINICA.getCdtipo(), params != null ? params.get("cdpresta") : null, params.get("cdEstado"),params.get("cdMunicipio"));
-					if(catalogoGenerico) {
-						listaGenerica = provSini;
-					} else {
-						lista = new ArrayList<GenericVO>();
-						for(ConsultaProveedorVO prov : provSini) {
 							lista.add(new GenericVO(prov.getCdpresta(),prov.getNombre()));
 						}
 					}
@@ -907,9 +874,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					{
 						params=new HashMap<String,String>();
 					}
-					UserVO usuario2 = (UserVO)session.get("USUARIO");
-					
-					lista = catalogosManager.cargarCotizadoresActivos(usuario2.getUser(), params.get("cadena"));
+					lista = catalogosManager.cargarCotizadoresActivos(params.get("cadena"));
 					break;
 				case MOTIVOS_REEXPEDICION:
 					if(params==null)
@@ -1112,9 +1077,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				        lista = catalogosManager.recuperarTiposEndosoPorTramite(params.get("ntramite"));
 				    }
 				    break;
-				case TIPOPROVEEDOR:
-					lista = siniestrosManager.getConsultaListaTiposProveedores();
-					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

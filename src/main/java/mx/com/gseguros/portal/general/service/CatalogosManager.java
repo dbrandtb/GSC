@@ -199,7 +199,7 @@ public interface CatalogosManager {
     
     public List<GenericVO> recuperarTdocume(String cdtiptra) throws Exception;
     
-    public List<GenericVO> cargarCotizadoresActivos(String usuario, String cadena) throws Exception;
+    public List<GenericVO> cargarCotizadoresActivos(String cadena) throws Exception;
 
     public List<GenericVO> obtieneMotivosReexp(String cdramo, String cdtipsit) throws Exception;
     
@@ -264,6 +264,4 @@ public interface CatalogosManager {
 	public List<GenericVO> obtieneComentariosNegocio(String cdramo, String cdtipsit, String negocio) throws Exception;
 
     public List<GenericVO> recuperarTiposEndosoPorTramite (String ntramite) throws Exception;
-
-	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception;
 }

@@ -341,9 +341,6 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
                                                 cmt_modificado = replaceAll(cmt_modificado,'Ú','UUUUU');
                                                 cmt_modificado = replaceAll(cmt_modificado,'Ñ','NNNNN');
                                                 cmt_modificado = replaceAll(cmt_modificado,',','ccccc');
-                                                cmt_modificado = replaceAll(cmt_modificado,'&','qqq');
-                                                cmt_modificado = replaceAll(cmt_modificado,'ü','rrrrr');
-                                                cmt_modificado = replaceAll(cmt_modificado,'Ü','RRRRR');
 												this.up().up().form.submit({
 													waitMsg:'Procesando...',
 													params: {
@@ -442,9 +439,6 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
                                             cmt_modificado = replaceAll(cmt_modificado,'Ú','UUUUU');
                                             cmt_modificado = replaceAll(cmt_modificado,'Ñ','NNNNN');
                                             cmt_modificado = replaceAll(cmt_modificado,',','ccccc');
-                                            cmt_modificado = replaceAll(cmt_modificado,'&','qqq');
-                                            cmt_modificado = replaceAll(cmt_modificado,'ü','rrrrr');
-                                            cmt_modificado = replaceAll(cmt_modificado,'Ü','RRRRR');
                                             
 											Ext.Ajax.request({
 												url     : compleUrlGuardarCartoRechazo

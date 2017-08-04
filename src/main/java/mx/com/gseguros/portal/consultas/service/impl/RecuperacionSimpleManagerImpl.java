@@ -249,18 +249,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				resp.setSmap(new HashMap<String,String>());
 				resp.getSmap().put("CONTEO" , consultasDAO.recuperarConteoTbloqueo(cdunieco,cdramo,estado,nmpoliza));
 			}
-			else if(proc.equals(RecuperacionSimple.RECUPERAR_VALORES_MODELO))
-			{
-				String cdunieco = params.get("cdunieco");
-				resp.setSmap(new HashMap<String,String>());
-				
-				resp.getSmap().putAll(consultasDAO.recuperarValoresModelo(
-						cdsisrol
-						,cdusuari
-						,cdunieco
-						));
-				
-			}
 		}
 		catch(Exception ex)
 		{
@@ -473,11 +461,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 									llave = llave.replace("DSVALOR", "DSVALOR1");
 								}else if(llave.startsWith("OTVALOR")){
 									llave = llave.replace("OTVALOR", "OTVALOR1");
-								}
-								
-								//EVITAMOS QUE PLANCHE EL PLAN consultasDAO.recuperarDatosIncisoEnNivelPoliza REGRESA NULL ESTATICAMENTE EN DSPLAN
-								if(llave.equals("DSPLAN") && valor==null){
-									continue;
 								}
 
 								resp.getSlist().get(0).put(llave, valor);
@@ -770,8 +753,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				}
 				
 			    mapa .put("correoAgente",correos );
-			}else if (consulta.equals(RecuperacionSimple.RECUPERAR_RANGO_DESCUENTO_RECARGO)) {
-			    mapa = cotizacionDAO.recuperarRangoDescuentoRecargo(params.get("cdramo"), params.get("cdtipsit"), cdusuari, cdsisrol);
 			}
 		}
 		catch(Exception ex)
@@ -1180,7 +1161,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_EXCLUSION_TURNADOS))
 			{
-				lista = consultasDAO.recuperarExclusionTurnados(cdusuari);
+				lista = consultasDAO.recuperarExclusionTurnados();
 			}	
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_CLAVES_PLAN_RAMO4))
 			{
@@ -1315,17 +1296,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				
 				lista =  paged2.getRangeList();
 				
-			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_TRAZABILIDAD_LTS) ) {
-				
-				PagedMapList paged = indicadoresDAO.obtieneDetalleLineaTrazabilidad(params.get("idcierre"), params.get("cdetapa"),
-						params.get("cdunieco"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", "1");
-				
-				PagedMapList paged2 = indicadoresDAO.obtieneDetalleLineaTrazabilidad(params.get("idcierre"), params.get("cdetapa"),
-                        params.get("cdunieco"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), "0", Long.toString(paged.getTotalItems()));
-				
-				lista =  paged2.getRangeList();
-				
-			}else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_SUCURSAL) ) {
+			} else if( consulta.equals(RecuperacionSimple.RECUPERAR_LINEANEGOCIO_POR_SUCURSAL) ) {
 				
 				lista = indicadoresDAO.obtieneLineaNegocioPorSucursal(params.get("idcierre"), params.get("cdetapa"),
 						params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"));
@@ -1466,12 +1437,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
                 
                 lista = indicadoresDAO.obtieneDetalleLineaNegocio(params.get("idcierre"), params.get("cdetapa"),
                         params.get("cdunieco"), params.get("lineanegocio"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), start, limit);
-                
-            }else if( consulta.equals(RecuperacionSimple.RECUPERAR_DETALLE_TRAZABILIDAD) ) {
-                
-                lista = indicadoresDAO.obtieneDetalleLineaTrazabilidad(params.get("idcierre"), params.get("cdetapa"),
-                        params.get("cdunieco"), params.get("cdramo"), params.get("tipotramite"), params.get("cdagente"), start, limit);
-                
                 
             }
 	    }
