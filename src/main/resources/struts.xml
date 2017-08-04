@@ -10,7 +10,7 @@
     <!-- Dev Mode: -->
     <constant name="struts.devMode" value="false"/>
     <!-- Load custom default resource bundles: -->
-    <constant name="struts.custom.i18n.resources" value="messages-database, reportes, portal"/>
+    <constant name="struts.custom.i18n.resources" value="global, messages-database, reportes"/>
     <!-- Parser to handle HTTP POST requests, encoded using the MIME-type multipart/form-data: -->
     <constant name="struts.multipart.parser" value="monitored"/>
     <!-- Allow slashes and parameters in action names: -->
@@ -18,6 +18,10 @@
     <constant name="struts.mapper.alwaysSelectFullNamespace" value="false" />
     <!-- Scan Struts2 annotations -->
     <constant name="struts.convention.action.packages" value="mx.com.gseguros" />
+    
+    <!-- Struts Convention Property modifications for Weblogic: -->
+    <constant name="struts.convention.action.includeJars" value=".*?/gseguros.*?jar(!/)?"/>
+    <constant name="struts.convention.action.fileProtocols" value="jar,zip"/>
     
     <!-- Maximum Size File Uploading (in Bytes): -->
     <constant name="struts.multipart.maxSize" value="10485760"/>
@@ -49,7 +53,6 @@
     <include file="struts/config/struts-reclamoexpress.xml"/>
     <include file="struts/config/struts-reportes.xml"/>
     <include file="struts/config/struts-seguridad.xml"/>
-    <include file="struts/config/struts-servicios.xml"/>
     
     <include file="struts/config/struts-peritaje.xml"/>
     
@@ -110,13 +113,6 @@
                 <param name="estadoSesion">arbol</param>
             </result>
             <result name="datosPoliza">/jsp/portal/login.jsp</result>
-            <result name="notfound">/404.jsp</result>
-            <result name="excel" type="stream">
-                <param name="contentType">application/vnd.ms-excel</param>
-                <param name="inputName">inputStream</param>
-                <param name="contentDisposition">attachment; filename="${fileName}"</param>
-                <param name="bufferSize">4096</param>
-            </result>
         </global-results>
 
 
@@ -295,24 +291,9 @@
         <action name="recotizar" class="beanDatosComplementarios" method="retarificar">
             <result name="success" type="json" />
         </action>
-        <action name="emitirAutosInd" class="beanDatosComplementarios" method="emitir">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result name="success" type="json" />
-        </action>
         <action name="emitir" class="beanDatosComplementarios" method="emitir">
             <result name="success" type="json" />
         </action>
-        <action name="cargaEndososB" class="beanDatosComplementarios" method="cargaEndososB">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result name="success" type="json" />
-        </action>
-        
         <action name="autorizaEmision" class="beanDatosComplementarios" method="autorizaEmision">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -330,6 +311,7 @@
         <action name="manualWSRecibosDxN" class="beanDatosComplementarios" method="ejecutaWSManualRecibosDxN">
             <result name="success" type="json" />
         </action>
+        
         
         <!-- <action name="cargaColonias" class="beanCatalogosAction" method="cargaColonias">
             <result name="success" type="json" />
@@ -362,10 +344,6 @@
         </action>
         
         <action name="reintentaWSautos" class="beanDatosComplementarios" method="reintentaWSautos">
-            <result name="success" type="json" />
-        </action>
-        
-        <action name="autorizaEmisionSinSMD" class="beanDatosComplementarios" method="autorizaEmision">
             <result name="success" type="json" />
         </action>
                 
