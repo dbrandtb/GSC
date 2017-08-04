@@ -150,7 +150,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 			
 			smap1 = new HashMap<String, String>();
 			
-			ArrayList<String> extensionesValidar = new ArrayList<String>(Arrays.asList(".pdf",".png",".jpg",".jpeg"));
+			ArrayList<String> extensionesValidar = new ArrayList<String>(Arrays.asList(".pdf",".png",".jpg",".jpeg",".PDF",".PNG",".JPG",".JPEG"));
 			
 			for(String extension:extensionesValidar){
 				
