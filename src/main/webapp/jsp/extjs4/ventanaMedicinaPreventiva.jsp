@@ -862,10 +862,6 @@ Ext.onReady(function()
                 xtype: 'hidden',
                 name: 'CDPRESTA',
                 value: recordEditar.get('CDPRESTA')
-            },{
-                xtype: 'button',
-                hidden: true,
-                text: 'Asignar m&eacute;dico seleccionado en la b&uacute;squeda.'
             }]
         });
     		
@@ -1326,7 +1322,6 @@ Ext.onReady(function()
 	                icon         : _CONTEXT+'/resources/fam3icons/icons/eye.png',
 	                tooltip      : 'Ver Documento',
 	                width        : 30,
-	                hidden: true,
 	                menuDisabled : true,
 	                sortable     : false,
 	                handler      : function(grid,rowIndex)
@@ -1392,7 +1387,6 @@ Ext.onReady(function()
 	                xtype        : 'actioncolumn',
 	                icon         : _CONTEXT+'/resources/fam3icons/icons/page_white_put.png',
 	                tooltip      : 'Descargar Documento',
-	                hidden: true,
 	                width        : 30,
 	                menuDisabled : true,
 	                sortable     : false,
@@ -1473,7 +1467,7 @@ Ext.onReady(function()
                             }
                         },{
                             xtype: 'button',
-                            text: 'Editar ultimo registro',
+                            text: 'Editar &uacute;ltimo registro',
                             icon:_CONTEXT+'/resources/fam3icons/icons/page_edit.png',
                             handler: function(btn){
                             	
@@ -1784,7 +1778,6 @@ Ext.onReady(function()
     	            },{
     	    	        xtype: 'filefield',
     	    	        fieldLabel: 'Subir Archivo',
-    	    	        hidden: true,
     	    	        labelWidth: 70,
     	    	        name: 'file',
     	    	        width: 340,
