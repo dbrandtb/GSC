@@ -1133,13 +1133,14 @@ Ext.onReady(function()
                                         ,value      : new Date()
                                         ,listeners  :
                                         {
-                                             change : function(field,value)
+                                            change : function(field,value)
+                                        	//dirtychange : function(field, isDirty, value)
                                              {
                                                  try
                                                  {
-                                                 	if(Ext.ComponentQuery.query('#fechaFinVigencia')[0].getValue()==""){
+                                                 	//if(Ext.ComponentQuery.query('#fechaFinVigencia')[0].getValue()==""){
                                                  		Ext.ComponentQuery.query('#fechaFinVigencia')[0].setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
-                                                 	}
+                                                 	//}
                                                  }
                                                  catch (e) {}
                                              }
@@ -1152,7 +1153,6 @@ Ext.onReady(function()
                                         ,itemId     : 'fechaFinVigencia'
                                         ,name       : 'fefin'
                                         ,allowBlank : false
-                                        //,readOnly   : true
                                         ,readOnly   : false
                                         ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
                                     })
