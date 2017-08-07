@@ -28,6 +28,7 @@
             var storeDocumentos;
             var ventanaEndoso;
             
+            
             var panDatComMap1 = <s:property value="%{convertToJSON('map1')}" escapeHtml="false" />;
             debug('panDatComMap1:',panDatComMap1,'.');
             
@@ -67,8 +68,8 @@
             var _URL_CONSULTA_CLAUSU         = '<s:url namespace="/catalogos"       action="consultaClausulas"           />';
             var _URL_ObtieneValNumeroSerie   = '<s:url namespace="/emision" 		action="obtieneValNumeroSerie"       />';
             var urlEditarAsegurados = '${ctx}<s:property value="map1.urlAsegurados" />?now=${now}';
-            var urlServidorReports  = '<s:property value="rutaServidorReports"         />';
-            var complerepSrvUsr     = '<s:property value="passServidorReports"         />';
+            var urlServidorReports  = '<s:text name="ruta.servidor.reports"         />';
+            var complerepSrvUsr     = '<s:text name="pass.servidor.reports"         />';
             var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarValoresSituacion"               />';
             var urlPantallaBeneficiarios = '<s:url namespace="/catalogos"  action="includes/pantallaBeneficiarios"       />';
             
@@ -100,8 +101,6 @@
             	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ms.nombre" />';
             }else if(inputCdtipsit == 'RI'){
             	_NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.ri.nombre" />';
-            }else if(inputCdtipsit == 'GMPI'){
-                _NOMBRE_REPORTE_CARATULA = '<s:text name="rdf.caratula.previa.gmpi.nombre" />';
             }
             
             if(Ext.isEmpty(_NOMBRE_REPORTE_CARATULA)){
@@ -451,7 +450,7 @@ function _p29_guardarComplementario(callback)
     {
         form.setLoading(true);
         //dxn
-        if( inputCdtipsit!='MC' && inputCdtipsit!='AT' && inputCdtipsit!='GMPI'){
+        if( inputCdtipsit!='MC' && inputCdtipsit!='AT'){
             
             guardaEmpleado();
         }
@@ -713,7 +712,8 @@ function _p29_emitirClicComplementarios()
 	                                                                    var paramsEmi = "";
 	                                                                    var jsonparams = "";
 	                                                                    
-	                                                                    if((inputCdtipsit=='AF' || inputCdtipsit=='PU') && saveList != null){		                                                                    	
+	                                                                    if((inputCdtipsit=='AF' || inputCdtipsit=='PU') && saveList != null){	
+	                                                                    	//console.log("savelist: " + JSON.stringify(saveList));
 	                                                                    	urlEmision = urlEmitirAutos;
 	                                                                    	jsonparams = 
 	                                                                    	{
@@ -732,7 +732,7 @@ function _p29_emitirClicComplementarios()
     	                                                                	         ,caseIdRstn  : _NVL(panDatComMap1.caseIdRstn)
     	                                                                	    }
     	                                                                        ,slist1 : saveList
-    	                                                                    };	                                                                    		                                                                    
+    	                                                                    };
 	                                                                    }
 	                                                                    else{	   
 	                                                                    	urlEmision = urlEmitir;	                                                                    
@@ -760,18 +760,6 @@ function _p29_emitirClicComplementarios()
 	                                                                            debug(json);
 	                                                                            if(json.success==true)
 		                                                            	    	{
-		                                                            	    	    if ((!Ext.isEmpty(panDatComFlujo)) && 'RSTN' === panDatComFlujo.aux) {
-		                                                            	    	        mensajeCorrecto(
-		                                                            	    	            'P\u00f3liza emitida',
-		                                                            	    	            'Se ha emitido la p\u00f3liza ' + json.panel2.nmpoliex,
-		                                                            	    	            function () {
-		                                                            	    	                _mask();
-		                                                            	    	                location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?nmpoliex=' + json.panel2.nmpoliex;
-		                                                            	    	            }
-		                                                            	    	        );
-		                                                            	    	        return;
-		                                                            	    	    }
-		                                                            	    	    
 		                                                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
 		                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
 		                                                            	    		
@@ -1321,21 +1309,6 @@ function _p29_emitirClicComplementarios()
                                 {
                                     window.parent.scrollTo(0,150+p.y);
                                 }*/
-                            	activate: function(){
-                        			try{
-                        		        if(inputCdramo==Ramo.ServicioPublico){
-                        		        	Ext.ComponentQuery
-                        		        	.query("[fieldLabel*='(FRONTERIZO)'],[fieldLabel*='TIPO DE CAMBIO AL D'],[fieldLabel*='PAQUETE'],[fieldLabel*='NOMBRE CLIENTE'],[fieldLabel*='TIPO PERSONA'],[fieldLabel*='FECHA DE NACIMIENTO DEL CONTRATANTE']")
-                        		        	.forEach(function(it){ 
-                        		    	    		it.allowBlank=true; 
-                        		    	    		it.hide();
-                        		        		}
-                        		        	);
-                        		    	}
-                        		    }catch(e){
-                        		    	debugError(e);
-                        		    }
-                        		},
                                 afterrender:function(tab)
                                 {
                                 	debug('afterrender tabPanelValosit');
@@ -1710,7 +1683,7 @@ function _p29_emitirClicComplementarios()
 		                                    
 		                                        try{
 		                                          
-		                                            if(inputCdtipsit=='MC' || inputCdtipsit=='AT' || inputCdtipsit=='GMPI'){
+		                                            if(inputCdtipsit=='MC' || inputCdtipsit=='AT'){
                                                        
                                                         return;
                                                     }
@@ -2664,9 +2637,6 @@ function _p29_emitirClicComplementarios()
                                                                                         cmt_modificado = replaceAll(cmt_modificado,'Ú','UUUUU');
                                                                                         cmt_modificado = replaceAll(cmt_modificado,'Ñ','NNNNN');
                                                                                         cmt_modificado = replaceAll(cmt_modificado,',','ccccc');
-                                                                                        cmt_modificado = replaceAll(cmt_modificado,'&','qqq');
-                                                                                        cmt_modificado = replaceAll(cmt_modificado,'ü','rrrrr');
-                                                                                        cmt_modificado = replaceAll(cmt_modificado,'Ü','RRRRR');
                                                                                         Ext.Ajax.request(
                                                                                         {
                                                                                             url     : compleUrlGuardarCartoRechazo
@@ -2832,8 +2802,8 @@ function _p29_emitirClicComplementarios()
                                   						mensajeValidacionNumSerie("Aviso","${ctx}/resources/fam3icons/icons/error.png", json.respuesta);
                                   						_fieldById('panDatComBotonRetarificar').setDisabled(false);
                                   					}
-                                  				}else{                                  					
-                                  					_fieldById('panDatComBotonRetarificar').setDisabled(false);                                   					
+                                  				}else{
+                                  					_fieldById('panDatComBotonRetarificar').setDisabled(false);
                                   				}
                                   			}
                                   			,failure : errorComunicacion
@@ -2892,7 +2862,7 @@ function _p29_emitirClicComplementarios()
 			            {
 			                itemId       : '_datcom_panelFlujo'
 			                ,title       : 'ACCIONES'
-			                ,hidden      : Ext.isEmpty(panDatComFlujo) || 'RSTN' === panDatComFlujo.aux
+			                ,hidden      : Ext.isEmpty(panDatComFlujo)
 			                ,buttonAlign : 'left'
 			                ,buttons     : []
 			                ,listeners   :
@@ -3025,8 +2995,7 @@ function _p29_emitirClicComplementarios()
                                 	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
                                 	    		Ext.getCmp('botonPagar').setDisabled(false);
                                 	    		Ext.getCmp('botonReenvioWS').setDisabled(true);
-                                	    		Ext.getCmp('botonReenvioWS').hide();
-                                	    		_fieldById('venDocVenEmiBotEndososB').hide();
+                                	    		Ext.getCmp('botonReenvioWS').hide();                                	    		_fieldById('venDocVenEmiBotEndososB').hide();
                                 	    		_fieldById('panDatComBotonRetarificar').setDisabled(true);
                                 	    		_fieldById('panDatComBotonGuardar').setDisabled(true);
                                 	    		
@@ -3172,9 +3141,6 @@ function _p29_emitirClicComplementarios()
 		            }
 		        }).showAt(500,0);
                 venDocuTramite.collapse();
-                if ((!Ext.isEmpty(panDatComFlujo)) && 'RSTN' === panDatComFlujo.aux) {
-                    venDocuTramite.hide();
-                }
                 //para ver documentos en vivo
                 
                 //codigo dinamico recuperado de la base de datos

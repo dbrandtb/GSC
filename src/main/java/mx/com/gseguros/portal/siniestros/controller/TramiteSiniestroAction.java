@@ -11,12 +11,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.json.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -66,16 +64,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
-
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-    
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports;	
-    
-    @Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;	
-    
+	
 	/**
 	* Funcion para cargar la pantalla principal del alta de tramite
 	* @param params
@@ -89,18 +78,15 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			UserVO usuario  = (UserVO)session.get("USUARIO");
 			String cdUnieco = usuario.getCdUnieco();
 			String rolUsuario = usuario.getRolActivo().getClave();
-			String caseIdRstn = null;
 			cdunieco = usuario.getCdUnieco().toString();
 			if(params != null){
 				cdunieco  = params.get("cdunieco");
 				ntramite  = params.get("ntramite");
-				caseIdRstn = params.get("caseIdRstn");
 			}
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("cdunieco",cdunieco);
 			params.put("ntramite",ntramite);
 			params.put("RolSiniestro", rolUsuario);
-			params.put("caseIdRstn", caseIdRstn);
 			setParamsJson(params);
 			logger.debug("Params : {}", params);
 		}catch( Exception e){
@@ -138,12 +124,6 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			// 1.- Guardar en TMESACONTROL 
 			this.session=ActionContext.getContext().getSession();
 			UserVO usuario=(UserVO) session.get("USUARIO");
-			
-			String caseIdRstn = null;
-			if (params != null && params.containsKey("caseIdRstn") && StringUtils.isNotBlank(params.get("caseIdRstn"))) {
-			    caseIdRstn = params.get("caseIdRstn");
-			}
-			
 			//Si el tr\u00e1mite es nuevo
 			if(params.get("idNumTramite").toString().length() <= 0){
 				
@@ -168,7 +148,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					valores.put("otvalor13",TipoPrestadorServicio.CLINICA.getCdtipo());
 				}
 				
-				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && (params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) || params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo()))){
+				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 					valores.put("otvalor12","7RDH");
 					valores.put("otvalor14","7RDH001");
 				}
@@ -251,7 +231,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				modMesaControl.put("pv_otvalor26_i",params.get("pv_cdtipsit_i"));
 				modMesaControl.put("pv_otvalor27_i",params.get("idCveBeneficiario"));
 				
-				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && (params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) || params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo()))){
+				if(params.get("cmbTipoPago").toString().equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()) && params.get("cmbRamos").toString().equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())){
 					modMesaControl.put("pv_otvalor12","7RDH");
 					modMesaControl.put("pv_otvalor14","7RDH001");
 				}
@@ -411,7 +391,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			String tipoPago = params.get("cmbTipoPago");
 			for(int i=0;i<datosTablas.size();i++) {
 				
-				if((cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())|| cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo())) {
+				if((cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo())) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo())) {
 					valorFactura = params.get("nmtramite")+""+(slist1.size());
 				}else{
 					valorFactura = datosTablas.get(i).get("nfactura");
@@ -424,8 +404,8 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					datosTablas.get(i).get("cdtipser"),
 					(cdramo.equalsIgnoreCase(Ramo.RECUPERA.getCdramo()))?"0":datosTablas.get(i).get("cdpresta"),
 					datosTablas.get(i).get("ptimport"),
-					(((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo())) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH":null),
-					(((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) || cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo()))&& tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH001":null),
+					((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH":null),
+					((cdramo.equalsIgnoreCase(Ramo.GASTOS_MEDICOS_MAYORES.getCdramo()) && tipoPago.equalsIgnoreCase(TipoPago.INDEMNIZACION.getCodigo()))?"7RDH001":null),
 					null,
 					null,
 					datosTablas.get(i).get("cdmoneda"),
@@ -844,7 +824,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 				success =  false;
 				return SUCCESS;
 			}
-			File carpeta=new File(rutaDocumentosPoliza + "/" + paramsO.get("pv_ntramite_i"));
+			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
 			if(!carpeta.exists()){
 				logger.debug("no existe la carpeta::: {}", paramsO.get("pv_ntramite_i"));
 				carpeta.mkdir();
@@ -858,28 +838,20 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 			}
 			UserVO usuario=(UserVO)session.get("USUARIO");
 	
-			String nombreArchivoReporte= null;
-			if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals((String)paramsO.get("pv_cdramo_i"))) {
-				nombreArchivoReporte = getText("rdf.siniestro.contrarecibo.nombreGNP");
-			}else{
-				nombreArchivoReporte= getText("rdf.siniestro.contrarecibo.nombre");
-			}
-			
-			logger.debug("Alberto ==> "+nombreArchivoReporte);
 			String urlContrareciboSiniestro = ""
-					+ rutaServidorReports
+					+ getText("ruta.servidor.reports")
 					+ "?p_usuario=" + usuario.getUser() 
 					+ "&p_TRAMITE=" + paramsO.get("pv_ntramite_i")
 					+ "&destype=cache"
 					+ "&desformat=PDF"
-					+ "&userid="+passServidorReports
+					+ "&userid="+getText("pass.servidor.reports")
 					+ "&ACCESSIBLE=YES"
-					+ "&report="+nombreArchivoReporte
+					+ "&report="+getText("rdf.siniestro.contrarecibo.nombre")
 					+ "&paramform=no"
 					;
 					String nombreArchivo = getText("siniestro.contrarecibo.nombre");
 					String pathArchivo=""
-					+ rutaDocumentosPoliza
+					+ getText("ruta.documentos.poliza")
 					+ "/" + paramsO.get("pv_ntramite_i")
 					+ "/" + nombreArchivo
 			;
@@ -913,14 +885,6 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 					,null
 					,null, false
 					);
-			
-			if (Ramo.GASTOS_MEDICOS_MAYORES_PRUEBA.getCdramo().equals((String)paramsO.get("pv_cdramo_i"))) {
-                HttpUtil.enviarArchivoRSTN(
-                        HttpUtil.RSTN_SINIESTROS_PATH + (String)paramsO.get("caseIdRstn"),
-                        pathArchivo, 
-                        "Contra Recibo",
-                        HttpUtil.RSTN_DOC_CLASS_SINIESTROS);
-            }
 			
 		}catch( Exception e){
 			logger.error("Error en generarContrarecibo : {}", e.getMessage(), e);
@@ -1131,17 +1095,5 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 
 	public void setValidaCdTipsitTramite(String validaCdTipsitTramite) {
 		this.validaCdTipsitTramite = validaCdTipsitTramite;
-	}
-	
-    public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
 	}
 }

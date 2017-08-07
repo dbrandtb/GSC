@@ -23,14 +23,6 @@
             </result>
         </action>
 		
-		<action name="verficiaExiteDocumentoExt" class="documentosPolizaAction" method="verficiaExiteDocumentoExt">
-		    <result name="success" type="json" />
-		</action>
-		
-		<action name="subirArchivoHistorialMedicinaPrev" class="beanSubirArchivo" method="subirArchivoHistorialMedicinaPrev">
-            <result type="json" />
-        </action>
-		
 		<action name="ventanaDocumentosPoliza" class="documentosPolizaAction" method="ventanaDocumentosPoliza">
 		    <result name="success">/jsp/extjs4/ventanaDocumentosPoliza.jsp</result>
 		</action>
