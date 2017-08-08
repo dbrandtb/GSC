@@ -5441,7 +5441,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                                throw new ApplicationException("No es numero");
 	                            }
 	                        }else{
-	                            bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getStringCellValue())+"|":"|");    
+	                            bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");    
 	                        }
 	                    }catch(Exception ex) {
 	                        filaBuena = false;
@@ -6744,7 +6744,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                				throw new ApplicationException("No es numero");
 	                			}
 	                		}else{
-	                			bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getStringCellValue())+"|":"|");    
+	                			bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");    
 	                		}
 	                	}catch(Exception ex) {
 	                		filaBuena = false;
