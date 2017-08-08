@@ -2535,7 +2535,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 	public Map<String, Object> actualizaDatosGeneralesCopago(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String nmsituac, String nmsinies, String ntramite, String nfactura, String cdgarant,
 			String cdconval, String deducible, String copago, String nmcallcenter,String aplicaCambio, 
-			String feingreso,String feegreso, String cveEvento, String cveAlta,String accion) throws Exception {
+			String feingreso,String feegreso, String cveEvento, String esMedPrev, String cveAlta,String accion) throws Exception {
 
 		HashMap<String,Object> params=new HashMap<String,Object>();
 		params.put("pv_cdunieco_i", cdunieco);
@@ -2560,6 +2560,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 		params.put("pv_feegreso_i",  StringUtils.isNotBlank(feegreso) && !feegreso.equals("null")  ? Utils.parse(feegreso) :null);	//(EGS)
 		params.put("pv_cveEvento_i", cveEvento);
 		params.put("pv_cveAlta_i", cveAlta);		
+		params.put("pv_swmedprv_i", esMedPrev);		
 		params.put("pv_accion_i", accion);
 		log.debug("actualizaDatosGeneralesSiniestro params: "+params);
 		return siniestrosDAO.actualizaDatosGeneralesCopago(params);

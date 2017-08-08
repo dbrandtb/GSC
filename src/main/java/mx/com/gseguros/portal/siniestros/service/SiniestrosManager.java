@@ -726,7 +726,7 @@ public interface SiniestrosManager {
 	public Map<String, Object> actualizaDatosGeneralesCopago(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String nmsituac, String nmsinies, String ntramite, String nfactura, String cdgarant,
 			String cdconval, String deducible, String copago, String nmcallcenter,String aplicaCambio, String feingreso,
-			String feegreso, String cveEvento, String cveAlta,String accion) throws Exception;
+			String feegreso, String cveEvento, String esMedPrev, String cveAlta,String accion) throws Exception;
 	
 	public String actualizarDeducibleCopagoConceptos(HashMap<String, Object> datosActualizacion) throws Exception;
 	

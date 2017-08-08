@@ -1334,7 +1334,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 			declareParameter(new SqlParameter("pi_cdmunici", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pi_cdespeci", OracleTypes.VARCHAR));
 			String[] cols = new String[]{
-					"CDPRESTA","NOMBRE","DIRECCION","NMTELEFO"
+					"CDPRESTA","NOMBRE","DIRECCION","NMTELEFO","ESPECIALIDAD"
 			};
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(cols)));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));

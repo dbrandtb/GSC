@@ -385,7 +385,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 											siniestrosAnterior.get(r).get("CDCONVAL"), null,
 											null, null,null, 
 											siniestrosAnterior.get(r).get("FEINGRESO"),siniestrosAnterior.get(r).get("FEEGRESO"),
-											siniestrosAnterior.get(r).get("CDTIPEVE"),siniestrosAnterior.get(r).get("CDTIPALT"),
+											siniestrosAnterior.get(r).get("CDTIPEVE"),siniestrosAnterior.get(r).get("SWMEDPRV"),
+											siniestrosAnterior.get(r).get("CDTIPALT"),
 											Constantes.INSERT_MODE);									
 									loadList = new ArrayList<HashMap<String,String>>();
 									for(Map<String,String>map:lista) {
@@ -520,7 +521,8 @@ public class SiniestrosAction extends PrincipalCoreAction {
 								siniestros.get(0).get("CDCONVAL"), null,
 								null, null,null, 
 								siniestros.get(0).get("FEINGRESO"),siniestros.get(0).get("FEEGRESO"),
-								siniestros.get(0).get("CDTIPEVE"),siniestros.get(0).get("CDTIPALT"),
+								siniestros.get(0).get("CDTIPEVE"),siniestros.get(0).get("SWMEDPRV"),
+								siniestros.get(0).get("CDTIPALT"),
 								Constantes.INSERT_MODE);
 						
 						
@@ -1723,7 +1725,7 @@ public class SiniestrosAction extends PrincipalCoreAction {
 					params.get("nfactura"),null,
 					null,null,
 					null,null,
-					null,null,null,null,null,Constantes.DELETE_MODE);
+					null,null,null,null,null,null,Constantes.DELETE_MODE);
 			
 			HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
 				paramsTworkSin.put("pv_nmtramite_i",params.get("nmtramite"));

@@ -308,7 +308,7 @@
 						{type:'string', name:'CDTIPEVE'},       {type:'string', name:'CDTIPALT'},
 						{type:'string', name:'FLAGTIPEVE'},     {type:'string', name:'FLAGTIPALT'},
 						{type:'string', name:'NUMRECLA'},       {type:'string', name:'FLAGREQAUT'},
-						{type:'string', name:'LIMAUTSEVMED'}
+						{type:'string', name:'LIMAUTSEVMED'},   {type:'string', name:'SWMEDPRV', defaultValue: 'N'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -2063,6 +2063,34 @@
                                         leyenda= v;
                                     }
                                     return leyenda;
+                                }
+                            },
+                            {
+                                header: 'Carta Med. Prev.', dataIndex: 'SWMEDPRV'
+                                ,editor : Ext.create('Ext.form.ComboBox',{
+                                    name:'idCartaMedPrev',
+                                    store: Ext.create('Ext.data.Store', {
+                	                    fields: ['key', 'value'],
+                	                    data : [
+                	                        {"key":"S", "value":"SI"},
+                	                        {"key":"N", "value":"NO"}
+                	                    ]
+                	                }),
+                                    queryMode:'local',  
+                                    displayField: 'value',
+                                    valueField: 'key',
+                                    forceSelection: true,
+                                    editable: false
+                                })
+                                ,renderer: function(v) {
+                                    var r=v;
+                                    if(v=='S'||v=='s') {
+                                        r='SI';
+                                    }
+                                    else if(v=='N'||v=='n'){
+                                        r='NO';
+                                    }
+                                    return r;
                                 }
                             },
                              {
