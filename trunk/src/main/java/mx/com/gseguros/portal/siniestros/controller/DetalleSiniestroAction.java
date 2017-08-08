@@ -154,7 +154,8 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 					params.get("copago"),params.get("nmcallcenter"),
 					null,
 					params.get("feingreso"),params.get("feegreso"),
-					params.get("cveEvento"),params.get("cveAlta"),
+					params.get("cveEvento"),params.get("esMedPrev"),
+					params.get("cveAlta"),
 					Constantes.INSERT_MODE);
 			String formatoFeEgreso;
 			if(params.get("feegreso").length() > 0){

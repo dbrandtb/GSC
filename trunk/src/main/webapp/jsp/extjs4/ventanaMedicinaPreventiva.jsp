@@ -89,7 +89,7 @@ Ext.onReady(function()
     		{
     	extend : 'Ext.data.Model'
     		,fields :
-    			['CDPRESTA','NOMBRE','DIRECCION','NMTELEFO']
+    			['CDPRESTA','NOMBRE','DIRECCION','NMTELEFO','ESPECIALIDAD']
     });
     
     /*//////////////////////*/
@@ -727,7 +727,8 @@ Ext.onReady(function()
                 columns: [
                     { text: 'Nombre M&eacutedico', dataIndex: 'NOMBRE' , flex: 2 },
                     { text: 'Direcci&oacute;n M&eacutedico', dataIndex: 'DIRECCION', flex: 3 },
-                    { text: 'Tel&eacute;fono', dataIndex: 'NMTELEFO', flex: 1 }
+                    { text: 'Tel&eacute;fono', dataIndex: 'NMTELEFO', flex: 1 },
+                    { text: 'Especialidad', dataIndex: 'ESPECIALIDAD', flex: 2 }
                 ],
                 listeners: {
                 	select: function(grd,record){
@@ -1058,60 +1059,13 @@ Ext.onReady(function()
                             			return;
                             		}
                             	
-	                                var urlServerReporteCartaMP = _urlRutaReports
-	                                
-	                                + '?P_UNIECO='   + recordEditar.get('CDUNIECO')
-	                                + '&P_RAMO='     + recordEditar.get('CDRAMO')
-	                                + '&P_POLIZA='   + recordEditar.get('NMPOLIZA')
-	                                + '&P_SITUAC='   + recordEditar.get('NMSITUAC')
-	                                + '&P_CDPERSON=' + recordEditar.get('CDPERSON')
-	                                + '&P_CDICD='    + recordEditar.get('CDICD')
-	                                + '&destype=cache'
-	                                + "&desformat=PDF"
-	                                + "&userid="        + _reportsServerUser
-	                                + "&ACCESSIBLE=YES"
-	                                + "&report="        + _reporteCartaMedicinaPreventiva
-	                                + "&paramform=no";
-	                                
-			                        debug(urlServerReporteCartaMP);
-			                        var numRand = Math.floor((Math.random() * 100000) + 1);
-			                        debug(numRand);
-			                        var windowVerDocu = Ext.create('Ext.window.Window',
-			                        {
-			                            title          : 'Vista Previa'
-			                            ,width         : 700
-			                            ,height        : 500
-			                            ,collapsible   : true
-			                            ,titleCollapse : true
-			                            ,html : '<iframe innerframe="'
-			                                    + numRand
-			                                    + '" frameborder="0" width="100" height="100"'
-			                                    + 'src="'
-			                                    + panDocUrlViewDoc
-			                                    + "?contentType=application/pdf&url="
-			                                    + encodeURIComponent(urlServerReporteCartaMP)
-			                                    + "\">"
-			                                    + '</iframe>'
-			                            ,listeners :
-			                            {
-			                                resize : function(win,width,height,opt)
-			                                {
-			                                    debug(width,height);
-			                                    $('[innerframe="'+ numRand+ '"]').attr(
-			                                    {
-			                                        'width'   : width - 20
-			                                        ,'height' : height - 60
-			                                    });
-			                                }
-			                            }
-			                        }).show();
-			                        windowVerDocu.center();
+	                                verCartaMedicinaPreventiva(true);
 				            }
                         },
                         {
                             xtype: 'button',
                             icon:_CONTEXT+'/resources/fam3icons/icons/page_go.png',
-                            text: 'Generar Carta',
+                            text: 'Imprimir Carta',
                             tooltip: 'Generar Carta de Medicina Preventiva en los documentos de p&oacute;liza',
                             handler: function(btn){
                             	
@@ -1160,7 +1114,10 @@ Ext.onReady(function()
     		                                            if(json.success){
     		                                            	
     		                                            	padecimientosGridStore.reload();
-    		                                            	mensajeCorrecto('Aviso','Carta genarada correctamente.');
+    		                                            	mensajeCorrecto('Aviso','La Carta de Medicina Preventiva se ha guardado correctamente en los documentos de p&oacute;liza.');
+    		                                            	
+    		                                            	verCartaMedicinaPreventiva(false);
+    		                                            	
     		                                            }else{
     		                                                mensajeError(json.mensaje);
     		                                            }
@@ -1191,7 +1148,9 @@ Ext.onReady(function()
                                             if(json.success){
                                             	
                                             	padecimientosGridStore.reload();
-                                            	mensajeCorrecto('Aviso','Carta genarada correctamente.');
+                                            	mensajeCorrecto('Aviso','La Carta de Medicina Preventiva se ha guardado correctamente en los documentos de p&oacute;liza.');
+                                            	
+                                            	verCartaMedicinaPreventiva(false);
                                             }else{
                                                 mensajeError(json.mensaje);
                                             }
@@ -1260,6 +1219,58 @@ Ext.onReady(function()
 //            	mensajeInfo('No se pudo obtener el Copago para este asegurado');
 //            }
 //        });
+    	
+    	function verCartaMedicinaPreventiva(vistaPrevia){
+    		
+    		var urlServerReporteCartaMP = _urlRutaReports
+            
+            + '?P_UNIECO='   + recordEditar.get('CDUNIECO')
+            + '&P_RAMO='     + recordEditar.get('CDRAMO')
+            + '&P_POLIZA='   + recordEditar.get('NMPOLIZA')
+            + '&P_SITUAC='   + recordEditar.get('NMSITUAC')
+            + '&P_CDPERSON=' + recordEditar.get('CDPERSON')
+            + '&P_CDICD='    + recordEditar.get('CDICD')
+            + '&destype=cache'
+            + "&desformat=PDF"
+            + "&userid="        + _reportsServerUser
+            + "&ACCESSIBLE=YES"
+            + "&report="        + _reporteCartaMedicinaPreventiva
+            + "&paramform=no";
+            
+            debug(urlServerReporteCartaMP);
+            var numRand = Math.floor((Math.random() * 100000) + 1);
+            debug(numRand);
+            var windowVerDocu = Ext.create('Ext.window.Window',
+            {
+                title          : vistaPrevia?'Vista Previa':'Carta de Medicina Preventiva'
+                ,width         : 700
+                ,height        : 500
+                ,collapsible   : true
+                ,titleCollapse : true
+                ,html : '<iframe innerframe="'
+                        + numRand
+                        + '" frameborder="0" width="100" height="100"'
+                        + 'src="'
+                        + panDocUrlViewDoc
+                        + "?contentType=application/pdf&url="
+                        + encodeURIComponent(urlServerReporteCartaMP)
+                        + "\">"
+                        + '</iframe>'
+                ,listeners :
+                {
+                    resize : function(win,width,height,opt)
+                    {
+                        debug(width,height);
+                        $('[innerframe="'+ numRand+ '"]').attr(
+                        {
+                            'width'   : width - 20
+                            ,'height' : height - 60
+                        });
+                    }
+                }
+            }).show();
+            windowVerDocu.center();
+    	}
     }
 
     function historialPadecimientoAseg(recordEditar){

@@ -561,7 +561,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 							null,null,
 							null,null,
                             null,null,
-                            null,Constantes.DELETE_MODE
+                            null,null,Constantes.DELETE_MODE
 						);
 					}
 					actualizaMesaControlSiniestro(params.get("ntramite"));
