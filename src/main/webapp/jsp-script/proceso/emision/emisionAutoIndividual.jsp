@@ -54,6 +54,9 @@ var _p29_ventanaDocs            = null;
 var _p29_validaSeguro           = "N";
 
 var _SWexiper = _p29_smap1.swexiper;
+if ((_SWexiper==null) || (_SWexiper=="") || (_SWexiper==" ")){
+	_SWexiper="N"
+}
 
 var _paramsRetryWS;
 var _mensajeEmail;
