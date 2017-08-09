@@ -1182,6 +1182,7 @@ Ext.onReady(function()
                                     {
                                         format      : 'd/m/Y'
                                         ,fieldLabel : 'FECHA INICIO VIGENCIA'
+                                        ,itemId     : 'fechaIniVigencia'
                                         ,name       : 'feini'
                                         ,allowBlank : false
                                         ,value      : new Date()
@@ -1207,7 +1208,25 @@ Ext.onReady(function()
                                         ,name       : 'fefin'
                                         ,allowBlank : false
                                         ,readOnly   : false
-                                        ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
+                                        //,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
+                                        ,listeners  :
+                                        {
+                                             boxready : function()
+                                             {
+                                                 var vfechaFinVigencia = Ext.ComponentQuery.query('#fechaFinVigencia')[0].getValue();
+                                                 debug("*** vfechaFinVigencia dentro del boxready: ", vfechaFinVigencia);
+                                                 
+                                                 try
+                                                 {
+                                                 	if(vfechaFinVigencia==null){
+                                                 		Ext.ComponentQuery.query('#fechaFinVigencia')[0].setValue(Ext.Date.add(Ext.ComponentQuery.query('#fechaIniVigencia')[0].getValue(),Ext.Date.YEAR,1));
+                                                 	}
+                                                 }
+                                                 catch (e) {
+                                                 	debug("*** Ha ocurrido un error en la vfechaFinVigencia dentro del boxready: ", e);
+                                                 }
+                                             }
+                                        }
                                     })
                                     ,<s:property value="imap.comboFormaPago" />
                                     ,<s:property value="imap.comboRepartoPago" />
