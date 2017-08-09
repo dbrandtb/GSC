@@ -46,6 +46,10 @@ var _p31_selectedRecord         = null;
 var _p31_ventanaDocs            = null;
 
 var _SWexiper = _p31_smap1.swexiper;
+if ((_SWexiper==null) || (_SWexiper=="") || (_SWexiper==" ")){
+	_SWexiper="N"
+}
+
 var _paramsRetryWS;
 var _mensajeEmail;
 
