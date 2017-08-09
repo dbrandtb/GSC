@@ -483,6 +483,7 @@ Ext.onReady(function() {
 			                	//(EGS) Si encuentra más de una póliza, debe mostrar la lista
 							    if(jsonResponse.listaPoliza.length > 1){
 							    	debug('Muestra lista 2');
+							    	_unmask();	//(EGS)
 							    	cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
 							    		if(success){
 							    			jsonResponse = Ext.decode(response.responseText);
@@ -521,9 +522,10 @@ Ext.onReady(function() {
 									 icon:	Ext.Msg.WARNING,
                                 fn: function(buttonId, text, opt) {	// (EGS) agregamos parametros a la función
 									if (buttonId == 'ok'){
-											cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA_ORIG, 'listaPoliza', params, function(options, success, response){
-												if(success){
-													jsonResponse = Ext.decode(response.responseText);
+										_unmask();	//(EGS)
+										cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA_ORIG, 'listaPoliza', params, function(options, success, response){
+											if(success){
+												jsonResponse = Ext.decode(response.responseText);
 													if(jsonResponse.listaPoliza == null){
 														Ext.Msg.show({
 															title:	'Aviso',
@@ -538,17 +540,18 @@ Ext.onReady(function() {
 													}else{
 														modPolizasAltaTramite.show();
 													}
-												}else{
-						                            Ext.Msg.show({
+											}else{
+						                    	Ext.Msg.show({
                         					        title: 'Aviso',
 					                                msg: 'Error al obtener los datos.',
                     					            buttons: Ext.Msg.OK,
 					                                icon: Ext.Msg.ERROR
                     						        });
-												}
-											});
+											}
+										});
 									}
 									else{
+										_unmask();	//(EGS)
 		                                panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
            			                    modPolizasAltaTramite.hide();
                        			        return;
