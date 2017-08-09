@@ -3746,7 +3746,7 @@
 	                        		var feOcurre = panelListadoAsegurado.form.getValues().dtfechaOcurrencias;
 	                        		feOcurre = new Date(feOcurre.substring(6,10) + "/" + feOcurre.substring(3,5)  + "/" + feOcurre.substring(0,2));
 	                        		debug('afiliadosAfectados - Fecha ocurrencia blur ', feOcurre);
-	                        		if (feOcurre.getTime() != feOcurreOrig.getTime()) {
+	                        		if (feOcurreOrig != null && feOcurre.getTime() != feOcurreOrig.getTime()) {
 	                        			//limpiamos datos de asegurado
 	                        			panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
 										panelListadoAsegurado.down('[name="cdRamoAsegurado"]').setValue('');
