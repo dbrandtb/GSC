@@ -454,6 +454,7 @@ Ext.onReady(function() {
 			                	//(EGS) Si encuentra más de una póliza, debe mostrar la lista
 							    if(jsonResponse.listaPoliza.length > 1){
 							    	debug('Muestra lista 4');
+							    	_unmask();	//(EGS)
 							    	cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
 							    		if(success){
 							    			jsonResponse = Ext.decode(response.responseText);
