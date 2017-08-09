@@ -155,7 +155,11 @@ Ext.onReady(function() {
                                 	   tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.show();
                                 	} else {
                                 	   tabDatosGeneralesPoliza.child('#tbDocumentos').tab.show();
-                                	   tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.show();
+                                	   
+                                	   if(_GLOBAL_CDSISROL == _ROL_COORDINADOR_MEDICINA_PREVENTIVA){
+                                		   tabDatosGeneralesPoliza.child('#tbMedicinaPreventiva').tab.show();
+                                	   }
+                                	   
                                 	   tabDatosGeneralesPoliza.child('#tabEnfermedades').tab.hide();
                                 	}
                                     tabDatosGeneralesPoliza.child('#tabDatosPlan').tab.hide();
