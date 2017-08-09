@@ -193,7 +193,4 @@ public interface ProductoManager {
 			String descripcionProducto,
 			String langCode, String usuario) throws ApplicationException;
 
-	public String generarProducto(String codigoProducto, String server, String usuario, String pass)
-			throws ApplicationException;
-
 }
