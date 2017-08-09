@@ -1506,7 +1506,7 @@ Ext.onReady(function() {
                         	blur:function(e){
                         		var feOcurre = panelInicialPral.down('[name=dtFechaOcurrencia]').getValue();
                         		debug('Fecha ocurrencia blur ', feOcurre);
-                        		if (feOcurre.getTime() != feOcurreOrig.getTime()) {
+                        		if (feOcurreOrig != null && feOcurre.getTime() != feOcurreOrig.getTime()) {
 	                        		limpiarRegistros();
                         			//limpiamos datos de asegurado y beneficiario
 	                        		panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');

@@ -2002,7 +2002,7 @@ Ext.onReady(function() {
 	                      			var feOcurre = panelInicialPral.down('[name=modFechaOcurrencia]').getValue();
 	                        		debug('Blur - 2000 - feOcurre ', feOcurre);
 	                        		//si se modifico la fecha, se limpian los campos para que otra vez capturen afiliado
-	                        		if (feOcurre.getTime() != feOcurreOrig.getTime()) {
+	                        		if (feOcurreOrig != null && feOcurre.getTime() != feOcurreOrig.getTime()) {
 		                        		limpiarRegistros();
 	                        			//limpiamos datos de asegurado
 		                        		valorIndexSeleccionado.set('modCdperson','');
