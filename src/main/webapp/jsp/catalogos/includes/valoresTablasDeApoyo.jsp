@@ -352,7 +352,7 @@ Ext.onReady(function() {
 			 	sortable: false,
 			 	menuDisabled: true,
 			 	items: [{
-			 		icon:_CONTEXT+'/resources/fam3icons/icons/delete.png',
+			 		icon:_CONTEXT+'/resources/fam3icons/icons/fam/delete.png',
 			 		tooltip: 'Eliminar Clave',
 			 		handler: function(grid, rowIndex){
 			 					debug('eliminando',rowIndex);
@@ -585,7 +585,7 @@ Ext.onReady(function() {
 			                            					items: [
 			                            						{boxLabel: 'Agregar Datos Nuevos', name: 'tipoBusqueda', inputValue: 1,  width: 200},
 			                            						{boxLabel: 'Actualizar Tarifas', name: 'tipoBusqueda', inputValue: 2, checked: true, width: 200},
-			                            						{boxLabel: 'Reemplazar Datos', name: 'tipoBusqueda', inputValue: 3,width: 200, hidden: (cdSisRolActivo==RolSistema.SuscriptorAuto) ? true : false,}
+			                            						{boxLabel: 'Reemplazar Datos', name: 'tipoBusqueda', inputValue: 3,width: 200}
 									                                ],
 			                            					listeners : {
 			                            						change : function(radiogroup, newValue, oldValue, eOpts) {
@@ -712,7 +712,7 @@ Ext.onReady(function() {
 							    	text : 'Exportar',
 							    	tooltip: 'Exporta la tabla a formato Excel.',
 							    	icon:_CONTEXT+'/resources/fam3icons/icons/database_table.png',
-							    	 hidden: (cdSisRolActivo==RolSistema.SuscriptorAuto) ? false : true, //(cdSisRolActivo==RolSistema.SuscriptorAuto || cdSisRolActivo==RolSistema.Parametrizador) ? false : true,//se evalua habilitar o desabilitar Boton, dependiendo el rol
+							    	 hidden: true ,//(cdSisRolActivo==RolSistema.ParametrizadorSistemas ||  cdSisRolActivo==RolSistema.Parametrizador) ? false : true,//se evalua habilitar o desabilitar Boton, dependiendo el rol
 							    	handler: function(btn){
 							    		var loadMaskExport = new Ext.LoadMask('divValoresCincoClaves', {msg:"Exportando Tabla de Apoyo..."});
 										loadMaskExport.show();
@@ -939,7 +939,7 @@ Ext.onReady(function() {
                      
                     
                     if(tipoFormato == 'A'){
-                    	regexFormato = new RegExp("^[a-zA-Z0-9\-]+$");
+                    	regexFormato = new RegExp("^[a-zA-Z0-9]+$");
                     	dsFormato = 'Alfanum&eacute;rico';
                     }else if(tipoFormato == 'N'){
                     	regexFormato = new RegExp("^([0-9])+$");

@@ -247,10 +247,10 @@ Ext.onReady(function()
 	    [{
 	    	layout: 'column',
 	    	border: false,
-	    	html:'<br/><strong>Agregar o editar Cat&aacute;logo de URLs:</strong><br/>'
+	    	html:'<br/><strong>Agregar o editar URLs para Men&uacute;s:</strong><br/>'
 	     },{
 	    	xtype: 'button',
-	    	text : 'Agregar/Editar Cat&aacute;logo de URLs',
+	    	text : 'Agregar/Editar URLs para Men&uacute;s',
 	    	tooltip: 'Agrega o edita las URLs para los Men&uacute;s',
 	    	handler: verEditarOpcionesURL
 	    },{
@@ -891,7 +891,7 @@ Ext.onReady(function()
 			                        })
 			                    },{
 			            	    	xtype: 'button',
-			            	    	text : 'Agregar/Editar Cat&aacute;logo de URLs',
+			            	    	text : 'Agregar/Editar URLs para Men&uacute;s',
 			            	    	tooltip: 'Agrega o edita las URLs para los Men&uacute;s',
 			            	    	handler: verEditarOpcionesURL
 			            	    }
@@ -1059,7 +1059,7 @@ Ext.onReady(function()
 		
 		
 			var windowOpcionesLiga = Ext.create('Ext.window.Window', {
-		          title: 'Cat&aacute;logo de URLs',
+		          title: 'URLs de Men&uacute;s',
 		          modal:true,
 		          height : 450,
 		          width  : 800,

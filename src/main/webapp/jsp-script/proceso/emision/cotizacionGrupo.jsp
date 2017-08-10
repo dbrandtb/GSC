@@ -112,7 +112,7 @@ var _p21_urlSubirCensoMorbilidad         = '<s:url namespace="/emision"         
 
 var _p21_urlCargarAseguradosFiltroGrupoPag     = '<s:url namespace="/emision"         action="cargarAseguradosFiltroGrupoPag"      />';
 var _p21_urlCargarAseguradosFiltroExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosFiltroExtraprimas"   />';
-var _CAT_TATRIPOL                              = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TATRIPOL"/>';
+var _p21_urlCargarAseguradosFiltroExtraprimas  = '<s:url namespace="/emision"         action="cargarAseguradosFiltroExtraprimas"   />';
 var _p21_filtroGrupoPag     = 'NOMBRE ASEGURADO';
 
 //estas url se declaran con cotcol para ser usadas desde funcionesCotizacionGrupo.js en comun con cotizacionGrupo2.jsp
@@ -125,14 +125,15 @@ var _p21_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol"
 var _p21_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
-var _p21_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p21_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p21_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p21_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _TIPO_SITUACION_RENOVACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
 var _EN_ESPERA_DE_COTIZACION 			= '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
 var _EN_EMISION_EN_REVISION_TECNICA     = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EMISION_EN_REVISION_TECNICA.codigo" />';
 
 var _ESTATUS_PENDIENTE       = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@PENDIENTE.codigo" />';
 var _ESTATUS_TRAMITE_AGENTE  = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@TRAMITE_AGENTE.codigo" />';
+
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
@@ -327,7 +328,6 @@ var forzaCambiaCensoClon = (cambiaTamTramClon||cargaCensoRenovNuvo)? true : fals
 
 var cveDesSucursal = '';
 var mensajeCambioGrupos = 0;
-
 ////// variables //////
 
 Ext.onReady(function()
@@ -711,7 +711,7 @@ Ext.onReady(function()
 
         			setTimeout(function(){
         				if(grd.isVisible()){
-        					if(mensajeCambioGrupos == 0){
+            				if(mensajeCambioGrupos == 0){
         						mensajeCambioGrupos ++;
         						mensajeInfo('Si agrega o elimina Grupos para este Tr&aacute;mite Clonado debe volver a cargar el censo con las nuevas caracter&iacute;sticas.');
             				}
@@ -1133,8 +1133,7 @@ Ext.onReady(function()
                                         ,value      : new Date()
                                         ,listeners  :
                                         {
-                                            change : function(field,value)
-                                        	//dirtychange : function(field, isDirty, value)
+                                             change : function(field,value)
                                              {
                                                  try
                                                  {
@@ -1153,6 +1152,7 @@ Ext.onReady(function()
                                         ,itemId     : 'fechaFinVigencia'
                                         ,name       : 'fefin'
                                         ,allowBlank : false
+                                        //,readOnly   : true
                                         ,readOnly   : false
                                         ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
                                     })
@@ -1380,7 +1380,7 @@ Ext.onReady(function()
             		var arrBusqComp =  Ext.ComponentQuery.query('button[text=Guardar y recargar]', _p_21_panelPrincipal);
             		var btnGuardarYrecargar = arrBusqComp[arrBusqComp.length-1];
                 	
-            		if(!esTramiteClonado){
+                	if(!esTramiteClonado){
             			if((RolSistema.EjecutivoVenta == _p21_smap1.cdsisrol || RolSistema.MesaControl == _p21_smap1.cdsisrol ) && _p21_smap1.status == _ESTATUS_PENDIENTE){
             				btnGuardarYrecargar.hide();
             			}
@@ -1388,7 +1388,7 @@ Ext.onReady(function()
             				btnGuardarYrecargar.hide();
             			}
             		}
-            		
+                	
                 }catch(exClon){
                 	debugError('Error sin impacto al mostrar boton de Guardar para clonacion',exClon);
                 }
@@ -1617,12 +1617,12 @@ Ext.onReady(function()
     try
     {
     	if(_p21_cdtipsup  == _TIPO_SITUACION_RENOVACION){
-    		//Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
+    		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].show();
     		Ext.ComponentQuery.query('button[text=Complementar]')[0].hide();
     	}else{
-    		//Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].hide();
+    		Ext.ComponentQuery.query('button[text=Exportar Censo]')[0].hide();
     		Ext.ComponentQuery.query('button[text=Actualizar Censo]')[0].hide();
     		Ext.ComponentQuery.query('button[text=Refrescar Censo]')[0].hide();
     		Ext.ComponentQuery.query('button[text=Complementar]')[0].show();
@@ -2702,13 +2702,10 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             	if(!Ext.isEmpty(elementoCobertura.auxiliar) && elementoCobertura.auxiliar == 'C'){
                                             		elementoCobertura.fieldLabel = new String(elementoCobertura.fieldLabel).replace('(MONTO)','').trim();
                                             		elementoCobertura.fieldLabel = new String(elementoCobertura.fieldLabel).replace('(%)','').trim();
-                                            		
                                             		fieldSinTipoCopago = new String(elementoCobertura.fieldLabel);
-                                            		
                                             		elementoCobertura.fieldLabel = '';
                                             		elementoCobertura.labelWidth = 0; 
                                                 	elementoCobertura.width = 100;
-                                                	
                                                 	elementoCobertura.on({
                                                 		beforerender: function(cmb){
                                         	        		cmb.labelWidth= 0;
@@ -2717,7 +2714,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             	}else{
                                             		elementoCobertura.labelWidth = 215; 
                                                 	elementoCobertura.width = 310;
-                                                	
                                             		elementoCobertura.on({
                                                 		beforerender: function(cmb){
                                         	        		cmb.labelWidth= 215;
@@ -2746,7 +2742,7 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             			fieldLabel: fieldSinTipoCopago,
                                             			labelWidth: 215,
                                             	        width: 310,
-                                            			store: modeloTipoCopago,
+                                            	        store: modeloTipoCopago,
                                             	        style : 'margin:5px;',
                                             	        displayField: 'value',
                                             	        valueField: 'key',
@@ -2793,7 +2789,6 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             		hijosCheckPorcentaje.push(elementoCobertura);
                                             	}else{
                                             		hijosCheckPorcentaje.push(elementoCobertura);
-                                        			
                                             		var nuevoCheck = Ext.create('Ext.form.Label', {
                                             	        html:'<br/>',
                                             	        width: 0,
@@ -2806,6 +2801,8 @@ function _p21_editarGrupoClic(grid,rowIndex)
                                             		
                                             		hijosCheckPorcentaje.push(nuevoCheck);
                                             	}
+                                            	
+                                            	
                                            	});
                                             
                                             //para factores menor a cero
