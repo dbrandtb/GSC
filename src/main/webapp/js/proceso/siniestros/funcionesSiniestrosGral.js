@@ -402,91 +402,72 @@ function _11_solicitarPago(){
                         centrarVentanaInterna(mensajeWarning(resultCobertura));
                     }
                 }else{
-                	
-                	Ext.Ajax.request({
+                    Ext.Ajax.request({
                         url : _UrlValidaDatosEstudiosFacturasTramite
                         ,params:{
                             'params.ntramite' : _11_params.NTRAMITE
                         }
                         ,success : function (responseDatos){
                             var jsonRespuestaDatos =Ext.decode(responseDatos.responseText);
-                            
                             if(jsonRespuestaDatos.success == true){
                                 if( !Ext.isEmpty(jsonRespuestaDatos.params) && !Ext.isEmpty(jsonRespuestaDatos.params.FALTAN_DATOS_ESTUDIOS)
                                 		&& jsonRespuestaDatos.params.FALTAN_DATOS_ESTUDIOS == "S"){
-                                	
                                 	centrarVentanaInterna(mensajeWarning(jsonRespuestaDatos.mensaje));
-                                	
                                 }else{
-
                                 	Ext.Ajax.request({
-                                        url : _URL_MONTO_PAGO_SINIESTRO
+                        url : _URL_MONTO_PAGO_SINIESTRO
+                        ,params:{
+                            'params.ntramite' : _11_params.NTRAMITE,
+                            'params.cdramo'   : _11_params.CDRAMO,
+                            'params.tipoPago' : _11_params.OTVALOR02
+                        }
+                        ,success : function (response){
+                            var jsonRespuesta =Ext.decode(response.responseText);
+                            debug("Valor de Respuesta", jsonRespuesta);
+                            
+                            if(jsonRespuesta.success == true){
+                                if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
+                                    //_11_mostrarSolicitudPago(); ...1
+                                    _11_validaProveedorPagoDirecto(); // (EGS) validamos solo un proveedor en reclamo pago directo
+                                    //_11_validaAseguroLimiteCoberturas(); // (EGS) se comenta aquí pero se agrega en funcion _11_validaProveedorPagoDirecto()
+                                }else{
+                                    //Verificamos si tiene la validacion del dictaminador medico
+                                    Ext.Ajax.request({
+                                        url  : _URL_VAL_AJUSTADOR_MEDICO
                                         ,params:{
-                                            'params.ntramite' : _11_params.NTRAMITE,
-                                            'params.cdramo'   : _11_params.CDRAMO,
-                                            'params.tipoPago' : _11_params.OTVALOR02
+                                            'params.ntramite': _11_params.NTRAMITE
                                         }
-                                        ,success : function (response){
-                                            var jsonRespuesta =Ext.decode(response.responseText);
-                                            debug("Valor de Respuesta", jsonRespuesta);
-                                            
-                                            if(jsonRespuesta.success == true){
-                                                if( _11_params.OTVALOR02 ==_TIPO_PAGO_DIRECTO){
-                                                    //_11_mostrarSolicitudPago(); ...1
-                                                    _11_validaProveedorPagoDirecto(); // (EGS) validamos solo un proveedor en reclamo pago directo
-                                                    //_11_validaAseguroLimiteCoberturas(); // (EGS) se comenta aquí pero se agrega en funcion _11_validaProveedorPagoDirecto()
-                                                }else{
-                                                    //Verificamos si tiene la validacion del dictaminador medico
-                                                    Ext.Ajax.request({
-                                                        url  : _URL_VAL_AJUSTADOR_MEDICO
-                                                        ,params:{
-                                                            'params.ntramite': _11_params.NTRAMITE
-                                                        }
-                                                        ,success : function (response)
-                                                        {
-                                                            if(Ext.decode(response.responseText).datosValidacion != null){
-                                                                var autAM = null;
-                                                                var result ="";
-                                                                banderaValidacion = "0";
-                                                                var json = Ext.decode(response.responseText).datosValidacion;
-                                                                if(json.length > 0){
-                                                                    for(var i = 0; i < json.length; i++){
-                                                                        if(json[i].AREAAUTO =="ME"){
-                                                                            var valorValidacion = json[i].SWAUTORI+"";
-                                                                            if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
-                                                                                banderaValidacion = "1";
-                                                                                result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
-                                                                            }
-                                                                            
-                                                                        }
-                                                                    }
-                                                                    if(banderaValidacion == "1"){
-                                                                        centrarVentanaInterna(mensajeWarning(result));
-                                                                    }else{
-                                                                        //_11_mostrarSolicitudPago(); ..2
-                                                                        _11_validaAseguroLimiteCoberturas();
-                                                                    }
-                                                                }else{
-                                                                    centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
-                                                                }
+                                        ,success : function (response)
+                                        {
+                                            if(Ext.decode(response.responseText).datosValidacion != null){
+                                                var autAM = null;
+                                                var result ="";
+                                                banderaValidacion = "0";
+                                                var json = Ext.decode(response.responseText).datosValidacion;
+                                                if(json.length > 0){
+                                                    for(var i = 0; i < json.length; i++){
+                                                        if(json[i].AREAAUTO =="ME"){
+                                                            var valorValidacion = json[i].SWAUTORI+"";
+                                                            if(valorValidacion == null || valorValidacion == ''|| valorValidacion == 'null'){
+                                                                banderaValidacion = "1";
+                                                                result = result + 'El m&eacute;dico no autoriza la factura ' + json[i].NFACTURA + '<br/>';
                                                             }
-                                                        },
-                                                        failure : function (){
-                                                            //me.up().up().setLoading(false);
-                                                            Ext.Msg.show({
-                                                                title:'Error',
-                                                                msg: 'Error de comunicaci&oacute;n',
-                                                                buttons: Ext.Msg.OK,
-                                                                icon: Ext.Msg.ERROR
-                                                            });
+                                                            
                                                         }
-                                                    });
+                                                    }
+                                                    if(banderaValidacion == "1"){
+                                                        centrarVentanaInterna(mensajeWarning(result));
+                                                    }else{
+                                                        //_11_mostrarSolicitudPago(); ..2
+                                                        _11_validaAseguroLimiteCoberturas();
+                                                    }
+                                                }else{
+                                                    centrarVentanaInterna(mensajeWarning('El m&eacute;dico no ha autizado la factura'));
                                                 }
-                                            }else {
-                                                centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
                                             }
                                         },
                                         failure : function (){
+                                            //me.up().up().setLoading(false);
                                             Ext.Msg.show({
                                                 title:'Error',
                                                 msg: 'Error de comunicaci&oacute;n',
@@ -495,7 +476,6 @@ function _11_solicitarPago(){
                                             });
                                         }
                                     });
-                            	
                                 }
                             }else {
                                 centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
@@ -510,7 +490,20 @@ function _11_solicitarPago(){
                             });
                         }
                     });
-                	
+                                }
+                            }else {
+                                centrarVentanaInterna(mensajeWarning(jsonRespuesta.mensaje));
+                            }
+                        },
+                        failure : function (){
+                            Ext.Msg.show({
+                                title:'Error',
+                                msg: 'Error de comunicaci&oacute;n',
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.Msg.ERROR
+                            });
+                        }
+                    });
                 }
             },
             failure : function () {
@@ -563,100 +556,6 @@ function _11_validaProveedorPagoDirecto(){
             }));
         }
     });
-}
-
-
-//(EGS) se crea como función para simular seleccion de poliza en grid que muestra lista de polizas
-function eligePoliza(record,panelListadoAsegurado,modPolizasAsegurado){
-	_11_fueraVigencia = "0";	// (EGS) reiniciamos valor
-	//1.- Validamos que el asegurado este vigente
-	if(record.desEstatusCliente=="Vigente") {
-		var valorFechaOcurrencia;
-		var valorFechaOcu = panelListadoAsegurado.query('datefield[name=dtfechaOcurrencias]')[0].rawValue;
-		valorFechaOcurrencia = new Date(valorFechaOcu.substring(6,10)+"/"+valorFechaOcu.substring(3,5)+"/"+valorFechaOcu.substring(0,2));
-		var valorFechaInicial = new Date(record.feinicio.substring(6,10)+"/"+record.feinicio.substring(3,5)+"/"+record.feinicio.substring(0,2));
-		var valorFechaFinal =   new Date(record.fefinal.substring(6,10)+"/"+record.fefinal.substring(3,5)+"/"+record.fefinal.substring(0,2));
-		var valorFechaAltaAsegurado = new Date(record.faltaAsegurado.substring(6,10)+"/"+record.faltaAsegurado.substring(3,5)+"/"+record.faltaAsegurado.substring(0,2));
-		Ext.Ajax.request({
-			url     : _URL_VALIDA_STATUSASEG
-			,params:{
-				'params.cdperson'  : panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').getValue(),
-				'params.feoocurre' : valorFechaOcurrencia,
-				'params.nmpoliza'  : record.nmpoliza
-			}
-			,success : function (response) {
-				json = Ext.decode(response.responseText);
-				if(Ext.decode(response.responseText).validacionGeneral =="V"){
-					if((valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
-						if( valorFechaOcurrencia >= valorFechaAltaAsegurado ) {
-							_11_fueraVigencia = "1";	// (EGS) indicamos que siniestro sale de vigencia de la poliza
-							panelListadoAsegurado.down('[name="cdUniecoAsegurado"]').setValue(record.cdunieco);
-							panelListadoAsegurado.down('[name="cdRamoAsegurado"]').setValue(record.cdramo);
-							panelListadoAsegurado.down('[name="estadoAsegurado"]').setValue(record.estado);
-							panelListadoAsegurado.down('[name="nmPolizaAsegurado"]').setValue(record.nmpoliza);
-							panelListadoAsegurado.down('[name="nmSoliciAsegurado"]').setValue(record.nmsolici);
-							panelListadoAsegurado.down('[name="nmSuplemAsegurado"]').setValue(record.nmsuplem);
-							panelListadoAsegurado.down('[name="nmSituacAsegurado"]').setValue(record.nmsituac);
-							panelListadoAsegurado.down('[name="cdTipsitAsegurado"]').setValue(record.cdtipsit);
-							modPolizasAsegurado.hide();
-						}else{
-							// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
-							Ext.Msg.show({
-								title:'Error',
-								msg: 'La fecha de ocurrencia es mayor a la fecha de alta del asegurado',
-								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.ERROR
-							});
-							panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
-							modPolizasAsegurado.hide();
-							//limpiarRegistros();
-						}
-					}else{
-						// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
-						centrarVentanaInterna(Ext.Msg.show({
-							title:'Error',
-							msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						}));
-						panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
-						modPolizasAsegurado.hide();
-					}
-				 }else{
-					// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
-					centrarVentanaInterna(Ext.Msg.show({
-						title:'Error',
-						msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.ERROR
-					}));
-					panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
-					modPolizasAsegurado.hide();
-				 }
-			},
-			failure : function (){
-				me.up().up().setLoading(false);
-				centrarVentanaInterna(Ext.Msg.show({
-					title:'Error',
-					msg: 'Error de comunicaci&oacute;n',
-					buttons: Ext.Msg.OK,
-					icon: Ext.Msg.ERROR
-				}));
-			}
-		});
-	}else{
-		// El asegurado no se encuentra vigente
-		centrarVentanaInterna(Ext.Msg.show({
-			title:'Error',
-			msg: 'El asegurado de la p&oacute;liza seleccionado no se encuentra vigente',
-			buttons: Ext.Msg.OK,
-			icon: Ext.Msg.ERROR
-		}));
-		panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue("");
-		modPolizasAsegurado.hide();
-		//limpiarRegistros();
-	}
-
 }
 
 //5.2.- Validamos si existe coberturas que no cubre para su validacion
@@ -2427,8 +2326,7 @@ function guardaCambiosAutorizacionServ(record, numeroAutorizacion, tipoProceso, 
                 null,
                 jsonAutServ.idTipoEvento,
                 null,
-                record.data.SWFONSIN,
-                record.data.SWMEDPRV
+                record.data.APLICFONDO
             );
             gridFacturaDirecto.setLoading(false);
         },
@@ -3242,8 +3140,7 @@ function guardaDatosComplementariosValidacionAsegurado(record, banderaAsegurado)
                                             Ext.Date.format(record.data.FEEGRESO, 'd/m/Y'),
                                             record.data.CDTIPEVE,
                                             record.data.CDTIPALT,
-                                            record.data.SWFONSIN,
-                                            record.data.SWMEDPRV
+                                            record.data.SWFONSIN
                                         );
                                     }
                                 }else{
@@ -3295,8 +3192,7 @@ function guardaDatosComplementariosValidacionAsegurado(record, banderaAsegurado)
                             Ext.Date.format(record.data.FEEGRESO, 'd/m/Y'),
                             record.data.CDTIPEVE,
                             record.data.CDTIPALT,
-                            record.data.SWFONSIN,
-                            record.data.SWMEDPRV
+                            record.data.SWFONSIN
                         );
                     }
                 }
@@ -3321,7 +3217,7 @@ function _11_guardarDatosComplementario(cdunieco,cdramo, estado, nmpoliza, nmsup
                                     cdicd2,cdcausa, cdgarant,cdconval, nmautser,
                                     cdperson, tipoProceso, complemento,nmsituac,
                                     deducible, copago,nmcallcenter, actMisiniper,
-                                    fechaIngreso,fechaEgreso,cveEvento, cveAlta, aplicFondo, esMedPrev){
+                                    fechaIngreso,fechaEgreso,cveEvento, cveAlta, aplicFondo){
     
     debug("Datos de guardado 1 ===> ","cdunieco :"+cdunieco,"cdramo :"+cdramo, "estado :"+estado, "nmpoliza :"+nmpoliza);
     debug("Datos de guardado 2 ===> ","nmsuplem :"+nmsuplem,"aaapertu :"+aaapertu, "nmsinies :"+nmsinies,"feocurre :"+feocurre);
@@ -3329,7 +3225,7 @@ function _11_guardarDatosComplementario(cdunieco,cdramo, estado, nmpoliza, nmsup
     debug("Datos de guardado 4 ===> ","cdgarant :"+cdgarant,"cdconval :"+cdconval, "nmautser :"+nmautser,"cdperson :"+cdperson);
     debug("Datos de guardado 5 ===> ","tipoProceso :"+tipoProceso, "complemento :"+complemento,"nmsituac :"+nmsituac);
     debug("Datos de guardado 6 ===> ","deducible :"+deducible, "copago :"+copago,"nmcallcenter :"+nmcallcenter, "actMisiniper :"+actMisiniper);
-    debug("Datos de guardado 7 ===> ","fechaIngreso :"+fechaIngreso, "fechaEgreso :"+fechaEgreso,"cveEvento :"+cveEvento, "cveAlta :"+cveAlta,"esMedPrev :"+esMedPrev);
+    debug("Datos de guardado 7 ===> ","fechaIngreso :"+fechaIngreso, "fechaEgreso :"+fechaEgreso,"cveEvento :"+cveEvento, "cveAlta :"+cveAlta);
     Ext.Ajax.request( {
         url  : _URL_ACTUALIZA_INFO_GRAL_SIN
         ,params:{
@@ -3375,8 +3271,7 @@ function _11_guardarDatosComplementario(cdunieco,cdramo, estado, nmpoliza, nmsup
             'params.feegreso'       : fechaEgreso,
             'params.cveEvento'      : cveEvento,
             'params.cveAlta'        : cveAlta,
-            'params.aplicFondo'     : aplicFondo,
-            'params.esMedPrev'      : esMedPrev
+            'params.aplicFondo'     : aplicFondo
         }
         ,success : function(response, opts) {   //(EGS)
             banderaAsegurado = 0;
@@ -3505,9 +3400,7 @@ function _11_obtieneDatosOpcionalesValor(cdramo,cdtipsit,cdgarant,cdconval,recor
         }
     });
 }
-
 function validaCapturaResultadoEstudiosAsegurado(paramsResEstudios){
-	
 	Ext.Ajax.request( {
         url  : _UrlValidaCapturaEstudiosCobertura 
         ,params:{
@@ -3517,10 +3410,8 @@ function validaCapturaResultadoEstudiosAsegurado(paramsResEstudios){
             'params.pi_cdconval'  : paramsResEstudios.cdconval
         }
         ,success : function (response) {
-        	
             if(Ext.decode(response.responseText).params != null){
                 var respuestaValidacionCober =Ext.decode(response.responseText).params.CAPTURA_RESULTADOS;
-                
                 if(respuestaValidacionCober == 'S'){
                 	capturaResultadosInf(paramsResEstudios.cdunieco, paramsResEstudios.cdramo, paramsResEstudios.aaapertu,
             				paramsResEstudios.status, paramsResEstudios.nmsinies, paramsResEstudios.nmsituac, paramsResEstudios.cdtipsit,
@@ -3541,52 +3432,40 @@ function validaCapturaResultadoEstudiosAsegurado(paramsResEstudios){
             });
         }
     });	
-	
 }
-
 function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nmsituac,_cdtipsit,_cdgarant,_cdconval,_dsconval,_dsasegurado){
-	
 	var bufferTiposResultadoEstudios = new Ext.util.HashMap();
 	var windowResultEstudios;
-	
 	var recordSelCombo;
-	
 	var _TIPO_PROVEEDOR_MEDICO = '15';
 	var _TIPO_PROVEEDOR_LAB    = '16';
-	
 	/////////////////////
 	////// modelos //////
 	/*/////////////////*/
-	
 	Ext.define('modeloResEstudios',
 			{
 				extend : 'Ext.data.Model'
 				,fields :
 				['CDCONCEP','DSCONCEP','CDEST','DSEST','CDRESEST','VALOR', 'OBSERV','SWOBLVAL','SWOBLRES', 'CDTABRES', 'SWOBLEST','CDTIPO']
 	});
-	
 	/*/////////////////*/
 	////// modelos //////
 	/////////////////////
-	
 	////////////////////
 	////// stores //////
 	/*////////////////*/
-	
 	var editorPluginResultados = Ext.create('Ext.grid.plugin.CellEditing', {
     	//autoCancel : false,
     	//dirtyText  : 'Necesita Aceptar o Cancelar sus cambios',
         clicksToEdit: 1,
         listeners: {
         	beforeedit: function(editor, context, eOpts ){
-        		
         		if(context.field == 'CDRESEST'){
         			var comboColumnaFila = context.column.getEditor(context.record);
             		debug('Combo CDRESEST:',comboColumnaFila);
             		if(Ext.isEmpty(context.record.get('CDRESEST'))){
             			comboColumnaFila.clearValue();
             		}
-        			
             		comboColumnaFila.getStore().load({
             			params:{
             				'params.cdest': context.record.get('CDEST')
@@ -3596,7 +3475,6 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
         	}
         }
     });
-	
 	Ext.define('tiposResEstudioStore', {
 		extend : 'Ext.data.Store',
 		constructor : function(cfg) {
@@ -3617,7 +3495,6 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 		    }, cfg) ]);
 		}
 	});
-
 	Ext.define('tiposResEstudioStoreTodos', {
 		extend : 'Ext.data.Store',
 		constructor : function(cfg) {
@@ -3638,18 +3515,14 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 			}, cfg) ]);
 		}
 	});
-	
 	var storeResEstudiosAux = new tiposResEstudioStoreTodos();
 	storeResEstudiosAux.load({
 		callback: function(recordsEstRes, operationEst, successEst){
-			
 			Ext.Array.each(recordsEstRes,function(recordsEstResIT, indexRecRes){
 				bufferTiposResultadoEstudios.add(recordsEstResIT.get('aux')+'-'+recordsEstResIT.get('key'), recordsEstResIT.get('value'));
            	});
 		}
 	});
-
-	
 	var estudiosCobAsegStore = Ext.create('Ext.data.Store',
     {
 		pageSize : 20
@@ -3666,16 +3539,12 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
             }
         }
     });
-	
 	/*////////////////*/
 	////// stores //////
 	////////////////////
-	
 	///////////////////////
 	////// contenido //////
 	/*///////////////////*/
-	
-	
 	var resultadosEstudiosGrid = Ext.create('Ext.grid.Panel',
 	    {
     	title : "Capture los resultados del asegurado: " + _dsasegurado//"Capture los resultados de '"+ _dsconval + "' para: " + _dsasegurado
@@ -3734,10 +3603,8 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 			    {
 			    	descConcept: function(children){
 			    		//debug('Para GroupSummary, children',children.length);
-			    		
 			            if(children.length > 0){
 			            	var tipoConcepto = '';
-			            	
 			            	if(children[0].get('CDTIPO') == _TIPO_PROVEEDOR_MEDICO){
 				    			tipoConcepto = ' (MEDICO)';
 				    		}else if(children[0].get('CDTIPO') == _TIPO_PROVEEDOR_LAB){
@@ -3745,9 +3612,7 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 				    		}
 			            	return children[0].get('DSCONCEP') + tipoConcepto;
 			            }
-			            
 			            return 'Sin Concepto';
-			           
 			        }
 			    }
 			],
@@ -3768,16 +3633,12 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
             icon    : _CONTEXT + '/resources/fam3icons/icons/disk.png',
             text    : 'Guardar Datos',
             handler : function(btn, e){
-            	
                 var updateList = [];
                 var estudioRequiereResVal    = false;
                 var estudioRequiereResValDes = '';
                 var mensajeRequiereCampo     = '';
-                
-                
                 estudiosCobAsegStore.each(function(record) {
                 	if( !Ext.isEmpty(record.get('CDRESEST')) || !Ext.isEmpty(record.get('VALOR')) || !Ext.isEmpty(record.get('OBSERV')) ){
-                		
                 		/* Valida para este estudio si el Resultado es obligatorio */
                 		if(!Ext.isEmpty(record.get('SWOBLRES')) && record.get('SWOBLRES') == 'S'
                 			&& Ext.isEmpty(record.get('CDRESEST'))){
@@ -3786,7 +3647,6 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                     		mensajeRequiereCampo = 'Resultado';
                     		return false;
                 		}
-                		
                 		/* Valida para este estudio si el Valor es obligatorio */
                 		if(!Ext.isEmpty(record.get('SWOBLVAL')) && record.get('SWOBLVAL') == 'S'
                 			&& Ext.isEmpty(record.get('VALOR'))){
@@ -3795,18 +3655,14 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                     		mensajeRequiereCampo = 'Valor';
                     		return false;
                 		}
-                		
                 	}
                 });
-                
                 if(estudioRequiereResVal){
 	            	mensajeWarning("Debe capturar un " + mensajeRequiereCampo + " para el estudio: ''"
 	            			+estudioRequiereResValDes+"'' o borre toda la informaci&oacute;n del mismo.");
 	            	return;
 	            }
-                
                 estudiosCobAsegStore.getUpdatedRecords().forEach(function(record,index,arr){
-                	
                     var datosResultado = {
                    		 'pi_cdunieco': _cdunieco,
                    		 'pi_cdramo': _cdramo,
@@ -3823,14 +3679,10 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                    		 'pi_valor' : record.get('VALOR'),
                    		 'pi_observ' : record.get('OBSERV')
                     };
-               	    
                     updateList.push(datosResultado);
                 });
-                
                 debug('Lista de Resultados a guardar: ',updateList);
-
                 var maskGuarda = _maskLocal('Guardando...');
-                
                 Ext.Ajax.request({
                     url: _UrlActualizaEliminaEstudiosCobertura,
                     jsonData : {
@@ -3840,7 +3692,6 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                    	 maskGuarda.close();
                         var json = Ext.decode(response.responseText);
                         if(json.success){
-                       	 
 //                            mensajeCorrecto('Aviso','Se ha guardado correctamente.', function(){
                            	 Ext.Ajax.request( {
                            	        url  : _UrlValidaDatosEstudiosReclamacion 
@@ -3856,34 +3707,26 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                                   		 	'params.pi_cdconval': _cdconval
                            	        }
                            	        ,success : function (response) {
-                           	        	
                            	        	estudiosCobAsegStore.reload();
-                           	        	
                            	            if(Ext.decode(response.responseText).params != null){
                            	                var respuestaValidacionResEst = Ext.decode(response.responseText).params.VALIDA_RES_RECL;
                            	                var respuestaTipoProvedor = Ext.decode(response.responseText).params.VALIDA_RES_TIPO_PROV;
-                           	                
                            	                if(respuestaValidacionResEst == 'N'){
                            	                	var mensajeEstudios = 'Capture almenos un estudio de conceptos de LABORATORIO.';
-
                            	                	var mensajeEstudiosObligMedico = ''; 
                            	                	var mensajeEstudiosObligLab    = '';
-                           	                	
                            	                	estudiosCobAsegStore.each(function(record) {
                            	                     	if( !Ext.isEmpty(record.get('CDTIPO')) && _TIPO_PROVEEDOR_MEDICO == record.get('CDTIPO')
                            	                     			&& !Ext.isEmpty(record.get('SWOBLEST')) && record.get('SWOBLEST') == "S"
                            	                     			&& Ext.isEmpty(record.get('CDRESEST'))  && Ext.isEmpty(record.get('VALOR'))){
                            	                     		mensajeEstudiosObligMedico += (record.get('DSEST')+", ");
-                           	                     		
                            	                     	}else if( !Ext.isEmpty(record.get('CDTIPO')) && _TIPO_PROVEEDOR_LAB == record.get('CDTIPO')
                            	                     			&& !Ext.isEmpty(record.get('SWOBLEST')) && record.get('SWOBLEST') == "S"
                            	                     			&& Ext.isEmpty(record.get('CDRESEST'))  && Ext.isEmpty(record.get('VALOR'))){
                            	                     		mensajeEstudiosObligMedico += (record.get('DSEST')+", ");
                            	                     	}
                            	                     });
-                           	                 
                            	                	if(respuestaTipoProvedor == _TIPO_PROVEEDOR_MEDICO){
-                           	                		
                                	                	mensajeEstudios = 'Capture los estudios de: '+ mensajeEstudiosObligMedico;
                                	                }
                            	                	mensajeWarning('Datos Guardados. Aun faltan capturar estudios para este asegurado.<br/>' + mensajeEstudios);
@@ -3913,29 +3756,22 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
                         mensajeError(json.mensaje);
                     }
                 });
-            
-                
             }
         }]
     });
-		
-	
 	function rendererColumnUsandoEditorDep(value, record, columnIndex, grid){
 		var nuevoValor = value;
 //		debug('valor en render',value);
 		var llave =  (Ext.isEmpty(record.get('CDTABRES'))? '' : record.get('CDTABRES')) + '-' + value;
 		//alert(llave);
 		var existe = bufferTiposResultadoEstudios.containsKey(llave);
-		
 		if(existe){
 			nuevoValor=bufferTiposResultadoEstudios.get(llave);
         }else{
         	nuevoValor = '';
         }
-		
 		return nuevoValor;
 	}
-
 	estudiosCobAsegStore.load({
 		params: {
 			'params.cdunieco'  : _cdunieco,
@@ -3949,18 +3785,14 @@ function capturaResultadosInf(_cdunieco,_cdramo,_aaapertu,_status,_nmsinies,_nms
 			'params.cdconval'  : _cdconval
 		}
 	});
-	
 	/*///////////////////*/
 	////// contenido //////
 	///////////////////////
-	
 	windowResultEstudios = Ext.create('Ext.window.Window',{
 		title: 'Consulta y actualizaci&oacute;n de Datos Informativos para estudios m&eacute;dicos'
 		,modal  : true
 		,width  : 900  
 		,items : [resultadosEstudiosGrid]
 	}).show();
-	
 	centrarVentanaInterna(windowResultEstudios);
-	
 }

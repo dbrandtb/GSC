@@ -26,8 +26,6 @@
 			var _CATALOGO_SUBCOBERTURASTOTALES 			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASTOTALES"/>';
 			var _CATALOGO_VALIDACIONESGRALES            = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@VALIDACIONESGRALES"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALESMS 		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MS"/>';
-			var _CATALOGO_SUBCOBERTURASTOTALESGMPI      = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASGMPI"/>';
-			var _CATALOGO_SUBCOBERTURASTOTALESGMPC      = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASGMPC"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALESMSC		= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS4MSC"/>';
 			var _CATALOGO_SUBCOBERTURASTOTALINFONAVIT	= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASINFONAVIT"/>';
 			var _CATALOGO_SUBCOBERTURASRECUPERA			= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURASRECUPERA"/>';
@@ -89,8 +87,7 @@
 			var _URL_GENERAR_CALCULO					= '<s:url namespace="/siniestros" 		action="generarCalculoSiniestros" />';
 			var _URL_CONCEPTOSASEG						= '<s:url namespace="/siniestros" 		action="obtenerMsinival" />';
 			var _URL_LISTADO_ASEGURADO          		= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
-			var _URL_CONSULTA_LISTADO_POLIZA			= '<s:url namespace="/siniestros" 		action="consultaListaPolizaFeOcu" />';//(EGS) cambiamos consultaListaPoliza
-			var _URL_CONSULTA_LISTADO_POLIZA_ORIG		= '<s:url namespace="/siniestros"		action="consultaListaPoliza" />'; //(EGS) para poder generar reclamos fuera de vigencia con autorización especial
+			var _URL_CONSULTA_LISTADO_POLIZA			= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
 			var _URL_ASOCIA_MSINEST_REFERENCIADO    	= '<s:url namespace="/siniestros"      	action="asociaMsiniestroReferenciado" />';
 			var _URL_ACTUALIZA_INFO_GRAL_SIN       		= '<s:url namespace="/siniestros"      	action="actualizaDatosGeneralesSiniestro" />';
 			var _URL_GUARDA_CONCEPTO_TRAMITE			= '<s:url namespace="/siniestros"  		action="guardarMsinival"/>';
@@ -176,7 +173,6 @@
 			var _genero				= "";	// (EGS)
 			var _edad				= "";	// (EGS)
 			var _11_fueraVigencia	= "0";	// (EGS)
-		    var feOcurreOrig = null;	//(EGS) 	para comparar si se modifico fecha de ocurrencia
 			
 			//iteramos el arreglos de loas Facturas para hacer la asignacion
 			<s:set name="contadorFactura" value="0" />
@@ -308,7 +304,7 @@
 						{type:'string', name:'CDTIPEVE'},       {type:'string', name:'CDTIPALT'},
 						{type:'string', name:'FLAGTIPEVE'},     {type:'string', name:'FLAGTIPALT'},
 						{type:'string', name:'NUMRECLA'},       {type:'string', name:'FLAGREQAUT'},
-						{type:'string', name:'LIMAUTSEVMED'},   {type:'string', name:'SWMEDPRV', defaultValue: 'N'}
+						{type:'string', name:'LIMAUTSEVMED'}
 					]
 				});
 //MODELO DE LOS CONCEPTOS
@@ -633,52 +629,6 @@
 					}
 				});
 				storeSubcoberturaAsegurado4MSCRender.load();
-				
-                storeSubcoberturaAseguradoGMPCRender = Ext.create('Ext.data.JsonStore', {
-                    model:'Generic',
-                    //autoLoad:true,
-                    cargado:false,
-                    proxy: {
-                        type: 'ajax',
-                        url: _URL_CATALOGOS,
-                        extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALESGMPC},
-                        reader: {
-                            type: 'json',
-                            root: 'lista'
-                        }
-                    },listeners: {
-                        load : function() {
-                            this.cargado=true;
-                            if(!Ext.isEmpty(gridFacturaDirecto)){
-                                gridFacturaDirecto.getView().refresh();
-                            }
-                        }
-                    }
-                });
-                storeSubcoberturaAseguradoGMPCRender.load();
-                
-                storeSubcoberturaAseguradoGMPIRender = Ext.create('Ext.data.JsonStore', {
-                    model:'Generic',
-                    //autoLoad:true,
-                    cargado:false,
-                    proxy: {
-                        type: 'ajax',
-                        url: _URL_CATALOGOS,
-                        extraParams : {catalogo:_CATALOGO_SUBCOBERTURASTOTALESGMPI},
-                        reader: {
-                            type: 'json',
-                            root: 'lista'
-                        }
-                    },listeners: {
-                        load : function() {
-                            this.cargado=true;
-                            if(!Ext.isEmpty(gridFacturaDirecto)){
-                                gridFacturaDirecto.getView().refresh();
-                            }
-                        }
-                    }
-                });
-                storeSubcoberturaAseguradoGMPIRender.load();
 				
 				storeSubcoberturaAsegurado4INFORender = Ext.create('Ext.data.JsonStore', {
 					model:'Generic',
@@ -1832,10 +1782,10 @@
                                 header: 'Reclamo',   dataIndex: 'NUMRECLA',          width: 90, hidden : (_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
                             },
 							{
-								header: 'Id<br/>Sini. Existente',   dataIndex: 'NMSINREF',          width: 90, hidden : true//(_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
+								header: 'Id<br/>Sini. Existente',	dataIndex: 'NMSINREF',			width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
-								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : true//(_tipoProducto != _GMMI && _tipoProducto != _GMPRUEBA)
+								header: 'Complemento',				dataIndex: 'COMPLEMENTO',		width: 90, hidden : _tipoProducto != _GMMI
 							},
 							{
 								header: 'Fecha<br/>Ocurrencia',		dataIndex: 'FEOCURRE'
@@ -1961,34 +1911,6 @@
 											    leyenda='Cargando...';
 											}
 										}
-										else if(_cdtipsitProducto =="GMPC"){
-                                            if(storeSubcoberturaAseguradoGMPCRender.cargado) {
-                                                debug("storeSubcoberturaAseguradoGMPCRender");
-                                                debug(storeSubcoberturaAseguradoGMPCRender);
-                                                storeSubcoberturaAseguradoGMPCRender.each(function(rec) {
-                                                    if (rec.data.key == v){
-                                                        leyenda = rec.data.value;
-                                                    }
-                                                });
-                                            }
-                                            else{
-                                                leyenda='Cargando...';
-                                            }
-                                        }
-                                        else if(_cdtipsitProducto =="GMPI"){
-                                            if(storeSubcoberturaAseguradoGMPIRender.cargado) {
-                                                debug("storeSubcoberturaAseguradoGMPIRender");
-                                                debug(storeSubcoberturaAseguradoGMPIRender);
-                                                storeSubcoberturaAseguradoGMPIRender.each(function(rec) {
-                                                    if (rec.data.key == v){
-                                                        leyenda = rec.data.value;
-                                                    }
-                                                });
-                                            }
-                                            else{
-                                                leyenda='Cargando...';
-                                            }
-                                        }
 										else{
 											if(storeSubcoberturaAseguradoRender.cargado) {
 												debug("storeSubcoberturaAseguradoRender");
@@ -2014,7 +1936,7 @@
 									return leyenda;
 								}
 							},
-                            {   header: 'Fecha ingreso',        dataIndex: 'FEINGRESO',  renderer: Ext.util.Format.dateRenderer('d/m/Y')  ,hidden : _tipoProducto == _GMPRUEBA
+                            {   header: 'Fecha ingreso',        dataIndex: 'FEINGRESO',  renderer: Ext.util.Format.dateRenderer('d/m/Y')
                                 ,editor : {
                                     xtype : 'datefield',
                                     format : 'd/m/Y',
@@ -2026,7 +1948,7 @@
                                     }
                                 }
                             }, 
-                            {   header: 'Fecha egreso',             dataIndex: 'FEEGRESO',    renderer: Ext.util.Format.dateRenderer('d/m/Y')       //,hidden : _tipoProducto == _GMPRUEBA
+                            {   header: 'Fecha egreso',             dataIndex: 'FEEGRESO',    renderer: Ext.util.Format.dateRenderer('d/m/Y')
                                 ,editor : {
                                     xtype    : 'datefield',
                                     format   : 'd/m/Y',
@@ -2038,7 +1960,7 @@
                                 }
                             },
                             {
-                                header: 'Tipo evento',              dataIndex: 'CDTIPEVE'           ,hidden : _tipoProducto == _GMPRUEBA
+                                header: 'Tipo evento',              dataIndex: 'CDTIPEVE'
                                 ,editor : comboTipoEventos
                                 ,renderer : function(v) {
                                     var leyenda = '';
@@ -2065,36 +1987,8 @@
                                     return leyenda;
                                 }
                             },
-                            {
-                                header: 'Carta Med. Prev.', dataIndex: 'SWMEDPRV'
-                                ,editor : Ext.create('Ext.form.ComboBox',{
-                                    name:'idCartaMedPrev',
-                                    store: Ext.create('Ext.data.Store', {
-                	                    fields: ['key', 'value'],
-                	                    data : [
-                	                        {"key":"S", "value":"SI"},
-                	                        {"key":"N", "value":"NO"}
-                	                    ]
-                	                }),
-                                    queryMode:'local',  
-                                    displayField: 'value',
-                                    valueField: 'key',
-                                    forceSelection: true,
-                                    editable: false
-                                })
-                                ,renderer: function(v) {
-                                    var r=v;
-                                    if(v=='S'||v=='s') {
-                                        r='SI';
-                                    }
-                                    else if(v=='N'||v=='n'){
-                                        r='NO';
-                                    }
-                                    return r;
-                                }
-                            },
                              {
-                                header: 'Alta',                     dataIndex: 'CDTIPALT'           ,hidden : _tipoProducto == _GMPRUEBA
+                                header: 'Alta',                     dataIndex: 'CDTIPALT'
                                 ,editor : comboAltaHospital
                                 ,renderer : function(v) {
                                     var leyenda = '';
@@ -3734,32 +3628,6 @@
 						{
 							xtype      : 'datefield',		name       : 'dtfechaOcurrencias',		fieldLabel : 'Fecha ocurrencia',
 							maxValue   :  new Date(),		format		: 'd/m/Y'
-	                        ,listeners : { //(EGS)
-	                        	focus: function(e){
-	                        		feOcurreOrig = panelListadoAsegurado.form.getValues().dtfechaOcurrencias;
-	                        		feOcurreOrig = new Date(feOcurreOrig.substring(6,10) + "/" +
-	                        								feOcurreOrig.substring(3,5)  + "/" +
-	                        								feOcurreOrig.substring(0,2));
-	                        		debug('afiliadosAfectados - Fecha ocurrencia focus',feOcurreOrig);
-	                        	},
-	                        	blur:function(e){
-	                        		var feOcurre = panelListadoAsegurado.form.getValues().dtfechaOcurrencias;
-	                        		feOcurre = new Date(feOcurre.substring(6,10) + "/" + feOcurre.substring(3,5)  + "/" + feOcurre.substring(0,2));
-	                        		debug('afiliadosAfectados - Fecha ocurrencia blur ', feOcurre);
-	                        		if (feOcurreOrig != null && feOcurre.getTime() != feOcurreOrig.getTime()) {
-	                        			//limpiamos datos de asegurado
-	                        			panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
-										panelListadoAsegurado.down('[name="cdRamoAsegurado"]').setValue('');
-										panelListadoAsegurado.down('[name="estadoAsegurado"]').setValue('');
-										panelListadoAsegurado.down('[name="nmPolizaAsegurado"]').setValue('');
-										panelListadoAsegurado.down('[name="nmSoliciAsegurado"]').setValue('');
-										panelListadoAsegurado.down('[name="nmSuplemAsegurado"]').setValue('');
-										panelListadoAsegurado.down('[name="nmSituacAsegurado"]').setValue('');
-										panelListadoAsegurado.down('[name="cdTipsitAsegurado"]').setValue('');
-		                        		debug('Fecha ocurrencia blur limpiarRegistros()');
-	                        		}
-	                        	}
-	                        }	//fin (EGS)
 						},
 						{	
 							xtype      : 'textfield',		name       : 'cdUniecoAsegurado',		fieldLabel : 'Unieco',
@@ -3800,143 +3668,27 @@
 							queryMode :'remote',			queryParam: 'params.cdperson',			store : storeAsegurados,
 							triggerAction: 'all',			hideTrigger:true,						allowBlank: false,
 							listeners : {
+								
 								'select' : function(combo, record) {
-									cdPerson = this.getValue();
 									var params = {'params.cdperson' : this.getValue(),
-												  'params.cdramo' : _11_params.CDRAMO,
-												  'params.fe_ocurre' : panelListadoAsegurado.form.getValues().dtfechaOcurrencias	//(EGS)
-												  };
-									_mask("Consulta poliza...");	//(EGS)
-							        Ext.Ajax.request({	//(EGS) SE MODIFICA PARA OBTENER SOLO UNA POLIZA, Y MOSTRARLA EN EL ESPACIO CORRESPONDIENTE
-							            url     : _URL_CONSULTA_LISTADO_POLIZA
-							            ,params: params
-							            ,success : function (response) {
-							            	debug('Consultando una poliza para mostrar');
-							            	var jsonResponse = Ext.decode(response.responseText);
-							                if(jsonResponse.listaPoliza != null){
-							                	//(EGS) Si encuentra más de una póliza, debe mostrar la lista
-							                	if(jsonResponse.listaPoliza.length > 1){
-							                		debug('Muestra lista 1');
-							                		_unmask(); //(EGS)
-							                		cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
-							                			if(success){
-							                				jsonResponse = Ext.decode(response.responseText);
-                                                            if(jsonResponse.listaPoliza == null){
-                                                            	Ext.Msg.show({title:    'Aviso',
-                                                            		msg:    'No existen p&oacute;lizas para el asegurado elegido',
-                                                                    buttons:Ext.Msg.OK,
-                                                                    icon:    Ext.Msg.WARNING,
-                                                                    fn: function() {
-                                                                    	panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
-                                                                    }
-                                                                });
-                                                            }else{
-                                                            	centrarVentanaInterna(modPolizasAsegurado.show());
-                                                            }
-                                                        }else{
-                                                        	Ext.Msg.show({
-                                                            	title: 'Aviso',
-                                                                msg: 'Error al obtener los datos.',
-                                                                buttons: Ext.Msg.OK,
-                                                                icon: Ext.Msg.ERROR
-                                                            });
-                                                        }
-                                                    });
-							                	
-							                	}else{
-							                		debug('No muestra lista 1');
-							                		eligePoliza(jsonResponse.listaPoliza[0],panelListadoAsegurado,modPolizasAsegurado);
-							                		_unmask();	//(EGS)
-							                	}
-							                }
-							                else {
-												_unmask();	//(EGS)
-												Ext.Msg.show({
-													title:	'Aviso',
-													//msg:	'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',
-													msg:	'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia.',
-													buttons:Ext.Msg.OK,
-													//buttons:Ext.Msg.OKCANCEL,
-													icon:	Ext.Msg.WARNING //,  (PENDIENTE: NO SABEMOS SI SE DEJARA ESTA FUNCIONALIDAD PARA EL ROL OPERADOR!!!!!)
-//                                                    fn: function(buttonId, text, opt) {    // (EGS) agregamos parametros a la función
-//                                                        if (buttonId == 'ok'){
-//                                                            cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA_ORIG, 'listaPoliza', params, function(options, success, response){
-//                                                                if(success){
-//                                                                    jsonResponse = Ext.decode(response.responseText);
-//                                                                    if(jsonResponse.listaPoliza == null){
-//                                                                        Ext.Msg.show({
-//                                                                            title:    'Aviso',
-//                                                                            msg:    'No existen p&oacute;lizas para el asegurado elegido',
-//                                                                            buttons:Ext.Msg.OK,
-//                                                                            icon:    Ext.Msg.WARNING,
-//                                                                                fn: function() {
-//                                                                                panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
-//                                                                            }
-//                                                                        });
-//                                                                    }else{
-//                                                                        centrarVentanaInterna(modPolizasAsegurado.show());
-//                                                                    }
-//                                                                }else{
-//                                                                    Ext.Msg.show({
-//                                                                        title: 'Aviso',
-//                                                                        msg: 'Error al obtener los datos.',
-//                                                                        buttons: Ext.Msg.OK,
-//                                                                        icon: Ext.Msg.ERROR
-//                                                                    });
-//                                                                }
-//                                                            });
-//                                                        }
-//                                                        else{
-//                                                            panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
-//                                                               modPolizasAsegurado.hide();
-//                                                               return;
-//                                                        }
-//                                                    }
-												});
-						                    	panelListadoAsegurado.down('combo[name=cmbAseguradoAfect]').setValue('');
-				                       			return;
-							                }//else
-							            },//success
-							            failure : function (){
-							                me.up().up().setLoading(false);
-							                centrarVentanaInterna(Ext.Msg.show({
-							                    title:'Error',
-							                    msg: 'Error de comunicaci&oacute;n',
-							                    buttons: Ext.Msg.OK,
-							                    icon: Ext.Msg.ERROR
-							                }));
-							            }
-							        });//_URL_CONSULTA_LISTADO_POLIZA
-									/*
-									var params = {'params.cdperson' : this.getValue(),
-												  'params.cdramo' : _11_params.CDRAMO,
-												  'params.fe_ocurre' : panelListadoAsegurado.form.getValues().dtfechaOcurrencias	//(EGS)
-												  };
+												  'params.cdramo' : _11_params.CDRAMO };
+									
 									cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
 										if(success){
 											var jsonResponse = Ext.decode(response.responseText);
 											if(jsonResponse.listaPoliza == null) {
 												Ext.Msg.show({
 													title: 'Aviso',
-					                                //msg: 'No existen p&oacute;lizas para el asegurado elegido.', (EGS)
-			                                		msg: 'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',	// (EGS)
-            			                    		buttons: Ext.Msg.OKCANCEL, //Ext.Msg.OK, (EGS) cambiamos a OKCANCEL 
-													icon: Ext.Msg.WARNING,
-													fn: function(buttonId, text, opt) {	// (EGS) agregamos function
-														if (buttonId == 'ok'){
-															Ext.Msg.show({
-																title: 'Te digo',
-																msg:	'Que programes5',
-																buttons:Ext.Msg.OK,
-																icon:	Ext.Msg.QUESTION
-															});
-														}
-													}	// fin (EGS) agregamos function
-                                    			});
+													msg: 'No existen p&oacute;lizas para el asegurado elegido.',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.WARNING
+												});
+												
 												combo.clearValue();
 												modPolizasAsegurado.hide();
 												return;
 											}
+											
 										}else{
 											Ext.Msg.show({
 												title: 'Aviso',
@@ -3946,9 +3698,9 @@
 											});
 										}
 									});
-									centrarVentanaInterna(modPolizasAsegurado.show());*/
-								}//select
-							}//listeners
+									centrarVentanaInterna(modPolizasAsegurado.show());
+								}
+							}
 						}
 					]
 				});
@@ -4484,9 +4236,6 @@
 			}
 		//}
 	}
-	
-
-	
 	
 	//FIN DE FUNCIONES
 		</script>
