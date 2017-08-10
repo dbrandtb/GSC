@@ -152,8 +152,4 @@ public interface RenovacionDAO
 	public void eliminacionRegistros(String ntramite,String cddocume) throws Exception;
 	
 	public String validaValorExclusion(String criterio, String valor) throws Exception;
-	
-	public String validaRenovacionColectivo(String cdusuari, String cdunieco, String cdramo, String nmpoliza) throws Exception;
-	
-	public String renovaXFechasColectivo(String cdusuari, String fecdesde, String fechasta) throws Exception;
 }

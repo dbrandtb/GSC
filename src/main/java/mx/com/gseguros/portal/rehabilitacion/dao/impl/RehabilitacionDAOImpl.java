@@ -47,21 +47,21 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 		params.put("pv_cdramo_i"    , cdramo);
 		params.put("pv_nmpoliza_i"  , nmpoliza);
 		params.put("pv_nmsituac_i"  , nmsituac);
-		Utils.debugProcedure(logger, "pkg_cancela.p_polizas_canc_a_rehabilitar", params);
+		Utils.debugProcedure(logger, "PKG_CANCELA_PRE.p_polizas_canc_a_rehabilitar", params);
 		Map<String,Object> resultadoMap = this.ejecutaSP(new BuscarPolizas(this.getDataSource()), params);
 		List<Map<String,String>> lista  = (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
 		if(lista==null)
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
-		Utils.debugProcedure(logger, "pkg_cancela.p_polizas_canc_a_rehabilitar", params, lista);
+		Utils.debugProcedure(logger, "PKG_CANCELA_PRE.p_polizas_canc_a_rehabilitar", params, lista);
 		return lista;
 	}
 	
 	protected class BuscarPolizas extends StoredProcedure
 	{
 		protected BuscarPolizas(DataSource dataSource) {
-			super(dataSource, "pkg_cancela.p_polizas_canc_a_rehabilitar");
+			super(dataSource, "PKG_CANCELA_PRE.p_polizas_canc_a_rehabilitar");
 			declareParameter(new SqlParameter("pv_asegurado_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
@@ -130,7 +130,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 		params.put("pv_nmsuplem_i" , nmsuplem);
 		params.put("pv_cdusuari_i" , cdusuari);
 		params.put("pv_cdsisrol_i" , cdsisrol);
-		Utils.debugProcedure(logger, "pkg_cancela.p_rehabilita_poliza", params);
+		Utils.debugProcedure(logger, "PKG_CANCELA_PRE.p_rehabilita_poliza", params);
 		Map<String,Object> procResult = ejecutaSP(new RehabilitarPoliza(getDataSource()),params);
 		return procResult;
 	}
@@ -139,7 +139,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 	{
 		protected RehabilitarPoliza(DataSource dataSource)
 		{
-			super(dataSource, "pkg_cancela.p_rehabilita_poliza");
+			super(dataSource, "PKG_CANCELA_PRE.p_rehabilita_poliza");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -167,7 +167,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 	}
 	
 	/**
-	 * pkg_satelites.p_valida_antiguedad
+	 * PKG_SATELITES_PRE.p_valida_antiguedad
 	 */
 	@Override
 	public boolean validaAntiguedad(Map<String,String>params) throws Exception
@@ -183,7 +183,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 	{
 		protected ValidaAntiguedad(DataSource dataSource)
 		{
-			super(dataSource, "pkg_satelites.p_valida_antiguedad");
+			super(dataSource, "PKG_SATELITES_PRE.p_valida_antiguedad");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -197,7 +197,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 	}
 	
 	/**
-	 * pkg_satelites.p_borra_antiguedad
+	 * PKG_SATELITES_PRE.p_borra_antiguedad
 	 */
 	@Override
 	public void borraAntiguedad(Map<String,String>params) throws Exception
@@ -209,7 +209,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 	{
 		protected BorraAntiguedad(DataSource dataSource)
 		{
-			super(dataSource, "pkg_satelites.p_borra_antiguedad");
+			super(dataSource, "PKG_SATELITES_PRE.p_borra_antiguedad");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
