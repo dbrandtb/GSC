@@ -830,14 +830,20 @@ function _p29_loadCallback()
     vigen.hide();
     var feini = _fieldByName('feini');
     var fefin = _fieldByName('fefin');
+    debug("vigencia: ", vigen.getValue(), " feini: ", feini.getValue() , " fefin: ", fefin.getValue());
     feini.on(
     {
         change : function(me,val)
         {
             try
             {
-//              debug('### obtener retroactividad:',json);
-                fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,vigen.getValue()))
+            	debug("### val: ", val, " DAY: ", Ext.Date.DAY, " vigen: ", vigen.getValue());
+                if (vigen.getValue()==366){
+               		fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
+                }
+                else {
+            		fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,vigen.getValue()));
+                }
             }
             catch(e)
             {
