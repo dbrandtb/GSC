@@ -38,9 +38,12 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaVoidVO;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionAutoManager;
 import mx.com.gseguros.portal.cotizacion.service.CotizacionManager;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
+import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
+import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
@@ -82,6 +85,10 @@ public class CotizacionAutoAction extends PrincipalCoreAction
     
     @Autowired
 	private ConsultasPolizaManager consultasPolizaManager;
+    
+    @Autowired
+    private transient CatalogosManager catalogosManager;
+    
     
 	@Value("${sigs.facultaDatosPolizaSicaps.url}")
     private String sigsFacultaDatosPolizaSicapsUrl;	
@@ -2631,6 +2638,22 @@ return SUCCESS;
              ));
      return SUCCESS;
  }
+ 
+	/**
+	* metodo para consultar el numero de dias maximo
+	* @param Ramo, cdtipsit
+	* @return diasMaximos - Numero de dias maximo
+	*/
+	public String edadMaximaAsegurado(){
+		logger.debug("Entra a consultaEdadMaxAsegurado Params: {}", smap1);
+		try {
+			respuesta = catalogosManager.obtieneCantidadMaxima(smap1.get("cdramo"), smap1.get("cdtipsit"),TipoTramite.POLIZA_NUEVA, Rango.ANIOSASEG, Validacion.EDAD_MAX_ASEGURADOS);
+		}catch( Exception e){
+			logger.error("Error edadMaximaAsegurado : {}", e.getMessage(), e);
+			return SUCCESS;
+		}
+		return SUCCESS;
+	}
  
  @SuppressWarnings("unchecked")
  public String datosFlujo() throws Exception

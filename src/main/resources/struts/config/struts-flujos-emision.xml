@@ -656,8 +656,9 @@
        <action name="includes/altaMorbilidad" class="CotizacionAction" method="consultaMorbilidad">
            <result>/jsp-script/proceso/emision/altaMorbilidad.jsp</result>
        </action>       
-       
-       
+        <action name="edadMaximaAsegurado" class="cotizacionAutoAction" method="edadMaximaAsegurado">
+            <result type="json" />
+        </action>
     </package>
     
 </struts>
