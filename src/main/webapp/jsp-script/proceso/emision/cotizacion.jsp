@@ -2013,7 +2013,7 @@ function _0_cotizar(boton)
                 debug("Valor _o_edadMaximaAsegurado ===>",_o_edadMaximaAsegurado);
             	var mensaje='Asegurado(s):<br/>';
             	var bandContinuarProc = true;
-                if(_0_smap1.cdramo == _SALUD_VITAL || _0_smap1.cdramo == _GMMI ||_0_smap1.cdramo == _MULTISALUD || _0_smap1.cdramo == _RECUPERA){
+                if((_0_smap1.cdramo == _SALUD_VITAL || _0_smap1.cdramo == _GMMI ||_0_smap1.cdramo == _MULTISALUD || _0_smap1.cdramo == _RECUPERA) && _0_smap1.cdsisrol !='SUSCRIPTOR'){
                     for ( var i = 0; i < json.slist1.length; i++) {
                         var fechaHoy    = new Date();
                         if(_0_smap1.cdramo == _SALUD_VITAL || _0_smap1.cdramo == _GMMI){
