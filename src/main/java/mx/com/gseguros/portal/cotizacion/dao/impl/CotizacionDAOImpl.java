@@ -8749,7 +8749,7 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
         Map<String,Object> procResult = ejecutaSP(new ObtenerAtributosPolizaOriginal(getDataSource()),params);
         List<ComponenteVO> lista = (List<ComponenteVO>)procResult.get("pv_registro_o");
         if (lista==null || lista.size()==0) {
-            throw new Exception("No hay informacion de la poliza original");
+        	//throw new Exception("No hay informacion de la poliza original"+params);
         }
         logger.debug(Utils.log("Recupera la informacion de la poliza original lista = ", lista));
         return lista;
