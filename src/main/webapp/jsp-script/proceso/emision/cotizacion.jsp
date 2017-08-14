@@ -43,8 +43,8 @@ try {
 debug('_0_flujoAux:', _0_flujoAux);
 
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
-var _0_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _0_reportsServerUser = '<s:property value="passServidorReports" />';
+var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                        />';
 var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                        />';
@@ -86,11 +86,6 @@ var _0_urlCargarPoliza                      = '<s:url namespace="/emision"      
 var _0_urlCargarCatalogo                    = '<s:url namespace="/catalogos"       action="obtieneCatalogo"                     />';
 var _0_urlCargaValidacionDescuentoR6        = '<s:url namespace="/emision"         action="obtieneValidacionDescuentoR6"                 />';
 var _0_urlAplicaDxn                         = '<s:url namespace="/emision"         action="aplicaDxn"                 />';
-var _0_urlEdadMaximaAsegudado               ='<s:url namespace="/emision"         action="edadMaximaAsegurado"                 />';
-var _SALUD_VITAL                            = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@SALUD_VITAL.cdramo" />';
-var _MULTISALUD                             = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@MULTISALUD.cdramo" />';
-var _GMMI                                   = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@GASTOS_MEDICOS_MAYORES.cdramo" />';
-var _RECUPERA                               = '<s:property value="@mx.com.gseguros.portal.general.util.Ramo@RECUPERA.cdramo" />';
 
 
 var _0_modeloExtraFields = [
@@ -144,7 +139,6 @@ var sinTarificar;
 var cdagenteCotiza;
 var cduniecocotiza;
 var _0_validacion_custom;
-var _o_edadMaximaAsegurado = 0;
 
 var _parentescoTitular = 'T';
 // var rolesSuscriptores = '|SUSCRIAUTO|TECNISUSCRI|EMISUSCRI|JEFESUSCRI|GERENSUSCRI|SUBDIRSUSCRI|';
@@ -407,7 +401,6 @@ function _0_comprar()
             ,'smap1.nmorddomCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.NMORDDOM
             ,'smap1.cdideperCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER
             ,'smap1.cdagenteExt'   : (_0_smap1.cdramo == '6' || _0_smap1.cdramo == '16') ? _fieldByLabel('AGENTE').getValue() : ''
-            ,'smap1.caseIdRstn'    : _NVL(_0_smap1.caseIdRstn)
         }
         ,success : function(response,opts)
         {
@@ -604,7 +597,7 @@ function _0_comprar()
                                 'Se ha generado el tr\u00e1mite ' + json.smap1.ntramite,
                                 function () {
                                     _mask();
-                                    location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + json.smap1.ntramite;
+                                    location.reload();
                                 }
                             );
                             return;
@@ -1454,7 +1447,7 @@ function _0_cargarPoliza()
                                       'smap1.cdsucursal' : sucursal
                                      ,'smap1.cdramo' : ramo
                                      ,'smap1.cdpoliza' : poliza
-                                     ,'smap1.cdusuari' : _0_smap1.cdusuari
+                                     ,'smap1.cdusuari' : _0_smap1.cdusuari,
                                  }
                                  ,success : function(response)
                                  {
@@ -1999,206 +1992,198 @@ function _0_cotizar(boton)
             json['slist1'].push(inciso);
         }
         debug('json para cotizar:',json);
-
-        //Obtenemos la edad Maxima para los asegurados
-        Ext.Ajax.request({
-            url     : _0_urlEdadMaximaAsegudado
-            ,params:{
-                'smap1.cdramo'    : _0_smap1.cdramo
-                ,'smap1.cdtipsit' : _0_smap1.cdtipsit
-            }
-            ,success : function (response){
-            	_o_edadMaximaAsegurado = Ext.decode(response.responseText).respuesta;
-            	
-                debug("Valor _o_edadMaximaAsegurado ===>",_o_edadMaximaAsegurado);
-            	var mensaje='Asegurado(s):<br/>';
-            	var bandContinuarProc = true;
-                if((_0_smap1.cdramo == _SALUD_VITAL || _0_smap1.cdramo == _GMMI ||_0_smap1.cdramo == _MULTISALUD || _0_smap1.cdramo == _RECUPERA) && _0_smap1.cdsisrol !='SUSCRIPTOR'){
-                    for ( var i = 0; i < json.slist1.length; i++) {
-                        var fechaHoy    = new Date();
-                        if(_0_smap1.cdramo == _SALUD_VITAL || _0_smap1.cdramo == _GMMI){
-                            var fechaRecord = Ext.Date.add(Ext.Date.parse(json.slist1[i]['parametros.pv_otvalor02'],'d/m/Y'),Ext.Date.YEAR,0);
-                        }
-                        
-                        if(_0_smap1.cdramo == _MULTISALUD){
-                            var fechaRecord = Ext.Date.add(Ext.Date.parse(json.slist1[i]['parametros.pv_otvalor01'],'d/m/Y'),Ext.Date.YEAR,0);
-                        }
-                        
-                        if(_0_smap1.cdramo == _RECUPERA){
-                            var fechaRecord = Ext.Date.add(Ext.Date.parse(json.slist1[i]['parametros.pv_otvalor04'],'d/m/Y'),Ext.Date.YEAR,0);
-                        }
-                        var years   = calculaAniosTranscurridos(fechaRecord,fechaHoy);
-                        
-                        if(years >  _o_edadMaximaAsegurado ){
-                            bandContinuarProc = false;
-                            mensaje = mensaje+"  * "+json.slist1[i]['contador']+" rebasa(n) la edad permitida.<br/>"
-                        }
+        _0_panelPri.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url       : _0_smap1['externo']=='si'?_0_urlCotizarExterno:_0_urlCotizar
+            ,jsonData : json
+            ,success  : function(response)
+            {
+                _0_bloquear(true);
+                _0_panelPri.setLoading(false);
+                json=Ext.decode(response.responseText);
+                if(json.success==true)
+                {
+//                 	alert('Regresa');
+                    debug(Ext.decode(json.smap1.fields));
+                    debug(Ext.decode(json.smap1.columnas));
+                    
+                    _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
+                                    
+                    _grabarEvento('COTIZACION'
+                                  ,'COTIZA'
+                                  ,_0_smap1.ntramite
+                                  ,_0_smap1.cdunieco
+                                  ,_0_smap1.cdramo
+                                  ,'W'
+                                  ,json.smap1.nmpoliza
+                                  ,json.smap1.nmpoliza
+                                  ,'buscar'
+                                  );
+                    
+                    Ext.define('_0_modeloTarifa',
+                    {
+                        extend  : 'Ext.data.Model'
+                        ,fields : Ext.decode(json.smap1.fields)
+                    });
+                    
+                    
+                    
+                    /////////////// DXN //////////////////////////////
+                    var formasPago=json.slist2,soloDXN=[];
+                    if(_0_smap1.SITUACION=='AUTO' && _0_smap1.cdtipsit!='AT' && _0_smap1.cdtipsit!='MC'){
+                    
+	                    var administradora=_fieldByName("aux.otvalor08");
+	                    var retenedora=_fieldByName("aux.otvalor09");
+	                    
+	                    
+	                    
+	                    
+	                    
+	                    if(retenedora.getValue()!=null && retenedora.getValue()!="-1" && retenedora.getValue()!=""){
+	                        var fpago=getFormaPago(administradora.getValue(),retenedora.getValue());
+//	                      console.log(administradora.getValue());
+	                        
+	                        
+	                        var i;
+	                        for(i in formasPago){
+	                            
+	                            if((fpago.fpago+'').trim()==(formasPago[i].CDPERPAG+'').trim()){
+	                                soloDXN.push(formasPago[i]);
+	                                break;
+	                            }
+	                            
+	                        }
+	                        
+	                        
+	                        formasPago=soloDXN;
+	                    }else{
+	                        var i;
+	                        for(i in formasPago){
+	                            
+	                            if((!FormaPago.esDxN((formasPago[i].CDPERPAG+'').trim())) && (formasPago[i].DSPERPAG+'').trim().indexOf("DXN")==-1  ){
+	                                
+	                                soloDXN.push(formasPago[i]);
+	                                
+	                            }
+	                            
+	                        }
+	                        formasPago=soloDXN;
+	                    }
+	                    
                     }
-                }
-                
-                if(bandContinuarProc){
-                    _0_panelPri.setLoading(true);
-                    Ext.Ajax.request( {
-                        url       : _0_smap1['externo']=='si'?_0_urlCotizarExterno:_0_urlCotizar
-                        ,jsonData : json
-                        ,success  : function(response) {
-                            _0_bloquear(true);
-                            _0_panelPri.setLoading(false);
-                            json=Ext.decode(response.responseText);
-                            if(json.success==true) {
-                                debug(Ext.decode(json.smap1.fields));
-                                debug(Ext.decode(json.smap1.columnas));
-                                _0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
-                                _grabarEvento('COTIZACION'
-                                    ,'COTIZA'
-                                    ,_0_smap1.ntramite
-                                    ,_0_smap1.cdunieco
-                                    ,_0_smap1.cdramo
-                                    ,'W'
-                                    ,json.smap1.nmpoliza
-                                    ,json.smap1.nmpoliza
-                                    ,'buscar'
-                                );
                     
-                                Ext.define('_0_modeloTarifa', {
-                                    extend  : 'Ext.data.Model'
-                                    ,fields : Ext.decode(json.smap1.fields)
-                                });
-                                /////////////// DXN //////////////////////////////
-                                var formasPago=json.slist2,soloDXN=[];
-                                if(_0_smap1.SITUACION=='AUTO' && _0_smap1.cdtipsit!='AT' && _0_smap1.cdtipsit!='MC'){
-                                    var administradora=_fieldByName("aux.otvalor08");
-                                    var retenedora=_fieldByName("aux.otvalor09");
-                                    if(retenedora.getValue()!=null && retenedora.getValue()!="-1" && retenedora.getValue()!=""){
-                                        var fpago=getFormaPago(administradora.getValue(),retenedora.getValue());
-                                        var i;
-                                        for(i in formasPago){
-                                            if((fpago.fpago+'').trim()==(formasPago[i].CDPERPAG+'').trim()){
-                                                soloDXN.push(formasPago[i]);
-                                                break;
-                                            }
+         			///////////////// DXN /////////////////////////////
                     
-                                        }
-                                        formasPago=soloDXN;
-                                    }else{
-                                        var i;
-                                        for(i in formasPago){
-                                            if((!FormaPago.esDxN((formasPago[i].CDPERPAG+'').trim())) && (formasPago[i].DSPERPAG+'').trim().indexOf("DXN")==-1  ){
-                                                soloDXN.push(formasPago[i]);
-                                            }
-                                        }
-                                        formasPago=soloDXN;
-                                    }
-                                }
-                                ///////////////// DXN /////////////////////////////
-                                _0_gridTarifas=Ext.create('Ext.grid.Panel', {
-                                    title             : ( Ext.isEmpty(_0_flujo) ? false : (_0_flujo.cdflujomc == 220 && _0_flujo.cdtipflu == 103 && _0_smap1.cdramo == Ramo.AutosFronterizos) 
-                                                        )? 'Resultados:<br>Plan y forma de pago de p\u00f3liza a renovar: '+json.smap1.fila+'-'+json.smap1.columna 
-                                                      :'Resultados'
-                                    ,store            : Ext.create('Ext.data.Store', {
-                                        model : '_0_modeloTarifa'
-                                        ,data : formasPago
-                                    })
-                                    ,columns          : Ext.decode(json.smap1.columnas)
-                                    ,selType          : 'cellmodel'
-                                    ,minHeight        : 100
-                                    ,enableColumnMove : false
-                                    ,buttonAlign      : 'center'
-                                    ,buttons          : [
-                                        new _0_BotComprar()
-                                        ,{
-                                            text    : 'Enviar',
-                                            icon    : '${icons}user_go.png',
-                                            hidden  : typeof _0_flujoAux.onCotizar !== 'number',
-                                            handler : _0_botonOnCotizarClic
-                                        }
-                                        ,new _0_BotDetalles()
-                                        ,new _0_BotCoberturas()
-                                        ,new _0_BotEditar()
-                                        ,new _0_BotClonar()
-                                        ,new _0_BotNueva()
-                                        ,new _0_BotMail()
-                                        ,new _0_BotImprimir()
-                                    ]
-                                    ,listeners        : {
-                                        select       : _0_tarifaSelect
-                                        ,afterrender : function(me) {
-                                            if(!Ext.isEmpty(json.smap1.columna) && !Ext.isEmpty(json.smap1.fila)) {
-                                                var sm = _0_gridTarifas.getSelectionModel();
-                                                try {
-                                                    var columna=0, fila=999; 
-                                                    for(var IteGriTar=1;IteGriTar<_0_gridTarifas.columns.length;IteGriTar++) {
-                                                        if((_0_gridTarifas.columns[IteGriTar].text).toLowerCase() === json.smap1.columna.toLowerCase()) {
-                                                            columna = IteGriTar - columna;
-                                                            IteGriTar = _0_gridTarifas.columns.length + 1;
-                                                        }
-                                                        else if( IteGriTar%2 != 1) {
-                                                            columna ++;
-                                                        }
-                                                    }
-                                    
-                                                    for(var IteGriTar=0;IteGriTar<17;IteGriTar++) {
-                                                        sm.select({row:IteGriTar,column:columna});
-                                                        var texto = (sm.getSelection({row:IteGriTar,column:columna})[0].data.DSPERPAG).toLowerCase()
-                                                        if(json.smap1.fila.toLowerCase() === texto) {
-                                                            fila = IteGriTar;
-                                                            IteGriTar = 18;
-                                                        }
-                                                    }
-                                    
-                                                    sm.select({row:fila,column:columna});
-                                                }catch(e) {
-                                                    debug("Excede rango fuera de la cuadricula de tarifas");
-                                                }
-                                            }
-                                            if(!Ext.isEmpty(_0_flujo)) {
-                                                _0_actualizarCotizacionTramite();
-                                            }
-                                        }
-                                    }
-                                });
                     
-                                if(_0_smap1.cdramo+'x'=='6x') {
-                                    Ext.getCmp('_0_botDetallesId').setDisabled(true);
-                                    Ext.getCmp('_0_botCoberturasId').setDisabled(true);
+                    
+                    _0_gridTarifas=Ext.create('Ext.grid.Panel',
+                    {
+                        title             : ( Ext.isEmpty(_0_flujo) ? false : (_0_flujo.cdflujomc == 220 && _0_flujo.cdtipflu == 103 && _0_smap1.cdramo == Ramo.AutosFronterizos) 
+                                            )? 'Resultados:<br>Plan y forma de pago de p\u00f3liza a renovar: '+json.smap1.fila+'-'+json.smap1.columna 
+                                          :'Resultados'
+                        ,store            : Ext.create('Ext.data.Store',
+                        {
+                            model : '_0_modeloTarifa'
+                            ,data : formasPago
+                        })
+                        ,columns          : Ext.decode(json.smap1.columnas)
+                        ,selType          : 'cellmodel'
+                        ,minHeight        : 100
+                        ,enableColumnMove : false
+                        ,buttonAlign      : 'center'
+                        ,buttons          :
+                        [
+                            new _0_BotComprar()
+                            ,{
+                                text    : 'Enviar',
+                                icon    : '${icons}user_go.png',
+                                hidden  : typeof _0_flujoAux.onCotizar !== 'number',
+                                handler : _0_botonOnCotizarClic
+                            }
+                            ,new _0_BotDetalles()
+                            ,new _0_BotCoberturas()
+                            ,new _0_BotEditar()
+                            ,new _0_BotClonar()
+                            ,new _0_BotNueva()
+                            ,new _0_BotMail()
+                            ,new _0_BotImprimir()
+                        ]
+                        ,listeners        :
+                        {
+                            select       : _0_tarifaSelect
+                            ,afterrender : function(me)
+                            {
+                                if(!Ext.isEmpty(json.smap1.columna) && !Ext.isEmpty(json.smap1.fila))
+                                {
+                                    var sm = _0_gridTarifas.getSelectionModel();
+                                    try
+                                    {
+                                        var columna=0, fila=999; 
+                                        for(var IteGriTar=1;IteGriTar<_0_gridTarifas.columns.length;IteGriTar++)
+                                        {
+                                            if((_0_gridTarifas.columns[IteGriTar].text).toLowerCase() === json.smap1.columna.toLowerCase())
+                                            {
+                                                 columna = IteGriTar - columna;
+                                                 IteGriTar = _0_gridTarifas.columns.length + 1;
+                                            }
+                                            else if( IteGriTar%2 != 1)
+                                            {
+                                                columna ++;
+                                            }
+                                        }
+                                        
+                                        for(var IteGriTar=0;IteGriTar<17;IteGriTar++)
+                                        {
+                                            sm.select({row:IteGriTar,column:columna});
+                                            var texto = (sm.getSelection({row:IteGriTar,column:columna})[0].data.DSPERPAG).toLowerCase()
+                                            if(json.smap1.fila.toLowerCase() === texto)
+                                            {
+                                                  fila = IteGriTar;
+                                                  IteGriTar = 18;
+                                            }
+                                        }
+                                        
+                                        sm.select({row:fila,column:columna});
+                                     }catch(e) {
+                                       debug("Excede rango fuera de la cuadricula de tarifas");
+                                     }
                                 }
                                 
-                                _0_panelPri.add(_0_gridTarifas);
-                                _0_panelPri.doLayout();
-                                //setTimeout(function(){debug('timeout 1000');window.parent.scrollTo(0, 99999);},1000);//ELIMINADO
-                                // Se aplica el focus en algun boton habilitado del grid de tarifas:
-                                try {
-                                    _0_gridTarifas.down('button[disabled=false]').focus(false, 1000);
-                                } catch(e) {
-                                    debug(e);
+                                if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' ) // && !sinTarificar===true)
+                                {
+                                    _0_actualizarCotizacionTramite();
                                 }
-                            }else{
-                                _0_bloquear(false);
-                                mensajeError('Error al cotizar:<br/>'+json.error);
                             }
                         }
-                        ,failure  : function(response) {
-                            _0_panelPri.setLoading(false);
-                            errorComunicacion();
-                        }
                     });
-         
-                }else{
-                    centrarVentanaInterna(Ext.Msg.show({
-                        title: 'Aviso',
-                        msg: mensaje,
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.Msg.WARNING
-                    }));
+                    
+                    if(_0_smap1.cdramo+'x'=='6x')
+                    {
+                        Ext.getCmp('_0_botDetallesId').setDisabled(true);
+                        Ext.getCmp('_0_botCoberturasId').setDisabled(true);
+                    }
+                    
+                    _0_panelPri.add(_0_gridTarifas);
+                    _0_panelPri.doLayout();
+                    //setTimeout(function(){debug('timeout 1000');window.parent.scrollTo(0, 99999);},1000);//ELIMINADO
+                    // Se aplica el focus en algun boton habilitado del grid de tarifas:
+                    try {
+                       _0_gridTarifas.down('button[disabled=false]').focus(false, 1000);
+                    } catch(e) {
+                        debug(e);
+                    }
                 }
-            },
-            failure : function (){
-                centrarVentanaInterna(Ext.Msg.show({
-                    title:'Error',
-                    msg: 'Error de comunicaci&oacute;n',
-                    buttons: Ext.Msg.OK,
-                    icon: Ext.Msg.ERROR
-                }));
+                else
+                {
+                    _0_bloquear(false);
+                    mensajeError('Error al cotizar:<br/>'+json.error);
+                }
+            }
+            ,failure  : function(response)
+            {
+                _0_panelPri.setLoading(false);
+                errorComunicacion();
             }
         });
     }
@@ -2861,7 +2846,7 @@ function _0_actualizarCotizacionTramite(callback)
 
 function _0_recuperarCotizacionDeTramite()
 {
-    if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' )
+    if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' )
     {
         var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
         try
@@ -3704,9 +3689,6 @@ Ext.onReady(function()
     		var itemsFormAgrupados=[
     	            		 _0_fieldNtramite
     	    			    ,_0_fieldNmpoliza
-    	    			    <s:if test='%{imap.containsKey("tatripol")}'>
-    	    			    ,<s:property value="imap.tatripol"/>
-    	    			    </s:if>
     	    			    ,<s:property value="imap.camposAgrupados"/>
     	    			    ,{
     	                        name        : 'FESOLICI'
@@ -5420,35 +5402,35 @@ Ext.onReady(function()
     }
     
     // Se busca la imagen para mostrar en el cotizador segun el producto:
-    if (_0_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba) {
-        Ext.Ajax.request({
-            url    : _0_urlObtenerParametros,
-            params :{
-                'smap1.parametro' : 'IMAGEN_COTIZACION',
-                'smap1.cdramo'   : _0_smap1.cdramo,
-                'smap1.cdtipsit' : _0_smap1.cdtipsit
-            },
-            success : function(response) {
-                var json=Ext.decode(response.responseText);
-                debug('########## Respuesta:',json);
-                if(json.exito) {
-                    Ext.create('Ext.window.Window', {
-                        focusOnToFront : false, //evitamos que obtenga el focus en automatico
-                        closable : false,
-                        header: false,
-                        border: false,
-                        resizable: false,
-                        width: Number(json.smap1.P2VALOR),
-                        height: Number(json.smap1.P3VALOR),
-                        items: [{
-                            xtype : 'image',
-                            src : '${ctx}/images/proceso/cotizacion/'+json.smap1.P1VALOR
-                        }]
-                    }).showAt(Number(json.smap1.P4VALOR), Number(json.smap1.P5VALOR));
-               }
-            }
-        });
-    }
+    /*
+    Ext.Ajax.request({
+        url    : _0_urlObtenerParametros,
+        params :{
+            'smap1.parametro' : 'IMAGEN_COTIZACION',
+            'smap1.cdramo'   : _0_smap1.cdramo,
+            'smap1.cdtipsit' : _0_smap1.cdtipsit
+        },
+        success : function(response) {
+            var json=Ext.decode(response.responseText);
+            debug('########## Respuesta:',json);
+            if(json.exito) {
+                Ext.create('Ext.window.Window', {
+                    focusOnToFront : false, //evitamos que obtenga el focus en automatico
+                    closable : false,
+                    header: false,
+                    border: false,
+                    resizable: false,
+                    width: Number(json.smap1.P2VALOR),
+                    height: Number(json.smap1.P3VALOR),
+                    items: [{
+                        xtype : 'image',
+                        src : '${ctx}/images/proceso/cotizacion/'+json.smap1.P1VALOR
+                    }]
+                }).showAt(Number(json.smap1.P4VALOR), Number(json.smap1.P5VALOR));
+           }
+        }
+    });
+    */
     
     if(_0_smap1.ntramite&&_0_smap1.ntramite.length>0)
     {
@@ -5642,79 +5624,6 @@ Ext.onReady(function()
     	debugError(e);
     }
     
-    if (_0_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba) {
-        if (!Ext.isEmpty(_fieldLikeLabel('DESCUENTO', null, true))) {
-            var ck = 'Recuperando rango de descuento/recargo';
-            try {
-                _request({
-                    mask   : ck,
-                    url    : _GLOBAL_URL_RECUPERACION,
-                    params : {
-                        'params.consulta' : 'RECUPERAR_RANGO_DESCUENTO_RECARGO',
-                        'params.cdramo'   : _0_smap1.cdramo,
-                        'params.cdtipsit' : _0_smap1.cdtipsit
-                    },
-                    success : function (json) {
-                        var comp = _fieldLikeLabel('DESCUENTO');
-                        comp.setMinValue(json.params.MINIMO);
-                        comp.setMaxValue(json.params.MAXIMO);
-                    }
-                });
-            } catch (e) {
-                manejaException(e, ck);
-            }
-        }
-        
-        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true))) {
-            var planCmp = _fieldByLabel('PLAN', null, true);
-            _0_formAgrupados.remove(planCmp, false);
-            _0_formAgrupados.insert(2, planCmp);
-        }
-        
-        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true)) && !Ext.isEmpty(_fieldByLabel('SUMA ASEGURADA', null, true))) {
-            var planCmp = _fieldByLabel('PLAN', null, true),
-                sumaCmp = _fieldByLabel('SUMA ASEGURADA', null, true);
-            sumaCmp.anidado = true;
-            sumaCmp.heredar = function () {
-                sumaCmp.getStore().load({
-                    params : {
-                        'params.idPadre' : planCmp.getValue()
-                    }
-                });
-            };
-        }
-        
-        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true)) && !Ext.isEmpty(_fieldLikeLabel('ULO M', null, true))) {
-            var planCmp = _fieldByLabel('PLAN', null, true),
-                circCmp = _fieldLikeLabel('ULO M', null, true);
-            circCmp.anidado = true;
-            circCmp.heredar = function () {
-                circCmp.getStore().load({
-                    params : {
-                        'params.idPadre' : planCmp.getValue()
-                    }
-                });
-            };
-            planCmp.on({
-                blur : function () {
-                    circCmp.heredar();
-                }
-            });
-        } 
-        
-        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true)) && !Ext.isEmpty(_fieldByLabel('DEDUCIBLE', null, true))) {
-            var planCmp = _fieldByLabel('PLAN', null, true),
-                deduCmp = _fieldByLabel('DEDUCIBLE', null, true);
-            deduCmp.anidado = true;
-            deduCmp.heredar = function () {
-                deduCmp.getStore().load({
-                    params : {
-                        'params.idPadre' : planCmp.getValue()
-                    }
-                });
-            };
-        }
-    }
     
     // Para TODOS LOS PRODUCTOS (si aplican), se agrega validacion de Codigo Postal vs Estado:
     agregaValidacionCPvsEstado();

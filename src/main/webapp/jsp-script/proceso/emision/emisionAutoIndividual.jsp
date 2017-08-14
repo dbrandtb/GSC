@@ -838,7 +838,7 @@ function _p29_loadCallback()
             try
             {
             	debug("### val: ", val, " DAY: ", Ext.Date.DAY, " vigen: ", vigen.getValue());
-                if (vigen.getValue()==366){
+                if ((vigen.getValue()==364)||(vigen.getValue()==365)||(vigen.getValue()==366)){
                		fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
                 }
                 else {
