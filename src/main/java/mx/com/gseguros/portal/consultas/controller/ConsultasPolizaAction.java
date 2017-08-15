@@ -183,15 +183,6 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
 	@Autowired
 	private FlujoMesaControlManager flujoMesaControlManager;
 
-	@Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-	
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-	
-	@Value("${pass.servidor.reports}")
-    private String passServidorReports;
-	
 	/**
 	 * Metodo de entrada a consulta de polizas
 	 * 
@@ -1272,7 +1263,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
         logger.debug("loadList={}", loadList);
         if(params.get("exportar") != null && "true".equals(params.get("exportar"))){
             
-            File carpeta=new File(rutaDocumentosPoliza + "/" + params.get("ntramite"));
+            File carpeta=new File(getText("ruta.documentos.poliza") + "/" + params.get("ntramite"));
             if(!carpeta.exists()){
                 logger.debug("no existe la carpeta : {}",params.get("ntramite"));
                 carpeta.mkdir();
@@ -1288,7 +1279,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
             // Generar archivo en Excel en ruta temporal:
             String valorFecha= System.currentTimeMillis()+"";
             String nombreArchivo = "Censo_" + valorFecha+ TipoArchivo.XLSX.getExtension();
-            String fullFileName = rutaDocumentosPoliza + Constantes.SEPARADOR_ARCHIVO
+            String fullFileName = getText("ruta.documentos.poliza") + Constantes.SEPARADOR_ARCHIVO
                     + params.get("ntramite") + Constantes.SEPARADOR_ARCHIVO + nombreArchivo;
             fileName = nombreArchivo;
             boolean exito = DocumentosUtils.generaExcel(loadList, fullFileName, true);
@@ -1648,17 +1639,5 @@ public class ConsultasPolizaAction extends PrincipalCoreAction {
     public void setInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
     }
-    
-    public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
-	}
-
-	public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
 	
 }
