@@ -71,7 +71,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	protected class ConsultaResultadosAseguradoSP extends StoredProcedure {
 		protected ConsultaResultadosAseguradoSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Resultados_Asegurado");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Resultados_Asegurado");
     		declareParameter(new SqlParameter("pv_cdrfc_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nombre_i", OracleTypes.VARCHAR));
@@ -121,7 +121,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	protected class ConsultaPolizaActualSP extends StoredProcedure {
 		protected ConsultaPolizaActualSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Suplem");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Suplem");
 			declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosSuplementoMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -174,7 +174,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class ConsultaDatosComplementariosSP extends StoredProcedure{
 		protected ConsultaDatosComplementariosSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Aseg");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Aseg");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -218,7 +218,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 
 	public class ConsultaDatosPolizaSP extends StoredProcedure {
 		protected ConsultaDatosPolizaSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Poliza");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Poliza");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -296,7 +296,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	protected class ConsultaAseguradoDetalleSP extends StoredProcedure{
 		protected ConsultaAseguradoDetalleSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Aseg");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Aseg");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -346,7 +346,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class ConsultaDatosTitularSP extends StoredProcedure{
 		protected ConsultaDatosTitularSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Titular");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Titular");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -396,7 +396,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class ConsultaDatosContratanteSP extends StoredProcedure{
 		protected ConsultaDatosContratanteSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Contratante");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Contratante");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -446,7 +446,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 
 	public class ConsultaAseguradosSP extends StoredProcedure {
 		protected ConsultaAseguradosSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Familia");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Familia");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -496,7 +496,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class ConsultaEndososSP extends StoredProcedure {
 		protected ConsultaEndososSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Endosos_Asegurado");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Endosos_Asegurado");
 			declareParameter(new SqlParameter("pv_cdunieco", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado", OracleTypes.VARCHAR));
@@ -536,7 +536,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	}
 	public class ConsultaDatosPlanSP extends StoredProcedure{
 		protected ConsultaDatosPlanSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Datos_Plan");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Datos_Plan");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -584,7 +584,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	public class ConsultaCopagosPolizaSP extends StoredProcedure {
 		protected ConsultaCopagosPolizaSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_CONSULTA.P_GET_COPAGOS");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_COPAGOS");
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -633,7 +633,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 
 	public class ConsultaCoberturasPolizaSP extends StoredProcedure {
 		protected ConsultaCoberturasPolizaSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Coberturas");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Coberturas");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
@@ -710,7 +710,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	protected class ConsultaHistoricoAseguradoSP extends StoredProcedure {
 		protected ConsultaHistoricoAseguradoSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Historico_Asegurado");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Historico_Asegurado");
 			
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
@@ -849,7 +849,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class ConsultaHospitalesSP extends StoredProcedure{
 		protected ConsultaHospitalesSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Catalogo_Hospitales");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Catalogo_Hospitales");
     		declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new HospitalesMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -879,7 +879,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class AvisosAnterioresSP extends StoredProcedure{
 		protected AvisosAnterioresSP(DataSource dataSource){
-			super(dataSource, "PKG_CONSULTA_GS.P_Get_Avisos_Hosp_Anteriores");
+			super(dataSource, "PKG_CONSULTA_GS_PRE.P_Get_Avisos_Hosp_Anteriores");
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new AvisosAnterioresMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -916,7 +916,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class enviarAvisoHospitalizacionSP extends StoredProcedure{
 		protected enviarAvisoHospitalizacionSP(DataSource dataSource){
-			super(dataSource, "PKG_SATELITES2.P_Guarda_Aviso_Hosp");
+			super(dataSource, "PKG_SATELITES2_PRE.P_Guarda_Aviso_Hosp");
 			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdagente_i", OracleTypes.VARCHAR));
@@ -945,7 +945,7 @@ public class ConsultasAseguradoDAOICEImpl extends AbstractManagerDAO implements
 	
 	public class actualizaEstatusEnvioSP extends StoredProcedure{
 		protected actualizaEstatusEnvioSP(DataSource dataSource){
-			super(dataSource, "PKG_SATELITES2.P_Actualiza_Estatus_Envio");
+			super(dataSource, "PKG_SATELITES2_PRE.P_Actualiza_Estatus_Envio");
 			declareParameter(new SqlParameter("pv_cdaviso_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));

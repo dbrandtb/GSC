@@ -32,7 +32,7 @@ public class EndososGrupoDAOImpl extends AbstractManagerDAO implements EndososGr
 		logger.debug(
 				new StringBuilder()
 				.append("\n**********************************************")
-				.append("\n****** PKG_CONSULTA.P_GET_ENDOSOS_G_COL ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_ENDOSOS_G_COL ******")
 				.append("\n****** params=").append(params)
 				.append("\n**********************************************")
 				.toString()
@@ -47,7 +47,7 @@ public class EndososGrupoDAOImpl extends AbstractManagerDAO implements EndososGr
 				new StringBuilder()
 				.append("\n**********************************************")
 				.append("\n****** registro=").append(lista)
-				.append("\n****** PKG_CONSULTA.P_GET_ENDOSOS_G_COL ******")
+				.append("\n****** PKG_CONSULTA_PRE.P_GET_ENDOSOS_G_COL ******")
 				.append("\n**********************************************")
 				.toString()
 				);
@@ -58,7 +58,7 @@ public class EndososGrupoDAOImpl extends AbstractManagerDAO implements EndososGr
 	{
 		protected BuscarHistoricoPolizas(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_ENDOSOS_G_COL");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_ENDOSOS_G_COL");
 			declareParameter(new SqlParameter("nmpoliex" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("rfc"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
@@ -100,7 +100,7 @@ public class EndososGrupoDAOImpl extends AbstractManagerDAO implements EndososGr
 		logger.debug(
 				new StringBuilder()
 				.append("\n***********************************************")
-				.append("\n****** PKG_ENDOSOS.P_GET_FAMILIAS_POLIZA ******")
+				.append("\n****** PKG_ENDOSOS_PRE.P_GET_FAMILIAS_POLIZA ******")
 				.append("\n****** params=").append(params)
 				.append("\n***********************************************")
 				.toString()
@@ -119,7 +119,7 @@ public class EndososGrupoDAOImpl extends AbstractManagerDAO implements EndososGr
 				new StringBuilder()
 				.append("\n***********************************************")
 				.append("\n****** lista=").append(lista)
-				.append("\n****** PKG_ENDOSOS.P_GET_FAMILIAS_POLIZA ******")
+				.append("\n****** PKG_ENDOSOS_PRE.P_GET_FAMILIAS_POLIZA ******")
 				.append("\n***********************************************")
 				.toString()
 				);
@@ -130,7 +130,7 @@ public class EndososGrupoDAOImpl extends AbstractManagerDAO implements EndososGr
 	{
 		protected CargarFamiliasPoliza(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_GET_FAMILIAS_POLIZA");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_GET_FAMILIAS_POLIZA");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
@@ -173,7 +173,7 @@ public class EndososGrupoDAOImpl extends AbstractManagerDAO implements EndososGr
 		logger.debug(
 				new StringBuilder()
 				.append("\n***************************************************")
-				.append("\n****** PKG_ENDOSOS.P_GET_INTEGRANTES_FAMILIA ******")
+				.append("\n****** PKG_ENDOSOS_PRE.P_GET_INTEGRANTES_FAMILIA ******")
 				.append("\n****** params=").append(params)
 				.append("\n***************************************************")
 				.toString()
@@ -188,7 +188,7 @@ public class EndososGrupoDAOImpl extends AbstractManagerDAO implements EndososGr
 				new StringBuilder()
 				.append("\n***************************************************")
 				.append("\n****** lista=").append(lista)
-				.append("\n****** PKG_ENDOSOS.P_GET_INTEGRANTES_FAMILIA ******")
+				.append("\n****** PKG_ENDOSOS_PRE.P_GET_INTEGRANTES_FAMILIA ******")
 				.append("\n***************************************************")
 				.toString()
 				);
@@ -199,7 +199,7 @@ public class EndososGrupoDAOImpl extends AbstractManagerDAO implements EndososGr
 	{
 		protected CargarIntegrantesFamilia(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_GET_INTEGRANTES_FAMILIA");
+			super(dataSource, "PKG_ENDOSOS_PRE.P_GET_INTEGRANTES_FAMILIA");
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
