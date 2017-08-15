@@ -825,11 +825,12 @@ function _p29_nuevaClic()
 }
 
 function _p29_loadCallback()
-{
+{          	
     var vigen = _fieldByLabel('VIGENCIA');
     vigen.hide();
     var feini = _fieldByName('feini');
     var fefin = _fieldByName('fefin');
+    
     debug("vigencia: ", vigen.getValue(), " feini: ", feini.getValue() , " fefin: ", fefin.getValue());
     feini.on(
     {
@@ -838,8 +839,8 @@ function _p29_loadCallback()
             try
             {
             	debug("### val: ", val, " DAY: ", Ext.Date.DAY, " vigen: ", vigen.getValue());
-                if (vigen.getValue()==366){
-               		fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
+                if ((vigen.getValue()==364)||(vigen.getValue()==365)||(vigen.getValue()==366)){
+               		fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));            		
                 }
                 else {
             		fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,vigen.getValue()));

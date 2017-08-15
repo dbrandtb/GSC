@@ -284,10 +284,6 @@ Ext.onReady(function()
             ,fieldLabel : 'INICIO DE VIGENCIA'
             ,name       : 'feini'
             ,style      : 'margin:5px;'
-            ,listeners  :
-            {
-                change : _p31_feiniChange
-            }
         }
         ,{
             xtype       : 'datefield'
@@ -649,20 +645,23 @@ Ext.onReady(function()
     try{
     	var feini=_fieldByName("feini",null,true);
     	var fefin=_fieldByName("fefin",null,true);
-    	
 	    feini.on(
 	    {
 	        change : function(me,val,oldVal)
 	        {
 	            try
 	            {
-	            	
-	            	
 	            	var date1 = oldVal;
 	            	var date2 = fefin.getValue();
 	            	var timeDiff = Math.abs(date2.getTime() - date1.getTime());
 	            	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-	                fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,diffDays))
+	            	debug("diffDays: "+diffDays);
+	            	if ((diffDays==364)||(diffDays==365)||(diffDays==366)){
+               			fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));            		
+                	}
+                	else {
+            			fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,diffDays))
+                	}
 	            }
 	            catch(e)
 	            {
@@ -776,6 +775,26 @@ Ext.onReady(function()
                 debug('record:',record);
                 form.loadRecord(record);
                 
+                //aqui ya se cargo el formulario, debo verificar la fecha fin
+                try
+	            {
+	            	var date1 = feini.getValue();
+	            	var date2 = fefin.getValue();
+	            	var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+	            	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+	            	debug("diffDays: "+diffDays);
+	            	if ((diffDays==364)||(diffDays==365)||(diffDays==366)){
+               			fefin.setValue(Ext.Date.add(date1,Ext.Date.YEAR,1));            		
+                	}
+                	else {
+            			fefin.setValue(Ext.Date.add(date1,Ext.Date.DAY,diffDays))
+                	}
+	            }
+	            catch(e)
+	            {
+	                debug(e);
+	            }
+                
                 if(json.smap1.agente_sec+'x'!='x')
                 {
                     var age2 = _fieldByName('agente_sec');
@@ -880,22 +899,6 @@ function _p31_loadCallback()
 {
     var feini = _fieldByName('feini');
     var fefin = _fieldByName('fefin');
-    /*var vigen = _fieldByLabel('VIGENCIA');
-    vigen.hide();
-    feini.on(
-    {
-        change : function(me,val)
-        {
-            try
-            {
-                fefin.setValue(Ext.Date.add(val,Ext.Date.DAY,vigen.getValue()))
-            }
-            catch(e)
-            {
-                debug(e);
-            }
-        }
-    });*/
     
     Ext.Ajax.request(
     {
@@ -1732,14 +1735,6 @@ function reintentarWSAuto(loading, params){
        }
     });
                         
-}
-
-function _p31_feiniChange(comp,val)
-{
-    debug('_p31_feiniChange:',val);
-    var fefin = _fieldByName('fefin');
-   // fefin.setMinValue(Ext.Date.add(val,Ext.Date.DAY,1));
-    fefin.isValid();
 }
 
 function _p31_renderer(record,mapeo)
