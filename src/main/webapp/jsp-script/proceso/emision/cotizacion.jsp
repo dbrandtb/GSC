@@ -2029,7 +2029,7 @@ function _0_cotizar(boton)
                         }
                         var years   = calculaAniosTranscurridos(fechaRecord,fechaHoy);
                         
-                        if(years >  _o_edadMaximaAsegurado ){
+                        if(parseInt(years) >  _o_edadMaximaAsegurado ){
                             bandContinuarProc = false;
                             mensaje = mensaje+"  * "+json.slist1[i]['contador']+" rebasa(n) la edad permitida.<br/>"
                         }
