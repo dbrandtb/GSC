@@ -69,7 +69,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		
 		protected ProcesoEmisionGeneralSP(DataSource dataSource) {
 			
-			super(dataSource,"PKG_EMISION.P_PROCESO_EMISION_GENERAL");
+			super(dataSource,"PKG_EMISION_PRE.P_PROCESO_EMISION_GENERAL");
 			declareParameter(new SqlParameter("pv_cdusuari",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdunieco",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo",        OracleTypes.VARCHAR));
@@ -134,7 +134,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	protected class EmisionRemotaRecuperaSP extends StoredProcedure {
 	    
 	    protected EmisionRemotaRecuperaSP(DataSource dataSource) {
-	        super(dataSource, "PKG_EMISION.P_EMISION_REMOTA_RECUPERA");
+	        super(dataSource, "PKG_EMISION_PRE.P_EMISION_REMOTA_RECUPERA");
             declareParameter(new SqlParameter("pv_cdusuari",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdunieco",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo",        OracleTypes.VARCHAR));
@@ -181,7 +181,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		
 		protected ActualizaPolizaExternaSP(DataSource dataSource) {
 			
-			super(dataSource, "PKG_SATELITES.P_ACTUALIZA_NMPOLIEX_AUTOS");
+			super(dataSource, "PKG_SATELITES_PRE.P_ACTUALIZA_NMPOLIEX_AUTOS");
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i",   OracleTypes.VARCHAR));
@@ -228,7 +228,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	{
 		protected InsertarMpoliimp(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_INSERTA_MPOLIIMP");
+			super(dataSource, "PKG_SATELITES2_PRE.P_INSERTA_MPOLIIMP");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
@@ -258,7 +258,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	{
 		protected MarcarTramiteImpreso(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_IMPRIMIR_TRAMITE");
+			super(dataSource, "PKG_SATELITES2_PRE.P_IMPRIMIR_TRAMITE");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("swimpres" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
@@ -280,7 +280,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		params.put("peso"     , peso);
 		Map<String,Object> procRes = ejecutaSP(new SumarImpresiones(getDataSource()),params);
 		boolean            impreso = "S".equals((String)procRes.get("pv_impreso_o"));
-		logger.debug(Utils.log("PKG_SATELITES2.P_SUMA_IMPRESIONES impreso:",impreso));
+		logger.debug(Utils.log("PKG_SATELITES2_PRE.P_SUMA_IMPRESIONES impreso:",impreso));
 		return impreso;
 	}
 	
@@ -288,7 +288,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	{
 		protected SumarImpresiones(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_SUMA_IMPRESIONES");
+			super(dataSource, "PKG_SATELITES2_PRE.P_SUMA_IMPRESIONES");
 			declareParameter(new SqlParameter("lote"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("tipolote" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("peso"     , OracleTypes.VARCHAR));
@@ -310,7 +310,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 		}
 		Map<String,Object> params = new LinkedHashMap<String,Object>();
 		params.put("array" , new SqlArrayValue(array));
-		Utils.debugProcedure(logger, "PKG_SATELITES2.P_MUESTRA_RECIBOS_IMPRESOS", params);
+		Utils.debugProcedure(logger, "PKG_SATELITES2_PRE.P_MUESTRA_RECIBOS_IMPRESOS", params);
 		ejecutaSP(new MostrarRecibosImpresosListaDeListas(getDataSource()),params);
 	}
 	
@@ -318,7 +318,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	{
 		protected MostrarRecibosImpresosListaDeListas(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MUESTRA_RECIBOS_IMPRESOS");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MUESTRA_RECIBOS_IMPRESOS");
 			declareParameter(new SqlParameter("array" , OracleTypes.ARRAY , "LISTA_LISTAS_VARCHAR2"));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
@@ -479,7 +479,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
 	{
 		protected RecuperarDocumentosGeneradosPorParametrizacionSP(DataSource dataSource)
 		{
-			super(dataSource, "PKG_EMISION.P_GET_DOCS_GENERADOS_X_PARAM");
+			super(dataSource, "PKG_EMISION_PRE.P_GET_DOCS_GENERADOS_X_PARAM");
 			declareParameter(new SqlParameter("ntramite", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new GenericMapper(new String[]{
 					"CDDOCUME", "DSDOCUME", "CDORDDOC", "CDMODDOC"
@@ -588,7 +588,7 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
     {
         protected ObtieneDatosWsCotizacionServPublico(DataSource dataSource)
         {
-            super(dataSource, "PKG_CONSULTA.P_WS_COTIZACION_SERV_PUBLICO");
+            super(dataSource, "PKG_CONSULTA_PRE.P_WS_COTIZACION_SERV_PUBLICO");
             declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -707,5 +707,4 @@ public class EmisionDAOImpl extends AbstractManagerDAO implements EmisionDAO
             compile();
         }
     }
-	
 }
