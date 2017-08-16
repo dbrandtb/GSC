@@ -2011,7 +2011,7 @@ function _0_cotizar(boton)
             	_o_edadMaximaAsegurado = Ext.decode(response.responseText).respuesta;
             	
                 debug("Valor _o_edadMaximaAsegurado ===>",_o_edadMaximaAsegurado);
-            	var mensaje='Asegurado(s):<br/>';
+            	var mensaje='El asegurado:<br/>';
             	var bandContinuarProc = true;
                 if((_0_smap1.cdramo == _SALUD_VITAL || _0_smap1.cdramo == _GMMI ||_0_smap1.cdramo == _MULTISALUD || _0_smap1.cdramo == _RECUPERA) && _0_smap1.cdsisrol !='SUSCRIPTOR'){
                     for ( var i = 0; i < json.slist1.length; i++) {
@@ -2031,7 +2031,7 @@ function _0_cotizar(boton)
                         
                         if(parseInt(years) >  _o_edadMaximaAsegurado ){
                             bandContinuarProc = false;
-                            mensaje = mensaje+"  * "+json.slist1[i]['contador']+" rebasa(n) la edad permitida.<br/>"
+                            mensaje = mensaje+"  * No. "+json.slist1[i]['contador']+" rebasa la edad permitida.<br/>"
                         }
                     }
                 }

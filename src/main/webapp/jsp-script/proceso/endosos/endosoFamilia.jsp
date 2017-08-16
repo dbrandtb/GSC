@@ -369,103 +369,126 @@ Ext.onReady(function()
                                         {
                                             throw 'Revisar datos del endoso';
                                         }
-                                       	
-                                        if(+_p48_params.cdtipsup > 9){
-                                        	var cdtipsitPrimerInc = _p48_store.getAt(0).get('CDTIPSIT');
+                                        
+                                        var arr = [];
+                                        _p48_storeMov.each(function(record) {
+                                            arr.push(record.data);
+                                        });
+                                        var continuarProceso = '0';
+                                        var mensaje="La fecha efecto "+Ext.Date.format(_fieldByName('FEFECHA').getValue(),'d/m/Y')+" :</br>";
+                                        for(var i = 0; i < arr.length; i++){
+                                        	if(_fieldByName('FEFECHA').getValue() < arr[i].FEFECSIT){
+                                            	continuarProceso ='1';
+                                                mensaje = mensaje +"* Para el inciso "+arr[i].NMSITUAC +" con fecha alta: "+Ext.Date.format(arr[i].FEFECSIT,'d/m/Y')+" debe de ser menor a la fecha efecto.</br>";
+                                            }
+                                        }
+                                        
+                                        if(continuarProceso =='1'){
+                                        	centrarVentanaInterna(Ext.Msg.show({
+                                                title: 'Warning',
+                                                msg: mensaje,
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.WARNING
+                                            }));
                                         }else{
-                                        	var cdtipsitPrimerInc = _p48_params.CDTIPSIT;
-                                        }
-                                        var datos =
-                                        {
-                                            params : 
-                                            {
-                                                cdunieco              : _p48_params.CDUNIECO
-                                                ,cdramo               : _p48_params.CDRAMO
-                                                ,estado               : _p48_params.ESTADO
-                                                ,nmpoliza             : _p48_params.NMPOLIZA
-                                                ,cdtipsup             : _p48_params.cdtipsup
-                                                ,nmsuplem             : _p48_params.nmsuplem_endoso
-                                                ,nsuplogi             : _p48_params.nsuplogi
-                                                ,fecha                : Ext.Date.format(_fieldByName('FEFECHA').getValue(),'d/m/Y')
-                                                ,cdtipsitPrimerInciso : cdtipsitPrimerInc
-                                                ,nmsolici             : _p48_params.NMSOLICI
+                                            if(+_p48_params.cdtipsup > 9){
+                                                var cdtipsitPrimerInc = _p48_store.getAt(0).get('CDTIPSIT');
+                                            }else{
+                                                var cdtipsitPrimerInc = _p48_params.CDTIPSIT;
                                             }
-                                            ,list : []
-                                        };
-                                        
-                                        _p48_storeMov.each(function(record)
-                                        {
-                                            datos.list.push({nmsituac:record.get('NMSITUAC')});
-                                        });
-                                        
-                                        if(!Ext.isEmpty(_p48_flujo))
-                                        {
-                                            datos.flujo = _p48_flujo;
-                                        }
-                                        
-                                        debug('datos para confirmar:',datos);
-                                        
-                                        _setLoading(true,_fieldById('_p48_panelpri'));
-                                        
-                                        Ext.Ajax.request(
-                                        {
-                                            url       : _p48_urlConfirmarEndoso
-                                            ,jsonData : datos
-                                            ,success  : function(response)
+                                            
+                                            var datos =
                                             {
-                                                _setLoading(false,_fieldById('_p48_panelpri'));
-                                                var ck = 'Decodificando respuesta al confirmar endoso';
-                                                try
+                                                params : 
                                                 {
-                                                    var json = Ext.decode(response.responseText);
-                                                    debug('### confirmar:',json);
-                                                    if(json.success)
+                                                    cdunieco              : _p48_params.CDUNIECO
+                                                    ,cdramo               : _p48_params.CDRAMO
+                                                    ,estado               : _p48_params.ESTADO
+                                                    ,nmpoliza             : _p48_params.NMPOLIZA
+                                                    ,cdtipsup             : _p48_params.cdtipsup
+                                                    ,nmsuplem             : _p48_params.nmsuplem_endoso
+                                                    ,nsuplogi             : _p48_params.nsuplogi
+                                                    ,fecha                : Ext.Date.format(_fieldByName('FEFECHA').getValue(),'d/m/Y')
+                                                    ,cdtipsitPrimerInciso : cdtipsitPrimerInc
+                                                    ,nmsolici             : _p48_params.NMSOLICI
+                                                }
+                                                ,list : []
+                                            };
+                                            
+                                            _p48_storeMov.each(function(record)
+                                            {
+                                                datos.list.push({nmsituac:record.get('NMSITUAC')});
+                                            });
+                                            
+                                            if(!Ext.isEmpty(_p48_flujo))
+                                            {
+                                                datos.flujo = _p48_flujo;
+                                            }
+                                            
+                                            debug('datos para confirmar:',datos);
+                                            
+                                            _setLoading(true,_fieldById('_p48_panelpri'));
+                                            
+                                            Ext.Ajax.request(
+                                            {
+                                                url       : _p48_urlConfirmarEndoso
+                                                ,jsonData : datos
+                                                ,success  : function(response)
+                                                {
+                                                    _setLoading(false,_fieldById('_p48_panelpri'));
+                                                    var ck = 'Decodificando respuesta al confirmar endoso';
+                                                    try
                                                     {
-                                                        var callbackRemesa = function()
+                                                        var json = Ext.decode(response.responseText);
+                                                        debug('### confirmar:',json);
+                                                        if(json.success)
                                                         {
-                                                            marendNavegacion(2);
-                                                        };
-                                                        mensajeCorrecto('Endoso generado',json.message,function()
+                                                            var callbackRemesa = function()
+                                                            {
+                                                                marendNavegacion(2);
+                                                            };
+                                                            mensajeCorrecto('Endoso generado',json.message,function()
+                                                            {
+                                                                var cadena= json.message;
+                                                                var palabra="guardado";
+                                                                if (cadena.indexOf(palabra)==-1){
+                                                                    _generarRemesaClic2(
+                                                                            false
+                                                                            ,_p48_params.CDUNIECO
+                                                                            ,_p48_params.CDRAMO
+                                                                            ,_p48_params.ESTADO
+                                                                            ,_p48_params.NMPOLIZA
+                                                                            ,callbackRemesa
+                                                                        );
+                                                                }else{
+                                                                    _generarRemesaClic(
+                                                                            true
+                                                                            ,_p48_params.CDUNIECO
+                                                                            ,_p48_params.CDRAMO
+                                                                            ,_p48_params.ESTADO
+                                                                            ,_p48_params.NMPOLIZA
+                                                                            ,callbackRemesa
+                                                                        );
+                                                                }
+                                                            });
+                                                        }
+                                                        else
                                                         {
-                                                        	var cadena= json.message;
-                                                        	var palabra="guardado";
-                                                        	if (cadena.indexOf(palabra)==-1){
-                                                        		_generarRemesaClic2(
-                                                                        false
-                                                                        ,_p48_params.CDUNIECO
-                                                                        ,_p48_params.CDRAMO
-                                                                        ,_p48_params.ESTADO
-                                                                        ,_p48_params.NMPOLIZA
-                                                                        ,callbackRemesa
-                                                                    );
-                                                        	}else{
-                                                        		_generarRemesaClic(
-                                                                        true
-                                                                        ,_p48_params.CDUNIECO
-                                                                        ,_p48_params.CDRAMO
-                                                                        ,_p48_params.ESTADO
-                                                                        ,_p48_params.NMPOLIZA
-                                                                        ,callbackRemesa
-                                                                    );
-                                                        	}
-                                                        });
+                                                            mensajeError(json.message);
+                                                        }
                                                     }
-                                                    else
+                                                    catch(e)
                                                     {
-                                                        mensajeError(json.message);
+                                                        manejaException(e,ck);
                                                     }
                                                 }
-                                                catch(e)
+                                                ,failure : function()
                                                 {
-                                                    manejaException(e,ck);
+                                                    _setLoading(false,_fieldById('_p48_panelpri'));
+                                                    errorComunicacion();
                                                 }
-                                            }
-                                            ,failure : function()
-                                            {
-                                                _setLoading(false,_fieldById('_p48_panelpri'));
-                                                errorComunicacion();
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
                                     catch(e)
                                     {
