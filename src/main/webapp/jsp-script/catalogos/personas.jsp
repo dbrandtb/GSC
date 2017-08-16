@@ -2899,7 +2899,7 @@ function _p22_datosAdicionalesClic()
                 	
                 	if(item.xtype && (item.xtype == 'combo' || item.xtype == 'combobox')){
 						item.editable = true;
-						item.forceSelection = true;
+						//item.forceSelection = true;
 					}
                 	
                 });
