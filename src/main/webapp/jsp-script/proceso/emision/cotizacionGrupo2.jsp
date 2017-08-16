@@ -122,7 +122,7 @@ var _ESTATUS_TRAMITE_AGENTE  = '<s:property value="@mx.com.gseguros.portal.gener
 
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 
-debug('_p25_smap1:',_p25_smap1);
+debug('#################################################_p25_smap1:',_p25_smap1);
 
 if ('S' === _p25_smap1.rstn && RolSistema.Agente === _p25_smap1.cdsisrol) {
     _p25_smap1.DETALLE_LINEA = 'S';
@@ -210,6 +210,7 @@ var cdmuniciDefinitivo;
 _defaultNmordomProspecto = undefined;// valor default del numero de domicilio del prospecto
 var nmorddomProspecto = _defaultNmordomProspecto; 
 
+                                    
 var _p25_editorNombreGrupo=
 {
     xtype       : 'textfield'
@@ -313,6 +314,7 @@ Ext.onReady(function()
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
+
 
     ////// modelos //////
     var _p25_colsBaseFields =
@@ -1186,19 +1188,6 @@ Ext.onReady(function()
                                         ,name       : 'feini'
                                         ,allowBlank : false
                                         ,value      : new Date()
-                                        ,listeners  :
-                                        {
-                                             change : function(field,value)
-                                             {
-                                                 try
-                                                 {
-                                                 	//if(Ext.ComponentQuery.query('#fechaFinVigencia')[0].getValue()==""){
-                                                 		Ext.ComponentQuery.query('#fechaFinVigencia')[0].setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
-                                                 	//}
-                                                 }
-                                                 catch (e) {}
-                                             }
-                                        }
                                     })
                                     ,Ext.create('Ext.form.field.Date',
                                     {
@@ -1208,18 +1197,19 @@ Ext.onReady(function()
                                         ,name       : 'fefin'
                                         ,allowBlank : false
                                         ,readOnly   : false
-                                        //,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
+                                        ,value      : null
                                         ,listeners  :
                                         {
+                                             //inicializa el campo cuando viene vacio para que ponga la fecha + 1 anio cuando 
                                              boxready : function()
                                              {
                                                  var vfechaFinVigencia = Ext.ComponentQuery.query('#fechaFinVigencia')[0].getValue();
-                                                 debug("*** vfechaFinVigencia dentro del boxready: ", vfechaFinVigencia);
                                                  
                                                  try
                                                  {
                                                  	if(vfechaFinVigencia==null){
                                                  		Ext.ComponentQuery.query('#fechaFinVigencia')[0].setValue(Ext.Date.add(Ext.ComponentQuery.query('#fechaIniVigencia')[0].getValue(),Ext.Date.YEAR,1));
+                                                 		
                                                  	}
                                                  }
                                                  catch (e) {
@@ -1228,6 +1218,7 @@ Ext.onReady(function()
                                              }
                                         }
                                     })
+                                    
                                     ,<s:property value="imap.comboFormaPago" />
                                     ,<s:property value="imap.comboRepartoPago" />
                                     ,{
@@ -1429,18 +1420,6 @@ Ext.onReady(function()
                                 }
                             }
                         }]
-                        /*,buttons     :
-                        [
-                            <s:if test='%{getImap().get("botones")!=null}'>
-                                <s:property value="imap.botones" />,
-                            </s:if>
-                            {
-                                text     : 'Limpiar'
-                                ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-                                ,handler : _p25_cotizarNueva
-                                ,hidden  : _p25_ntramite ? true : false
-                            }
-                        ]*/
                     })
                 ]
             }
@@ -2172,7 +2151,7 @@ Ext.onReady(function()
     
     //_iceMostrar();
     ////// custom //////
-    
+    _p25_loadCallback();
     ////// loaders //////
     Ext.Ajax.request(
     {
@@ -2257,6 +2236,13 @@ Ext.onReady(function()
                 debug('### cargar cotizacion response:',json);
                 if(json.exito)
                 {
+                	//seteo los campos de fechas
+                	var feini = new String(json.params.feini);
+                	var fefin = new String(json.params.fefin);
+                	debug("antes de setear feini: " ,feini, "fefin: ", fefin);
+                	Ext.ComponentQuery.query('#fechaIniVigencia')[0].setValue(feini);
+                	Ext.ComponentQuery.query('#fechaFinVigencia')[0].setValue(fefin);
+                	debug("despues de setear feini: " ,Ext.ComponentQuery.query('#fechaIniVigencia')[0].getValue(), "fefin: ", Ext.ComponentQuery.query('#fechaFinVigencia')[0].getValue());
                 	
                 	cveDesSucursal = new String(json.params.ofna);
                     
@@ -7667,6 +7653,30 @@ function _p25quitarFiltroSumaAsegRamo11 () {
         manejaException(e, ck);
     }
 };
+
+function _p25_loadCallback()
+{          	
+    var feini = _fieldByName('feini', null, true);
+    var fefin = _fieldByName('fefin', null, true);
+    
+    if (feini!=null){
+	    feini.on(
+	    {
+	        change : function(me,val)
+	        {
+	            try
+	            {
+	            	debug("###val: ", val, " DAY: ", Ext.Date.DAY);
+	            	fefin.setValue(Ext.Date.add(val,Ext.Date.YEAR,1));
+	            }
+	            catch(e)
+	            {
+	                debug(e);
+	            }
+	        }
+	    });
+    }
+}
 ////// funciones //////
 <%-- include file="/jsp-script/proceso/documentos/scriptImpresionRemesaEmisionEndoso.jsp" --%>
 </script>
