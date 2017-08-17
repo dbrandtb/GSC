@@ -147,7 +147,7 @@ function validarRFC(rfc,tper, silencioso)
 		var regexLetras=/^[a-zA-Z&]*$/;
 		var regexNumeros=/^[0-9]*$/;
 		var regexLetrasNumeros=/^[a-zA-Z0-9]*$/;
-		if(tper=='F'||tper=='S')
+		if(tper=='F')
 		{
 			valido=rfc.length==10||rfc.length==13;
 			debug('validacion longitud:',valido);
@@ -183,7 +183,7 @@ function validarRFC(rfc,tper, silencioso)
 				}
 			}
 		}
-		else if(tper=='M')
+		else if(tper=='M'||tper=='S')
 		{
 			valido=rfc.length==9||rfc.length==12;
 			debug('validacion longitud:',valido);
