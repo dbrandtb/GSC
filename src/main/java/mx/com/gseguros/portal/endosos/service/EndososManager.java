@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.endosos.service;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,6 @@ public interface EndososManager
     public List<Map<String,String>>  retarificarEndosos(Map<String,String>params ) throws Exception;
     @Deprecated
     public Map<String, String>       confirmarEndosoB(Map<String, String> params)             throws Exception;
-    
     public Map<String,String>        guardarEndosoDomicilio(Map<String,Object>params)         throws Exception;    
     public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception;
     
@@ -65,13 +65,10 @@ public interface EndososManager
 	/**
 	 * PKG_ENDOSOS.P_ENDOSO_INICIA
 	 */
-	@Deprecated
 	public Map<String,String>        iniciarEndoso(Map<String,String>params)                  throws Exception;
-	
 	/**
 	 * PKG_ENDOSOS.P_ENDOSO_INICIA
 	 */
-	@Deprecated
 	public Map<String,String>        iniciarEndoso(
 			String cdunieco
 			,String cdramo
@@ -82,7 +79,6 @@ public interface EndososManager
 			,String cdusuari
 			,String proceso
 			,String cdtipsup) throws Exception;
-	
 	/**
 	 * PKG_SATELITES.P_INSERTA_TWORKSUP_END
 	 * @param accion TODO
@@ -173,10 +169,7 @@ public interface EndososManager
 			,String fecha
 			,String cdusuario
 			,String newcdunieco
-			,String tipoTramite
-			,String nuevoTipoTramite
-			,String tipoClonacion
-			,String tamanioTramite) throws Exception;
+			,String tipoClonacion) throws Exception;
 	
 	public boolean clonaGruposReexp(
 			String cdunieco
@@ -217,7 +210,6 @@ public interface EndososManager
 			,String nmsuplem
 			,String cdtipsup) throws Exception;
 	
-	@Deprecated
 	public List<Map<String, String>> obtenerValositUltimaImagen(
 			String cdunieco
 			,String cdramo
@@ -409,7 +401,6 @@ public interface EndososManager
 			,String cdusuari
 			,String cdtipsup);
 	public ManagerRespuestaSmapVO cargarTvalositTitular(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem);
-	
 	public ManagerRespuestaVoidVO guardarEndosoAtributosSituacionGeneral(
 			String cdunieco
 			,String cdramo
@@ -425,8 +416,7 @@ public interface EndososManager
 			,String rutaDocsPoliza
 			,String rutaServReports
 			,String passServReports
-			,FlujoVO flujo
-			)throws Exception;
+			);
 	
 	public ManagerRespuestaVoidVO guardarEndosoBeneficiarios(
 			String cdunieco
@@ -581,7 +571,6 @@ public interface EndososManager
 			,List<String> incisos
 			,String cdtipsitPrimerInciso
 			,String nmsolici
-			,FlujoVO flujo
 			)throws Exception;
 	
 	public String confirmarEndosoBajaFamilia(
@@ -603,7 +592,6 @@ public interface EndososManager
 			,List<String> incisos
 			,String cdtipsitPrimerInciso
 			,String nmsolici
-			,FlujoVO flujo
 			)throws Exception;
 	
 	@Deprecated
@@ -645,7 +633,7 @@ public interface EndososManager
 	
 	public Map<String,Item> cargaInfoPantallaClonacion() throws Exception;
 	
-	public List<Map<String, String>> buscarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari, String cdagente, String contratante) throws Exception;
+	public List<Map<String, String>> buscarCotizaciones(String cdunieco, String cdramo, String cdtipsit, String estado, String nmpoliza, String ntramite, String status, String fecini, String fecfin, String cdsisrol, String cdusuari) throws Exception;
 	
 	public Map<String,Object> procesarCensoClonacion(
 			String cdunieco,
@@ -673,38 +661,12 @@ public interface EndososManager
 		String nmpoliza,
 		String cdtipsit,
 		int    numSituac) throws Exception;
-	
-	@Deprecated
-	public void confirmarEndosoB(
-    		String cdunieco
-    		,String cdramo
-    		,String estado
-    		,String nmpoliza
-    		,String nmsuplem
-    		,String nsuplogi
-    		,String cdtipsup
-    		,String dscoment
-    		)throws Exception;
-	
-	public void BeneficiarioVida_M(
-	        String cdunieco
+    
+    public void BeneficiarioVida_M(
+            String cdunieco
             ,String cdramo
             ,String estado
             ,String nmpoliza
             ,String nmsuplem
             )throws Exception;
-	
-	public Map<String, String> obtieneDetalleTramiteClonar(Map<String, String> params) throws Exception;
-
-	public List<Map<String,String>> obtieneGruposTramiteClonar(Map<String, String> params) throws Exception;
-	
-	public List<Map<String,String>> obtenerSocioFamilia(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String noSocio
-			,String familia
-			,String nmgrupo
-			,String nmfamilia) throws Exception;
 }

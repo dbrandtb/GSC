@@ -10,15 +10,16 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.ValidationDataException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -28,10 +29,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.exception.ValidationDataException;
 
 /**
  * Utiler&iacute;as para validar datos de la aplicacion
@@ -43,7 +40,6 @@ public class Utils
 	
 	private static Logger           logger              = LoggerFactory.getLogger(Utils.class);
 	private static SimpleDateFormat renderFechas        = new SimpleDateFormat("dd/MM/yyyy");
-	private static SimpleDateFormat renderFechasConHora = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	private static String           stringDateFormat    = "dd/MM/yyyy";
 	private static String           TIMEZONE_DEFAULT_ID = "GMT0"; //Se manda TimeZone a 0 para los WS de ice2sigs, pues se movia un dia.
 	
@@ -228,14 +224,12 @@ public class Utils
 		}
 	}
 
-	@Deprecated
 	public static void validate(StringBuilder sb, String cadena, String mensaje) throws ValidationDataException {
 		if(StringUtils.isBlank(cadena)) {
 			throw new ValidationDataException(mensaje,sb.toString());
 		}
 	}
 	
-	@Deprecated
 	public static void validate(StringBuilder sb, String... args) throws ValidationDataException
 	{
 		for(int i=0;i<args.length;i=i+2)
@@ -244,7 +238,6 @@ public class Utils
 		}
 	}
 	
-	@Deprecated
 	public static void validate(StringBuilder sb, Map<?,?> map, String mensaje) throws ValidationDataException {
 		if(MapUtils.isEmpty(map)) {
 			throw new ValidationDataException(mensaje,sb.toString());
@@ -402,20 +395,6 @@ public class Utils
 			return false;
 		}
 		return true;
-	}
-	
-	
-	/**
-	 * Indica si un email tiene formato valido
-	 * @param email email a validar
-	 * @return true si es valido, false si no
-	 */
-	public static boolean esEmailValido(String email){
-		
-		String emailRegExp = "(([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5}){1,25})";
-        Pattern pattern = Pattern.compile(emailRegExp);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
 	}
 
 	public static void main(String[] args)
@@ -606,11 +585,9 @@ public class Utils
 		return concat;
 	}
 	
-	@Deprecated
 	public static void debugProcedure(org.apache.log4j.Logger logger2,String storedProcedureName,Map<String,?>params)
     {
-		return;
-		/*int len = storedProcedureName.length();
+		int len = storedProcedureName.length();
 		logger.debug
 		(
 				Utils.log
@@ -620,14 +597,12 @@ public class Utils
 				,"\n****** params=",params
 				,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
 				)
-		);*/
+		);
     }
     
-	@Deprecated
     public static void debugProcedure(org.apache.log4j.Logger logger2,String storedProcedureName,Map<String,?>params,List<?>lista)
     {
-    	return;
-    	/*int len = storedProcedureName.length();
+    	int len = storedProcedureName.length();
     	logger.debug
     	(
     			Utils.log
@@ -638,14 +613,12 @@ public class Utils
     					,"\n****** ",storedProcedureName," ******"
     					,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
     			)
-    	);*/
+    	);
     }
 	
-	@Deprecated
 	public static void debugProcedure(Logger logger2,String storedProcedureName,Map<String,?>params)
     {
-		return;
-		/*int len = storedProcedureName.length();
+		int len = storedProcedureName.length();
 		logger.debug
 		(
 				Utils.log
@@ -655,14 +628,12 @@ public class Utils
 				,"\n****** params=",params
 				,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
 				)
-		);*/
+		);
     }
     
-	@Deprecated
     public static void debugProcedure(Logger logger2,String storedProcedureName,Map<String,?>params,List<?>lista)
     {
-    	return;
-    	/*int len = storedProcedureName.length();
+    	int len = storedProcedureName.length();
     	logger.debug
     	(
     			Utils.log
@@ -673,25 +644,17 @@ public class Utils
     					,"\n****** ",storedProcedureName," ******"
     					,"\n*******",StringUtils.leftPad("",len,"*"),"*******"
     			)
-    	);*/
+    	);
     }
     
     public static Date parse(String fecha) throws Exception
     {
-        if (fecha == null) {
-            return null;
-        }
     	return renderFechas.parse(fecha);
     }
     
     public static String format(Date fecha) throws Exception
     {
     	return renderFechas.format(fecha);
-    }
-    
-    public static String formatConHora(Date fecha) throws Exception
-    {
-    	return renderFechasConHora.format(fecha);
     }
     
     public static String[][] convierteMapasEnArreglos(List<Map<String,String>>lista)
@@ -729,28 +692,6 @@ public class Utils
         }
         return true;
     }
-    
-    
-    /**
-     * Obtiene el valor de una celda como String
-     * 
-     * @param celda Celda que contiene el valor
-     * @return Valor de la celda, o cadena vacia en caso de error
-     */
-    public static String getCellValue(Cell celda) {
-        String strValor = "";
-        try {
-            if(celda.getCellType() == Cell.CELL_TYPE_STRING) {
-                strValor = celda.getStringCellValue();
-            } else if(celda.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                strValor = String.valueOf(celda.getNumericCellValue());
-            }
-        } catch (Exception e) {
-            logger.warn("Error al obtener valor de la celda, se devuelve cadena vacia", e);
-        }
-        return strValor;
-    }
-    
     
     public static String NVL(String origen, String reemplazo)
     {
@@ -838,70 +779,9 @@ public class Utils
     			,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     			));
     	
-    	//logger.debug(sb.toString());
+    	logger.debug(sb.toString());
     	
     	return fin;
-    }
-    
-    public static Date parseConHora(String fecha) throws Exception
-    {
-    	return renderFechasConHora.parse(fecha);
-    }
-    
-    public static String cambiaAcentosUnicodePorGuionesBajos(String texto) {
-    	return texto
-    			.replace("\u00e1", "_a_")
-    			.replace("\u00e9", "_e_")
-				.replace("\u00ed", "_i_")
-				.replace("\u00f3", "_o_")
-				.replace("\u00fa", "_u_")
-				.replace("\u00c1", "_A_")
-				.replace("\u00c9", "_E_")
-				.replace("\u00cd", "_I_")
-				.replace("\u00d3", "_O_")
-				.replace("\u00da", "_U_");
-    }
-    
-    public static String cambiaGuionesBajosPorAcentosUnicode(String texto) {
-    	return texto
-    			.replace("_a_", "\u00e1")
-    			.replace("_e_", "\u00e9")
-				.replace("_i_", "\u00ed")
-				.replace("_o_", "\u00f3")
-				.replace("_u_", "\u00fa")
-				.replace("_A_", "\u00c1")
-				.replace("_E_", "\u00c9")
-				.replace("_I_", "\u00cd")
-				.replace("_O_", "\u00d3")
-				.replace("_U_", "\u00da");
-    }
-    
-    public static String cambiaGuionesBajosPorAcentosHtml(String texto) {
-    	return texto
-    			.replace("_a_", "&aacute;")
-    			.replace("_e_", "&eacute;")
-				.replace("_i_", "&iacute;")
-				.replace("_o_", "&oacute;")
-				.replace("_u_", "&uacute;")
-				.replace("_A_", "&Aacute;")
-				.replace("_E_", "&Eacute;")
-				.replace("_I_", "&Iacute;")
-				.replace("_O_", "&Oacute;")
-				.replace("_U_", "&Uacute;");
-    }
-    
-    public static String cambiaAcentosUnicodePorAcentosHtml(String texto) {
-    	return texto
-    			.replace("\u00e1", "&aacute;")
-    			.replace("\u00e9", "&eacute;")
-				.replace("\u00ed", "&iacute;")
-				.replace("\u00f3", "&oacute;")
-				.replace("\u00fa", "&uacute;")
-				.replace("\u00c1", "&Aacute;")
-				.replace("\u00c9", "&Eacute;")
-				.replace("\u00cd", "&Iacute;")
-				.replace("\u00d3", "&Oacute;")
-				.replace("\u00da", "&Uacute;");
     }
     
     public static String convierteTextfieldCodificadoEnMD5(String cadena) throws Exception{
@@ -926,23 +806,4 @@ public class Utils
     	}
     	return sb.toString();
     }
-    
-    /**
-	 * Formatea un long que representa una fecha en milisegundos a un string con el contenido de una fecha
-	 * @param fecha
-	 * @return
-	 */
-	public static String formateaFechaMilisegundos(long fecha) {
-		String sFecha="";
-		try {
-			final Calendar cal = Calendar.getInstance();
-        	cal.setTimeInMillis(fecha);
-        	final SimpleDateFormat sdfParser = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", new Locale("ES"));
-        	sFecha = sdfParser.format(cal.getTime());
-		} catch (Exception e) {
-			logger.error("Error al formateaFechaMilisegundos ", e);
-		}
-		return sFecha;
-	}
-	
 }

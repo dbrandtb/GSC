@@ -57,7 +57,7 @@ Ext.define('Ext.grid.override.RowEditor', {
 });
 
 
-// Bug fix para tooltip en Firefox, se debe eliminar cuando se cambie la versiï¿½n de EXTJS 4.2.1 a una superior
+// Bug fix para tooltip en Firefox, se debe eliminar cuando se cambie la versión de EXTJS 4.2.1 a una superior
 // Fuente: https://www.sencha.com/forum/showthread.php?260106-Tooltips-on-forms-and-grid-are-not-resizing-to-the-size-of-the-text&p=976013&viewfull=1
 Ext.define('Ext.SubPixelRoundingFix', {
     override: 'Ext.dom.Element',

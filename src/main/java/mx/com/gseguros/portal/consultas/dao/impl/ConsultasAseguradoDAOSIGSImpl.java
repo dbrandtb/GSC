@@ -9,8 +9,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.IConsultasAseguradoDAO;
 import mx.com.gseguros.portal.consultas.model.AseguradoDetalleVO;
 import mx.com.gseguros.portal.consultas.model.AseguradoVO;
@@ -34,6 +32,11 @@ import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.SolicitudCxPVO;
+import mx.com.gseguros.portal.reclamoExpress.dao.impl.ReclamoExpressDAOSIGSImpl.ConsultaReclamoExpressSP;
+import mx.com.gseguros.portal.reclamoExpress.dao.impl.ReclamoExpressDAOSIGSImpl.ReclamoExpressMapper;
+import mx.com.gseguros.portal.reclamoExpress.model.ReclamoExpressVO;
+import mx.com.gseguros.ws.autosgs.dao.impl.AutosSIGSDAOImpl;
+
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -268,96 +271,6 @@ public class ConsultasAseguradoDAOSIGSImpl extends AbstractManagerDAO implements
 			return solicitudesCXP;
 		}
 	}
-
-	@Override
-	public List<GenericVO> obtieneCatalogoICDs() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Map<String, String>> obtienePadecimientosAsegurado(Map<String, String> params) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void actualizaPadecimientoAsegurado(Map<String, String> params) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Map<String, String> obtieneDatosAsegurado(Map<String, String> params) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<String, String> obtieneCopagoCobMedPrevPol(Map<String, String> params) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<GenericVO> obtieneCatalogoEstadosProvMedicos() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<GenericVO> obtieneCatalogoEspecialidadesMedicos() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<GenericVO> obtieneCatalogoFrecuenciaVisitas() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<GenericVO> obtieneCatalogoPeriodicidadVisitas() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<GenericVO> obtieneCatalogoMunicipiosProvMedicos(Map<String, String> params) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Map<String, String>> obtieneCatDireccionProvMedPorEspecialidad(Map<String, String> params)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean validaAsegCobMedicinaPreventiva(Map<String, String> params) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Map<String, String> obtenerNtramiteEmision(String cdunieco, String cdramo, String estado, String nmpoliza)
-			throws ApplicationException, Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Map<String, String>> obtieneTratamientosAsegurado(Map<String, String> params) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String actualizaTratamientoAsegurado(Map<String, String> params) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	
 }
