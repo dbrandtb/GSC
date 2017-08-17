@@ -2899,12 +2899,25 @@ function _p22_datosAdicionalesClic()
                 	
                 	if(item.xtype && (item.xtype == 'combo' || item.xtype == 'combobox')){
 						item.editable = true;
-						//item.forceSelection = true;
 					}
                 	
                 });
 				
                 _p22_formDatosAdicionales().loadRecord(new _p22_modeloTatriper(json.smap2));
+                
+                _p22_formDatosAdicionales().items.each(function(item,index,len){
+                	if(item.xtype && (item.xtype == 'combo' || item.xtype == 'combobox')){
+                		
+                		var valorComb = item.getValue();
+                		item.forceSelection = true;
+                		
+                		item.getStore().on({
+                			load: function(){
+                				item.setValue(valorComb);
+                			}
+                		});
+					}
+                });
                 
                 var itemsDocumento=Ext.ComponentQuery.query('[tieneDocu]',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />);
                 debug('itemsDocumento:',itemsDocumento);
