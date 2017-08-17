@@ -1904,13 +1904,13 @@ function _p22_tipoPersonaChange(combo,value)
         _fieldByName('DSNOMBRE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setFieldLabel('Raz&oacute;n social*');
         _fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setFieldLabel('Fecha de constituci&oacute;n*');
         
-        if(value == 'S'){
+        /*if(value == 'S'){
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = true;
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
-        }else {
+        }else {*/
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = false;
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
-        }
+        //}
     }
     else
     {
