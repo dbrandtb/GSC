@@ -18,6 +18,7 @@ import org.springframework.jdbc.object.StoredProcedure;
 import mx.com.gseguros.portal.consultas.model.PagedMapList;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
+import mx.com.gseguros.portal.dao.impl.GenericMapperFecha;
 import mx.com.gseguros.portal.general.dao.IndicadoresDAO;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -629,7 +630,7 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 			declareParameter(new SqlParameter("pv_start_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_limit_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_num_rec_o", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols,true)));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapperFecha(cols,true)));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o",  OracleTypes.VARCHAR));
 			compile();
