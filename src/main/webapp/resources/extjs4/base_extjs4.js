@@ -147,7 +147,7 @@ function validarRFC(rfc,tper, silencioso)
 		var regexLetras=/^[a-zA-Z&]*$/;
 		var regexNumeros=/^[0-9]*$/;
 		var regexLetrasNumeros=/^[a-zA-Z0-9]*$/;
-		if(tper=='F')
+		if(tper=='F'||tper=='S')
 		{
 			valido=rfc.length==10||rfc.length==13;
 			debug('validacion longitud:',valido);
@@ -183,7 +183,7 @@ function validarRFC(rfc,tper, silencioso)
 				}
 			}
 		}
-		else if(tper=='M'||tper=='S')
+		else if(tper=='M')
 		{
 			valido=rfc.length==9||rfc.length==12;
 			debug('validacion longitud:',valido);
@@ -540,43 +540,53 @@ function _fieldByNameDown(name,parent,ocultarErrores){
     return comp;
 }
 
-function _fieldByLabel (label, parent, ocultarErrores) {
+function _fieldByLabel(label,parent,ocultarErrores)
+{
     //debug('_fieldByLabel:',label);
     //debug('ocultarErrores:',ocultarErrores,'DUMMY');
-    var comp, arr = [];
-    if (!Ext.isEmpty(parent)) {
-        if (typeof parent === 'string') {
-            parent = _fieldById(parent);
-        }
-        arr = Ext.ComponentQuery.query('[fieldLabel='+label+']', parent);
-    } else {
+    
+    var comp;
+    var arr = [];
+    if(parent)
+    {
+        arr = Ext.ComponentQuery.query('[fieldLabel='+label+']',parent);
+    }
+    else
+    {
         arr = Ext.ComponentQuery.query('[fieldLabel='+label+']');
     }
-    if (arr.length === 0 && true !== ocultarErrores) {
-        mensajeError('No se encuentra el campo "' + label + '"');
-    } else {
+    if(arr.length==0&&(Ext.isEmpty(ocultarErrores)||ocultarErrores==false))
+    {
+        mensajeError('No se encuentra el campo "'+label+'"');
+    }
+    else
+    {
         comp = arr[arr.length-1];
     }
     //debug('_fieldByLabel comp:',comp);
     return comp;
 }
 
-function _fieldLikeLabel (label,parent,ocultarErrores) {
+function _fieldLikeLabel(label,parent,ocultarErrores)
+{
     //debug('_fieldLikeLabel:',label);
     //debug('ocultarErrores:',ocultarErrores,'DUMMY');
     var comp;
     var arr = [];
-    if (!Ext.isEmpty(parent)) {
-        if (typeof parent === 'string') {
-            parent = _fieldById(parent);
-        }
-        arr = Ext.ComponentQuery.query('[fieldLabel*='+label+']', parent);
-    } else {
+    if(parent)
+    {
+        arr = Ext.ComponentQuery.query('[fieldLabel*='+label+']',parent);
+    }
+    else
+    {
         arr = Ext.ComponentQuery.query('[fieldLabel*='+label+']');
     }
-    if (arr.length === 0 && ocultarErrores !== true) {
-        mensajeError('No se encuentra el campo "' + label + '"');
-    } else {
+    if(arr.length==0&&(Ext.isEmpty(ocultarErrores)||ocultarErrores==false))
+    {
+        mensajeError('No se encuentra el campo "'+label+'"');
+    }
+    else
+    {
         comp = arr[arr.length-1];
     }
     //debug('_fieldLikeLabel comp:',comp);
@@ -3934,7 +3944,7 @@ function _request(params) {
                 var ck = 'Decodificando respuesta posterior al proceso: ' + ((params.mask || 'enviando petici\00f3n').toLowerCase());
                 try {
                     var json = Ext.decode(response.responseText);
-                    debug('### AJAX ' + params.url.slice(-50) + ' json:', json);
+                    debug('AJAX ...' + params.url.slice(-50) + ' json:', json);
                     if (true !== json.success) {
                         throw json.message || 'La petici\u00f3n no fue exitosa';
                     }
