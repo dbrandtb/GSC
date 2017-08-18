@@ -1617,11 +1617,11 @@ function irModoEdicion(){
 						    {
 						    	_p22_formBusqueda().hide();
 							}
-						    if(_muestraBusqueda){
+							if(_muestraBusqueda){
 								
 								_p22_formBusqueda().show();
 							}
-						    
+							
 							
 						    try{
 								var ventanaMensaje = window.parent;
@@ -1904,13 +1904,13 @@ function _p22_tipoPersonaChange(combo,value)
         _fieldByName('DSNOMBRE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setFieldLabel('Raz&oacute;n social*');
         _fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setFieldLabel('Fecha de constituci&oacute;n*');
         
-        /*if(value == 'S'){
+        if(value == 'S'){
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = true;
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
-        }else {*/
+        }else {
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = false;
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
-        //}
+        }
     }
     else
     {
@@ -4397,13 +4397,7 @@ function checarBenef(callback)
 	}
 	else(!Ext.isEmpty(inputCdramo) && !Ext.isEmpty(_fieldLikeLabel('Fecha de nacimiento',null,true)) && _p22_fieldTipoPersona().getValue()=='F')
     {
-    	var fecnam =new Date();
-    	if(_p22_fieldTipoPersona().getValue()=='F'){
-    		//
-    		fecnam= _fieldLikeLabel('Fecha de nacimiento').getRawValue();
-    		debug('Fecha de nacimiento original del contratante:',fecnam);
-    	}
-    	
+		var fecnam= _fieldLikeLabel('Fecha de nacimiento').getRawValue();debug('Fecha de nacimiento original del contratante:',fecnam);
 		     Ext.Ajax.request(
 		     {
 		         url     : _URL_urlCargarTvalosit
@@ -4417,14 +4411,11 @@ function checarBenef(callback)
 		         }
 		         ,success : function(response)
 		         {
-		             var json=Ext.decode(response.responseText);
-		             debug('### tvalosit:',json);
+		             var json=Ext.decode(response.responseText);debug('### tvalosit:',json);
 		             if(json.exito)
 		             {
-		                     var _p22_validaFecha = json.smap1['parametros.pv_otvalor56'];
-		                     debug('Fecha de nacimiento recien capturada por el contratante: ',_p22_validaFecha);
-		                     var _p22_validaSeguro = json.smap1['parametros.pv_seguroVida'];
-		                     debug('¿Tiene seguro de vida?',_p22_validaSeguro);
+		                     var _p22_validaFecha = json.smap1['parametros.pv_otvalor56'];debug('Fecha de nacimiento recien capturada por el contratante: ',_p22_validaFecha);
+		                     var _p22_validaSeguro = json.smap1['parametros.pv_seguroVida'];debug('¿Tiene seguro de vida?',_p22_validaSeguro);
 		                     if( _p22_validaSeguro=="S" && _p22_validaFecha+'X' != fecnam+'X')
 		                     {    
 		                    	 mensajeWarning('No se puede amparar la cobertura de Seguro de Vida debido a inconsistencias en la fecha de nacimiento del contratante ingresada en la cotización ('+_p22_validaFecha+') y la asociada al cliente seleccionado ('+fecnam+').\n  Por favor generar una nueva cotización o seleccionar otro cliente.');
