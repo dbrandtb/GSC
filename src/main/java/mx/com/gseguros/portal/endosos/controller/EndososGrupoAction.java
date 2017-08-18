@@ -3,9 +3,6 @@ package mx.com.gseguros.portal.endosos.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -13,6 +10,9 @@ import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaImapVO;
 import mx.com.gseguros.portal.cotizacion.model.ManagerRespuestaSlistVO;
 import mx.com.gseguros.portal.endosos.service.EndososGrupoManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 public class EndososGrupoAction extends PrincipalCoreAction
 {
@@ -79,7 +79,6 @@ public class EndososGrupoAction extends PrincipalCoreAction
 		String rfc      = null;
 		String cdperson = null;
 		String nombre   = null;
-		String cdsisrol = null;
 		
 		//datos completos
 		try
@@ -92,7 +91,6 @@ public class EndososGrupoAction extends PrincipalCoreAction
 			rfc      = smap1.get("rfc");
 			cdperson = smap1.get("cdperson");
 			nombre   = smap1.get("nombre");
-			cdsisrol = smap1.get("cdsisrol");
 			
 			if(StringUtils.isBlank(nmpoliex)
 					&&StringUtils.isBlank(rfc)
@@ -114,7 +112,7 @@ public class EndososGrupoAction extends PrincipalCoreAction
 		//proceso
 		if(exito)
 		{
-			ManagerRespuestaSlistVO resp = endososGrupoManager.buscarHistoricoPolizas(nmpoliex,rfc,cdperson,nombre,cdsisrol);
+			ManagerRespuestaSlistVO resp = endososGrupoManager.buscarHistoricoPolizas(nmpoliex,rfc,cdperson,nombre);
 			exito           = resp.isExito();
 			respuesta       = resp.getRespuesta();
 			respuestaOculta = resp.getRespuestaOculta();

@@ -3,7 +3,6 @@ package mx.com.gseguros.portal.consultas.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,7 +35,7 @@ import mx.com.gseguros.portal.consultas.model.SuplementoVO;
 import mx.com.gseguros.portal.consultas.model.TarifaVO;
 import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DynamicMapper;
+import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.general.model.ClausulaVO;
 import mx.com.gseguros.portal.general.model.DetalleReciboVO;
@@ -435,7 +434,7 @@ public class ConsultasPolizaDAOImpl extends AbstractManagerDAO implements Consul
     	
     	public CopagoVO mapRow(ResultSet rs, int rowNum) throws SQLException {
     		CopagoVO copago = new CopagoVO();
-    		copago.setOrden(rs.getString("ORDEN"));
+    		copago.setOrden(rs.getInt("ORDEN"));
     		copago.setDescripcion(rs.getString("DESCRIPCION"));
     		copago.setValor(rs.getString("VALOR"));
     		copago.setNivel(rs.getInt("NIVEL"));
@@ -1025,7 +1024,7 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     	protected GetQueryResult(DataSource dataSource) {
     		super(dataSource, "PKG_EXEC_SQL.GET_SALIDA");
             declareParameter(new SqlParameter("query"  , OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o"  , OracleTypes.CURSOR,  new DynamicMapper()));
+            declareParameter(new SqlOutParameter("pv_registro_o"  , OracleTypes.CURSOR,  new DinamicMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o"    , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o"     , OracleTypes.VARCHAR));
     		compile();
@@ -1100,63 +1099,5 @@ public List<AseguradoVO> obtieneAsegurados(PolizaVO poliza,long start,long limit
     		compile();
     	}
     }
-    
-    
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Map<String, String>> consultaIncisosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza)
-			throws Exception {
-		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		Map<String, Object> mapResult = ejecutaSP(new GetIncisosPolizaSP(getDataSource()), params);
-		return (List<Map<String, String>>) mapResult.get("pv_registro_o");
-	}
 	
-	protected class GetIncisosPolizaSP extends StoredProcedure {
-
-		protected GetIncisosPolizaSP(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA2.P_GET_INCISOS_POLIZA");
-			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DynamicMapper()));
-	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
-	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	 public String insertaBitacora(Date fecha,String nombre,int polizas,String rango,String usuario)throws Exception{
-		 String resultado = null;
-		 
-		    Map<String, Object> params = new HashMap<String, Object>();
-			params.put("pv_feproceso_i", fecha);
-			params.put("pv_nomarchivo_i",   nombre);
-			params.put("pv_nmpolreg_i",   polizas);
-			params.put("pv_rangopolproc_i", rango);
-			params.put("pv_nomusuario_i", usuario);
-			Map<String, Object> mapResult = ejecutaSP(new InsertaBitacoraSP(getDataSource()), params);
-			
-		 return resultado;
-	 }
-	
-	 protected class InsertaBitacoraSP extends StoredProcedure {
-
-			protected InsertaBitacoraSP(DataSource dataSource) {
-				super(dataSource, "P_INS_BITA_EMI_REMOTA_RECUPERA");
-				declareParameter(new SqlParameter("pv_feproceso_i", OracleTypes.DATE));
-				declareParameter(new SqlParameter("pv_nomarchivo_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_nmpolreg_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_rangopolproc_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_nomusuario_i", OracleTypes.VARCHAR));
-		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
-		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-				compile();
-			}
-		}
 }

@@ -14,10 +14,6 @@ var _p41_urlRecuperacionSimpleLista = '<s:url namespace="/emision" action="recup
 var _p41_smap1  = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 debug('_p41_smap1:',_p41_smap1);
 
-var _p41_flujo  = <s:property value="%{convertToJSON('flujo')}"  escapeHtml="false" />;
-debug('_p41_flujo:',_p41_flujo);
-debug('TipoEndoso', TipoEndoso.CancelacionAutomaticaEndodo);
-
 var _p41_storeEndosos = null;
 ////// variables //////
 
@@ -54,7 +50,7 @@ Ext.onReady(function()
             ,url         : _p41_urlRecuperacionSimpleLista
             ,extraParams :
             {
-                'smap1.procedimiento' : !Ext.isEmpty(_p41_smap1.cdtipsup) && _p41_smap1.cdtipsup==TipoEndoso.CancelacionAutomaticaEndodo?'RECUPERAR_ENDOSOS_CANCELABLES':'RECUPERAR_ENDOSOS_SINIESTRALIDAD'
+                'smap1.procedimiento' : 'RECUPERAR_ENDOSOS_CANCELABLES'
                 ,'smap1.cdunieco'     : _p41_smap1.CDUNIECO
                 ,'smap1.cdramo'       : _p41_smap1.CDRAMO
                 ,'smap1.estado'       : _p41_smap1.ESTADO
@@ -154,49 +150,28 @@ Ext.onReady(function()
                             me.disable();
                             me.setText('Cargando...');
                             var record = _fieldById('_p41_gridEndosos').getSelectionModel().getSelection()[0];
-                            
-                            var paramsConfirmar =
-                            {
-                                'smap1.cdunieco'  : _p41_smap1.CDUNIECO
-                                ,'smap1.cdramo'   : _p41_smap1.CDRAMO
-                                ,'smap1.estado'   : _p41_smap1.ESTADO
-                                ,'smap1.nmpoliza' : _p41_smap1.NMPOLIZA
-                                ,'smap1.cdtipsup' : _p41_smap1.cdtipsup
-                                ,'smap1.nsuplogi' : record.get('NSUPLOGI')
-                                ,'smap1.cddevcia' : record.get('CDDEVCIA')
-                                ,'smap1.cdgestor' : record.get('CDGESTOR')
-                                ,'smap1.feemisio' : record.raw['FEEMISIO']
-                                ,'smap1.feinival' : record.raw['FEINIVAL']
-                                ,'smap1.fefinval' : record.raw['FEFINVAL']
-                                ,'smap1.feefecto' : record.raw['FEEFECTO']
-                                ,'smap1.feproren' : record.raw['FEPROREN']
-                                ,'smap1.cdmoneda' : record.get('CDMONEDA')
-                                ,'smap1.nmsuplem' : record.get('NMSUPLEM')
-                                ,'smap1.feinicio' : record.raw['FEINICIO']
-                            };
-                            
-                            if(!Ext.isEmpty(_p41_flujo))
-                            {
-                                paramsConfirmar['flujo.ntramite']  = _p41_flujo.ntramite;
-                                paramsConfirmar['flujo.status']    = _p41_flujo.status;
-                                paramsConfirmar['flujo.cdtipflu']  = _p41_flujo.cdtipflu;
-                                paramsConfirmar['flujo.cdflujomc'] = _p41_flujo.cdflujomc;
-                                paramsConfirmar['flujo.webid']     = _p41_flujo.webid;
-                                paramsConfirmar['flujo.tipoent']   = _p41_flujo.tipoent;
-                                paramsConfirmar['flujo.claveent']  = _p41_flujo.claveent;
-                                paramsConfirmar['flujo.cdunieco']  = _p41_flujo.cdunieco;
-                                paramsConfirmar['flujo.cdramo']    = _p41_flujo.cdramo;
-                                paramsConfirmar['flujo.estado']    = _p41_flujo.estado;
-                                paramsConfirmar['flujo.nmpoliza']  = _p41_flujo.nmpoliza;
-                                paramsConfirmar['flujo.nmsituac']  = _p41_flujo.nmsituac;
-                                paramsConfirmar['flujo.nmsuplem']  = _p41_flujo.nmsuplem;
-                                paramsConfirmar['flujo.aux']       = _p41_flujo.aux;
-                            }
-                            
                             Ext.Ajax.request(
                             {
                                 url      : _p41_urlConfirmarEndoso
-                                ,params  : paramsConfirmar
+                                ,params  :
+                                {
+                                    'smap1.cdunieco'  : _p41_smap1.CDUNIECO
+                                    ,'smap1.cdramo'   : _p41_smap1.CDRAMO
+                                    ,'smap1.estado'   : _p41_smap1.ESTADO
+                                    ,'smap1.nmpoliza' : _p41_smap1.NMPOLIZA
+                                    ,'smap1.cdtipsup' : _p41_smap1.cdtipsup
+                                    ,'smap1.nsuplogi' : record.get('NSUPLOGI')
+                                    ,'smap1.cddevcia' : record.get('CDDEVCIA')
+                                    ,'smap1.cdgestor' : record.get('CDGESTOR')
+                                    ,'smap1.feemisio' : record.raw['FEEMISIO']
+                                    ,'smap1.feinival' : record.raw['FEINIVAL']
+                                    ,'smap1.fefinval' : record.raw['FEFINVAL']
+                                    ,'smap1.feefecto' : record.raw['FEEFECTO']
+                                    ,'smap1.feproren' : record.raw['FEPROREN']
+                                    ,'smap1.cdmoneda' : record.get('CDMONEDA')
+                                    ,'smap1.nmsuplem' : record.get('NMSUPLEM')
+                                    ,'smap1.feinicio' : record.raw['FEINICIO']
+                                }
                                 ,success : function(response)
                                 {
                                     me.enable();

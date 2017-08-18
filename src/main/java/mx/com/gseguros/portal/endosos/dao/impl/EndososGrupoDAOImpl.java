@@ -22,7 +22,7 @@ public class EndososGrupoDAOImpl extends AbstractManagerDAO implements EndososGr
 	private static final Logger logger = Logger.getLogger(EndososGrupoDAOImpl.class);
 	
 	@Override
-	public List<Map<String,String>>buscarHistoricoPolizas(String nmpoliex,String rfc,String cdperson,String nombre,String cdsisrol)throws Exception
+	public List<Map<String,String>>buscarHistoricoPolizas(String nmpoliex,String rfc,String cdperson,String nombre)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
 		params.put("nmpoliex" , nmpoliex);
@@ -63,7 +63,6 @@ public class EndososGrupoDAOImpl extends AbstractManagerDAO implements EndososGr
 			declareParameter(new SqlParameter("rfc"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdperson" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nombre"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			String cols[]=new String[]
 					{
 					"cdunieco"

@@ -32,7 +32,7 @@ public class RedirectFilter implements Filter {
     		HttpSession httpSession = ((HttpServletRequest)request).getSession(false);
     		if (httpSession == null) {
     			logger.debug("La url " + url + " no se puede procesar en esta sesion");
-        		response.getWriter().write("{\"success\": false, \"actionErrors\": [\"Sesi\u00f3n inv\u00e1lida\"], \"totalCount\": 0, \"errCode\": -999999}");
+        		response.getWriter().write("{\"success\": false, \"actionErrors\": [\"Sesi&oacute;n inv&aacute;lida\"], \"totalCount\": 0, \"errCode\": -999999}");
     		} else {
     			logger.debug("La url " + url + " se procesara en la sesion para la sesin con id: " + httpSession.getId());
         		chain.doFilter(request, response);

@@ -31,7 +31,7 @@ public interface LoginManager {
 	
 	/**
 	 * Valida si existe un usuario en LDAP deacuerdo a sus credenciales
-	 * @param unicamenteExiste true si solo se desea validar el usuario, false false si se desea validar el usuario Y password
+	 * @param unicamenteExiste true si se desea validar el usuario/password, false si solo se desea saber si existe el usuario en LDAP
 	 * @param user
 	 * @param password
 	 * @return
@@ -45,7 +45,7 @@ public interface LoginManager {
 	 * @param password
 	 * @return
 	 */
-	public boolean validaDatosConexionLDAP(String dn, String password) throws Exception;
+	public boolean validaDatosConexionLDAP(String dn, String password);
 	
 	/**
 	 * Obtiene los datos de conexion de LDAP

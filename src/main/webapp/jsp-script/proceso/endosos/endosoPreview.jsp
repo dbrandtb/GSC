@@ -72,9 +72,6 @@ Ext.onReady(function()
                     ,buttons: Ext.Msg.OK
 					,icon: Ext.Msg.ERROR
                 });
-                var botonConfirmar =_fieldByName('enviarButton');
-                botonConfirmar.setDisabled(true);
-                
                 var botonConfirmar =_fieldByName('endosoButton');
                 botonConfirmar.setDisabled(true);
                 
