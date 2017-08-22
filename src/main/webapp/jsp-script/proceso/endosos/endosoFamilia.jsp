@@ -289,10 +289,11 @@ Ext.onReady(function()
                         	    }
                         	    ,extraParams:
                         	    {
-                        	        catalogo           : 'RECUPERAR_LISTA_FILTRO_PROPIEDAD_INCISO'
+                        	        catalogo           : 'RECUPERAR_LISTA_FILTRO_PROPIEDADDES_INCISO'
+                        	        ,'params.cdunieco' :  _p48_params.CDUNIECO
                         	        ,'params.cdramo'   :  _p48_params.CDRAMO
-                        	        ,'params.cdtipsit' :  _p48_params.CDTIPSIT
-                        	        ,'params.nivel'    :  "I"
+                        	        ,'params.estado'   :  _p48_params.ESTADO
+                        	        ,'params.nmpoliza' :  _p48_params.NMPOLIZA
                         	    }
                         	}
                             ,listeners :
@@ -1036,6 +1037,7 @@ function _p48_agregarFamClic()
 							});
 						}
                     });
+                     /**/
                 }
                 else
                 {
@@ -1057,7 +1059,141 @@ function _p48_agregarFamClic()
             errorComunicacion(null,'Error al quitar asegurado');
         }
     });
+	/**/
 }
+/*function _p48_agregarFamClic()
+{
+    debug('_p48_agregarFamClic');
+    var ck = 'Agregando familia';
+    try
+    {
+        _p48_obtenerComponentes('FAM',_p48_store.getAt(0).get('CDTIPSIT'),function(mpersona,tatrisit,tatrirol,validacion)
+        {
+            centrarVentanaInterna(Ext.create('Ext.window.Window',
+            {
+                title  : 'DATOS DEL TITULAR'
+                ,modal : true
+                ,items :
+                [
+                    Ext.create('Ext.panel.Panel',
+                    {
+                        width     : 900
+                        ,height   : 500
+                        ,autoScroll : true
+                        ,border   : 0
+                        ,defaults : { style : 'margin:5px;' }
+                        ,items    :
+                        [
+                            _p48_crearFormulario(mpersona,tatrisit,tatrirol)
+                        ]
+                        ,listeners :
+                        {
+                            afterrender : function(me)
+                            {
+                                var ck = 'Manejando consecutivo de familia';
+                                try
+                                {
+                                    _p48_nfamilia = _p48_nfamilia+1;
+                                    me.familia    = _p48_nfamilia;
+                                    me.down('form').down('[name=NMSITAUX]').setValue('NUEVA-'+me.familia);
+                                }
+                                catch(e)
+                                {
+                                    manejaException(e,ck);
+                                }                                    
+                            }
+                        }
+                        ,buttonAlign : 'center'
+                        ,buttons     :
+                        [
+                            {
+                                text     : 'Aceptar'
+                                ,icon    : '${icons}accept.png'
+                                ,handler : function(me)
+                                {
+                                    Ext.MessageBox.confirm('Confirmar', '¿Termin\u00F3 de agregar todos los asegurados de la familia?', function(btn)
+                                    {
+                                        if(btn === 'yes')
+                                        {
+		                                    var ck = 'Revisando datos';
+		                                    try
+		                                    {
+		                                        var panel = me.up('panel');
+		                                        var forms = Ext.ComponentQuery.query('form',panel);
+		                                        debug('forms:',forms);
+		                                        var errores = [];
+		                                        for(var i in forms)
+		                                        {
+		                                            var form = forms[i];
+		                                            if(!form.isValid())
+		                                            {
+		                                                throw 'Favor de revisar datos';
+		                                            }
+		                                        }
+		                                        var cdtipsit = _p48_store.getAt(0).get('CDTIPSIT');
+		                                        var records = [];
+		                                        for(var i in forms)
+		                                        {
+		                                            var form         = forms[i];
+		                                            var vals         = form.getValues();
+		                                            vals['CDTIPSIT'] = cdtipsit;
+		                                            records.push(new _p48_modelo(vals));
+		                                        }
+		                                        debug('records:',records);
+		                                        var maxGrupo = 0;
+		                                        _p48_store.each(function(record)
+		                                        {
+		                                            if(Number(record.get('CDGRUPO'))>maxGrupo)
+		                                            {
+		                                                maxGrupo = Number(record.get('CDGRUPO'));
+		                                            }
+		                                        });
+		                                        debug('maxGrupo:',maxGrupo);
+		                                        for(var i in records)
+		                                        {
+		                                            var cdgrupo = Number(records[i].get('CDGRUPO'));
+		                                            if(cdgrupo==0||cdgrupo>maxGrupo)
+		                                            {
+		                                                throw 'El grupo no es v\u00E1lido para '+
+		                                                    (
+		                                                        [
+		                                                            records[i].get('DSNOMBRE')
+		                                                            ,records[i].get('DSNOMBRE1')
+		                                                            ,records[i].get('DSAPELLIDO')
+		                                                            ,records[i].get('DSAPELLIDO1')
+		                                                        ].join(' ')
+		                                                    );
+		                                            }
+		                                        }
+		                                        ck = 'Ejecutando validaci\u00F3n din\u00E1mica';
+		                                        validacion(records);
+		                                        for(var i in records)
+		                                        {
+		                                            records[i].set('MOV'  , '+');
+		                                            records[i].set('AUX1' , 'FAM');
+		                                            _p48_storeMov.add(records[i]);
+		                                        }
+		                                        me.up('window').destroy();
+		                                    }
+		                                    catch(e)
+		                                    {
+		                                        manejaException(e,ck);
+		                                    }
+		                                }
+		                            });
+                                }
+                            }
+                        ]
+                    })
+                ]
+            }).show());
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}*/
 
 function _p48_crearFormulario(mpersona,tatrisit,tatrirol)
 {

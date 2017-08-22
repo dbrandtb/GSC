@@ -21,11 +21,7 @@ public enum TipoSituacion {
 	TRADICIONALES_SUSALUD     ("TSS"),
 	MOTOS                     ("MO"),
 	TRACTOCAMIONES_ARMADOS    ("TC"),
-	REMOLQUES_INDISTINTOS     ("RQ"),
-	TURISTA_LICENCIA          ("TL"),
-	TURISTA_VEHICULO          ("TV"),
-	GASTOS_MEDICOS_MAYORES_PRUEBA_IND ("GMPI"),
-	GASTOS_MEDICOS_MAYORES_PRUEBA_COL ("GMPC")
+	REMOLQUES_INDISTINTOS     ("RQ")
 	;
 
 	private String cdtipsit;

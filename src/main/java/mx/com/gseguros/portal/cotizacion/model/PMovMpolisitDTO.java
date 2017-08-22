@@ -1,8 +1,5 @@
 package mx.com.gseguros.portal.cotizacion.model;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 /**
  * ESPEJO DE PKG_SATELITES.P_MOV_MPOLISIT		
  * @author jair
@@ -101,19 +98,5 @@ public class PMovMpolisitDTO
 		        ,this.accion
 		        };
 	}
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
-    }
-
-    public String getNmsituac() {
-        return nmsituac;
-    }
-
-    public void setNmsituac(String nmsituac) {
-        this.nmsituac = nmsituac;
-    }
-	
 	
 }

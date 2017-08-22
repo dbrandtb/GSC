@@ -3,7 +3,6 @@ package mx.com.gseguros.portal.cotizacion.controller;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.gseguros.mesacontrol.model.FlujoVO;
 import mx.com.gseguros.portal.mesacontrol.service.MesaControlManager;
 import mx.com.gseguros.utils.Utils;
 
@@ -30,8 +29,6 @@ public class MesaControl2Action extends PrincipalCoreAction
 	private boolean success;
 	
 	private Map<String,String> params;
-	
-	private FlujoVO flujo;
 	
 	@Autowired
 	private MesaControlManager mesaControlManager;
@@ -79,44 +76,6 @@ public class MesaControl2Action extends PrincipalCoreAction
 		
 		return SUCCESS;
 	}
-	
-	@Action(value   = "borrarNmsoliciTramite",
-			results = { @Result(name="success", type="json") }
-			)
-	public String borrarNmsoliciTramite()
-	{
-		logger.debug(Utils.log(
-				 "\n###################################"
-				,"\n###### borrarNmsoliciTramite ######"
-				,"\n###### flujo=" , flujo
-				));
-		
-		try
-		{
-			Utils.validateSession(session);
-
-			Utils.validate(flujo, "No hay flujo");
-			
-			mesaControlManager.borrarNmsoliciTramite(flujo.getNtramite());
-			
-			message = "Operaci\u00f3n sobre solicitud correcta";
-			
-			success = true;
-		}
-		catch(Exception ex)
-		{
-			message = Utils.manejaExcepcion(ex);
-		}
-		
-		logger.debug(Utils.log(
-				 "\n###### success=" , success
-				,"\n###### message=" , message
-				,"\n###### borrarNmsoliciTramite ######"
-				,"\n###################################"
-				));
-		
-		return SUCCESS;
-	}
 
 	////// Getters y Setters //////////////////////////////////////////////////////////////////
 	
@@ -152,18 +111,6 @@ public class MesaControl2Action extends PrincipalCoreAction
 
 	public void setParams(Map<String, String> params) {
 		this.params = params;
-	}
-	
-	////// Getters y Setters //////////////////////////////////////////////////////////////////
-
-	public FlujoVO getFlujo() {
-		return flujo;
-	}
-	
-	////// Getters y Setters //////////////////////////////////////////////////////////////////
-
-	public void setFlujo(FlujoVO flujo) {
-		this.flujo = flujo;
 	}
 	
 	////// Getters y Setters //////////////////////////////////////////////////////////////////
