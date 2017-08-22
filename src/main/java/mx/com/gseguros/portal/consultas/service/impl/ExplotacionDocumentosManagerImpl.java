@@ -1357,7 +1357,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,"S"
 						,null
 						,null
-						,EstatusTramite.IMPRESO.getCodigo()
+						,EstatusTramite.ENTREGA_CORREO.getCodigo()
 						,true
 						);
 			}
