@@ -2889,8 +2889,12 @@ debug("validarYGuardar flag:2");
 									}
 									
 									var ocupacionRec = gridSource.getAt(j).data.ocup;
+									var years = calculaAniosTranscurridos(gridSource.getAt(j).data.fenacimi,new Date());
+									
 									if(inputCduniecop2 == 1403 && gridSource.getAt(j).data.Parentesco == "T" 
-									        && ( Ext.isEmpty(ocupacionRec) || ocupacionRec == '156' || ocupacionRec == 'n')){
+									        && ( Ext.isEmpty(ocupacionRec) || ocupacionRec == '156' || ocupacionRec == 'n')
+									        && parseInt(years) >= 18
+									        ){
 									    titularSinOcupacion = true;
 									}
 									
