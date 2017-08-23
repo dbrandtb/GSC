@@ -17,42 +17,19 @@
         <property name="locations">
             <list>
                  <!-- <value>file:/u01/wlserver/wldomain/gseguros/properties/mail.properties</value> -->
-                 <value>file:/RES/properties/gseguros/global.properties</value>
                  <value>classpath:mail.properties</value>
-                 <value>classpath:portal.properties</value>
+                 <value>classpath:global.properties</value>
                  <value>classpath:reportes.properties</value>
             </list>
         </property> 
 	</bean>
 	
 	
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
-        <property name="url" value="jdbc:oracle:thin:@10.1.1.133:6521:GSEGUROS"/>
-        <!-- <property name="url" value="jdbc:oracle:thin:@10.1.1.170X:1521:GSEGUROS1X"/>-->
-        <property name="username" value="ice"/>
-        <property name="password" value="ice"/>
-        <!--
-        <property name="maxActive" value="30"/>
-        <property name="maxIdle" value="10"/>
-        <property name="maxWait" value="1000"/>
-        <property name="defaultAutoCommit" value="true"/>
-        -->
-    </bean>
+    <jee:jndi-lookup id="dataSource" jndi-name="jdbc/gseguros"/>
     
-    <bean id="dataSourceSISA" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-        <property name="url" value="jdbc:sqlserver://192.168.5.26\\RESPALDO:1434;databaseName=SISA"/>
-        <property name="username" value="sa"/>
-        <property name="password" value="sa4925"/>
-    </bean>
-     
-    <bean id="dataSourceSIGS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.informix.jdbc.IfxDriver"/>
-        <property name="url" value="jdbc:informix-sqli://10.101.1.167:1001/dbsigs:INFORMIXSERVER=infdss"/>
-        <property name="username" value="sadgdl"/>
-        <property name="password" value="1salud"/>
-    </bean>
+    <jee:jndi-lookup id="dataSourceSISA" jndi-name="jdbc/dbsisa"/>
+
+    <jee:jndi-lookup id="dataSourceSIGS" jndi-name="gsegifx"/>
     
     
     <!-- ******************** Manejo de transacciones para Spring JDBC ******************** -->
