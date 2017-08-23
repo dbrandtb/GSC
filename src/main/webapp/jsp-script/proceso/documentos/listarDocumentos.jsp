@@ -6,22 +6,32 @@
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator" %>
 <%@ taglib uri="/struts-tags"                                   prefix="s" %>
 
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<style></style>
+<style>
+
+.child-row .x-grid-cell{ 
+    background-color: #ffe2e2 !important; 
+    color: #900; 
+}
+
+.personal-row { 
+    background-color: #ffe2e2 !important; 
+    color: #900; 
+}
+ 
+</style>
 
 <!-- Libreria EXTJS4 -->
-<link href="../../../resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="../../../resources/extjs4/ext-all.js"></script>
-<script type="text/javascript" src="../../../resources/extjs4/locale/ext-lang-es.js"></script>
+<link href="../../../resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../../resources/extjs4/ext-all.js"></script> 
+<!--<script type="text/javascript" src="../../../resources/extjs4/locale/ext-lang-es.js"></script>-->
         
 <script>
 
 ////// overrides //////
-
 
 ////// variables //////
 var _CONTEXT = '${ctx}';
@@ -33,7 +43,6 @@ var _p21_pathListarDirectorio           ='/RES/logs/gseguros';
 var _p21_pathDescargarDirectorio        ='/RES/logs';
 var _p21_subfolderDescargarDirectorio   ='gseguros';
 var _p21_nombreArchDescargar            ='';
-
 
 ////// onReady //////
 
@@ -53,7 +62,6 @@ Ext.onReady(function()
         ]
     });
     
-   
     ////// stores //////
     var storeDocumentos = Ext.create('Ext.data.Store', {
 		model             : 'modeloDocumentos',
@@ -71,8 +79,6 @@ Ext.onReady(function()
 		sorters           :[
 	    	{
 	    		sorterFn  : function(o1,o2){
-	            	//console.log(o1.get('tamDoc'), "-------", o2.get('tamDoc'));
-	            	//console.log('sorting:',o1,o2);
 	                if (o1.get('tamDoc') === o2.get('tamDoc')){
 	                	return 0;
 	                }
@@ -82,17 +88,26 @@ Ext.onReady(function()
 		]
 	});
     
-    
     ////// componentes //////
 	var gridDocumentos = Ext.create('Ext.grid.Panel', {
 	    title: 'Documentos del Servidor',
 	    itemId: 'gridDocumentos',
-	    //layout: 'fit',
 	    flex  : 1,
 		selType: 'cellmodel',
 	    store: storeDocumentos,
 	    columns: [
-	        { text: 'nombreDoc', dataIndex:'nombreDoc'},
+	        { text: 'nombreDoc', dataIndex:'nombreDoc'
+	        	//colorear grid celda
+		        ,renderer: function(value, meta) { 
+	                if (value === 'dev.log') {
+	                    meta.tdCls += "personal-row";
+	                } 
+	                else{
+		                meta.tdCls = null; 
+	                }
+	                return value;
+	            } 
+            },
 	        { text: 'tamDoc', dataIndex:'tamDoc'},
 	        { text: 'modificado', dataIndex:'modificado'},
 	        { text: 'permisos', dataIndex:'permisos'},
@@ -114,13 +129,23 @@ Ext.onReady(function()
 	    	],
 	    width: '100%',
 	    forceFit: true,
-	    //selType: 'cellmodel',
 	    listeners: {
 			boxready: function (sm, selectedRecord) {
 				storeDocumentos.load()
 			} 
 	    }
-	});
+	    //colorear grid row
+	    ,viewConfig: {
+        	getRowClass: function(record) {  
+            	if ((record.get('nombreDoc') == "dev_desa.log") || (record.get('nombreDoc') == "dev_clientes.log") || (record.get('nombreDoc') == "dev_clientes_preprod.log")){
+            		return 'child-row'
+            	}
+            	else{
+            		return null
+            	}
+        	} 
+	    }
+	});	
 	
     ////// contenido //////
     Ext.create('Ext.Panel', {
