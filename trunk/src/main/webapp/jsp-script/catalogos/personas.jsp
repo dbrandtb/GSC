@@ -1090,7 +1090,8 @@ var _URL_urlCargarTvalosit   = '<s:url namespace="/emision"    action="cargarVal
 	_p22_fieldSexo().forceSelection = true;
 	_fieldByName('CDESTCIV',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).forceSelection = true;
 	_p22_fieldCumuloPrima().forceSelection = true;
-	_fieldByName('CANALING',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).forceSelection = true;
+	//Se elimina Canal de Ingreso
+	//_fieldByName('CANALING',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).forceSelection = true;
 	
 	
 	_p22_fieldRFC().validator =  function(value){
@@ -1903,6 +1904,9 @@ function _p22_tipoPersonaChange(combo,value)
         
         _fieldByName('DSNOMBRE',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setFieldLabel('Raz&oacute;n social*');
         _fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).setFieldLabel('Fecha de constituci&oacute;n*');
+        //Se agrega Campo de CURP para persona fisica
+        _fieldByName('CURP',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = true;
+        _fieldByName('CURP',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).hide();
         
         /*if(value == 'S'){
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = true;
@@ -1910,6 +1914,7 @@ function _p22_tipoPersonaChange(combo,value)
         }else {*/
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = false;
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
+        	
         //}
     }
     else
@@ -1925,6 +1930,10 @@ function _p22_tipoPersonaChange(combo,value)
         
         _fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = false;
     	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
+    	
+    	//Se agrega Campo de CURP para persona fisica
+        _fieldByName('CURP',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = false;
+        _fieldByName('CURP',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
     }
     debug('<_p22_tipoPersonaChange');
 }
