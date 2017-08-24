@@ -4975,6 +4975,7 @@ public String retarificarEndosos()
 			String apat     = smap1.get("apat");
 			String amat     = smap1.get("amat");
 			String cdnacion = smap1.get("cdnacion");
+			String cdpersonAseg = smap1.get("cdperson");
 			String cdelemen = usuario.getEmpresa().getElementoId();
 			String cdusuari = usuario.getUser();
 			Date   fechaHoy = new Date();
@@ -5049,7 +5050,14 @@ public String retarificarEndosos()
 				
 				//////////////////////
         		////// cdperson //////
-				String cdperson=kernelManager.generaCdperson();
+				String cdperson="";
+				if(cdpersonAseg!= null && !cdpersonAseg.isEmpty()){
+					cdperson = cdpersonAseg;
+				}else{
+					cdperson = kernelManager.generaCdperson();
+				}
+				logger.debug("5.- Obtenemos el valor del cdperson a agregar ===> :{}",cdperson);
+				
 				////// cdperson //////
 				//////////////////////
 				
@@ -5156,34 +5164,39 @@ public String retarificarEndosos()
                 
                 //////////////////////
                 ////// mpersona //////
-                Map<String,Object> mapaMpersona=new LinkedHashMap<String,Object>(0);
-				mapaMpersona.put("pv_cdperson_i"    , cdperson); 
-				mapaMpersona.put("pv_cdtipide_i"    , "1");
-				mapaMpersona.put("pv_cdideper_i"    , rfc);
-				mapaMpersona.put("pv_dsnombre_i"    , nombre);
-				mapaMpersona.put("pv_cdtipper_i"    , "1");
-				mapaMpersona.put("pv_otfisjur_i"    , tpersona);
-				mapaMpersona.put("pv_otsexo_i"      , sexo);
-				mapaMpersona.put("pv_fenacimi_i"    , renderFechas.parse(fenacimi));
-				mapaMpersona.put("pv_cdrfc_i"       , rfc);
-				mapaMpersona.put("pv_dsemail_i"     , "");
-				mapaMpersona.put("pv_dsnombre1_i"   , nombre2);
-				mapaMpersona.put("pv_dsapellido_i"  , apat);
-				mapaMpersona.put("pv_dsapellido1_i" , amat);
-				mapaMpersona.put("pv_feingreso_i"   , fechaHoy);
-				mapaMpersona.put("pv_cdnacion_i"    , cdnacion);
-				mapaMpersona.put("pv_canaling_i"    , null);
-				mapaMpersona.put("pv_conducto_i"    , null);
-				mapaMpersona.put("pv_ptcumupr_i"    , null);
-				mapaMpersona.put("pv_residencia_i"  , null);
-				mapaMpersona.put("pv_nongrata_i"    , null);
-				mapaMpersona.put("pv_cdideext_i"    , null);
-				mapaMpersona.put("pv_cdestciv_i"    , null);
-				mapaMpersona.put("pv_cdsucemi_i"    , null);
-				mapaMpersona.put("pv_cdusuario_i"   , usuarioCaptura);
-				mapaMpersona.put("pv_dsocupacion_i" , ocupacion);
-				mapaMpersona.put("pv_accion_i"      , "I");
-				kernelManager.movMpersona(mapaMpersona);
+            	if(cdpersonAseg!= null && !cdpersonAseg.isEmpty()){
+            		//No realizamos nada porque ya existia
+            		logger.debug("Entra pero no realiza nada porque el asegurado ya existe.");
+            	}else{
+            		Map<String,Object> mapaMpersona=new LinkedHashMap<String,Object>(0);
+    				mapaMpersona.put("pv_cdperson_i"    , cdperson); 
+    				mapaMpersona.put("pv_cdtipide_i"    , "1");
+    				mapaMpersona.put("pv_cdideper_i"    , rfc);
+    				mapaMpersona.put("pv_dsnombre_i"    , nombre);
+    				mapaMpersona.put("pv_cdtipper_i"    , "1");
+    				mapaMpersona.put("pv_otfisjur_i"    , tpersona);
+    				mapaMpersona.put("pv_otsexo_i"      , sexo);
+    				mapaMpersona.put("pv_fenacimi_i"    , renderFechas.parse(fenacimi));
+    				mapaMpersona.put("pv_cdrfc_i"       , rfc);
+    				mapaMpersona.put("pv_dsemail_i"     , "");
+    				mapaMpersona.put("pv_dsnombre1_i"   , nombre2);
+    				mapaMpersona.put("pv_dsapellido_i"  , apat);
+    				mapaMpersona.put("pv_dsapellido1_i" , amat);
+    				mapaMpersona.put("pv_feingreso_i"   , fechaHoy);
+    				mapaMpersona.put("pv_cdnacion_i"    , cdnacion);
+    				mapaMpersona.put("pv_canaling_i"    , null);
+    				mapaMpersona.put("pv_conducto_i"    , null);
+    				mapaMpersona.put("pv_ptcumupr_i"    , null);
+    				mapaMpersona.put("pv_residencia_i"  , null);
+    				mapaMpersona.put("pv_nongrata_i"    , null);
+    				mapaMpersona.put("pv_cdideext_i"    , null);
+    				mapaMpersona.put("pv_cdestciv_i"    , null);
+    				mapaMpersona.put("pv_cdsucemi_i"    , null);
+    				mapaMpersona.put("pv_cdusuario_i"   , usuarioCaptura);
+    				mapaMpersona.put("pv_dsocupacion_i" , ocupacion);
+    				mapaMpersona.put("pv_accion_i"      , "I");
+    				kernelManager.movMpersona(mapaMpersona);
+            	}
                 ////// mpersona //////
                 //////////////////////
 				
@@ -5202,7 +5215,7 @@ public String retarificarEndosos()
 				mapaMpoliper.put("pv_nmorddom_i" , "1");
 				mapaMpoliper.put("pv_swreclam_i" , null);
 				mapaMpoliper.put("pv_accion_i"   , "I");
-				mapaMpoliper.put("pv_swexiper_i" , Constantes.NO);
+				mapaMpoliper.put("pv_swexiper_i" , (cdpersonAseg!= null && !cdpersonAseg.isEmpty())?Constantes.SI:Constantes.NO);
 				kernelManager.movMpoliper(mapaMpoliper);
 				////// mpoliper //////
 				//////////////////////
