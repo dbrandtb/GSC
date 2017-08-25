@@ -33,7 +33,6 @@ import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.MailService;
-import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.FlujoMC;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
@@ -2179,8 +2178,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			boolean turnarAOtraPersona = false;
 			
-			        //userSinPermisoEndoso = false;
-			
+	        		//userSinPermisoEndoso = false;
+	
 			// Si el sistema genera el tramite o el tramite viene de sigs, hay que turnarlo
 			if (Constantes.USUARIO_SISTEMA.equals(cdusuari)
 			        || Constantes.ROL_SISTEMA.equals(cdsisrol)
@@ -4144,24 +4143,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	        logger.debug(paso);
 	        flujoMesaControlDAO.cambiarTipoEndosoTramite(ntramite, cdtipsup);
 	        
-	        paso = "Registrando detalle tramite recategorizado";
-	        logger.debug(paso);
-	        mesaControlDAO.movimientoDetalleTramite(
-	                ntramite,
-	                new Date(), //feinicio
-	                null, //cdclausu
-	                Utils.log("Se recategoriza el motivo de endoso a \"", dstipsup, "\" con las siguientes observaciones: ",
-	                        Utils.NVL(comments, "(sin comentarios)")),
-	                cdusuari,
-	                null, //cdmotivo
-	                cdsisrol,
-	                swagente ? "S" : "N",
-	                null, //cdusuariDest
-	                null, //cdsisrolDest
-	                EstatusTramite.RECATEGORIZADO.getCodigo(),//status,
-	                true
-	                );
-	        
 	        paso = "Registrando detalle";
 	        logger.debug(paso);
 	        mesaControlDAO.movimientoDetalleTramite(
@@ -4184,26 +4165,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	    }
         logger.debug("{}", Utils.log("\n@@@@@@ cambiarTipoEndosoTramite @@@@@@",
                                      "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-	}
-	
-	@Override
-	public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception {
-	    logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-	                           "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-	                           "\n@@@@@@ ntramite = ", ntramite,
-	                           "\n@@@@@@ cdusuari = ", cdusuari,
-	                           "\n@@@@@@ cdsisrol = ", cdsisrol));
-	    FlujoVO flujo = null;
-	    String paso = "Construyendo flujo RSTN";
-	    try {
-	        flujo = flujoMesaControlDAO.generarYRecuperarFlujoRSTN(ntramite, cdusuari, cdsisrol);
-	    } catch (Exception ex) {
-	        Utils.generaExcepcion(ex, paso);
-	    }
-        logger.debug(Utils.log("\n@@@@@@ flujo = ", flujo,
-                               "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-                               "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-        return flujo;
 	}
 	
 	@Deprecated
