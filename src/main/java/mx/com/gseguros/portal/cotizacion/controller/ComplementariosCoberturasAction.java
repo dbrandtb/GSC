@@ -121,13 +121,8 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	public String cargarPantallaCoberturas() 
+	public String cargarPantallaCoberturas()
 	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ cargarPantallaCoberturas @@@@@@"
-				,"\n@@@@@@ smap1=" , smap1, "\n",slist1
-				));
 		try
 		{
 			/*
@@ -147,13 +142,6 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			logger.error("error al cargar la pantalla de coberturas",ex);
 			success=false;
 		}
-		
-		logger.debug(Utils.log(
-				 "\n@@@@@@ slist1=",slist1
-			    ,"\n@@@@@@ cargarPantallaCoberturas @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
-		
 		return SUCCESS;
 	}
 	
@@ -639,11 +627,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction {
 			gc.setCdrol(smap1.get("pv_cdrol"));
 			gc.setCdramo(smap1.get("pv_cdramo"));
 			gc.setCdtipsit(smap1.get("cdtipsit"));
-			if(!smap1.get("pv_cdramo").equalsIgnoreCase("2") && !smap1.get("pv_cdramo").equalsIgnoreCase("4")){
-				gc.genera(tatriper);
-			}else{
-				gc.genera(null);
-			}
+			gc.genera(tatriper);
 			item1=gc.getFields();
 			item2=gc.getItems();
 			

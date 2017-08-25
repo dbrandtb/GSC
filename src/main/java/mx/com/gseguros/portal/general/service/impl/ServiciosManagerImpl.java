@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,33 +13,22 @@ import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
-import mx.com.gseguros.portal.catalogos.dao.PersonasDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
-import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
-import mx.com.gseguros.portal.consultas.model.AseguradoVO;
-import mx.com.gseguros.portal.consultas.model.CopagoVO;
-import mx.com.gseguros.portal.consultas.model.PolizaAseguradoVO;
-import mx.com.gseguros.portal.consultas.model.PolizaDTO;
 import mx.com.gseguros.portal.cotizacion.dao.CotizacionDAO;
 import mx.com.gseguros.portal.cotizacion.model.ParametroGeneral;
 import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
-import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
-import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.mesacontrol.dao.MesaControlDAO;
-import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
-import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
@@ -85,16 +73,6 @@ public class ServiciosManagerImpl implements ServiciosManager
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
-	
-	@Autowired
-	private PersonasDAO personasDAO;
-	
-	@Autowired
-	private SiniestrosDAO siniestrosDAO;
-	
-	@Autowired
-    @Qualifier("consultasDAOICEImpl")
-	private ConsultasPolizaDAO consultasPolizaDAO;
 	
 	@Override
 	public String reemplazarDocumentoCotizacion(StringBuilder sb, String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
@@ -633,219 +611,4 @@ public class ServiciosManagerImpl implements ServiciosManager
 	public void bloquearProceso (String cdproceso, boolean bloquear, String cdusuari, String cdsisrol) throws Exception {
 		emisionDAO.bloquearProceso(cdproceso, bloquear, cdusuari, cdsisrol);
 	}
-	
-	@Override
-	public List<Map<String, String>> recuperarPersonasPorRFCoPorNombre (String rfc, String nombre) throws Exception {
-	    logger.debug(Utils.log("\n@@@@@@ recuperarPersonasPorRFCoPorNombre rfc = ", rfc, ", nombre = ", nombre));
-	    String paso = "Recuperando personas por RFC";
-	    List<Map<String, String>> lista = null;
-	    try {
-	        lista = personasDAO.obtenerPersonasPorRFC(rfc, nombre, null, null, null, "N");
-	    } catch (Exception ex) {
-	        Utils.generaExcepcion(ex, paso);
-	    }
-	    return lista;
-	}
-	
-	@Override
-	public List<Map<String, String>> recuperarPolizasPorCdpersonYcdramo (String cdperson, String cdramo) throws Exception {
-        logger.debug(Utils.log("\n@@@@@@ recuperarPolizasPorCdpersonYcdramo cdperson = ", cdperson, ", cdramo = ", cdramo));
-        String paso = "Recuperando polizas por cdperson y cdramo";
-        List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-        try {
-            List<PolizaVigenteVO> listaObj = siniestrosDAO.obtieneListadoPoliza(cdperson, cdramo,
-                    RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol());
-            for (PolizaVigenteVO obj : listaObj) {
-                Map<String, String> mapa = new LinkedHashMap<String, String>();
-                mapa.put("CDUNIECO",             obj.getCdunieco());
-                mapa.put("DSSUCURSAL",           obj.getDssucursal());
-                mapa.put("ESTADO",               obj.getEstado());
-                mapa.put("CDRAMO",               obj.getCdramo());
-                mapa.put("DSRAMO",               obj.getDsramo());
-                mapa.put("NMPOLIZA",             obj.getNmpoliza());
-                mapa.put("NMSITUAC",             obj.getNmsituac());
-                mapa.put("MTOBASE",              obj.getMtoBase());
-                mapa.put("FEINICIO",             obj.getFeinicio());
-                mapa.put("FEFINAL",              obj.getFefinal());
-                mapa.put("ESTATUS",              obj.getEstatus());
-                mapa.put("DSESTATUS",            obj.getDsestatus());
-                mapa.put("NMSOLICI",             obj.getNmsolici());
-                mapa.put("NMSUPLEM",             obj.getNmsuplem());
-                mapa.put("CDTIPSIT",             obj.getCdtipsit());
-                mapa.put("ESTATUSCLIENTE",       obj.getEstatusCliente());
-                mapa.put("DESESTATUSCLIENTE",    obj.getDesEstatusCliente());
-                mapa.put("FALTAASEGURADO",       obj.getFaltaAsegurado());
-                mapa.put("FCANCELACIONAFILIADO", obj.getFcancelacionAfiliado());
-                mapa.put("MTOBENEFICIOMAX",      obj.getMtoBeneficioMax());
-                mapa.put("ZONACONTRATADA",       obj.getZonaContratada());
-                mapa.put("VIGENCIAPOLIZA",       obj.getVigenciaPoliza());
-                mapa.put("NUMPOLIZA",            obj.getNumPoliza());
-                mapa.put("DSPLAN",               obj.getDsplan());
-                mapa.put("MESESASEGURADO",       obj.getMesesAsegurado());
-                mapa.put("DIASASEGURADO",        obj.getDiasAsegurado());
-                mapa.put("EMAIL",                obj.getEmail());
-                mapa.put("TELEFONO",             obj.getTelefono());
-                mapa.put("NOMBASEGURADO",        obj.getNombAsegurado());
-                mapa.put("DSTIPSIT",             obj.getDsTipsit());
-                mapa.put("GENERO",               obj.getGenero());
-                mapa.put("FENACIMI",             obj.getFenacimi());
-                lista.add(mapa);
-            }
-        } catch (Exception ex) {
-            Utils.generaExcepcion(ex, paso);
-        }
-        return lista;
-	}
-	
-	@Override
-	public List<Map<String, String>> recuperarCoberturasAmparadasPorPolizaYasegurado (String cdunieco, String cdramo, String estado,
-            String nmpoliza, String nmsuplem, String nmsituac) throws Exception {
-	    logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-	                           "\n@@@@@@ recuperarCoberturasAmparadasPorPolizaYasegurado @@@@@@",
-	                           "\n@@@@@@ cdunieco = " , cdunieco,
-	                           "\n@@@@@@ cdramo = "   , cdramo,
-	                           "\n@@@@@@ estado = "   , estado,
-	                           "\n@@@@@@ nmpoliza = " , nmpoliza,
-	                           "\n@@@@@@ nmsuplem = " , nmsuplem,
-	                           "\n@@@@@@ nmsituac = " , nmsituac));
-	    String paso = "Recuperando coberturas por poliza y asegurado";
-	    List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-	    try {
-	        PolizaVO poliza = new PolizaVO();
-	        poliza.setCdunieco(cdunieco);
-	        poliza.setCdramo(cdramo);
-	        poliza.setEstado(estado);
-	        poliza.setNmpoliza(nmpoliza);
-	        poliza.setNmsuplem(nmsuplem);
-	        List<CopagoVO> listaObj = consultasPolizaDAO.obtieneCopagosPoliza(poliza, nmsituac);
-	        for (CopagoVO obj : listaObj) {
-	            Map<String, String> mapa = new LinkedHashMap<String, String>();
-	            mapa.put("orden"       , obj.getOrden());
-	            mapa.put("descripcion" , obj.getDescripcion());
-	            mapa.put("valor"       , obj.getValor());
-	            mapa.put("agrupador"   , obj.getAgrupador());
-	            lista.add(mapa);
-	        }
-	    } catch (Exception ex) {
-	        Utils.generaExcepcion(ex, paso);
-	    }
-	    return lista;
-	}
-	
-	@Override
-	public Map<String, String> recuperarDetallePoliza (String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception {
-	    logger.debug(Utils.log("\n@@@@@@ recuperarDetallePoliza cdunieco = ", cdunieco, ", cdramo = ", cdramo, ", estado = ", estado,
-	            ", nmpoliza = ", nmpoliza));
-	    String paso = "Recuperando detalle de poliza";
-	    Map<String, String> detalle = new LinkedHashMap<String, String>();
-	    try {
-	        PolizaAseguradoVO params = new PolizaAseguradoVO();
-	        params.setCdunieco(cdunieco);
-	        params.setCdramo(cdramo);
-	        params.setEstado(estado);
-	        params.setNmpoliza(nmpoliza);
-	        List<PolizaDTO> listaPol = consultasPolizaDAO.obtieneDatosPoliza(params);
-	        if (listaPol == null || listaPol.size() == 0) {
-	            throw new ApplicationException("No hay datos de poliza");
-	        }
-	        
-	        detalle.put("NMPOLIEX"     , listaPol.get(0).getNmpoliex());
-	        detalle.put("CDRAMOEXT"    , listaPol.get(0).getCdramoext());
-	        detalle.put("CDUNIEXT"     , listaPol.get(0).getCduniext());
-	        detalle.put("NMSOLICI"     , listaPol.get(0).getNmsolici());
-	        detalle.put("FEEMISIO"     , listaPol.get(0).getFeemisio());
-	        detalle.put("FEEFECTO"     , listaPol.get(0).getFeefecto());
-	        detalle.put("CDMONEDA"     , listaPol.get(0).getCdmoneda());
-	        detalle.put("DSMONEDA"     , listaPol.get(0).getDsmoneda());
-	        detalle.put("OTTEMPOT"     , listaPol.get(0).getOttempot());
-	        detalle.put("DSTEMPOT"     , listaPol.get(0).getDstempot());
-	        detalle.put("FEPROREN"     , listaPol.get(0).getFeproren());
-	        detalle.put("FEVENCIM"     , listaPol.get(0).getFevencim());
-	        detalle.put("NMRENOVA"     , listaPol.get(0).getNmrenova());
-	        detalle.put("CDPERPAG"     , listaPol.get(0).getCdperpag());
-	        detalle.put("DSPERPAG"     , listaPol.get(0).getDsperpag());
-	        detalle.put("SWTARIFI"     , listaPol.get(0).getSwtarifi());
-	        detalle.put("DSTARIFI"     , listaPol.get(0).getDstarifi());
-	        detalle.put("CDTIPCOA"     , listaPol.get(0).getCdtipcoa());
-	        detalle.put("DSTIPCOA"     , listaPol.get(0).getDstipcoa());
-	        detalle.put("NMCUADRO"     , listaPol.get(0).getNmcuadro());
-	        detalle.put("DSCUADRO"     , listaPol.get(0).getDscuadro());
-	        detalle.put("PORREDAU"     , listaPol.get(0).getPorredau());
-	        detalle.put("PTPRITOT"     , listaPol.get(0).getPtpritot());
-	        detalle.put("CDMOTANU"     , listaPol.get(0).getCdmotanu());
-	        detalle.put("DSMOTANU"     , listaPol.get(0).getDsmotanu());
-	        detalle.put("CDPERSON"     , listaPol.get(0).getCdperson());
-	        detalle.put("TITULAR"      , listaPol.get(0).getTitular());
-	        detalle.put("CDRFC"        , listaPol.get(0).getCdrfc());
-	        detalle.put("CDAGENTE"     , listaPol.get(0).getCdagente());
-	        detalle.put("STATUSPOLIZA" , listaPol.get(0).getStatuspoliza());
-	        detalle.put("CDPLAN"       , listaPol.get(0).getCdplan());
-	        detalle.put("DSPLAN"       , listaPol.get(0).getDsplan());
-	        detalle.put("CDRAMO"       , listaPol.get(0).getCdramo());
-	        detalle.put("DSRAMO"       , listaPol.get(0).getDsramo());
-	        detalle.put("CDTIPSIT"     , listaPol.get(0).getCdtipsit());
-	        detalle.put("CDUNIECO"     , listaPol.get(0).getCdunieco());
-	        detalle.put("DSUNIECO"     , listaPol.get(0).getDsunieco());
-	        detalle.put("NMPOLANT"     , listaPol.get(0).getNmpolant());
-	        detalle.put("TIPOPOL"      , listaPol.get(0).getTipopol());
-	        detalle.put("REDUCEGS"     , listaPol.get(0).getReduceGS());
-	        detalle.put("GESTORIA"     , listaPol.get(0).getGestoria());
-	        detalle.put("COBVIDA"      , listaPol.get(0).getCobvida());
-	    } catch (Exception ex) {
-	        Utils.generaExcepcion(ex, paso);
-	    }
-	    return detalle;
-	}
-    
-    @Override
-    public List<Map<String, String>> recuperarDetalleAseguradosPoliza (String cdunieco, String cdramo, String estado, String nmpoliza,
-            String nmsuplem) throws Exception {
-        logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-                               "\n@@@@@@ recuperarDetalleAseguradosPoliza @@@@@@",
-                               "\n@@@@@@ cdunieco = " , cdunieco,
-                               "\n@@@@@@ cdramo = "   , cdramo,
-                               "\n@@@@@@ estado = "   , estado,
-                               "\n@@@@@@ nmpoliza = " , nmpoliza,
-                               "\n@@@@@@ nmsuplem = " , nmsuplem));
-        String paso = "Recuperando detalle de asegurados de poliza";
-        List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-        try {
-            PolizaVO poliza = new PolizaVO();
-            poliza.setCdunieco(cdunieco);
-            poliza.setCdramo(cdramo);
-            poliza.setEstado(estado);
-            poliza.setNmpoliza(nmpoliza);
-            poliza.setNmsuplem(nmsuplem);
-            List<AseguradoVO> listaObj = consultasPolizaDAO.obtieneAsegurados(poliza);
-            for (AseguradoVO obj : listaObj) {
-                Map<String, String> mapa = new LinkedHashMap<String, String>();
-                mapa.put("cdperson"    , obj.getCdperson());
-                mapa.put("NMSITUAC"    , obj.getNmsituac());
-                mapa.put("CDTIPSIT"    , obj.getCdtipsit());
-                mapa.put("NOMBRE"      , obj.getNombre());
-                mapa.put("CDRFC"       , obj.getCdrfc());
-                mapa.put("CDROL"       , obj.getCdrol());
-                mapa.put("DSROL"       , obj.getDsrol());
-                mapa.put("SEXO"        , obj.getSexo());
-                mapa.put("FENACIMI"    , obj.getFenacimi());
-                mapa.put("STATUS"      , obj.getStatus());
-                mapa.put("PARENTESCO"  , obj.getParentesco());
-                mapa.put("GRUPO"       , obj.getGrupo());
-                mapa.put("CDGRUPO"     , obj.getCdgrupo());
-                mapa.put("FAMILIA"     , obj.getFamilia());
-                mapa.put("CDFAMILIA"   , obj.getCdfamilia());
-                mapa.put("CDPLAN"      , obj.getCdplan());
-                mapa.put("DSPLAN"      , obj.getDsplan());
-                mapa.put("TOTAL"       , obj.getTotal() + "");
-                mapa.put("CANTICD"     , obj.getCantIcd());
-                mapa.put("MAXPERFIL"   , obj.getMaxPerfil());
-                mapa.put("NUMPERFIL"   , obj.getNumPerfil());
-                mapa.put("PERFILFINAL" , obj.getPerfilFinal());
-                lista.add(mapa);
-            }
-        } catch (Exception ex) {
-            Utils.generaExcepcion(ex, paso);
-        }
-        return lista;
-    }
 }

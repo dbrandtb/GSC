@@ -79,12 +79,7 @@
     Ext.define('RFCPersona',
     {
         extend  : 'Ext.data.Model'
-        ,fields : [ "RFCCLI",       "NOMBRECLI",        "FENACIMICLI",          "DIRECCIONCLI",
-                    "CLAVECLI",     "DISPLAY",          "CDIDEPER",             "CDIDEEXT",
-                    //se considera
-                    "NOMBRE",       "SNOMBRE",          "APPAT",                 "APMAT",
-                    "TIPOPERSONA",  "SEXO",             "NACIONALIDAD",          "CDESTCIV"
-                ]
+        ,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY", "CDIDEPER", "CDIDEEXT"]
     });
     
     function rendererRolp2(v)
@@ -601,90 +596,37 @@
     	var size = grid.getView().dataSource.data.items.length;
 		var arrErrores = [];
 		var err;
-		var edoCivil        = '0';
-        var numEmpleado     = '0';
-        var cveFamiliar     = '0';
-        var ocupacion       = '0';
-        var noSocioAnterior = null;
-        var noSocioActual   = null;
-        var esNoSocio       = '0';
-        
-        var cveFamAnterior  = null;
-        var cveFamActual    = null;
-        var esCveFam        = '0';
-        
+				
 		for (var i=0; i < size; i++){
 		
 			debug('edociv ',grid.getView().dataSource.data.items[i].data.cdestciv);
 			debug('ocup ',grid.getView().dataSource.data.items[i].data.ocup);
-			    // validaremos con la información actual con la anterior, cuando es la primera vez se le asignara el valor 
-			    // de la primera posición
-			    if(i =='0'){
-			    	noSocioAnterior = grid.getView().dataSource.data.items[i].data.numsoc;
-			    	noSocioActual   = grid.getView().dataSource.data.items[i].data.numsoc;
-			    	cveFamAnterior  = null;
-                    cveFamActual    = grid.getView().dataSource.data.items[i].data.clvfam;
-			    }else{
-			    	noSocioAnterior = grid.getView().dataSource.data.items[i-1].data.numsoc;
-			    	noSocioActual   = grid.getView().dataSource.data.items[i].data.numsoc;
-			    	cveFamAnterior  = grid.getView().dataSource.data.items[i-1].data.clvfam;
-                    cveFamActual    = grid.getView().dataSource.data.items[i].data.clvfam;
-                    
-			    }
+			
 				if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.cdestciv)){
-		            if(edoCivil =='0'){
-		                arrErrores.push('* Estado Civil requerido.<br/>');
-                        grid.getStore().getAt(i).set('cdestciv',null);
-                        edoCivil ='1';
-		            }
+		            arrErrores.push('Estado Civil\n');
+		            grid.getStore().getAt(i).set('cdestciv',null);
 		        }
 			
 			
 		        if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.numsoc)){
-		            if(numEmpleado =='0'){
-		            	arrErrores.push('* No. de Socio/Empleado requerido.<br/>');
-                        grid.getStore().getAt(i).set('numsoc',null);
-                        numEmpleado = '1';
-		            }
+		            arrErrores.push('Numero de empleado\n');
+		            grid.getStore().getAt(i).set('numsoc',null);
 		        }
 		
 		        if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.clvfam)){
-		            if(cveFamiliar =='0'){
-		                 arrErrores.push('* Clave Familiar requerido.<br/>');
-		                 grid.getStore().getAt(i).set('clvfam',null);
-		                 cveFamiliar ='1';
-		            }
+		            arrErrores.push('Clave Familiar\n');
+		            grid.getStore().getAt(i).set('clvfam',null);
 		         }
 		         
 		         if(cdunieco == 1403 && Ext.isEmpty(grid.getView().dataSource.data.items[i].data.ocup)){
-		            if(ocupacion =='0'){
-		                 arrErrores.push('* Ocupacion requerido.<br/>');
-		                 grid.getStore().getAt(i).set('ocup','156');
-		                 ocupacion = '1';
-		            }		            
+		            arrErrores.push('Ocupacion\n');
+		            grid.getStore().getAt(i).set('ocup','156');
 		        }
-		        
-		        if(cdunieco == 1403){
-		        	// CUANDO LOS CAMPOS ESTAN LLENOS REALIZAMOS LA VALIDACION
-                    if(esNoSocio == '0' && numEmpleado=='0'){
-                        if(noSocioAnterior != noSocioActual){
-                            esNoSocio = '1';
-                            arrErrores.push('* No. de Socio/Empleado no corresponde al Titular. <br/>');
-                        }
-                    }
-                    
-                    if(esCveFam == '0' && cveFamiliar=='0'){
-                        if(cveFamAnterior == cveFamActual){
-                            esCveFam = '1';
-                            arrErrores.push('* Clave Familiar duplicado. <br/>');
-                        }
-                    }
-                 }
 		
 		}
 		
 		if(!Ext.isEmpty(arrErrores)){
-			err = 'Los campos : <br/>';
+			err = 'Los campos : ';
 			for(var i=0; i < arrErrores.length;i++){
 				err += arrErrores[i];
 			}
@@ -1677,10 +1619,6 @@ debug("validarYGuardar flag:2");
                                                                            }
                                                                        ]
                                                                    },{
-                                                                       header     : 'ID. Asegurado'
-                                                                       ,dataIndex : 'CLAVECLI'
-                                                                       ,flex      : 1
-                                                                   },{
                                                                        header     : 'RFC'
                                                                        ,dataIndex : 'RFCCLI'
                                                                        ,flex      : 1
@@ -1831,11 +1769,6 @@ debug("validarYGuardar flag:2");
                                                                            }
                                                                        ]
                                                                    },{
-                                                                       header     : 'ID. Asegurado'
-                                                                       ,dataIndex : 'CLAVECLI'
-                                                                       ,flex      : 1
-                                                                   }
-                                                                   ,{
                                                                        header     : 'RFC'
                                                                        ,dataIndex : 'RFCCLI'
                                                                        ,flex      : 1
@@ -2647,130 +2580,25 @@ debug("validarYGuardar flag:2");
                     chkCol.disable();
                     var datosContr = obtieneDatosClienteContratante();
                     debug('Datos de Contratante para row: ' + datosContr);
-                    gridPersonasp2.setLoading(true);
-                    
-                    Ext.Ajax.request
-                    ({
-                        url     : urlAutoRFCp2
-                        ,timeout: 240000
-                        ,params :
-                        {
-                            'map1.pv_rfc_i'     : datosContr.rfc,
-                            'map1.cdtipsit'     : inputCdtipsitp2,
-                            'map1.pv_cdunieco_i':inputCduniecop2,
-                            'map1.pv_cdramo_i'  :inputCdramop2,
-                            'map1.pv_estado_i'  :inputEstadop2,
-                            'map1.pv_nmpoliza_i':inputNmpolizap2,
-                            'map1.esContratante': 'S'
-                        }
-                        ,success:function(response)
-                        {
-                            var json=Ext.decode(response.responseText);
-                            debug(json);
-                            if(json && !json.success){
-                                mensajeError("Error al Buscar RFC, Intente nuevamente. Si el problema persiste consulte a soporte t&eacute;cnico.");
-                                return;
-                            }
-                            if(json&&json.slist1&&json.slist1.length>0)
-                            {
-                            	gridPersonasp2.setLoading(false);
-                                centrarVentanaInterna(Ext.create('Ext.window.Window',
-                                {
-                                    width        : 600
-                                    ,height      : 400
-                                    ,modal       : true
-                                    ,autoScroll  : true
-                                    ,title       : 'El ID. Asegurado del Contratante es : '+datosContr.cdperson+'<br/> <br/>Coincidencias:'
-                                    ,items       : Ext.create('Ext.grid.Panel',
-                                                   {
-                                                       store    : Ext.create('Ext.data.Store',
-                                                                  {
-                                                                      model     : 'RFCPersona'
-                                                                      ,autoLoad : true
-                                                                      ,proxy :
-                                                                      {
-                                                                          type    : 'memory'
-                                                                          ,reader : 'json'
-                                                                          ,data   : json['slist1']
-                                                                      }
-                                                                  })
-                                                       ,columns :
-                                                       [
-                                                           {
-                                                               xtype         : 'actioncolumn'
-                                                               ,menuDisabled : true
-                                                               ,width        : 30
-                                                               ,items        :
-                                                               [
-                                                                   {
-                                                                       icon     : '${ctx}/resources/fam3icons/icons/accept.png'
-                                                                       ,tooltip : 'Seleccionar usuario'
-                                                                       ,handler : function(grid, rowIndexInterno, colIndex) {
-                                                                           var record = grid.getStore().getAt(rowIndexInterno);
-                                                                           
-                                                                           if(datosContr.cdperson == record.get("CLAVECLI")){
-                                                                           	    _p29_llenarDatosGridAsegurados(rowIndex, datosContr.fenacimi, datosContr.sexo, datosContr.tipoper, datosContr.naciona,
-                                                                           	                                    datosContr.cdperson, datosContr.nombre, datosContr.snombre, datosContr.appat,datosContr.apmat,
-                                                                           	                                    datosContr.rfc,datosContr.cdideper,datosContr.cdideext,'S',datosContr.cdestciv,true
-                                                                                );
-                                                                           }else{
-                                                                           	    _p29_llenarDatosGridAsegurados(rowIndex,record.get("FENACIMICLI"),record.get("SEXO"),record.get("TIPOPERSONA"),record.get("NACIONALIDAD"),
-                                                                                                                record.get("CLAVECLI"),record.get("NOMBRE"),record.get("SNOMBRE"),record.get("APPAT"),record.get("APMAT"),
-                                                                                                                record.get("RFCCLI"),record.get("CDIDEPER"),record.get("CDIDEEXT"),'S',record.get("CDESTCIV"),false
-                                                                                );
-                                                                           }
-                                                                           
-                                                                           
-                                                                           
-                                                                           grid.up().up().destroy();
-                                                                       }
-                                                                   }
-                                                               ]
-                                                           },{
-                                                               header     : 'ID. Asegurado'
-                                                               ,dataIndex : 'CLAVECLI'
-                                                               ,flex      : 1
-                                                           }
-                                                           ,{
-                                                               header     : 'RFC'
-                                                               ,dataIndex : 'RFCCLI'
-                                                               ,flex      : 1
-                                                           }
-                                                           ,{
-                                                               header     : 'Nombre'
-                                                               ,dataIndex : 'NOMBRECLI'
-                                                               ,flex      : 1
-                                                           }
-                                                           ,{
-                                                               header     : 'Direcci&oacute;n'
-                                                               ,dataIndex : 'DIRECCIONCLI'
-                                                               ,flex      : 3
-                                                           }
-                                                       ]
-                                                   })
-                                }).show());
-                            }
-                            else
-                            {
-                            	gridPersonasp2.setLoading(false);
-                            	//Si no hay coincidencias entonces poner la información tal como viene 
-                            	_p29_llenarDatosGridAsegurados(rowIndex,datosContr.fenacimi,datosContr.sexo,datosContr.tipoper,datosContr.naciona,
-                                                                datosContr.cdperson,datosContr.nombre,datosContr.snombre,datosContr.appat,datosContr.apmat,
-                                                                datosContr.rfc,datosContr.cdideper,datosContr.cdideext,'S',datosContr.cdestciv,true
-                                );
-                            }
-                        }
-                        ,failure:function()
-                        {
-                            //gridPersonasp2.setLoading(false);
-                            Ext.Msg.show({
-                                title:'Error',
-                                msg: 'Error de comunicaci&oacute;n',
-                                buttons: Ext.Msg.OK,
-                                icon: Ext.Msg.ERROR
-                            });
-                        }
-                    });
+                    debug('Estado civil contratante', datosContr);
+                    recordContr = gridPersonasp2.getStore().getAt(rowIndex);
+//                  recordContr.set('nmsituac','0');
+//                  recordContr.set('cdrol'   ,'1');
+                    recordContr.set('fenacimi', datosContr.fenacimi);
+                    recordContr.set('sexo'    , datosContr.sexo);
+                    recordContr.set('tpersona', datosContr.tipoper);
+                    recordContr.set('nacional', datosContr.naciona);
+                    recordContr.set('cdperson', datosContr.cdperson);
+                    recordContr.set('nombre'  , datosContr.nombre);
+                    recordContr.set('segundo_nombre'  , datosContr.snombre);
+                    recordContr.set('Apellido_Paterno', datosContr.appat);
+                    recordContr.set('Apellido_Materno', datosContr.apmat);
+                    recordContr.set('cdrfc'   , datosContr.rfc);
+                    recordContr.set('cdideper', datosContr.cdideper);
+                    recordContr.set('cdideext', datosContr.cdideext);
+                    recordContr.set('swexiper', 'S');
+                    //ELP Datos traido de los datos del Contratante.
+                    recordContr.set('cdestciv', datosContr.cdestciv);                    
                 }
                 
             }
@@ -2872,14 +2700,10 @@ debug("validarYGuardar flag:2");
 								var hayConyuge = false;
 								var titularCasado =  false;
 								
-								var clavesFam           = [];
-								var clavesSoc           = [];
-								var claveFamRepetida    = false;
+								var clavesFam = [];
+								var claveFamRepetida = false;
 								var titularSinOcupacion = false;
-								var claveSocDiferente   = false;
-								var noASocioAnterior    = null;
-                                var noASocioActual      = null;
-                                    
+								
 								for(var j=0;j < gridSource.length;j++){
 									if(gridSource.getAt(j).data.Parentesco == "C"){
 										hayConyuge = true;
@@ -2889,12 +2713,8 @@ debug("validarYGuardar flag:2");
 									}
 									
 									var ocupacionRec = gridSource.getAt(j).data.ocup;
-									var years = calculaAniosTranscurridos(gridSource.getAt(j).data.fenacimi,new Date());
-									
 									if(inputCduniecop2 == 1403 && gridSource.getAt(j).data.Parentesco == "T" 
-									        && ( Ext.isEmpty(ocupacionRec) || ocupacionRec == '156' || ocupacionRec == 'n')
-									        && parseInt(years) >= 18
-									        ){
+									        && ( Ext.isEmpty(ocupacionRec) || ocupacionRec == '156' || ocupacionRec == 'n')){
 									    titularSinOcupacion = true;
 									}
 									
@@ -2905,17 +2725,6 @@ debug("validarYGuardar flag:2");
 										    claveFamRepetida = true;
 										}
 									}
-									
-									if(gridSource.getAt(j).data.cdrol == '2' ){
-										if(!Ext.isEmpty(gridSource.getAt(j).data.numsoc) && gridSource.getAt(j).data.numsoc != null){
-    										noASocioAnterior = (j =='0') ? gridSource.getAt(j).data.numsoc:gridSource.getAt(j-1).data.numsoc;
-                                            noASocioActual   = (j =='0') ? gridSource.getAt(j).data.numsoc:gridSource.getAt(j).data.numsoc;
-                                            
-                                            if(noASocioAnterior != noASocioActual && claveSocDiferente == false){
-                                                claveSocDiferente = true;
-                                            }
-										}
-                                    }									
 								}
 								
 								/** Se agrega validacion para no poder utilizar la misma clave familiar en todos los integrantes de la familia**/
@@ -2929,12 +2738,6 @@ debug("validarYGuardar flag:2");
 								    mensajeWarning('No se puede utilizar mas de una vez la Clave Familiar entre los integrantes de una familia.');
                                     return false;
 								}
-								
-								/** Se agrega validacion para no poder utilizar la misma clave familiar en todos los integrantes de la familia**/
-                                if(claveSocDiferente){
-                                    mensajeWarning('Clave de Socio no corresponde al Titular entre los integrantes de la familia.');
-                                    return false;
-                                }
 								
 								for(var j=0;j < gridSource.length;j++){
 									if(gridSource.getAt(j).data.Parentesco == "C" && titularCasado && gridSource.getAt(j).data.cdestciv != 2){
@@ -3485,35 +3288,6 @@ function _p29_personaSaved(json)
     });
         
     debug('<_p29_personaSaved');
-}
-
-function _p29_llenarDatosGridAsegurados(
-    rowIndex,fenacimi,sexo,tipoper,naciona,
-    cdperson,nombre,nombre2,apellidoP,apellidoM,
-    rfc,cdideper,cdideext,swexiper,cdestciv,
-    estomador){
-    recordContr = gridPersonasp2.getStore().getAt(rowIndex);
-    recordContr.set('fenacimi', fenacimi);
-    recordContr.set('sexo'    , sexo);
-    recordContr.set('tpersona', tipoper);
-    recordContr.set('nacional', naciona);
-    recordContr.set('cdperson', cdperson);
-    recordContr.set('nombre'  , nombre);
-    recordContr.set('segundo_nombre'  , nombre2);
-    recordContr.set('Apellido_Paterno', apellidoP);
-    recordContr.set('Apellido_Materno', apellidoM);
-    recordContr.set('cdrfc'   , rfc);
-    recordContr.set('cdideper', cdideper);
-    recordContr.set('cdideext', cdideext);
-    recordContr.set('swexiper', swexiper);
-    recordContr.set('cdestciv', cdestciv);
-    recordContr.set('estomador',estomador);
-    
-    if(estomador){
-        gridPersonasp2.getView().headerCt.child("[dataIndex=estomador]").disable();
-    }else{
-        gridPersonasp2.getView().headerCt.child("[dataIndex=estomador]").enable();
-    }
 }
         
 });

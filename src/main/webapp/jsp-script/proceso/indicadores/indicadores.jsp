@@ -244,7 +244,6 @@
 		            {type:'string', name:'CDRAMO'},
 		            {type:'string', name:'SUCURSAL'},
 		            {type:'string', name:'NMPOLIZA'},
-		            {type:'string', name:'NMPOLIEXT'},
 		            {type:'string', name:'NMSOLICI'},
 		            {type:'string', name:'CDUSUARI_ACT'},
 		            {type:'string', name:'DSUSUARI_ACT'},
@@ -274,53 +273,6 @@
 					{type:'string', name: 'OFICINA_USR_CREA'},
 					{type:'string', name: 'DS_OFICINA_USR_CREA'}
 		            
-		        ]
-		    });
-		    
-		    Ext.define('DetalleTrazabilidadModel', {
-		        extend: 'Ext.data.Model',
-		        fields: [
-		        	{type:'string', name:'CDUNIECO'	         },
-					{type:'string', name:'EVENTO'	         },
-					{type:'string', name:'CDETAPA'	         },
-					{type:'string', name:'ETAPA'	         },
-					{type:'string', name:'NTRAMITE'	         },
-					{type:'string', name:'TIPO_FLUJO'	     },
-					{type:'string', name:'CD_TIPO_TRAMITE'	 },
-					{type:'string', name:'TIPO_TRAMITE'	     },
-					{type:'string', name:'DESC_TIPO_TRAMITE' },
-					{type:'string', name:'FECHA_RECEP_TRAMITE'},	
-					{type:'string', name:'CD_LINEA_NEGOCIO'	 },
-					{type:'string', name:'DS_LINEA_NEGOCIO'	 },
-					{type:'string', name:'STATUS_TRAMITE'	 },
-					{type:'string', name:'DS_STATUS_TRAMITE' },
-					{type:'string', name:'CDRAMO'	         },
-					{type:'string', name:'DSRAMO'	         },
-					{type:'string', name:'CDPERSON'	         },
-					{type:'string', name:'CLIENTE'	         },
-					{type:'string', name:'CDAGENTE'	         },
-					{type:'string', name:'NOMBRE_AGENTE'	 },
-					{type:'string', name:'NMPOLIZA'	         },
-					{type:'string', name:'NMPOLIEXT'         },
-					{type:'string', name:'COTIZACION'	     },
-					{type:'string', name:'CDUSUARI_CREA'	 },
-					{type:'string', name:'DSUSUARI_CREA'	 },
-					{type:'string', name:'OFICINA_USR_CREA'  },
-					{type:'string', name:'DS_OFICINA_USR_CREA'},
-					{type:'string', name:'ESTACION'	         },
-					{type:'string', name:'DS_ESTACION'	     },
-					{type:'string', name:'STATUSTRAZA'	     },
-					{type:'string', name:'DS_STATUSTRAZA'	 },
-					{type:'string', name:'CDUSUARI_INI'	     },
-					{type:'string', name:'DS_USUARIO'	     },
-					{type:'string', name:'OFICINA_USR'	     },
-					{type:'string', name:'DS_OFICINA_USR'	 },
-					{type:'string', name:'FECHAINI'	         },
-					{type:'string', name:'FECHAFIN'	         },
-					{type:'string', name:'HORAS_LAB'	     },
-					{type:'string', name:'HORAS_NORMAL'	     },
-					{type:'string', name:'CANT_INSISOS'      }
-
 		        ]
 		    });
 		    
@@ -516,21 +468,6 @@
 			
 			var storeDetalleLineaNegocio = new Ext.data.Store({
 				model: 'DetalleLineaNegocioModel',
-				pageSize: _itemsPerPage,
-				proxy: {
-				    type: 'ajax',
-				 	url : _GLOBAL_URL_RECUPERACION,
-					reader: {
-					    type: 'json',
-					    root: 'list',
-					    totalProperty: 'total'
-					    //simpleSortMode: true
-				    }
-				}
-			});
-			
-			var storeDetalleTrazabilidad = new Ext.data.Store({
-				model: 'DetalleTrazabilidadModel',
 				pageSize: _itemsPerPage,
 				proxy: {
 				    type: 'ajax',
@@ -1019,26 +956,6 @@
 											
 											storeDetalleLineaNegocio.loadPage(1);
 						                }
-						            },{
-						                tooltip : 'Ver Detalle Trazabilidad',
-						                icon    : '${ctx}/resources/fam3icons/icons/text_columns.png',
-						                handler: function(grid, rowIndex, colIndex, item, e, record, row) {
-						                	
-						                	//debug('grid, rowIndex, colIndex, item, e, record, row',grid, rowIndex, colIndex, item, e, record, row);
-						                	mostrarPanelSubdetalles('grdDetalleTrazabilidad');
-						                	
-						                	var par = Ext.ComponentQuery.query('form')[0].getForm().getValues();
-											par['params.consulta']     = 'RECUPERAR_DETALLE_TRAZABILIDAD';
-											par['params.cdetapa']      = Ext.ComponentQuery.query('[name=params.cdetapa]')[0].getValue();
-											
-											storeDetalleTrazabilidad.getProxy().extraParams = par;
-											
-											storeDetalleTrazabilidad.loadPage(1);
-						                },isDisabled: function(grid, rowIndex, colIndex, items , rec){
-						                	debug('grid, rowIndex, colIndex, items , rec',grid, rowIndex, colIndex, items , rec);
-										    return rec.get('CD_LINEA_NEGOCIO')!=='2';
-										}
-						                
 						            }]
     							}],
     	                        dockedItems: [{
@@ -1409,7 +1326,6 @@
 							{text: 'CD Sucursal',       dataIndex: 'SUCURSAL'},
 							{text: 'Sucursal',          dataIndex: 'DS_SUCURSAL'},
 							{text: 'Poliza',            dataIndex: 'NMPOLIZA'},
-							{text: 'Poliza Externa',            dataIndex: 'NMPOLIEXT'},
 							{text: 'No. Solicitud',     dataIndex: 'NMSOLICI'},
 							{text: 'CD Usuario inicia', dataIndex: 'CDUSUARI_ACT'},
 							{text: 'Usuario inicia',    dataIndex: 'DSUSUARI_ACT'},
@@ -1462,96 +1378,6 @@
                                            params['params.consulta'] = 'RECUPERAR_DETALLE_LINEA_NEGOCIO';
                                            params['params.exportar'] = 'S';
                                            
-                                           mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
-                                               
-                                           Ext.create('Ext.form.Panel').submit({
-                                               url       : _GLOBAL_URL_RECUPERACION,
-                                               standardSubmit : true,
-                                               target         : '_blank', // para abrir una nueva pestaña en caso de que se recarge la pagina
-                                               params   : params
-                                           });
-                                       }
-                                  }]
-                         }]
-					},{
-						xtype: 'grid',
-						itemId: 'grdDetalleTrazabilidad',
-						hidden: true,
-						flex: 1,
-						title: '--> Detalle del tr\u00E1mite',
-						//autoScroll: true,
-						height: 300,
-						//layout: 'fit',
-						store: storeDetalleTrazabilidad,
-						columns: [
-							{text:'CDUNIECO'	       ,dataIndex:'CDUNIECO'	         },
-							{text:'NTRAMITE'	       ,dataIndex:'NTRAMITE'	         },
-							{text:'EVENTO'	           ,dataIndex:'EVENTO'	             },
-							{text:'CDETAPA'	           ,dataIndex:'CDETAPA'	             },
-							{text:'ETAPA'	           ,dataIndex:'ETAPA'	             },
-							{text:'TIPO_FLUJO'	       ,dataIndex:'TIPO_FLUJO'	         },
-							{text:'CD_TIPO_TRAMITE'	   ,dataIndex:'CD_TIPO_TRAMITE'	     },
-							{text:'TIPO_TRAMITE'	   ,dataIndex:'TIPO_TRAMITE'	     },
-							{text:'DESC_TIPO_TRAMITE'  ,dataIndex:'DESC_TIPO_TRAMITE'    },
-							{text:'FECHA_RECEP_TRAMITE',dataIndex:'FECHA_RECEP_TRAMITE'  },	
-							{text:'CD_LINEA_NEGOCIO'   ,dataIndex:'CD_LINEA_NEGOCIO'	 },
-							{text:'DS_LINEA_NEGOCIO'   ,dataIndex:'DS_LINEA_NEGOCIO'	 },
-							{text:'STATUS_TRAMITE'	  ,dataIndex:'STATUS_TRAMITE'	     },
-							{text:'DS_STATUS_TRAMITE' ,dataIndex:'DS_STATUS_TRAMITE'     },
-							{text:'CDRAMO'	          ,dataIndex:'CDRAMO'	             },
-							{text:'DSRAMO'	          ,dataIndex:'DSRAMO'	             },
-							{text:'CDPERSON'	      ,dataIndex:'CDPERSON'	             },
-							{text:'CLIENTE'	          ,dataIndex:'CLIENTE'	             },
-							{text:'CDAGENTE'	      ,dataIndex:'CDAGENTE'	             },
-							{text:'NOMBRE_AGENTE'	  ,dataIndex:'NOMBRE_AGENTE'	     },
-							{text:'NMPOLIZA'	      ,dataIndex:'NMPOLIZA'	             },
-							{text:'NMPOLIEXT'	      ,dataIndex:'NMPOLIEXT'	         },
-							{text:'COTIZACION'	      ,dataIndex:'COTIZACION'	         },
-							{text:'CDUSUARI_CREA'	  ,dataIndex:'CDUSUARI_CREA'	     },
-							{text:'DSUSUARI_CREA'	  ,dataIndex:'DSUSUARI_CREA'	     },
-							{text:'OFICINA_USR_CREA'  ,dataIndex:'OFICINA_USR_CREA'      },
-							{text:'DS_OFICINA_USR_CREA',dataIndex:'DS_OFICINA_USR_CREA'    },	
-							{text:'ESTACION'	      ,dataIndex:'ESTACION'	             },
-							{text:'DS_ESTACION'	      ,dataIndex:'DS_ESTACION'	         },
-							{text:'STATUSTRAZA'	      ,dataIndex:'STATUSTRAZA'	         },
-							{text:'DS_STATUSTRAZA'	  ,dataIndex:'DS_STATUSTRAZA'	     },
-							{text:'CDUSUARI_INI'	  ,dataIndex:'CDUSUARI_INI'	         },
-							{text:'DS_USUARIO'	      ,dataIndex:'DS_USUARIO'	         },
-							{text:'OFICINA_USR'	      ,dataIndex:'OFICINA_USR'	         },
-							{text:'DS_OFICINA_USR'	  ,dataIndex:'DS_OFICINA_USR'	     },
-							{text:'FECHAINI'	      ,dataIndex:'FECHAINI'	             },
-							{text:'FECHAFIN'	      ,dataIndex:'FECHAFIN'	             },
-							{text:'HORAS_LAB'	      ,dataIndex:'HORAS_LAB'	         },
-							{text:'HORAS_NORMAL'	  ,dataIndex:'HORAS_NORMAL'	         },
-							{text:'CANT_INSISOS'       ,dataIndex:'CANT_INSISOS'          }
-
-						],
-                        dockedItems: [{
-                            xtype: 'toolbar',
-                            dock: 'bottom',
-                            padding: '0 0 0 0',
-                            items:[{
-                                    xtype: 'pagingtoolbar',
-                                    store: storeDetalleTrazabilidad, // same store GridPanel is using
-                                    displayInfo: true,
-                                    flex: 1
-                                   },{ xtype: 'button', text: 'Exportar', icon: '${ctx}/resources/fam3icons/icons/page_excel.png',
-                                       handler: function(){
-                                           
-                                           if(storeDetalleTrazabilidad.isLoading()){
-                                               mensajeWarning('No se puede exportar mientras esta cargando.');
-                                               return;
-                                           }
-
-                                           if(storeDetalleTrazabilidad.getTotalCount() <= 0){
-                                               mensajeWarning('No hay datos a exportar.');
-                                               return;
-                                           }
-                                           
-                                           var params = Ext.clone(storeDetalleTrazabilidad.getProxy().extraParams); 
-                                           params['params.consulta'] = 'RECUPERAR_DETALLE_TRAZABILIDAD_LTS';
-                                           params['params.exportar'] = 'S';
-                                           debug('Exportando Trazabilidad');
                                            mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
                                                
                                            Ext.create('Ext.form.Panel').submit({
