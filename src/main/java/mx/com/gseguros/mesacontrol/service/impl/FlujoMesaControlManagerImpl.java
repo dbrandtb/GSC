@@ -33,6 +33,7 @@ import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.MailService;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.FlujoMC;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
@@ -4142,6 +4143,24 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	        paso = "Actualizando motivo de endoso";
 	        logger.debug(paso);
 	        flujoMesaControlDAO.cambiarTipoEndosoTramite(ntramite, cdtipsup);
+	        
+	        paso = "Registrando detalle tramite recategorizado";
+	        logger.debug(paso);
+	        mesaControlDAO.movimientoDetalleTramite(
+	                ntramite,
+	                new Date(), //feinicio
+	                null, //cdclausu
+	                Utils.log("Se recategoriza el motivo de endoso a \"", dstipsup, "\" con las siguientes observaciones: ",
+	                        Utils.NVL(comments, "(sin comentarios)")),
+	                cdusuari,
+	                null, //cdmotivo
+	                cdsisrol,
+	                swagente ? "S" : "N",
+	                null, //cdusuariDest
+	                null, //cdsisrolDest
+	                EstatusTramite.RECATEGORIZADO.getCodigo(),//status,
+	                true
+	                );
 	        
 	        paso = "Registrando detalle";
 	        logger.debug(paso);
