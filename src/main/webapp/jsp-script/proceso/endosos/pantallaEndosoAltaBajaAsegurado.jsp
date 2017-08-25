@@ -22,7 +22,6 @@ var loadExcluTimeoutVar;
 var _3_panelCla;
 var _3_storeClaUsa;
 var _TITULAR = 'T';
-var timeoutBuscarRFCBp2;
 
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var panendabaseguInputSmap1   = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
@@ -35,7 +34,6 @@ var _3_urlCargarClaDisp       = '<s:url namespace="/"           action="obtenerE
 var _3_urlCargarClaTipos      = '<s:url namespace="/"           action="cargarTiposClausulasExclusion" />';
 var _3_urlLoadHtml            = '<s:url namespace="/"           action="cargarHtmlExclusion" />';
 var pvalidaSocioFamilia       = '<s:url namespace="/endosos"    action="validaSocioFamilia" />';
-var urlAutoRFCp2              = '<s:url namespace="/"           action="buscarPersonasRepetidas" />';
 
 debug('panendabaseguInputSmap1',panendabaseguInputSmap1);
 debug('panendabaseguInputSmap2',panendabaseguInputSmap2);
@@ -50,16 +48,6 @@ debug('_endAseg_flujo:',_endAseg_flujo);
 ///////////////////////
 ////// funciones //////
 /*///////////////////*/
-    Ext.define('RFCPersona',
-    {
-        extend  : 'Ext.data.Model'
-        ,fields : [ "RFCCLI",       "NOMBRECLI",        "FENACIMICLI",          "DIRECCIONCLI",
-                    "CLAVECLI",     "DISPLAY",          "CDIDEPER",             "CDIDEEXT",
-                    //se considera
-                    "NOMBRE",       "SNOMBRE",          "APPAT",                 "APMAT",
-                    "TIPOPERSONA",  "SEXO",             "NACIONALIDAD",          "CDESTCIV"
-                ]
-    });
 function _3_cellclick(grid, td, index)
 {
 	debug('_3_itemclick');
@@ -652,10 +640,8 @@ Ext.onReady(function()
 	
 	Ext.define('PanEndAltBajAseWindowAsegu',
 	{
-		extend        : 'Ext.window.Window',
-		id            :'panelDatosAdicionales',
-		name          : 'panelDatosAdicionales',
-		initComponent : function()
+		extend         : 'Ext.window.Window'
+		,initComponent : function()
         {
 			debug('PanEndAltBajAseWindowAsegu initComponent');
 			Ext.apply(this,
@@ -788,7 +774,6 @@ Ext.onReady(function()
                                                     ,tpersona         : panEndAltBajAseValues['tpersona']
                                                     ,sexo             : panEndAltBajAseValues[sexoName]
                                                     ,fenacimi         : panEndAltBajAseValues[nacimientoName]
-                                                    ,cdperson         : panEndAltBajAseValues['cdperson']
                                                 });
                                                 _window.hide();
                                             }
@@ -1195,140 +1180,6 @@ Ext.onReady(function()
 	panendabaseguGridAsegu      = new PanendabaseguGridAsegu();
 	panendabaseguPanelLectura   = new PanendabaseguPanelLectura();
 	panendabaseguPanelPrincipal = new PanendabaseguPanelPrincipal(); 
-    
-    _fieldById('_3_formNuevo').down('[fieldLabel=RFC]').on('blur',function() {
-            debug("Entra ");
-            _mask('Buscando ...');
-            var valorFieldRFC = _fieldById('_3_formNuevo').down('[fieldLabel=RFC]').getValue();
-            var respuesta = validarRFC(valorFieldRFC,"F"); 
-            if(respuesta){
-            	if(valorFieldRFC.length>8) {
-                    clearTimeout(timeoutBuscarRFCBp2);
-                    timeoutBuscarRFCBp2=setTimeout(function() {
-                        Ext.Ajax.request({
-                            url     : urlAutoRFCp2
-                            ,timeout: 240000
-                            ,params : {
-                                'map1.pv_rfc_i'     : valorFieldRFC,
-                                'map1.cdtipsit'     : panendabaseguInputSmap1.CDTIPSIT,
-                                'map1.pv_cdunieco_i': panendabaseguInputSmap1.CDUNIECO,
-                                'map1.pv_cdramo_i'  : panendabaseguInputSmap1.CDRAMO,
-                                'map1.pv_estado_i'  : panendabaseguInputSmap1.ESTADO,
-                                'map1.pv_nmpoliza_i': panendabaseguInputSmap1.NMPOLIZA,
-                                'map1.esContratante': 'S'
-                            }
-                            ,success:function(response) {
-                                var json=Ext.decode(response.responseText);
-                                if(json&&json.slist1&&json.slist1.length>0) {
-                                    _unmask();
-                                    centrarVentanaInterna(Ext.create('Ext.window.Window', {
-                                        width        : 600
-                                        ,height      : 400
-                                        ,modal       : true
-                                        ,autoScroll  : true
-                                        ,title       : 'Coincidencias'
-                                        ,items       : Ext.create('Ext.grid.Panel',
-                                        {
-                                            store    : Ext.create('Ext.data.Store', {
-                                                model     : 'RFCPersona'
-                                                ,autoLoad : true
-                                                ,proxy : {
-                                                    type    : 'memory'
-                                                    ,reader : 'json'
-                                                    ,data   : json['slist1']
-                                                }
-                                            })
-                                            ,columns : [
-                                                {
-                                                    xtype         : 'actioncolumn'
-                                                    ,menuDisabled : true
-                                                    ,width        : 30
-                                                    ,items        : [
-                                                        {
-                                                            icon     : '${ctx}/resources/fam3icons/icons/accept.png'
-                                                            ,tooltip : 'Seleccionar usuario'
-                                                            ,handler : function(grid, rowIndex, colIndex) {
-                                                                var record = grid.getStore().getAt(rowIndex);
-                                                                debug(record);
-                                                                var formularioRes = _fieldById('_3_formNuevo');
-                                                                
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=CVE. ASEGURADO]').setValue(record.get("CLAVECLI"));
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=NOMBRE]').setValue(record.get("NOMBRE"));
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=SEGUNDO NOMBRE]').setValue(record.get("SNOMBRE"));
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=APELLIDO PATERNO]').setValue(record.get("APPAT"));
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=APELLIDO MATERNO]').setValue(record.get("APMAT"));
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=NACIONALIDAD]').setValue(record.get("NACIONALIDAD"));
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=ESTADO CIVIL]').setValue(record.get("CDESTCIV"));
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=F. NACIMIENTO]').setValue(record.get("FENACIMICLI"));
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=SEXO]').setValue(record.get("SEXO"));
-                                                                
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=CVE. ASEGURADO]').setReadOnly(true);
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=NOMBRE]').setReadOnly(true);
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=SEGUNDO NOMBRE]').setReadOnly(true);
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=APELLIDO PATERNO]').setReadOnly(true);
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=APELLIDO MATERNO]').setReadOnly(true);
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=NACIONALIDAD]').setReadOnly(true);
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=ESTADO CIVIL]').setReadOnly(true);
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=F. NACIMIENTO]').setReadOnly(true);
-                                                                _fieldById('_3_formNuevo').down('[fieldLabel=SEXO]').setReadOnly(true);
-                                                                
-                                                                //debug('cliente obtenido de WS? ', json.clienteWS);
-                                                                grid.up().up().destroy();
-                                                            }
-                                                        }
-                                                    ]
-                                                },{
-                                                    header     : 'ID. Asegurado'
-                                                    ,dataIndex : 'CLAVECLI'
-                                                    ,flex      : 1
-                                                },{
-                                                    header     : 'RFC'
-                                                    ,dataIndex : 'RFCCLI'
-                                                    ,flex      : 1
-                                                },{
-                                                    header     : 'Nombre'
-                                                    ,dataIndex : 'NOMBRECLI'
-                                                    ,flex      : 1
-                                                },{
-                                                    header     : 'Direcci&oacute;n'
-                                                    ,dataIndex : 'DIRECCIONCLI'
-                                                    ,flex      : 3
-                                            }]
-                                        })
-                                    }).show());
-                                }else {
-                                    _unmask();
-                                    _fieldById('_3_formNuevo').down('[fieldLabel=CVE. ASEGURADO]').setReadOnly(true);
-                                    _fieldById('_3_formNuevo').down('[fieldLabel=NOMBRE]').setReadOnly(false);
-                                    _fieldById('_3_formNuevo').down('[fieldLabel=SEGUNDO NOMBRE]').setReadOnly(false);
-                                    _fieldById('_3_formNuevo').down('[fieldLabel=APELLIDO PATERNO]').setReadOnly(false);
-                                    _fieldById('_3_formNuevo').down('[fieldLabel=APELLIDO MATERNO]').setReadOnly(false);
-                                    _fieldById('_3_formNuevo').down('[fieldLabel=NACIONALIDAD]').setReadOnly(false);
-                                    _fieldById('_3_formNuevo').down('[fieldLabel=ESTADO CIVIL]').setReadOnly(false);
-                                    _fieldById('_3_formNuevo').down('[fieldLabel=F. NACIMIENTO]').setReadOnly(false);
-                                    _fieldById('_3_formNuevo').down('[fieldLabel=SEXO]').setReadOnly(false);
-                                    var ven=Ext.Msg.show({
-                                        title:'Sin coincidencias',
-                                        msg: 'No hay coincidencias de RFC',
-                                        buttons: Ext.Msg.OK
-                                    });
-                                    centrarVentanaInterna(ven);
-                                }
-                            },failure:function() {
-                                Ext.Msg.show({
-                                    title:'Error',
-                                    msg: 'Error de comunicaci&oacute;n',
-                                    buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.ERROR
-                                });
-                            }
-                        });
-                    },0);
-                }
-            }else{
-            	_unmask();
-            }
-        });
 	/*///////////////////*/
 	////// contenido //////
 	///////////////////////
