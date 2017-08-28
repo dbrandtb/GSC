@@ -12,7 +12,9 @@ import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import mx.com.aon.portal.dao.ProcesoDAO;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.catalogos.dao.ClienteDAO;
@@ -184,7 +186,14 @@ public class PersonasManagerImpl implements PersonasManager
 		{
 			try
 			{
-				listaPersonas=personasDAO.obtenerPersonasPorRFC(rfc, nombre, snombre, apat, amat, validaTienePoliza);
+				Map<String,String>params=new HashMap<String,String>();
+				params.put("pv_cdrfc_i"    , rfc);
+				params.put("pv_dsnombre_i" , nombre);
+				params.put("pv_dsnombre1_i" , snombre);
+				params.put("pv_dsapellido_i"   , apat);
+				params.put("pv_dsapellido1_i"   , amat);
+				params.put("pv_validapol_i"   , validaTienePoliza);
+				listaPersonas=personasDAO.obtenerPersonasPorRFC(params);
 			}
 			catch(Exception ex)
 			{

@@ -1796,8 +1796,8 @@ function _p21_agregarConcepto() {
         debug("recordFactura ===> ",recordFactura);
         
         if(_11_params.CDRAMO != _RECUPERA){
-        	//(EGS) restringimos la validacion solo para pago directo _tipoPago == _TIPO_PAGO_DIRECTO &&
-        	if(_tipoPago == _TIPO_PAGO_DIRECTO && recordFactura.get('FLAGREQAUT') == "SI" &&  (  recordFactura.get('NMAUTSER') =="N/A" || +recordFactura.get('NMAUTSER') <= '0' || recordFactura.get('NMAUTSER')== "")){
+        	
+        	if(recordFactura.get('FLAGREQAUT') == "SI" &&  (  recordFactura.get('NMAUTSER') =="N/A" || +recordFactura.get('NMAUTSER') <= '0' || recordFactura.get('NMAUTSER')== "")){
                 debug("Entra a la configuración");
                  _11_obtieneDatosOpcionalesValor(recordFactura.get('CDRAMO'),recordFactura.get('CDTIPSIT'),recordFactura.get('CDGARANT'),recordFactura.get('CDCONVAL'),recordFactura,"0"); 
             }else{
