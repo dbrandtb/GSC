@@ -1498,8 +1498,8 @@
                                                 }
                                             });
                                         }
-                                        
-                                        if(jsonValidacionCober[0].FLAGREQAUT == "SI" &&  (  _11_aseguradoSeleccionado.get('NMAUTSER') =="N/A" || +_11_aseguradoSeleccionado.get('NMAUTSER') <= '0' || _11_aseguradoSeleccionado.get('NMAUTSER')== "")){
+                                        //(EGS) restringimos la validacion solo para pago directo _tipoPago == _TIPO_PAGO_DIRECTO &&
+                                        if(_tipoPago == _TIPO_PAGO_DIRECTO && jsonValidacionCober[0].FLAGREQAUT == "SI" &&  (  _11_aseguradoSeleccionado.get('NMAUTSER') =="N/A" || +_11_aseguradoSeleccionado.get('NMAUTSER') <= '0' || _11_aseguradoSeleccionado.get('NMAUTSER')== "")){
                                 	        _11_modificarAutorizacion(_11_aseguradoSeleccionado);
                                         	/*msgWindow = Ext.Msg.show({
                                                 title: 'Aviso',
@@ -2502,8 +2502,8 @@
 													});
 												}
 											});
-											
-											if(record.get('FLAGREQAUT') == "SI" &&  (  record.get('NMAUTSER') =="N/A" || +record.get('NMAUTSER') <= '0' || record.get('NMAUTSER')== "")){
+											//(EGS) restringimos la validacion unicamente para pago directo		_tipoPago == _TIPO_PAGO_DIRECTO && 
+											if(_tipoPago == _TIPO_PAGO_DIRECTO && record.get('FLAGREQAUT') == "SI" &&  (  record.get('NMAUTSER') =="N/A" || +record.get('NMAUTSER') <= '0' || record.get('NMAUTSER')== "")){
 												debug("Entra a la configuración");
 											     _11_obtieneDatosOpcionalesValor(record.get('CDRAMO'),record.get('CDTIPSIT'),record.get('CDGARANT'),record.get('CDCONVAL'),record, "1");	
 											}
