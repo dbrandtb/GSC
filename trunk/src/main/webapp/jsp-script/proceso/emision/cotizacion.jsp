@@ -4851,8 +4851,14 @@ Ext.onReady(function()
                	            debug('### obtener auto por clave gs:',ijson);
                	            if(ijson.success)
                	            {
-               	            	_fieldLikeLabel('DESCUENTO').setMinValue(ijson.smap1.RANGO_MINIMO);
-               	            	_fieldLikeLabel('DESCUENTO').setMaxValue(ijson.smap1.RANGO_MAXIMO);
+               	            	//Incidencia Serv Publico  
+               	            	var valor = _p28_validarDescuento(_fieldLikeLabel('DESCUENTO').getValue(), ijson.smap1.RANGO_MINIMO, ijson.smap1.RANGO_MAXIMO);
+               	            	debug("descuento: ", _fieldLikeLabel('DESCUENTO').getValue(), " valor: ", valor);
+               	            	if(!valor) {
+               	            		_fieldLikeLabel('DESCUENTO').markInvalid();
+               	            		 mensajeWarning('Debe seleccionar un monto de Descuento Valido');
+               	            	}
+               	             	_fieldLikeLabel('DESCUENTO').isValid();
                	             	_fieldLikeLabel('DESCUENTO').setLoading(false);
                	            }
                	            else
@@ -5893,6 +5899,18 @@ function _p28_cargarCorreos()
             errorComunicacion();
          }
     })
+}
+
+function _p28_validarDescuento(valor, valMinimo, valMaximo)
+{
+	var r=false;
+	debug("valor: ", valor, " valMinimo: ", valMinimo, " valMaximo: ", valMaximo);
+	if (valor>=valMinimo){
+		if (valor<=valMaximo){
+			r=true;
+		}
+	}
+	return r;
 }
 </script>
 </head>
