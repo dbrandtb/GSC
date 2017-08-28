@@ -324,24 +324,36 @@ public class EndososAutoAction extends PrincipalCoreAction
 		
 		try
 		{
-			Utils.validate(session                , "No hay sesion");
-			Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+			UserVO usuarioSesion;
+			if(smap1.get("cdusuari")==null) {
+				Utils.validate(session                , "No hay sesion");
+				Utils.validate(session.get("USUARIO") , "No hay usuario en la sesion");
+				usuarioSesion = (UserVO)session.get("USUARIO");
+			}
+			else {				
+				//usuarioSesion = (UserVO)smap1.get("usuario");
+				usuarioSesion = new UserVO();
+				//usuarioSesion.setCdUnieco(smap1.get("cdunieco"));
+				usuarioSesion.setCdElemento(smap1.get("cdelemen"));
+				//usuarioSesion.setName(smap1.get("name"));
+				usuarioSesion.setUser(smap1.get("cdusuari"));
+			}
 			
-			UserVO usuarioSesion = (UserVO)session.get("USUARIO");
-			String cdusuari = ((UserVO)session.get("USUARIO")).getUser();
-			String cdsisrol = ((UserVO)session.get("USUARIO")).getRolActivo().getClave();
-			String cdelemen = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			//UserVO usuarioSesion = (UserVO)session.get("USUARIO");			
+			String cdusuari = session.get("USUARIO")==null?smap1.get("cdusuari"):((UserVO)session.get("USUARIO")).getUser();
+			String cdsisrol = session.get("USUARIO")==null?smap1.get("cdsisrol"):((UserVO)session.get("USUARIO")).getRolActivo().getClave();			
+			String cdelemen = session.get("USUARIO")==null?smap1.get("cdelemen"):((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
 			
 			Utils.validate(smap1  , "No se recibieron datos");
 			Utils.validate(slist1 , "No se recibieron datos de inciso");
 			
 			String cdtipsup = smap1.get("cdtipsup");
 			String tstamp   = smap1.get("tstamp");
-			String cdunieco = smap1.get("cdunieco");
-			String cdramo   = smap1.get("cdramo");
-			String estado   = smap1.get("estado");
-			String nmpoliza = smap1.get("nmpoliza");
-			String feefecto = smap1.get("feefecto");
+			String cdunieco = smap1.get("cdunieco")==null?smap1.get("CDUNIECO"):smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo")==null?smap1.get("CDRAMO"):smap1.get("cdramo");
+			String estado   = smap1.get("estado")==null?smap1.get("ESTADO"):smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza")==null?smap1.get("NMPOLIZA"):smap1.get("nmpoliza");
+			String feefecto = smap1.get("feefecto")==null?smap1.get("FEEFECTO"):smap1.get("feefecto");
 			
 			Utils.validate(cdtipsup  , "No se recibio el tipo de endoso");
 			Utils.validate(tstamp    , "No se recibio el id de proceso");
