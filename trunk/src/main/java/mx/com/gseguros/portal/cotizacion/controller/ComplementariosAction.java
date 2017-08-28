@@ -4812,8 +4812,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			if(StringUtils.isNotBlank(infoPoliza.get("RENUNIEXT")) && StringUtils.isNotBlank(infoPoliza.get("RENRAMO")) && StringUtils.isNotBlank(infoPoliza.get("RENPOLIEX")) && (infoPoliza.get("RENRAMO").contains("711") || infoPoliza.get("RENRAMO").contains("721")))
 			{
-				//int[] motend = {44,75};
-				int[] motend = {75}; //SOLO ENDOSO LIBRE PARA PRODUCCIÓN
+				int[] motend = {44,45,75,76};
+
 				slist1 = new ArrayList<Map<String, String>>();
 				
 				for(int i = 0; i < motend.length; i++){
