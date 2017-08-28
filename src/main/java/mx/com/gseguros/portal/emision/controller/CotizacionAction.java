@@ -4879,7 +4879,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            
 				boolean[] gruposValidos = new boolean[olist1.size()];
 				
-				HashMap<String,String> codigosPostales = null;
+				/*HashMap<String,String> codigosPostales = null;
 				
 				try
 				{
@@ -4895,7 +4895,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				if(codigosPostales == null){
 					codigosPostales = new HashMap<String, String>();
-				}
+				}*/
 				
 				String requeridoSucursal 	= "0";
 				String existeNoSocio    	= "0";
@@ -5193,13 +5193,18 @@ public class CotizacionAction extends PrincipalCoreAction
 	                }
 	                
 	                logger.debug(">>> Validando codigo postal existente en el producto");
-	                if(StringUtils.isBlank(codpostal) || !codigosPostales.containsKey(codpostal)){
-	                	logger.error("Codigo Postal inexistente en la fila: " + fila);
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' No v\u00e1lido (J) de la fila ",fila," "));
-	                }else{
-	                	logger.debug("<<< Codigo postal correcto..");
-	                }
+	                try {
+						if(StringUtils.isBlank(codpostal) || cotizacionManager.existeCodPostalVigente(codpostal).equalsIgnoreCase("0")){
+							logger.error("Codigo Postal inexistente en la fila: " + fila);
+							filaBuena = false;
+							bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' No v\u00e1lido (J) de la fila ",fila," "));
+						}else{
+							logger.debug("<<< Codigo postal correcto..");
+						}
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 	                
 	                //ESTADO
 	                try {
@@ -6064,7 +6069,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	            
 				boolean[] gruposValidos = new boolean[olist1.size()];
 				
-				HashMap<String,String> codigosPostales = null;
+				/*HashMap<String,String> codigosPostales = null;
 				
 				try
 				{
@@ -6080,7 +6085,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				
 				if(codigosPostales == null){
 					codigosPostales = new HashMap<String, String>();
-				}
+				}*/
 				
 				boolean exitoCPs =  true;
 				
@@ -6427,18 +6432,26 @@ public class CotizacionAction extends PrincipalCoreAction
 
 		                logger.debug(">>> Validando codigo postal existente en el producto");
 		                if(StringUtils.isNotBlank(codpostal)){
-		                	if(StringUtils.isBlank(codpostal) || !codigosPostales.containsKey(codpostal)){
-			                	logger.error("Codigo Postal inexistente en la fila: " + (row.getRowNum()+1) +"Para la el asegurado: " + nombre1+" "+ nombre2 + " "+apellidoP+" " +apellidoM);
-			                	exitoCPs = false;
-			                	erroresCP.append("\n *** C\u00f3digo Postal inexistente '").append(codpostal).append("' en la fila: ").append((row.getRowNum()+1)).append(" para la el asegurado: ")
-			                	.append(nombre1).append(" ").append(nombre2).append(" ").append(apellidoP).append(" ").append(apellidoM);
-			                	
-			                	//Para aniadir al conjunto de errores
-			                	filaBuena = false;
-			                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' No v\u00e1lido (J) de la fila ",fila," "));
-			                }else{
-			                	logger.debug("<<< Codigo postal correcto..");
-			                }
+		                	String respuesta;
+							try {
+								respuesta = cotizacionManager.existeCodPostalVigente(codpostal);
+								logger.debug("VALOR DEL CP ==>:{}",respuesta);
+								if(StringUtils.isBlank(codpostal) || respuesta.equalsIgnoreCase("0")){
+				                	logger.error("Codigo Postal inexistente en la fila: " + (row.getRowNum()+1) +"Para la el asegurado: " + nombre1+" "+ nombre2 + " "+apellidoP+" " +apellidoM);
+				                	exitoCPs = false;
+				                	erroresCP.append("\n *** C\u00f3digo Postal inexistente '").append(codpostal).append("' en la fila: ").append((row.getRowNum()+1)).append(" para la el asegurado: ")
+				                	.append(nombre1).append(" ").append(nombre2).append(" ").append(apellidoP).append(" ").append(apellidoM);
+				                	
+				                	//Para aniadir al conjunto de errores
+				                	filaBuena = false;
+				                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' No v\u00e1lido (J) de la fila ",fila," "));
+				                }else{
+				                	logger.debug("<<< Codigo postal correcto..");
+				                }
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 		                }
 	                
 		            //ESTADO

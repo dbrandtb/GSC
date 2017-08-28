@@ -1329,4 +1329,6 @@ public interface CotizacionManager
 	public List<Map<String, String>> getConsultaMorbilidad(String morbilidad)throws Exception;
 	
 	public String existeMorbilidadNueva(String morbilidad) throws Exception;
+
+	public String existeCodPostalVigente(String codpostal)throws Exception;
 }

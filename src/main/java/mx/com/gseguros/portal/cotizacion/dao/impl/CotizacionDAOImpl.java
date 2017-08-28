@@ -9724,4 +9724,24 @@ public class CotizacionDAOImpl extends AbstractManagerDAO implements CotizacionD
 			compile();
 		}
 	}
+	
+	@Override
+	public String existeCodPostalVigente(String codpostal) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_codpostal_i", codpostal);
+		Map<String, Object> mapResult = ejecutaSP(new ExisteCodPostalVigente(getDataSource()), params);
+		 return (String) mapResult.get("pv_existe_o");
+	}
+	
+	protected class ExisteCodPostalVigente extends StoredProcedure {
+
+		protected ExisteCodPostalVigente(DataSource dataSource) {
+			super(dataSource, "PKG_COTIZA.P_GET_EXISTECODPOSTAL");
+			declareParameter(new SqlParameter("pv_codpostal_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_existe_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

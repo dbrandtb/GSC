@@ -1053,4 +1053,6 @@ public interface CotizacionDAO {
 	
 	public String existeMorbilidadNueva(String morbilidad) throws Exception;
 	
+	public String existeCodPostalVigente(String codpostal)throws Exception;
+	
 }

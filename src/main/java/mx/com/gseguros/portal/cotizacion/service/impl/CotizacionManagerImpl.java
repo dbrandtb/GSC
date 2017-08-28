@@ -5592,13 +5592,18 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                }
 	                
 	                logger.debug(">>> Validando codigo postal existente en el producto");
-	                if(StringUtils.isBlank(codpostal) || !codigosPostales.containsKey(codpostal)){
-	                	logger.error("Codigo Postal inexistente en la fila: " + fila);
-	                	filaBuena = false;
-	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' No v\u00e1lido (J) de la fila ",fila," "));
-	                }else{
-	                	logger.debug("<<< Codigo postal correcto..");
-	                }
+	                try {
+						if(StringUtils.isBlank(codpostal) || this.existeCodPostalVigente(codpostal).equalsIgnoreCase("0")){
+							logger.error("Codigo Postal inexistente en la fila: " + fila);
+							filaBuena = false;
+							bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' No v\u00e1lido (J) de la fila ",fila," "));
+						}else{
+							logger.debug("<<< Codigo postal correcto..");
+						}
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 	                
 	              //ESTADO
 	                try
@@ -12049,6 +12054,10 @@ public class CotizacionManagerImpl implements CotizacionManager
 	@Override
 	public String existeMorbilidadNueva(String morbilidad) throws Exception{
 		return this.cotizacionDAO.existeMorbilidadNueva(morbilidad);
+	}
+	
+	public String existeCodPostalVigente(String codpostal) throws Exception{
+		return this.cotizacionDAO.existeCodPostalVigente(codpostal);
 	}
 	/////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////
