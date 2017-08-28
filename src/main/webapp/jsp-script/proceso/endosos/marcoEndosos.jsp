@@ -1270,7 +1270,7 @@
             
             if(valido)
             {
-                debug("arrayEditados",arrayEditados);
+                debug(arrayEditados);
                 Ext.getCmp('marendMenuOperaciones').collapse();
                 Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
                 var json={};
@@ -1371,7 +1371,7 @@
                 mensajeError('Seleccione la p&oacute;liza');
             }
         }
-        else if(recordOperacion.get('funcion')=='endosoParentescoAntiguedad'||recordOperacion.get('funcion')=='endosoParentescoAntiguedadSimple')
+        else if(recordOperacion.get('funcion')=='endosoParentescoAntiguedad')
         {
             debug(recordOperacion.get('funcion'));
             var nPolizasActivas=0;
@@ -1397,8 +1397,7 @@
                     ,autoLoad : true
                     ,jsonData :
                     {
-                        'smap1'         : smap1
-                        ,'endosoSimple' : recordOperacion.get('funcion')=='endosoParentescoAntiguedadSimple'
+                        'smap1'  : smap1
                     }
                 });
             }
@@ -1642,7 +1641,7 @@ Ext.onReady(function()
 					cdtipsup : '0'
                     ,texto   : 'CORRECI&Oacute;N ASEGURADOS ANTIGUEDAD Y PARENTESCO *'//valosit
                     ,liga    : '<s:url namespace="/endosos" action="entrarEndosoParentescoAntiguedad" />'
-                    ,funcion : 'endosoParentescoAntiguedadSimple'
+                    ,funcion : 'endosoParentescoAntiguedad'
                 },{
                 	cdtipsup : '2'
                     ,texto   : '2'//nombres
@@ -1656,8 +1655,8 @@ Ext.onReady(function()
                 },{
                     cdtipsup : '4'
                     ,texto   : '4'//valosit
-                    ,liga    : '<s:url namespace="/endosos" action="entrarEndosoParentescoAntiguedad" />'
-                    ,funcion : 'endosoParentescoAntiguedad'
+                    ,liga    : '<s:url namespace="/endosos" action="entrarEndosoValositBasico" />'
+                    ,funcion : 'endosovalositbasico'
                 },{
                     cdtipsup : '6'
                     ,texto   : '6'//alta coberturas
@@ -2147,7 +2146,6 @@ Ext.onReady(function()
                                 ,width       : 600
                                 ,height      : 400
                                 ,autoScroll  : true
-                                ,cls         : 'VENTANA_DOCUMENTOS_CLASS'
                                 ,loader      :
                                 {
                                     url       : marendUrlDoc

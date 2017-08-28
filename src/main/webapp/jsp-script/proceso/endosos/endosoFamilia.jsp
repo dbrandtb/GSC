@@ -27,10 +27,6 @@ var _p48_storeRespaldo;
 var _p48_storeMov;
 var _p48_nfamilia = 0;
 var _p48_storeFamilia;
-
-var _p48_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
-
-debug('_p48_flujo:',_p48_flujo);
 ////// variables //////
 
 ////// overrides //////
@@ -289,10 +285,11 @@ Ext.onReady(function()
                         	    }
                         	    ,extraParams:
                         	    {
-                        	        catalogo           : 'RECUPERAR_LISTA_FILTRO_PROPIEDAD_INCISO'
+                        	        catalogo           : 'RECUPERAR_LISTA_FILTRO_PROPIEDADDES_INCISO'
+                        	        ,'params.cdunieco' :  _p48_params.CDUNIECO
                         	        ,'params.cdramo'   :  _p48_params.CDRAMO
-                        	        ,'params.cdtipsit' :  _p48_params.CDTIPSIT
-                        	        ,'params.nivel'    :  "I"
+                        	        ,'params.estado'   :  _p48_params.ESTADO
+                        	        ,'params.nmpoliza' :  _p48_params.NMPOLIZA
                         	    }
                         	}
                             ,listeners :
@@ -369,7 +366,7 @@ Ext.onReady(function()
                                         {
                                             throw 'Revisar datos del endoso';
                                         }
-                                        
+                                       	
                                         var arr = [];
                                         _p48_storeMov.each(function(record) {
                                             arr.push(record.data);
@@ -382,7 +379,6 @@ Ext.onReady(function()
                                                 mensaje = mensaje +"* Para el inciso "+arr[i].NMSITUAC +" con fecha alta: "+Ext.Date.format(arr[i].FEFECSIT,'d/m/Y')+" debe de ser menor a la fecha efecto.</br>";
                                             }
                                         }
-                                        
                                         if(continuarProceso =='1'){
                                         	centrarVentanaInterna(Ext.Msg.show({
                                                 title: 'Warning',
@@ -391,104 +387,97 @@ Ext.onReady(function()
                                                 icon: Ext.Msg.WARNING
                                             }));
                                         }else{
-                                            if(+_p48_params.cdtipsup > 9){
-                                                var cdtipsitPrimerInc = _p48_store.getAt(0).get('CDTIPSIT');
-                                            }else{
-                                                var cdtipsitPrimerInc = _p48_params.CDTIPSIT;
-                                            }
-                                            
-                                            var datos =
-                                            {
-                                                params : 
-                                                {
-                                                    cdunieco              : _p48_params.CDUNIECO
-                                                    ,cdramo               : _p48_params.CDRAMO
-                                                    ,estado               : _p48_params.ESTADO
-                                                    ,nmpoliza             : _p48_params.NMPOLIZA
-                                                    ,cdtipsup             : _p48_params.cdtipsup
-                                                    ,nmsuplem             : _p48_params.nmsuplem_endoso
-                                                    ,nsuplogi             : _p48_params.nsuplogi
-                                                    ,fecha                : Ext.Date.format(_fieldByName('FEFECHA').getValue(),'d/m/Y')
-                                                    ,cdtipsitPrimerInciso : cdtipsitPrimerInc
-                                                    ,nmsolici             : _p48_params.NMSOLICI
-                                                }
-                                                ,list : []
-                                            };
-                                            
-                                            _p48_storeMov.each(function(record)
-                                            {
-                                                datos.list.push({nmsituac:record.get('NMSITUAC')});
-                                            });
-                                            
-                                            if(!Ext.isEmpty(_p48_flujo))
-                                            {
-                                                datos.flujo = _p48_flujo;
-                                            }
-                                            
-                                            debug('datos para confirmar:',datos);
-                                            
-                                            _setLoading(true,_fieldById('_p48_panelpri'));
-                                            
-                                            Ext.Ajax.request(
-                                            {
-                                                url       : _p48_urlConfirmarEndoso
-                                                ,jsonData : datos
-                                                ,success  : function(response)
-                                                {
-                                                    _setLoading(false,_fieldById('_p48_panelpri'));
-                                                    var ck = 'Decodificando respuesta al confirmar endoso';
-                                                    try
-                                                    {
-                                                        var json = Ext.decode(response.responseText);
-                                                        debug('### confirmar:',json);
-                                                        if(json.success)
-                                                        {
-                                                            var callbackRemesa = function()
-                                                            {
-                                                                marendNavegacion(2);
-                                                            };
-                                                            mensajeCorrecto('Endoso generado',json.message,function()
-                                                            {
-                                                                var cadena= json.message;
-                                                                var palabra="guardado";
-                                                                if (cadena.indexOf(palabra)==-1){
-                                                                    _generarRemesaClic2(
-                                                                            false
-                                                                            ,_p48_params.CDUNIECO
-                                                                            ,_p48_params.CDRAMO
-                                                                            ,_p48_params.ESTADO
-                                                                            ,_p48_params.NMPOLIZA
-                                                                            ,callbackRemesa
-                                                                        );
-                                                                }else{
-                                                                    _generarRemesaClic(
-                                                                            true
-                                                                            ,_p48_params.CDUNIECO
-                                                                            ,_p48_params.CDRAMO
-                                                                            ,_p48_params.ESTADO
-                                                                            ,_p48_params.NMPOLIZA
-                                                                            ,callbackRemesa
-                                                                        );
-                                                                }
-                                                            });
-                                                        }
-                                                        else
-                                                        {
-                                                            mensajeError(json.message);
-                                                        }
-                                                    }
-                                                    catch(e)
-                                                    {
-                                                        manejaException(e,ck);
-                                                    }
-                                                }
-                                                ,failure : function()
-                                                {
-                                                    _setLoading(false,_fieldById('_p48_panelpri'));
-                                                    errorComunicacion();
-                                                }
-                                            });
+                                        if(+_p48_params.cdtipsup > 9){
+                                        	var cdtipsitPrimerInc = _p48_store.getAt(0).get('CDTIPSIT');
+                                        }else{
+                                        	var cdtipsitPrimerInc = _p48_params.CDTIPSIT;
                                         }
+                                        var datos =
+                                        {
+                                            params : 
+                                            {
+                                                cdunieco              : _p48_params.CDUNIECO
+                                                ,cdramo               : _p48_params.CDRAMO
+                                                ,estado               : _p48_params.ESTADO
+                                                ,nmpoliza             : _p48_params.NMPOLIZA
+                                                ,cdtipsup             : _p48_params.cdtipsup
+                                                ,nmsuplem             : _p48_params.nmsuplem_endoso
+                                                ,nsuplogi             : _p48_params.nsuplogi
+                                                ,fecha                : Ext.Date.format(_fieldByName('FEFECHA').getValue(),'d/m/Y')
+                                                ,cdtipsitPrimerInciso : cdtipsitPrimerInc
+                                                ,nmsolici             : _p48_params.NMSOLICI
+                                            }
+                                            ,list : []
+                                        };
+                                        
+                                        _p48_storeMov.each(function(record)
+                                        {
+                                            datos.list.push({nmsituac:record.get('NMSITUAC')});
+                                        });
+                                        debug('datos para confirmar:',datos);
+                                        
+                                        _setLoading(true,_fieldById('_p48_panelpri'));
+                                        
+                                        Ext.Ajax.request(
+                                        {
+                                            url       : _p48_urlConfirmarEndoso
+                                            ,jsonData : datos
+                                            ,success  : function(response)
+                                            {
+                                                _setLoading(false,_fieldById('_p48_panelpri'));
+                                                var ck = 'Decodificando respuesta al confirmar endoso';
+                                                try
+                                                {
+                                                    var json = Ext.decode(response.responseText);
+                                                    debug('### confirmar:',json);
+                                                    if(json.success)
+                                                    {
+                                                        var callbackRemesa = function()
+                                                        {
+                                                            marendNavegacion(2);
+                                                        };
+                                                        mensajeCorrecto('Endoso generado',json.message,function()
+                                                        {
+                                                        	var cadena= json.message;
+                                                        	var palabra="guardado";
+                                                        	if (cadena.indexOf(palabra)==-1){
+                                                        		_generarRemesaClic2(
+                                                                        false
+                                                                        ,_p48_params.CDUNIECO
+                                                                        ,_p48_params.CDRAMO
+                                                                        ,_p48_params.ESTADO
+                                                                        ,_p48_params.NMPOLIZA
+                                                                        ,callbackRemesa
+                                                                    );
+                                                        	}else{
+                                                        		_generarRemesaClic(
+                                                                        true
+                                                                        ,_p48_params.CDUNIECO
+                                                                        ,_p48_params.CDRAMO
+                                                                        ,_p48_params.ESTADO
+                                                                        ,_p48_params.NMPOLIZA
+                                                                        ,callbackRemesa
+                                                                    );
+                                                        	}
+                                                        });
+                                                    }
+                                                    else
+                                                    {
+                                                        mensajeError(json.message);
+                                                    }
+                                                }
+                                                catch(e)
+                                                {
+                                                    manejaException(e,ck);
+                                                }
+                                            }
+                                            ,failure : function()
+                                            {
+                                                _setLoading(false,_fieldById('_p48_panelpri'));
+                                                errorComunicacion();
+                                            }
+                                        });
+                                    }
                                     }
                                     catch(e)
                                     {
@@ -504,41 +493,6 @@ Ext.onReady(function()
                         ,icon    : '${icons}cancel.png'
                         ,hidden  : true
                         ,handler : _p48_cancelarEndosoClic
-                    }, {
-                        text    : 'Imprimir',
-                        icon    : '${ctx}/resources/fam3icons/icons/printer.png',
-                        handler : function () {
-                            centrarVentanaInterna(Ext.create('Ext.window.Window', {
-                                title       : 'Documentos',
-                                modal       : true,
-                                buttonAlign : 'center',
-                                width       : 600,
-                                height      : 400,
-                                autoScroll  : true,
-                                cls         : 'VENTANA_DOCUMENTOS_CLASS',
-                                loader      : {
-                                    url    : _GLOBAL_COMP_URL_VENTANA_DOCS,
-                                    params : {
-                                        'smap1.cdunieco' : _p48_params.CDUNIECO,
-                                        'smap1.cdramo'   : _p48_params.CDRAMO,
-                                        'smap1.estado'   : _p48_params.ESTADO,
-                                        'smap1.nmpoliza' : _p48_params.NMPOLIZA,
-                                        'smap1.nmsuplem' : '0',
-                                        'smap1.ntramite' : _p48_params.NTRAMITE || (!Ext.isEmpty(_p48_flujo) ? _p48_flujo.ntramite : ''),
-                                        'smap1.nmsolici' : '',
-                                        'smap1.tipomov'  : '0'
-                                    },
-                                    scripts  : true,
-                                    autoLoad : true
-                                }
-                            }).show());
-                        }
-                    }, {
-                        text    : 'Regresar a mesa de control',
-                        icon    : '${icons}house.png',
-                        handler : function (me) {
-                            _iceMesaControl();
-                        }
                     }
                 ]
                 ,listeners :
@@ -727,7 +681,118 @@ function _p48_quitarAseguradoClic(me)
 			    _p48_agregarAseguradoMov(recordsQueSeQuitan, record);
 		        
 		    });
-        }
+        }  
+//        
+//        
+        
+//        _p48_store.clearFilter();
+//        _fieldById('eliminarFiltro').setValue('');
+//        debug('record:',record);
+//        
+//        _p48_storeMov.each(function(record2)
+//        {
+//            if(Number(record2.get('NMSITUAC'))==Number(record.get('NMSITUAC')))
+//            {
+//                throw 'Este inciso ya se encuentra en los movimientos';
+//            }
+//        });
+//        
+//        var recordsQueSeQuitan = [];
+//        
+//        if(record.get('CVE_PARENTESCO')=='T')
+//        {
+//            var familia = Number(record.get('NMSITAUX'));
+//            _p48_store.each(function(rec)
+//            {
+//                if(Number(rec.get('NMSITAUX'))==familia)//pertenece a la familia
+//                {
+//                    var yaSeQuito = false;
+//                    for(var i=0;i<_p48_storeMov.getCount();i++)
+//                    {
+//                        if(Number(_p48_storeMov.getAt(i).get('NMSITUAC'))==Number(rec.get('NMSITUAC')))//buscar si ya se encuentra en movimientos
+//                        {
+//                            yaSeQuito = true;
+//                            break;
+//                        }
+//                    }
+//                    if(yaSeQuito==false)
+//                    {
+//                        recordsQueSeQuitan.push(rec);
+//                        rec.set('MOV','-');
+//                    }
+//                }
+//            });
+//        }
+//        else
+//        {
+//            record.set('MOV','-');
+//            recordsQueSeQuitan.push(record);
+//        }
+//        debug('recordsQueSeQuitan:',recordsQueSeQuitan);
+        
+//        var quitados = 0;
+//        _setLoading(true,'_p48_gridAsegurados');
+//        debug('Longitud =>',recordsQueSeQuitan.length);
+//        for(var i in recordsQueSeQuitan)
+//        {
+//            var datos           = parseaFechas(recordsQueSeQuitan[i].data);
+//            datos['FEPROREN']   = _p48_params.FEPROREN;
+//            datos['cdtipsup']   = _p48_params.cdtipsup;
+//            datos['movimiento'] = 'PASO_QUITAR_ASEGURADO';
+//            datos['sleep']      = i*300;
+//            debug('datos:',datos);
+//            Ext.Ajax.request(
+//            {
+//                url       : _p48_urlMovimientosSMD 
+//                ,jsonData : { params : datos }
+//                ,success  : function(response)
+//                {
+//                    var ck = 'Decodificando respuesta al quitar asegurado';
+//                    try
+//                    {
+//                        quitados = quitados + 1;
+//                        debug('Longitud =>',recordsQueSeQuitan.length);
+//                        if(quitados==recordsQueSeQuitan.length)
+//                        {
+//                            _setLoading(false,'_p48_gridAsegurados');
+//                        }
+//                        var json = Ext.decode(response.responseText);
+//                        debug('### quitar:',json);
+//                        if(json.success==true)
+//                        {
+//                            if(quitados==recordsQueSeQuitan.length)
+//                            {
+//                                _p48_params.nmsuplem_endoso = json.params.nmsuplem_endoso;
+//                                _p48_params.nsuplogi        = json.params.nsuplogi;
+//                                debug('_p48_params:',_p48_params);
+//                                _p48_storeMov.proxy.extraParams['params.nmsuplem'] = _p48_params.nmsuplem_endoso;
+//                                _p48_cargarStoreMov();
+//                                mensajeCorrecto('Movimiento guardado','Se ha guardado el movimiento');
+//                                
+//                                _p48_validarEstadoBotonCancelar();
+//                            }
+//                        }
+//                        else
+//                        {
+//                            mensajeError(json.message);
+//                        }
+//                    }
+//                    catch(e)
+//                    {
+//                        manejaException(e,ck);
+//                    }
+//                }
+//                ,failure : function()
+//                {
+//                    quitados = quitados + 1;
+//                    if(quitados==recordsQueSeQuitan.length)
+//                    {
+//                        _setLoading(false,'_p48_gridAsegurados');
+//                    }
+//                    errorComunicacion(null,'Error al quitar asegurado');
+//                }
+//            });
+//        }
     }
     catch(e)
     {
@@ -1019,10 +1084,19 @@ function _p48_agregarFamClic()
 		                 		listeners:{
 	        						 close:function(){
 	        							 if(true){
+	        								//windowHistSinies.removeAll();
 	        								windowHistSinies.destroy();
 	        							 }
 	        						 }
-	        					}
+	        					}/*,
+		                 		buttons: [{
+		                 			//icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+		                 			icon: '${icons}cancel.png',
+		                 			text: 'Cerrar',
+		                 			handler: function() {
+		                 				windowHistSinies.close();
+		                 			}
+		                 		}]*/
 		                 	}).show();
 							
 		                 	centrarVentana(windowHistSinies);
@@ -1036,6 +1110,10 @@ function _p48_agregarFamClic()
 							});
 						}
                     });
+                     
+                     
+                     
+                     /**/
                 }
                 else
                 {
@@ -1057,7 +1135,153 @@ function _p48_agregarFamClic()
             errorComunicacion(null,'Error al quitar asegurado');
         }
     });
+	
+	
+	
+	/**/
 }
+
+/*function _p48_agregarFamClic()
+{
+    debug('_p48_agregarFamClic');
+    var ck = 'Agregando familia';
+    try
+    {
+        _p48_obtenerComponentes('FAM',_p48_store.getAt(0).get('CDTIPSIT'),function(mpersona,tatrisit,tatrirol,validacion)
+        {
+            centrarVentanaInterna(Ext.create('Ext.window.Window',
+            {
+                title  : 'DATOS DEL TITULAR'
+                ,modal : true
+                ,items :
+                [
+                    Ext.create('Ext.panel.Panel',
+                    {
+                        width     : 900
+                        ,height   : 500
+                        ,autoScroll : true
+                        ,border   : 0
+                        ,defaults : { style : 'margin:5px;' }
+                        ,items    :
+                        [
+                            _p48_crearFormulario(mpersona,tatrisit,tatrirol)
+                        ]
+                        ,listeners :
+                        {
+                            afterrender : function(me)
+                            {
+                                var ck = 'Manejando consecutivo de familia';
+                                try
+                                {
+                                    _p48_nfamilia = _p48_nfamilia+1;
+                                    me.familia    = _p48_nfamilia;
+                                    me.down('form').down('[name=NMSITAUX]').setValue('NUEVA-'+me.familia);
+                                }
+                                catch(e)
+                                {
+                                    manejaException(e,ck);
+                                }                                    
+                            }
+                        }
+                        ,buttonAlign : 'center'
+                        ,buttons     :
+                        [
+                            {
+                                text     : 'Aceptar'
+                                ,icon    : '${icons}accept.png'
+                                ,handler : function(me)
+                                {
+                                    Ext.MessageBox.confirm('Confirmar', '¿Termin\u00F3 de agregar todos los asegurados de la familia?', function(btn)
+                                    {
+                                        if(btn === 'yes')
+                                        {
+		                                    var ck = 'Revisando datos';
+		                                    try
+		                                    {
+		                                        var panel = me.up('panel');
+		                                        var forms = Ext.ComponentQuery.query('form',panel);
+		                                        debug('forms:',forms);
+		                                        
+		                                        var errores = [];
+		                                        for(var i in forms)
+		                                        {
+		                                            var form = forms[i];
+		                                            if(!form.isValid())
+		                                            {
+		                                                throw 'Favor de revisar datos';
+		                                            }
+		                                        }
+		                                        
+		                                        var cdtipsit = _p48_store.getAt(0).get('CDTIPSIT');
+		                                        
+		                                        var records = [];
+		                                        for(var i in forms)
+		                                        {
+		                                            var form         = forms[i];
+		                                            var vals         = form.getValues();
+		                                            vals['CDTIPSIT'] = cdtipsit;
+		                                            records.push(new _p48_modelo(vals));
+		                                        }
+		                                        debug('records:',records);
+		                                        
+		                                        var maxGrupo = 0;
+		                                        _p48_store.each(function(record)
+		                                        {
+		                                            if(Number(record.get('CDGRUPO'))>maxGrupo)
+		                                            {
+		                                                maxGrupo = Number(record.get('CDGRUPO'));
+		                                            }
+		                                        });
+		                                        debug('maxGrupo:',maxGrupo);
+		                                        
+		                                        for(var i in records)
+		                                        {
+		                                            var cdgrupo = Number(records[i].get('CDGRUPO'));
+		                                            if(cdgrupo==0||cdgrupo>maxGrupo)
+		                                            {
+		                                                throw 'El grupo no es v\u00E1lido para '+
+		                                                    (
+		                                                        [
+		                                                            records[i].get('DSNOMBRE')
+		                                                            ,records[i].get('DSNOMBRE1')
+		                                                            ,records[i].get('DSAPELLIDO')
+		                                                            ,records[i].get('DSAPELLIDO1')
+		                                                        ].join(' ')
+		                                                    );
+		                                            }
+		                                        }
+		                                        
+		                                        ck = 'Ejecutando validaci\u00F3n din\u00E1mica';
+		                                        validacion(records);
+		                                        
+		                                        for(var i in records)
+		                                        {
+		                                            records[i].set('MOV'  , '+');
+		                                            records[i].set('AUX1' , 'FAM');
+		                                            _p48_storeMov.add(records[i]);
+		                                        }
+		                                        
+		                                        me.up('window').destroy();
+		                                    }
+		                                    catch(e)
+		                                    {
+		                                        manejaException(e,ck);
+		                                    }
+		                                }
+		                            });
+                                }
+                            }
+                        ]
+                    })
+                ]
+            }).show());
+        });
+    }
+    catch(e)
+    {
+        manejaException(e,ck);
+    }
+}*/
 
 function _p48_crearFormulario(mpersona,tatrisit,tatrirol)
 {

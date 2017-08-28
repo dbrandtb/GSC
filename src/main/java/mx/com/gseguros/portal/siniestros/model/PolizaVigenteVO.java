@@ -43,11 +43,7 @@ public class PolizaVigenteVO implements Serializable {
 	private String dsTipsit;
 	private String genero; // (EGS)
 	private String fenacimi; // (EGS)
-	private String cirHosp;
-	private String cpaseg;
-	private String estadoAseg;
-	private String municipioAseg;
-	private String fantiguedadgs;
+	 
 	
 	
 	
@@ -409,54 +405,5 @@ public class PolizaVigenteVO implements Serializable {
 	public void setFenacimi(String fenacimi){
 		this.fenacimi = fenacimi;
 	} // fin (EGS)
-
-
-	public String getCirHosp() {
-		return cirHosp;
-	}
-
-
-	public void setCirHosp(String cirHosp) {
-		this.cirHosp = cirHosp;
-	}
-
-
-	public String getCpaseg() {
-		return cpaseg;
-	}
-
-
-	public void setCpaseg(String cpaseg) {
-		this.cpaseg = cpaseg;
-	}
-
-
-	public String getEstadoAseg() {
-		return estadoAseg;
-	}
-
-
-	public void setEstadoAseg(String estadoAseg) {
-		this.estadoAseg = estadoAseg;
-	}
-
-
-	public String getMunicipioAseg() {
-		return municipioAseg;
-	}
-
-
-	public void setMunicipioAseg(String municipioAseg) {
-		this.municipioAseg = municipioAseg;
-	}
-
-
-	public String getFantiguedadgs() {
-		return fantiguedadgs;
-	}
-
-
-	public void setFantiguedadgs(String fantiguedadgs) {
-		this.fantiguedadgs = fantiguedadgs;
-	}
+	
 }

@@ -18,10 +18,9 @@ public interface EmisionAutosService {
 	 * @param ntramite
 	 * @param userVO
 	 * @return
-	 * @throws Exception 
 	 */
 	public EmisionAutosVO cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO) throws Exception;
+			String estado, String nmpoliza, String nmsuplem, String ntramite, String cdtipsit, UserVO userVO);
 	
 	/**
 	 * Para saber que movimientos de endosos se imprimiran en un endoso principal.
@@ -36,7 +35,7 @@ public interface EmisionAutosService {
 			String estado, String nmpoliza, String nmsuplem);
 	
 	public Integer enviaRecibosAutosSigs(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal) throws Exception;
+			String estado, String nmpoliza, String nmsuplem, String nmpoliex, String subramo, String sucursal);
 	
 	public int endosoCambioClienteAutos(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem);
@@ -48,11 +47,11 @@ public interface EmisionAutosService {
 			String estado, String nmpoliza, String nmsuplem);
 
 	public int endosoCambioDomicil(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion);
+			String estado, String nmpoliza, String nmsuplem);
 
 	public int actualizaDatosCambioDomicilCP(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion);
+			String estado, String nmpoliza, String nmsuplem);
 
 	public int actualizaDatosCambioDomicilSinCP(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, UserVO usuarioSesion);
+			String estado, String nmpoliza, String nmsuplem);
 }
