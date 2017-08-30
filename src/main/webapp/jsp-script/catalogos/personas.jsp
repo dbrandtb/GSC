@@ -1932,7 +1932,7 @@ function _p22_tipoPersonaChange(combo,value)
     	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
     	
     	//Se agrega Campo de CURP para persona fisica
-        _fieldByName('CURP',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = false;
+        _fieldByName('CURP',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = true;
         _fieldByName('CURP',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
     }
     debug('<_p22_tipoPersonaChange');
