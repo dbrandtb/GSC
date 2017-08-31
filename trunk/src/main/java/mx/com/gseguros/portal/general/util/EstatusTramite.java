@@ -28,7 +28,8 @@ public enum EstatusTramite {
 	EN_DOCUMENTACION("99"),
 	TRAMITE_AGENTE("100"),
 	ENTREGA_CORREO("44"),
-	RECATEGORIZADO("170");
+	RECATEGORIZADO("170"),
+	REASIGNADO("171");
 
 	private String codigo;
 

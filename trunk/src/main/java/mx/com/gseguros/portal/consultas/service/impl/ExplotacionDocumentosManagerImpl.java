@@ -317,12 +317,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							,movAgente.get("nmsuplem")
 							,tipolote
 							//,"P".equals(tipolote) ? movAgente.get("ntramite") : null
-							,"P".equals(tipolote) ? endososDAO.obtenerNtramiteEmision(
-									movAgente.get("cdunieco")
-									,movAgente.get("cdramo")
-									,movAgente.get("estado")
-									,movAgente.get("nmpoliza")
-									) : null
+							,"P".equals(tipolote) ? endososDAO.obtenerNtramiteLote( movAgente.get("cdunieco")
+																					  ,movAgente.get("cdramo")
+																					  ,movAgente.get("estado")
+																					  ,movAgente.get("nmpoliza")
+																					  ,movAgente.get("nmsuplem")
+																						) : null
 							,"R".equals(tipolote) ? movAgente.get("nmrecibo") : null
 							,StringUtils.isBlank(movAgente.get("orden")) ? "1" : movAgente.get("orden")
 							);
