@@ -914,4 +914,6 @@ public interface EndososDAO
     public List<Map<String,String>> obtieneGruposTramiteClonar(Map<String, String> params) throws Exception;
     
     public List<Map<String,String>> obtenerSocioFamilia(Map<String, String> params)throws Exception;    
+    
+    public String obtenerNtramiteLote(String cdunieco,String cdramo,String estado,String nmpoliza, String nmsumplem)throws ApplicationException,Exception;
 }

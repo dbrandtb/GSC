@@ -6738,5 +6738,49 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public String obtenerNtramiteLote(String cdunieco,String cdramo,String estado,String nmpoliza, String nmsuplem)throws ApplicationException,Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>();
+		logger.debug("cdunieco, cdramo, estado, nmpoliza,  nmsuplem{}",cdunieco, cdramo, estado, nmpoliza,  nmsuplem);
+		
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		
+		Map<String,Object> procRes = ejecutaSP(new ObtenerNtramiteLote(this.getDataSource()), params);
+		
+		String ntramite = (String) procRes.get("pv_ntramite_o");
+		
+		if(StringUtils.isBlank(ntramite))
+		{
+			throw new ApplicationException(Utils.join("No hay suplemento  ",ntramite));
+		}
+		
+		return ntramite;
+		
+	}
+	
+	protected class ObtenerNtramiteLote extends StoredProcedure
+	{
+
+		protected ObtenerNtramiteLote(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_GET_TRAMITE_X_NMSUPLEM");
+
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	    
 }

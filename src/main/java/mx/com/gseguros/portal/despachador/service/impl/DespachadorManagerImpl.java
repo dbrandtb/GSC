@@ -831,6 +831,22 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 if (sinGrabarDetalle == false) {
                     paso = "Guardando detalle";
                     logger.debug(paso);
+                    
+                    mesaControlDAO.movimientoDetalleTramite(
+                            ntramite,
+                            fechaHoy,
+                            null, // cdclausu
+                            result.getMessage(),
+                            cdusuariSes,
+                            null, // cdmotivo
+                            cdsisrolSes,
+                            permisoAgente ? "S" : "N",
+                            null,
+                            null,
+                            EstatusTramite.REASIGNADO.getCodigo(),// status,
+                            true // cerrado
+                            );
+                    
                     mesaControlDAO.movimientoDetalleTramite(
                             ntramite,
                             fechaHoy,
