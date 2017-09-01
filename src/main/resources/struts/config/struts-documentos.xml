@@ -23,14 +23,6 @@
             </result>
         </action>
 		
-		<action name="verficiaExiteDocumentoExt" class="documentosPolizaAction" method="verficiaExiteDocumentoExt">
-		    <result name="success" type="json" />
-		</action>
-		
-		<action name="subirArchivoHistorialMedicinaPrev" class="beanSubirArchivo" method="subirArchivoHistorialMedicinaPrev">
-            <result type="json" />
-        </action>
-		
 		<action name="ventanaDocumentosPoliza" class="documentosPolizaAction" method="ventanaDocumentosPoliza">
 		    <result name="success">/jsp/extjs4/ventanaDocumentosPoliza.jsp</result>
 		</action>
@@ -76,14 +68,7 @@
         <action name="borrarDocumento" class="beanSubirArchivo" method="borrarDocumento">
             <result name="success" type="json" />
         </action>
-        
-        <action name="documentosXFamilia" class="documentosPolizaAction" method="documentosXFamilia">
-            <result name="success" type="json" />
-        </action>
-        
-        <action name="ejecutaFusionFam" class="documentosPolizaAction" method="ejecutaFusionFam">
-            <result name="success" type="json" />
-        </action>
+
 	</package>
 
 </struts>

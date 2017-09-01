@@ -57,7 +57,6 @@ var _URL_ValidaLayoutConfigExcel        	= '<s:url namespace="/siniestros"   act
 var _URL_VALIDA_COBASEGURADOS				= '<s:url namespace="/siniestros" 	action="validaLimiteCoberturaAsegurados"/>';
 var _URL_VALIDA_COBASEGURADOSCR				= '<s:url namespace="/siniestros" 	action="validarMultiplesCRSISCO"/>';
 var _URL_VALIDA_IMPASEGURADOSINIESTRO		= '<s:url namespace="/siniestros" 	action="validaImporteTramiteAsegurados"/>';
-var _URL_CREA_TRAMITES_LAYOUT				= '<s:url namespace="/siniestros"	action="crearTramitesLayout" />';
 
 
 var windowLoader;
@@ -117,7 +116,6 @@ var msgWindow;
 	        width       : 600,
 	        height      : 400,
 	        autoScroll  : true,
-	        cls         : 'VENTANA_DOCUMENTOS_CLASS',
 	        loader      : {
 	            url     : _UrlDocumentosPoliza,
 	            params  : {
@@ -365,7 +363,6 @@ var msgWindow;
 											,columns    : 2
 											,width      : 250
 											,style      : 'margin:5px;'
-											,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 											,items      :
 											[
 												{
@@ -373,13 +370,12 @@ var msgWindow;
 													,itemId     : 'SWAGENTE2'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'S'
-													,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 												}
 												,{
 													boxLabel    : 'No'
 													,name       : 'SWAGENTE2'
 													,inputValue : 'N'
-													,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+													,checked    : true
 												}
 											]
 										}],
@@ -633,7 +629,6 @@ var msgWindow;
        	                        ,columns    : 2
        	                        ,width      : 250
        	                        ,style      : 'margin:5px;'
-       	                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
        	                        ,items      :
        	                        [
        	                            {
@@ -641,13 +636,12 @@ var msgWindow;
        	                                ,itemId     : 'SWAGENTE2'
        	                                ,name       : 'SWAGENTE2'
        	                                ,inputValue : 'S'
-       	                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
        	                            }
        	                            ,{
        	                                boxLabel    : 'No'
        	                                ,name       : 'SWAGENTE2'
        	                                ,inputValue : 'N'
-                                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                        ,checked    : true
        	                            }
        	                        ]
        	                    }],
@@ -1436,7 +1430,6 @@ var msgWindow;
 				        	                        ,columns    : 2
 				        	                        ,width      : 250
 				        	                        ,style      : 'margin:5px;'
-				        	                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 				        	                        ,items      :
 				        	                        [
 				        	                            {
@@ -1444,13 +1437,12 @@ var msgWindow;
 				        	                                ,itemId     : 'SWAGENTE3'
 				        	                                ,name       : 'SWAGENTE3'
 				        	                                ,inputValue : 'S'
-				        	                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 				        	                            }
 				        	                            ,{
 				        	                                boxLabel    : 'No'
 				        	                                ,name       : 'SWAGENTE3'
 				        	                                ,inputValue : 'N'
-                                                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                                            ,checked    : true
 				        	                            }
 				        	                        ]
 				        	                    }],
@@ -1577,7 +1569,6 @@ var msgWindow;
        	                        ,columns    : 2
        	                        ,width      : 250
        	                        ,style      : 'margin:5px;'
-       	                        ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
        	                        ,items      :
        	                        [
        	                            {
@@ -1585,13 +1576,12 @@ var msgWindow;
        	                                ,itemId     : 'SWAGENTE5'
        	                                ,name       : 'SWAGENTE5'
        	                                ,inputValue : 'S'
-       	                                ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
        	                            }
        	                            ,{
        	                                boxLabel    : 'No'
        	                                ,name       : 'SWAGENTE5'
        	                                ,inputValue : 'N'
-                                        ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+                                        ,checked    : true
        	                            }
        	                        ]
        	                    }],
@@ -2061,32 +2051,7 @@ var msgWindow;
 			}
 		});
 	}
-	
-	function crearReclamosLayout(button,grid,rowIndex,colIndex){
-		var form = button.up().up();
-		form.setLoading(true);
-		Ext.Ajax.request({
-				url: _URL_CREA_TRAMITES_LAYOUT,
-			success: function(response, opts){
-				debug("success");
-				var respuesta = Ext.decode(response.responseText);
-				debug("Respuesta crearReclamosLayout ", respuesta);
-				if(respuesta.success){
-					form.setLoading(false);
-					centrarVentanaInterna(mensajeCorrecto('Aviso',respuesta.mensaje));
-				}else{
-					form.setLoading(false);
-					centrarVentanaInterna(mensajeWarning(respuesta.mensaje));
-				}
-			},
-			failure: function(){
-				debug("failure");
-				mcdinGrid.setLoading(false);
-				mensajeError("Falla en proceso: crearReclamosLayout");
-			}
-		});
-	}
-	
+
 	Ext.onReady(function(){
 		    Ext.Ajax.timeout = 1000*60*15; // 15 minutos
 		    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });

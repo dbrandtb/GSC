@@ -95,15 +95,15 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
             setLocale(request);
             processUpload(request, saveDir);
         } catch (FileUploadBase.SizeLimitExceededException e) {
-        	
+            //Validacion de archivos mayor a 10MB
         	log.error("Error al subir archivo=", e);
         	String errorKey = "SK_ERROR";
         	request.getSession(true).setAttribute(errorKey, new StringBuilder()
         			.append("El tama\u00F1o m\u00E1ximo del archivo es de ")
         			.append(maxSize/1024/1024)
         			.append(" MB.").toString());
-        	
-            if (LOG.isWarnEnabled()) {
+        	//Fin de validacion de archivo mayor a 10MB
+        	if (LOG.isWarnEnabled()) {
                 LOG.warn("Request exceeded size limit!", e);
             }
             String errorMessage = buildErrorMessage(e, new Object[]{e.getPermittedSize(), e.getActualSize()});
@@ -200,16 +200,29 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
         upload.setSizeMax(maxSize);
         //jtezva agregado para monitorear el progreso al subir archivo
         String uploadKey="SK_PROGRESS_LISTENER";
+        //Validacion para archivos mayores a 10MB
         String errorKey = "SK_ERROR";
         log.debug("llave de sesion para subir archivo: "+uploadKey);
         servletRequest.getSession(true).setAttribute(uploadKey, new CustomProgressListener());
         servletRequest.getSession(true).setAttribute(errorKey, null);
+        //log.debug("llave de sesion para subir archivo: "+uploadKey);
+        //servletRequest.getSession(true).setAttribute(uploadKey, new CustomProgressListener());
+        //Fin del cambio para validar archivos mayores a 10MB
         CustomProgressListener pl=(CustomProgressListener) servletRequest.getSession(true).getAttribute(uploadKey);
         upload.setProgressListener(pl);
         pl.setEstado(CustomProgressListener.SUBIENDO);
         log.debug("Upload started "+System.currentTimeMillis());
-        //fin modificaciones
-        return upload.parseRequest(createRequestContext(servletRequest));
+        //return upload.parseRequest(createRequestContext(servletRequest));
+        List<FileItem> lista = new ArrayList<FileItem>();
+        try {
+        	lista = upload.parseRequest(createRequestContext(servletRequest));
+        } catch(Exception e) {
+        	log.error("Error al subir archivo:", e);
+        	servletRequest.getSession(true).setAttribute(errorKey, "El tama\u00F1o m\u00E1ximo del archivo es de 10 MB");
+            throw new FileUploadException("Error al subir archivo", e);
+        }
+        return lista;
+        //fin de moficiaciones
     }
 
     private DiskFileItemFactory createDiskFileItemFactory(String saveDir) {

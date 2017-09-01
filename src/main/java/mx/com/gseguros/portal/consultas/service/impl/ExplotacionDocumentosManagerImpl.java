@@ -35,6 +35,7 @@ import mx.com.gseguros.portal.consultas.model.DescargaLotePdfVO;
 import mx.com.gseguros.portal.consultas.model.DocumentoReciboParaMostrarDTO;
 import mx.com.gseguros.portal.consultas.model.ImpresionLayoutVO;
 import mx.com.gseguros.portal.consultas.service.ExplotacionDocumentosManager;
+import mx.com.gseguros.portal.cotizacion.model.AgentePolizaVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.documentos.model.Documento;
 import mx.com.gseguros.portal.emision.dao.EmisionDAO;
@@ -42,6 +43,7 @@ import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.model.Reporte;
 import mx.com.gseguros.portal.general.service.ImpresionService;
 import mx.com.gseguros.portal.general.service.ReportesManager;
@@ -285,7 +287,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null //swimpres
 						,null //cdtipflu
 						,null //cdflujomc
-						,valores, null, null, null, null, false, null
+						,valores, null
 						);
 				
 				mesaControlDAO.movimientoDetalleTramite(
@@ -296,11 +298,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null                      //cdmotivo
 						,cdsisrol
-						,"S"
-						,null
-						,null
-						,EstatusTramite.IMPRESION_PENDIENTE.getCodigo()
-						,false
+						,"S", null, null
 						);
 				
 				for(Map<String,String>movAgente:movsAgente)
@@ -317,12 +315,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							,movAgente.get("nmsuplem")
 							,tipolote
 							//,"P".equals(tipolote) ? movAgente.get("ntramite") : null
-							,"P".equals(tipolote) ? endososDAO.obtenerNtramiteLote( movAgente.get("cdunieco")
-																					  ,movAgente.get("cdramo")
-																					  ,movAgente.get("estado")
-																					  ,movAgente.get("nmpoliza")
-																					  ,movAgente.get("nmsuplem")
-																						) : null
+							,"P".equals(tipolote) ? endososDAO.obtenerNtramiteEmision(
+									movAgente.get("cdunieco")
+									,movAgente.get("cdramo")
+									,movAgente.get("estado")
+									,movAgente.get("nmpoliza")
+									) : null
 							,"R".equals(tipolote) ? movAgente.get("nmrecibo") : null
 							,StringUtils.isBlank(movAgente.get("orden")) ? "1" : movAgente.get("orden")
 							);
@@ -393,7 +391,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,null         //codidocu
 						,TipoTramite.IMPRESION.getCdtiptra()
 						,"0"
-						,Documento.REMESA_IMPRESION_LOTE, null, null, false
+						,Documento.REMESA_IMPRESION_LOTE, null, null
 						);
 				
 				paso = "Generando remesa excel";
@@ -432,7 +430,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,TipoTramite.IMPRESION.getCdtiptra()
 						,null           //cdorddoc
 						,null           //cdmoddoc
-, null, null, false
+, null, null
 						);
 				
 			}
@@ -574,7 +572,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
                                     , hoja.length() > 1 ? ("M".equals(papelDoc) ? charola2 : charola1) : charola1,
                                     (esDuplex && swImpDpxArchivo));
                         } catch (Exception e) {
-                        	logger.error("Error al ejecutar el comando de impresion: ",e);
                             String dsdocume = archivo.get("dsdocume");
                             hayErrores.set(true);
                             BufferedWriter bw = new BufferedWriter(new FileWriter(noExiste, true));
@@ -661,7 +658,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
                                                                 : ("papeler\u00EDa y recibos"))),
                                         ")"),
                                 cdusuari, null // cdmotivo
-                                , cdsisrol, "S", null, null, remesa.get("status"), impresos);
+                                , cdsisrol, "S", null, null);
             }
 
         } catch (Exception ex) {
@@ -944,11 +941,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null       //cdmotivo
 						,cdsisrol
-						,"S"
-						,null
-						,null
-						,status
-						,true
+						,"S", null, null
 						);
 			}
 			catch(Exception ex)
@@ -972,11 +965,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				));
 	}
 	
-	
-	/**
-	 * Se comenta porque ya no se usa, aunque está funcional
-	 */
-	/*
 	@Override
 	public Map<String,String> generarRemesaEmisionEndoso(
 			String cdusuari
@@ -1129,11 +1117,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null                      //cdmotivo
 						,cdsisrol
-						,"S"
-						,null
-						,null
-						,EstatusTramite.IMPRESION_PENDIENTE.getCodigo()
-						,true
+						,"S", null, null
 						);
 				
 				paso = "Registrando relaci\u00F3n de movimiento";
@@ -1274,7 +1258,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		
 		return result;
 	}
-	*/
 	
 	@Override
 	public Map<String,String> marcarImpresionOperacion(
@@ -1285,7 +1268,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			,String estado
 			,String nmpoliza
 			,String marcar
-			,String ntramiteIn
 			)throws Exception
 	{
 		StringBuilder sb = new StringBuilder(Utils.log(
@@ -1298,7 +1280,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 				,"\n@@@@@@ estado="     , estado
 				,"\n@@@@@@ nmpoliza="   , nmpoliza
 				,"\n@@@@@@ marcar="     , marcar
-				,"\n@@@@@@ ntramiteIn=" , ntramiteIn
 				));
 		
 		Map<String,String> result = new HashMap<String,String>();
@@ -1312,14 +1293,10 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 			String nmsuplem = consultasDAO.recuperarUltimoNmsuplem(cdunieco,cdramo,estado,nmpoliza);
 			
 			
-			String ntramite = ntramiteIn;
-			
-			if (StringUtils.isBlank(ntramite)) {
 				paso = "Recuperando tr\u00e1mite";
 				sb.append("\n").append(paso);
 				
-				ntramite = consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
-			}
+			String ntramite = consultasDAO.recuperarTramitePorNmsuplem(cdunieco,cdramo,estado,nmpoliza,nmsuplem);
 			
 			paso = "Marcando tr\u00e1mite";
 			sb.append("\n").append(paso);
@@ -1354,11 +1331,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,cdusuari
 						,null                      //cdmotivo
 						,cdsisrol
-						,"S"
-						,null
-						,null
-						,EstatusTramite.ENTREGA_CORREO.getCodigo()
-						,true
+						,"S", null, null
 						);
 			}
 		}
@@ -1626,7 +1599,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
                                                                 : ("papeler\u00EDa y recibos"))),
                                         ")"),
                                 cdusuari, null // cdmotivo
-                                , cdsisrol, "S", null, null, remesa.get("status"), impresos);
+                                , cdsisrol, "S", null, null);
             }
 
         } catch (Exception ex) {
@@ -1847,7 +1820,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
                                                                 : ("papeler\u00EDa y recibos"))),
                                         ")"),
                                 cdusuari, null // cdmotivo
-                                , cdsisrol, "S", null, null, remesa.get("status"), impresos);
+                                , cdsisrol, "S", null, null);
             }
 
         } catch (Exception ex) {
@@ -2058,140 +2031,226 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 		return listaArmada;
 	}
 	
-		
-		   /**
-	     * Recibe una lista de documentos para regenerarlos en el caso de que no existan o esten corruptos
-	     * 
-	     * @param documentos Documentos a verificar, si no existen o estan corruptos se regeneraran
-	     * @param archivoErrrores  Archivo de errores con la lista de documentos que se intentaron regenerar y fallaron
-	     * @param cdtipram Tipo de Ramo
-	     * @param hayErrores Indica si se escribieron errores en el archivo de errores
-	     * @param lote      Numero de lote (opcional)
-	     * @param cdusuari  Usuario que ejecuta el proceso (opcional)
-	     * @return Lista de archivos correctos (ya existentes y regenerados exitosamente)
-	     * @throws Exception
-	     */
-	    private List<Map<String, String>> regeneraDocs(List<Map<String, String>> documentos, File archivoErrrores,
-	            String cdtipram, AtomicBoolean hayErrores, String lote, String cdusuari) throws Exception {
-	        
-	        logger.debug(Utils.join("@@@@@@@@@@@@@@@@@@@@@@@@"
-	                               ,"@@@@@ regeneraDocs"
-	                               ,"@@@@@ documentos = ", documentos
-	                              , "@@@@@ cdtipram = ", cdtipram));
-	        List<Map<String, String>> docsExisten = new ArrayList<Map<String, String>>();
-	        try{
-	    
-	            BufferedWriter bw = new BufferedWriter(new FileWriter(archivoErrrores, true));
-	            bw.append("POLIZA,DOCUMENTO,DESCRIPCION\r\n");
-	            // bw.close();
-	    
-	            for (Map<String, String> archivo : documentos) {
-	    
-	                String ntramite = archivo.get("ntramite");
-	                String cddocume = archivo.get("cddocume");
-	                String dsdocume = archivo.get("dsdocume");
-	                String nmpoliza = archivo.get("nmpoliza");
-	                String filePath = Utils.join(rutaDocumentosPoliza, "/", ntramite, "/", cddocume);
-	                boolean existe = true;
-	                logger.debug(Utils.join("\ntramite,archivo=", ntramite, ",", cddocume));
-	    
-	                if (cddocume.toLowerCase().indexOf("://") != -1) {
-	    
-	                    logger.debug("Usando archivo local descargado");
-	    
-	                    filePath = archivo.get("descargadoEn");
-	    
-	                    if (StringUtils.isBlank(filePath)) {
-	    
-	                        logger.error(Utils.join("Error en descarga-: ", cddocume));
-	                        continue;
-	                    }
-	    
-	                }
-	                File f = new File(filePath);
-	                logger.debug("Verificando si existe el archivo");
-	    
-	                if (!f.exists() || !DocumentosUtils.verificaPDF(f)) {
-	    
-	                    if (cdtipram.trim().equals("10")) {
-	    
-	                        String dirTramite = Utils.join(rutaDocumentosPoliza, "/", ntramite, "/");
-	                        logger.debug(Utils.join("\n@@@@ Creando directorio : ", dirTramite));
-	                        File dir = new File(dirTramite);
-	                        dir.mkdirs();
-	                        logger.debug("Regenerando Docs");
-	                        mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
-	                    }
-	                    
-	                    if(lote!= null && cdusuari!=null && nombreRemesaPdf.equals(cddocume)){
-	                        try{
-	                                String urlReporteCotizacion = Utils.join(
-	                                        rutaServidorReports
-	                                      , "?p_lote="     , lote
-	                                      , "&p_usr_imp="  , cdusuari
-	                                      , "&p_ntramite=" , ntramite
-	                                      , "&destype=cache"
-	                                      , "&desformat=PDF"
-	                                      , "&userid="        , passServidorReports
-	                                      , "&ACCESSIBLE=YES"
-	                                      , "&report="        , nombreReporteRemesa
-	                                      , "&paramform=no"
-	                                      );
-	                              
-	                              String pathRemesa=Utils.join(
-	                                      rutaDocumentosPoliza
-	                                      ,"/",ntramite
-	                                      ,"/",nombreRemesaPdf
-	                                      );
-	                              
-	                              HttpUtil.generaArchivo(urlReporteCotizacion, pathRemesa);
-	                        }catch(Exception e){
-	                            logger.debug(Utils.join("Error tratando de regenerar remesa lote:",lote," tramite: ",ntramite));
-	                        }
-	                    }
-	                    
-	                    
-	    
-	                    f = new File(filePath);
-	    
-	                    if (!f.exists() || !DocumentosUtils.verificaPDF(f)) {
-	    
-	                        logger.debug(Utils.join("\n@@@@No existe el archivo: ", filePath, "\n", archivo));
-	                        existe = false;
-	    
-	                    }
-	    
-	                }
-	    
-	                if (!existe) {
-	                    logger.debug("Escribiendo errores");
-	                    bw.append(Utils.join(nmpoliza == null ? "" : nmpoliza, ",\"", cddocume, "\"", ",\"", dsdocume, "\"",
-	                            "\r\n"));
-	    
-	                    hayErrores.set(true);
-	    
-	                } else {
-	    
-	                    docsExisten.add(archivo);
-	                }
-	    
-	            }
-	            bw.close();
-	        }catch(Exception e){
-	            Utils.generaExcepcion(e, "Error regenerando documentos");
-	        }
-	        
-	        logger.debug(Utils.log(
-	                
-	                "\n@@@@@@ regeneraDocs @@@@@@"
-	               ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-	               ));
+		private List<Map<String, String>> regeneraDocs( List<Map<String, String>> documentos
+	                                                , File errores
+	                                                , String cdtipram
+	                                                , AtomicBoolean hayErrores
+	                                                ) 
+	                                                        throws Exception {
+        logger.debug(Utils.join("@@@@@@@@@@@@@@@@@@@@@@@@"
+                               ,"@@@@@ regeneraDocs"
+                               ,"@@@@@ documentos = ", documentos
+                              , "@@@@@ cdtipram = ", cdtipram));
+        List<Map<String, String>> docsExisten = new ArrayList<Map<String, String>>();
+        try{
+            
+    
+            BufferedWriter bw = new BufferedWriter(new FileWriter(errores, true));
+            bw.append("POLIZA,DOCUMENTO,DESCRIPCION\r\n");
+            // bw.close();
+    
+            for (Map<String, String> archivo : documentos) {
+    
+                String ntramite = archivo.get("ntramite");
+                String cddocume = archivo.get("cddocume");
+                String dsdocume = archivo.get("dsdocume");
+                String nmpoliza = archivo.get("nmpoliza");
+                String filePath = Utils.join(rutaDocumentosPoliza, "/", ntramite, "/", cddocume);
+                boolean existe = true;
+                logger.debug(Utils.join("\ntramite,archivo=", ntramite, ",", cddocume));
+    
+                if (cddocume.toLowerCase().indexOf("://") != -1) {
+    
+                    logger.debug("Usando archivo local descargado");
+    
+                    filePath = archivo.get("descargadoEn");
+    
+                    if (StringUtils.isBlank(filePath)) {
+    
+                        logger.error(Utils.join("Error en descarga-: ", cddocume));
+                        continue;
+                    }
+    
+                }
+                File f = new File(filePath);
+                logger.debug("Verificando si existe el archivo");
+    
+                if (!f.exists() || !DocumentosUtils.verificaPDF(f)) {
+    
+                    if (cdtipram.trim().equals("10")) {
+    
+                        String dirTramite = Utils.join(rutaDocumentosPoliza, "/", ntramite, "/");
+                        logger.debug(Utils.join("\n@@@@ Creando directorio : ", dirTramite));
+                        File dir = new File(dirTramite);
+                        dir.mkdirs();
+                        logger.debug("Regenerando Docs");
+                        mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
+                    }
+                    
+                    
+    
+                    f = new File(filePath);
+    
+                    if (!f.exists() || !DocumentosUtils.verificaPDF(f)) {
+    
+                        logger.debug(Utils.join("\n@@@@No existe el archivo: ", filePath, "\n", archivo));
+                        existe = false;
+    
+                    }
+    
+                }
+    
+                if (!existe) {
+                    logger.debug("Escribiendo errores");
+                    bw.append(Utils.join(nmpoliza == null ? "" : nmpoliza, ",\"", cddocume, "\"", ",\"", dsdocume, "\"",
+                            "\r\n"));
+    
+                    hayErrores.set(true);
+    
+                } else {
+    
+                    docsExisten.add(archivo);
+                }
+    
+            }
+            bw.close();
+        }catch(Exception e){
+            Utils.generaExcepcion(e, "Error regenerando documentos");
+        }
+        
+        logger.debug(Utils.log(
+                
+                "\n@@@@@@ regeneraDocs @@@@@@"
+               ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+               ));
 
-	        return docsExisten;
-	    }	
-		
-		
-		
+        return docsExisten;
+    }
+	
+	private List<Map<String, String>> regeneraDocs( List<Map<String, String>> documentos
+	                                                , File errores
+	                                                , String cdtipram
+	                                                , AtomicBoolean hayErrores
+	                                                , String lote
+	                                                , String cdusuari) 
+	                                                        throws Exception {
+        logger.debug(Utils.join("@@@@@@@@@@@@@@@@@@@@@@@@"
+                               ,"@@@@@ regeneraDocs"
+                               ,"@@@@@ documentos = ", documentos
+                              , "@@@@@ cdtipram = ", cdtipram));
+        List<Map<String, String>> docsExisten = new ArrayList<Map<String, String>>();
+        try{
+            
+    
+            BufferedWriter bw = new BufferedWriter(new FileWriter(errores, true));
+            bw.append("POLIZA,DOCUMENTO,DESCRIPCION\r\n");
+            // bw.close();
+    
+            for (Map<String, String> archivo : documentos) {
+    
+                String ntramite = archivo.get("ntramite");
+                String cddocume = archivo.get("cddocume");
+                String dsdocume = archivo.get("dsdocume");
+                String nmpoliza = archivo.get("nmpoliza");
+                String filePath = Utils.join(rutaDocumentosPoliza, "/", ntramite, "/", cddocume);
+                boolean existe = true;
+                logger.debug(Utils.join("\ntramite,archivo=", ntramite, ",", cddocume));
+    
+                if (cddocume.toLowerCase().indexOf("://") != -1) {
+    
+                    logger.debug("Usando archivo local descargado");
+    
+                    filePath = archivo.get("descargadoEn");
+    
+                    if (StringUtils.isBlank(filePath)) {
+    
+                        logger.error(Utils.join("Error en descarga-: ", cddocume));
+                        continue;
+                    }
+    
+                }
+                File f = new File(filePath);
+                logger.debug("Verificando si existe el archivo");
+    
+                if (!f.exists() || !DocumentosUtils.verificaPDF(f)) {
+    
+                    if (cdtipram.trim().equals("10")) {
+    
+                        String dirTramite = Utils.join(rutaDocumentosPoliza, "/", ntramite, "/");
+                        logger.debug(Utils.join("\n@@@@ Creando directorio : ", dirTramite));
+                        File dir = new File(dirTramite);
+                        dir.mkdirs();
+                        logger.debug("Regenerando Docs");
+                        mesaControlDAO.regeneraRemesaReport(ntramite, cddocume);
+                    }
+                    
+                    if(nombreRemesaPdf.equals(cddocume)){
+                        try{
+                                String urlReporteCotizacion = Utils.join(
+                                        rutaServidorReports
+                                      , "?p_lote="     , lote
+                                      , "&p_usr_imp="  , cdusuari
+                                      , "&p_ntramite=" , ntramite
+                                      , "&destype=cache"
+                                      , "&desformat=PDF"
+                                      , "&userid="        , passServidorReports
+                                      , "&ACCESSIBLE=YES"
+                                      , "&report="        , nombreReporteRemesa
+                                      , "&paramform=no"
+                                      );
+                              
+                              String pathRemesa=Utils.join(
+                                      rutaDocumentosPoliza
+                                      ,"/",ntramite
+                                      ,"/",nombreRemesaPdf
+                                      );
+                              
+                              HttpUtil.generaArchivo(urlReporteCotizacion, pathRemesa);
+                        }catch(Exception e){
+                            logger.debug(Utils.join("Error tratando de regenerar remesa lote:",lote," tramite: ",ntramite));
+                        }
+                    }
+                    
+                    
+    
+                    f = new File(filePath);
+    
+                    if (!f.exists() || !DocumentosUtils.verificaPDF(f)) {
+    
+                        logger.debug(Utils.join("\n@@@@No existe el archivo: ", filePath, "\n", archivo));
+                        existe = false;
+    
+                    }
+    
+                }
+    
+                if (!existe) {
+                    logger.debug("Escribiendo errores");
+                    bw.append(Utils.join(nmpoliza == null ? "" : nmpoliza, ",\"", cddocume, "\"", ",\"", dsdocume, "\"",
+                            "\r\n"));
+    
+                    hayErrores.set(true);
+    
+                } else {
+    
+                    docsExisten.add(archivo);
+                }
+    
+            }
+            bw.close();
+        }catch(Exception e){
+            Utils.generaExcepcion(e, "Error regenerando documentos");
+        }
+        
+        logger.debug(Utils.log(
+                
+                "\n@@@@@@ regeneraDocs @@@@@@"
+               ,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+               ));
+
+        return docsExisten;
+    }
+	
 	public ImpresionLayoutVO verificaLayout(
 			List<Map<String,String>> layout,
 			String tpdocum,
@@ -2369,7 +2428,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	            // Se intenta regenerar archivos si no existen, devuelve los
 	            // archivos que si existen y crea una lista en un archivo con los
 	            // documentos no encontrados
-	            documentos = regeneraDocs(documentos, noExiste, cdtipram, hayErrores,null,null);
+	            documentos = regeneraDocs(documentos, noExiste, cdtipram, hayErrores);
 
 	            documentos = armaJuegosDeImpresiones(documentos);
 
@@ -2618,7 +2677,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 	
 	/**
      * Descarga si hay archivos remotos en la lista y agrega un campo
-     * [descargadoEn] que contiene la ruta del archivo local ya descargado.
+     * [descargadoEn] que contiene la ruta del archivo local ya descargado
      * 
      * @param original
      */

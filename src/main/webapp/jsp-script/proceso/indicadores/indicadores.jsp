@@ -47,13 +47,6 @@
 		
 		var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 		var _CAT_IDCIERRES      = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@IDCIERRES"/>';
-		//
-		var _CAT_ZONAS_SUCURSALES = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
-		//var _CAT_RAMOS = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOS"/>';
-		var _CAT_RAMOS = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOS_X_TIPORAMO"/>';
-		var _CAT_SUBRAMOS = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBRAMOS"/>';
-		var _CAT_AGENTES = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>';
-		var _CAT_TRAMITES = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_TIPOS_TRAMITE"/>';
 		
 		////// urls //////
 		
@@ -71,67 +64,14 @@
 		
 		Ext.onReady(function() {
 			
-			//Contingencia para aumentar timeot de consultas por error en produccion
-			Ext.Ajax.timeout = 5*60*1000; //5 minutos
-	    	Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
-	    	Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
-	    	Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
 			
 		    ////// modelos //////
-		    
-		    Ext.define('IdTipoSeguroModel', {
-                extend: 'Ext.data.Model',
-                fields: [
-                    {type:'string', name:'cdtipram'},
-                    {type:'string', name:'dstipram'}
-                ]
-            });
 		    
 		    Ext.define('IdcierresModel', {
                 extend: 'Ext.data.Model',
                 fields: [
                     {type:'string', name:'idcierre'},
                     {type:'string', name:'fecha_cierre'}
-                ]
-            });
-		    
-		    Ext.define('IdRamoPadreModel', {
-                extend: 'Ext.data.Model',
-                fields: [
-                    {type:'string', name:'key'},
-                    {type:'string', name:'value'}
-                ]
-            });
-		    
-		    Ext.define('IdRamosModel', {
-                extend: 'Ext.data.Model',
-                fields: [
-                    {type:'string', name:'key'},
-                    {type:'string', name:'value'}
-                ]
-            });
-		    
-		    Ext.define('IdAgentesModel', {
-                extend: 'Ext.data.Model',
-                fields: [
-                    {type:'string', name:'key'},
-                    {type:'string', name:'value'}
-                ]
-            });
-		    
-		    Ext.define('IdSucursalesModel', {
-                extend: 'Ext.data.Model',
-                fields: [
-                    {type:'string', name:'key'},
-                    {type:'string', name:'value'}
-                ]
-            });
-		    
-		    Ext.define('IdTramitesModel', {
-                extend: 'Ext.data.Model',
-                fields: [
-                    {type:'string', name:'key'},
-                    {type:'string', name:'value'}
                 ]
             });
 		    
@@ -179,8 +119,8 @@
 		    Ext.define('TramitesLineaNegocioPorSucursalModel', {
 		        extend: 'Ext.data.Model',
 		        fields: [
-		            {type:'string', name:'SUCURSAL'},
-		            {type:'string', name:'DS_SUCURSAL'},
+		            {type:'string', name:'CDUNIECO'},
+		            {type:'string', name:'DSUNIECO'},
 		            {type:'string', name:'SALUD'},
 		            {type:'string', name:'AUTOS'}
 		        ]
@@ -204,8 +144,8 @@
 		            {type:'string', name:'NTRAMITE'},
 		            {type:'string', name:'FECHA_RECEP_TRAMITE'},
 		            {type:'string', name:'FECHA_DESDE'},
-		            {type:'string', name:'SUCURSAL'},
-		            {type:'string', name:'DS_SUCURSAL'},
+		            {type:'string', name:'CDUNIECO'},
+		            {type:'string', name:'DSUNIECO'},
 		            {type:'string', name:'CD_TIPO_TRAMITE'},
 		            {type:'string', name:'TIPO_TRAMITE'},
 		            {type:'string', name:'CD_LINEA_NEGOCIO'},
@@ -242,9 +182,8 @@
 		            {type:'string', name:'CDAGENTE'},
 		            {type:'string', name:'CDETAPA'},
 		            {type:'string', name:'CDRAMO'},
-		            {type:'string', name:'SUCURSAL'},
+		            {type:'string', name:'CDUNIECO'},
 		            {type:'string', name:'NMPOLIZA'},
-		            {type:'string', name:'NMPOLIEXT'},
 		            {type:'string', name:'NMSOLICI'},
 		            {type:'string', name:'CDUSUARI_ACT'},
 		            {type:'string', name:'DSUSUARI_ACT'},
@@ -256,93 +195,19 @@
 		            {type:'string', name:'CLIENTE'},
 		            {type:'string', name:'DSRAMO'},
 		            {type:'string', name:'TIPO_TRAMITE'},
-		            {type:'string', name: 'DESC_TIPO_TRAMITE'},
 		            {type:'string', name:'DSUNIECO'},
 		            {type:'string', name:'STATUS_TRAMITE'},
 		            {type:'string', name:'DS_STATUS_TRAMITE'},
 		            {type:'string', name:'ETAPA'},
 		            {type:'string', name:'FECHA_DESDE'},
 		            {type:'string', name:'FECHA_RECEP_TRAMITE'},
-		            {type:'string', name:'NOMBRE_AGENTE'},
-		            {type:'string', name:'OFICINA_USR_ACT'},
-		            {type:'string', name:'DS_OFICINA_USR_ACT'},
-		            {type:'string', name:'CDUSUARI_ANT'},
-		            {type:'string', name:'DSUSUARI_ANT'},
-		            {type:'string', name:'OFICINA_USR_ANT'},
-		            {type:'string', name:'DS_OFICINA_USR_ANT'},
-		            {type:'string', name: 'CDPERSON'},
-					{type:'string', name: 'OFICINA_USR_CREA'},
-					{type:'string', name: 'DS_OFICINA_USR_CREA'}
-		            
-		        ]
-		    });
-		    
-		    Ext.define('DetalleTrazabilidadModel', {
-		        extend: 'Ext.data.Model',
-		        fields: [
-		        	{type:'string', name:'CDUNIECO'	         },
-					{type:'string', name:'EVENTO'	         },
-					{type:'string', name:'CDETAPA'	         },
-					{type:'string', name:'ETAPA'	         },
-					{type:'string', name:'NTRAMITE'	         },
-					{type:'string', name:'TIPO_FLUJO'	     },
-					{type:'string', name:'CD_TIPO_TRAMITE'	 },
-					{type:'string', name:'TIPO_TRAMITE'	     },
-					{type:'string', name:'DESC_TIPO_TRAMITE' },
-					{type:'string', name:'FECHA_RECEP_TRAMITE'},	
-					{type:'string', name:'CD_LINEA_NEGOCIO'	 },
-					{type:'string', name:'DS_LINEA_NEGOCIO'	 },
-					{type:'string', name:'STATUS_TRAMITE'	 },
-					{type:'string', name:'DS_STATUS_TRAMITE' },
-					{type:'string', name:'CDRAMO'	         },
-					{type:'string', name:'DSRAMO'	         },
-					{type:'string', name:'CDPERSON'	         },
-					{type:'string', name:'CLIENTE'	         },
-					{type:'string', name:'CDAGENTE'	         },
-					{type:'string', name:'NOMBRE_AGENTE'	 },
-					{type:'string', name:'NMPOLIZA'	         },
-					{type:'string', name:'NMPOLIEXT'         },
-					{type:'string', name:'COTIZACION'	     },
-					{type:'string', name:'CDUSUARI_CREA'	 },
-					{type:'string', name:'DSUSUARI_CREA'	 },
-					{type:'string', name:'OFICINA_USR_CREA'  },
-					{type:'string', name:'DS_OFICINA_USR_CREA'},
-					{type:'string', name:'ESTACION'	         },
-					{type:'string', name:'DS_ESTACION'	     },
-					{type:'string', name:'STATUSTRAZA'	     },
-					{type:'string', name:'DS_STATUSTRAZA'	 },
-					{type:'string', name:'CDUSUARI_INI'	     },
-					{type:'string', name:'DS_USUARIO'	     },
-					{type:'string', name:'OFICINA_USR'	     },
-					{type:'string', name:'DS_OFICINA_USR'	 },
-					{type:'string', name:'FECHAINI'	         },
-					{type:'string', name:'FECHAFIN'	         },
-					{type:'string', name:'HORAS_LAB'	     },
-					{type:'string', name:'HORAS_NORMAL'	     },
-					{type:'string', name:'CANT_INSISOS'      }
-
+		            {type:'string', name:'NOMBRE_AGENTE'}
 		        ]
 		    });
 		    
 		    ////// modelos //////
 		    
 		    ////// stores //////
-		    
-		    var storeTipoSeguro = Ext.create('Ext.data.Store', {
-			   fields:['cdtipram', 'dstipram']
-		       ,data :{ 'items': [
-			            {cdtipram: null,   dstipram: 'Seleccione'},
-			            {cdtipram: '2',    dstipram: 'AUTO'},
-			            {cdtipram: '10',   dstipram: 'SALUD'}
-			    ]}
-		    	,proxy: {
-		        	type: 'memory',
-		        	reader: {
-		            	type: 'json',
-		            	root: 'items'
-		        	}
-		    	}
-		    });
 		    
 		    var storeCierres = Ext.create('Ext.data.Store', {
 		        model     : 'IdcierresModel',
@@ -355,77 +220,10 @@
 		                type  : 'json'
 		                ,root : 'lista'
 		            }
-		            //,autoLoad : true
-		        }
-		    });
-		    
-		    storeCierres.load({
-		        callback: function(){
-		            idcierres.setValue('0');
 		        }
 		    });
     
-		    var storeRamoPadre = Ext.create('Ext.data.Store', {
-		        model     : 'IdRamoPadreModel',
-		        proxy     : {
-		            type        : 'ajax'
-		            ,url        : _URL_CARGA_CATALOGO
-		            ,extraParams: {catalogo:_CAT_RAMOS}
-		            ,reader     :
-		            {
-		                type  : 'json'
-		                ,root : 'lista'
-		            }
-		            ,autoLoad : true
-		        }
-		    
-		    });
-		    
-		    var storeAgentes = Ext.create('Ext.data.Store', {
-		        model     : 'IdAgentesModel',
-		        proxy     : {
-		            type        : 'ajax'
-		            ,url        : _URL_CARGA_CATALOGO
-		            ,extraParams: {catalogo:_CAT_AGENTES}
-		            ,reader     :
-		            {
-		                type  : 'json'
-		                ,root : 'lista'
-		            }
-		            ,autoLoad : true
-		        }
-		    });
 
-		    var storeSucursales = Ext.create('Ext.data.Store', {
-		        model     : 'IdSucursalesModel',
-		        proxy     : {
-		            type        : 'ajax'
-		            ,url        : _URL_CARGA_CATALOGO
-		            ,extraParams: {catalogo:_CAT_ZONAS_SUCURSALES}
-		            ,reader     :
-		            {
-		                type  : 'json'
-		                ,root : 'lista'
-		            }
-		            ,autoLoad : true
-		        }
-		    });
-		    
-		    var storeTramites = Ext.create('Ext.data.Store', {
-		        model     : 'IdTramitesModel',
-		        proxy     : {
-		            type        : 'ajax'
-		            ,url        : _URL_CARGA_CATALOGO
-		            ,extraParams: {catalogo:_CAT_TRAMITES}
-		            ,reader     :
-		            {
-		                type  : 'json'
-		                ,root : 'lista'
-		            }
-		            ,autoLoad : true
-		        }
-		    });
-		    
 		    var storeTramitesPorLineaNegocio = new Ext.data.Store({
 				model: 'TramitesPorLineaNegocioModel',
 				proxy: {
@@ -529,46 +327,9 @@
 				}
 			});
 			
-			var storeDetalleTrazabilidad = new Ext.data.Store({
-				model: 'DetalleTrazabilidadModel',
-				pageSize: _itemsPerPage,
-				proxy: {
-				    type: 'ajax',
-				 	url : _GLOBAL_URL_RECUPERACION,
-					reader: {
-					    type: 'json',
-					    root: 'list',
-					    totalProperty: 'total'
-					    //simpleSortMode: true
-				    }
-				}
-			});
-			
 		    ////// stores //////
 		    
 		    ////// componentes //////
-		    
-		    var idTipoSeguro = Ext.create('Ext.form.ComboBox', {
-		        name:'params.lineanegocio',
-		        fieldLabel: 'Tipo de Seguro:',
-		        displayField: 'dstipram',
-		        valueField: 'cdtipram',
-		        allowBlank:true,
-		        forceSelection: true,
-		        emptyText:'Seleccione...',
-		        typeAhead:true,
-		        typeAheadDelay:10,
-		        anyMatch:true,
-		        store: storeTipoSeguro,
-		        listeners: {
-		    		change: {
-		    			fn:function(){
-		    				cargarRamos(idTipoSeguro, idRamoPadre);
-		    			}
-		    		}
-		        }
-		    }); 
-		    
 		    
 		    var idcierres = Ext.create('Ext.form.ComboBox', {
 		        name:'params.idcierre',
@@ -580,94 +341,19 @@
 		        emptyText:'Seleccione...',
 		        store: storeCierres,
 		        listeners:{
-		        }
-		    }); 
-
-		    var idRamoPadre = Ext.create('Ext.form.ComboBox', {
-		        name:'params.cdramoPadre',
-		        fieldLabel: 'Ramo:',
-		        displayField: 'value',
-		        valueField: 'key',
-		        allowBlank:true,
-		        forceSelection: true,
-		        typeAhead:true,
-		        anyMatch:true,
-		        emptyText:'Seleccione...',
-		        queryMode: 'local',
-		        store: storeRamoPadre,
-		        listeners: {
-		    		change: {
-		    			fn:function(){
-		    				cargarSubramos(idRamos, idRamoPadre);
-		    			}
-		    		}
+		            /*change: function(cmbo, newVal, oldVal){
+		                if (!cmbo.getValue() || cmbo.getValue().length === 0) {
+		                    cmbo.reset();
+		                }      
+		            }*/
 		        }
 		    }); 
 		    
-           	var storeRamos=Ext.create('Ext.data.Store', {
-   		        model     : 'IdRamosModel',
-   		        proxy     : {
-   		            type        : 'ajax'
-   		            ,url        : _URL_CARGA_CATALOGO
-   		            ,extraParams: {
-   		            	catalogo:_CAT_SUBRAMOS//,
-   		            	//'params.idPadre':idRamoPadre.getValue()
-   		            }
-   		            ,reader     :
-   		            {
-   		                type  : 'json'
-   		                ,root : 'lista'
-   		            }
-   		        }
-   		    });
-		    
-		    var idRamos = Ext.create('Ext.form.ComboBox', {
-		        name:'params.cdramo',
-		        itemId:'params.cdramo',
-		        fieldLabel: 'SubRamo:',
-		        displayField: 'value',
-		        valueField: 'key',
-		        allowBlank:true,
-		        queryMode: 'local',
-		        forceSelection: true,
-		        //typeAhead:true,
-		        anyMatch:false,
-		        emptyText:'Seleccione...',
-		        store: storeRamos
-		    }); 
-
-		    var idAgentes = Ext.create('Ext.form.ComboBox', {
-		        name:'params.cdagente',
-		        fieldLabel: 'Agente:',
-		        displayField: 'value',
-		        valueField: 'key',
-		        allowBlank:true,
-		        emptyText:'Seleccione...',
-		        store: storeAgentes
-		    }); 
-		    
-		    var idSucursales = Ext.create('Ext.form.ComboBox', {
-		        name:'params.cdunieco',
-		        fieldLabel: 'Sucursal Emisora:',
-		        displayField: 'value',
-		        valueField: 'key',
-		        allowBlank:true,
-		        forceSelection: true,
-		        emptyText:'Seleccione...',
-		        store: storeSucursales,
-		        listeners:{}
-		    }); 
-		    
-		    var idTramites = Ext.create('Ext.form.ComboBox', {
-		        name:'params.tipotramite',
-		        fieldLabel: 'Tipo de Tr&aacute;mite:',
-		        displayField: 'value',
-		        valueField: 'key',
-		        allowBlank:true,
-		        emptyText:'Seleccione...',
-		        store: storeTramites
+		    storeCierres.load({
+		        callback: function(){
+		            idcierres.setValue('0');
+		        }
 		    });
-		    
 		    ////// componentes //////
 		    
 		    ////// contenido //////
@@ -685,8 +371,7 @@
 		                columns  : 3//4//TODO: regresar valor
 		        	},
 		        	defaults: {
-		        		//labelAlign: 'right',
-		        		labelAlign: 'left',
+		        		labelAlign: 'right',
 		        		margin: '5px'
 		        	},
 		        	buttonAlign: 'center',
@@ -714,15 +399,11 @@
 //						{xtype: 'textfield', name: 'promotoria', fieldLabel: 'Promotor&iacute;a'}, 
 //						{xtype: 'textfield', name: 'params.cdagente', fieldLabel: 'Agente'}, 
 //						{xtype: 'textfield', name: 'zona', fieldLabel: 'Zona'}, 
-						//{xtype: 'textfield', name: 'params.cdunieco', fieldLabel: 'Sucursal emisora', value:0}, 
-						idTipoSeguro,
-						idRamoPadre,
-						//{xtype: 'textfield', name: 'params.cdramo', fieldLabel: 'SubRamo', value:711},
-						idRamos,
-						idSucursales,
-						//{xtype: 'textfield', name: 'params.tipotramite', fieldLabel: 'Tipo de tr&aacute;mite'},
-						idTramites,
-						idAgentes,
+						{xtype: 'textfield', name: 'params.cdramo', fieldLabel: 'Ramo', value:711}, 
+						{xtype: 'textfield', name: 'params.cdunieco', fieldLabel: 'Sucursal emisora', value:0}, 
+						{xtype: 'textfield', name: 'params.lineanegocio', fieldLabel: 'Tipo Seguro'}, 
+						{xtype: 'textfield', name: 'params.tipotramite', fieldLabel: 'Tipo de tr&aacute;mite'}, 
+						{xtype: 'textfield', name: 'params.cdagente', fieldLabel: 'Agente'},
 						idcierres,
 						{xtype: 'hiddenfield',name: 'params.cdetapa'}
 						],
@@ -759,7 +440,6 @@
 							cls    : 'my-btn',
 							tooltip: 'Ver detalle',
 							handler: function() {
-								buscar();
 								mostrarPanelPrincipal('tbDetalle');
 								cargarDetalleTramites(1);
 							}
@@ -780,7 +460,6 @@
 							cls    : 'my-btn',
 							tooltip: 'Ver detalle',
 							handler: function() {
-								buscar();
 								mostrarPanelPrincipal('tbDetalle');
 								cargarDetalleTramites(3);
 							}
@@ -801,7 +480,6 @@
 							cls    : 'my-btn',
 							tooltip: 'Ver detalle',
 							handler: function() {
-								buscar();
 								mostrarPanelPrincipal('tbDetalle');
 								cargarDetalleTramites(2);
 							}
@@ -866,14 +544,13 @@
 						],
 						listeners: {
 							cellclick: function ( grd, td, cellIndex, record, tr, rowIndex, e, eOpts ) {
-								buscar();
+								
 								setTituloDetalleProcesoPorDia(cellIndex+1);
 								
 								mostrarPanelPrincipal('grdDetalleProcesoPorDia');
 								
 								var par = Ext.ComponentQuery.query('form')[0].getForm().getValues();
-								//par['params.consulta'] = 'RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS_LP';
-								par['params.consulta'] = 'RECUPERAR_TRAMITES_PENDIENTES_POR_HORAS_LP';
+								par['params.consulta'] = 'RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS_LP';
 								par['params.numdias'] = cellIndex+1;
 
 								storeTramitesPendientesPorDias.getProxy().extraParams = par;
@@ -938,8 +615,7 @@
 							items : [{
 								xtype: 'grid',
 								itemId: 'grdTramitesPorLineaNegocio',
-								//title: 'Total de tramites ingresados por LOB',
-								title: 'Total de tramites por LN',
+								title: 'Total de tramites ingresados por LOB',
 								header: {
 								    autoEl: {
 								        'data-qtip': 'Click en M\u00E1s Detalles -->'
@@ -1019,26 +695,6 @@
 											
 											storeDetalleLineaNegocio.loadPage(1);
 						                }
-						            },{
-						                tooltip : 'Ver Detalle Trazabilidad',
-						                icon    : '${ctx}/resources/fam3icons/icons/text_columns.png',
-						                handler: function(grid, rowIndex, colIndex, item, e, record, row) {
-						                	
-						                	//debug('grid, rowIndex, colIndex, item, e, record, row',grid, rowIndex, colIndex, item, e, record, row);
-						                	mostrarPanelSubdetalles('grdDetalleTrazabilidad');
-						                	
-						                	var par = Ext.ComponentQuery.query('form')[0].getForm().getValues();
-											par['params.consulta']     = 'RECUPERAR_DETALLE_TRAZABILIDAD';
-											par['params.cdetapa']      = Ext.ComponentQuery.query('[name=params.cdetapa]')[0].getValue();
-											
-											storeDetalleTrazabilidad.getProxy().extraParams = par;
-											
-											storeDetalleTrazabilidad.loadPage(1);
-						                },isDisabled: function(grid, rowIndex, colIndex, items , rec){
-						                	debug('grid, rowIndex, colIndex, items , rec',grid, rowIndex, colIndex, items , rec);
-										    return rec.get('CD_LINEA_NEGOCIO')!=='2';
-										}
-						                
 						            }]
     							}],
     	                        dockedItems: [{
@@ -1121,8 +777,7 @@
 							items : [{
 								xtype: 'grid',
 								itemId: 'grdTramitesPorSucursal',
-								//title: 'Total de tramites ingresados por Sucursal',
-								title: 'Total de tramites por Sucursal',
+								title: 'Total de tramites ingresados por Sucursal',
 								//layout: 'fit',
 								height: 350,
 								store: storeTramitesLineaNegocioPorSucursal,
@@ -1130,11 +785,11 @@
 									{
                                         text     : 'C\u00F3digo Sucursal',
                                         flex     : 2,
-                                        dataIndex: 'SUCURSAL'
+                                        dataIndex: 'CDUNIECO'
                                     },{
                                         text     : 'Sucursal', 
                                         flex     : 5,
-                                        dataIndex: 'DS_SUCURSAL'
+                                        dataIndex: 'DSUNIECO'
                                     },{
                                         text     : 'Total Salud', 
                                         flex     : 3,
@@ -1183,8 +838,7 @@
 							items : [{
 								xtype: 'grid',
 								itemId: 'grdTramitesPorUsuario',
-								//title: 'Total de tramites ingresados por Usuario',
-								title: 'Total de tramites por Usuario',
+								title: 'Total de tramites ingresados por Usuario',
 								//layout: 'fit',
 								height: 350,
 								store: storeTramitesLineaNegocioPorUsuario,
@@ -1242,7 +896,7 @@
 						store: storeTramitesPendientesPorDias,
 						columns: [
 							{text: 'Tramite',         dataIndex: 'NTRAMITE'},
-							{text: 'Sucursal',        dataIndex: 'SUCURSAL'},
+							{text: 'Sucursal',        dataIndex: 'CDUNIECO'},
 							{text: 'Ramo',            dataIndex: 'DSRAMO'},
 							{text: 'Usuario inicial', dataIndex: 'CDUSUARI_CREA'},
 							{text: 'Usuario actual',  dataIndex: 'CDUSUARI_ACT'},
@@ -1277,8 +931,7 @@
 	                                       }
 	                                       
 	                                       var params = Ext.clone(storeTramitesPendientesPorDias.getProxy().extraParams); 
-	                                       //params['params.consulta'] = 'RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS';
-	                                       params['params.consulta'] = 'RECUPERAR_TRAMITES_PENDIENTES_POR_HORAS';
+	                                       params['params.consulta'] = 'RECUPERAR_TRAMITES_PENDIENTES_POR_DIAS';
 	                                       params['params.exportar'] = 'S';
 	                                       
 	                                       mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
@@ -1406,35 +1059,23 @@
 							//{text: 'C\u00F3digo', dataIndex: 'CDETAPA'},
 							//{text: 'C\u00F3digo', dataIndex: 'CDRAMO'},
 							{text: 'Ramo',              dataIndex: 'DSRAMO'},
-							{text: 'CD Sucursal',       dataIndex: 'SUCURSAL'},
-							{text: 'Sucursal',          dataIndex: 'DS_SUCURSAL'},
+							{text: 'CD Sucursal',       dataIndex: 'CDUNIECO'},
+							{text: 'Sucursal',          dataIndex: 'DSUNIECO'},
 							{text: 'Poliza',            dataIndex: 'NMPOLIZA'},
-							{text: 'Poliza Externa',            dataIndex: 'NMPOLIEXT'},
 							{text: 'No. Solicitud',     dataIndex: 'NMSOLICI'},
 							{text: 'CD Usuario inicia', dataIndex: 'CDUSUARI_ACT'},
 							{text: 'Usuario inicia',    dataIndex: 'DSUSUARI_ACT'},
 							{text: 'CD Usuario crea',   dataIndex: 'CDUSUARI_CREA'},
 							{text: 'Usuario inicia',    dataIndex: 'DSUSUARI_CREA'},
-							{text: 'CD Sucursal Usr. crea', dataIndex: 'OFICINA_USR_CREA'},
-							{text: 'Sucursal Usr. crea', dataIndex: 'DS_OFICINA_USR_CREA'},
 							//{text: 'Cd ', dataIndex: 'CD_LINEA_NEGOCIO'},
 							{text: 'L\u00EDnea de negocio',   dataIndex: 'DS_LINEA_NEGOCIO'},
 							//{text: 'C\u00F3digo', dataIndex: 'CD_TIPO_TRAMITE'},
 							{text: 'Tipo de tr\u00E1mite',    dataIndex: 'TIPO_TRAMITE'},
-							{text: 'Descripci\u00F3n tipo tr\u00E1mite',    dataIndex: 'DESC_TIPO_TRAMITE'},
 							//{text: 'Es', dataIndex: 'STATUS_TRAMITE'},
 							{text: 'Estatus tr\u00E1mite',    dataIndex: 'DS_STATUS_TRAMITE'},
 							{text: 'Etapa',             dataIndex: 'ETAPA'},
 							{text: 'Fecha inicio',      dataIndex: 'FECHA_DESDE'},
-							{text: 'Fecha de recepci\u00F3n', dataIndex: 'FECHA_RECEP_TRAMITE'},
-							{text: 'CD Sucursal Usuario', dataIndex: 'OFICINA_USR_ACT'},
-							{text: 'Sucursal Usuario', dataIndex: 'DS_OFICINA_USR_ACT'},
-							{text: 'CD Usuariol Ant.', dataIndex: 'CDUSUARI_ANT'},
-							{text: 'Usuario Ant.', dataIndex: 'DSUSUARI_ANT'},
-							{text: 'CD Sucursal Usr. Ant.', dataIndex: 'OFICINA_USR_ANT'},
-							{text: 'Sucursal Usr. Ant.', dataIndex: 'DS_OFICINA_USR_ANT'},
-							{text: 'CDPERSON', dataIndex: 'CDPERSON'}
-							
+							{text: 'Fecha de recepci\u00F3n', dataIndex: 'FECHA_RECEP_TRAMITE'}
 						],
                         dockedItems: [{
                             xtype: 'toolbar',
@@ -1473,96 +1114,6 @@
                                        }
                                   }]
                          }]
-					},{
-						xtype: 'grid',
-						itemId: 'grdDetalleTrazabilidad',
-						hidden: true,
-						flex: 1,
-						title: '--> Detalle del tr\u00E1mite',
-						//autoScroll: true,
-						height: 300,
-						//layout: 'fit',
-						store: storeDetalleTrazabilidad,
-						columns: [
-							{text:'CDUNIECO'	       ,dataIndex:'CDUNIECO'	         },
-							{text:'NTRAMITE'	       ,dataIndex:'NTRAMITE'	         },
-							{text:'EVENTO'	           ,dataIndex:'EVENTO'	             },
-							{text:'CDETAPA'	           ,dataIndex:'CDETAPA'	             },
-							{text:'ETAPA'	           ,dataIndex:'ETAPA'	             },
-							{text:'TIPO_FLUJO'	       ,dataIndex:'TIPO_FLUJO'	         },
-							{text:'CD_TIPO_TRAMITE'	   ,dataIndex:'CD_TIPO_TRAMITE'	     },
-							{text:'TIPO_TRAMITE'	   ,dataIndex:'TIPO_TRAMITE'	     },
-							{text:'DESC_TIPO_TRAMITE'  ,dataIndex:'DESC_TIPO_TRAMITE'    },
-							{text:'FECHA_RECEP_TRAMITE',dataIndex:'FECHA_RECEP_TRAMITE'  },	
-							{text:'CD_LINEA_NEGOCIO'   ,dataIndex:'CD_LINEA_NEGOCIO'	 },
-							{text:'DS_LINEA_NEGOCIO'   ,dataIndex:'DS_LINEA_NEGOCIO'	 },
-							{text:'STATUS_TRAMITE'	  ,dataIndex:'STATUS_TRAMITE'	     },
-							{text:'DS_STATUS_TRAMITE' ,dataIndex:'DS_STATUS_TRAMITE'     },
-							{text:'CDRAMO'	          ,dataIndex:'CDRAMO'	             },
-							{text:'DSRAMO'	          ,dataIndex:'DSRAMO'	             },
-							{text:'CDPERSON'	      ,dataIndex:'CDPERSON'	             },
-							{text:'CLIENTE'	          ,dataIndex:'CLIENTE'	             },
-							{text:'CDAGENTE'	      ,dataIndex:'CDAGENTE'	             },
-							{text:'NOMBRE_AGENTE'	  ,dataIndex:'NOMBRE_AGENTE'	     },
-							{text:'NMPOLIZA'	      ,dataIndex:'NMPOLIZA'	             },
-							{text:'NMPOLIEXT'	      ,dataIndex:'NMPOLIEXT'	         },
-							{text:'COTIZACION'	      ,dataIndex:'COTIZACION'	         },
-							{text:'CDUSUARI_CREA'	  ,dataIndex:'CDUSUARI_CREA'	     },
-							{text:'DSUSUARI_CREA'	  ,dataIndex:'DSUSUARI_CREA'	     },
-							{text:'OFICINA_USR_CREA'  ,dataIndex:'OFICINA_USR_CREA'      },
-							{text:'DS_OFICINA_USR_CREA',dataIndex:'DS_OFICINA_USR_CREA'    },	
-							{text:'ESTACION'	      ,dataIndex:'ESTACION'	             },
-							{text:'DS_ESTACION'	      ,dataIndex:'DS_ESTACION'	         },
-							{text:'STATUSTRAZA'	      ,dataIndex:'STATUSTRAZA'	         },
-							{text:'DS_STATUSTRAZA'	  ,dataIndex:'DS_STATUSTRAZA'	     },
-							{text:'CDUSUARI_INI'	  ,dataIndex:'CDUSUARI_INI'	         },
-							{text:'DS_USUARIO'	      ,dataIndex:'DS_USUARIO'	         },
-							{text:'OFICINA_USR'	      ,dataIndex:'OFICINA_USR'	         },
-							{text:'DS_OFICINA_USR'	  ,dataIndex:'DS_OFICINA_USR'	     },
-							{text:'FECHAINI'	      ,dataIndex:'FECHAINI'	             },
-							{text:'FECHAFIN'	      ,dataIndex:'FECHAFIN'	             },
-							{text:'HORAS_LAB'	      ,dataIndex:'HORAS_LAB'	         },
-							{text:'HORAS_NORMAL'	  ,dataIndex:'HORAS_NORMAL'	         },
-							{text:'CANT_INSISOS'       ,dataIndex:'CANT_INSISOS'          }
-
-						],
-                        dockedItems: [{
-                            xtype: 'toolbar',
-                            dock: 'bottom',
-                            padding: '0 0 0 0',
-                            items:[{
-                                    xtype: 'pagingtoolbar',
-                                    store: storeDetalleTrazabilidad, // same store GridPanel is using
-                                    displayInfo: true,
-                                    flex: 1
-                                   },{ xtype: 'button', text: 'Exportar', icon: '${ctx}/resources/fam3icons/icons/page_excel.png',
-                                       handler: function(){
-                                           
-                                           if(storeDetalleTrazabilidad.isLoading()){
-                                               mensajeWarning('No se puede exportar mientras esta cargando.');
-                                               return;
-                                           }
-
-                                           if(storeDetalleTrazabilidad.getTotalCount() <= 0){
-                                               mensajeWarning('No hay datos a exportar.');
-                                               return;
-                                           }
-                                           
-                                           var params = Ext.clone(storeDetalleTrazabilidad.getProxy().extraParams); 
-                                           params['params.consulta'] = 'RECUPERAR_DETALLE_TRAZABILIDAD_LTS';
-                                           params['params.exportar'] = 'S';
-                                           debug('Exportando Trazabilidad');
-                                           mensajeCorrecto('Exportando...' ,'Se descargar&aacute un archivo en su navegador.');
-                                               
-                                           Ext.create('Ext.form.Panel').submit({
-                                               url       : _GLOBAL_URL_RECUPERACION,
-                                               standardSubmit : true,
-                                               target         : '_blank', // para abrir una nueva pestaña en caso de que se recarge la pagina
-                                               params   : params
-                                           });
-                                       }
-                                  }]
-                         }]
 					}]
 				}]
 			});
@@ -1575,41 +1126,16 @@
 		    ////// loaders //////
 		    ////// loaders //////
 			
-			
+			/*
 			var task = Ext.TaskManager.start({
 			    run: buscar,
-			    //interval: 60000 //tiempo en milisegundos 
-			    interval: 600000 //10 minutos
+			    interval: 60000
 			});
-			
+			*/
 			
 		});
 		
 		////// funciones //////
-		
-		function cargarSubramos(idRamos, idRamoPadre){
-			debug('cargarSubramos', idRamos, idRamoPadre);
-           	//idRamos.clearValue();
-           	//idRamos.store = storeRamos;
-           	debug('idRamoPadre=', idRamoPadre);
-           	debug('idRamoPadre.getValue()=', idRamoPadre.getValue());
-           	idRamos.getStore().load({
-		            params: {
-        				'params.idPadre':idRamoPadre.getValue()
-		            }
-           	});
-		}
-		
-		function cargarRamos(idTipoSeguro, idRamoPadre){
-           	debug('idTipoSeguro=', idTipoSeguro);
-           	debug('idTipoSeguro.getValue()=', idTipoSeguro.getValue());
-           	idRamoPadre.getStore().load({
-		            params: {
-        				'params.idPadre':idTipoSeguro.getValue()
-		            }
-           	});
-		}
-		
 		function setTituloDetalleProcesoPorDia(dia) {
 			
 			var titulo = 'Total en proceso ';
@@ -1620,12 +1146,10 @@
 				case 3:
 				case 4:
 				case 5:
-					//titulo += dia + ' d\u00EDa(s)';
-					titulo += dia + ' h';
+					titulo += dia + ' d\u00EDa(s)';
 					break;
 				case 6:
-					//titulo += 'm\u00E1s de 5 d\u00EDas';
-					titulo += ' +5h';
+					titulo += 'm\u00E1s de 5 d\u00EDas';
 					break;
 				default:
 					break;
@@ -1638,13 +1162,11 @@
 		 * Buqueda de datos de indicadores
 		 */
 		function buscar() {
-
+			
 			Ext.ComponentQuery.query('#pnlEstadisticas')[0].setLoading(true);
 			
 			var form = Ext.ComponentQuery.query('form')[0].getForm();
-        	debug("cdunieco ", form.findField('params.cdunieco').getValue());
-        	debug("cdramo ", form.findField('params.cdramo').getValue());
-        	
+			
 			Ext.Ajax.request({
 	        	url       : _GLOBAL_URL_RECUPERACION,
 	            params    : {
@@ -1792,12 +1314,13 @@
 			Ext.ComponentQuery.query('#grdTramitesPorUsuario')[0].getStore().getProxy().extraParams = parUsuario;
 			Ext.ComponentQuery.query('#grdTramitesPorUsuario')[0].getStore().loadPage(1);
 			
+			
 		}
 		
 		////// funciones //////
 		</script>
 	</head>
 	<body>
-		<div id="dvEstadisticas" style="height:800px"></div>
+		<div id="dvEstadisticas" style="height:700px"></div>
 	</body>
 </html>

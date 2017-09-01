@@ -1,7 +1,5 @@
 package mx.com.gseguros.mesacontrol.model;
 
-import org.apache.commons.lang.StringUtils;
-
 import mx.com.gseguros.utils.Utils;
 
 public class FlujoVO
@@ -18,8 +16,7 @@ public class FlujoVO
 	               ,estado
 	               ,nmpoliza
 	               ,nmsituac
-	               ,nmsuplem
-	               ,aux;
+	               ,nmsuplem;
 
 	public String getNtramite() {
 		return ntramite;
@@ -125,36 +122,23 @@ public class FlujoVO
 		this.claveent = claveent;
 	}
 	
-	public String getAux() {
-		return aux;
-	}
-
-	public void setAux(String aux) {
-		this.aux = aux;
-	}
-
 	@Override
 	public String toString()
 	{
 		return Utils.log(
-				 "\n***************************************"
-				,"\n**************** FLUJO ****************"
-				,"\n*** ntramite  = " , StringUtils.rightPad(this.ntramite  , 20, " "), "***"
-				,"\n*** status    = " , StringUtils.rightPad(this.status    , 20, " "), "***"
-				,"\n*** cdtipflu  = " , StringUtils.rightPad(this.cdtipflu  , 20, " "), "***"
-				,"\n*** cdflujomc = " , StringUtils.rightPad(this.cdflujomc , 20, " "), "***"
-				,"\n*** webid     = " , StringUtils.rightPad(this.webid     , 20, " "), "***"
-				,"\n*** tipoent   = " , StringUtils.rightPad(this.tipoent   , 20, " "), "***"
-				,"\n*** claveent  = " , StringUtils.rightPad(this.claveent  , 20, " "), "***"
-				,"\n*** cdunieco  = " , StringUtils.rightPad(this.cdunieco  , 20, " "), "***"
-				,"\n*** cdramo    = " , StringUtils.rightPad(this.cdramo    , 20, " "), "***"
-				,"\n*** estado    = " , StringUtils.rightPad(this.estado    , 20, " "), "***"
-				,"\n*** nmpoliza  = " , StringUtils.rightPad(this.nmpoliza  , 20, " "), "***"
-				,"\n*** nmsituac  = " , StringUtils.rightPad(this.nmsituac  , 20, " "), "***"
-				,"\n*** nmsuplem  = " , StringUtils.rightPad(this.nmsuplem  , 20, " "), "***"
-				,"\n*** aux       = " , StringUtils.rightPad(this.aux       , 20, " "), "***"
-				,"\n***************************************"
-				,"\n***************************************"
+				"\nntramite="   , this.ntramite
+				,"\nstatus="    , this.status
+				,"\ncdtipflu="  , this.cdtipflu
+				,"\ncdflujomc=" , this.cdflujomc
+				,"\nwebid="     , this.webid
+				,"\ntipoent="   , this.tipoent
+				,"\nclaveent="  , this.claveent
+				,"\ncdunieco="  , this.cdunieco
+				,"\ncdramo="    , this.cdramo
+				,"\nestado="    , this.estado
+				,"\nnmpoliza="  , this.nmpoliza
+				,"\nnmsituac="  , this.nmsituac
+				,"\nnmsuplem="  , this.nmsuplem
 				);
 	}
 }

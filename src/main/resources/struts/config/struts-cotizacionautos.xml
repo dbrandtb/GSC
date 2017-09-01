@@ -9,10 +9,6 @@
 			<result name="SUCCESS">/jsp/confpantallas/success.jsp</result>
 		</action>
 		
-		<action name="cargarCorreos" class="cotizacionAutoAction" method="cargarCorreosPorTramite">
-            <result name="success" type="json" />
-		</action>
-		
     </package>
     
 </struts>

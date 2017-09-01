@@ -13,7 +13,7 @@ public class CopagoVO implements Serializable {
 		super();
 	}
 	
-	public CopagoVO(String orden, String descripcion, String valor, String agrupador) {
+	public CopagoVO(int orden, String descripcion, String valor, String agrupador) {
 		super();
 		this.orden = orden;
 		this.descripcion = descripcion;
@@ -21,7 +21,7 @@ public class CopagoVO implements Serializable {
 		this.agrupador = agrupador;
 	}
 
-	private String orden;
+	private int orden;
 	
 	private String descripcion;
 	
@@ -41,11 +41,11 @@ public class CopagoVO implements Serializable {
 	 */
 	private boolean visible;
 
-	public String getOrden() {
+	public int getOrden() {
 		return orden;
 	}
 
-	public void setOrden(String orden) {
+	public void setOrden(int orden) {
 		this.orden = orden;
 	}
 
@@ -99,6 +99,6 @@ public class CopagoVO implements Serializable {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
 	}
 }
