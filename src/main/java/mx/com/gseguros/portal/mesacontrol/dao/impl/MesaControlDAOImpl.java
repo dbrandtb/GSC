@@ -198,6 +198,159 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	}
 	
 	@Override
+	public String movimientoMesaControl (
+			String cdunieco  , String cdramo   , String estado     , String nmpoliza,
+			String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra,
+			Date ferecepc   , String cdagente , String referencia , String nombre,
+			Date festatus   , String status   , String comments   , String nmsolici,
+			String cdtipsit , String cdusuari , String cdsisrol   , String swimpres,
+			String cdtipflu , String cdflujomc,
+			Map<String, String> valores,
+			String cdtipsup , String renuniext , String renramo , String renpoliex, boolean origenMesa,
+			String cdunidspch, String otvalor28, String otvalor29) throws Exception {
+		Map<String,Object>params=new LinkedHashMap<String,Object>();
+		params.put("cdunieco"  , cdunieco);
+		params.put("cdramo"    , cdramo);
+		params.put("estado"    , estado);
+		params.put("nmpoliza"  , nmpoliza);
+		params.put("nmsuplem"  , nmsuplem);
+		params.put("cdsucadm"  , cdsucadm);
+		params.put("cdsucdoc"  , cdsucdoc);
+		params.put("cdtiptra"  , cdtiptra);
+		params.put("ferecepc"  , ferecepc);
+		params.put("cdagente"  , cdagente);
+		params.put("referencia", referencia);
+		params.put("nombre"    , nombre);
+		params.put("festatus"  , festatus);
+		params.put("status"    , status);
+		params.put("comments"  , comments);
+		params.put("nmsolici"  , nmsolici);
+		params.put("cdtipsit"  , cdtipsit);
+		params.put("cdusuari"  , cdusuari);
+		params.put("cdsisrol"  , cdsisrol);
+		params.put("swimpres"  , swimpres);
+		params.put("cdtipflu"  , cdtipflu);
+		params.put("cdflujomc" , cdflujomc);
+		params.put("cdtipsup"  , cdtipsup);
+		params.put("renuniext" , renuniext);
+		params.put("renramo"   , renramo);
+		params.put("renpoliex" , renpoliex);
+		
+		params.put("sworigenmesa" , origenMesa ? "S" : "N");
+		params.put("cdunidspch" , cdunidspch);
+		
+		params.put("pv_otvalor28", otvalor28); //indicador de cotizacion (S=Es Cotizacion, N=Es emision)
+		params.put("pv_otvalor29", otvalor29); //indicador de tipo de tramite No Sicaps (I=Individual, F=Flotilla, P=Pyme) 
+		
+		logger.debug("entre al dao: "+ otvalor29 + otvalor28);
+		
+		if (valores==null) {
+			valores = new LinkedHashMap<String,String>();
+		}
+		
+		for (int i=1; i <= 50; i++) {
+			String key    = Utils.join("otvalor",StringUtils.leftPad(String.valueOf(i),2,"0"));
+			String pv_key = Utils.join("pv_",key);
+			if (!valores.containsKey(key)) {
+				valores.put(key,valores.get(pv_key));
+			}
+		}
+		params.putAll(valores);
+		Map<String,Object>procResult=ejecutaSP(new MovimientoMesaControl2(getDataSource()),params);
+		return String.valueOf(procResult.get("pv_tramite_o"));
+	}
+	
+	protected class MovimientoMesaControl2 extends StoredProcedure {
+		protected MovimientoMesaControl2 (DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES2.P_MOV_MESACONTROL");
+			declareParameter(new SqlParameter("cdunieco"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsucadm"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsucdoc"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtiptra"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ferecepc"   , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("cdagente"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("referencia" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nombre"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("festatus"   , OracleTypes.TIMESTAMP));
+			declareParameter(new SqlParameter("status"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("comments"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsolici"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor01"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor02"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor03"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor04"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor05"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor06"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor07"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor08"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor09"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor10"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor11"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor12"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor13"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor14"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor15"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor16"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor17"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor18"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor19"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor20"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor21"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor22"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor23"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor24"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor25"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor26"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor27"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor28"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor29"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor30"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor31"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor32"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor33"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor34"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor35"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor36"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor37"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor38"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor39"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor40"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor41"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor42"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor43"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor44"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor45"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor46"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor47"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor48"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor49"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("otvalor50"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("swimpres"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipflu"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdflujomc"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdtipsup"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("renuniext"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("renramo"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("renpoliex"  , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlParameter("sworigenmesa" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunidspch"   , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_tramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public void actualizaNmpolizaMesaControl(
 			  String ntramite ,String cdunieco ,String cdramo ,String estado  ,String nmpoliza
 			 ,String cdtiptra ,String renuniext ,String renramo   ,String renpoliex

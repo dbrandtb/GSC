@@ -266,4 +266,6 @@ public interface CatalogosManager {
     public List<GenericVO> recuperarTiposEndosoPorTramite (String ntramite) throws Exception;
 
 	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception;
+
+	public List<GenericVO> getTipoNoSicaps() throws Exception;
 }

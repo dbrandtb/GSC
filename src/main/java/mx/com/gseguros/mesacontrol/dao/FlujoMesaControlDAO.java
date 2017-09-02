@@ -988,4 +988,6 @@ public interface FlujoMesaControlDAO {
     public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception;
     
     public String obtenerSuplementoTramite(String ntramite)throws Exception;
+    
+    public String recuperarColores(String ntramite)throws Exception;
 }
