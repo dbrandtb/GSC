@@ -191,7 +191,8 @@ public enum Catalogos {
 	ZONASHOSPITALARIA("ZONAHOSP"),
 	TIPOPROVEEDOR(""),
 	TIPOEVENTOGNP("TIPOEVEN"),
-	PROVEEDORESINI("");
+	PROVEEDORESINI(""),
+	TIPO_NO_SICAPS("");
 	
 
 	private String cdTabla;

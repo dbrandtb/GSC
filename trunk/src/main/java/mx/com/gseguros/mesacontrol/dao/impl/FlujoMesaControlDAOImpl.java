@@ -1654,6 +1654,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			total = 0;
 		}
 		String flag = null;
+		
 		for (Map<String, String> tra : lista) {
 			flag = tra.get("FLAG");
 			String ordenFlag = "5";
@@ -1668,6 +1669,7 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
 			}
 			tra.put("ORDENFLAG", ordenFlag);
 		}
+		
 		logger.debug(Utils.log("\n******lista=",lista,"\n******total=",total));
 		result.put("lista" , lista);
 		result.put("total" , total);
@@ -4568,6 +4570,26 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
     protected class ObtenerSuplementoTramite extends StoredProcedure{
         protected ObtenerSuplementoTramite(DataSource dataSource){
             super(dataSource,"P_GET_NMSUPLEM_X_NTRAMITE");
+            declareParameter(new SqlParameter("ntramite"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+    
+    @Override
+    public String recuperarColores(String ntramite)throws Exception{
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        params.put("ntramite"   , ntramite);
+        Map<String,Object> procRes = ejecutaSP(new RecuperarColores(getDataSource()),params);        
+        String cdtipfluSalida = (String)procRes.get("pv_nmsuplem_o");      
+        return cdtipfluSalida;
+    }
+    
+    protected class RecuperarColores extends StoredProcedure{
+        protected RecuperarColores(DataSource dataSource){
+            super(dataSource,"P_GET_COLOR_TRAMITE");
             declareParameter(new SqlParameter("ntramite"   , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

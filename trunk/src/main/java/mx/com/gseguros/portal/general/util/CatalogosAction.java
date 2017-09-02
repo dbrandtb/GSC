@@ -1115,6 +1115,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPOPROVEEDOR:
 					lista = siniestrosManager.getConsultaListaTiposProveedores();
 					break;
+				case TIPO_NO_SICAPS:
+					lista = catalogosManager.getTipoNoSicaps();
+					/*lista=new ArrayList<GenericVO>(0);
+					lista.add(new GenericVO("N", "NO"));
+					lista.add(new GenericVO("S", "SI"));
+					*/
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

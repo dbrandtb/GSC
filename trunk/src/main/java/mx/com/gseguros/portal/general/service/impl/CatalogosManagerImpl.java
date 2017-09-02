@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
@@ -2161,5 +2162,19 @@ public class CatalogosManagerImpl implements CatalogosManager {
                                     "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
        return lista;
    }
-	
+
+   @Override
+	public List<GenericVO> getTipoNoSicaps() throws Exception {
+		try {
+			List<GenericVO> lista = catalogosDAO.getTipoNoSicaps();
+			if(lista==null)
+			{
+				lista= new ArrayList<GenericVO>();
+			}
+			logger.debug("getTipoNoSicaps lista size: "+lista.size());
+			return lista;
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
 }

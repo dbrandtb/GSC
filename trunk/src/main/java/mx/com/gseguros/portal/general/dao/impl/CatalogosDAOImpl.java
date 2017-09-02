@@ -2269,4 +2269,26 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             compile();
         }
     }
+    
+    @Override
+	public List<GenericVO> getTipoNoSicaps() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> mapResult = ejecutaSP(new getTipoNoSicapsSP(getDataSource()), params);
+		return (List<GenericVO>) mapResult.get("pv_registro_o");
+	}
+    
+    protected class getTipoNoSicapsSP extends StoredProcedure
+	{
+		protected getTipoNoSicapsSP(DataSource dataSource)
+		{
+			super(dataSource, "P_GET_TIPONOSICAPS");
+			 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{
+	                    "key", "value"
+	            })));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
