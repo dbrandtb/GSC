@@ -189,7 +189,5 @@ public interface CatalogosDAO {
     public List<Map<String, String>> recuperarTiposEndosoPorTramite (String ntramite) throws Exception;
 
 	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception;
-
-	public List<GenericVO> getTipoNoSicaps() throws Exception;
 	
 }
