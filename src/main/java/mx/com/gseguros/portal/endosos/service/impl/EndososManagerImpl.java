@@ -574,22 +574,8 @@ public class EndososManagerImpl implements EndososManager
 		
 		return exito;
 	}
-
-	@Override
-	public Map<String,String> obtieneDetalleTramiteClonar(Map<String,String> params) throws Exception
-	{
-		Map<String,String> mapa = endososDAO.obtieneDetalleTramiteClonar(params);
-        return mapa;
-	}
-
-	@Override
-	public List<Map<String,String>> obtieneGruposTramiteClonar(Map<String,String> params) throws Exception
-	{
-		return endososDAO.obtieneGruposTramiteClonar(params);
-	}
-
-	
-	@Override
+	//P_CLONAR_POLIZA_REEXPED SIN PLAN EOT 04052016 CLONACION COTIZACIONES SALUD
+		@Override
 	public Map<String,String> pClonarCotizacionTotal(
 				String cdunieco
 				,String cdramo
@@ -598,10 +584,7 @@ public class EndososManagerImpl implements EndososManager
 				,String fecha
 				,String cdusuario
 				,String newcdunieco
-				,String tipoTramte
-				,String nuevoTipoTramite
-				,String tipoClonacion
-				,String tamanioTramite) throws Exception
+				,String tipoClonacion) throws Exception
 		{
 			Map<String,String>params = new HashMap<String,String>();
 			params.put("pv_cdunieco_i", cdunieco);
@@ -611,10 +594,7 @@ public class EndososManagerImpl implements EndososManager
 			params.put("pv_feinival_i", fecha);
 			params.put("pv_cduser_i"  , cdusuario);
 			params.put("pv_cdunieco_new_i", newcdunieco);
-			params.put("pv_cdtiptra_org_i", tipoTramte);
-			params.put("pv_cdtiptra_nvo_i", nuevoTipoTramite);
 			params.put("pv_tipo_clonacion_i", tipoClonacion);
-			params.put("pv_cdtamtra_i", tamanioTramite);
 			logger.debug("EndososManager pClonarPolizaReexped params: "+params);
 			Map<String,String> mapa = endososDAO.pClonarCotizacionTotal(params);
 			logger.debug("EndososManager pClonarPolizaReexped response map: "+mapa);
@@ -3455,18 +3435,17 @@ public class EndososManagerImpl implements EndososManager
 														String fecini, 
 														String fecfin, 
 														String cdsisrol, 
-														String cdusuari,
-														String cdagente,
-														String contratante) throws Exception {
+														String cdusuari) throws Exception {
 		String paso = null;
 		List<Map<String, String>> infoGrid = null;		
 		try
 		{
 			paso = "Antes de buscar cotizacion";
+			String cdagente = null;
 			
-//			if (cdsisrol.toUpperCase().equals("EJECUTIVOCUENTA")){
-//				cdagente = cdusuari;
-//			}
+			if (cdsisrol.toUpperCase().equals("EJECUTIVOCUENTA")){
+				cdagente = cdusuari;
+			}
 			
 			infoGrid = endososDAO.recuperarCotizaciones(
 					cdunieco, 
@@ -3480,8 +3459,7 @@ public class EndososManagerImpl implements EndososManager
 					fecfin, 
 					cdsisrol, 
 					cdusuari,
-					cdagente,
-					contratante);
+					cdagente);
 			
 			paso = "Despues de buscar cotizacion";
 		}

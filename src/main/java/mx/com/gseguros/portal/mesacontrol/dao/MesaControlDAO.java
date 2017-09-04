@@ -56,16 +56,6 @@ public interface MesaControlDAO
 			Map<String, String> valores, String cdtipsup, String renuniext, String renramo, String renpoliex, boolean origenMesa,
 			String cdunidspch) throws Exception;
 	
-	public String movimientoMesaControl (
-			String cdunieco  , String cdramo   , String estado     , String nmpoliza,
-			String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra,
-			Date ferecepc   , String cdagente , String referencia , String nombre,
-			Date festatus   , String status   , String comments   , String nmsolici,
-			String cdtipsit , String cdusuari , String cdsisrol   , String swimpres,
-			String cdtipflu , String cdflujomc,
-			Map<String, String> valores, String cdtipsup, String renuniext, String renramo, String renpoliex, boolean origenMesa,
-			String cdunidspch, String otvalor28, String otvalor29) throws Exception;
-	
 	/**
 	 * @param cdunieco
 	 * @param cdramo
@@ -364,12 +354,4 @@ public interface MesaControlDAO
      * Si ya existe un tramite cdtiptra 1 o 21 con esa cdunieco, cdramo, estado, nmsolici arroja excepcion
      */
     public void validaDuplicidadTramiteEmisionPorNmsolici (String cdunieco, String cdramo, String estado, String nmsolici) throws Exception;
-    
-    /**
-	 * RECUPERA SI EXISTE EL OTVALOR QUE CORRESPONDIENTE A UN OTVALOR DE CR
-	 * @param tipsitfake
-	 * @param valorOtUtil
-	 * @return otvalor
-	 * @throws Exception
-	 */
-	public List<Map<String,String>> obtieneOtValorCorrespondienteSubtipoCR()throws Exception;}
+}

@@ -91,8 +91,6 @@ public interface FlujoMesaControlManager
 			,String statusout
 			,boolean swfinnode
 			,String cdetapa
-			,String cdestacion 
-			,String cdtrazabilidad
 			)throws Exception;
 	
 	public String registrarConnection(
@@ -228,17 +226,6 @@ public interface FlujoMesaControlManager
             Map<String, String> valores,
             String cdtipsup , String cduniext  , String ramo       , String nmpoliex,
             boolean origenMesa, boolean inyectadoDesdeSigs)throws Exception;
-	
-	public Map<String,String> registrarTramite ( 
-			String cdunieco , String cdramo    , String estado     , String nmpoliza,
-			String nmsuplem , String cdsucadm  , String cdsucdoc   , String cdtiptra,
-			Date ferecepc   , String cdagente  , String referencia , String nombre,
-			Date festatus   , String status    , String comments   , String nmsolici,
-			String cdtipsit , String cdusuari  , String cdsisrol   , String swimpres,
-			String cdtipflu , String cdflujomc , 
-			Map<String, String> valores,
-			String cdtipsup , String cduniext  , String ramo       , String nmpoliex,
-			boolean origenMesa, boolean inyectadoDesdeSigs, String otvalor28, String otvalor29) throws Exception;
 	
 	public void actualizaTramiteMC(
 			  String nmpoliza ,String cdunieco ,String cdramo ,String estado  ,String ntramite
@@ -448,14 +435,10 @@ public interface FlujoMesaControlManager
 	public void cambiarTipoEndosoTramite (String ntramite, String status, String cdtipsup, String comments, boolean swagente,
 	        String cdusuari, String cdsisrol) throws Exception;
 	
-	public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception;
-	
 	@Deprecated
 	public Map<String,String> recuperaTflujomc(String cdflujomc) throws Exception;
 	
 	public String obtenerSuplementoTramite(String ntramite) throws Exception;
 	
 	public int obtenerCantidadDocumentosCotizacion(String ntramite) throws Exception;
-	
-	public String recuperarColores(String ntramite)throws Exception;
 }

@@ -831,22 +831,6 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 if (sinGrabarDetalle == false) {
                     paso = "Guardando detalle";
                     logger.debug(paso);
-                    if(sinBuscarRegreso) {//Se usa validacion para insertar nuevo registro cuando un tramite se reasigna a usuario diferente
-                    mesaControlDAO.movimientoDetalleTramite(
-                            ntramite,
-                            fechaHoy,
-                            null, // cdclausu
-                            result.getMessage(),
-                            cdusuariSes,
-                            null, // cdmotivo
-                            cdsisrolSes,
-                            permisoAgente ? "S" : "N",
-                            null,
-                            null,
-                            EstatusTramite.REASIGNADO.getCodigo(),// status,
-                            true // cerrado
-                            );
-                    }
                     mesaControlDAO.movimientoDetalleTramite(
                             ntramite,
                             fechaHoy,
@@ -1006,7 +990,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                         try {
                             paso = "Enviando correos configurados 3";
                             logger.debug(paso);
-                            //req0005 se solicito eliminar la notificacion en este paso para tramites sicaps
+                          //req0005 se solicito eliminar la notificacion en este paso para tramites sicaps
                             Map<String,String> detalleTramite=  siniestrosManager.obtenerTramiteCompleto(ntramite);
                             String cdtipflu = detalleTramite.get("CDTIPFLU");
                             logger.debug("Determinando si es flujo SICAPS o NO SICAPS cdtipflu: "+ cdtipflu + " ntramite: " + ntramite);
@@ -1315,42 +1299,6 @@ K                   ENCOLAR CON DATOS ORIGINALES
             Utils.generaExcepcion(ex, paso);
         }
         return items;
-    }
-
-    @Override
-    public List<Map<String, String>> cargaConfSucursales(String cdunieco, String cdunizon, String cdnivel) throws Exception {
-    	String paso = null;
-    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-    	
-    	try {
-    		lista = despachadorDAO.recuperarClasifSucursalZonaNivel(cdunieco, cdunizon, cdnivel);
-    	} catch (Exception ex) {
-    		Utils.generaExcepcion(ex, paso);
-    	}
-    	return lista;
-    }
-
-    @Override
-    public void guardaConfSucursales(Map<String, String> sucursal) throws Exception {
-    	despachadorDAO.guardaConfSucursales(sucursal);
-    }
-
-    @Override
-    public List<Map<String, String>> cargaConfPermisos(String cdtipflu, String cdflujomc, String cdramo, String cdtipsit) throws Exception {
-    	String paso = null;
-    	List<Map<String, String>> lista = new ArrayList<Map<String, String>>();
-    	
-    	try {
-    		lista = despachadorDAO.recuperarPermisosFlujos(cdtipflu, cdflujomc, cdramo, cdtipsit);
-    	} catch (Exception ex) {
-    		Utils.generaExcepcion(ex, paso);
-    	}
-    	return lista;
-    }
-    
-    @Override
-    public void guardaConfPermisos(Map<String, String> permiso) throws Exception {
-    	despachadorDAO.guardaConfPermisos(permiso);
     }
     
     @Override

@@ -29,7 +29,6 @@ import mx.com.gseguros.mesacontrol.service.FlujoMesaControlManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.despachador.model.RespuestaTurnadoVO;
 import mx.com.gseguros.portal.despachador.service.DespachadorManager;
-import mx.com.gseguros.portal.endosos.service.EndososAutoManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
@@ -85,9 +84,6 @@ public class MesaControlAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
-	
-	@Autowired
-    private EndososAutoManager endososAutoManager;
 	
 	public String principal()
 	{
@@ -441,16 +437,17 @@ public class MesaControlAction extends PrincipalCoreAction
 			String rolDestino     = smap1.get("rol_destino");
 			String usuarioDestino = smap1.get("usuario_destino");
 			//boolean paraUsuario = StringUtils.isNotBlank(rolDestino);
-			String cdusuariSesion = StringUtils.isNotBlank(smap1.get("usuario_inicial"))?smap1.get("usuario_inicial"):usu.getUser();
-			String cdsisrolSesion = StringUtils.isNotBlank(smap1.get("rol_inicial"))?smap1.get("rol_inicial"):usu.getRolActivo().getClave();
+			
+			String cdusuariSesion = usu.getUser();
+			String cdsisrolSesion = usu.getRolActivo().getClave();
 			String cdclausu       = null;
 			
 			Map<String,Object> res = siniestrosManager.moverTramite(
 					ntramite
 					,statusNuevo
 					,comments
-						,cdusuariSesion
-						,cdsisrolSesion
+					,cdusuariSesion
+					,cdsisrolSesion
 					,usuarioDestino
 					,rolDestino
 					,cdmotivo
@@ -625,8 +622,7 @@ public class MesaControlAction extends PrincipalCoreAction
                     Constantes.SI.equalsIgnoreCase(mostrarAgente), // permisoAgente 
                     false, // porEscalamiento 
                     fechaHoy, 
-                    false,  // sinGrabarDetalle
-                    true // crear Registro de status 171 REASIGNADO
+                    false  // sinGrabarDetalle
                     );
             
             logger.debug(Utils.log("Tr\u00e1mite reasignado. ", reasignado.getMessage()));
@@ -1093,14 +1089,6 @@ public class MesaControlAction extends PrincipalCoreAction
 			{
 				omap.put((String)entry.getKey(),entry.getValue());//se pasa de smap1 a omap
 			}
-			
-			/*Se Agrega validacion al crear un tramite en la mesa de control antigua la validacion de agente
-             * */
-			endososAutoManager.validacionSigsAgente(  (String)omap.get("pv_cdagente_i")
-                                                    , (String)omap.get("pv_cdramo_i")
-                                                    , (String)omap.get("pv_cdtipsit_i")
-                                                    , "A");
-			
 			omap.put("pv_cdunieco_i",smap1.get("pv_cdsucdoc_i"));//se parcha porque requiere el mismo valor
 			omap.put("pv_ferecepc_i",renderFechas.parse((String)omap.get("pv_ferecepc_i")));//se convierte String a Date
 			omap.put("pv_festatus_i",renderFechas.parse((String)omap.get("pv_festatus_i")));//se convierte String a Date

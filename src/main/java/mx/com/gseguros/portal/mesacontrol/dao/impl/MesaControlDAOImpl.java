@@ -40,7 +40,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected CargarCdagentePorCdusuari(DataSource dataSource)
 		{
-			super(dataSource, "PKG_CONSULTA.P_GET_CDAGENTE_X_CDUSUARI");
+			super(dataSource, "PKG_CONSULTA_PRE.P_GET_CDAGENTE_X_CDUSUARI");
 			declareParameter(new SqlParameter("cdusuari"    , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_cdagente_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
@@ -109,7 +109,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	
 	protected class MovimientoMesaControl extends StoredProcedure {
 		protected MovimientoMesaControl (DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_MOV_MESACONTROL");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_MESACONTROL");
 			declareParameter(new SqlParameter("cdunieco"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"     , OracleTypes.VARCHAR));
@@ -198,159 +198,6 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	}
 	
 	@Override
-	public String movimientoMesaControl (
-			String cdunieco  , String cdramo   , String estado     , String nmpoliza,
-			String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra,
-			Date ferecepc   , String cdagente , String referencia , String nombre,
-			Date festatus   , String status   , String comments   , String nmsolici,
-			String cdtipsit , String cdusuari , String cdsisrol   , String swimpres,
-			String cdtipflu , String cdflujomc,
-			Map<String, String> valores,
-			String cdtipsup , String renuniext , String renramo , String renpoliex, boolean origenMesa,
-			String cdunidspch, String otvalor28, String otvalor29) throws Exception {
-		Map<String,Object>params=new LinkedHashMap<String,Object>();
-		params.put("cdunieco"  , cdunieco);
-		params.put("cdramo"    , cdramo);
-		params.put("estado"    , estado);
-		params.put("nmpoliza"  , nmpoliza);
-		params.put("nmsuplem"  , nmsuplem);
-		params.put("cdsucadm"  , cdsucadm);
-		params.put("cdsucdoc"  , cdsucdoc);
-		params.put("cdtiptra"  , cdtiptra);
-		params.put("ferecepc"  , ferecepc);
-		params.put("cdagente"  , cdagente);
-		params.put("referencia", referencia);
-		params.put("nombre"    , nombre);
-		params.put("festatus"  , festatus);
-		params.put("status"    , status);
-		params.put("comments"  , comments);
-		params.put("nmsolici"  , nmsolici);
-		params.put("cdtipsit"  , cdtipsit);
-		params.put("cdusuari"  , cdusuari);
-		params.put("cdsisrol"  , cdsisrol);
-		params.put("swimpres"  , swimpres);
-		params.put("cdtipflu"  , cdtipflu);
-		params.put("cdflujomc" , cdflujomc);
-		params.put("cdtipsup"  , cdtipsup);
-		params.put("renuniext" , renuniext);
-		params.put("renramo"   , renramo);
-		params.put("renpoliex" , renpoliex);
-		
-		params.put("sworigenmesa" , origenMesa ? "S" : "N");
-		params.put("cdunidspch" , cdunidspch);
-		
-		params.put("pv_otvalor28", otvalor28); //indicador de cotizacion (S=Es Cotizacion, N=Es emision)
-		params.put("pv_otvalor29", otvalor29); //indicador de tipo de tramite No Sicaps (I=Individual, F=Flotilla, P=Pyme) 
-		
-		logger.debug("entre al dao: "+ otvalor29 + otvalor28);
-		
-		if (valores==null) {
-			valores = new LinkedHashMap<String,String>();
-		}
-		
-		for (int i=1; i <= 50; i++) {
-			String key    = Utils.join("otvalor",StringUtils.leftPad(String.valueOf(i),2,"0"));
-			String pv_key = Utils.join("pv_",key);
-			if (!valores.containsKey(key)) {
-				valores.put(key,valores.get(pv_key));
-			}
-		}
-		params.putAll(valores);
-		Map<String,Object>procResult=ejecutaSP(new MovimientoMesaControl2(getDataSource()),params);
-		return String.valueOf(procResult.get("pv_tramite_o"));
-	}
-	
-	protected class MovimientoMesaControl2 extends StoredProcedure {
-		protected MovimientoMesaControl2 (DataSource dataSource) {
-			super(dataSource,"PKG_SATELITES2.P_MOV_MESACONTROL");
-			declareParameter(new SqlParameter("cdunieco"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdramo"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("estado"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmpoliza"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmsuplem"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdsucadm"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdsucdoc"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtiptra"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("ferecepc"   , OracleTypes.TIMESTAMP));
-			declareParameter(new SqlParameter("cdagente"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("referencia" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nombre"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("festatus"   , OracleTypes.TIMESTAMP));
-			declareParameter(new SqlParameter("status"     , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("comments"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("nmsolici"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtipsit"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor01"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor02"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor03"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor04"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor05"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor06"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor07"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor08"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor09"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor10"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor11"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor12"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor13"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor14"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor15"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor16"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor17"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor18"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor19"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor20"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor21"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor22"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor23"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor24"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor25"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor26"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor27"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor28"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor29"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor30"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor31"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor32"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor33"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor34"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor35"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor36"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor37"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor38"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor39"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor40"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor41"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor42"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor43"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor44"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor45"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor46"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor47"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor48"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor49"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("otvalor50"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("swimpres"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdusuari"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdsisrol"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtipflu"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdflujomc"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdtipsup"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("renuniext"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("renramo"    , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("renpoliex"  , OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlParameter("sworigenmesa" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("cdunidspch"   , OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_tramite_o" , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
 	public void actualizaNmpolizaMesaControl(
 			  String ntramite ,String cdunieco ,String cdramo ,String estado  ,String nmpoliza
 			 ,String cdtiptra ,String renuniext ,String renramo   ,String renpoliex
@@ -374,7 +221,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected actualizaNmpolizaMesaControl(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_UPDATE_NMPOLIZA_MC");
+			super(dataSource,"PKG_SATELITES2_PRE.P_UPDATE_NMPOLIZA_MC");
 			declareParameter(new SqlParameter("pv_ntramite_i"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.NUMERIC));
@@ -426,7 +273,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected MovimientoDetalleTramite(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MOV_DMESACONTROL");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_DMESACONTROL");
 			declareParameter(new SqlParameter("ntramite"     , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("feinicio"     , OracleTypes.TIMESTAMP));
 			declareParameter(new SqlParameter("cdclausu"     , OracleTypes.VARCHAR));
@@ -458,7 +305,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected ActualizarNmsoliciTramite(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES.P_UPDATE_NMSOLICI");
+			super(dataSource,"PKG_SATELITES_PRE.P_UPDATE_NMSOLICI");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmsolici" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
@@ -498,7 +345,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected ActualizaValoresTramite(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES.p_upd_tmesacontrol");
+			super(dataSource, "PKG_SATELITES_PRE.p_upd_tmesacontrol");
 			declareParameter(new SqlParameter("ntramite"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit"  , OracleTypes.VARCHAR));
@@ -602,7 +449,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected CargarTramitesPorParametrosVariables(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_GET_TMESACONTROL_X_PAR_VAR");
+			super(dataSource, "PKG_SATELITES2_PRE.P_GET_TMESACONTROL_X_PAR_VAR");
 			declareParameter(new SqlParameter("cdtiptra" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
@@ -642,7 +489,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected GuardarRegistroContrarecibo(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_INSERTA_CONTRARECIBO");
+			super(dataSource, "PKG_SATELITES2_PRE.P_INSERTA_CONTRARECIBO");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
@@ -665,7 +512,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected ActualizarNombreDocumento(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_UPD_TDOCUPOL_DSDOCUME");
+			super(dataSource, "PKG_SATELITES2_PRE.P_UPD_TDOCUPOL_DSDOCUME");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cddocume" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nuevo"    , OracleTypes.VARCHAR));
@@ -688,7 +535,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected BorrarDocumento(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_BORRAR_TDOCUPOL");
+			super(dataSource, "PKG_SATELITES2_PRE.P_BORRAR_TDOCUPOL");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cddocume" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
@@ -720,7 +567,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected BorraDomicilioAsegSiCodposCambia(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_ELIMINA_MDOMICIL_ASEGURADOS");
+			super(dataSource, "PKG_SATELITES2_PRE.P_ELIMINA_MDOMICIL_ASEGURADOS");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
@@ -765,7 +612,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	
 	protected class GuardarDocumentoPolizaSP extends StoredProcedure {
 		protected GuardarDocumentoPolizaSP(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES2.P_MOV_DOCUMENTOS");
+			super(dataSource, "PKG_SATELITES2_PRE.P_MOV_DOCUMENTOS");
 			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
@@ -809,7 +656,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	
 	protected class TurnaPorCargaTrabajo extends StoredProcedure {
 		protected TurnaPorCargaTrabajo(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES2.P_MUEVE_TRAMITE_CARGA");
+			super(dataSource, "PKG_SATELITES2_PRE.P_MUEVE_TRAMITE_CARGA");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
@@ -844,7 +691,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	
 	protected class ValidarAntesDeTurnar extends StoredProcedure {
 		protected ValidarAntesDeTurnar(DataSource dataSource) {
-			super(dataSource, "PKG_CONSULTA.P_VALIDA_ANTES_TURNADO");
+			super(dataSource, "PKG_CONSULTA_PRE.P_VALIDA_ANTES_TURNADO");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
@@ -868,7 +715,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	protected class ActualizaStatusMesaControlSP extends StoredProcedure {
 		protected ActualizaStatusMesaControlSP(DataSource dataSource) {
 			
-			super(dataSource,"PKG_SATELITES.P_UPDATE_STATUS_MC");
+			super(dataSource,"PKG_SATELITES_PRE.P_UPDATE_STATUS_MC");
     		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
@@ -897,7 +744,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	protected class ActualizarStatusRemesa extends StoredProcedure {
 		protected ActualizarStatusRemesa(DataSource dataSource) {
 			
-			super(dataSource,"PKG_SATELITES2.P_ACT_ESTATUS_REMESA");
+			super(dataSource,"PKG_SATELITES2_PRE.P_ACT_ESTATUS_REMESA");
     		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_error_o"  , OracleTypes.VARCHAR));
@@ -970,7 +817,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected RecuperarTramites(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SATELITES2.P_OBTIENE_MESACONTROL");
+			super(dataSource, "PKG_SATELITES2_PRE.P_OBTIENE_MESACONTROL");
 			declareParameter(new SqlParameter("cdunieco"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("ntramite"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdramo"        , OracleTypes.VARCHAR));
@@ -1035,7 +882,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected ActualizarHijosRemesa(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_ACTUALIZA_HIJOS_REMESA");
+			super(dataSource,"PKG_SATELITES2_PRE.P_ACTUALIZA_HIJOS_REMESA");
     		declareParameter(new SqlParameter("lote"     , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
@@ -1070,7 +917,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected MarcarImpresionOperacion(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MARCA_IMPRESION_OPE");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MARCA_IMPRESION_OPE");
     		declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("marcar"   , OracleTypes.VARCHAR));
@@ -1094,7 +941,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected MarcarTramiteVistaPreviaSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MARCA_TRAMITE_VISTA_PREVIA");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MARCA_TRAMITE_VISTA_PREVIA");
     		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
@@ -1120,7 +967,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected RecuperarSwvispreTramiteSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA.P_GET_SWVISPRE_TRAMITE");
+			super(dataSource,"PKG_CONSULTA_PRE.P_GET_SWVISPRE_TRAMITE");
     		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_swvispre_o" , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
@@ -1156,7 +1003,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected MarcarTramiteComoStatusTemporalSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MARCA_STATUS_TEMPORAL");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MARCA_STATUS_TEMPORAL");
     		declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_status_actual_o" , OracleTypes.VARCHAR));
@@ -1178,7 +1025,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected MovimientoExclusionUsuarioSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_MOV_EXCLU_TURNADO");
+			super(dataSource,"PKG_SATELITES2_PRE.P_MOV_EXCLU_TURNADO");
     		declareParameter(new SqlParameter("usuario" , OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O"        , OracleTypes.NUMERIC));
@@ -1474,7 +1321,7 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
 	{
 		protected BorrarNmsoliciTramiteSP(DataSource dataSource)
 		{
-			super(dataSource,"PKG_SATELITES2.P_BORRA_NMSOLICI_TRAMITE");
+			super(dataSource,"PKG_SATELITES2_PRE.P_BORRA_NMSOLICI_TRAMITE");
 			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
@@ -1621,51 +1468,4 @@ public class MesaControlDAOImpl extends AbstractManagerDAO implements MesaContro
             declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
         }
     }
-    
-    @Override
-	public List<Map<String,String>> obtieneOtValorCorrespondienteSubtipoCR()throws Exception
-	{
-		Map<String,String> params = new LinkedHashMap<String,String>();
-		Map<String,Object> procRes = ejecutaSP(new obtieneOtValorCorrespondienteSubtipoCR(getDataSource()),params);
-		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
-		String   error  = (String)procRes.get("pv_error_o");
-		if(StringUtils.isNotBlank(error))
-		{
-			throw new ApplicationException(error);
-		}
-		if(lista==null)
-		{
-			return new ArrayList<Map<String,String>>();
-		}
-		else
-		{
-			logger.debug(Utils.log(
-					"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-					,"\n@@@@@@ obtieneOtValorCorrespondienteSubtipoCR @@@@@@"
-					));
-			logger.debug(Utils.log(
-					"\n@@@@@@ otvalor correspondientes=", lista.toString()
-					,"\n@@@@@@ recuperarOtvalorTramitePorDsatribu @@@@@@"
-					,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-					));
-			return lista;
-		}
-	}
-	
-	protected class obtieneOtValorCorrespondienteSubtipoCR extends StoredProcedure
-	{
-		protected obtieneOtValorCorrespondienteSubtipoCR(DataSource dataSource)
-		{
-			super(dataSource,"P_GET_VALOR_SUBTIPO_CR");
-			String[] cols = new String[]{
-					"tipstitFake"
-					,"otFake"
-            };
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
 }

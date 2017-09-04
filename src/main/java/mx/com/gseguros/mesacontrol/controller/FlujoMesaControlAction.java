@@ -657,10 +657,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,swescala   = params.get("SWESCALA")
 			       ,statusout  = params.get("STATUSOUT")
 			       ,swfinnode  = params.get("SWFINNODE")
-			       ,cdetapa    = params.get("CDETAPA")
-	    		   ,cdestacion    = params.get("ESTACION")
-				   ,cdtrazabilidad    = params.get("STATUSTRAZA")
-			       ;
+			       ,cdetapa    = params.get("CDETAPA");
 			
 			Utils.validate(
 					cdtipflu    , "No se recibi\u00f3 el tipo de flujo"
@@ -678,8 +675,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,timewrn2m  , "No se recibi\u00f3 minutos max alerta 2"
 					,cdtipasig  , "No se recibi\u00f3 tipo de asignaci\u00f3n"
 					,cdetapa    , "No se recibi\u00f3 el indicador"
-					,cdestacion    , "No se recibi\u00f3 el Estaci\u00f3n de Trabajo"
-					,cdtrazabilidad    , "No se recibi\u00f3 el Estatus de Trazabilidad"
 					);
 			
 			flujoMesaControlManager.guardarDatosEstado(
@@ -702,8 +697,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,statusout
 					,"S".equals(swfinnode)
 					,cdetapa
-					,cdestacion 
-					,cdtrazabilidad
 					);
 			
 			success = true;
@@ -1485,10 +1478,7 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 			       ,estado     = params.get("ESTADO")
 			       ,cduniext   = params.get("CDUNIEXT")
 			       ,ramo       = params.get("RAMO")
-			       ,nmpoliex   = params.get("NMPOLIEX")
-			       ,otvalor28  = params.get("OTVALOR28")
-			       ,otvalor29  = params.get("OTVALOR29")
-			       ;
+			       ,nmpoliex   = params.get("NMPOLIEX");
 			       
 			Utils.validate(
 					cdtiptra   , "No se recibi\u00f3 el tipo de tr\u00e1imte"
@@ -1543,8 +1533,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 					,ramo
 					,nmpoliex
 					,true, false
-					,otvalor28
-					,otvalor29
 					);
 			
 			if(TipoTramite.ENDOSO.getCdtiptra().equals(cdtiptra))
@@ -2884,103 +2872,6 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
                                      "\n@@@@@@ cambiarTipoEndosoTramite @@@@@@",
                                      "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	    return SUCCESS;
-	}
-	
-	@Action(value   = "recuperarTramitesColores",
-			results = { @Result(name="success", type="json") }
-			)
-	public String recuperarTramitesColores()
-	{
-		logger.debug(Utils.log(
-				 "\n###############################"
-				,"\n###### recuperarTramitesColores ######"
-				,"\n###### params=" , params
-				,"\n###### start="  , start
-				,"\n###### limit="  , limit
-				));
-		try
-		{
-			UserVO usuario = Utils.validateSession(session);
-			
-			Utils.validate(params, "No se recibieron datos");
-			
-			//obligatorios
-			String agrupamc = params.get("AGRUPAMC")
-			       ,status  = params.get("STATUS");
-			
-			//opcionales
-			String cdunieco  = params.get("CDUNIECO")
-			       ,cdramo   = params.get("CDRAMO")
-			       ,cdtipsit = params.get("CDTIPSIT")
-			       ,estado   = params.get("ESTADO")
-			       ,nmpoliza = params.get("NMPOLIZA")
-			       ,cdagente = params.get("CDAGENTE")
-			       ,ntramite = params.get("NTRAMITE")
-			       ,fedesde  = params.get("FEDESDE")
-			       ,fehasta  = params.get("FEHASTA")
-			       ,filtro   = params.get("FILTRO")
-			       ,dscontra = params.get("DSCONTRA")
-			       ,nmsolici = params.get("NMSOLICI");
-			
-			String cdpersonCliente = params.get("CDPERSONCLI");
-			
-			Utils.validate(
-					agrupamc , "No se recibi\u00f3n el agrupador"
-					,status  , "No se recibi\u00f3n el status"
-					);
-			
-			try
-			{
-				AgrupadorMC agrupador = AgrupadorMC.valueOf(agrupamc);
-			}
-			catch(Exception ex)
-			{
-				throw new ApplicationException("No se reconoce el agrupador");
-			}
-			
-			Map<String,Object> manRes = flujoMesaControlManager.recuperarTramites(
-					agrupamc
-					,status
-					,usuario.getUser()
-					,usuario.getRolActivo().getClave()
-					,cdunieco
-					,cdramo
-					,cdtipsit
-					,estado
-					,nmpoliza
-					,cdagente
-					,ntramite
-					,fedesde
-					,fehasta
-					,cdpersonCliente
-					,filtro
-					,dscontra
-					,nmsolici
-					,start
-					,limit
-					);
-			
-			list  = (List<Map<String,String>>)manRes.get("lista");
-			total = (Integer)manRes.get("total");
-			
-			//debo recorrer la lista y agregarle los colores correspondientes a cada tramite
-			for(Map<String,String>tramite:list){
-				String color = flujoMesaControlManager.recuperarColores(tramite.get("NTRAMITE"));
-				tramite.put("COLORREC", color);
-			}
-			success = true;
-			
-			logger.debug(Utils.log(
-					 "\n###### list=",list
-					,"\n###### recuperarTramitesColores ######"
-					,"\n###############################"
-					));
-		}
-		catch(Exception ex)
-		{
-			message = Utils.manejaExcepcion(ex);
-		}
-		return SUCCESS;
 	}
 	
 	////////////////////////////////////////////////////////

@@ -33,7 +33,6 @@ import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.MailService;
-import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.FlujoMC;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Ramo;
@@ -132,16 +131,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			gc.generaComponentes(comboEtapa, true, false, true, false, false, false);
 			
 			items.put("comboEtapa" , gc.getItems());
-			
-			List<ComponenteVO> comboEstacion = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "FLUJOMC", "COMBO_ESTACION", null);
-			gc.generaComponentes(comboEstacion, true, false, true, false, false, false);
-			
-			items.put("comboEstacion" , gc.getItems());
-			
-			List<ComponenteVO> comboTrazabilidad = pantallasDAO.obtenerComponentes(null, null, null, null, null, cdsisrol, "FLUJOMC", "COMBO_TRAZABILIDAD", null);
-			gc.generaComponentes(comboTrazabilidad, true, false, true, false, false, false);
-			
-			items.put("comboTrazabilidad" , gc.getItems());
 			
 		}
 		catch(Exception ex)
@@ -385,10 +374,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,"-1"  //statusout
 						,"N"   //swfinnode
 						,"1"   //EN REGISTRO
-						,"MDC"//null
-						,"1"//null
 						,"I"
-						
 						);
 			}
 			else if("S".equals(tipo))
@@ -555,8 +541,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 						,null //statusout
 						,null //swfinnode
 						,null //cdetapa
-						,null // cdestacion
-						,null // cdtrazabilidad
 						,"D"
 						);
 			}
@@ -921,8 +905,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			,String statusout
 			,boolean swfinnode
 			,String cdetapa
-			,String cdestacion 
-			,String cdtrazabilidad
 			)throws Exception
 	{
 		logger.debug(Utils.log(
@@ -946,8 +928,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				,"\n@@@@@@ statusout="  , statusout
 				,"\n@@@@@@ swfinnode="  , swfinnode
 				,"\n@@@@@@ cdetapa="    , cdetapa
-				,"\n@@@@@@ cdestacion=" , cdestacion
-				,"\n@@@@@@ cdtrazabilidad=", cdtrazabilidad
 				,"\n@@@@@@ list="       , list
 				));
 		
@@ -971,8 +951,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					,statusout
 					,swfinnode ? "S" : "N"
 					,cdetapa
-					,cdestacion
-					,cdtrazabilidad
 					,accion
 					);
 			
@@ -1977,7 +1955,7 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			Date ferecepc   , String cdagente  , String referencia , String nombre,
 			Date festatus   , String status    , String comments   , String nmsolici,
 			String cdtipsit , String cdusuari  , String cdsisrol   , String swimpres,
-			String cdtipflu , String cdflujomc , 
+			String cdtipflu , String cdflujomc ,
 			Map<String, String> valores,
 			String cdtipsup , String cduniext  , String ramo       , String nmpoliex,
 			boolean origenMesa, boolean inyectadoDesdeSigs) throws Exception {
@@ -2167,325 +2145,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 					renpoliex,
 					origenMesa,
 					cdsucadm
-			);
-			
-			paso = "Registrando movimiento";
-			logger.debug(paso);
-			
-			Date fechaHoy = new Date();
-			
-			String cdusuariDestino = cdusuari,
-			       cdsisrolDestino = cdsisrol;
-			
-			boolean turnarAOtraPersona = false;
-			
-			        //userSinPermisoEndoso = false;
-			
-			// Si el sistema genera el tramite o el tramite viene de sigs, hay que turnarlo
-			if (Constantes.USUARIO_SISTEMA.equals(cdusuari)
-			        || Constantes.ROL_SISTEMA.equals(cdsisrol)
-			        || inyectadoDesdeSigs
-			        ) {
-			    turnarAOtraPersona = true;
-			}
-			
-			// Si la persona que registra el endoso de auto no tiene permisos, hay que turnarlo
-			/*if ((!turnarAOtraPersona)
-			        && origenMesa
-			        && FlujoMC.AUTOS_ENDOSO.getCdflujomc().equals(cdflujomc)
-			    ) {
-			    boolean tienePermiso = false;
-			    List<Map<String, String>> endososPermitidos = despachadorDAO.recuperarPermisosEndosos(cdusuari, cdsisrol);
-			    for (Map<String, String> elem : endososPermitidos) {
-			        if (cdramo.equals(elem.get("CDRAMO"))
-			                && cdtipsup.equals(elem.get("CDTIPSUP"))) {
-			            tienePermiso = true;
-			            break;
-			        }
-			    }
-			    if (!tienePermiso) {
-			        turnarAOtraPersona   = true;
-			        userSinPermisoEndoso = true;
-			    }
-			}*/
-			
-			String commentsCreacion = Utils.join(
-                    "Se registra un nuevo tr\u00e1mite desde mesa de control con las siguientes observaciones: ",
-                    StringUtils.isBlank(comments)
-                        ? "(sin observaciones)"
-                        : comments
-            );
-			
-			if (turnarAOtraPersona) {
-			    cdusuariDestino = null;
-			    cdsisrolDestino = null;
-			    
-			    /*if (userSinPermisoEndoso) {
-    			    paso = "Guardando detalle";
-                    logger.debug(paso);
-                    mesaControlDAO.movimientoDetalleTramite(
-                            ntramite,
-                            fechaHoy,
-                            null, // cdclausu
-                            commentsCreacion,
-                            cdusuari,
-                            null, // cdmotivo
-                            cdsisrol,
-                            "S",
-                            null, //cdusuariDes,
-                            null, //cdsisrolDes,
-                            status,
-                            false // cerrado
-                            );
-                    
-                    paso = "Abriendo historial";
-                    logger.debug(paso);
-                    flujoMesaControlDAO.guardarHistoricoTramite(
-                            fechaHoy,
-                            ntramite,
-                            cdusuari,
-                            cdsisrol,
-                            status,
-                            cdunieco,
-                            ConstantesDespachador.TIPO_ASIGNACION_REASIGNA);
-                    
-                    commentsCreacion = "Tr\u00e1mite turnado autom\u00e1ticamente por perfilamiento";
-			    }*/
-			}
-			
-		    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
-                    cdusuari,
-                    cdsisrol,
-                    ntramite,
-                    status,
-                    commentsCreacion,
-                    null,  // cdrazrecha
-                    cdusuariDestino,
-                    cdsisrolDestino,
-                    true,  // permisoAgente
-                    false, // porEscalamiento
-                    fechaHoy,
-                    false,  // sinGrabarDetalle
-                    turnarAOtraPersona
-                    );
-		    logger.debug(ntramite);
-            logger.debug(despacho.getMessage());		
-            respuesta.put("ntramite", ntramite);
-            respuesta.put("asignado", despacho.getMessage());
-		} catch (Exception ex) {
-			Utils.generaExcepcion(ex, paso);
-		}
-		
-		logger.debug(Utils.log(
-				"\n@@@@@@ ntramite  = ", ntramite,
-				"\n@@@@@@ respuesta = ", respuesta, 
-				"\n@@@@@@ registrarTramite @@@@@@",
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-		));
-		return respuesta;
-	}
-	
-	@Override
-	public Map<String,String> registrarTramite ( 
-			String cdunieco , String cdramo    , String estado     , String nmpoliza,
-			String nmsuplem , String cdsucadm  , String cdsucdoc   , String cdtiptra,
-			Date ferecepc   , String cdagente  , String referencia , String nombre,
-			Date festatus   , String status    , String comments   , String nmsolici,
-			String cdtipsit , String cdusuari  , String cdsisrol   , String swimpres,
-			String cdtipflu , String cdflujomc , 
-			Map<String, String> valores,
-			String cdtipsup , String cduniext  , String ramo       , String nmpoliex,
-			boolean origenMesa, boolean inyectadoDesdeSigs, String otvalor28, String otvalor29) throws Exception {
-		logger.debug(Utils.log(
-				"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-				"\n@@@@@@ registrarTramite @@@@@@",
-				"\n@@@@@@ cdunieco           = " , cdunieco,
-				"\n@@@@@@ cdramo             = " , cdramo,
-				"\n@@@@@@ estado             = " , estado,
-				"\n@@@@@@ nmpoliza           = " , nmpoliza,
-				"\n@@@@@@ nmsuplem           = " , nmsuplem,
-				"\n@@@@@@ cdsucadm           = " , cdsucadm,
-				"\n@@@@@@ cdsucdoc           = " , cdsucdoc,
-				"\n@@@@@@ cdtiptra           = " , cdtiptra,
-				"\n@@@@@@ ferecepc           = " , ferecepc,
-				"\n@@@@@@ cdagente           = " , cdagente,
-				"\n@@@@@@ referencia         = " , referencia,
-				"\n@@@@@@ nombre             = " , nombre,
-				"\n@@@@@@ festatus           = " , festatus,
-				"\n@@@@@@ status             = " , status,
-				"\n@@@@@@ comments           = " , comments,
-				"\n@@@@@@ nmsolici           = " , nmsolici,
-				"\n@@@@@@ cdtipsit           = " , cdtipsit,
-				"\n@@@@@@ cdusuari           = " , cdusuari,
-				"\n@@@@@@ cdsisrol           = " , cdsisrol,
-				"\n@@@@@@ swimpres           = " , swimpres,
-				"\n@@@@@@ cdtipflu           = " , cdtipflu,
-				"\n@@@@@@ cdflujomc          = " , cdflujomc,
-				"\n@@@@@@ valores            = " , valores,
-				"\n@@@@@@ cdtipsup           = " , cdtipsup,
-				"\n@@@@@@ cduniext           = " , cduniext,
-				"\n@@@@@@ ramo               = " , ramo,
-				"\n@@@@@@ nmpoliex           = " , nmpoliex,
-				"\n@@@@@@ origenMesa         = " , origenMesa,
-                "\n@@@@@@ inyectadoDesdeSigs = " , inyectadoDesdeSigs,
-                "\n@@@@@@ otvalor28 = " , otvalor28,
-                "\n@@@@@@ otvalor29 = " , otvalor29
-		));
-		
-		Map<String,String> respuesta = new HashMap<String,String>();
-		String paso = null, ntramite = null;
-		try {
-			String renuniext  = null,
-					renramo   = null,
-					renpoliex = null;
-			
-			if ("21".equals(cdtiptra)) { // Si es una renovacion
-				logger.debug(Utils.log("Es una renovacion: ", renuniext, ", ", renramo, ", ", renpoliex));
-				renuniext = cduniext;
-				renramo   = ramo;
-				renpoliex = nmpoliex;
-			}
-			
-			paso = "Verificando si requiere validaci\u00f3n sigs";
-			logger.debug(paso);
-			
-			// Recuperamos de tparagen algo como: |EMISION|ENDOSO|RENOVACION|
-			String tramitesValidadosPorSigs = consultasDAO.recuperarTparagen(ParametroGeneral.VALIDACION_SIGS_TRAMITE);
-			
-			logger.debug("tramitesValidadosPorSigs = {}", tramitesValidadosPorSigs);
-			
-			// Recuperamos la lista de TTIPTRAMC y buscamos nuestro cdtiptra para recuperar el DSTIPTRA
-			List<Map<String,String>> tiposTramites = flujoMesaControlDAO.recuperaTtiptramc();
-			String dstiptra = null;
-			for (Map<String,String> tramite : tiposTramites) {
-				if (tramite.get("CDTIPTRA").equals(cdtiptra)) {
-					dstiptra = tramite.get("DSTIPTRA");
-					break;
-				}
-			}
-			Utils.validate(dstiptra, "No se encontr\u00f3 el tr\u00e1mite para revisar si requiere validaci\u00f3n");
-			
-			// Si hay coincidencia de |EMISION|ENDOSO|RENOVACION| que contenga |+EMISION+|
-			boolean requiereValidacion = tramitesValidadosPorSigs.indexOf(Utils.join("|", dstiptra, "|")) != -1;
-			logger.debug("Coincidencia de {} que contiene {} = {}", tramitesValidadosPorSigs, dstiptra, requiereValidacion);
-			
-			if (requiereValidacion) {
-				paso = "Ejecutando validaci\u00f3n externa";
-				logger.debug(paso);
-				
-				String cdtipend = "P"; // Poliza nueva
-				
-				if (!TipoTramite.POLIZA_NUEVA.getCdtiptra().equals(cdtiptra)
-						&& !TipoTramite.RENOVACION.getCdtiptra().equals(cdtiptra)
-				) { // Si no es emision ni renovacion buscamos por cdtipsup
-					cdtipend = consultasDAO.recuperarTtipsupl(cdtipsup).get("CDTIPEND");
-				}
-				
-				String ramoGS = null;
-				
-				// RECUPERAMOS EL RAMO DESDE UN OTVALOR SI EL FLUJO ES EXTERNO
-			    paso = "Recuperando tipos de flujo";
-			    logger.debug(paso);
-			    List<Map<String, String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumc("PRINCIPAL", "1");
-			    Map<String, String> tipoFlujo = null;
-			    for (Map<String, String> ite : tiposFlujo) {
-			        if (cdtipflu.equals(ite.get("CDTIPFLU"))) {
-			            tipoFlujo = ite;
-			            break;
-			        }
-			    }
-			    if (tipoFlujo == null) {
-			        throw new ApplicationException("No se encuentra el tipo de flujo");
-			    }
-			    boolean externo = "S".equals(tipoFlujo.get("SWEXTERNO"));
-			    if (externo) {
-			        String cdatribu = flujoMesaControlDAO.recuperarCdatribuPorDsatribuTatriflumc(cdtipflu, cdflujomc, "RAMO");
-			        if (StringUtils.isNotBlank(cdatribu)) {
-			            String key = Utils.join("otvalor", StringUtils.leftPad(cdatribu, 2, "0"));
-			            String valor = valores.get(key);
-			            if (StringUtils.isNotBlank(valor)) {
-			                ramoGS = valor;
-			            }
-			        }
-			    }
-				
-				if (StringUtils.isBlank(ramoGS)) {
-				    ramoGS = consultasDAO.obtieneSubramoGS(cdramo, cdtipsit);
-				}
-				
-				if (!"B".equals(cdtipend)) {
-					autosSIGSDAO.validarAgenteParaNuevoTramite(
-						cdagente,
-						ramoGS,
-						cdtipend
-					);
-				} else {
-					logger.debug("Para tipo B no se valida agente");
-				}
-			}
-			
-			paso = "Recuperando sucursal del usuario";
-            logger.debug(paso);
-            cdsucadm = despachadorDAO.recuperarSucursalUsuarioPorTipoTramite(cdusuari, cdflujomc);
-			
-            // Para flujos de renovacion de autos se recupera la sucursal del agente porque
-            // la que se captura (ejemplo 120) puede no existir en sicaps
-            if((
-                    FlujoMC.AUTOS_RENOVACION_INDIVIDUAL.getCdflujomc().equals(cdflujomc)
-                    || FlujoMC.AUTOS_RENOVACION_PYME.getCdflujomc().equals(cdflujomc)
-                    || FlujoMC.AUTOS_RENOVACION_FLOTILLA.getCdflujomc().equals(cdflujomc)
-                )
-                && StringUtils.isNotBlank(cdramo)
-                && StringUtils.isNotBlank(cdagente)
-                ) {
-                try{
-                    paso = "Recuperando cdunieco del agente";
-                    logger.debug(paso);
-                    //Se toma el cdunieco del agente en vez del que esta en la pantalla
-                    String cdtipram=consultasDAO.recuperarTipoRamoPorCdramo(cdramo);
-                    cdunieco = cotizacionDAO.cargarCduniecoAgenteAuto(cdagente, cdtipram);
-                    cdsucdoc = cdunieco; 
-                }catch(Exception e){
-                    logger.error("Error recuperando cdunieco del agente {}",e);
-                }
-            }
-            
-            
-			paso = "Registrando tr\u00e1mite";
-			logger.debug(paso);
-			
-			ntramite = mesaControlDAO.movimientoMesaControl(
-					cdunieco,
-					cdramo,
-					estado,
-					nmpoliza,
-					nmsuplem,
-					cdsucadm,
-					cdsucdoc,
-					cdtiptra,
-					ferecepc,
-					cdagente,
-					referencia,
-					nombre,
-					festatus,
-					status,
-					comments,
-					nmsolici,
-					cdtipsit,
-					cdusuari,
-					cdsisrol,
-					swimpres,
-					cdtipflu,
-					cdflujomc,
-					valores,
-					cdtipsup,
-					renuniext,
-					renramo,
-					renpoliex,
-					origenMesa,
-					cdsucadm,
-					otvalor28,
-					otvalor29
 			);
 			
 			paso = "Registrando movimiento";
@@ -4463,24 +4122,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	        logger.debug(paso);
 	        flujoMesaControlDAO.cambiarTipoEndosoTramite(ntramite, cdtipsup);
 	        
-	        paso = "Registrando detalle tramite recategorizado";
-	        logger.debug(paso);
-	        mesaControlDAO.movimientoDetalleTramite(
-	                ntramite,
-	                new Date(), //feinicio
-	                null, //cdclausu
-	                Utils.log("Se recategoriza el motivo de endoso a \"", dstipsup, "\" con las siguientes observaciones: ",
-	                        Utils.NVL(comments, "(sin comentarios)")),
-	                cdusuari,
-	                null, //cdmotivo
-	                cdsisrol,
-	                swagente ? "S" : "N",
-	                null, //cdusuariDest
-	                null, //cdsisrolDest
-	                EstatusTramite.RECATEGORIZADO.getCodigo(),//status,
-	                true
-	                );
-	        
 	        paso = "Registrando detalle";
 	        logger.debug(paso);
 	        mesaControlDAO.movimientoDetalleTramite(
@@ -4503,26 +4144,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	    }
         logger.debug("{}", Utils.log("\n@@@@@@ cambiarTipoEndosoTramite @@@@@@",
                                      "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-	}
-	
-	@Override
-	public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception {
-	    logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-	                           "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-	                           "\n@@@@@@ ntramite = ", ntramite,
-	                           "\n@@@@@@ cdusuari = ", cdusuari,
-	                           "\n@@@@@@ cdsisrol = ", cdsisrol));
-	    FlujoVO flujo = null;
-	    String paso = "Construyendo flujo RSTN";
-	    try {
-	        flujo = flujoMesaControlDAO.generarYRecuperarFlujoRSTN(ntramite, cdusuari, cdsisrol);
-	    } catch (Exception ex) {
-	        Utils.generaExcepcion(ex, paso);
-	    }
-        logger.debug(Utils.log("\n@@@@@@ flujo = ", flujo,
-                               "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-                               "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-        return flujo;
 	}
 	
 	@Deprecated
@@ -4560,35 +4181,4 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 	    }
 	    return cantidadDocumentos;
 	}
-	
-	@Override
-	public String recuperarColores(String ntramite)throws Exception
-	{
-		logger.debug(Utils.log(
-				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				,"\n@@@@@@ recuperarColores @@@@@@"
-				,"\n@@@@@@ ntramite="         , ntramite
-				));
-		String             paso   = null;
-		String result = null;
-		try
-		{
-			paso = "Recuperando colores";
-			
-			result = flujoMesaControlDAO.recuperarColores(ntramite);
-			
-		}
-		catch(Exception ex)
-		{
-			Utils.generaExcepcion(ex, paso);
-		}
-
-		logger.debug(Utils.log(
-				 "\n@@@@@@ result=" , result
-				,"\n@@@@@@ recuperarColores @@@@@@"
-				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-				));
-		return result;
-	}
-	
 }

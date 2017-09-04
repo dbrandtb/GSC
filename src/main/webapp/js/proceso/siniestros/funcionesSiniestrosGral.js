@@ -1796,8 +1796,8 @@ function _p21_agregarConcepto() {
         debug("recordFactura ===> ",recordFactura);
         
         if(_11_params.CDRAMO != _RECUPERA){
-        	//(EGS) restringimos la validacion solo para pago directo _tipoPago == _TIPO_PAGO_DIRECTO &&
-        	if(_tipoPago == _TIPO_PAGO_DIRECTO && recordFactura.get('FLAGREQAUT') == "SI" &&  (  recordFactura.get('NMAUTSER') =="N/A" || +recordFactura.get('NMAUTSER') <= '0' || recordFactura.get('NMAUTSER')== "")){
+        	
+        	if(recordFactura.get('FLAGREQAUT') == "SI" &&  (  recordFactura.get('NMAUTSER') =="N/A" || +recordFactura.get('NMAUTSER') <= '0' || recordFactura.get('NMAUTSER')== "")){
                 debug("Entra a la configuración");
                  _11_obtieneDatosOpcionalesValor(recordFactura.get('CDRAMO'),recordFactura.get('CDTIPSIT'),recordFactura.get('CDGARANT'),recordFactura.get('CDCONVAL'),recordFactura,"0"); 
             }else{
@@ -2427,8 +2427,7 @@ function guardaCambiosAutorizacionServ(record, numeroAutorizacion, tipoProceso, 
                 null,
                 jsonAutServ.idTipoEvento,
                 null,
-                record.data.SWFONSIN,
-                record.data.SWMEDPRV
+                record.data.APLICFONDO
             );
             gridFacturaDirecto.setLoading(false);
         },
@@ -3242,8 +3241,7 @@ function guardaDatosComplementariosValidacionAsegurado(record, banderaAsegurado)
                                             Ext.Date.format(record.data.FEEGRESO, 'd/m/Y'),
                                             record.data.CDTIPEVE,
                                             record.data.CDTIPALT,
-                                            record.data.SWFONSIN,
-                                            record.data.SWMEDPRV
+                                            record.data.SWFONSIN
                                         );
                                     }
                                 }else{
@@ -3295,8 +3293,7 @@ function guardaDatosComplementariosValidacionAsegurado(record, banderaAsegurado)
                             Ext.Date.format(record.data.FEEGRESO, 'd/m/Y'),
                             record.data.CDTIPEVE,
                             record.data.CDTIPALT,
-                            record.data.SWFONSIN,
-                            record.data.SWMEDPRV
+                            record.data.SWFONSIN
                         );
                     }
                 }
@@ -3321,7 +3318,7 @@ function _11_guardarDatosComplementario(cdunieco,cdramo, estado, nmpoliza, nmsup
                                     cdicd2,cdcausa, cdgarant,cdconval, nmautser,
                                     cdperson, tipoProceso, complemento,nmsituac,
                                     deducible, copago,nmcallcenter, actMisiniper,
-                                    fechaIngreso,fechaEgreso,cveEvento, cveAlta, aplicFondo, esMedPrev){
+                                    fechaIngreso,fechaEgreso,cveEvento, cveAlta, aplicFondo){
     
     debug("Datos de guardado 1 ===> ","cdunieco :"+cdunieco,"cdramo :"+cdramo, "estado :"+estado, "nmpoliza :"+nmpoliza);
     debug("Datos de guardado 2 ===> ","nmsuplem :"+nmsuplem,"aaapertu :"+aaapertu, "nmsinies :"+nmsinies,"feocurre :"+feocurre);
@@ -3329,7 +3326,7 @@ function _11_guardarDatosComplementario(cdunieco,cdramo, estado, nmpoliza, nmsup
     debug("Datos de guardado 4 ===> ","cdgarant :"+cdgarant,"cdconval :"+cdconval, "nmautser :"+nmautser,"cdperson :"+cdperson);
     debug("Datos de guardado 5 ===> ","tipoProceso :"+tipoProceso, "complemento :"+complemento,"nmsituac :"+nmsituac);
     debug("Datos de guardado 6 ===> ","deducible :"+deducible, "copago :"+copago,"nmcallcenter :"+nmcallcenter, "actMisiniper :"+actMisiniper);
-    debug("Datos de guardado 7 ===> ","fechaIngreso :"+fechaIngreso, "fechaEgreso :"+fechaEgreso,"cveEvento :"+cveEvento, "cveAlta :"+cveAlta,"esMedPrev :"+esMedPrev);
+    debug("Datos de guardado 7 ===> ","fechaIngreso :"+fechaIngreso, "fechaEgreso :"+fechaEgreso,"cveEvento :"+cveEvento, "cveAlta :"+cveAlta);
     Ext.Ajax.request( {
         url  : _URL_ACTUALIZA_INFO_GRAL_SIN
         ,params:{
@@ -3375,8 +3372,7 @@ function _11_guardarDatosComplementario(cdunieco,cdramo, estado, nmpoliza, nmsup
             'params.feegreso'       : fechaEgreso,
             'params.cveEvento'      : cveEvento,
             'params.cveAlta'        : cveAlta,
-            'params.aplicFondo'     : aplicFondo,
-            'params.esMedPrev'      : esMedPrev
+            'params.aplicFondo'     : aplicFondo
         }
         ,success : function(response, opts) {   //(EGS)
             banderaAsegurado = 0;
