@@ -55,7 +55,7 @@
 
 <script>
 ////// urls //////
-var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramitesColores"             />'
+var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramitesColoresLista"             />'
     ,_p54_urlRecuperarPoliza          = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnica"          />'
     ,_p54_urlRegistrarTramite         = '<s:url namespace="/flujomesacontrol" action="registrarTramite"              />'
     ,_p54_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"          action="cargarCduniecoAgenteAuto"      />'

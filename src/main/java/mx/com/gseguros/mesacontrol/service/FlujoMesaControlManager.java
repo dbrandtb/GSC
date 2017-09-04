@@ -458,4 +458,6 @@ public interface FlujoMesaControlManager
 	public int obtenerCantidadDocumentosCotizacion(String ntramite) throws Exception;
 	
 	public String recuperarColores(String ntramite)throws Exception;
+	
+	public List<Map<String,String>> recuperarColoresLista(String listaTramites)throws Exception;
 }
