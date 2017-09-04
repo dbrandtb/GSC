@@ -4591,4 +4591,35 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 		return result;
 	}
 	
+	@Override
+	public List<Map<String,String>> recuperarColoresLista(String listaTramites)throws Exception
+	{
+		logger.debug(Utils.log(
+				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				,"\n@@@@@@ recuperarColoresLista @@@@@@"
+				,"\n@@@@@@ ntramite="         , listaTramites
+				));
+		List<Map<String,String>> resultado = new ArrayList<Map<String,String>>();
+		String             paso   = null;
+		String result = null;
+		try
+		{
+			paso = "Recuperando colores";
+			
+			resultado = flujoMesaControlDAO.recuperarColoresLista(listaTramites);
+			
+		}
+		catch(Exception ex)
+		{
+			Utils.generaExcepcion(ex, paso);
+		}
+
+		logger.debug(Utils.log(
+				 "\n@@@@@@ result=" , result
+				,"\n@@@@@@ recuperarColoresLista @@@@@@"
+				,"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+				));
+		return resultado;
+	}
+	
 }

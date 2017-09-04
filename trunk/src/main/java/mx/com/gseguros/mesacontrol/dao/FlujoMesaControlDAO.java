@@ -990,4 +990,6 @@ public interface FlujoMesaControlDAO {
     public String obtenerSuplementoTramite(String ntramite)throws Exception;
     
     public String recuperarColores(String ntramite)throws Exception;
+    
+    public List<Map<String,String>> recuperarColoresLista(String listaTramites)throws Exception;
 }

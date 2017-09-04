@@ -2983,6 +2983,144 @@ public class FlujoMesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	
+	@Action(value   = "recuperarTramitesColoresLista",
+			results = { @Result(name="success", type="json") }
+			)
+	public String recuperarTramitesColoresLista()
+	{
+		logger.debug(Utils.log(
+				 "\n###############################"
+				,"\n###### recuperarTramitesColoresLista ######"
+				,"\n###### params=" , params
+				,"\n###### start="  , start
+				,"\n###### limit="  , limit
+				));
+		try
+		{
+			UserVO usuario = Utils.validateSession(session);
+			
+			Utils.validate(params, "No se recibieron datos");
+			
+			//obligatorios
+			String agrupamc = params.get("AGRUPAMC")
+			       ,status  = params.get("STATUS");
+			
+			//opcionales
+			String cdunieco  = params.get("CDUNIECO")
+			       ,cdramo   = params.get("CDRAMO")
+			       ,cdtipsit = params.get("CDTIPSIT")
+			       ,estado   = params.get("ESTADO")
+			       ,nmpoliza = params.get("NMPOLIZA")
+			       ,cdagente = params.get("CDAGENTE")
+			       ,ntramite = params.get("NTRAMITE")
+			       ,fedesde  = params.get("FEDESDE")
+			       ,fehasta  = params.get("FEHASTA")
+			       ,filtro   = params.get("FILTRO")
+			       ,dscontra = params.get("DSCONTRA")
+			       ,nmsolici = params.get("NMSOLICI");
+			
+			String cdpersonCliente = params.get("CDPERSONCLI");
+			
+			Utils.validate(
+					agrupamc , "No se recibi\u00f3n el agrupador"
+					,status  , "No se recibi\u00f3n el status"
+					);
+			
+			try
+			{
+				AgrupadorMC agrupador = AgrupadorMC.valueOf(agrupamc);
+			}
+			catch(Exception ex)
+			{
+				throw new ApplicationException("No se reconoce el agrupador");
+			}
+			
+			Map<String,Object> manRes = flujoMesaControlManager.recuperarTramites(
+					agrupamc
+					,status
+					,usuario.getUser()
+					,usuario.getRolActivo().getClave()
+					,cdunieco
+					,cdramo
+					,cdtipsit
+					,estado
+					,nmpoliza
+					,cdagente
+					,ntramite
+					,fedesde
+					,fehasta
+					,cdpersonCliente
+					,filtro
+					,dscontra
+					,nmsolici
+					,start
+					,limit
+					);
+			
+			list  = (List<Map<String,String>>)manRes.get("lista");
+			total = (Integer)manRes.get("total");
+			
+			//debo armar la lista de string para llamar al sp que me indicará los colores
+			if(list != null && list.size() > 0) {
+				String paso="consulta de tramites exitosa: "+list.size();
+				logger.debug(paso);
+				//totalCount = list.get(0).getTotal();
+				
+				//se debe armar la lista de tramites para hacer la consulta de colores
+				String listaTramites="";
+				String listaTramitesTmp="";
+				for(Map<String,String>tramite:list){
+					listaTramitesTmp=tramite.get("NTRAMITE") + "#";
+					listaTramites=listaTramites+listaTramitesTmp;
+				}
+				
+				paso = "armando la lista de tramites para consultar colores: "+listaTramites;
+				logger.debug(paso);
+				//listaTramites=listaTramites.substring(0, listaTramites.length()-1);
+				
+				//consulta la informacion de colores
+				paso="consultando la informacion de los colores de los siguientes tramites: "+listaTramites;
+				logger.debug(paso);
+				
+				try{
+					List<Map<String,String>> listaColores;
+					listaColores = flujoMesaControlManager.recuperarColoresLista(listaTramites);
+				
+					paso = "Consulta exitosa de los colores: " + listaColores.size();
+		            logger.debug(paso);
+				
+		            //se debe recorrer la lista de tramites y para completar el objeto y agregarle el color
+		            for(Map<String,String>tramite:list){
+		            	for(Map<String,String>color:listaColores){
+		            		//se le agregan los datos del color
+		            		if (tramite.get("NTRAMITE").equals(color.get("NTRAMITE"))){
+		            			tramite.put("COLORREC", color.get("COLOR"));
+		            		}//if
+		            	}//for j
+		            }//for i
+		            paso= "agregando informacion de colores a los tramites: ";
+            		logger.debug(paso);	
+			
+				}//try
+				catch (Exception e){
+					message = Utils.manejaExcepcion(e);
+				}
+			}//if
+			success = true;
+			
+			logger.debug(Utils.log(
+					 "\n###### list=",list
+					,"\n###### recuperarTramitesColoresLista ######"
+					,"\n###############################"
+					));
+		}
+		catch(Exception ex)
+		{
+			message = Utils.manejaExcepcion(ex);
+		}
+		return SUCCESS;
+	}
 	////////////////////////////////////////////////////////
 	// GETTERS Y SETTERS                                  //
 	                                                      //

@@ -4597,4 +4597,31 @@ public class FlujoMesaControlDAOImpl extends AbstractManagerDAO implements Flujo
             compile();
         }
     }
+    
+    @Override
+    public List<Map<String, String>> recuperarColoresLista (String listraTramites) throws Exception {
+        Map<String, String> params = new LinkedHashMap<String, String>();
+        params.put("pv_lista_tram_i" , listraTramites);
+        Map<String, Object> procRes = ejecutaSP(new RecuperarColoresListaSP(getDataSource()), params);
+        List<Map<String, String>> lista = (List<Map<String, String>>) procRes.get("pv_registro_o");
+        if (lista == null) {
+            lista = new ArrayList<Map<String, String>>();
+        }
+        logger.debug("recuperarColoresLista lista: {}", Utils.log(lista));
+        return lista;
+    }
+    
+    protected class RecuperarColoresListaSP extends StoredProcedure {
+        protected RecuperarColoresListaSP (DataSource dataSource) {
+            super(dataSource,"P_GET_COLOR_TRAMITE_LISTA");
+            declareParameter(new SqlParameter("pv_lista_tram_i" , OracleTypes.VARCHAR));
+            String[] cols = new String[] {
+                    "NTRAMITE", "COLOR"
+                    };
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
+        }
+    }
 }
