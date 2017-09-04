@@ -625,7 +625,8 @@ public class MesaControlAction extends PrincipalCoreAction
                     Constantes.SI.equalsIgnoreCase(mostrarAgente), // permisoAgente 
                     false, // porEscalamiento 
                     fechaHoy, 
-                    false  // sinGrabarDetalle
+                    false,  // sinGrabarDetalle
+                    true // crear Registro de status 171 REASIGNADO
                     );
             
             logger.debug(Utils.log("Tr\u00e1mite reasignado. ", reasignado.getMessage()));
