@@ -831,7 +831,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                 if (sinGrabarDetalle == false) {
                     paso = "Guardando detalle";
                     logger.debug(paso);
-                    
+                    if(sinBuscarRegreso) {//Se usa validacion para insertar nuevo registro cuando un tramite se reasigna a usuario diferente
                     mesaControlDAO.movimientoDetalleTramite(
                             ntramite,
                             fechaHoy,
@@ -846,7 +846,7 @@ K                   ENCOLAR CON DATOS ORIGINALES
                             EstatusTramite.REASIGNADO.getCodigo(),// status,
                             true // cerrado
                             );
-                    
+                    }
                     mesaControlDAO.movimientoDetalleTramite(
                             ntramite,
                             fechaHoy,
