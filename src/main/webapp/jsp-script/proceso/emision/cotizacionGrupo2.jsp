@@ -111,8 +111,8 @@ var _p25_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol"
 var _p25_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p25_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
-var _p25_urlImprimirCotiza      = '<s:property value="rutaServidorReports" />';
-var _p25_reportsServerUser      = '<s:property value="passServidorReports" />';
+var _p25_urlImprimirCotiza      = '<s:text name="ruta.servidor.reports" />';
+var _p25_reportsServerUser      = '<s:text name="pass.servidor.reports" />';
 var _TIPO_SITUACION_RENOVACION  = '<s:property value="@mx.com.gseguros.portal.general.util.TipoEndoso@RENOVACION.cdTipSup" />';
 var _EN_ESPERA_DE_COTIZACION    = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_COTIZACION.codigo" />';
 var _EN_EMISION_EN_REVISION_TECNICA  = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EMISION_EN_REVISION_TECNICA.codigo" />';
@@ -122,12 +122,7 @@ var _ESTATUS_TRAMITE_AGENTE  = '<s:property value="@mx.com.gseguros.portal.gener
 
 var _p25_smap1 = <s:property value='%{convertToJSON("smap1")}' escapeHtml="false" />;
 
-debug('#################################################_p25_smap1:',_p25_smap1);
-
-if ('S' === _p25_smap1.rstn && RolSistema.Agente === _p25_smap1.cdsisrol) {
-    _p25_smap1.DETALLE_LINEA = 'S';
-    _p25_smap1.LINEA_EXTENDIDA = 'N';
-}
+debug('_p25_smap1:',_p25_smap1);
 
 _p25_smap1.modificarTodo = false;
 
@@ -135,20 +130,6 @@ if (Number(_p25_smap1.status) === 24
     && [RolSistema.Agente, RolSistema.EjecutivoVenta, RolSistema.MesaControl].indexOf(_p25_smap1.cdsisrol) != -1
     ) {
     _p25_smap1.modificarTodo = true;
-}
-
-_p25_smap1.mapaSwitchCoberValosit = {};
-try {
-    var listaSwitchCoberValosit = _p25_smap1.swtichCoberturaTatrisit.split(',');
-    debug('listaSwitchCoberValosit:', listaSwitchCoberValosit);
-    var mapaSwitchCoberValosit = {};
-    for (var i = 0; i < listaSwitchCoberValosit.length; i++) {
-        mapaSwitchCoberValosit[listaSwitchCoberValosit[i]] = 'S';
-    }
-    debug('mapaSwitchCoberValosit:', mapaSwitchCoberValosit);
-    _p25_smap1.mapaSwitchCoberValosit = mapaSwitchCoberValosit;
-} catch (e) {
-    debugError('WARNING al manejar switch de cobertura tvalosit', e);
 }
 
 var posicionExtraprimaOcup;
@@ -301,7 +282,6 @@ var forzaCambiaCensoClon = (cambiaTamTramClon||cargaCensoRenovNuvo)? true : fals
 
 var cveDesSucursal = '';
 var mensajeCambioGrupos = 0;
-
 ////// variables //////
 
 Ext.onReady(function()
@@ -310,7 +290,7 @@ Ext.onReady(function()
     /*_grabarEvento('COTIZACION','ACCCOTIZA'
                   ,_p25_ntramiteVacio?_p25_ntramiteVacio:(_p25_ntramite?_p25_ntramite:''),_p25_smap1.cdunieco,_p25_smap1.cdramo);*/
 
-    Ext.Ajax.timeout = 60*60*1000;
+    Ext.Ajax.timeout = 240*60*1000;
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
@@ -642,7 +622,6 @@ Ext.onReady(function()
                 {
                     beforeedit : function(editor,context)
                     {
-                        _p25quitarFiltroSumaAsegRamo11();
                     	debug( 'VEditor: ', editor);
                     	debug( 'VContext: ', context);
                         if(!(
@@ -705,12 +684,6 @@ Ext.onReady(function()
                                  );
                             }
                         }
-                    },
-                    edit : function () {
-                        _p25quitarFiltroSumaAsegRamo11();
-                    },
-                    canceledit : function () {
-                        _p25quitarFiltroSumaAsegRamo11();
                     }
                 }
             })
@@ -735,7 +708,7 @@ Ext.onReady(function()
 
         			setTimeout(function(){
         				if(grd.isVisible()){
-        					if(mensajeCambioGrupos == 0){
+            				if(mensajeCambioGrupos == 0){
         						mensajeCambioGrupos ++;
         						mensajeInfo('Si agrega o elimina Grupos para este Tr&aacute;mite Clonado debe volver a cargar el censo con las nuevas caracter&iacute;sticas.');
             				}
@@ -881,7 +854,6 @@ Ext.onReady(function()
                 {
                     beforeedit : function(editor,context)
                     {
-                        _p25quitarFiltroSumaAsegRamo11();
                     	debug( 'VEditor: ', editor);
                         debug( 'VContext: ', context);
                         if(!(
@@ -942,12 +914,6 @@ Ext.onReady(function()
 						         );
 						    }
 						}                      
-                    },
-                    edit : function () {
-                        _p25quitarFiltroSumaAsegRamo11();
-                    },
-                    canceledit : function () {
-                        _p25quitarFiltroSumaAsegRamo11();
                     }
                 }
             })
@@ -1397,28 +1363,7 @@ Ext.onReady(function()
                                     ,handler : _p25_cotizarNueva
                                     ,hidden  : _p25_ntramite ? true : false
                                 }
-                            ],
-                            listeners : {
-                                afterrender : function (me) {
-                                    if (!Ext.isEmpty(_cotcol_flujo) && _cotcol_flujo.aux === 'RSTN') {
-                                        var ck = 'Quitando botones rstn';
-                                        try {
-                                            var botones = Ext.ComponentQuery.query('button', me);
-                                            debug('botones rstn:', botones);
-                                            for (var i = 0; i < botones.length; i++) {
-                                                var boton = botones[i];
-                                                debug(boton.text, boton.handler.toString());
-                                                if (boton.handler.toString().indexOf('turnar') != -1) {
-                                                    debug('boton hide');
-                                                    boton.hide();
-                                                }
-                                            }
-                                        } catch (e) {
-                                            debugError(e, 'WARNING al quitar botones rstn. ' + ck);
-                                        }
-                                    }
-                                }
-                            }
+                            ]
                         }]
                     })
                 ]
@@ -1458,7 +1403,7 @@ Ext.onReady(function()
             		var arrBusqComp =  Ext.ComponentQuery.query('button[text=Guardar y recargar]', _p_25_panelPrincipal);
             		var btnGuardarYrecargar = arrBusqComp[arrBusqComp.length-1];
                 	
-            		if(!esTramiteClonado){
+                	if(!esTramiteClonado){
             			if((RolSistema.EjecutivoVenta == _p25_smap1.cdsisrol || RolSistema.MesaControl == _p25_smap1.cdsisrol ) && _p25_smap1.status == _ESTATUS_PENDIENTE){
             				btnGuardarYrecargar.hide();
             			}
@@ -1466,7 +1411,7 @@ Ext.onReady(function()
             				btnGuardarYrecargar.hide();
             			}
             		}
-            		
+                	
                 }catch(exClon){
                 	debugError('Error sin impacto al mostrar boton de Guardar para clonacion',exClon);
                 }
@@ -1483,7 +1428,7 @@ Ext.onReady(function()
             {
                 itemId       : '_cotcol_panelFlujo'
                 ,title       : 'ACCIONES'
-                ,hidden      : Ext.isEmpty(_cotcol_flujo) || _cotcol_flujo.aux === 'RSTN'
+                ,hidden      : Ext.isEmpty(_cotcol_flujo)
                 ,buttonAlign : 'left'
                 ,buttons     : []
                 ,style       : 'margin-bottom: 5px;'
@@ -1570,7 +1515,7 @@ Ext.onReady(function()
         
 	};
     
-    if(_p25_smap1.VENTANA_DOCUMENTOS=='S'&&(_p25_ntramite||_p25_ntramiteVacio) && (Ext.isEmpty(_cotcol_flujo) || _cotcol_flujo.aux !== 'RSTN'))
+    if(_p25_smap1.VENTANA_DOCUMENTOS=='S'&&(_p25_ntramite||_p25_ntramiteVacio))
     {
         Ext.create('Ext.window.Window',
         {
@@ -1689,23 +1634,23 @@ Ext.onReady(function()
             debug('reparto pago select valor:',val);
             if(val==1)
             {
-                _hide(_fieldByName('pcpgocte'));
+                _fieldByName('pcpgocte').hide();
                 _fieldByName('pcpgocte').setValue(100);
-                _hide(_fieldByName('pcpgotit'));
+                _fieldByName('pcpgotit').hide();
                 _fieldByName('pcpgotit').setValue(0);
             }
             else if(val==2)
             {
-                _show(_fieldByName('pcpgocte'));
+                _fieldByName('pcpgocte').show();
                 _fieldByName('pcpgocte').setValue(50);
-                _show(_fieldByName('pcpgotit'));
+                _fieldByName('pcpgotit').show();
                 _fieldByName('pcpgotit').setValue(50);
             }
             else
             {
-                _hide(_fieldByName('pcpgocte'));
+                _fieldByName('pcpgocte').hide();
                 _fieldByName('pcpgocte').setValue(0);
-                _hide(_fieldByName('pcpgotit'));
+                _fieldByName('pcpgotit').hide();
                 _fieldByName('pcpgotit').setValue(100);
             }
         }
@@ -1767,102 +1712,99 @@ Ext.onReady(function()
     
     try
     {
-        var recCombo    = _fieldLikeLabel('PERSONALIZA', null, true);
-        var recNumber   = _fieldLikeLabel('PAGO FRACCIONADO', null, true);
-        var cdperpagCmp = _fieldByName('cdperpag', null, true);
-        
-        if (!Ext.isEmpty(recCombo) && !Ext.isEmpty(recNumber) && !Ext.isEmpty(cdperpagCmp)) {
-	        recNumber.bloqueo = false;
-	        recNumber.heredar = function()
-	        {
-	            var recCombo    = _fieldLikeLabel('PERSONALIZA');
-	            var recNumber   = _fieldLikeLabel('PAGO FRACCIONADO');
-	            var cdperpagCmp = _fieldByName('cdperpag');
-	            if(recCombo.getValue()+'x'=='Nx')
+        var recCombo    = _fieldLikeLabel('PERSONALIZA');
+        var recNumber   = _fieldLikeLabel('PAGO FRACCIONADO');
+        var cdperpagCmp = _fieldByName('cdperpag');
+        recNumber.bloqueo = false;
+        recNumber.heredar = function()
+        {
+            var recCombo    = _fieldLikeLabel('PERSONALIZA');
+            var recNumber   = _fieldLikeLabel('PAGO FRACCIONADO');
+            var cdperpagCmp = _fieldByName('cdperpag');
+            if(recCombo.getValue()+'x'=='Nx')
+            {
+                recNumber.hide();
+                recNumber.setValue(0);
+            }
+            else
+            {
+                recNumber.show();
+                if(!Ext.isEmpty(cdperpagCmp.getValue())&&recNumber.bloqueo==false)
 	            {
-	                recNumber.hide();
-	                recNumber.setValue(0);
-	            }
-	            else
-	            {
-	                recNumber.show();
-	                if(!Ext.isEmpty(cdperpagCmp.getValue())&&recNumber.bloqueo==false)
-		            {
-		                recNumber.setLoading(true);
-		                Ext.Ajax.request(
-		                {
-		                    url     : _p25_urlRecuperacionSimple
-		                    ,params :
-		                    {
-		                        'smap1.procedimiento' : 'RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO'
-		                        ,'smap1.cdramo'       : _p25_smap1.cdramo
-		                        ,'smap1.cdperpag'     : cdperpagCmp.getValue()
-		                    }
-		                    ,success : function(response)
-		                    {
-		                        var ck = 'Recuperando porcentaje de recargo por producto';
-		                        try
-		                        {
-		                            recNumber.setLoading(false);
-		                            ck = 'Decodificando porcentaje de recargo por producto'; 
-		                            var json=Ext.decode(response.responseText);
-		                            debug('### pago frac:',json);
-		                            if(json.exito)
-		                            {
-	    	                            recNumber.setValue(json.smap1.recargo);
-		                            }
-		                            else
-		                            {
-		                                mensajeError(json.respuesta);
-		                            }
-		                        }
-		                        catch(e)
-		                        {
-		                            manejaException(e,ck);
-		                        }
-		                    }
-		                    ,failure : function()
-		                    {
-		                        recNumber.setLoading(false);
-		                        errorComunicacion(null,'Recuperando porcentaje de recargo por producto');
-		                    }
-		                });
-		            }
-	            }
-	        };
-	        
-	        //triggers
-	        recCombo.on(
-	        {
-	           change : function()
-	           {
-	               _fieldLikeLabel('PAGO FRACCIONADO').heredar();
-	           }
-	        });
-	        if(recCombo.store.getCount()>0)
-	        {
-	            recCombo.setValue('N');
-	        }
-	        else
-	        {
-	            recCombo.store.padre=recCombo;
-	            recCombo.store.on(
-	            {
-	                load : function(me)
+	                recNumber.setLoading(true);
+	                Ext.Ajax.request(
 	                {
-	                    me.padre.setValue('N');
-	                }
-	            });
-	        }
-	        
-	        cdperpagCmp.on(
-	        {
-	           change : function()
-	           {
-	               _fieldLikeLabel('PAGO FRACCIONADO').heredar();
-	           }
-	        });
-	    }
+	                    url     : _p25_urlRecuperacionSimple
+	                    ,params :
+	                    {
+	                        'smap1.procedimiento' : 'RECUPERAR_PORCENTAJE_RECARGO_POR_PRODUCTO'
+	                        ,'smap1.cdramo'       : _p25_smap1.cdramo
+	                        ,'smap1.cdperpag'     : cdperpagCmp.getValue()
+	                    }
+	                    ,success : function(response)
+	                    {
+	                        var ck = 'Recuperando porcentaje de recargo por producto';
+	                        try
+	                        {
+	                            recNumber.setLoading(false);
+	                            ck = 'Decodificando porcentaje de recargo por producto'; 
+	                            var json=Ext.decode(response.responseText);
+	                            debug('### pago frac:',json);
+	                            if(json.exito)
+	                            {
+    	                            recNumber.setValue(json.smap1.recargo);
+	                            }
+	                            else
+	                            {
+	                                mensajeError(json.respuesta);
+	                            }
+	                        }
+	                        catch(e)
+	                        {
+	                            manejaException(e,ck);
+	                        }
+	                    }
+	                    ,failure : function()
+	                    {
+	                        recNumber.setLoading(false);
+	                        errorComunicacion(null,'Recuperando porcentaje de recargo por producto');
+	                    }
+	                });
+	            }
+            }
+        };
+        
+        //triggers
+        recCombo.on(
+        {
+           change : function()
+           {
+               _fieldLikeLabel('PAGO FRACCIONADO').heredar();
+           }
+        });
+        if(recCombo.store.getCount()>0)
+        {
+            recCombo.setValue('N');
+        }
+        else
+        {
+            recCombo.store.padre=recCombo;
+            recCombo.store.on(
+            {
+                load : function(me)
+                {
+                    me.padre.setValue('N');
+                }
+            });
+        }
+        
+        cdperpagCmp.on(
+        {
+           change : function()
+           {
+               _fieldLikeLabel('PAGO FRACCIONADO').heredar();
+           }
+        });
     }
     catch(e)
     {
@@ -2059,96 +2001,6 @@ Ext.onReady(function()
          }
      }
     
-    if (_p25_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba) {
-        // Participacion - contratacion - poblacion
-        var ck = 'Configurando participacion - contratacion - poblacion';
-        try {
-            var r11partComp = _fieldLikeLabel('PARTICIPACI', '_p25_fieldsetRiesgo', true),
-                r11contComp = _fieldLikeLabel('CONTRATACI', '_p25_fieldsetRiesgo', true),
-                r11poblComp = _fieldLikeLabel('POBLACI', '_p25_fieldsetRiesgo', true);
-            if (!Ext.isEmpty(r11partComp) && !Ext.isEmpty(r11contComp) && !Ext.isEmpty(r11poblComp)) {
-                r11partComp.heredar = function () {
-                    debug('r11partComp heredar!');
-                    var ck = 'Heredando participacion de contratacion';
-                    try {
-                        var desc = r11contComp.findRecordByValue(r11contComp.getValue()).get('value');
-                        debug('desc:', desc);
-                        if (desc.indexOf('CONTRIBUTORIO') != -1) {
-                            _show(r11partComp);
-                            r11partComp.setValue(0);
-                        } else {
-                            _hide(r11partComp);
-                            r11partComp.setValue(0);
-                        }
-                    } catch (e) {
-                        manejaException(e, ck);
-                    }
-                };
-                r11contComp.on({
-                    select : r11partComp.heredar
-                });
-                
-                r11poblComp.heredar = function () {
-                    debug('r11poblComp heredar!');
-                    var ck = 'Heredando poblacion de contratacion';
-                    try {
-                        var desc = r11contComp.findRecordByValue(r11contComp.getValue()).get('value');
-                        debug('desc:', desc);
-                        if (desc.indexOf('VOLUNTAR') != -1) {
-                            _show(r11poblComp);
-                            r11poblComp.setValue(0);
-                        } else {
-                            _hide(r11poblComp);
-                            r11poblComp.setValue(0);
-                        }
-                    } catch (e) {
-                        manejaException(e, ck);
-                    }
-                };
-                r11contComp.on({
-                    select : r11poblComp.heredar
-                });
-            }
-        } catch (e) {
-            manejaException(e, ck);
-        }
-        
-        // ocultar cdreppag y cdpool
-        ck = 'Ocultando cdreppag y cdpool';
-        try {
-            var cdreppagCmp = _fieldByName('cdreppag', null, true),
-                cdpoolCmp   = _fieldByName('cdpool', null, true);
-            _hide(cdreppagCmp);
-            _hide(cdpoolCmp);
-        } catch (e) {
-            manejaException(e, ck);
-        }
-        
-        // tarifa fija - monto
-        ck = 'Configurando monto de tarifa fija';
-        try {
-            var tarifaCmp = _fieldByLabel('TARIFA FIJA', '_p25_fieldsetRiesgo', true),
-                montoCmp  = _fieldByLabel('MONTO DE TARIFA FIJA', '_p25_fieldsetRiesgo', true);
-            if (!Ext.isEmpty(tarifaCmp) && !Ext.isEmpty(montoCmp)) {
-                montoCmp.heredar = function () {
-                    montoCmp.setValue(0);
-                    var tarifaVal = tarifaCmp.getValue();
-                    if (tarifaVal === 'S') {
-                        _show(montoCmp);
-                    } else {
-                        _hide(montoCmp);
-                    }
-                };
-                tarifaCmp.on({
-                    select : montoCmp.heredar
-                });
-                montoCmp.heredar();
-            }
-        } catch (e) {
-            manejaException(e, ck);
-        }
-    }
-    
     //_iceMostrar();
     ////// custom //////
     _p25_loadCallback();
@@ -2211,7 +2063,7 @@ Ext.onReady(function()
         _p25_tabpanel().setLoading(true);
         try
         {
-            _fieldLikeLabel('PAGO FRACCIONADO', null, true).bloqueo=true;
+            _fieldLikeLabel('PAGO FRACCIONADO').bloqueo=true;
         }
         catch(e)
         {
@@ -2395,7 +2247,7 @@ Ext.onReady(function()
                             {
                                 try
 						        {
-						            _fieldLikeLabel('PAGO FRACCIONADO', null, true).bloqueo=false;
+						            _fieldLikeLabel('PAGO FRACCIONADO').bloqueo=false;
 						        }
 						        catch(e)
 						        {
@@ -2932,36 +2784,6 @@ function _p25_editorPlanHijos(combo)
 			
 			});
 		}
-
-    if (_p25_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba && !Ext.isEmpty(combo.getValue())) {
-        var ck = 'Heredando suma asegurada';
-        debug(ck);
-        try {
-            var cols = _p25_query('#'+_p25_tabGrupos.itemId)[0].items.items[0].columns;
-            debug('cols:', cols);
-            for (var i = 0; i < cols.length; i++) {
-                if (cols[i].text === 'SUMA ASEGURADA') {
-                    var editor = cols[i].field;
-                    editor.getStore().clearFilter();
-                    editor.getStore().filter('key', combo.getValue());
-                } else if (cols[i].text === 'DEDUCIBLE') {
-                    var editor = cols[i].field;
-                    editor.getStore().clearFilter();
-                    editor.getStore().filter('key', combo.getValue());
-                } else if (cols[i].text.indexOf('ULO HOSPITAL') !== -1) {
-                    var editor = cols[i].field;
-                    editor.getStore().clearFilter();
-                    editor.getStore().filter('key', combo.getValue());
-                }/* else if (cols[i].text.indexOf('VEL HOSPITAL') !== -1) {
-                    var editor = cols[i].field;
-                    editor.getStore().clearFilter();
-                    editor.getStore().filter('key', combo.getValue());
-                }*/
-            }
-        } catch (e) {
-            manejaException(e, ck);
-        }
-    }
 }
 
 function _p25_editorPlanChange(combo,newValue,oldValue,eOpts)
@@ -3591,7 +3413,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                     }
                                                     ,{
                                                         xtype       : 'checkbox' 
-                                                        ,boxLabel   : 'Amparada' + (_p25_smap1.mapaSwitchCoberValosit['_' + json.slist1[j].CDGARANT] === 'S' ? '**' : '')
+                                                        ,boxLabel   : 'Amparada'
                                                         ,name       : 'amparada'
                                                         ,inputValue : 'S'
 	                                                    ,checked    : json.slist1[j].SWOBLIGA == 'S' // && (json.slist1[j].SWSELECCIONADO == 'S')
@@ -3618,7 +3440,7 @@ function _p25_editarGrupoClic(grid,rowIndex)
                                                                 {
                                                                     form.items.items[l].setDisabled(!value);
                                                                     if(value
-                                                                        &&(Ext.isEmpty(checkbox.flagPuedesBorrar) || checkbox.flagPuedesBorrar==true)
+                                                                        &&(Ext.isEmpty(me.flagPuedesBorrar)||me.flagPuedesBorrar==true)
                                                                     )
                                                                     {
                                                                         try
@@ -4672,7 +4494,7 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
                                     _p25_smap1.ntramite = _p25_ntramiteVacio;
                                     _p25_smap1.nmpoliza = json.smap1.nmpoliza;
                                 }
-                                if((true==revision || _p25_ntramiteVacio || ( esTramiteClonado && !censoCloCargado))
+                                if((true==revision||_p25_ntramiteVacio)
                                     &&!(_p25_ntramite&&_p25_smap1.sincenso!='S')
                                     &&Ext.isEmpty(nombreCensoParaConfirmar)
                                 )
@@ -5097,37 +4919,6 @@ function _p25_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
 	                        }
 	                        else
 	                        {
-	                            if ('S' === _p25_smap1.rstn) {
-	                                try {
-	                                    Ext.Ajax.request({
-	                                        url    : _p25_guardarReporteCotizacion,
-	                                        params : {
-	                                            'smap1.cdunieco' : json.smap1.cdunieco,
-	                                            'smap1.cdramo'   : json.smap1.cdramo,
-	                                            'smap1.estado'   : 'W',
-	                                            'smap1.nmpoliza' : json.smap1.nmpoliza,
-	                                            'smap1.cdperpag' : _fieldByName('cdperpag').getValue(),
-	                                            'smap1.cdtipsit' : _p25_smap1.cdtipsit,
-	                                            'smap1.ntramite' : json.smap1.ntramite,
-	                                            'smap1.nGrupos'  : _p25_storeGrupos.getCount(),
-	                                            'smap1.status'   : '14',
-	                                            'smap1.caseIdRstn' : _NVL(_p25_smap1.caseIdRstn)
-	                                        }
-	                                    });
-	                                } catch (e) {
-	                                    manejaException(e, 'Generando y enviando documentos de cotizacion');
-	                                }
-	                                mensajeCorrecto(
-	                                    'Tr\u00e1mite generado',
-	                                    'Se ha generado el tr\u00e1mite ' + json.smap1.ntramite,
-	                                    function () {
-	                                        _mask();
-	                                        location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + json.smap1.ntramite;
-	                                    }
-	                                );
-	                                return;
-	                            }
-	                            
 	                            var callbackConfirmado = function (callback)
                                 {
                                     centrarVentanaInterna(Ext.create('Ext.window.Window',
@@ -6246,14 +6037,7 @@ function _p25_tbloqueo(closable,callback,retry)
                                 {
                                     text     : 'Regresar'
                                     ,icon    : '${icons}arrow_undo.png'
-                                    ,handler : function () {
-                                        if (!Ext.isEmpty(_cotcol_flujo) && _cotcol_flujo.aux === 'RSTN') {
-                                            _mask();
-                                            location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?empty';
-                                            return;
-                                        }
-                                        _p25_mesacontrol();
-                                    }
+                                    ,handler : function(){ _p25_mesacontrol(); }
                                     ,hidden  : closable
                                 }
                                 ,{
@@ -6295,17 +6079,6 @@ function _p25_tbloqueo(closable,callback,retry)
                                                         debug('### marcar swvispre:',json);
                                                         if(json.success==true)
                                                         {
-                                                            if (!Ext.isEmpty(_cotcol_flujo) && _cotcol_flujo.aux === 'RSTN') {
-                                                                mensajeCorrecto(
-                                                                    'Tr\u00e1mite en espera',
-                                                                    'El tr\u00e1imte podr\u00e1 ser consultado posteriormente',
-                                                                    function () {
-                                                                        _mask();
-                                                                        location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?empty';
-                                                                    }
-                                                                );
-                                                                return;
-                                                            }
                                                             _p25_mesacontrol();
                                                         }
                                                         else
@@ -7109,7 +6882,7 @@ function _p25_editarCoberturas(grid,row)
                     ,'smap1.pv_cdramo'   : _p25_smap1.cdramo
                     ,'smap1.pv_estado'   : _p25_smap1.estado
                     ,'smap1.pv_nmpoliza' : _p25_smap1.nmpoliza
-                    ,'smap1.pv_nmsituac' : record.get('nmsituac')
+                    ,'smap1.pv_nmsituac' : record.get('NMSITUAC')
                     ,'smap1.pv_cdperson' : record.get('CDPERSON')
                     ,'smap1.pv_cdtipsit' : _p25_smap1.cdtipsit
                 }
@@ -7142,7 +6915,7 @@ function _p25_editarExclusiones(grid,row)
                     ,'smap1.pv_cdramo'       : _p25_smap1.cdramo
                     ,'smap1.pv_estado'       : _p25_smap1.estado
                     ,'smap1.pv_nmpoliza'     : _p25_smap1.nmpoliza
-                    ,'smap1.pv_nmsituac'     : record.get('nmsituac')
+                    ,'smap1.pv_nmsituac'     : record.get('NMSITUAC')
                     ,'smap1.pv_nmsuplem'     : '0'
                     ,'smap1.pv_cdperson'     : record.get('CDPERSON')
                     ,'smap1.pv_cdrol'        : record.get('CDROL')
@@ -7301,7 +7074,6 @@ function _p25_emitir2(ventana,button)
         ,'smap1.feini'    : Ext.Date.format(_fieldByName('feini').getValue(),'d/m/Y')
         ,'smap1.fefin'    : Ext.Date.format(_fieldByName('fefin').getValue(),'d/m/Y')
         ,'smap1.ntramite' : _p25_ntramite
-        ,'smap1.caseIdRstn' : _NVL(_p25_smap1.caseIdRstn)
     };
     debug('parametros para emitir:',params);
     ventana.setLoading(true);
@@ -7316,18 +7088,6 @@ function _p25_emitir2(ventana,button)
             debug('json response emitir:',json);
             if(json.exito)
             {
-                if ((!Ext.isEmpty(_cotcol_flujo)) && 'RSTN' === _cotcol_flujo.aux) {
-                    mensajeCorrecto(
-                        'P\u00f3liza emitida',
-                        'Se ha emitido la p\u00f3liza ' + json.smap1.nmpoliexEmi,
-                        function () {
-                            _mask();
-                            location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?nmpoliex=' + json.smap1.nmpoliexEmi;
-                        }
-                    );
-                    return;
-                }
-                
                 button.hide();
                 button.up().down('[text=Cancelar]').hide();
                 button.up().add(
@@ -7607,52 +7367,6 @@ function _p25_exportarExcelCensoFinal(){
         }
     });
 }
-
-function _hide (comp) {
-    debug('_hide comp:', comp, '.');
-    if (!Ext.isEmpty(comp) && typeof comp === 'object') {
-        //comp.addCls('red');
-        //comp.removeCls('green');
-        comp.hide();
-    }
-}
-
-function _show (comp) {
-    debug('_show comp:', comp, '.');
-    if (!Ext.isEmpty(comp) && typeof comp === 'object') {
-        //comp.addCls('green');
-        //comp.removeCls('red');
-        comp.show();
-    }
-}
-
-function _p25quitarFiltroSumaAsegRamo11 () {
-    debug('_p25quitarFiltroSumaAsegRamo11');
-    var ck = 'Quitando filtros de suma asegurada ramo 11';
-    try {
-        if (_p25_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba) {
-            var cols = _p25_query('#'+_p25_tabGrupos.itemId)[0].items.items[0].columns;
-            debug('cols:', cols);
-            for (var i = 0; i < cols.length; i++) {
-                if (cols[i].text === 'SUMA ASEGURADA') {
-                    var editor = cols[i].field;
-                    editor.getStore().clearFilter();
-                } else if (cols[i].text === 'DEDUCIBLE') {
-                    var editor = cols[i].field;
-                    editor.getStore().clearFilter();
-                } else if (cols[i].text.indexOf('ULO HOSPITAL') !== -1) {
-                    var editor = cols[i].field;
-                    editor.getStore().clearFilter();
-                }/* else if (cols[i].text.indexOf('VEL HOSPITAL') !== -1) {
-                    var editor = cols[i].field;
-                    editor.getStore().clearFilter();
-                }*/
-            }
-        }
-    } catch (e) {
-        manejaException(e, ck);
-    }
-};
 
 function _p25_loadCallback()
 {          	

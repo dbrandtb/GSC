@@ -302,7 +302,6 @@ Ext.onReady(function()
                     ck = 'Encendiendo atributos por proceso';
                     
                     var comps = Ext.ComponentQuery.query('[name]:not([fieldLabel^=_])',me);
-                    debug("DBB: comps: ", comps);
                     
                     for(var i = 0 ; i < comps.length ; i++ )
                     {
@@ -313,7 +312,7 @@ Ext.onReady(function()
                     {
                         // indistinto salud y danios
                         // mostrar
-                        debug("DBB: mostrar indistinto salud y danios: ");
+                        
                         me.down('[name=CDRAMO]').allowBlank = false;
                         _show(me.down('[name=CDRAMO]'));
                         
@@ -359,16 +358,11 @@ Ext.onReady(function()
                             _fieldByName('CDSUCDOC',me).forceSelection = false;
                             _hide(_fieldByName('CDSUCDOC',me));
                         }
-                        
-                        //_fieldByName('OTVALOR29',me).allowBlank = true;
-                        //_fieldByName('OTVALOR29',me).value='N/A';
-                        //_hide(_fieldByName('OTVALOR29',me));
-                        
                     }
                     else if(Number(cdtiptra) === 15 || Number(cdtiptra) === 21) // para endoso o renovacion
                     {
                         // indistinto salud y danios
-                        debug("DBB: mostrar endoso o renovacion: ");
+                        
                         // mostrar
                         
                         _fieldByName('CDUNIEXT',me).allowBlank = false;
@@ -401,20 +395,12 @@ Ext.onReady(function()
                         _hide(_fieldByName('COMMENTS',me));
                         
                         _fieldByName('CDAGENTE',me).allowBlank = true;
-                        _fieldByName('CDAGENTE',me).value='N';
                         _hide(_fieldByName('CDAGENTE',me));
-                        
-                        //_fieldByName('OTVALOR29',me).allowBlank = true;
-                        //_fieldByName('OTVALOR29',me).value='N/A';
-                        //_hide(_fieldByName('OTVALOR29',me));
                         
                         if(Number(cdtiptra) === 15)
                         {
                             _fieldByName('CDTIPSUPEND',me).allowBlank = false;
                             _show(_fieldByName('CDTIPSUPEND',me));
-                            
-                            //_fieldByName('OTVALOR29',me).allowBlank = false;
-                        	//_show(_fieldByName('OTVALOR29',me));
                         }
                         else
                         {
@@ -443,7 +429,7 @@ Ext.onReady(function()
                         else if(Number(cdtipram) === Number(TipoRamo.Autos))
                         {
                             // mostrar
-                            debug("DBB: autossssss: ");
+                            
                             me.down('[name=NMPOLIEX]').allowBlank = false;
 	                        _show(me.down('[name=NMPOLIEX]'));
 	                        
@@ -1529,37 +1515,6 @@ Ext.onReady(function()
                                                                 } catch (e) {}
                                                                 debugError('error al contar camiones (1):', e);
                                                             }
-                                                            
-                                                          //Validacion de nivel de siniestralidad
-                                                            var mascaraSiniestralidad;
-                                                            try {
-                                                                mascaraSiniestralidad = _maskLocal();
-                                                                var json2 = Ext.decode(json.smap1.valoresCampos);
-                                                                if (!Ext.isEmpty(json2.smap1.porcenSin))
-                                                                {
-                                                              	  debug('Poliza can alto nivel de siniestralidad!');
-                                                                    var form = _p54_windowNuevo.down('form');
-                                                                    try {
-                                                                        form.remove(form.down('[name=otvalor10]'));
-                                                                    } catch(e) {}
-                                                                    form.add({
-                                                                        xtype      : 'numberfield',
-                                                                        name       : 'otvalor10',
-                                                                        fieldLabel : 'porcentaje siniestralidad',
-                                                                        value      : '',
-                                                                        hidden     : true
-                                                                    });
-                                                                    form.doLayout();
-                                                                    form.down('[name=otvalor10]').setValue(json2.smap1.porcenSin);
-                                                                }
-                                                                mascaraSiniestralidad.close();
-                                                            } catch (e) {
-                                                                try {
-                                                                    mascaraSiniestralidad.close();
-                                                                } catch (e) {}
-                                                                debugError('error al contar camiones (1):', e);
-                                                            }
-                                                              
                                                         }
                                                     }
                                                 }
