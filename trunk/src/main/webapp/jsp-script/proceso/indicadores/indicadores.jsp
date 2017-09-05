@@ -319,7 +319,17 @@
 					{type:'string', name:'FECHAFIN'	         },
 					{type:'string', name:'HORAS_LAB'	     },
 					{type:'string', name:'HORAS_NORMAL'	     },
-					{type:'string', name:'CANT_INSISOS'      }
+					{type:'string', name:'CANT_INSISOS'      },
+					{type:'string', name:'SUCURSAL_AGENTE'	 },
+					{type:'string', name:'OFICINA_AGENTE'    },
+					{type:'string', name:'CODIGO_PROMOTOR'   },
+					{type:'string', name:'NOMBRE_PROMOTOR'	 },
+					{type:'string', name:'SUCURSAL_PROMOTOR' },
+					{type:'string', name:'OFICINA_PROMOTOR'	 },
+					//{type:'string', name:'NMSUPLEM'	         },
+					{type:'string', name:'NRO_ENDOSO'	     },
+					{type:'string', name:'PRIMA'	         },
+					{type:'string', name:'CONTRATANTE'       }
 
 		        ]
 		    });
@@ -1510,7 +1520,7 @@
 							{text:'CDUSUARI_CREA'	  ,dataIndex:'CDUSUARI_CREA'	     },
 							{text:'DSUSUARI_CREA'	  ,dataIndex:'DSUSUARI_CREA'	     },
 							{text:'OFICINA_USR_CREA'  ,dataIndex:'OFICINA_USR_CREA'      },
-							{text:'DS_OFICINA_USR_CREA',dataIndex:'DS_OFICINA_USR_CREA'    },	
+							{text:'DS_OFICINA_USR_CREA',dataIndex:'DS_OFICINA_USR_CREA'  },	
 							{text:'ESTACION'	      ,dataIndex:'ESTACION'	             },
 							{text:'DS_ESTACION'	      ,dataIndex:'DS_ESTACION'	         },
 							{text:'STATUSTRAZA'	      ,dataIndex:'STATUSTRAZA'	         },
@@ -1523,7 +1533,17 @@
 							{text:'FECHAFIN'	      ,dataIndex:'FECHAFIN'	             },
 							{text:'HORAS_LAB'	      ,dataIndex:'HORAS_LAB'	         },
 							{text:'HORAS_NORMAL'	  ,dataIndex:'HORAS_NORMAL'	         },
-							{text:'CANT_INSISOS'       ,dataIndex:'CANT_INSISOS'          }
+							{text:'CANT_INSISOS'      ,dataIndex:'CANT_INSISOS'          },
+							{text:'OFICINA_AGENTE'    ,dataIndex:'OFICINA_AGENTE'	     },
+							{text:'OFICINA_AGENTE'    ,dataIndex:'OFICINA_AGENTE'        },
+							{text:'CODIGO_PROMOTOR'   ,dataIndex:'CODIGO_PROMOTOR'       },
+							{text:'NOMBRE_PROMOTOR'   ,dataIndex:'NOMBRE_PROMOTOR'	     },
+							{text:'SUCURSAL_PROMOTOR' ,dataIndex:'SUCURSAL_PROMOTOR'     },
+							{text:'OFICINA_PROMOTOR'  ,dataIndex:'OFICINA_PROMOTOR'	     },
+							//{text:'NMSUPLEM'          ,dataIndex:'NMSUPLEM'	             },
+							{text:'NRO_ENDOSO'        ,dataIndex:'NRO_ENDOSO'	         },
+							{text:'PRIMA'             ,dataIndex:'PRIMA'	             },
+							{text:'CONTRATANTE'       ,dataIndex:'CONTRATANTE'           }
 
 						],
                         dockedItems: [{
