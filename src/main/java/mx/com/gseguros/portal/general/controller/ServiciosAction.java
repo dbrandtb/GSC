@@ -12,7 +12,6 @@ import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -27,7 +26,6 @@ import mx.com.gseguros.portal.despachador.service.DespachadorManager;
 import mx.com.gseguros.portal.general.service.ServiciosManager;
 import mx.com.gseguros.portal.general.util.TipoRamo;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.Utils;
 
 @Controller
@@ -58,9 +56,6 @@ public class ServiciosAction extends PrincipalCoreAction
 	
 	@Autowired
 	private DespachadorManager despachadorManager;
-
-	@Value("${ruta.documentos.temporal}")
-    private String rutaDocumentosTemporal;
 	
 	@Action(value   = "reemplazarDocumentoCotizacion",
 		    results = {
@@ -206,7 +201,7 @@ public class ServiciosAction extends PrincipalCoreAction
 		
 		try
 		{
-			serviciosManager.recibosSubsecuentes(rutaDocumentosTemporal,false);
+			serviciosManager.recibosSubsecuentes(getText("ruta.documentos.temporal"),false);
 		}
 		catch(Exception ex)
 		{
@@ -234,7 +229,7 @@ public class ServiciosAction extends PrincipalCoreAction
 		
 		try
 		{
-			serviciosManager.recibosSubsecuentes(rutaDocumentosTemporal,true);
+			serviciosManager.recibosSubsecuentes(getText("ruta.documentos.temporal"),true);
 		}
 		catch(Exception ex)
 		{
@@ -504,31 +499,6 @@ public class ServiciosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	@Action(value   = "enviarDocRstn",
-            results = {
-                @Result(name="success" , location="/jsp-script/servicios/respuesta.jsp")
-            })
-	public String enviarDocRstn () {
-	    logger.debug(Utils.log("\n###########################",
-	                           "\n###### enviarDocRstn ######",
-	                           "\n###### params = ", params));
-	    try {
-	        HttpUtil.enviarArchivoRSTN(
-	                HttpUtil.RSTN_DEFAULT_PATH + params.get("caseIdRstn"),
-	                params.get("fullPath"),
-	                params.get("fileDesc"),
-	                "Cotizacion".equals(params.get("docClass"))
-	                    ? HttpUtil.RSTN_DOC_CLASS_COTIZACION
-	                    : HttpUtil.RSTN_DOC_CLASS_EMISION);
-	    } catch (Exception ex) {
-	        respuesta = Utils.manejaExcepcion(ex);
-	    }
-        logger.debug(Utils.log("\n###### respuesta = ", respuesta,
-                               "\n###### enviarDocRstn ######",
-                               "\n###########################"));
-	    return SUCCESS;
-	}
-	
 	/*
 	 * Getters y setters
 	 */
@@ -560,8 +530,4 @@ public class ServiciosAction extends PrincipalCoreAction
 		this.serviciosManager = serviciosManager;
 	}
 	
-	public String getRutaDocumentosTemporal() {
-		return rutaDocumentosTemporal;
-	}
-
 }
