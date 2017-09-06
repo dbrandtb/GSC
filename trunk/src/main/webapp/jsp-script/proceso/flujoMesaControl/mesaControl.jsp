@@ -2217,7 +2217,7 @@ function colorearGrid (v,meta,rec){
     	meta.tdCls += "personal-row4";
     } else if (rec.get("COLORREC")=="5"){
     	meta.tdCls += "personal-row5";
-    } else if (rec.get("COLORREC")=="color6"){
+    } else if (rec.get("COLORREC")=="6"){
     	meta.tdCls += "personal-row6";
     } else if (rec.get("COLORREC")=="7"){
     	meta.tdCls += "personal-row7";
