@@ -624,6 +624,16 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 					,"HORAS_LAB"	      
 					,"HORAS_NORMAL"	      
 					,"CANT_INSISOS"
+					,"COD_SUCURSAL_AGENTE"
+					,"SUCURSAL_AGENTE" 
+					,"COD_OFICINA_AGENTE"
+					,"OFICINA_AGENTE" 
+					,"COD_PROMOTORIA"
+					,"PROMOTORIA" 
+					,"NRO_ENDOSO" 
+					,"PRIMA"
+					,"CONTRATANTE"
+
 
             };
 			
