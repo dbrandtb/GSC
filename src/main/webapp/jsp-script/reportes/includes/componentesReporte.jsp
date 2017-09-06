@@ -12,7 +12,7 @@ debug("cdreporte",cdreporte);
 Ext.onReady(function(){
 	
 	// Se aumenta el timeout para todas las peticiones:
-    Ext.Ajax.timeout = 1000*60*60; // 60 min - 1 hr
+    Ext.Ajax.timeout = 1000*60*200; // 200 min - 1 hr
     Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
     Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout });
     Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });

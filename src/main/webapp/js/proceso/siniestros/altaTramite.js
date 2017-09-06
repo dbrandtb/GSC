@@ -471,9 +471,9 @@ Ext.onReady(function() {
                         'params.cdramo'     :   panelInicialPral.down('combo[name=cmbRamos]').getValue(),
                         'params.fe_ocurre'	:	panelInicialPral.down('[name=dtFechaOcurrencia]').getValue()	//(EGS)
                 };
-                debug('altaTramite.js - 474 ...');	//(EGS)
+			    debug('altaTramite.js - 474 ...');	//(EGS)
                 _mask("Consulta poliza...");	//(EGS)
-			        Ext.Ajax.request({	//(EGS) SE MODIFICA PARA OBTENER SOLO UNA POLIZA, Y MOSTRARLA EN EL ESPACIO CORRESPONDIENTE
+                	Ext.Ajax.request({	//(EGS) SE MODIFICA PARA OBTENER SOLO UNA POLIZA, Y MOSTRARLA EN EL ESPACIO CORRESPONDIENTE
 			            url     : _URL_CONSULTA_LISTADO_POLIZA
 			            ,params: params
 			            ,success : function (response) {
@@ -511,7 +511,7 @@ Ext.onReady(function() {
 							    }else{
 							    	debug('No muestra lista 2');
 			                		eligePoliza(jsonResponse.listaPoliza[0]);
-					            	_unmask();	//(EGS)
+			                		_unmask();	//(EGS)
 							    }
 			                }
 			                else {
@@ -522,10 +522,10 @@ Ext.onReady(function() {
 									 icon:	Ext.Msg.WARNING,
                                 fn: function(buttonId, text, opt) {	// (EGS) agregamos parametros a la función
 									if (buttonId == 'ok'){
-										_unmask();	//(EGS)
-										cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA_ORIG, 'listaPoliza', params, function(options, success, response){
-											if(success){
-												jsonResponse = Ext.decode(response.responseText);
+											_unmask();	//(EGS)
+											cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA_ORIG, 'listaPoliza', params, function(options, success, response){
+												if(success){
+													jsonResponse = Ext.decode(response.responseText);
 													if(jsonResponse.listaPoliza == null){
 														Ext.Msg.show({
 															title:	'Aviso',
@@ -540,15 +540,15 @@ Ext.onReady(function() {
 													}else{
 														modPolizasAltaTramite.show();
 													}
-											}else{
-						                    	Ext.Msg.show({
+												}else{
+						                            Ext.Msg.show({
                         					        title: 'Aviso',
 					                                msg: 'Error al obtener los datos.',
                     					            buttons: Ext.Msg.OK,
 					                                icon: Ext.Msg.ERROR
                     						        });
-											}
-										});
+												}
+											});
 									}
 									else{
 										_unmask();	//(EGS)
@@ -624,7 +624,7 @@ Ext.onReady(function() {
                         'params.cdramo'     :   panelInicialPral.down('combo[name=cmbRamos]').getValue(),
                         'params.fe_ocurre'	:	valorIndexSeleccionado.get('modFechaOcurrencia')	//(EGS)
                 };
-                debug('altaTramite.js - 624...');	//(EGS)
+			    debug('altaTramite.js - 624...');	//(EGS)
                 _mask("Consulta poliza...");	//(EGS)
 			        Ext.Ajax.request({	//(EGS) SE MODIFICA PARA OBTENER SOLO UNA POLIZA, Y MOSTRARLA EN EL ESPACIO CORRESPONDIENTE
 			            url     : _URL_CONSULTA_LISTADO_POLIZA
@@ -672,7 +672,7 @@ Ext.onReady(function() {
 								}
 			                }
 			                else {
-				            	_unmask();	//(EGS)
+			                	_unmask();	//(EGS)
 								Ext.Msg.show(
 									{title:	'Aviso',
 									 msg:	'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',
@@ -728,7 +728,6 @@ Ext.onReady(function() {
 			                }));
 			            }
 			        });
-
                 /*cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
                     if(success){
                         var jsonResponse = Ext.decode(response.responseText);
@@ -739,40 +738,14 @@ Ext.onReady(function() {
                                 msg: 'No existe p&oacute;liza vigente del asegurado para la fecha de ocurrencia. \u00bfDesea continuar?',	// (EGS)
                                 buttons: Ext.Msg.OKCANCEL, //Ext.Msg.OK, (EGS) cambiamos a OKCANCEL 
                                 icon: Ext.Msg.WARNING,
-                                fn: function(buttonId, text, opt) {	// (EGS) agregamos parametros a la función
-									if (buttonId == 'ok'){
-											cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA_ORIG, 'listaPoliza', params, function(options, success, response){
-												if(success){
-													jsonResponse = Ext.decode(response.responseText);
-													if(jsonResponse.listaPoliza == null){
-														Ext.Msg.show({
-															title:	'Aviso',
-															msg:	'No existen p&oacute;lizas para el asegurado elegido',
-															buttons:Ext.Msg.OK,
-															icon:	Ext.Msg.WARNING,
-							                                fn: function() {
-                            							        valorIndexSeleccionado.set('modCdperson','');
-                                    							valorIndexSeleccionado.set('modCdpersondesc','');
-							                                }
-														});
-													}
-												}else{
-						                            Ext.Msg.show({
-                        					        title: 'Aviso',
-					                                msg: 'Error al obtener los datos.',
-                    					            buttons: Ext.Msg.OK,
-					                                icon: Ext.Msg.ERROR
-                    						        });
-												}
-											});
-									}
-									else{
-		                                panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
-           			                    modPolizasAltaTramite.hide();
-                       			        return;
-									}
+                                fn: function() {
+                                    valorIndexSeleccionado.set('modCdperson','');
+                                    valorIndexSeleccionado.set('modCdpersondesc','');
                                 }
                             });
+                            panelInicialPral.down('combo[name=cmbAseguradoAfectado]').setValue('');
+                            modPolizasAltaTramite.hide();
+                            return;
                         }
                     }else{
                         Ext.Msg.show({
@@ -1782,7 +1755,7 @@ Ext.onReady(function() {
                 tbar: [
                     {
                         text     : 'Agregar Documento'
-                        ,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+                        ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
                         ,handler : _p21_agregarFactura
                     }
                 ]
@@ -1930,7 +1903,7 @@ Ext.onReady(function() {
                 tbar: [
                     {
                         text     : 'Agregar Documento'
-                        ,icon:_CONTEXT+'/resources/fam3icons/icons/book.png'
+                        ,icon:_CONTEXT+'/resources/fam3icons/icons/fam/book.png'
                         ,handler : _p21_agregarFactura
                     }
                 ]
@@ -2466,8 +2439,7 @@ Ext.onReady(function() {
                                     'paramsO.pv_cdtippag_i' : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
                                     'paramsO.pv_cdtipate_i' : panelInicialPral.down('combo[name=cmbTipoAtencion]').getValue(),
                                     'paramsO.pv_tipmov_i'   : panelInicialPral.down('combo[name=cmbTipoPago]').getValue(),
-                                    'paramsO.pv_pagoAut_i'  : "0" ,//pago Normal 
-                                    'paramsO.caseIdRstn'    : _NVL(valorAction.caseIdRstn) //pago Normal 
+                                    'paramsO.pv_pagoAut_i'  : "0" //pago Normal 
                                 },
                                 success: function(response, opt) {
                                     var jsonRes=Ext.decode(response.responseText);
@@ -3273,7 +3245,6 @@ Ext.onReady(function() {
             
             submitValues['datosTablas']=datosTablas;
             panelInicialPral.setLoading(true);
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             procesaGuardaAltaTramite(submitValues,retornaMC);
         }
         else{ //PAGO POR INMEDIZACION
@@ -3366,7 +3337,6 @@ Ext.onReady(function() {
             
             submitValues['datosTablas']=datosTablas;
             panelInicialPral.setLoading(true);
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             procesaGuardaAltaTramite(submitValues,retornaMC);
         }
     }
@@ -3525,7 +3495,6 @@ Ext.onReady(function() {
                 });
             });
             submitValues['datosTablas']=datosTablas;
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             panelInicialPral.setLoading(true);
             Ext.Ajax.request(
             {
@@ -3609,7 +3578,6 @@ Ext.onReady(function() {
             });
             submitValues['datosTablas']=datosTablas;
             panelInicialPral.setLoading(true);
-            submitValues.params['caseIdRstn'] = _NVL(valorAction.caseIdRstn);
             Ext.Ajax.request(
             {
                 url: _URL_GUARDA_FACTURA_TRAMITE,
@@ -4050,91 +4018,21 @@ Ext.onReady(function() {
                                                                                         }
                                                                                         ,success : function (response)
                                                                                         {
-                                                                                            if(panelInicialPral.down('combo[name=cmbRamos]').getValue() =="11"){
-                                                                                                var usuarioTurnadoSiniestro1 = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-                                                                                                ///mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito a: '+usuarioTurnadoSiniestro);
-                                                                                                debug("Usuario turnado1 ==>"+usuarioTurnadoSiniestro1);
-                                                                                                var fields = usuarioTurnadoSiniestro1.split('|');
-                                                                                                var Nombre = fields[0];
-                                                                                                var usuario = fields[1];
-                                                                                                
-                                                                                                Ext.Ajax.request(
+                                                                                            var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
+                                                                                            debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
+                                                                                            mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
+                                                                                                windowLoader.close();
+                                                                                                Ext.create('Ext.form.Panel').submit(
                                                                                                 {
-                                                                                                    url: _URL_ActualizaStatusTramite,
-                                                                                                    params: {
-                                                                                                            'smap1.ntramite' : panelInicialPral.down('[name=idNumTramite]').getValue(), 
-                                                                                                            'smap1.status'   : _STATUS_TRAMITE_EN_REVISION_MEDICA
-                                                                                                            ,'smap1.rol_destino'     : 'medajustador'
-                                                                                                            ,'smap1.usuario_destino' : ''
-                                                                                                            ,'smap1.rol_inicial'     : 'OPERADORSINI'
-                                                                                                            ,'smap1.usuario_inicial' :  usuario 
-                                                                                                    },
-                                                                                                    success:function(response,opts){
-                                                                                                        Ext.Ajax.request(
-                                                                                                        {
-                                                                                                            url     : _URL_NOMBRE_TURNADO
-                                                                                                            ,params : 
-                                                                                                            {           
-                                                                                                                'params.ntramite': panelInicialPral.down('[name=idNumTramite]').getValue(),
-                                                                                                                'params.rolDestino': 'medajustador'
-                                                                                                            }
-                                                                                                            ,success : function (response)
-                                                                                                            {
-                                                                                                                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-                                                                                                                debug("Usuario turnado2 ==>"+usuarioTurnadoSiniestro);
-                                                                                                                mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
-                                                                                                                    windowLoader.close();
-                                                                                                                    Ext.create('Ext.form.Panel').submit(
-                                                                                                                    {
-                                                                                                                        url     : _p12_urlMesaControl
-                                                                                                                        ,standardSubmit : true
-                                                                                                                        ,params         :
-                                                                                                                        {
-                                                                                                                            'smap1.gridTitle'      : 'Siniestros en espera'
-                                                                                                                            ,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
-                                                                                                                        }
-                                                                                                                    });
-                                                                                                                });
-                                                                                                            },
-                                                                                                            failure : function ()
-                                                                                                            {
-                                                                                                                me.up().up().setLoading(false);
-                                                                                                                centrarVentanaInterna(Ext.Msg.show({
-                                                                                                                    title:'Error',
-                                                                                                                    msg: 'Error de comunicaci&oacute;n',
-                                                                                                                    buttons: Ext.Msg.OK,
-                                                                                                                    icon: Ext.Msg.ERROR
-                                                                                                                }));
-                                                                                                            }
-                                                                                                        });
-                                                                                                    },
-                                                                                                    failure:function(response,opts)
+                                                                                                    url     : _p12_urlMesaControl
+                                                                                                    ,standardSubmit : true
+                                                                                                    ,params         :
                                                                                                     {
-                                                                                                        Ext.Msg.show({
-                                                                                                            title:'Error',
-                                                                                                            msg: 'Error de comunicaci&oacute;n',
-                                                                                                            buttons: Ext.Msg.OK,
-                                                                                                            icon: Ext.Msg.ERROR
-                                                                                                        });
+                                                                                                        'smap1.gridTitle'      : 'Siniestros en espera'
+                                                                                                        ,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
                                                                                                     }
                                                                                                 });
-                                                                                            }else{
-                                                                                                var usuarioTurnadoSiniestro = Ext.decode(response.responseText).usuarioTurnadoSiniestro;
-                                                                                                debug("VALOR DE RESPUESTA -->",usuarioTurnadoSiniestro);
-                                                                                                mensajeCorrecto('&Eacute;XITO','Se ha turnado correctamente a: '+usuarioTurnadoSiniestro,function(){
-                                                                                                    windowLoader.close();
-                                                                                                    Ext.create('Ext.form.Panel').submit(
-                                                                                                    {
-                                                                                                        url     : _p12_urlMesaControl
-                                                                                                        ,standardSubmit : true
-                                                                                                        ,params         :
-                                                                                                        {
-                                                                                                            'smap1.gridTitle'      : 'Siniestros en espera'
-                                                                                                            ,'smap2.pv_cdtiptra_i' : _TIPO_TRAMITE_SINIESTRO
-                                                                                                        }
-                                                                                                    });
-                                                                                                });
-                                                                                            }
+                                                                                            });
                                                                                         },
                                                                                         failure : function ()
                                                                                         {
