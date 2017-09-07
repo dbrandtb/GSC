@@ -357,11 +357,6 @@ Ext.onReady(function()
                             _fieldByName('CDSUCDOC',me).forceSelection = false;
                             _hide(_fieldByName('CDSUCDOC',me));
                         }
-                        
-                        //_fieldByName('OTVALOR29',me).allowBlank = true;
-                        //_fieldByName('OTVALOR29',me).value='N/A';
-                        //_hide(_fieldByName('OTVALOR29',me));
-                        
                     }
                     else if(Number(cdtiptra) === 15 || Number(cdtiptra) === 21) // para endoso o renovacion
                     {
@@ -398,20 +393,13 @@ Ext.onReady(function()
                         _hide(_fieldByName('COMMENTS',me));
                         
                         _fieldByName('CDAGENTE',me).allowBlank = true;
-                        _fieldByName('CDAGENTE',me).value='N';
                         _hide(_fieldByName('CDAGENTE',me));
-                        
-                        //_fieldByName('OTVALOR29',me).allowBlank = true;
-                        //_fieldByName('OTVALOR29',me).value='N/A';
-                        //_hide(_fieldByName('OTVALOR29',me));
                         
                         if(Number(cdtiptra) === 15)
                         {
                             _fieldByName('CDTIPSUPEND',me).allowBlank = false;
                             _show(_fieldByName('CDTIPSUPEND',me));
                             
-                            //_fieldByName('OTVALOR29',me).allowBlank = false;
-                        	//_show(_fieldByName('OTVALOR29',me));
                         }
                         else
                         {
