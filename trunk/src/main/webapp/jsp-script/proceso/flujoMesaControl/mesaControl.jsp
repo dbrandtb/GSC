@@ -15,13 +15,13 @@
 	color: #000000; 
 }
 
-.personal-row1 { 
-    color: #FFFF00; 
+.personal-row1 {
+	color: #FF00FF;
 	font-weight:bold;
 }
 
 .personal-row2 { 
-    color: #6ACE00; 
+    color: #ff9502; 
 	font-weight:bold;
 }
 
@@ -35,7 +35,7 @@
 }
 
 .personal-row5 { 
-	color: #FF8040; 
+	color: #00B050;
 	font-weight:bold;
 }
 
@@ -302,7 +302,6 @@ Ext.onReady(function()
                     ck = 'Encendiendo atributos por proceso';
                     
                     var comps = Ext.ComponentQuery.query('[name]:not([fieldLabel^=_])',me);
-                    debug("DBB: comps: ", comps);
                     
                     for(var i = 0 ; i < comps.length ; i++ )
                     {
@@ -313,7 +312,6 @@ Ext.onReady(function()
                     {
                         // indistinto salud y danios
                         // mostrar
-                        debug("DBB: mostrar indistinto salud y danios: ");
                         me.down('[name=CDRAMO]').allowBlank = false;
                         _show(me.down('[name=CDRAMO]'));
                         
@@ -368,7 +366,6 @@ Ext.onReady(function()
                     else if(Number(cdtiptra) === 15 || Number(cdtiptra) === 21) // para endoso o renovacion
                     {
                         // indistinto salud y danios
-                        debug("DBB: mostrar endoso o renovacion: ");
                         // mostrar
                         
                         _fieldByName('CDUNIEXT',me).allowBlank = false;
@@ -443,7 +440,6 @@ Ext.onReady(function()
                         else if(Number(cdtipram) === Number(TipoRamo.Autos))
                         {
                             // mostrar
-                            debug("DBB: autossssss: ");
                             me.down('[name=NMPOLIEX]').allowBlank = false;
 	                        _show(me.down('[name=NMPOLIEX]'));
 	                        
