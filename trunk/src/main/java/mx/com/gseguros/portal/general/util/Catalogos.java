@@ -192,7 +192,9 @@ public enum Catalogos {
 	TIPOPROVEEDOR(""),
 	TIPOEVENTOGNP("TIPOEVEN"),
 	PROVEEDORESINI(""),
-	TIPO_NO_SICAPS("");
+	TIPO_NO_SICAPS(""),
+	ES_COTIZACION("")
+	;
 	
 
 	private String cdTabla;
