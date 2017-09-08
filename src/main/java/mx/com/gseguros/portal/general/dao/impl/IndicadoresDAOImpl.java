@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -18,7 +17,6 @@ import org.springframework.jdbc.object.StoredProcedure;
 import mx.com.gseguros.portal.consultas.model.PagedMapList;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
-import mx.com.gseguros.portal.dao.impl.GenericMapperFecha;
 import mx.com.gseguros.portal.general.dao.IndicadoresDAO;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -43,7 +41,7 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 		map.put("ingresados", (String)mapResult.get("pv_tramites_ingr_o"));
 		map.put("procesados", (String)mapResult.get("pv_tramites_proc_o"));
 		map.put("pendientes", (String)mapResult.get("pv_tramites_pend_o"));
-		map.put("eficacia",   StringUtils.isNotBlank((String)mapResult.get("pv_eficacia_o")) ? (String)mapResult.get("pv_eficacia_o") : "0");
+		map.put("eficacia",   (String)mapResult.get("pv_eficacia_o"));
 		return map;
 	}
 	
@@ -259,46 +257,34 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 			String[] cols=new String[]{
             		"CDETAPA"
             		,"ETAPA"
-            		,"TIPO_FLUJO"
             		,"NTRAMITE"
             		,"FECHA_RECEP_TRAMITE"
             		,"FECHA_DESDE"
-            		,"SUCURSAL"
-            		,"DS_SUCURSAL"
+            		,"CDUNIECO"
+            		,"DSUNIECO"
             		,"CD_TIPO_TRAMITE"
             		,"TIPO_TRAMITE"
-            		,"DESC_TIPO_TRAMITE"
             		,"CD_LINEA_NEGOCIO"
             		,"DS_LINEA_NEGOCIO"
             		,"STATUS_TRAMITE"
             		,"DS_STATUS_TRAMITE"
             		,"CDRAMO"
             		,"DSRAMO"
-            		,"CDPERSON"
             		,"CLIENTE"
             		,"CDAGENTE"
             		,"NOMBRE_AGENTE"
             		,"NMPOLIZA"
-            		,"NMPOLIEXT"
             		,"NMSOLICI"
             		,"CDUSUARI_CREA"
             		,"DSUSUARI_CREA"
-            		,"OFICINA_USR_CREA"
-            		,"DS_OFICINA_USR_CREA"
             		,"CDUSUARI_ACT"
             		,"DSUSUARI_ACT"
-            		,"OFICINA_USR_ACT"
-            		,"DS_OFICINA_USR_ACT"
-            		,"CDUSUARI_ANT"
-            		,"DSUSUARI_ANT"
-            		,"OFICINA_USR_ANT"
-            		,"DS_OFICINA_USR_ANT"
             };
 			
 			declareParameter(new SqlParameter("pv_start_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_limit_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_num_rec_o", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols,true)));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o",  OracleTypes.VARCHAR));
 			compile();
@@ -338,8 +324,8 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 			declareParameter(new SqlParameter("pv_tipotramite_i",  OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdagente_i",     OracleTypes.VARCHAR));
 			String[] cols=new String[]{
-					"SUCURSAL"
-            		,"DS_SUCURSAL"
+            		"CDUNIECO"
+            		,"DSUNIECO"
             		,"SALUD"
             		,"AUTOS"
             };
@@ -510,12 +496,11 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 			String[] cols=new String[]{
             		"CDETAPA"
             		,"ETAPA"
-            		,"TIPO_FLUJO"
             		,"NTRAMITE"
             		,"FECHA_RECEP_TRAMITE"
             		,"FECHA_DESDE"
-            		,"SUCURSAL"
-            		,"DS_SUCURSAL"
+            		,"CDUNIECO"
+            		,"DSUNIECO"
             		,"CD_TIPO_TRAMITE"
             		,"TIPO_TRAMITE"
             		,"CD_LINEA_NEGOCIO"
@@ -539,108 +524,6 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 			declareParameter(new SqlParameter("pv_limit_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_num_rec_o", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(cols)));
-	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-	        declareParameter(new SqlOutParameter("pv_title_o",  OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-	@Override
-	public PagedMapList obtieneDetalleLineaTrazabilidad(String idcierre, String cdetapa,
-			String cdunieco, String cdramo, String tipoTramite, String cdagente, String start, String limit) throws Exception {
-		
-		Map<String,String> params  = new LinkedHashMap<String,String>();
-		params.put("pv_idCierre" ,        idcierre);
-		params.put("pv_cdetapa" ,        cdetapa);
-		params.put("pv_cdunieco_i" ,     cdunieco);
-		params.put("pv_cdramo_i" ,       cdramo);
-		params.put("pv_tipotramite_i",   tipoTramite);
-		params.put("pv_cdagente_i",      cdagente);
-		params.put("pv_start_i",         start);
-		params.put("pv_limit_i",         limit);
-		Map<String,Object>       procRes = ejecutaSP(new ObtieneDetalleLineaTrazabilidadSP(getDataSource()),params);
-		List<Map<String,String>> lista   = (List<Map<String,String>>)procRes.get("pv_registro_o");
-		
-		String totalRec = (String)procRes.get("pv_num_rec_o");
-		
-		if(lista==null) {
-			lista = new ArrayList<Map<String,String>>();
-		}
-		PagedMapList paged = new PagedMapList();
-        paged.setRangeList(lista);
-        paged.setTotalItems(Long.parseLong(totalRec));
-        
-        return paged;
-	}
-		
-	protected class ObtieneDetalleLineaTrazabilidadSP extends StoredProcedure {
-
-		protected ObtieneDetalleLineaTrazabilidadSP(DataSource dataSource) {
-			super(dataSource, "PKG_ESTADISTICAS_MESA.p_dash_trazabilidad_auto");
-			declareParameter(new SqlParameter("pv_idCierre",        OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdetapa",        OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdunieco_i",     OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i",   	   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_tipotramite_i",  OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdagente_i",     OracleTypes.VARCHAR));
-			String[] cols=new String[]{
-					 "CDUNIECO"	         
-					,"NTRAMITE"	         
-					,"EVENTO"	             
-					,"CDETAPA"	             
-					,"ETAPA"	             
-					,"TIPO_FLUJO"	         
-					,"CD_TIPO_TRAMITE"	     
-					,"TIPO_TRAMITE"	     
-					,"DESC_TIPO_TRAMITE"    
-					,"FECHA_RECEP_TRAMITE"  
-					,"CD_LINEA_NEGOCIO"	 
-					,"DS_LINEA_NEGOCIO"	 
-					,"STATUS_TRAMITE"	     
-					,"DS_STATUS_TRAMITE"    
-					,"CDRAMO"	             
-					,"DSRAMO"	             
-					,"CDPERSON"	         
-					,"CLIENTE"	             
-					,"CDAGENTE"	         
-					,"NOMBRE_AGENTE"	     
-					,"COD_SUCURSAL_AGENTE"  
-					,"SUCURSAL_AGENTE"      
-					,"COD_OFICINA_AGENTE"   
-					,"OFICINA_AGENTE"	     
-					,"COD_PROMOTORIA"       
-					,"PROMOTORIA"	         
-					,"NMPOLIZA"	         
-					,"NMPOLIEXT"	         
-					,"COTIZACION"	         
-					,"CDUSUARI_CREA"	     
-					,"DSUSUARI_CREA"	     
-					,"OFICINA_USR_CREA"     
-					,"DS_OFICINA_USR_CREA"  
-					,"ESTACION"	         
-					,"DS_ESTACION"	         
-					,"STATUSTRAZA"	         
-					,"DS_STATUSTRAZA"	     
-					,"CDUSUARI_INI"	     
-					,"DS_USUARIO"	         
-					,"OFICINA_USR"	         
-					,"DS_OFICINA_USR"	     
-					,"FECHAINI"	         
-					,"FECHAFIN"	         
-					,"HORAS_LAB"	         
-					,"HORAS_NORMAL"	     
-					,"CANT_INSISOS"         
-					,"NRO_ENDOSO"	         
-					,"PRIMA"	             
-					,"CONTRATANTE"          
-
-
-            };
-			
-			declareParameter(new SqlParameter("pv_start_i",      OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_limit_i",      OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_num_rec_o", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapperFecha(cols,true)));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o",  OracleTypes.VARCHAR));
 			compile();

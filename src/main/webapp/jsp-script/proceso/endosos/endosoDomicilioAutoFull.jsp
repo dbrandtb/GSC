@@ -33,7 +33,6 @@ _5_smap1:
 */
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _5_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
-var _5_flujo = <s:property value="%{convertToJSON('flujo')}" escapeHtml="false" />;
 
 var _5_urlLoadMdomicil = '<s:url namespace="/catalogos"  action="obtenerDomicilioContratante" />';
 var _5_urlGuardar      = '<s:url namespace="/endosos"    action="guardarEndosoDomicilioAutoFull" />';
@@ -48,7 +47,6 @@ var _5_panelPri;
 var datosIniciales;
 
 debug('_5_smap1:',_5_smap1);
-debug('_5_flujo:',_5_flujo);
 
 
 var _p5_urlRecuperacionSimple = '<s:url namespace="/emision" action="recuperacionSimple" />';
@@ -232,7 +230,6 @@ Ext.onReady(function()
             ,'smap1.pv_nmsuplem_i'    : _5_smap1.NMSUPLEM
             ,'smap1.pv_nmsituac_i'    : _5_smap1.nmsituac
             ,'smap1.pv_cdperson_i'    : _5_smap1.cdperson
-            ,'smap1.pv_nmorddom_i'    : ''// obtiene el asignado a la poliza
             ,'smap1.pv_cdrol_i'       : _5_smap1.cdrol
             ,'smap1.nombreAsegurado'  : ''
             ,'smap1.cdrfc'            : _5_smap1.cdrfc
@@ -447,12 +444,6 @@ function _5_confirmar(boton)
 					}
 					//,parametros : _5_panelTatriper.getValues()
 				};
-				
-				if(!Ext.isEmpty(_5_flujo))
-				{
-				    json.flujo = _5_flujo;
-				}
-				
 				debug('datos a enviar:',json);
 				var panelMask = new Ext.LoadMask('divEndDomCP', {msg:"Confirmando..."});
 				panelMask.show();

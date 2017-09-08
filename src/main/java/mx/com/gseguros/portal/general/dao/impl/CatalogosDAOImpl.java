@@ -67,15 +67,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             return generic;
         }
     }
-
-    protected class ObtenerTmanteniMapper2 implements RowMapper {
-    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-    		GenericVO generic=new GenericVO();
-    		generic.setKey(rs.getString("CODIGO"));
-    		generic.setValue(rs.getString("DESCRIPL"));
-    		return generic;
-    	}
-    }
     
     
     public List<GenericVO> obtieneColonias(String codigoPostal) throws Exception {
@@ -310,7 +301,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			params.put("pv_cdgarant_i",cdGarant);
 			params.put("pv_cdatribu_i",cdAtribu);
 			params.put("pv_otvalor_i" ,valAnt);
-			params.put("pv_cdsisrol_i", cdSisrol); // se agrega par�metro para considerar restricciones por rol (EGS)
+			params.put("pv_cdsisrol_i", cdSisrol); // se agrega parametro para considerar restricciones por rol (EGS)
     		
     		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosGar(getDataSource()), params);
     		return (List<GenericVO>) resultado.get("pv_registro_o");
@@ -328,7 +319,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR)); // se agrega par�metro para considerar restricciones por rol (ESG)
+			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR)); // se agrega parametro para considerar restricciones por rol (ESG)
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneAtributosGarMapper()));
 			declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
@@ -469,26 +460,6 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             compile();
     	}
     }
-	
-
-	@Override
-	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception
-	{
-		Map<String, Object> resultado = ejecutaSP(new ObtieneTiposTramiteClonacion(getDataSource()), new HashMap<String,String>());
-		return (List<GenericVO>) resultado.get("pv_registro_o");
-	}
-	
-	protected class ObtieneTiposTramiteClonacion extends StoredProcedure
-	{
-		protected ObtieneTiposTramiteClonacion(DataSource dataSource)
-		{
-			super(dataSource,"PKG_CONSULTA2.P_OBTIENE_TIPOS_TRAMITE");
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtenerTmanteniMapper2()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
 	
 	@Override
 	public List<GenericVO> obtieneSucursales(String cdunieco,String cdusuari) throws Exception {
@@ -1911,12 +1882,12 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 	}
 	
 	@Override
-	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, String vigente) throws Exception
+	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception
 	{
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("cdramo"   , cdramo);
 		params.put("cdtipsit" , cdtipsit);
-		params.put("vigente"  , StringUtils.isNotBlank(vigente) ? vigente : "N");
+		params.put("vigente"  , vigente ? "S" : "N");
 		
 		Map<String,Object> procRes = ejecutaSP(new RecuperarTiposDeEndosoPorCdramoPorCdtipsitSP(getDataSource()),params);
 		
@@ -2269,26 +2240,4 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             compile();
         }
     }
-    
-    @Override
-	public List<GenericVO> getTipoNoSicaps() throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
-		Map<String, Object> mapResult = ejecutaSP(new getTipoNoSicapsSP(getDataSource()), params);
-		return (List<GenericVO>) mapResult.get("pv_registro_o");
-	}
-    
-    protected class getTipoNoSicapsSP extends StoredProcedure
-	{
-		protected getTipoNoSicapsSP(DataSource dataSource)
-		{
-			super(dataSource, "P_GET_TIPONOSICAPS");
-			 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{
-	                    "key", "value"
-	            })));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
 }

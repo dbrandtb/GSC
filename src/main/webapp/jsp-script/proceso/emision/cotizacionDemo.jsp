@@ -13,8 +13,8 @@ _0_smap1['panelGenerado'] = '';
 _0_smap1['variablesGeneradas'] = '';
 
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
-var _0_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _0_reportsServerUser = '<s:property value="passServidorReports" />';
+var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _0_urlCotizar              = '<s:url namespace="/emision"         action="cotizar"                 />';
 var _0_urlCotizarExterno       = '<s:url namespace="/externo"         action="cotizar"                 />';
@@ -1453,7 +1453,6 @@ Ext.onReady(function()
 	                                    ,columns    : 2
 	                                    ,width      : 250
 	                                    ,style      : 'margin:5px;'
-	                                    ,hidden     : _GLOBAL_CDSISROL===RolSistema.Agente
 	                                    ,items      :
 	                                    [
 	                                        {
@@ -1461,13 +1460,12 @@ Ext.onReady(function()
 	                                            ,itemId     : 'SWAGENTE'
 	                                            ,name       : 'SWAGENTE'
 	                                            ,inputValue : 'S'
-	                                            ,checked    : _GLOBAL_CDSISROL===RolSistema.Agente
 	                                        }
 	                                        ,{
 	                                            boxLabel    : 'No'
 	                                            ,name       : 'SWAGENTE'
 	                                            ,inputValue : 'N'
-	                                            ,checked    : _GLOBAL_CDSISROL!==RolSistema.Agente
+	                                            ,checked    : true
 	                                        }
 	                                    ]
 	                                }
@@ -1909,7 +1907,6 @@ Ext.onReady(function()
             ,titleCollapse  : true
             ,startCollapsed : true
             ,resizable      : false
-            ,cls            : 'VENTANA_DOCUMENTOS_CLASS'
             ,loader         :
             {
                 scripts   : true

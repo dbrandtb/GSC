@@ -36,7 +36,7 @@ public interface CatalogosManager {
 	
 	public List<GenericVO> obtieneAtributosPoliza(String cdAtribu, String cdRamo, String idPadre) throws Exception;
 
-	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String idPadre, String cdGarant, String cdSisrol) throws Exception; // se agrega par�metro cdSisrol para considerar restricciones por rol (EGS)
+	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String idPadre, String cdGarant, String cdSisrol) throws Exception; // se agrega parametro cdSisrol para considerar restricciones por rol (EGS)
 	
 	public List<GenericVO> obtieneAtributosRol(String cdAtribu, String cdTipSit ,String cdRamo, String valAnt, String cdRol) throws Exception;
 	
@@ -199,7 +199,7 @@ public interface CatalogosManager {
     
     public List<GenericVO> recuperarTdocume(String cdtiptra) throws Exception;
     
-    public List<GenericVO> cargarCotizadoresActivos(String usuario, String cadena) throws Exception;
+    public List<GenericVO> cargarCotizadoresActivos(String cadena) throws Exception;
 
     public List<GenericVO> obtieneMotivosReexp(String cdramo, String cdtipsit) throws Exception;
     
@@ -232,7 +232,7 @@ public interface CatalogosManager {
     
     public List<GenericVO> recuperarTipsitPorRamoPorTipogrupo(String cdramo, String tipogrupo) throws Exception;
     
-    public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, String vigente) throws Exception;
+    public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception;
     
     public List<GenericVO> recuperarMotivosRechazo (String ntramite) throws Exception;
     
@@ -258,14 +258,4 @@ public interface CatalogosManager {
 	public List<GenericVO> obtieneIdsCierres() throws Exception;
 
     public List<GenericVO> obtieneAdministradoraXAgente(String pv_cdagente_i) throws Exception;
-    
-    public List<GenericVO> recuperarListaFiltroPropiedadInciso(String cdramo,String cdtipsit, String nivel) throws Exception;
-
-	public List<GenericVO> obtieneComentariosNegocio(String cdramo, String cdtipsit, String negocio) throws Exception;
-
-    public List<GenericVO> recuperarTiposEndosoPorTramite (String ntramite) throws Exception;
-
-	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception;
-
-	public List<GenericVO> getTipoNoSicaps() throws Exception;
 }

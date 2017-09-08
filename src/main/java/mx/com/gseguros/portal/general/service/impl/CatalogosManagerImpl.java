@@ -5,13 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.mesacontrol.dao.FlujoMesaControlDAO;
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
@@ -24,6 +18,10 @@ import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Utils;
 import mx.com.gseguros.wizard.dao.TablasApoyoDAO;
 import mx.com.gseguros.wizard.dao.WizardDAO;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CatalogosManagerImpl implements CatalogosManager {
 	
@@ -41,7 +39,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	@Autowired
 	private FlujoMesaControlDAO flujoMesaControlDAO;
 	
-	private static final Logger logger = LoggerFactory.getLogger(CatalogosManagerImpl.class);
+	private static final Logger logger = Logger.getLogger(CatalogosManagerImpl.class);
 	
 	
 	@Override
@@ -130,12 +128,6 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception
 	{
 		return catalogosDAO.obtieneStatusTramite(params);
-	}
-
-	@Override
-	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception
-	{
-		return catalogosDAO.obtieneTiposTramiteClonacion();
 	}
 	
 	@Override
@@ -1403,7 +1395,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 				));
 		
 		List<GenericVO> lista = new ArrayList<GenericVO>();
-		List<Map<String,String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumc(agrupamc, String.valueOf(TipoModelado.FLUJOS_PROCESOS.getCdtipmod()));
+		List<Map<String,String>> tiposFlujo = flujoMesaControlDAO.recuperaTtipflumc(agrupamc);
 		for(Map<String,String>tipoFlujo:tiposFlujo)
 		{
 			lista.add(new GenericVO(
@@ -1528,7 +1520,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> cargarCotizadoresActivos(String usuario , String cadena) throws Exception
+	public List<GenericVO> cargarCotizadoresActivos(String cadena) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1544,7 +1536,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		{
 			paso = "Recuperando documentos";
 			logger.debug(Utils.log("\n@@@@@@ ",paso));
-			List<Map<String,String>> documentos = consultasDAO.cargarCotizadoresActivos(usuario, cadena);
+			List<Map<String,String>> documentos = consultasDAO.cargarCotizadoresActivos(cadena);
 			
 			for(Map<String,String>elemento:documentos)
 			{
@@ -1915,7 +1907,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, String vigente) throws Exception
+	public List<GenericVO> recuperarTiposDeEndosoPorCdramoPorCdtipsit(String cdramo, String cdtipsit, boolean vigente) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2117,64 +2109,4 @@ public class CatalogosManagerImpl implements CatalogosManager {
         return catalogosDAO.obtieneAdminXAgente(pv_cdagente_i);
     }
 	
-   @Override
-    public List<GenericVO> recuperarListaFiltroPropiedadInciso(String cdramo,String cdtipsit, String nivel) throws Exception {
-        logger.info(
-                new StringBuilder()
-                .append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-                .append("\n@@@@@@ recuperarListaFiltroPropiedadInciso @@@@@@")
-                .toString()
-                );
-        return catalogosDAO.recuperarListaFiltroPropiedadInciso(cdramo, cdtipsit, nivel);
-    }
-   
-   @Override
-   public List<GenericVO> obtieneComentariosNegocio(
-           String cdramo
-           ,String cdtipsit
-           ,String negocio
-           )throws Exception{
-       return consultasDAO.obtieneComentariosNegocio(cdramo, cdtipsit, negocio);
-               
-   }
-   
-   @Override
-   public List<GenericVO> recuperarTiposEndosoPorTramite (String ntramite) throws Exception {
-       logger.debug("{}", Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-                                    "\n@@@@@@ recuperarTiposEndosoPorTramite @@@@@@",
-                                    "\n@@@@@@ ntramite = ", ntramite));
-       String paso = null;
-       List<GenericVO> lista = new ArrayList<GenericVO>();
-       try {
-           paso = "Recuperando tipos de endoso";
-           logger.debug(paso);
-           List<Map<String, String>> listaMapas = catalogosDAO.recuperarTiposEndosoPorTramite(ntramite);
-           if (listaMapas != null && listaMapas.size() > 0) {
-               for (Map<String, String> mapa : listaMapas) {
-                   lista.add(new GenericVO(mapa.get("CDTIPSUP"), mapa.get("DSTIPSUP")));
-               }
-           }
-       } catch (Exception ex) {
-           Utils.generaExcepcion(ex, paso);
-       }
-       logger.debug("{}", Utils.log("\n@@@@@@ lista = ", lista,
-                                    "\n@@@@@@ recuperarTiposEndosoPorTramite @@@@@@",
-                                    "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-       return lista;
-   }
-
-   @Override
-	public List<GenericVO> getTipoNoSicaps() throws Exception {
-		try {
-			List<GenericVO> lista = catalogosDAO.getTipoNoSicaps();
-			if(lista==null)
-			{
-				lista= new ArrayList<GenericVO>();
-			}
-			logger.debug("getTipoNoSicaps lista size: "+lista.size());
-			return lista;
-		} catch (DaoException daoExc) {
-			throw new Exception(daoExc.getMessage(), daoExc);
-		}
-	}
 }

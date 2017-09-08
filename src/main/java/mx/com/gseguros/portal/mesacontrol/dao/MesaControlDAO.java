@@ -38,60 +38,33 @@ public interface MesaControlDAO
 	 * @param swimpres
 	 * @param valores
 	 * @param cdtipsup TODO
-	 * @param renuniext TODO
-	 * @param renramo TODO
-	 * @param renpoliex TODO
-	 * @param origenMesa TODO
-	 * @param cdunidspch TODO
 	 * @return
 	 * @throws Exception
 	 */
-	public String movimientoMesaControl (
-			String cdunieco  , String cdramo   , String estado     , String nmpoliza,
-			String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra,
-			Date ferecepc   , String cdagente , String referencia , String nombre,
-			Date festatus   , String status   , String comments   , String nmsolici,
-			String cdtipsit , String cdusuari , String cdsisrol   , String swimpres,
-			String cdtipflu , String cdflujomc,
-			Map<String, String> valores, String cdtipsup, String renuniext, String renramo, String renpoliex, boolean origenMesa,
-			String cdunidspch) throws Exception;
-	
-	public String movimientoMesaControl (
-			String cdunieco  , String cdramo   , String estado     , String nmpoliza,
-			String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra,
-			Date ferecepc   , String cdagente , String referencia , String nombre,
-			Date festatus   , String status   , String comments   , String nmsolici,
-			String cdtipsit , String cdusuari , String cdsisrol   , String swimpres,
-			String cdtipflu , String cdflujomc,
-			Map<String, String> valores, String cdtipsup, String renuniext, String renramo, String renpoliex, boolean origenMesa,
-			String cdunidspch, String otvalor28, String otvalor29) throws Exception;
+	public String movimientoMesaControl(
+			String cdunieco  , String cdramo   , String estado     , String nmpoliza
+			,String nmsuplem , String cdsucadm , String cdsucdoc   , String cdtiptra
+			,Date ferecepc   , String cdagente , String referencia , String nombre
+			,Date festatus   , String status   , String comments   , String nmsolici
+			,String cdtipsit , String cdusuari , String cdsisrol   , String swimpres
+			,String cdtipflu , String cdflujomc
+			,Map<String, String> valores, String cdtipsup
+			)throws Exception;
 	
 	/**
-	 * @param cdunieco
-	 * @param cdramo
-	 * @param estado
-	 * @param nmpoliza
-	 * @param cdtiptra
-	 * @param renuniext TODO
-	 * @param renramo TODO
-	 * @param renpoliex TODO
-	 * @return
+	 * 
+	 * @param ntramite
+	 * @param feinicio
+	 * @param cdclausu
+	 * @param comments
+	 * @param cdusuari
+	 * @param cdmotivo
+	 * @param cdusuariDest TODO
+	 * @param cdsisrolDest TODO
 	 * @throws Exception
 	 */
-	public void actualizaNmpolizaMesaControl(
-												  String nmpoliza ,String cdunieco ,String cdramo ,String estado  ,String ntramite
-												 ,String cdtiptra ,String cduniext ,String ramo   ,String nmpoliex
-												)throws Exception;
-	
-	/**
-	 * GUARDA UN REGISTRO DE TDMESACONTROL.
-	 * @param cerrado ¿EL REGISTRO NUEVO YA INSERTA FECHA, USUARIO y ROL FIN?
-	 */
-	public void movimientoDetalleTramite(
-			String ntramite      , Date feinicio   , String cdclausu
-			,String comments     , String cdusuari , String cdmotivo
-			,String cdsisrol     , String swagente , String cdusuariDest
-			,String cdsisrolDest , String status   , boolean cerrado)
+	public void movimientoDetalleTramite(String ntramite, Date feinicio,
+			String cdclausu, String comments, String cdusuari, String cdmotivo, String cdsisrol,String swagente, String cdusuariDest, String cdsisrolDest)
 			throws Exception;
 	
 	/**
@@ -187,22 +160,19 @@ public interface MesaControlDAO
 	 * @param cdorddoc TODO
 	 * @param cdusuari TODO
 	 * @param cdsisrol TODO
-	 * @param sustituir TODO
 	 * @param cdmoddoc TODO
 	 * @throws Exception
 	 */
 	public void guardarDocumento(String cdunieco, String cdramo, String estado,
 			String nmpoliza, String nmsuplem, Date feinici, String cddocume,
 			String dsdocume, String nmsolici, String ntramite, String tipmov,
-			String swvisible, String codidocu, String cdtiptra, String cdorddoc, Documento documento, String cdusuari, String cdsisrol, boolean sustituir) throws Exception;
+			String swvisible, String codidocu, String cdtiptra, String cdorddoc, Documento documento, String cdusuari, String cdsisrol) throws Exception;
 	
-	/*
 	public String turnaPorCargaTrabajo(
 			String ntramite
 			,String cdsisrol
 			,String status
 			)throws Exception;
-	*/
 	
 	public void validarAntesDeTurnar(
     		String ntramite
@@ -311,9 +281,7 @@ public interface MesaControlDAO
 	public boolean regeneraDocumentosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws Exception;
 	
 	/**
-	 * Realiza el reverso de impresion para que dado un tramite que ya haya sido impreso,
-     * actualizar el mismo como "pendiente por imprimir"
-     * 
+	 * Reversa por tramite dado impreso
 	 * @param ntramite
 	 * @param cdsisrol
 	 * @param cdusuari
@@ -321,55 +289,12 @@ public interface MesaControlDAO
 	 */
 	public void regeneraReverso(String ntramite, String cdsisrol,String cdusuari) throws Exception;
 	
-	/**
-	 * ACTUALIZA UN OTVALOR USANDO UN LIKE %+dsatribu+%
-	 * @param ntramite
-	 * @param dsatribu
-	 * @param otvalor
-	 * @param accion (I,U,D) Insert, Update, Delete
-	 * @throws Exception
-	 */
-	public void actualizarOtvalorTramitePorDsatribu(
-			String ntramite
-			,String dsatribu
-			,String otvalor
-			,String accion
-			)throws Exception;
-	
-	/**
-	 * RECUPERA UN OTVALOR USANDO UN LIKE %+dsatribu+%
-	 * @param ntramite
-	 * @param dsatribu
-	 * @return otvalor
-	 * @throws Exception
-	 */
-	public String recuperarOtvalorTramitePorDsatribu(
-			String ntramite
-			,String dsatribu
-			)throws Exception;
-	
-	public void actualizarNmsuplemTramite(String ntramite, String nmsuplem) throws Exception;
-	
-	public void borrarNmsoliciTramite(String ntramite) throws Exception;
-	
-	public void concatenarAlInicioDelUltimoDetalle(String ntramite, String comentario, String cdmodulo, String cdevento) throws Exception;
 	
 	public String regeneraRemesaReport(String ntramite, String cddocume) throws Exception;
 	
-	public List<Map<String, String>> obtenerMesaControl(String cdunieco, String ntramite, String cdramo, String nmpoliza, String estado, String cdagente, String status, String cdtipsit, String fedesde, String fehasta, 
-	        String cdrol, String cdtiptra, String contrarecibo, String tipoPago, String nfactura, String cdpresta, String cdusuari, String cdtipram, String lote, String tipolote,     
-	        String tipoimpr, String cdusuari_busq, String dscontra) throws Exception;
-	
-	/**
+    
+    /**
      * Si ya existe un tramite cdtiptra 1 o 21 con esa cdunieco, cdramo, estado, nmsolici arroja excepcion
      */
     public void validaDuplicidadTramiteEmisionPorNmsolici (String cdunieco, String cdramo, String estado, String nmsolici) throws Exception;
-    
-    /**
-	 * RECUPERA SI EXISTE EL OTVALOR QUE CORRESPONDIENTE A UN OTVALOR DE CR
-	 * @param tipsitfake
-	 * @param valorOtUtil
-	 * @return otvalor
-	 * @throws Exception
-	 */
-	public List<Map<String,String>> obtieneOtValorCorrespondienteSubtipoCR()throws Exception;}
+}
