@@ -400,6 +400,12 @@ Ext.onReady(function()
                             _fieldByName('CDTIPSUPEND',me).allowBlank = false;
                             _show(_fieldByName('CDTIPSUPEND',me));
                             
+                            //REQ0270 es cotizacion = subtipo
+                            _fieldByName('OTVALOR28',me).forceSelection = false;
+                            _fieldByName('OTVALOR28',me).allowBlank = true;
+                            _fieldByName('OTVALOR28',me).value='N';//obligo a que le ponga color
+                            _hide(_fieldByName('OTVALOR28',me));
+                            
                         }
                         else
                         {
