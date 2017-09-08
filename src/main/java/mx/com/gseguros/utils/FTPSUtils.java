@@ -335,7 +335,7 @@ public class FTPSUtils {
             String remoteFilePath) {
         
         String connectionString = "sftp://" + username + ":" + password + "@" + hostName + "/" + remoteFilePath;
-        logger.info(new StringBuilder("Cadena de conexion: ").append(connectionString));
+        //logger.info(new StringBuilder("Cadena de conexion: ").append(connectionString));
         return connectionString;
     }
     

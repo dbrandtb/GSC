@@ -178,13 +178,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ZONAS_SUCURSALES:
 				case NIVELES_SUCURSALES:
 				case TAPOYO:
-				case TESPECIALIDADES:
-				case ZONASHOSPITALARIA:
 					lista = catalogosManager.getTmanteni(cat);
-	                break;
-				case TIPOEVENTOGNP:
-					lista = catalogosManager.getTmanteni(cat);
-					logger.debug("Valor de la lista TIPOEVENTOGNP :"+lista);
 	                break;
 				case CVECOLUMNA:
 					lista = catalogosManager.obtieneAtributosExcel(cat);
@@ -429,16 +423,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case SUBCOBERTURAS4MSC:
 					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("MSC");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
-				case SUBCOBERTURASGMPI:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPI");
-					logger.debug("Valor de lista==>"+lista.size());
-					logger.debug(lista);
-					break;
-				case SUBCOBERTURASGMPC:
-					lista = siniestrosManager.getConsultaListaSubcoberturaTotalesMultisalud("GMPC");
 					logger.debug("Valor de lista==>"+lista.size());
 					logger.debug(lista);
 					break;
@@ -907,9 +891,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					{
 						params=new HashMap<String,String>();
 					}
-					UserVO usuario2 = (UserVO)session.get("USUARIO");
-					
-					lista = catalogosManager.cargarCotizadoresActivos(usuario2.getUser(), params.get("cadena"));
+					lista = catalogosManager.cargarCotizadoresActivos(params.get("cadena"));
 					break;
 				case MOTIVOS_REEXPEDICION:
 					if(params==null)
@@ -1112,21 +1094,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 				        lista = catalogosManager.recuperarTiposEndosoPorTramite(params.get("ntramite"));
 				    }
 				    break;
-				case TIPOPROVEEDOR:
-					lista = siniestrosManager.getConsultaListaTiposProveedores();
-					break;
 				case TIPO_NO_SICAPS:
 					lista = catalogosManager.getTipoNoSicaps();
-					/*lista=new ArrayList<GenericVO>(0);
-					lista.add(new GenericVO("N", "NO"));
-					lista.add(new GenericVO("S", "SI"));
-					*/
 					break;
 				case ES_COTIZACION:
-					//cable solicitado por rafa por la premura del requerimiento REQ0270
 					lista=new ArrayList<GenericVO>(0);
-					lista.add(new GenericVO("N", "EMISIÓN"));
-					lista.add(new GenericVO("S", "COTIZACIÓN"));
+					lista.add(new GenericVO("N", "EMISION"));
+					lista.add(new GenericVO("S", "COTIZACION"));
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
