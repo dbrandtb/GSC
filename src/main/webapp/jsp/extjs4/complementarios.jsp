@@ -1628,7 +1628,7 @@ function _p29_emitirClicComplementarios()
         									minValue: 0,
                                             //readOnly:true,
                                             value:0,
-                                            fieldLabel:'N&uacute;mero Renovaci&Oacute;n',
+                                            fieldLabel:'N&uacute;mero Renovaci&oacute;n',
                                             style:'margin:5px;'
                                         },
 		                                {
