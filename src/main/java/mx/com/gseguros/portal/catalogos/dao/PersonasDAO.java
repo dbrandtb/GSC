@@ -156,8 +156,11 @@ public interface PersonasDAO
 			,String otvalor31,String otvalor32,String otvalor33,String otvalor34,String otvalor35
 			,String otvalor36,String otvalor37,String otvalor38,String otvalor39,String otvalor40
 			,String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45
-			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50,
-			String otvalor51, String otvalor52
+			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
+			,String otvalor51,String otvalor52,String otvalor53,String otvalor54,String otvalor55
+			,String otvalor56,String otvalor57,String otvalor58,String otvalor59,String otvalor60
+			,String otvalor61,String otvalor62,String otvalor63,String otvalor64,String otvalor65
+			,String otvalor66,String otvalor67,String otvalor68,String otvalor69,String otvalor70
 			)throws Exception;
 	
 	/**

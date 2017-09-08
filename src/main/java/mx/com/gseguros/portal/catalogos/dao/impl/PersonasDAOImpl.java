@@ -689,7 +689,10 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 			,String otvalor36,String otvalor37,String otvalor38,String otvalor39,String otvalor40
 			,String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45
 			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
-			,String otvalor51,String otvalor52
+			,String otvalor51,String otvalor52,String otvalor53,String otvalor54,String otvalor55
+			,String otvalor56,String otvalor57,String otvalor58,String otvalor59,String otvalor60
+			,String otvalor61,String otvalor62,String otvalor63,String otvalor64,String otvalor65
+			,String otvalor66,String otvalor67,String otvalor68,String otvalor69,String otvalor70
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -747,6 +750,24 @@ public class PersonasDAOImpl extends AbstractManagerDAO implements PersonasDAO
 		params.put("pv_otvalor50" , otvalor50);
 		params.put("pv_otvalor51" , otvalor51);
 		params.put("pv_otvalor52" , otvalor52);
+		params.put("pv_otvalor53" , otvalor53);
+		params.put("pv_otvalor54" , otvalor54);
+		params.put("pv_otvalor55" , otvalor55);
+		params.put("pv_otvalor56" , otvalor56);
+		params.put("pv_otvalor57" , otvalor57);
+		params.put("pv_otvalor58" , otvalor58);
+		params.put("pv_otvalor59" , otvalor59);
+		params.put("pv_otvalor60" , otvalor60);
+		params.put("pv_otvalor61" , otvalor61);
+		params.put("pv_otvalor62" , otvalor62);
+		params.put("pv_otvalor63" , otvalor63);
+		params.put("pv_otvalor64" , otvalor64);
+		params.put("pv_otvalor65" , otvalor65);
+		params.put("pv_otvalor66" , otvalor66);
+		params.put("pv_otvalor67" , otvalor67);
+		params.put("pv_otvalor68" , otvalor68);
+		params.put("pv_otvalor69" , otvalor69);
+		params.put("pv_otvalor70" , otvalor70);
 		
 		String[] inputKeys = new String[] {
 				"pv_cdunieco","pv_cdramo","pv_estado","pv_nmpoliza","pv_nmsituac","pv_nmsuplem","pv_status","pv_cdrol","pv_cdperson","pv_cdatribu","pv_cdtipsit",

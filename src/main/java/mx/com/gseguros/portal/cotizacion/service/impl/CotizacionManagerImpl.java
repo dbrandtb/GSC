@@ -7800,7 +7800,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 						    				null, null, cli.getTelefonoCli(), cli.getMailCli(), null, 
 						    				null, null, null, null, null, 
 						    				null, null, null, null, null,
-		    		    					cli.getFaxCli(), cli.getCelularCli());
+		    		    					cli.getFaxCli(), cli.getCelularCli(),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
 						    			
 									}
 								}

@@ -717,7 +717,10 @@ public class PersonasManagerImpl implements PersonasManager
 			,String otvalor36,String otvalor37,String otvalor38,String otvalor39,String otvalor40
 			,String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45
 			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
-			,String otvalor51, String otvalor52
+			,String otvalor51,String otvalor52,String otvalor53,String otvalor54,String otvalor55
+			,String otvalor56,String otvalor57,String otvalor58,String otvalor59,String otvalor60
+			,String otvalor61,String otvalor62,String otvalor63,String otvalor64,String otvalor65
+			,String otvalor66,String otvalor67,String otvalor68,String otvalor69,String otvalor70
 			,long timestamp
 			) throws Exception
 	{
@@ -778,6 +781,24 @@ public class PersonasManagerImpl implements PersonasManager
 				+ "\n otvalor50:"+otvalor50
 				+ "\n otvalor51:"+otvalor51
 				+ "\n otvalor52:"+otvalor52
+				+ "\n otvalor53:"+otvalor53
+				+ "\n otvalor54:"+otvalor54
+				+ "\n otvalor55:"+otvalor55
+				+ "\n otvalor56:"+otvalor56
+				+ "\n otvalor57:"+otvalor57
+				+ "\n otvalor58:"+otvalor58
+				+ "\n otvalor59:"+otvalor59
+				+ "\n otvalor60:"+otvalor60
+				+ "\n otvalor61:"+otvalor61
+				+ "\n otvalor62:"+otvalor62
+				+ "\n otvalor63:"+otvalor63
+				+ "\n otvalor64:"+otvalor64
+				+ "\n otvalor65:"+otvalor65
+				+ "\n otvalor66:"+otvalor66
+				+ "\n otvalor67:"+otvalor67
+				+ "\n otvalor68:"+otvalor68
+				+ "\n otvalor69:"+otvalor69
+				+ "\n otvalor70:"+otvalor70
 				);
 		boolean exito           = true;
 		String  respuesta       = null;
@@ -803,7 +824,11 @@ public class PersonasManagerImpl implements PersonasManager
 						otvalor36, otvalor37, otvalor38, otvalor39, otvalor40,
 						otvalor41, otvalor42, otvalor43, otvalor44, otvalor45,
 						otvalor46, otvalor47, otvalor48, otvalor49, otvalor50,
-						otvalor51, otvalor52
+						otvalor51, otvalor52, otvalor53, otvalor54, otvalor55,
+						otvalor56, otvalor57, otvalor58, otvalor59, otvalor60,
+						otvalor61, otvalor62, otvalor63, otvalor64, otvalor65,
+						otvalor66, otvalor67, otvalor68, otvalor69, otvalor70
+						
 						);
 			}
 			catch(Exception ex)
