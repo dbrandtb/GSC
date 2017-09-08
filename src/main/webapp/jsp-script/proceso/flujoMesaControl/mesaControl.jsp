@@ -1513,37 +1513,6 @@ Ext.onReady(function()
                                                                 } catch (e) {}
                                                                 debugError('error al contar camiones (1):', e);
                                                             }
-                                                            
-                                                          //Validacion de nivel de siniestralidad
-                                                            var mascaraSiniestralidad;
-                                                            try {
-                                                                mascaraSiniestralidad = _maskLocal();
-                                                                var json2 = Ext.decode(json.smap1.valoresCampos);
-                                                                if (!Ext.isEmpty(json2.smap1.porcenSin))
-                                                                {
-                                                              	  debug('Poliza can alto nivel de siniestralidad!');
-                                                                    var form = _p54_windowNuevo.down('form');
-                                                                    try {
-                                                                        form.remove(form.down('[name=otvalor10]'));
-                                                                    } catch(e) {}
-                                                                    form.add({
-                                                                        xtype      : 'numberfield',
-                                                                        name       : 'otvalor10',
-                                                                        fieldLabel : 'porcentaje siniestralidad',
-                                                                        value      : '',
-                                                                        hidden     : true
-                                                                    });
-                                                                    form.doLayout();
-                                                                    form.down('[name=otvalor10]').setValue(json2.smap1.porcenSin);
-                                                                }
-                                                                mascaraSiniestralidad.close();
-                                                            } catch (e) {
-                                                                try {
-                                                                    mascaraSiniestralidad.close();
-                                                                } catch (e) {}
-                                                                debugError('error al contar camiones (1):', e);
-                                                            }
-                                                              
                                                         }
                                                     }
                                                 }

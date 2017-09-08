@@ -770,8 +770,6 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 				}
 				
 			    mapa .put("correoAgente",correos );
-			}else if (consulta.equals(RecuperacionSimple.RECUPERAR_RANGO_DESCUENTO_RECARGO)) {
-			    mapa = cotizacionDAO.recuperarRangoDescuentoRecargo(params.get("cdramo"), params.get("cdtipsit"), cdusuari, cdsisrol);
 			}
 		}
 		catch(Exception ex)
@@ -1180,7 +1178,7 @@ public class RecuperacionSimpleManagerImpl implements RecuperacionSimpleManager 
 			}
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_EXCLUSION_TURNADOS))
 			{
-				lista = consultasDAO.recuperarExclusionTurnados(cdusuari);
+				lista = consultasDAO.recuperarExclusionTurnados();
 			}	
 			else if(consulta.equals(RecuperacionSimple.RECUPERAR_CLAVES_PLAN_RAMO4))
 			{
