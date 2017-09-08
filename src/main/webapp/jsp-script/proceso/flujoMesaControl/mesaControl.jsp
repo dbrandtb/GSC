@@ -3,59 +3,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<style>
-
-.personal-row0 { 
-    //background-color: #2EFEF7 !important; 
-    //color: #000000; 
-	
-	//background-color: #cbcbcb !important;
-	color: #000000; 
-}
-
-.personal-row1 {
-	color: #FF00FF;
-	font-weight:bold;
-}
-
-.personal-row2 { 
-    color: #ff9502; 
-	font-weight:bold;
-}
-
-.personal-row3 { 
-    color: #000000; 
-}
-
-.personal-row4 { 
-    color: #007AF4; 
-	font-weight:bold; 
-}
-
-.personal-row5 { 
-	color: #00B050;
-	font-weight:bold;
-}
-
-.personal-row6 { 	
-	color: #FF0000; 
-	font-weight:bold;
-}
-
-.personal-row7 { 
-	color: #808040; 
-	font-weight:bold;
-}
-
-</style>
 
 <script type="text/javascript" src="${ctx}/resources/extjs4/plugins/pagingpersistence/pagingselectionpersistence.js?${now}"></script>
 
 <script>
 ////// urls //////
-var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramitesColoresLista"             />'
+var _p54_urlCargar                    = '<s:url namespace="/flujomesacontrol" action="recuperarTramites"             />'
     ,_p54_urlRecuperarPoliza          = '<s:url namespace="/flujomesacontrol" action="recuperarPolizaUnica"          />'
     ,_p54_urlRegistrarTramite         = '<s:url namespace="/flujomesacontrol" action="registrarTramite"              />'
     ,_p54_urlCargarCduniecoAgenteAuto = '<s:url namespace="/emision"          action="cargarCduniecoAgenteAuto"      />'
@@ -312,6 +265,7 @@ Ext.onReady(function()
                     {
                         // indistinto salud y danios
                         // mostrar
+                        
                         me.down('[name=CDRAMO]').allowBlank = false;
                         _show(me.down('[name=CDRAMO]'));
                         
@@ -361,6 +315,7 @@ Ext.onReady(function()
                     else if(Number(cdtiptra) === 15 || Number(cdtiptra) === 21) // para endoso o renovacion
                     {
                         // indistinto salud y danios
+                        
                         // mostrar
                         
                         _fieldByName('CDUNIEXT',me).allowBlank = false;
@@ -399,7 +354,6 @@ Ext.onReady(function()
                         {
                             _fieldByName('CDTIPSUPEND',me).allowBlank = false;
                             _show(_fieldByName('CDTIPSUPEND',me));
-                            
                         }
                         else
                         {
@@ -428,6 +382,7 @@ Ext.onReady(function()
                         else if(Number(cdtipram) === Number(TipoRamo.Autos))
                         {
                             // mostrar
+                            
                             me.down('[name=NMPOLIEX]').allowBlank = false;
 	                        _show(me.down('[name=NMPOLIEX]'));
 	                        
@@ -1513,37 +1468,6 @@ Ext.onReady(function()
                                                                 } catch (e) {}
                                                                 debugError('error al contar camiones (1):', e);
                                                             }
-                                                            
-                                                          //Validacion de nivel de siniestralidad
-                                                            var mascaraSiniestralidad;
-                                                            try {
-                                                                mascaraSiniestralidad = _maskLocal();
-                                                                var json2 = Ext.decode(json.smap1.valoresCampos);
-                                                                if (!Ext.isEmpty(json2.smap1.porcenSin))
-                                                                {
-                                                              	  debug('Poliza can alto nivel de siniestralidad!');
-                                                                    var form = _p54_windowNuevo.down('form');
-                                                                    try {
-                                                                        form.remove(form.down('[name=otvalor10]'));
-                                                                    } catch(e) {}
-                                                                    form.add({
-                                                                        xtype      : 'numberfield',
-                                                                        name       : 'otvalor10',
-                                                                        fieldLabel : 'porcentaje siniestralidad',
-                                                                        value      : '',
-                                                                        hidden     : true
-                                                                    });
-                                                                    form.doLayout();
-                                                                    form.down('[name=otvalor10]').setValue(json2.smap1.porcenSin);
-                                                                }
-                                                                mascaraSiniestralidad.close();
-                                                            } catch (e) {
-                                                                try {
-                                                                    mascaraSiniestralidad.close();
-                                                                } catch (e) {}
-                                                                debugError('error al contar camiones (1):', e);
-                                                            }
-                                                              
                                                         }
                                                     }
                                                 }
@@ -1696,31 +1620,29 @@ function _p54_registrarTramite(bot)
                     		if (bandera==false)	{
                     			mensajeError('No se pudo grabar numero de tr\u00e1mite en sistema sigs',function(){callbackRegistar(true)});
                     		}else{
-                    				//Inicia el proceso normal de crear tramite
-                    				debug(json.params.asignado);
-                    				mensajeCorrecto
-		                            ('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
-		                             {
-		                                 bot.up('window').hide();
-		                                 var form  = _fieldById('_p54_filtroForm');
-		                                 var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
-		                                 form.getForm().reset();
-		                                 form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
-		                                 form.down('[name=STATUS]').setValue('0');
-		                                 _fieldById('_p54_filtroCmp').reset();
-		                                 
-		                                 var callbackCheck = function(store, records, success) {
-		                                     store.removeListener('load', callbackCheck);
-		                                     _p54_mostrarCheckDocumentosInicial(json.params.ntramite);
-		                                 };
-		                                 
-		                                 _p54_store.on({
-		                                     load : callbackCheck  
-		                                 });
-		                                 boton.handler(boton);
-		                             }
-		                            );
-	                            
+                    			
+	                            mensajeCorrecto
+	                            ('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
+	                             {
+	                                 bot.up('window').hide();
+	                                 var form  = _fieldById('_p54_filtroForm');
+	                                 var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
+	                                 form.getForm().reset();
+	                                 form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
+	                                 form.down('[name=STATUS]').setValue('0');
+	                                 _fieldById('_p54_filtroCmp').reset();
+	                                 
+	                                 var callbackCheck = function(store, records, success) {
+	                                     store.removeListener('load', callbackCheck);
+	                                     _p54_mostrarCheckDocumentosInicial(json.params.ntramite);
+	                                 };
+	                                 
+	                                 _p54_store.on({
+	                                     load : callbackCheck  
+	                                 });
+	                                 boton.handler(boton);
+	                             }
+	                            );
                             }
                         }
                     	
@@ -2188,29 +2110,6 @@ function _ventanaReasignarTramites(tramitesR){
             windowReasignar.show();
 }
 
-function colorearGrid (v,meta,rec){
-    if(rec.get("COLORREC")=="0"){
-        meta.tdCls += "personal-row0";
-    } else if (rec.get("COLORREC")=="1"){
-    	meta.tdCls += "personal-row1";
-    } else if (rec.get("COLORREC")=="2"){
-    	meta.tdCls += "personal-row2";
-    } else if (rec.get("COLORREC")=="3"){
-    	meta.tdCls += "personal-row3";
-    } else if (rec.get("COLORREC")=="4"){
-    	meta.tdCls += "personal-row4";
-    } else if (rec.get("COLORREC")=="5"){
-    	meta.tdCls += "personal-row5";
-    } else if (rec.get("COLORREC")=="6"){
-    	meta.tdCls += "personal-row6";
-    } else if (rec.get("COLORREC")=="7"){
-    	meta.tdCls += "personal-row7";
-    } 
-    else {
-    	meta.tdCls += null;
-    }
-    return v;
-}
 
 ////// funciones //////
 </script>

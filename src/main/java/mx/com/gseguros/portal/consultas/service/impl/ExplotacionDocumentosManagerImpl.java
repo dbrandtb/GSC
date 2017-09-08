@@ -317,12 +317,12 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 							,movAgente.get("nmsuplem")
 							,tipolote
 							//,"P".equals(tipolote) ? movAgente.get("ntramite") : null
-							,"P".equals(tipolote) ? endososDAO.obtenerNtramiteLote( movAgente.get("cdunieco")
-																					  ,movAgente.get("cdramo")
-																					  ,movAgente.get("estado")
-																					  ,movAgente.get("nmpoliza")
-																					  ,movAgente.get("nmsuplem")
-																						) : null
+							,"P".equals(tipolote) ? endososDAO.obtenerNtramiteEmision(
+									movAgente.get("cdunieco")
+									,movAgente.get("cdramo")
+									,movAgente.get("estado")
+									,movAgente.get("nmpoliza")
+									) : null
 							,"R".equals(tipolote) ? movAgente.get("nmrecibo") : null
 							,StringUtils.isBlank(movAgente.get("orden")) ? "1" : movAgente.get("orden")
 							);
@@ -574,7 +574,6 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
                                     , hoja.length() > 1 ? ("M".equals(papelDoc) ? charola2 : charola1) : charola1,
                                     (esDuplex && swImpDpxArchivo));
                         } catch (Exception e) {
-                        	logger.error("Error al ejecutar el comando de impresion: ",e);
                             String dsdocume = archivo.get("dsdocume");
                             hayErrores.set(true);
                             BufferedWriter bw = new BufferedWriter(new FileWriter(noExiste, true));
@@ -1357,7 +1356,7 @@ public class ExplotacionDocumentosManagerImpl implements ExplotacionDocumentosMa
 						,"S"
 						,null
 						,null
-						,EstatusTramite.ENTREGA_CORREO.getCodigo()
+						,EstatusTramite.IMPRESO.getCodigo()
 						,true
 						);
 			}
