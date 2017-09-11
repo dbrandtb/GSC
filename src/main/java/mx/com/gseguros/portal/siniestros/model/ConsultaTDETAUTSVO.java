@@ -23,7 +23,6 @@ public class ConsultaTDETAUTSVO implements Serializable{
 	private String precio;
 	private String cantporc;
 	private String ptimport;
-	private String contadorExt;
 	
 	
 
@@ -162,18 +161,6 @@ public class ConsultaTDETAUTSVO implements Serializable{
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
-	}
-
-
-
-	public String getContadorExt() {
-		return contadorExt;
-	}
-
-
-
-	public void setContadorExt(String contadorExt) {
-		this.contadorExt = contadorExt;
 	}	
 	
 }

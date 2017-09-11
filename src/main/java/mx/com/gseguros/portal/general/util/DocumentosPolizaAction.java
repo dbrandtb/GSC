@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 public class DocumentosPolizaAction extends PrincipalCoreAction {
 
@@ -78,19 +76,6 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
     
     @Autowired
     private ConsultasPolizaManager consultasPolizaManager;
-
-	@Value("${ruta.servidor.reports}")
-    private String rutaServidorReports;
-    
-    @Value("${pass.servidor.reports}")
-    private String passServidorReports;
-    
-    @Value("${ruta.documentos.poliza}")
-    private String rutaDocumentosPoliza;
-    
-    @Value("${ruta.documentos.temporal}")
-    private String rutaDocumentosTemporal;
-    
 	/**
 	 * Metodo para la descarga de los archivos de los Movimientos en los casos
 	 * de BO
@@ -137,47 +122,6 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		success = true;
 		return SUCCESS;
 	}
-
-	public String verficiaExiteDocumentoExt() {
-		
-		logger.debug("Verificando existencia de archivo y regresando tipo de extension...");
-		
-		logger.debug("path: " + path);
-		logger.debug("subfolder: " + subfolder);
-		logger.debug("filename: " + filename);
-		
-		try {
-			
-			smap1 = new HashMap<String, String>();
-			
-			ArrayList<String> extensionesValidar = new ArrayList<String>(Arrays.asList(".pdf",".png",".jpg",".jpeg",".PDF",".PNG",".JPG",".JPEG"));
-			
-			for(String extension:extensionesValidar){
-				
-				String rutaArchivo = generaRutaArchivo(path, subfolder, filename+extension);
-				logger.info("Se va a verificar el archivo: " + rutaArchivo);
-				File checkFile = new File(rutaArchivo);
-				
-				if(checkFile.exists() && checkFile.isFile()) { 
-					smap1.put("EXISTE_ARCHIVO", Constantes.SI);
-					smap1.put("EXTENSION", new String(extension));
-					break;
-				}else{
-					smap1.put("EXISTE_ARCHIVO", Constantes.NO);
-					smap1.put("EXTENSION", "");
-				}
-			}
-			
-		} catch (Exception e) {
-			logger.error("Error al verificar la existencia de archivo. ",e );
-			respuesta = "Error al verificar nombre de archivo.";
-			success = false;
-			return SUCCESS;
-		}
-		
-		success = true;
-		return SUCCESS;
-	}
 	
 	/**
 	 * Regenera un reporte que se ha generado con errores 
@@ -202,11 +146,11 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 	                   nmsuplem      = "999999999999999999",//smap1.get("pv_nmsuplem_i"),
 	                   nmtramite     = smap1.get("pv_nmtramite_i"),
 	                   nombreReporte = smap1.get("pv_cddocume_i").substring(0 , smap1.get("pv_cddocume_i").length()-3);
-	                       
+	            
 	            paso = "Generando URL para SOL_VIDA_AUTO.pdf";
-	            String rutaReports    = rutaServidorReports;
-	            String passReports    = passServidorReports;
-	            String rutaDocumentos = rutaDocumentosPoliza;
+	            String rutaReports    = getText("ruta.servidor.reports");
+	            String passReports    = getText("pass.servidor.reports");
+	            String rutaDocumentos = getText("ruta.documentos.poliza");
 	            String url = rutaReports
 	                    + "?destype=cache"
 	                    + "&desformat=PDF"
@@ -349,7 +293,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
                     List<PolizaDTO> lista = consultasPolizaManager.obtieneDatosPoliza(polizaAseguradoVO);
                     if (lista != null && !lista.isEmpty()) {
                         consultasManager.copiarArchivosRenovacionColectivo(listaMesaControl.get(0).getCduniecomc(),listaMesaControl.get(0).getCdramomc(),"M",
-                                        Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"",ntramite, this.rutaDocumentosPoliza);
+                                        Integer.parseInt(lista.get(0).getNmpolant().substring(7,13))+"",ntramite, this.getText("ruta.documentos.poliza"));
                     } 
 	            }
 	            
@@ -438,7 +382,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 				{
 					File file = new File(
 							new StringBuilder().
-							append(this.rutaDocumentosPoliza)
+							append(this.getText("ruta.documentos.poliza"))
 							.append(Constantes.SEPARADOR_ARCHIVO).append(ntramite)
 							.append(Constantes.SEPARADOR_ARCHIVO).append(iArchivo)
 							.toString()
@@ -449,7 +393,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		
 				File fusionado = DocumentosUtils.fusionarDocumentosPDF(files,new File(
 						new StringBuilder()
-						.append(this.rutaDocumentosTemporal).append(Constantes.SEPARADOR_ARCHIVO)
+						.append(this.getText("ruta.documentos.temporal")).append(Constantes.SEPARADOR_ARCHIVO)
 						.append(System.currentTimeMillis()).append("_fusion_").append(ntramite).append(".pdf")
 						.toString()
 						));
@@ -498,7 +442,7 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 		
 		StringBuilder sbRutaArchivo = new StringBuilder();
 		// Agregamos la ruta:
-		sbRutaArchivo.append(StringUtils.isNotBlank(ruta) ? ruta : this.rutaDocumentosPoliza);
+		sbRutaArchivo.append(StringUtils.isNotBlank(ruta) ? ruta : this.getText("ruta.documentos.poliza"));
 		sbRutaArchivo.append(Constantes.SEPARADOR_ARCHIVO);
 		// Agregamos la subcarpeta si existe:
 		if(StringUtils.isNotBlank(subcarpeta)) {
@@ -947,21 +891,5 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
     public void setParams(Map<String, String> params) {
         this.params = params;
     }
-    
-    public String getRutaServidorReports() {
-		return rutaServidorReports;
-	}
-
-	public String getPassServidorReports() {
-		return passServidorReports;
-	}
-
-	public String getRutaDocumentosPoliza() {
-		return rutaDocumentosPoliza;
-	}
-
-	public String getRutaDocumentosTemporal() {
-		return rutaDocumentosTemporal;
-	}
 	
 }

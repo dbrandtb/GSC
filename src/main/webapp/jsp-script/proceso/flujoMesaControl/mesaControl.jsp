@@ -1521,37 +1521,6 @@ Ext.onReady(function()
                                                                 } catch (e) {}
                                                                 debugError('error al contar camiones (1):', e);
                                                             }
-                                                            
-                                                          //Validacion de nivel de siniestralidad
-                                                            var mascaraSiniestralidad;
-                                                            try {
-                                                                mascaraSiniestralidad = _maskLocal();
-                                                                var json2 = Ext.decode(json.smap1.valoresCampos);
-                                                                if (!Ext.isEmpty(json2.smap1.porcenSin))
-                                                                {
-                                                              	  debug('Poliza can alto nivel de siniestralidad!');
-                                                                    var form = _p54_windowNuevo.down('form');
-                                                                    try {
-                                                                        form.remove(form.down('[name=otvalor10]'));
-                                                                    } catch(e) {}
-                                                                    form.add({
-                                                                        xtype      : 'numberfield',
-                                                                        name       : 'otvalor10',
-                                                                        fieldLabel : 'porcentaje siniestralidad',
-                                                                        value      : '',
-                                                                        hidden     : true
-                                                                    });
-                                                                    form.doLayout();
-                                                                    form.down('[name=otvalor10]').setValue(json2.smap1.porcenSin);
-                                                                }
-                                                                mascaraSiniestralidad.close();
-                                                            } catch (e) {
-                                                                try {
-                                                                    mascaraSiniestralidad.close();
-                                                                } catch (e) {}
-                                                                debugError('error al contar camiones (1):', e);
-                                                            }
-                                                              
                                                         }
                                                     }
                                                 }
@@ -1704,31 +1673,29 @@ function _p54_registrarTramite(bot)
                     		if (bandera==false)	{
                     			mensajeError('No se pudo grabar numero de tr\u00e1mite en sistema sigs',function(){callbackRegistar(true)});
                     		}else{
-                    				//Inicia el proceso normal de crear tramite
-                    				debug(json.params.asignado);
-                    				mensajeCorrecto
-		                            ('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
-		                             {
-		                                 bot.up('window').hide();
-		                                 var form  = _fieldById('_p54_filtroForm');
-		                                 var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
-		                                 form.getForm().reset();
-		                                 form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
-		                                 form.down('[name=STATUS]').setValue('0');
-		                                 _fieldById('_p54_filtroCmp').reset();
-		                                 
-		                                 var callbackCheck = function(store, records, success) {
-		                                     store.removeListener('load', callbackCheck);
-		                                     _p54_mostrarCheckDocumentosInicial(json.params.ntramite);
-		                                 };
-		                                 
-		                                 _p54_store.on({
-		                                     load : callbackCheck  
-		                                 });
-		                                 boton.handler(boton);
-		                             }
-		                            );
-	                            
+                    			
+	                            mensajeCorrecto
+	                            ('Tr\u00e1mite generado','Se gener\u00f3 el tr\u00e1mite '+json.params.ntramite,function()
+	                             {
+	                                 bot.up('window').hide();
+	                                 var form  = _fieldById('_p54_filtroForm');
+	                                 var boton = _fieldById('_p54_filtroForm').down('button[text=Buscar]');
+	                                 form.getForm().reset();
+	                                 form.down('[name=NTRAMITE]').setValue(json.params.ntramite);
+	                                 form.down('[name=STATUS]').setValue('0');
+	                                 _fieldById('_p54_filtroCmp').reset();
+	                                 
+	                                 var callbackCheck = function(store, records, success) {
+	                                     store.removeListener('load', callbackCheck);
+	                                     _p54_mostrarCheckDocumentosInicial(json.params.ntramite);
+	                                 };
+	                                 
+	                                 _p54_store.on({
+	                                     load : callbackCheck  
+	                                 });
+	                                 boton.handler(boton);
+	                             }
+	                            );
                             }
                         }
                     	

@@ -57,7 +57,6 @@ import mx.com.gseguros.portal.emision.dao.EmisionDAO;
 import mx.com.gseguros.portal.general.dao.AseguradoDAO;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
@@ -184,61 +183,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				new StringBuilder()
 				.append("\n@@@@@@ movimientoTvalogarGrupo @@@@@@")
 				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.toString()
-				);
-	}
-
-	@Override
-	public void movimientoTvalogarGrupoFlexCopago(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String nmsuplem
-			,String cdtipsit
-			,String cdgrupo
-			,String cdgarant
-			,String status
-			,String cdatribu
-			,String valor
-			,String formatoCop)throws Exception
-	{
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-				.append("\n@@@@@@ movimientoTvalogarGrupoFlexCopago @@@@@@")
-				.append("\n@@@@@@ cdunieco=").append(cdunieco)
-				.append("\n@@@@@@ cdramo=")  .append(cdramo)
-				.append("\n@@@@@@ estado=")  .append(estado)
-				.append("\n@@@@@@ nmpoliza=").append(nmpoliza)
-				.append("\n@@@@@@ nmsuplem=").append(nmsuplem)
-				.append("\n@@@@@@ cdtipsit=").append(cdtipsit)
-				.append("\n@@@@@@ cdgrupo=") .append(cdgrupo)
-				.append("\n@@@@@@ cdgarant=").append(cdgarant)
-				.append("\n@@@@@@ status=")  .append(status)
-				.append("\n@@@@@@ cdatribu=").append(cdatribu)
-				.append("\n@@@@@@ valor=")   .append(valor)
-				.append("\n@@@@@@ formatoCop=").append(formatoCop)
-				.toString()
-				);
-		cotizacionDAO.movimientoTvalogarGrupoFlexCopago(
-				cdunieco
-				,cdramo
-				,estado
-				,nmpoliza
-				,nmsuplem
-				,cdtipsit
-				,cdgrupo
-				,cdgarant
-				,status
-				,cdatribu
-				,valor
-				,formatoCop
-				);
-		logger.info(
-				new StringBuilder()
-				.append("\n@@@@@@ movimientoTvalogarGrupoFlexCopago @@@@@@")
-				.append("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 				.toString()
 				);
 	}
@@ -786,42 +730,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				);
 		return listaTvalogars;
 	}
-
-	@Override
-	public List<Map<String,String>>obtieneFormatosAtribsCobsGrupo(
-			String cdunieco
-			,String cdramo
-			,String estado
-			,String nmpoliza
-			,String cdgrupo)throws Exception
-	{
-		logger.info(""
-				+ "\n#############################################"
-				+ "\n###### obtieneFormatosAtribsCobsGrupo ######"
-				+ "\n cdunieco "+cdunieco
-				+ "\n cdramo "+cdramo
-				+ "\n estado "+estado
-				+ "\n nmpoliza "+nmpoliza
-				+ "\n cdgrupo "+cdgrupo
-				);
-		Map<String,String>params=new HashMap<String,String>();
-		params.put("cdunieco" , cdunieco);
-		params.put("cdramo"   , cdramo);
-		params.put("estado"   , estado);
-		params.put("nmpoliza" , nmpoliza);
-		params.put("cdgrupo"  , cdgrupo);
-		List<Map<String,String>>listaTvalogars=cotizacionDAO.obtieneFormatosAtribsCobsGrupo(params);
-		if(listaTvalogars==null)
-		{
-			listaTvalogars=new ArrayList<Map<String,String>>();
-		}
-		logger.debug("lista size: "+listaTvalogars.size());
-		logger.info(""
-				+ "\n###### obtieneFormatosAtribsCobsGrupo ######"
-				+ "\n############################################"
-				);
-		return listaTvalogars;
-	}
 	
 	@Override
 	public List<Map<String,String>>cargarTarifasPorEdad(
@@ -928,12 +836,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 				+ "\n#######################################"
 				);
 		return nombre;
-	}
-
-	@Override
-	public void censoTramiteClonadoCargado(String ntramite)throws Exception
-	{
-		cotizacionDAO.censoTramiteClonadoCargado(ntramite);
 	}
 	
 	@Override
@@ -2490,38 +2392,15 @@ public class CotizacionManagerImpl implements CotizacionManager
 		}
 		//atributo variable para recuperar tatrigar
 		
-		if (resp.isExito()) {
-		    try {
-		        resp.getSmap().put("customCode", consultasDAO.recuperarCodigoCustom("25", cdsisrol));
-		    } catch (Exception ex) {
-		        resp.getSmap().put("customCode", "/* error */");
-		        logger.error("Error sin impacto al recuperar codigo custom",ex);
-		    }
+		try
+		{
+			resp.getSmap().put("customCode", consultasDAO.recuperarCodigoCustom("25", cdsisrol));
 		}
-		
-		if (resp.isExito()) {
-            try {
-                StringBuilder switchCoberturaTatrisitString = new StringBuilder("_x");
-                List<ComponenteVO> switchCoberturaTatrisitListaCmp = pantallasDAO.obtenerComponentes(
-                        null, //cdtiptra, 
-                        null, //cdunieco, 
-                        "|" + cdramo + "|", 
-                        "|" + cdtipsit + "|", 
-                        null, //estado, 
-                        cdsisrol, 
-                        "COTIZACION_GRUPO", 
-                        "SWITCH_COBER_VALOSIT", 
-                        null
-                        );
-                for (ComponenteVO switchCoberturaTatrisitListaCmpIte : switchCoberturaTatrisitListaCmp) {
-                    switchCoberturaTatrisitString.append(",_").append(switchCoberturaTatrisitListaCmpIte.getLabel());
-                }
-                resp.getSmap().put("swtichCoberturaTatrisit", switchCoberturaTatrisitString.toString());
-            } catch (Exception ex) {
-                resp.getSmap().put("swtichCoberturaTatrisit", "_x");
-                logger.error("Error sin impacto al recuperar codigo custom",ex);
-            }
-        }
+		catch(Exception ex)
+		{
+			resp.getSmap().put("customCode", "/* error */");
+			logger.error("Error sin impacto al recuperar codigo custom",ex);
+		}
 		
 		logger.info(
 				new StringBuilder()
@@ -3425,39 +3304,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                    {
 	                    	bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(12)),"-"));
 	                    }
-                        
-                        try {
-                            auxCell = row.getCell(13);
-                            String valor = "";
-                            if (auxCell != null && auxCell.getStringCellValue() !=null && StringUtils.isNotBlank(auxCell.getStringCellValue())) {
-                                valor = auxCell.getStringCellValue();
-                                if (!"S".equals(valor) && !"C".equals(valor)) {
-                                    throw new ApplicationException(Utils.join("Solo se permite S o C en estado civil N", fila));
-                                }
-                            }
-                            logger.debug(Utils.join("ESTADO CIVIL: ", valor, "|"));
-                            bufferLinea.append(Utils.join(valor, "|"));
-                        } catch (Exception ex) {
-                            filaBuena = false;
-                            bufferErroresCenso.append(Utils.join("Error en el campo 'Estado civil' (N) de la fila ",fila," "));
-                        } finally {
-                            bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(13)),"-"));
-                        }
-                        
-                        try {
-                            auxCell = row.getCell(14);
-                            String valor = "";
-                            if (auxCell !=null) {
-                                valor = String.format("%.0f",auxCell.getNumericCellValue());
-                            }
-                            logger.debug(Utils.join("NUMERO DE DEPENDIENTES: ", valor, "|"));
-                            bufferLinea.append(Utils.join(valor, "|"));
-                        } catch (Exception ex) {
-                            filaBuena = false;
-                            bufferErroresCenso.append(Utils.join("Error en el campo 'Numero de dependientes' (O) de la fila ",fila," "));
-                        } finally {
-                            bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(14)),"-"));
-                        }
 		                
 		                bufferLinea.append("\n");
 		                logger.debug("** NUEVA_FILA **");
@@ -3739,8 +3585,14 @@ public class CotizacionManagerImpl implements CotizacionManager
 					if(clasif.equals("1")&&nSituac>49)
 					{
 						long timestamp  = System.currentTimeMillis();
-						resp.setExito(false);
-						resp.setRespuesta(Utils.join("No se permiten mas de 49 asegurados #",timestamp));
+						//se condiciona por rol la asignaci�n de valores, para que guarde las coberturas sin necesidad de editar subgrupo, para RC y roles restringidos (EGS)
+						if(!(RolSistema.AGENTE.getCdsisrol().equals(cdsisrol) || RolSistema.EJECUTIVO_INTERNO.getCdsisrol().equals(cdsisrol) || RolSistema.MESA_DE_CONTROL.getCdsisrol().equals(cdsisrol))
+								&&TipoSituacion.RECUPERA_COLECTIVO.getCdtipsit().equals(cdtipsit)){
+							resp.setExito(false);
+							resp.setRespuesta(Utils.join("No se permiten mas de 49 asegurados #",timestamp));
+						}
+						//resp.setExito(false); //(EGS)
+						//resp.setRespuesta(Utils.join("No se permiten mas de 49 asegurados #",timestamp)); //(EGS)
 						resp.setRespuestaOculta(resp.getRespuesta());
 						logger.error(resp.getRespuesta());
 					}
@@ -4226,8 +4078,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 									);
 							boolean grupoIteCoberturaIteTieneAtrib          = false;
 							Map<String,String>grupoIteCoberturaIteTvalogars = new HashMap<String,String>();
-							Map<String,String>listaTipoValorCdatribu=new HashMap<String,String>();
-							
 							for(Entry<String,String>grupoIteCoberturaIteAtribIte:grupoIteCoberturaIte.entrySet())
 							{
 								String grupoIteCoberturaIteAtribIteKey=grupoIteCoberturaIteAtribIte.getKey();
@@ -4238,16 +4088,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 										)
 								{
 									grupoIteCoberturaIteTieneAtrib=true;
-									String numeroAtr = grupoIteCoberturaIteAtribIteKey.substring("parametros.pv_".length(), grupoIteCoberturaIteAtribIteKey.length());
-									grupoIteCoberturaIteTvalogars.put(numeroAtr, String.valueOf(grupoIteCoberturaIteAtribIte.getValue()));
-									
-									//Se guarda el tipo de valor que se captura (porcentaje o monto) para cada atributo que contenga el campo de tipoValor
-									if(grupoIteCoberturaIte.containsKey("TipoValor_"+grupoIteCoberturaIteAtribIteKey)){
-										listaTipoValorCdatribu.put(numeroAtr, grupoIteCoberturaIte.get("TipoValor_"+grupoIteCoberturaIteAtribIteKey));
-									}
+									grupoIteCoberturaIteTvalogars.put(
+											grupoIteCoberturaIteAtribIteKey.substring("parametros.pv_".length()
+													,grupoIteCoberturaIteAtribIteKey.length()),String.valueOf(grupoIteCoberturaIteAtribIte.getValue()));
 								}
 							}
-							
 							if(grupoIteCoberturaIteTieneAtrib)
 							{
 								cotizacionDAO.movimientoTvalogarGrupoCompleto(
@@ -4262,36 +4107,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 										,"V"      //status
 										,grupoIteCoberturaIteTvalogars
 										);
-								
-								
-								logger.debug("<<<<<<>>>>>> CotizacionManager.movimientoTvalogarGrupoFlexCopago <<<<<<>>>>>>");
-								
-								for(Entry<String,String>atributo:grupoIteCoberturaIteTvalogars.entrySet())
-								{
-									if(StringUtils.isNotBlank(atributo.getKey()) && atributo.getKey().contains("otvalor")
-											&& listaTipoValorCdatribu.containsKey(atributo.getKey()) && StringUtils.isNotBlank(listaTipoValorCdatribu.get(atributo.getKey())))
-									{
-										
-										String numeroAtributo = atributo.getKey().substring("otvalor".length(), atributo.getKey().length());
-												
-										cotizacionDAO.movimientoTvalogarFormFlexCopago(
-												cdunieco
-												,cdramo
-												,"W"      //estado
-												,nmpoliza
-												,"0"      //nmsuplem
-												,cdtipsit
-												,grupoIteCdgrupo
-												,grupoIteCoberturaIteCdgarant
-												,"V"      //status
-												,numeroAtributo
-												,listaTipoValorCdatribu.get(atributo.getKey())
-												);
-									    
-									    logger.debug("<<<<<<>>>>>>   Tipo valor a instertar luego de instertar atributo   <<<<<<>>>>>> ::::::" + listaTipoValorCdatribu.get(atributo.getKey()));
-									    
-									}
-								}
 							}
 						}
 					}
@@ -5161,7 +4976,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 				String valorNoSocioTitular 	= null;
 				Map<String,String> valores  = null;
 				int contador 				= 0;
-				while (rowIterator.hasNext()&&resp.isExito()) 
+	            while (rowIterator.hasNext()&&resp.isExito()) 
 	            {
 	                Row           row            = rowIterator.next();
 	                Date          auxDate        = null;
@@ -5170,14 +4985,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                StringBuilder bufferLineaStr = new StringBuilder();
 	                boolean       filaBuena      = true;
 	                
-	                String nombre1         =  null;
-	                String nombre2         =  null;
-	                String apellidoP       =  null;
-	                String apellidoM       =  null;
-	                String fechaNac        =  null;
-	                String cveAsegurado    =  null;
-	                String fecanti         =  null;
-	                String feingreso       =  null;
+	                String fechaNac =  null;
+	                String fecanti  = null;
+	                String feingreso =  null;
 	                String identidad       =  null;
 	                
 	                if(Utils.isRowEmpty(row))
@@ -5319,8 +5129,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		.append("|")
 		                		.toString()
 		                		);
-	                    apellidoP = row.getCell(3).getStringCellValue();
-                        bufferLinea.append(
+		                bufferLinea.append(
 		                		new StringBuilder(row.getCell(3).getStringCellValue())
 		                		.append("|")
 		                		.toString()
@@ -5346,8 +5155,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		.append("|")
 		                		.toString()
 		                		);
-	                    apellidoM = row.getCell(4).getStringCellValue();
-	                    bufferLinea.append(
+		                bufferLinea.append(
 		                		new StringBuilder(row.getCell(4).getStringCellValue())
 		                		.append("|")
 		                		.toString()
@@ -5373,7 +5181,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                		.append("|")
 		                		.toString()
 		                		);
-		                nombre1 = row.getCell(5).getStringCellValue();
 		                bufferLinea.append(
 		                		new StringBuilder(row.getCell(5).getStringCellValue())
 		                		.append("|")
@@ -5392,42 +5199,50 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(5)),"-"));
 	                }
 	              //SEGUNDO NOMBRE
-                    try
-                    {
-                        auxCell=row.getCell(6);
-                        logger.debug("SEGUNDO NOMBRE: "+(
-                                auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-                                ));
-                        bufferLinea.append(
-                                auxCell!=null?auxCell.getStringCellValue()+"|":"|"
-                                );
-                        nombre2 = auxCell!=null?auxCell.getStringCellValue():"";
-                        nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
-                        
-                        if("T".equals(parentesco))
-                        {
-                            if(nFamilia > 0){
-                                listaFamilias.put(nFamilia, filasFamilia);
-                                filasFamilia = new ArrayList<Map<String,String>>(); 
-                            }
-                            
-                            nFamilia++;
-                            familias.put(nFamilia,"");
-                            estadoFamilias.put(nFamilia,true);
-                            titulares.put(nFamilia,nombre);
-                            
-                        }
-                    }
-                    catch(Exception ex)
-                    {
-                        filaBuena = false;
-                        bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (G) de la fila ",fila," "));
-                    }
-                    finally
-                    {
-                        bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
-                    }
-	                
+	                try
+                	{
+		                auxCell=row.getCell(6);
+		                logger.debug(
+		                		new StringBuilder("SEGUNDO NOMBRE: ")
+		                		.append(
+		                				auxCell!=null?
+		                						auxCell.getStringCellValue()
+		                						:""
+		                		)
+		                		.append("|")
+		                		.toString()
+		                		);
+		                bufferLinea.append(
+		                		auxCell!=null?
+		                				new StringBuilder(auxCell.getStringCellValue()).append("|").toString()
+		                				:"|"
+		                		);
+		                
+		                nombre = Utils.join(nombre,auxCell!=null?auxCell.getStringCellValue():"");
+		                
+		                if("T".equals(parentesco))
+		                {
+		                	if(nFamilia > 0){
+		                		listaFamilias.put(nFamilia, filasFamilia);
+		                		filasFamilia = new ArrayList<Map<String,String>>(); 
+		                	}
+		                	
+		                	nFamilia++;
+		                	familias.put(nFamilia,"");
+		                	estadoFamilias.put(nFamilia,true);
+		                	titulares.put(nFamilia,nombre);
+		                	
+		                }
+                	}
+	                catch(Exception ex)
+	                {
+	                	filaBuena = false;
+	                	bufferErroresCenso.append(Utils.join("Error en el campo 'Segundo nombre' (G) de la fila ",fila," "));
+	                }
+	                finally
+	                {
+	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(6)),"-"));
+	                }
 	              //SEXO
 	                try
                 	{
@@ -5593,17 +5408,17 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                
 	                logger.debug(">>> Validando codigo postal existente en el producto");
 	                try {
-						if(StringUtils.isBlank(codpostal) || this.existeCodPostalVigente(codpostal).equalsIgnoreCase("0")){
-							logger.error("Codigo Postal inexistente en la fila: " + fila);
-							filaBuena = false;
-							bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' No v\u00e1lido (J) de la fila ",fila," "));
-						}else{
-							logger.debug("<<< Codigo postal correcto..");
-						}
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+				if(StringUtils.isBlank(codpostal) || this.existeCodPostalVigente(codpostal).equalsIgnoreCase("0")){
+		                	logger.error("Codigo Postal inexistente en la fila: " + fila);
+		                	filaBuena = false;
+		                	bufferErroresCenso.append(Utils.join("Error en el campo 'Codigo postal' No v\u00e1lido (J) de la fila ",fila," "));
+	                	}else{
+	                		logger.debug("<<< Codigo postal correcto..");
+				}
+		        } catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+	                }
 	                
 	              //ESTADO
 	                try
@@ -5850,22 +5665,24 @@ public class CotizacionManagerImpl implements CotizacionManager
 		                identidad = auxCell!=null?auxCell.getNumericCellValue()+"":"";
 		                if(pideNumCliemte&& (auxCell==null||identidad ==null||StringUtils.isBlank(identidad))){
                 			requeridoSucursal = "1";
-                			throw new ApplicationException("Necesito el numero de empleado");
-                		}
+		                	throw new ApplicationException("Necesito el numero de empleado");
+		                }
 
+		                
 	                	if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
-	                		String identidadModificada[] = identidad.split("\\-");
-	                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
-	                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
-	                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
+		                		String identidadModificada[] = identidad.split("\\-");
+		                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
+		                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
+		                		
+		                		if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
 	                			//Validacion para el No. de Socio y Clave Familiar
 	                			if(parentesco.equalsIgnoreCase("T")){
 	                				valorNoSocioTitular = seccion1;
 	                				contador = 0;
 	                				valores  = new LinkedHashMap<String,String>();
 	                				valores.put(seccion2 , seccion2);
-	                				bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
-	                			}else{
+		                			bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
+		                		}else{
 	                				if(!valorNoSocioTitular.equalsIgnoreCase(seccion1)){
 	                					existeNoSocio = "1";
 	                					throw new ApplicationException("Es diferente No. de Socio Empleado es diferente al del Titular.");
@@ -5883,9 +5700,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                			}
 	                		}else{
 	                			requeridoSucursal = "1";
-	                			throw new ApplicationException("No es numero");
-	                		}
-                		}else{
+			                		throw new ApplicationException("No es numero");
+		                		}		                		
+		                	}else{
                 			bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");    
                 		}
                 	}catch(Exception e) {
@@ -5897,13 +5714,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                		if(pideNumCliemte&& (auxCell==null||identidad ==null||StringUtils.isBlank(identidad))){
                 				requeridoSucursal = "1";
                 				throw new ApplicationException("La identidad no puede ir en blanco");
-                			}
-	                	
+		                	}
 	                		if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
 	                			String identidadModificada[] = identidad.split("\\-");
 	                			String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
 	                			String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
-
 	                			if(StringUtils.isNumeric(seccion1) && StringUtils.isNumeric(seccion2)){
 	                				if(parentesco.equalsIgnoreCase("T")){
 	                					valorNoSocioTitular = seccion1;
@@ -5911,7 +5726,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                					valores  = new LinkedHashMap<String,String>();
 	                					valores.put(seccion2 , seccion2);
 	                					bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
-	                				}else{
+		                }else{
 	                					if(!valorNoSocioTitular.equalsIgnoreCase(seccion1)){
 	                						existeNoSocio ="1";
 	                						throw new ApplicationException("Es diferente No. de Socio Empleado es diferente al del Titular.");
@@ -5922,9 +5737,9 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                							throw new ApplicationException("Se encuentra repetido la Cve Familiar.");
 	                						}else{
 	                							valores.put(seccion2 , seccion2);
-	                						}
+		                }
 	                						bufferLinea.append(seccion1.toString()+"-"+seccion2.toString()+"|");
-	                					}
+                	}
 	                				}
 	                			}else{
 	                				requeridoSucursal = "1";
@@ -5934,7 +5749,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                			bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");    
 	                		}
 	                	}catch(Exception ex) {
-	                		filaBuena = false;
+	                	filaBuena = false;
 	                		if(existeNoSocio.equalsIgnoreCase("1")){
 	                			bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' - El No. de Socio/Empleado no corresponde al titular. (T) de la fila ",fila," "));
 	                		}else if(existeCveFamilia.equalsIgnoreCase("1")){
@@ -5944,11 +5759,11 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                		}
 	                		else{
 	                			bufferErroresCenso.append(Utils.join("Error en el campo 'Identidad' no cumple el formato. (T) de la fila ",fila," "));
-	                		}	                        
+	                }
 	                	}
                 	} finally {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(19)),"-"));
-                	}
+	                }
 	                
 	              //FECHA DE RECONOCIMIENTO DE ANTIGUEDAD
 	                try
@@ -6409,61 +6224,15 @@ public class CotizacionManagerImpl implements CotizacionManager
 	                {
 	                	bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(29)),"-"));
 	                }
-	              //ID. ASEGURADO
-	                try {
+	              //ID ASEGURADO
+                    try {
                         logger.debug("ID. ASEGURADO: "+(String.format("%.0f",row.getCell(30).getNumericCellValue())+"|"));
-                        auxCell=row.getCell(30);
-                        cveAsegurado = auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue()):"";
-                        bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
-                        /*boolean exitoValidacion;
-                        if(StringUtils.isNotBlank(cveAsegurado) && (Integer.parseInt(cveAsegurado) > 0)){
-                            long timestamp=System.currentTimeMillis();
-                            Map<String,Object>managerResult=personasManager.obtenerPersonaPorCdperson(cveAsegurado,timestamp);
-                            exitoValidacion = (Boolean)managerResult.get("exito");
-                           if(exitoValidacion){
-                        	   logger.debug("ID ASEGURADO: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
-                        	   bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
-                           }else{
-                               filaBuena = false;
-                               bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' :"+cveAsegurado+" ,no se encuentra en SICAPS (AE) de la fila ",fila," "));
-                           }                            
-                        }else{
-                            String respuesta  = personasManager.obtieneAseguradoSICAPS((nombre1+" "+nombre2),apellidoP,apellidoM,renderFechas.parse(fechaNac));
-                            if(Integer.parseInt(respuesta) > 0){
-                                filaBuena = false;
-                                bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado'. El asegurado ya se encuentra en SICAPS clave: "+respuesta +" (AE) de la fila ",fila," "));
-                            }else{
-                            	logger.debug("ID ASEGURADO: "+(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|"));
-                            	bufferLinea.append(auxCell!=null?String.format("%.0f",auxCell.getNumericCellValue())+"|":"|");
-                            }                            
-                        }*/
-                    } catch(Exception ex2) { 
-                        logger.warn("error al leer el campo 'Id. Asegurado', se intentara como string ==>");
+                        bufferLinea.append(String.format("%.0f",row.getCell(30).getNumericCellValue())+"|");
+                    } catch(Exception ex2) {
+                        logger.warn("error al leer Id. Asegurado, se intentara como string:",ex2);
                         try {
                             auxCell=row.getCell(30);
-                            cveAsegurado = auxCell!=null?auxCell.getStringCellValue():"";
-                            boolean exitoValidacion;
-                            if(StringUtils.isNotBlank(cveAsegurado)){
-                                long timestamp=System.currentTimeMillis();
-                                Map<String,Object>managerResult=personasManager.obtenerPersonaPorCdperson(cveAsegurado,timestamp);
-                                exitoValidacion = (Boolean)managerResult.get("exito");
-                               if(exitoValidacion){
-                            	   logger.debug("ID ASEGURADO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-                            	   bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                               }else{
-                                   filaBuena = false;
-                                   bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' :"+cveAsegurado+" ,no se encuentra en SICAPS (AE) de la fila ",fila," "));
-                               }                            
-                            }else{
-                                String respuesta  = personasManager.obtieneAseguradoSICAPS((nombre1+" "+nombre2),apellidoP,apellidoM,renderFechas.parse(fechaNac));
-                                if(Integer.parseInt(respuesta) > 0){
-                                    filaBuena = false;
-                                    bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado'. El asegurado ya se encuentra en SICAPS clave: "+respuesta +" (AE) de la fila ",fila," "));
-                                }else{
-                                	logger.debug("ID ASEGURADO: "+(auxCell!=null?auxCell.getStringCellValue()+"|":"|"));
-                                	bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
-                                }                                
-                            }
+                            bufferLinea.append(auxCell!=null?auxCell.getStringCellValue()+"|":"|");
                         } catch(Exception ex) {
                             filaBuena = false;
                             bufferErroresCenso.append(Utils.join("Error en el campo 'Id. Asegurado' (AE) de la fila ",fila," "));
@@ -6472,21 +6241,6 @@ public class CotizacionManagerImpl implements CotizacionManager
                         bufferLineaStr.append(Utils.join(extraerStringDeCelda(row.getCell(30)),"-"));
                     }
 	                /* nuevos para SSI fin */
-
-                    try {
-                        auxCell = row.getCell(31);
-                        String valor = "";
-                        if (auxCell !=null) {
-                            valor = String.format("%.0f",auxCell.getNumericCellValue());
-                        }
-                        logger.debug(Utils.join("NUMERO DE DEPENDIENTES: ", valor, "|"));
-                        bufferLinea.append(Utils.join(valor, "|"));
-                    } catch (Exception ex) {
-                        filaBuena = false;
-                        bufferErroresCenso.append(Utils.join("Error en el campo 'Numero de dependientes' (AF) de la fila ",fila," "));
-                    } finally {
-                        bufferLineaStr.append(Utils.join("",this.extraerStringDeCelda(row.getCell(31)),"-"));
-                    }
 	                
 	                logger.debug(Utils.log("** NUEVA_FILA (filaBuena=",filaBuena,",cdgrupo=",cdgrupo,") **"));
 	                
@@ -6625,7 +6379,7 @@ public class CotizacionManagerImpl implements CotizacionManager
 	            				Integer numFam = entry.getKey();
 	            				
 	            				if(estadoFamilias.containsKey(numFam) && estadoFamilias.get(numFam)){
-	            				    List<Map<String,String>> listaZwcenso = new ArrayList<Map<String,String>> ();
+	            					List<Map<String,String>> listaZwcenso = new ArrayList<Map<String,String>> ();
 	            					for(Map<String,String> paramsElemFam: listaFamilias.get(numFam)){
 	            					    listaZwcenso.add(paramsElemFam);
 	            					}
@@ -7659,152 +7413,154 @@ public class CotizacionManagerImpl implements CotizacionManager
 							}
 			    			
 			    			if(personaNueva){
-								String cdtipsitGS = consultasDAO.obtieneSubramoGS(cdramo, cdtipsit);
-	
-								ClienteGeneral clienteGeneral = new ClienteGeneral();
-								// clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
-								clienteGeneral.setRamoCli(Integer
-										.parseInt(cdtipsitGS));
-								clienteGeneral.setNumeroExterno(cdideperCli);
-	
-								ClienteGeneralRespuesta clientesRes = ice2sigsService
-										.ejecutaWSclienteGeneral(
-												null,
-												null,
-												null,
-												null,
-												null,
-												null,
-												null,
-												Ice2sigsService.Operacion.CONSULTA_GENERAL,
-												clienteGeneral, null, false);
-	
-								if (clientesRes != null
-										&& ArrayUtils.isNotEmpty(clientesRes
-												.getClientesGeneral())) {
-									ClienteGeneral cli = null;
-	
-									if (clientesRes.getClientesGeneral().length == 1) {
-										logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
-										cli = clientesRes.getClientesGeneral()[0];
-									} else {
-										logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
-									}
-	
-									if (cli != null) {
-	
-										/**
-										 * TODO: EVALUAR E IMPLEMENTAR CDPERSON TEMPORAL
-										 */
-										
-										// IR POR NUEVO CDPERSON:
-										newCdPerson = personasDAO.obtenerNuevoCdperson();
-	
-										logger.debug("Insertando nueva persona, cdperson generado: " +newCdPerson);
-										
-										String usuarioCaptura =  null;
-										
-										if(usuarioSesion!=null){
-											if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
-												usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
-											}else{
-												usuarioCaptura = usuarioSesion.getCodigoPersona();
-											}
-										}
-							    		
-							    		String apellidoPat = "";
-								    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
-								    		apellidoPat = cli.getApellidopCli();
-								    	}
-								    	
-								    	String apellidoMat = "";
-								    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
-								    		apellidoMat = cli.getApellidomCli();
-								    	}
-								    	
-							    		Calendar calendar =  Calendar.getInstance();
-							    		
-							    		String sexo = "H"; //Hombre
-								    	if(cli.getSexoCli() > 0){
-								    		if(cli.getSexoCli() == 2) sexo = "M";
-								    	}
-								    	
-								    	String tipoPersona = "F"; //Fisica
-								    	if(cli.getFismorCli() > 0){
-								    		if(cli.getFismorCli() == 2){
-								    			tipoPersona = "M";
-								    		}else if(cli.getFismorCli() == 3){
-								    			tipoPersona = "S";
-								    		}
-								    	}
-								    	
-								    	if(cli.getFecnacCli()!= null){
-								    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
-								    	}
-								    	
-								    	
-								    	Calendar calendarIngreso =  Calendar.getInstance();
-								    	if(cli.getFecaltaCli() != null){
-								    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
-								    	}
-								    	
-								    	String nacionalidad = "001";// Nacional
-								    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
-								    		nacionalidad = "002";
-								    	}
-								    	
-								    	String codPosImp = cli.getCodposCli();
-		                                if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
-		                                    codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
-		                                }
-								    	
-							    		//GUARDAR MPERSONA
-							    		
-										personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
-												, "1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(), null
-												, (cli.getFismorCli() == 1) ? apellidoPat : "", (cli.getFismorCli() == 1) ? apellidoMat: "", calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
-												, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
-										
-										String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
-						    			if(edoAdosPos2.length() ==  1){
-						    				edoAdosPos2 = "0"+edoAdosPos2;
-						    			}
-						    			
-						    			HashMap<String,String> paramsMunCol = new HashMap<String, String>();
-		                                paramsMunCol.put("pv_cdpostal_i", codPosImp);
-		                                paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
-		                                paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
-		                                paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
-		                                
-		                                Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
-							    		
-							    		//GUARDAR DOMICILIO
-						    			
-						    			personasDAO.movimientosMdomicil(newCdPerson, "1", cli.getCalleCli(), cli.getTelefonoCli()
-							    				, codPosImp, codPosImp+edoAdosPos2, munycol.get("CDMUNICI"), munycol.get("CDCOLONI")
-							    				, cli.getNumeroCli(), null
-							    				,"1" // domicilio personal default
-												,usuarioCaptura
-												,Constantes.SI  //domicilio activo
-												,Constantes.INSERT_MODE);
-	
-						    			//GUARDAR TVALOPER
-						    			
-						    			personasDAO.movimientosTvaloper("1", newCdPerson, cli.getCveEle(), cli.getPasaporteCli(), null, null, null,
-						    				null, null, cli.getOrirecCli(), null, null,
-						    				cli.getNacCli(), null, null, null, null, 
-						    				null, null, null, null, (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0", 
-						    				null, null, null, null, cli.getCurpCli(), 
-						    				null, null, null, null, null, 
-						    				null, null, null, null, null, 
-						    				null, null, cli.getTelefonoCli(), cli.getMailCli(), null, 
-						    				null, null, null, null, null, 
-						    				null, null, null, null, null,
-		    		    					cli.getFaxCli(), cli.getCelularCli(),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
-						    			
-									}
+							String cdtipsitGS = consultasDAO.obtieneSubramoGS(cdramo, cdtipsit);
+
+							ClienteGeneral clienteGeneral = new ClienteGeneral();
+							// clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
+							clienteGeneral.setRamoCli(Integer
+									.parseInt(cdtipsitGS));
+							clienteGeneral.setNumeroExterno(cdideperCli);
+
+							ClienteGeneralRespuesta clientesRes = ice2sigsService
+									.ejecutaWSclienteGeneral(
+											null,
+											null,
+											null,
+											null,
+											null,
+											null,
+											null,
+											Ice2sigsService.Operacion.CONSULTA_GENERAL,
+											clienteGeneral, null, false);
+
+							if (clientesRes != null
+									&& ArrayUtils.isNotEmpty(clientesRes
+											.getClientesGeneral())) {
+								ClienteGeneral cli = null;
+
+								if (clientesRes.getClientesGeneral().length == 1) {
+									logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
+									cli = clientesRes.getClientesGeneral()[0];
+								} else {
+									logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
 								}
-			    			}
+
+								if (cli != null) {
+
+									/**
+									 * TODO: EVALUAR E IMPLEMENTAR CDPERSON TEMPORAL
+									 */
+									
+									// IR POR NUEVO CDPERSON:
+									newCdPerson = personasDAO.obtenerNuevoCdperson();
+
+									logger.debug("Insertando nueva persona, cdperson generado: " +newCdPerson);
+									
+									String usuarioCaptura =  null;
+									
+									if(usuarioSesion!=null){
+										if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+											usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+										}else{
+											usuarioCaptura = usuarioSesion.getCodigoPersona();
+										}
+									}
+						    		
+						    		String apellidoPat = "";
+							    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
+							    		apellidoPat = cli.getApellidopCli();
+							    	}
+							    	
+							    	String apellidoMat = "";
+							    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
+							    		apellidoMat = cli.getApellidomCli();
+							    	}
+							    	
+						    		Calendar calendar =  Calendar.getInstance();
+						    		
+						    		String sexo = "H"; //Hombre
+							    	if(cli.getSexoCli() > 0){
+							    		if(cli.getSexoCli() == 2) sexo = "M";
+							    	}
+							    	
+							    	String tipoPersona = "F"; //Fisica
+							    	if(cli.getFismorCli() > 0){
+							    		if(cli.getFismorCli() == 2){
+							    			tipoPersona = "M";
+							    		}else if(cli.getFismorCli() == 3){
+							    			tipoPersona = "S";
+							    		}
+							    	}
+							    	
+							    	if(cli.getFecnacCli()!= null){
+							    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
+							    	}
+							    	
+							    	
+							    	Calendar calendarIngreso =  Calendar.getInstance();
+							    	if(cli.getFecaltaCli() != null){
+							    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
+							    	}
+							    	
+							    	String nacionalidad = "001";// Nacional
+							    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+							    		nacionalidad = "002";
+							    	}
+							    	
+							    	String codPosImp = cli.getCodposCli();
+	                                if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
+	                                    codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
+	                                }
+							    	
+						    		//GUARDAR MPERSONA
+						    		
+									personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(), (cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc()
+											, "1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(), null
+											, (cli.getFismorCli() == 1) ? apellidoPat : "", (cli.getFismorCli() == 1) ? apellidoMat: "", calendarIngreso.getTime(), nacionalidad, cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli()))
+											, null, null, null, null, null, null, Integer.toString(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
+									
+									String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
+					    			if(edoAdosPos2.length() ==  1){
+					    				edoAdosPos2 = "0"+edoAdosPos2;
+					    			}
+					    			
+					    			HashMap<String,String> paramsMunCol = new HashMap<String, String>();
+	                                paramsMunCol.put("pv_cdpostal_i", codPosImp);
+	                                paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
+	                                paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
+	                                paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
+	                                
+	                                Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
+						    		
+						    		//GUARDAR DOMICILIO
+					    			
+					    			personasDAO.movimientosMdomicil(newCdPerson, "1", cli.getCalleCli(), cli.getTelefonoCli()
+						    				, codPosImp, codPosImp+edoAdosPos2, munycol.get("CDMUNICI"), munycol.get("CDCOLONI")
+						    				, cli.getNumeroCli(), null
+						    				,"1" // domicilio personal default
+											,usuarioCaptura
+											,Constantes.SI  //domicilio activo
+											,Constantes.INSERT_MODE);
+
+					    			//GUARDAR TVALOPER
+					    			
+					    			personasDAO.movimientosTvaloper("1", newCdPerson, cli.getCveEle(), cli.getPasaporteCli(), null, null, null,
+					    				null, null, cli.getOrirecCli(), null, null,
+					    				cli.getNacCli(), null, null, null, null, 
+					    				null, null, null, null, (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0", 
+					    				null, null, null, null, cli.getCurpCli(), 
+					    				null, null, null, null, null, 
+					    				null, null, null, null, null, 
+					    				null, null, cli.getTelefonoCli(), cli.getMailCli(), null, 
+					    				null, null, null, null, null, 
+					    				null, null, null, null, null,
+	    		    					cli.getFaxCli(), cli.getCelularCli());
+					    			
+					    			
+
+								}
+							}
+						}
 			    			cdpersonCli = newCdPerson;
 			    			nmorddomCli = "1";
 						}
@@ -8465,7 +8221,6 @@ public class CotizacionManagerImpl implements CotizacionManager
     		    		|| Ramo.SERVICIO_PUBLICO.getCdramo().equalsIgnoreCase(cdramo)
     		    		|| Ramo.AUTOS_RESIDENTES.getCdramo().equalsIgnoreCase(cdramo)) {
     	    		
-    	    		
     	    		logger.debug("<<<>>> Verificando que no se haya insertado el cliente anteriormente... ");
 	    			boolean personaNueva =  true;
 	    			String  newCdPerson   = null;
@@ -8483,149 +8238,150 @@ public class CotizacionManagerImpl implements CotizacionManager
 					}
 	    			
 	    			if(personaNueva){
-	    		    	String cdtipsitGS = consultasDAO.obtieneSubramoGS(cdramo, cdtipsit);
-	    		    	
-	    		    	ClienteGeneral clienteGeneral = new ClienteGeneral();
-	    		    	//clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
-	    		    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
-	    		    	clienteGeneral.setNumeroExterno(cdideperCli);
-	    		    	
-	    		    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
-	    		    	
-	    		    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
-	    		    		ClienteGeneral cli = null;
-	    		    		
-	    		    		if(clientesRes.getClientesGeneral().length == 1){
-	    		    			logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
-	    		    			cli = clientesRes.getClientesGeneral()[0];
-	    		    		}else {
-	    		    			logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
-	    		    		}
-	    		    		
-	    		    		if(cli != null){
-	    		    			
-	    		    			//IR POR NUEVO CDPERSON:
-	    			    		newCdPerson = personasDAO.obtieneCdperson();
-	    			    		
-	    			    		logger.debug("Insertando nueva persona, cdperson generado: " + newCdPerson);
-	    			    		
-	    			    		String usuarioCaptura =  null;
-								
-								if(usuarioSesion!=null){
-									if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
-										usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
-									}else{
-										usuarioCaptura = usuarioSesion.getCodigoPersona();
-									}
-									
+    	    		String cdtipsitGS = consultasDAO.obtieneSubramoGS(cdramo, cdtipsit);
+    		    	
+    		    	ClienteGeneral clienteGeneral = new ClienteGeneral();
+    		    	//clienteGeneral.setRfcCli((String)aseg.get("cdrfc"));
+    		    	clienteGeneral.setRamoCli(Integer.parseInt(cdtipsitGS));
+    		    	clienteGeneral.setNumeroExterno(cdideperCli);
+    		    	
+    		    	ClienteGeneralRespuesta clientesRes = ice2sigsService.ejecutaWSclienteGeneral(null, null, null, null, null, null, null, Ice2sigsService.Operacion.CONSULTA_GENERAL, clienteGeneral, null, false);
+    		    	
+    		    	if(clientesRes !=null && ArrayUtils.isNotEmpty(clientesRes.getClientesGeneral())){
+    		    		ClienteGeneral cli = null;
+    		    		
+    		    		if(clientesRes.getClientesGeneral().length == 1){
+    		    			logger.debug("Cliente unico encontrado en WS, guardando informacion del WS...");
+    		    			cli = clientesRes.getClientesGeneral()[0];
+    		    		}else {
+    		    			logger.error("Error, No se pudo obtener el cliente del WS. Se ha encontrado mas de Un elemento!");
+    		    		}
+    		    		
+    		    		if(cli != null){
+    		    			
+    		    			//IR POR NUEVO CDPERSON:
+    		    			newCdPerson = personasDAO.obtieneCdperson();
+    			    		
+    			    		logger.debug("Insertando nueva persona, cdperson generado: " + newCdPerson);
+    			    		
+    			    		String usuarioCaptura =  null;
+							
+							if(usuarioSesion!=null){
+								if(StringUtils.isNotBlank(usuarioSesion.getClaveUsuarioCaptura())){
+									usuarioCaptura = usuarioSesion.getClaveUsuarioCaptura();
+								}else{
+									usuarioCaptura = usuarioSesion.getCodigoPersona();
 								}
-	    			    		
-	    			    		String apellidoPat = "";
-	    				    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
-	    				    		apellidoPat = cli.getApellidopCli();
-	    				    	}
-	    				    	
-	    				    	String apellidoMat = "";
-	    				    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
-	    				    		apellidoMat = cli.getApellidomCli();
-	    				    	}
-	    				    	
-	    			    		Calendar calendar =  Calendar.getInstance();
-	    			    		
-	    			    		String sexo = "H"; //Hombre
-	    				    	if(cli.getSexoCli() > 0){
-	    				    		if(cli.getSexoCli() == 2) sexo = "M";
-	    				    	}
-	    				    	
-	    				    	String tipoPersona = "F"; //Fisica
-	    				    	if(cli.getFismorCli() > 0){
-	    				    		if(cli.getFismorCli() == 2){
-	    				    			tipoPersona = "M";
-	    				    		}else if(cli.getFismorCli() == 3){
-	    				    			tipoPersona = "S";
-	    				    		}
-	    				    	}
-	    				    	/*
-	    				    	String nacionalidad = "001";// Nacional
-	    				    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
-	    				    		nacionalidad = "002";
-	    				    	}
-	    				    	*/
-	    				    	
-	    				    	if(cli.getFecnacCli()!= null){
-	    				    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
-	    				    	}
-	    				    	
-	    				    	
-	    				    	Calendar calendarIngreso =  Calendar.getInstance();
-	    				    	if(cli.getFecaltaCli() != null){
-	    				    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
-	    				    	}
-	    				    	
-	    				    	String nacionalidad = "001";// Nacional
-	    				    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
-	    				    		nacionalidad = "002";
-	    				    	}
-	    				    	
-	    			    		//GUARDAR MPERSONA
-	    						personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(),
-	    								(cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc(),
-	    								"1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(),
-	    								null, (cli.getFismorCli() == 1) ? apellidoPat : "", (cli.getFismorCli() == 1) ? apellidoMat : "", calendarIngreso.getTime(), nacionalidad,
-	    								cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())),
-	    								null, null, null, null, null, null, String.valueOf(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
-	    			    		
-	    			    		//GUARDAR DOMICILIO
-	    			    		String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
-	    		    			if(edoAdosPos2.length() ==  1){
-	    		    				edoAdosPos2 = "0"+edoAdosPos2;
-	    		    			}
-	    		    			
-	    		    			String codPosImp = cli.getCodposCli();
-	                            if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
-	                                codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
-	                            }
-	                            
-	                            HashMap<String,String> paramsMunCol = new HashMap<String, String>();
-	                            paramsMunCol.put("pv_cdpostal_i", codPosImp);
-	                            paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
-	                            paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
-	                            paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
-	                            
-	                            Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
-	    		    			
-	    		    			personasDAO.movimientosMdomicil(newCdPerson,"1", cli.getCalleCli() +" "+ cli.getNumeroCli()
-	    		    					,cli.getTelefonoCli(), codPosImp, codPosImp+edoAdosPos2
-	    		    					,munycol.get("CDMUNICI"), munycol.get("CDCOLONI"), cli.getNumeroCli(), null
-	    		    					,"1" // domicilio personal default
-										,usuarioCaptura
-										,Constantes.SI  //domicilio activo
-										,Constantes.INSERT_MODE);
-	    		    			
-	    		    			
-	    		    			personasDAO.insertaTvaloper("0", "0", null, "0", null,
-	    		    					null, null, "1", newCdPerson, null, null,
-	    		    					cli.getCveEle(), cli.getPasaporteCli(), null, null, null,
-	    		    					null, null, cli.getOrirecCli(), null, null,
-	    		    					cli.getNacCli(), null, null, null, null,
-	    		    					null, null, null, null, (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0",
-	    		    					null, null, null, null, cli.getCurpCli(),
-	    		    					null, null, null, null, null,
-	    		    					null, null, null, null, null,
-	    		    					null, null, cli.getTelefonoCli(), cli.getMailCli(), null,
-	    		    					null, null, null, null, null,
-	    		    					null, null, null, null, null,
-	    		    					cli.getFaxCli(), cli.getCelularCli());
-	    	    				
-	    	    				
-	    		    		}
-	    		    	}
-    		    	}
-	    			cotizacionDAO.borrarMpoliperTodos(cdunieco, cdramo, "W", nmpoliza);
-					
-					cotizacionDAO.movimientoMpoliper(cdunieco, cdramo, "W", nmpoliza,
-							"0", "1", newCdPerson, "0", "V", "1", null, "I",
-							"S");
+								
+							}
+    			    		
+    			    		String apellidoPat = "";
+    				    	if(StringUtils.isNotBlank(cli.getApellidopCli()) && !cli.getApellidopCli().trim().equalsIgnoreCase("null")){
+    				    		apellidoPat = cli.getApellidopCli();
+    				    	}
+    				    	
+    				    	String apellidoMat = "";
+    				    	if(StringUtils.isNotBlank(cli.getApellidomCli()) && !cli.getApellidomCli().trim().equalsIgnoreCase("null")){
+    				    		apellidoMat = cli.getApellidomCli();
+    				    	}
+    				    	
+    			    		Calendar calendar =  Calendar.getInstance();
+    			    		
+    			    		String sexo = "H"; //Hombre
+    				    	if(cli.getSexoCli() > 0){
+    				    		if(cli.getSexoCli() == 2) sexo = "M";
+    				    	}
+    				    	
+    				    	String tipoPersona = "F"; //Fisica
+    				    	if(cli.getFismorCli() > 0){
+    				    		if(cli.getFismorCli() == 2){
+    				    			tipoPersona = "M";
+    				    		}else if(cli.getFismorCli() == 3){
+    				    			tipoPersona = "S";
+    				    		}
+    				    	}
+    				    	/*
+    				    	String nacionalidad = "001";// Nacional
+    				    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+    				    		nacionalidad = "002";
+    				    	}
+    				    	*/
+    				    	
+    				    	if(cli.getFecnacCli()!= null){
+    				    		calendar.set(cli.getFecnacCli().get(Calendar.YEAR), cli.getFecnacCli().get(Calendar.MONTH), cli.getFecnacCli().get(Calendar.DAY_OF_MONTH));
+    				    	}
+    				    	
+    				    	
+    				    	Calendar calendarIngreso =  Calendar.getInstance();
+    				    	if(cli.getFecaltaCli() != null){
+    				    		calendarIngreso.set(cli.getFecaltaCli().get(Calendar.YEAR), cli.getFecaltaCli().get(Calendar.MONTH), cli.getFecaltaCli().get(Calendar.DAY_OF_MONTH));
+    				    	}
+    				    	
+    				    	String nacionalidad = "001";// Nacional
+    				    	if(StringUtils.isNotBlank(cli.getNacCli()) && !cli.getNacCli().equalsIgnoreCase("1")){
+    				    		nacionalidad = "002";
+    				    	}
+    				    	
+    			    		//GUARDAR MPERSONA
+    						personasDAO.movimientosMpersona(newCdPerson, "1", cli.getNumeroExterno(),
+    								(cli.getFismorCli() == 1) ? cli.getNombreCli() : cli.getRazSoc(),
+    								"1", tipoPersona, sexo, calendar.getTime(), cli.getRfcCli(), cli.getMailCli(),
+    								null, (cli.getFismorCli() == 1) ? apellidoPat : "", (cli.getFismorCli() == 1) ? apellidoMat : "", calendarIngreso.getTime(), nacionalidad,
+    								cli.getCanconCli() <= 0 ? "0" : (Integer.toString(cli.getCanconCli())),
+    								null, null, null, null, null, null, String.valueOf(cli.getSucursalCli()), usuarioCaptura, Constantes.INSERT_MODE);
+    			    		
+    			    		//GUARDAR DOMICILIO
+    			    		String edoAdosPos2 = Integer.toString(cli.getEstadoCli());
+    		    			if(edoAdosPos2.length() ==  1){
+    		    				edoAdosPos2 = "0"+edoAdosPos2;
+    		    			}
+    		    			
+    		    			String codPosImp = cli.getCodposCli();
+                            if(StringUtils.isNotBlank(codPosImp) && codPosImp.length() == 4){
+                                codPosImp = "0"+codPosImp;//Se agrega un cero a la izquierda del codigo postal en caso de que falte
+                            }
+                            
+                            HashMap<String,String> paramsMunCol = new HashMap<String, String>();
+                            paramsMunCol.put("pv_cdpostal_i", codPosImp);
+                            paramsMunCol.put("pv_cdedo_i",    edoAdosPos2);
+                            paramsMunCol.put("pv_dsmunici_i", cli.getMunicipioCli());
+                            paramsMunCol.put("pv_dscoloni_i", cli.getColoniaCli());
+                            
+                            Map<String,String> munycol= personasManager.obtieneMunicipioYcolonia(paramsMunCol);
+    		    			
+    		    			personasDAO.movimientosMdomicil(newCdPerson,"1", cli.getCalleCli() +" "+ cli.getNumeroCli()
+    		    					,cli.getTelefonoCli(), codPosImp, codPosImp+edoAdosPos2
+    		    					,munycol.get("CDMUNICI"), munycol.get("CDCOLONI"), cli.getNumeroCli(), null
+    		    					,"1" // domicilio personal default
+									,usuarioCaptura
+									,Constantes.SI  //domicilio activo
+									,Constantes.INSERT_MODE);
+    		    			
+    		    			
+    		    			personasDAO.insertaTvaloper("0", "0", null, "0", null,
+    		    					null, null, "1", newCdPerson, null, null,
+    		    					cli.getCveEle(), cli.getPasaporteCli(), null, null, null,
+    		    					null, null, cli.getOrirecCli(), null, null,
+    		    					cli.getNacCli(), null, null, null, null,
+    		    					null, null, null, null, (cli.getOcuPro() > 0) ? Integer.toString(cli.getOcuPro()) : "0",
+    		    					null, null, null, null, cli.getCurpCli(),
+    		    					null, null, null, null, null,
+    		    					null, null, null, null, null,
+    		    					null, null, cli.getTelefonoCli(), cli.getMailCli(), null,
+    		    					null, null, null, null, null,
+    		    					null, null, null, null, null,
+    		    					cli.getFaxCli(), cli.getCelularCli());
+    		    			}
+    		    		}
+	    			}
+    	    				
+    	    				cotizacionDAO.borrarMpoliperTodos(cdunieco, cdramo, "W", nmpoliza);
+    						
+    						cotizacionDAO.movimientoMpoliper(cdunieco, cdramo, "W", nmpoliza,
+    								"0", "1", newCdPerson, "0", "V", "1", null, "I",
+    								"S");
+    		    		
+    		    	
     	    	}
     		}
     		
@@ -10318,11 +10074,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 
 	@Override
-	public RespuestaVO obtieneValidaVigPolizaAnual(String cdunieco, String cdramo, String estado, String nmpoliza) throws Exception{
-		return cotizacionDAO.obtieneValidaVigPolizaAnual(cdunieco, cdramo, estado, nmpoliza);
-	}
-
-	@Override
 	public Map<String,String> obtieneDatosContratantePoliza(
 			String cdunieco
 			,String cdramo
@@ -11912,28 +11663,28 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-    public String aplicaDescAutos(
-             String cdunieco
-            ,String cdramo
-            ,String nmpoliza
-            ,String modPrim
-            ,String cdtipsit
-            )throws Exception
-    {
-        //////////////////////////////////////////
-        ////// alterar mpolirec sin recotizar/////
-        String paso = "Modificacion de primas al aplicar descuento";
-        try
-        {
-             return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim,cdtipsit.isEmpty()?"1":"0");
-        }
-        catch(Exception ex)
-        {
-            throw new ApplicationException(paso);
-        }
-        ////// alterar mpolirec sin recotizar/////
-        //////////////////////////////////////////
-    }
+	public String aplicaDescAutos(
+            String cdunieco
+           ,String cdramo
+           ,String nmpoliza
+           ,String modPrim
+           ,String cdtipsit
+           )throws Exception
+   {
+       //////////////////////////////////////////
+       ////// alterar mpolirec sin recotizar/////
+       String paso = "Modificacion de primas al aplicar descuento";
+       try
+       {
+            return cotizacionDAO.aplicaDescAutos(cdunieco, cdramo, nmpoliza, modPrim,cdtipsit.isEmpty()?"1":"0");
+       }
+       catch(Exception ex)
+       {
+           throw new ApplicationException(paso);
+       }
+       ////// alterar mpolirec sin recotizar/////
+       //////////////////////////////////////////
+   }
 	
 	@Override
     public String validaDatosAutoSigs(List<Map<String,String>> incisosSigs) throws Exception
@@ -11994,36 +11745,41 @@ public class CotizacionManagerImpl implements CotizacionManager
 	}
 	
 	@Override
-	public String aplicaRecargoPagoFraccionado(String cdunieco, String cdramo, String nmpoliza, String recargoPF, String flotilla) throws Exception{
-		return this.cotizacionDAO.aplicaRecargoPagoFraccionado( cdunieco,  cdramo,  nmpoliza,  recargoPF,  flotilla);
-	}
-	
-	@Override
-	public Map<String,String> obtieneOtValorCorrespondienteSubtipoCR()throws Exception
-	{
-		String paso     = "Obteniedo OtValor Correspondientes a Subtipo CR";
-		List<Map<String, String>> listaSubCr = null;
-		Map<String,String> listaSubTipCR = new HashMap<String,String>();
-		try
-		{
-			listaSubCr = mesaControlDAO.obtieneOtValorCorrespondienteSubtipoCR();
-			for(Map<String, String> elemento :listaSubCr)
-			{
-				listaSubTipCR.put(elemento.get("tipstitFake"), elemento.get("otFake"));
-			}
-		}
-		catch(Exception ex)
-		{
-			Utils.generaExcepcion(ex, paso);
-		}
-		return listaSubTipCR;
-	}
-	
-	@Override
 	public void actualizaTramiteOVA(String ntramite	,String nmsolici)throws Exception{
 		this.cotizacionDAO.actualizaTramiteOVA(ntramite, nmsolici);
 	}
 	
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	////////////////  GETTERS Y SETTERS  ////////////////
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
+	
+	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
+		this.cotizacionDAO = cotizacionDAO;
+	}
+
+	public void setPantallasDAO(PantallasDAO pantallasDAO) {
+		this.pantallasDAO = pantallasDAO;
+	}
+
+	public void setPersonasDAO(PersonasDAO personasDAO) {
+		this.personasDAO = personasDAO;
+	}
+
+	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
+		this.mesaControlDAO = mesaControlDAO;
+	}
+
+	public void setConsultasDAO(ConsultasDAO consultasDAO) {
+		this.consultasDAO = consultasDAO;
+	}
+	
+	@Override
+	public String aplicaRecargoPagoFraccionado(String cdunieco, String cdramo, String nmpoliza, String recargoPF, String flotilla) throws Exception{
+		return this.cotizacionDAO.aplicaRecargoPagoFraccionado( cdunieco,  cdramo,  nmpoliza,  recargoPF,  flotilla);
+	}
+
 	@Override
 	public void guardarMorbilidad(
 			String nombreArchivo
@@ -12059,33 +11815,6 @@ public class CotizacionManagerImpl implements CotizacionManager
 	public String existeCodPostalVigente(String codpostal) throws Exception{
 		return this.cotizacionDAO.existeCodPostalVigente(codpostal);
 	}
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	////////////////  GETTERS Y SETTERS  ////////////////
-	/////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////
-	
-	public void setCotizacionDAO(CotizacionDAO cotizacionDAO) {
-		this.cotizacionDAO = cotizacionDAO;
-	}
-
-	public void setPantallasDAO(PantallasDAO pantallasDAO) {
-		this.pantallasDAO = pantallasDAO;
-	}
-
-	public void setPersonasDAO(PersonasDAO personasDAO) {
-		this.personasDAO = personasDAO;
-	}
-
-	public void setMesaControlDAO(MesaControlDAO mesaControlDAO) {
-		this.mesaControlDAO = mesaControlDAO;
-	}
-
-	public void setConsultasDAO(ConsultasDAO consultasDAO) {
-		this.consultasDAO = consultasDAO;
-	}
-
-
     /////////////////////////////////////////////////////
     /////////////////////////////////////////////////////
     ////////////////  GETTERS Y SETTERS  ////////////////
