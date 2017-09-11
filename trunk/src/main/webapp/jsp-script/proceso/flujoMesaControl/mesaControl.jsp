@@ -266,7 +266,6 @@ Ext.onReady(function()
         {
             var me = this;
             debug('onLevelChange level:',level,'.');
-            
             var ck = 'Navegando ventana emergente de tr\u00e1mite nuevo';
             try
             {
@@ -399,14 +398,8 @@ Ext.onReady(function()
                         {
                             _fieldByName('CDTIPSUPEND',me).allowBlank = false;
                             _show(_fieldByName('CDTIPSUPEND',me));
-                            
-                            //REQ0270 es cotizacion = subtipo
-                            _fieldByName('OTVALOR28',me).forceSelection = false;
-                            _fieldByName('OTVALOR28',me).allowBlank = true;
-                            _fieldByName('OTVALOR28',me).value='N';//obligo a que le ponga color
-                            _hide(_fieldByName('OTVALOR28',me));
-                            
                         }
+                        
                         else
                         {
                             _fieldByName('CDTIPSUPEND',me).allowBlank = true;
@@ -441,6 +434,15 @@ Ext.onReady(function()
 	                        
 	                        me.down('[name=NMPOLIZA]').allowBlank = true;
 	                        _hide(me.down('[name=NMPOLIZA]'));
+	                        
+	                        if(Number(cdtiptra) === 15) //ocultar para Endosos
+                        	{
+	                            //REQ0270 es cotizacion = subtipo
+		                        _fieldByName('OTVALOR28',me).forceSelection = false;
+		                        _fieldByName('OTVALOR28',me).allowBlank = true;
+		                        _fieldByName('OTVALOR28',me).value='N';//obligo a que le ponga color
+		                        _hide(_fieldByName('OTVALOR28',me));
+                        	}
                         }
                     }
                 }
