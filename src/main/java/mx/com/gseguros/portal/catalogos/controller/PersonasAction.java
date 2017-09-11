@@ -473,7 +473,7 @@ public class PersonasAction extends PrincipalCoreAction
 							,null,null,(cliImport.getOcuPro() > 0) ? Integer.toString(cliImport.getOcuPro()) : "0"
 							,null,null,null,null,cliImport.getCurpCli(),null,null,null,null,null,null,null,null,null
 							,null,null,null,cliImport.getTelefonoCli(),cliImport.getMailCli(),null,null,null,null,null,null,null,null,null
-							,null,null, cliImport.getFaxCli(), cliImport.getCelularCli(),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,timestamp);
+							,null,null, cliImport.getFaxCli(), cliImport.getCelularCli(),timestamp);
 					
 					exito                = (Boolean)managerResult.get("exito");
 					respuesta            = (String)managerResult.get("respuesta");
@@ -695,7 +695,7 @@ public class PersonasAction extends PrincipalCoreAction
 								,null,null,(cliImport.getOcuPro() > 0) ? Integer.toString(cliImport.getOcuPro()) : "0"
 								,null,null,null,null,cliImport.getCurpCli(),null,null,null,null,null,null,null,null,null
 								,null,null,null,cliImport.getTelefonoCli(),cliImport.getMailCli(),null,null,null,null,null,null,null,null,null
-								,null,null, cliImport.getFaxCli(), cliImport.getCelularCli(),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,timestamp);
+								,null,null, cliImport.getFaxCli(), cliImport.getCelularCli(),timestamp);
 						
 						exito                = (Boolean)managerResult.get("exito");
 						respuesta            = (String)managerResult.get("respuesta");
@@ -1189,25 +1189,6 @@ public class PersonasAction extends PrincipalCoreAction
 				,smap1.get("parametros.pv_otvalor50") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor50")
 				,smap1.get("parametros.pv_otvalor51") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor51")
 				,smap1.get("parametros.pv_otvalor52") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor52")
-				,smap1.get("parametros.pv_otvalor53") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor53")
-				,smap1.get("parametros.pv_otvalor54") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor54")
-				,smap1.get("parametros.pv_otvalor55") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor55")
-				,smap1.get("parametros.pv_otvalor56") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor56")
-				,smap1.get("parametros.pv_otvalor57") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor57")
-				,smap1.get("parametros.pv_otvalor58") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor58")
-				,smap1.get("parametros.pv_otvalor59") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor59")
-				,smap1.get("parametros.pv_otvalor60") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor60")
-				,smap1.get("parametros.pv_otvalor61") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor61")
-				,smap1.get("parametros.pv_otvalor62") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor62")
-				,smap1.get("parametros.pv_otvalor63") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor63")
-				,smap1.get("parametros.pv_otvalor64") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor64")
-				,smap1.get("parametros.pv_otvalor65") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor65")
-				,smap1.get("parametros.pv_otvalor66") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor66")	
-				,smap1.get("parametros.pv_otvalor67") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor67")	
-				,smap1.get("parametros.pv_otvalor68") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor68")	
-				,smap1.get("parametros.pv_otvalor69") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor69")	
-				,smap1.get("parametros.pv_otvalor70") == null ? "SIN_VALOR" : smap1.get("parametros.pv_otvalor70")	
-														
 				,timestamp
 				);
 			
@@ -1263,7 +1244,7 @@ public class PersonasAction extends PrincipalCoreAction
 		    		 }
 		    		 
 		    	}
-		    	clientesRes.setCodigo(0);
+		    	
 		    	if(clientesRes != null && (Estatus.EXITO.getCodigo() == clientesRes.getCodigo())){
 		    	
 		    		exito = true;
@@ -1303,7 +1284,7 @@ public class PersonasAction extends PrincipalCoreAction
 		    		 */
 	    			 ice2sigsService.ejecutaWSdireccionClienteGeneral(smap1.get("cdperson"), (saludDanios.equalsIgnoreCase("S"))?"D":"S", saveList, updateList, !tieneSegundaCompania, usuario);
 	    		 }
-		    	exitoDomicilios=true;
+		    	
 		    	if(!exitoDomicilios){
 		    		logger.debug("Error al enviar domiciliosWS, exito false");
 		    		exito           = false;

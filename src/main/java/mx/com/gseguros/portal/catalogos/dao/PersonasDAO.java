@@ -10,10 +10,9 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 public interface PersonasDAO
 {
 	/**
-	 * Obtiene personas por RFC de PKG_CONSULTA.P_GET_MPERSONA
+	 * Obtiene personas por RFC de PKG_CONSULTA_PRE.P_GET_MPERSONA
 	 */
-	public List<Map<String,String>>obtenerPersonasPorRFC(String rfc, String nombre, String nombre2, String apat, String amat,
-	        String validaTienePoliza) throws Exception;
+	public List<Map<String,String>>obtenerPersonasPorRFC(Map<String,String>params) throws Exception;
 	
 	@Deprecated
 	public Map<String,String>obtenerPersonaPorCdperson(Map<String,String>params) throws Exception;
@@ -88,7 +87,7 @@ public interface PersonasDAO
 	public Map<String,String> obtenerDomicilioContratante(Map<String, String> params) throws Exception;
 	
 	/**
-	 * obtener domicilio por cdperson desde PKG_CONSULTA.P_GET_MDOMICIL
+	 * obtener domicilio por cdperson desde PKG_CONSULTA_PRE.P_GET_MDOMICIL
 	 */
 	public Map<String,String> obtenerDomicilioPorCdperson(String cdperson, String nmorddom) throws Exception;
 
@@ -136,15 +135,15 @@ public interface PersonasDAO
 
 
 	/**
-	 * Obtener los componentes de tatriper por cdrol y cdperson de PKG_LISTAS.P_GET_ATRI_PER
+	 * Obtener los componentes de tatriper por cdrol y cdperson de PKG_LISTAS_PRE.P_GET_ATRI_PER
 	 */
 	public List<ComponenteVO> obtenerAtributosPersona(String cdperson, String cdrol) throws Exception;
 	/**
-	 * Obtiene los valores de tvaloper para un cdperson y un cdrol de PKG_CONSULTA.P_GET_TVALOPER
+	 * Obtiene los valores de tvaloper para un cdperson y un cdrol de PKG_CONSULTA_PRE.P_GET_TVALOPER
 	 */
 	public Map<String,String> obtenerTvaloper(String cdrol,String cdperson) throws Exception;
 	/**
-	 * Movimientos de tvaloper por cdperson de PKG_SATELITES.P_MOV_TVALOPER_NUEVO
+	 * Movimientos de tvaloper por cdperson de PKG_SATELITES_PRE.P_MOV_TVALOPER_NUEVO
 	 */
 	public void movimientosTvaloper(String cdrol,String cdperson
 			,String otvalor01,String otvalor02,String otvalor03,String otvalor04,String otvalor05
@@ -156,15 +155,12 @@ public interface PersonasDAO
 			,String otvalor31,String otvalor32,String otvalor33,String otvalor34,String otvalor35
 			,String otvalor36,String otvalor37,String otvalor38,String otvalor39,String otvalor40
 			,String otvalor41,String otvalor42,String otvalor43,String otvalor44,String otvalor45
-			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50
-			,String otvalor51,String otvalor52,String otvalor53,String otvalor54,String otvalor55
-			,String otvalor56,String otvalor57,String otvalor58,String otvalor59,String otvalor60
-			,String otvalor61,String otvalor62,String otvalor63,String otvalor64,String otvalor65
-			,String otvalor66,String otvalor67,String otvalor68,String otvalor69,String otvalor70
+			,String otvalor46,String otvalor47,String otvalor48,String otvalor49,String otvalor50,
+			String otvalor51, String otvalor52
 			)throws Exception;
 	
 	/**
-	 * Movimientos de tvaloper por cdperson de PKG_SATELITES.P_MOV_TVALOPER
+	 * Movimientos de tvaloper por cdperson de PKG_SATELITES_PRE.P_MOV_TVALOPER
 	 */
 	public void insertaTvaloper(
 			String cdunieco, String cdramo, String estado, String nmpoliza, String nmsituac,
