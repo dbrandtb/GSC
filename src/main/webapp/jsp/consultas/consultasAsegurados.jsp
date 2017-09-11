@@ -33,11 +33,6 @@
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
             var _URL_CONSULTA_DOCUMENTOS          = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
             var _URL_LOADER_RECIBOS               = '<s:url namespace="/general"         action="includes/loadRecibos" />';
-            var _URL_CONSULTA_ECD 				  = '<s:url namespace="/consultasAsegurado" action="includes/consultaECD"                    />';
-            var _URL_CONSULTA_PERFIL 		      = '<s:url namespace="/perfilMedico" action="consultarPerfil"                    />';
-            
-            var _URL_LOADER_MEDICINA_PREVENTIVA   = '<s:url namespace="/consultasAsegurado" action="pantallaMedicinaPreventiva" />';
-            var _ROL_COORDINADOR_MEDICINA_PREVENTIVA = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@COORDINADOR_MEDICINA_PREVENTIVA.cdsisrol" />';
             
             //Mensajes
             var _MSG_ERROR                       = 'Error';
