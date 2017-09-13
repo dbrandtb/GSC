@@ -5853,7 +5853,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                 			throw new ApplicationException("Necesito el numero de empleado");
                 		}
 
-	                	if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                	if(cdunieco.equalsIgnoreCase("1403")){
 	                		String identidadModificada[] = identidad.split("\\-");
 	                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
 	                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
@@ -5899,7 +5899,7 @@ public class CotizacionManagerImpl implements CotizacionManager
                 				throw new ApplicationException("La identidad no puede ir en blanco");
                 			}
 	                	
-	                		if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                		if(cdunieco.equalsIgnoreCase("1403")){
 	                			String identidadModificada[] = identidad.split("\\-");
 	                			String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
 	                			String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
