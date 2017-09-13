@@ -7,7 +7,7 @@ Ext.onReady(function() {
 
 	Ext.selection.CheckboxModel.override( {
 		mode: 'SINGLE',
-		allowDeselect: true 
+		allowDeselect: true
 	});
 	
     // Conversi�n para el tipo de moneda

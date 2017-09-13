@@ -2179,8 +2179,8 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			boolean turnarAOtraPersona = false;
 			
-			        //userSinPermisoEndoso = false;
-			
+	        //userSinPermisoEndoso = false;
+	
 			// Si el sistema genera el tramite o el tramite viene de sigs, hay que turnarlo
 			if (Constantes.USUARIO_SISTEMA.equals(cdusuari)
 			        || Constantes.ROL_SISTEMA.equals(cdsisrol)
@@ -2498,96 +2498,97 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 			
 			boolean turnarAOtraPersona = false;
 			
-			        //userSinPermisoEndoso = false;
-			
-			// Si el sistema genera el tramite o el tramite viene de sigs, hay que turnarlo
-			if (Constantes.USUARIO_SISTEMA.equals(cdusuari)
-			        || Constantes.ROL_SISTEMA.equals(cdsisrol)
-			        || inyectadoDesdeSigs
-			        ) {
-			    turnarAOtraPersona = true;
-			}
-			
-			// Si la persona que registra el endoso de auto no tiene permisos, hay que turnarlo
-			/*if ((!turnarAOtraPersona)
-			        && origenMesa
-			        && FlujoMC.AUTOS_ENDOSO.getCdflujomc().equals(cdflujomc)
-			    ) {
-			    boolean tienePermiso = false;
-			    List<Map<String, String>> endososPermitidos = despachadorDAO.recuperarPermisosEndosos(cdusuari, cdsisrol);
-			    for (Map<String, String> elem : endososPermitidos) {
-			        if (cdramo.equals(elem.get("CDRAMO"))
-			                && cdtipsup.equals(elem.get("CDTIPSUP"))) {
-			            tienePermiso = true;
-			            break;
-			        }
-			    }
-			    if (!tienePermiso) {
-			        turnarAOtraPersona   = true;
-			        userSinPermisoEndoso = true;
-			    }
-			}*/
-			
-			String commentsCreacion = Utils.join(
-                    "Se registra un nuevo tr\u00e1mite desde mesa de control con las siguientes observaciones: ",
-                    StringUtils.isBlank(comments)
-                        ? "(sin observaciones)"
-                        : comments
-            );
-			
-			if (turnarAOtraPersona) {
-			    cdusuariDestino = null;
-			    cdsisrolDestino = null;
-			    
-			    /*if (userSinPermisoEndoso) {
-    			    paso = "Guardando detalle";
-                    logger.debug(paso);
-                    mesaControlDAO.movimientoDetalleTramite(
-                            ntramite,
-                            fechaHoy,
-                            null, // cdclausu
-                            commentsCreacion,
-                            cdusuari,
-                            null, // cdmotivo
-                            cdsisrol,
-                            "S",
-                            null, //cdusuariDes,
-                            null, //cdsisrolDes,
-                            status,
-                            false // cerrado
-                            );
-                    
-                    paso = "Abriendo historial";
-                    logger.debug(paso);
-                    flujoMesaControlDAO.guardarHistoricoTramite(
-                            fechaHoy,
-                            ntramite,
-                            cdusuari,
-                            cdsisrol,
-                            status,
-                            cdunieco,
-                            ConstantesDespachador.TIPO_ASIGNACION_REASIGNA);
-                    
-                    commentsCreacion = "Tr\u00e1mite turnado autom\u00e1ticamente por perfilamiento";
-			    }*/
-			}
-			
-		    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+	        //userSinPermisoEndoso = false;
+	
+	// Si el sistema genera el tramite o el tramite viene de sigs, hay que turnarlo
+	if (Constantes.USUARIO_SISTEMA.equals(cdusuari)
+	        || Constantes.ROL_SISTEMA.equals(cdsisrol)
+	        || inyectadoDesdeSigs
+	        ) {
+	    turnarAOtraPersona = true;
+	}
+	
+	// Si la persona que registra el endoso de auto no tiene permisos, hay que turnarlo
+	/*if ((!turnarAOtraPersona)
+	        && origenMesa
+	        && FlujoMC.AUTOS_ENDOSO.getCdflujomc().equals(cdflujomc)
+	    ) {
+	    boolean tienePermiso = false;
+	    List<Map<String, String>> endososPermitidos = despachadorDAO.recuperarPermisosEndosos(cdusuari, cdsisrol);
+	    for (Map<String, String> elem : endososPermitidos) {
+	        if (cdramo.equals(elem.get("CDRAMO"))
+	                && cdtipsup.equals(elem.get("CDTIPSUP"))) {
+	            tienePermiso = true;
+	            break;
+	        }
+	    }
+	    if (!tienePermiso) {
+	        turnarAOtraPersona   = true;
+	        userSinPermisoEndoso = true;
+	    }
+	}*/
+	
+	String commentsCreacion = Utils.join(
+            "Se registra un nuevo tr\u00e1mite desde mesa de control con las siguientes observaciones: ",
+            StringUtils.isBlank(comments)
+                ? "(sin observaciones)"
+                : comments
+    );
+	
+	if (turnarAOtraPersona) {
+	    cdusuariDestino = null;
+	    cdsisrolDestino = null;
+	    
+	    /*if (userSinPermisoEndoso) {
+		    paso = "Guardando detalle";
+            logger.debug(paso);
+            mesaControlDAO.movimientoDetalleTramite(
+                    ntramite,
+                    fechaHoy,
+                    null, // cdclausu
+                    commentsCreacion,
+                    cdusuari,
+                    null, // cdmotivo
+                    cdsisrol,
+                    "S",
+                    null, //cdusuariDes,
+                    null, //cdsisrolDes,
+                    status,
+                    false // cerrado
+                    );
+            
+            paso = "Abriendo historial";
+            logger.debug(paso);
+            flujoMesaControlDAO.guardarHistoricoTramite(
+                    fechaHoy,
+                    ntramite,
                     cdusuari,
                     cdsisrol,
-                    ntramite,
                     status,
-                    commentsCreacion,
-                    null,  // cdrazrecha
-                    cdusuariDestino,
-                    cdsisrolDestino,
-                    true,  // permisoAgente
-                    false, // porEscalamiento
-                    fechaHoy,
-                    false,  // sinGrabarDetalle
-                    turnarAOtraPersona
-                    );
-		    logger.debug(ntramite);
+                    cdunieco,
+                    ConstantesDespachador.TIPO_ASIGNACION_REASIGNA);
+            
+            commentsCreacion = "Tr\u00e1mite turnado autom\u00e1ticamente por perfilamiento";
+	    }*/
+	}
+	
+    RespuestaTurnadoVO despacho = despachadorManager.turnarTramite(
+            cdusuari,
+            cdsisrol,
+            ntramite,
+            status,
+            commentsCreacion,
+            null,  // cdrazrecha
+            cdusuariDestino,
+            cdsisrolDestino,
+            true,  // permisoAgente
+            false, // porEscalamiento
+            fechaHoy,
+            false,  // sinGrabarDetalle
+            turnarAOtraPersona
+            );
+    logger.debug(ntramite);
+
             logger.debug(despacho.getMessage());		
             respuesta.put("ntramite", ntramite);
             respuesta.put("asignado", despacho.getMessage());
@@ -4505,26 +4506,6 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
                                      "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
 	}
 	
-	@Override
-	public FlujoVO generarYRecuperarFlujoRSTN (String ntramite, String cdusuari, String cdsisrol) throws Exception {
-	    logger.debug(Utils.log("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-	                           "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-	                           "\n@@@@@@ ntramite = ", ntramite,
-	                           "\n@@@@@@ cdusuari = ", cdusuari,
-	                           "\n@@@@@@ cdsisrol = ", cdsisrol));
-	    FlujoVO flujo = null;
-	    String paso = "Construyendo flujo RSTN";
-	    try {
-	        flujo = flujoMesaControlDAO.generarYRecuperarFlujoRSTN(ntramite, cdusuari, cdsisrol);
-	    } catch (Exception ex) {
-	        Utils.generaExcepcion(ex, paso);
-	    }
-        logger.debug(Utils.log("\n@@@@@@ flujo = ", flujo,
-                               "\n@@@@@@ generarYRecuperarFlujoRSTN @@@@@@",
-                               "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-        return flujo;
-	}
-	
 	@Deprecated
 	@Override
 	public Map<String, String> recuperaTflujomc (String cdflujomc) throws Exception {
@@ -4621,5 +4602,4 @@ public class FlujoMesaControlManagerImpl implements FlujoMesaControlManager
 				));
 		return resultado;
 	}
-	
 }
