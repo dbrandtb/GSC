@@ -711,10 +711,15 @@ Ext.onReady(function()
                                                         'smap1.nmfamilia': null
                                                     }
                                                     ,success : function (response){
-                                                        var resEspera  = Ext.decode(response.responseText).slist1[0];
-                                                        var varSocio   = Ext.decode(response.responseText).slist1[0].SOCIO;
-                                                        var varFamilia = Ext.decode(response.responseText).slist1[0].FAMILIA;
-                                                        debug("Entra a la funcion ",_window,varSocio,varFamilia);
+                                                        var resEspera  = "";
+                                                        var varSocio   = "0";
+                                                        var varFamilia = "0";
+                                                        if(Ext.decode(response.responseText).slist1.length >0){
+                                                    		resEspera  = Ext.decode(response.responseText).slist1[0];
+                                                            varSocio   = Ext.decode(response.responseText).slist1[0].SOCIO;
+                                                            varFamilia = Ext.decode(response.responseText).slist1[0].FAMILIA;
+                                                            debug("Entra a la funcion ",_window,varSocio,varFamilia);
+                                                        }
                                                         respuestaNoSocioFamilia(_window,varSocio,varFamilia);
                                                     },
                                                     failure : function (){
@@ -753,10 +758,15 @@ Ext.onReady(function()
                                                         'smap1.nmfamilia': null
                                                     }
                                                     ,success : function (response){
-                                                        var resEspera  = Ext.decode(response.responseText).slist1[0];
-                                                        var varSocio   = Ext.decode(response.responseText).slist1[0].SOCIO;
-                                                        var varFamilia = Ext.decode(response.responseText).slist1[0].FAMILIA;
-                                                        debug("Entra a la funcion ",_window,varSocio,varFamilia);
+                                                    	var resEspera  = "";
+                                                        var varSocio   = "0";
+                                                        var varFamilia = "0";
+                                                        if(Ext.decode(response.responseText).slist1.length >0){
+                                                    		resEspera  = Ext.decode(response.responseText).slist1[0];
+                                                            varSocio   = Ext.decode(response.responseText).slist1[0].SOCIO;
+                                                            varFamilia = Ext.decode(response.responseText).slist1[0].FAMILIA;
+                                                            debug("Entra a la funcion ",_window,varSocio,varFamilia);
+                                                        }
                                                         respuestaNoSocioFamilia(_window,varSocio,varFamilia);
                                                     },
                                                     failure : function (){

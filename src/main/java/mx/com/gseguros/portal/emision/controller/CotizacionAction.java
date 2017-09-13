@@ -5324,7 +5324,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                    auxCell=row.getCell(19);
 	                    identidad = auxCell!=null?auxCell.getNumericCellValue()+"":"";
 	                    
-	                    if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                    if(cdunieco.equalsIgnoreCase("1403")){
 	                        String identidadModificada[] = identidad.split("\\-");
 	                        String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
 	                        String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
@@ -5390,7 +5390,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                        auxCell=row.getCell(19);
 	                        identidad = auxCell!=null?auxCell.getStringCellValue():"";
 	                        
-	                        if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                        if(cdunieco.equalsIgnoreCase("1403")){
 	                            String identidadModificada[] = identidad.split("\\-");
 	                            String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
 	                            String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
@@ -6676,7 +6676,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                		}
 	                	}
 
-	                	if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                	if(cdunieco.equalsIgnoreCase("1403")){
 	                		String identidadModificada[] = identidad.split("\\-");
 	                		String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
 	                		String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
@@ -6725,7 +6725,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	                			}
 	                		}
 	                	
-	                		if(cdunieco.equalsIgnoreCase("1403") || StringUtils.isNotBlank(identidad)){
+	                		if(cdunieco.equalsIgnoreCase("1403")){
 	                			String identidadModificada[] = identidad.split("\\-");
 	                			String seccion1 = StringUtils.leftPad(identidadModificada[0].toString(), 6, "0");
 	                			String seccion2 = StringUtils.leftPad(identidadModificada[1].toString(), 2, "0");
