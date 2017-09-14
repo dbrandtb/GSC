@@ -4160,7 +4160,7 @@ function _p21_generarTramiteClic(callback,sincenso,revision,complemento,nombreCe
       		valido=true;
         }
       	else{
-      		if ((_fieldByName('numcontrato').getValue()=="0") && (_p21_smap1.cdunieco ==1403))
+      		if ((_fieldByName('numcontrato').getValue()=="") && (_p21_smap1.cdunieco ==1403))
         	{
 	        	valido=false;
 	        	mensajeWarning('Verificar los datos del numero de contrato', _p21_setActiveConcepto);
