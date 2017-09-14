@@ -2171,7 +2171,20 @@ public class CatalogosManagerImpl implements CatalogosManager {
 			{
 				lista= new ArrayList<GenericVO>();
 			}
-			logger.debug("getTipoNoSicaps lista size: "+lista.size());
+			return lista;
+		} catch (DaoException daoExc) {
+			throw new Exception(daoExc.getMessage(), daoExc);
+		}
+	}
+   
+   @Override
+	public List<GenericVO> getEsCotizacion() throws Exception {
+		try {
+			List<GenericVO> lista = catalogosDAO.getEsCotizacion();
+			if(lista==null)
+			{
+				lista= new ArrayList<GenericVO>();
+			}
 			return lista;
 		} catch (DaoException daoExc) {
 			throw new Exception(daoExc.getMessage(), daoExc);
