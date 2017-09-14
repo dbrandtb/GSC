@@ -437,8 +437,8 @@ function _p29_guardarComplementario(callback)
         //if ((inputCdunieco == 1403) && (Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO').value))||(_fieldByLabel('NUMERO DE CONTRATO').value==0)){
         if (inputCdunieco == 1403 && _fieldByLabel('NUMERO DE CONTRATO').value==0){
     		_fieldByLabel('NUMERO DE CONTRATO',null,true).allowBlank = false;
-         	_fieldByLabel('NUMERO DE CONTRATO',null,true).regex = /^[a-zA-Z]{3}[-]\d{3}$/;
-         	_fieldByLabel('NUMERO DE CONTRATO',null,true).regexText = 'Debe cumplir con el formato /^[a-zA-Z]{3}[-]\d{3}$/';
+         	//_fieldByLabel('NUMERO DE CONTRATO',null,true).regex = /^[a-zA-Z]{3}[-]\d{3}$/;
+         	//_fieldByLabel('NUMERO DE CONTRATO',null,true).regexText = 'Debe cumplir con el formato /^[a-zA-Z]{3}[-]\d{3}$/';
          	debug('**Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
          	debug('**Valor en Numero de contrato',_fieldByLabel('NUMERO DE CONTRATO').value);
         }
@@ -2801,8 +2801,8 @@ function _p29_emitirClicComplementarios()
 	                                    //if ((inputCdunieco == 1403) && (Ext.isEmpty(_fieldByLabel('NUMERO DE CONTRATO').value))||(_fieldByLabel('NUMERO DE CONTRATO').value==0)){
 	                                    if (inputCdunieco == 1403 && _fieldByLabel('NUMERO DE CONTRATO').value==0){
 	                                    	_fieldByLabel('NUMERO DE CONTRATO',null,true).allowBlank = false;
-	                                    	_fieldByLabel('NUMERO DE CONTRATO',null,true).regex = /^[a-zA-Z]{3}[-]\d{3}$/;
-	                                    	_fieldByLabel('NUMERO DE CONTRATO',null,true).regexText = 'Debe cumplir con el formato /^[a-zA-Z]{3}[-]\d{3}$/';
+	                                    	//_fieldByLabel('NUMERO DE CONTRATO',null,true).regex = /^[a-zA-Z]{3}[-]\d{3}$/;
+	                                    	//_fieldByLabel('NUMERO DE CONTRATO',null,true).regexText = 'Debe cumplir con el formato /^[a-zA-Z]{3}[-]\d{3}$/';
 	                                    	debug('**Numero de contrato puede estar vacio? ',_fieldByLabel('NUMERO DE CONTRATO').allowBlank);
 	                                    	debug('**Valor en Numero de contrato',_fieldByLabel('NUMERO DE CONTRATO').value);
 	                                    }else{
