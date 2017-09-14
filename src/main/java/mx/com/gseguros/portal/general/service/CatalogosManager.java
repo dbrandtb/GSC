@@ -268,4 +268,6 @@ public interface CatalogosManager {
 	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception;
 
 	public List<GenericVO> getTipoNoSicaps() throws Exception;
+	
+	public List<GenericVO> getEsCotizacion() throws Exception;
 }

@@ -192,4 +192,6 @@ public interface CatalogosDAO {
 
 	public List<GenericVO> getTipoNoSicaps() throws Exception;
 	
+	public List<GenericVO> getEsCotizacion() throws Exception;
+	
 }

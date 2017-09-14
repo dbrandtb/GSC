@@ -2290,5 +2290,26 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			compile();
 		}
 	}
+    
+    @Override
+	public List<GenericVO> getEsCotizacion() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> mapResult = ejecutaSP(new getEsCotizacionSP(getDataSource()), params);
+		return (List<GenericVO>) mapResult.get("pv_registro_o");
+	}
+    
+    protected class getEsCotizacionSP extends StoredProcedure
+	{
+		protected getEsCotizacionSP(DataSource dataSource)
+		{
+			super(dataSource, "P_GET_ESCOTIZACION");
+			 declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(new String[]{
+	                    "key", "value"
+	            })));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 }

@@ -1117,16 +1117,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 					break;
 				case TIPO_NO_SICAPS:
 					lista = catalogosManager.getTipoNoSicaps();
-					/*lista=new ArrayList<GenericVO>(0);
-					lista.add(new GenericVO("N", "NO"));
-					lista.add(new GenericVO("S", "SI"));
-					*/
 					break;
 				case ES_COTIZACION:
-					//cable solicitado por rafa por la premura del requerimiento REQ0270
-					lista=new ArrayList<GenericVO>(0);
-					lista.add(new GenericVO("N", "EMISIÓN"));
-					lista.add(new GenericVO("S", "COTIZACIÓN"));
+					lista= catalogosManager.getEsCotizacion();
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
