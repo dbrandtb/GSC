@@ -43,8 +43,8 @@ try {
 debug('_0_flujoAux:', _0_flujoAux);
 
 var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
-var _0_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _0_reportsServerUser = '<s:property value="passServidorReports" />';
+var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _0_urlCotizar                  = '<s:url namespace="/emision"         action="cotizar"                        />';
 var _0_urlCotizarExterno           = '<s:url namespace="/externo"         action="cotizar"                        />';
@@ -407,7 +407,6 @@ function _0_comprar()
             ,'smap1.nmorddomCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.NMORDDOM
             ,'smap1.cdideperCli'   : Ext.isEmpty(_0_recordClienteRecuperado) ? '' : _0_recordClienteRecuperado.raw.CDIDEPER
             ,'smap1.cdagenteExt'   : (_0_smap1.cdramo == '6' || _0_smap1.cdramo == '16') ? _fieldByLabel('AGENTE').getValue() : ''
-            ,'smap1.caseIdRstn'    : _NVL(_0_smap1.caseIdRstn)
         }
         ,success : function(response,opts)
         {
@@ -604,7 +603,7 @@ function _0_comprar()
                                 'Se ha generado el tr\u00e1mite ' + json.smap1.ntramite,
                                 function () {
                                     _mask();
-                                    location.href = _GLOBAL_CONTEXTO + '/jsp-script/general/callback.jsp?ntramite=' + json.smap1.ntramite;
+                                    location.reload();
                                 }
                             );
                             return;
@@ -2861,7 +2860,7 @@ function _0_actualizarCotizacionTramite(callback)
 
 function _0_recuperarCotizacionDeTramite()
 {
-    if(!Ext.isEmpty(_0_flujo))// && _0_smap1.SITUACION === 'AUTO' )
+    if(!Ext.isEmpty(_0_flujo) && _0_smap1.SITUACION === 'AUTO' )
     {
         var ck = 'Recuperando cotizaci\u00f3n de tr\u00e1mite';
         try
@@ -3704,9 +3703,6 @@ Ext.onReady(function()
     		var itemsFormAgrupados=[
     	            		 _0_fieldNtramite
     	    			    ,_0_fieldNmpoliza
-    	    			    <s:if test='%{imap.containsKey("tatripol")}'>
-    	    			    ,<s:property value="imap.tatripol"/>
-    	    			    </s:if>
     	    			    ,<s:property value="imap.camposAgrupados"/>
     	    			    ,{
     	                        name        : 'FESOLICI'
@@ -4851,14 +4847,8 @@ Ext.onReady(function()
                	            debug('### obtener auto por clave gs:',ijson);
                	            if(ijson.success)
                	            {
-               	            	//Incidencia Serv Publico  
-               	            	var valor = _p28_validarDescuento(_fieldLikeLabel('DESCUENTO').getValue(), ijson.smap1.RANGO_MINIMO, ijson.smap1.RANGO_MAXIMO);
-               	            	debug("descuento: ", _fieldLikeLabel('DESCUENTO').getValue(), " valor: ", valor);
-               	            	if(!valor) {
-               	            		_fieldLikeLabel('DESCUENTO').markInvalid();
-               	            		 mensajeWarning('Debe seleccionar un monto de Descuento Valido');
-               	            	}
-               	             	_fieldLikeLabel('DESCUENTO').isValid();
+               	            	_fieldLikeLabel('DESCUENTO').setMinValue(ijson.smap1.RANGO_MINIMO);
+               	            	_fieldLikeLabel('DESCUENTO').setMaxValue(ijson.smap1.RANGO_MAXIMO);
                	             	_fieldLikeLabel('DESCUENTO').setLoading(false);
                	            }
                	            else
@@ -5426,35 +5416,35 @@ Ext.onReady(function()
     }
     
     // Se busca la imagen para mostrar en el cotizador segun el producto:
-    if (_0_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba) {
-        Ext.Ajax.request({
-            url    : _0_urlObtenerParametros,
-            params :{
-                'smap1.parametro' : 'IMAGEN_COTIZACION',
-                'smap1.cdramo'   : _0_smap1.cdramo,
-                'smap1.cdtipsit' : _0_smap1.cdtipsit
-            },
-            success : function(response) {
-                var json=Ext.decode(response.responseText);
-                debug('########## Respuesta:',json);
-                if(json.exito) {
-                    Ext.create('Ext.window.Window', {
-                        focusOnToFront : false, //evitamos que obtenga el focus en automatico
-                        closable : false,
-                        header: false,
-                        border: false,
-                        resizable: false,
-                        width: Number(json.smap1.P2VALOR),
-                        height: Number(json.smap1.P3VALOR),
-                        items: [{
-                            xtype : 'image',
-                            src : '${ctx}/images/proceso/cotizacion/'+json.smap1.P1VALOR
-                        }]
-                    }).showAt(Number(json.smap1.P4VALOR), Number(json.smap1.P5VALOR));
-               }
-            }
-        });
-    }
+    /*
+    Ext.Ajax.request({
+        url    : _0_urlObtenerParametros,
+        params :{
+            'smap1.parametro' : 'IMAGEN_COTIZACION',
+            'smap1.cdramo'   : _0_smap1.cdramo,
+            'smap1.cdtipsit' : _0_smap1.cdtipsit
+        },
+        success : function(response) {
+            var json=Ext.decode(response.responseText);
+            debug('########## Respuesta:',json);
+            if(json.exito) {
+                Ext.create('Ext.window.Window', {
+                    focusOnToFront : false, //evitamos que obtenga el focus en automatico
+                    closable : false,
+                    header: false,
+                    border: false,
+                    resizable: false,
+                    width: Number(json.smap1.P2VALOR),
+                    height: Number(json.smap1.P3VALOR),
+                    items: [{
+                        xtype : 'image',
+                        src : '${ctx}/images/proceso/cotizacion/'+json.smap1.P1VALOR
+                    }]
+                }).showAt(Number(json.smap1.P4VALOR), Number(json.smap1.P5VALOR));
+           }
+        }
+    });
+    */
     
     if(_0_smap1.ntramite&&_0_smap1.ntramite.length>0)
     {
@@ -5648,79 +5638,6 @@ Ext.onReady(function()
     	debugError(e);
     }
     
-    if (_0_smap1.cdramo == Ramo.GastosMedicosMayoresPrueba) {
-        if (!Ext.isEmpty(_fieldLikeLabel('DESCUENTO', null, true))) {
-            var ck = 'Recuperando rango de descuento/recargo';
-            try {
-                _request({
-                    mask   : ck,
-                    url    : _GLOBAL_URL_RECUPERACION,
-                    params : {
-                        'params.consulta' : 'RECUPERAR_RANGO_DESCUENTO_RECARGO',
-                        'params.cdramo'   : _0_smap1.cdramo,
-                        'params.cdtipsit' : _0_smap1.cdtipsit
-                    },
-                    success : function (json) {
-                        var comp = _fieldLikeLabel('DESCUENTO');
-                        comp.setMinValue(json.params.MINIMO);
-                        comp.setMaxValue(json.params.MAXIMO);
-                    }
-                });
-            } catch (e) {
-                manejaException(e, ck);
-            }
-        }
-        
-        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true))) {
-            var planCmp = _fieldByLabel('PLAN', null, true);
-            _0_formAgrupados.remove(planCmp, false);
-            _0_formAgrupados.insert(2, planCmp);
-        }
-        
-        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true)) && !Ext.isEmpty(_fieldByLabel('SUMA ASEGURADA', null, true))) {
-            var planCmp = _fieldByLabel('PLAN', null, true),
-                sumaCmp = _fieldByLabel('SUMA ASEGURADA', null, true);
-            sumaCmp.anidado = true;
-            sumaCmp.heredar = function () {
-                sumaCmp.getStore().load({
-                    params : {
-                        'params.idPadre' : planCmp.getValue()
-                    }
-                });
-            };
-        }
-        
-        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true)) && !Ext.isEmpty(_fieldLikeLabel('ULO M', null, true))) {
-            var planCmp = _fieldByLabel('PLAN', null, true),
-                circCmp = _fieldLikeLabel('ULO M', null, true);
-            circCmp.anidado = true;
-            circCmp.heredar = function () {
-                circCmp.getStore().load({
-                    params : {
-                        'params.idPadre' : planCmp.getValue()
-                    }
-                });
-            };
-            planCmp.on({
-                blur : function () {
-                    circCmp.heredar();
-                }
-            });
-        } 
-        
-        if (!Ext.isEmpty(_fieldByLabel('PLAN', null, true)) && !Ext.isEmpty(_fieldByLabel('DEDUCIBLE', null, true))) {
-            var planCmp = _fieldByLabel('PLAN', null, true),
-                deduCmp = _fieldByLabel('DEDUCIBLE', null, true);
-            deduCmp.anidado = true;
-            deduCmp.heredar = function () {
-                deduCmp.getStore().load({
-                    params : {
-                        'params.idPadre' : planCmp.getValue()
-                    }
-                });
-            };
-        }
-    }
     
     // Para TODOS LOS PRODUCTOS (si aplican), se agrega validacion de Codigo Postal vs Estado:
     agregaValidacionCPvsEstado();
@@ -5899,18 +5816,6 @@ function _p28_cargarCorreos()
             errorComunicacion();
          }
     })
-}
-
-function _p28_validarDescuento(valor, valMinimo, valMaximo)
-{
-	var r=false;
-	debug("valor: ", valor, " valMinimo: ", valMinimo, " valMaximo: ", valMaximo);
-	if (valor>=valMinimo){
-		if (valor<=valMaximo){
-			r=true;
-		}
-	}
-	return r;
 }
 </script>
 </head>

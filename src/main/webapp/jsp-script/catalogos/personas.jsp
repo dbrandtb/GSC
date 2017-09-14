@@ -1910,7 +1910,6 @@ function _p22_tipoPersonaChange(combo,value)
         }else {*/
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).allowBlank = false;
         	_fieldByName('FENACIMI',_PanelPrincipalPersonas<s:property value="smap1.idPantalla" />).show();
-        	
         //}
     }
     else
