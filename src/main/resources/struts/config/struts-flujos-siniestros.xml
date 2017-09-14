@@ -219,10 +219,6 @@
 			<result>/jsp-script/proceso/siniestros/altaTramitePrevio.jsp</result>
 		</action>
 		
-        <action name="altaTramitePrevio" class="tramiteSiniestroAction"  method="altaTramite">
-            <result>/jsp-script/proceso/siniestros/altaTramitePrevio.jsp</result>
-        </action>
-        
 		<action name="complementoAltaTramite" class="tramiteSiniestroAction"  method="altaTramite">
 			<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
 		</action>
@@ -605,26 +601,6 @@
 				</param>
 			</result>
 		</action>
-		
-		<action name="consultaListaCPTUnico" class="siniestrosAction" method="consultaListaCPTUnico"> 
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    datosValidacionGral.*,
-                    success
-                </param>
-            </result>
-        </action>
-        
-        <action name="consultaListaTipoMedico" class="siniestrosAction" method="consultaListaTipoMedico"> 
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    datosValidacionGral.*,
-                    success
-                </param>
-            </result>
-        </action>
 
 		<action name="afiliadosAfectados" class="siniestrosAction" method="afiliadosAfectados">
 			<result name="success">/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</result>
@@ -666,16 +642,6 @@
 			</result>
 		</action>
 		
-		<action name="crearTramitesLayout" class="siniestrosAction" method="crearTramitesLayout">	<!--EGS-->
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					success,
-					mensaje
-				</param>
-			</result>
-		</action>
-
 		<action name="generarTramiteSiniestro" class="siniestrosAction" method="generarTramiteSiniestro">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
@@ -1427,10 +1393,6 @@
             </interceptor-ref>
             <result type="json" />
         </action>
-        <action name="graficas" class="renovacionAction" method="pantallaRenovacion">
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/renovacion/graficas.jsp</result>
-        </action>
         
 		<!-- CONSULTA PROVEEDORES -->
 		<!--<action name="includes/altaCitasMedica" class="siniestrosAction"  method="altaTramite">
@@ -1445,89 +1407,6 @@
 			<result>/jsp-script/proceso/asegurados/altaCitasMedica.jsp</result>
 		</action>-->
 		
-		<action name="reservasSiniestralidad" class="siniestrosAction" method="reservaSiniestralidad">
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/siniestros/reservaSiniestralidad.jsp</result>
-        </action>
-        
-        <action name="pantallaProveedores" class="siniestrosAction" >
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/siniestros/pantallaProvedores.jsp</result>
-        </action>
-        
-        <action name="consultaRenovaSiniestros" class="siniestrosAction" method="consultaRenovaSiniestralidad">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					slist1.*,
-					graficas.*,
-					success
-				</param>
-			</result>
-		</action>
-		<action name="listaProveedores" class="siniestrosAction" method="listaProveedores">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					slist1.*,
-					graficas.*,
-					success
-				</param>
-			</result>
-		</action>
-		
-		<action name="topIcd" class="siniestrosAction" method="topIcd">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					slist1.*,
-					success
-				</param>
-			</result>
-		</action>
-		
-		<action name="reservas" class="siniestrosAction" method="reservas">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					slist1.*,
-					success
-				</param>
-			</result>
-		</action>
-		<action name="reservasTipPag" class="siniestrosAction" method="reservasTipPag">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					slist1.*,
-					success
-				</param>
-			</result>
-		</action>
-        <action name="obtieneImporteArancelGNP" class="autorizacionServiciosAction" method="obtieneImporteArancelGNP">
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    success,
-                    msgResult
-                </param>
-            </result>
-        </action>        
-        <action name="includes/consultaListaDetalle" class="siniestrosAction" method="consultaListaDetalleSiniestro">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					datosValidacion.*,
-					success
-				</param>
-			</result>
-		</action>
-     
         <action name="obtieneDatosEstCobAseg" class="detalleSiniestroAction" method="obtieneDatosEstudiosCoberturaAsegurado">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
@@ -1590,8 +1469,8 @@
                 </param>
             </result>
 	   </action>
-
-        <action name="validaDatosEstudiosFacturasTramite" class="detalleSiniestroAction" method="validaDatosEstudiosFacturasTramite">
+	   
+	   <action name="validaDatosEstudiosFacturasTramite" class="detalleSiniestroAction" method="validaDatosEstudiosFacturasTramite">
 	       <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
@@ -1685,46 +1564,6 @@
 			</interceptor-ref>
 			<result name="success" type="json"/>
 		</action>
-		
-        <action name="consultaEstadoSiniestros" class="siniestrosAction" method="consultaEstadoSiniestros">
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    datosValidacionGral.*,
-                    success
-                </param>
-            </result>
-        </action>
-        
-        <action name="consultaMunicipioSiniestros" class="siniestrosAction" method="consultaMunicipioSiniestros">
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    datosValidacionGral.*,
-                    success
-                </param>
-            </result>
-        </action>
-        
-        <action name="obtenerValidacionExclusionICDGral" class="autorizacionServiciosAction" method="obtenerValidacionExclusionICDGral">
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    success,
-                    msgResult
-                </param>
-            </result>
-        </action>
-        
-        <action name="obtieneDatosICDGenerales" class="autorizacionServiciosAction" method="obtieneDatosICDGenerales">
-            <result type="json">
-                <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    success,
-                    msgResult
-                </param>
-            </result>
-        </action>
 		
     </package>
 

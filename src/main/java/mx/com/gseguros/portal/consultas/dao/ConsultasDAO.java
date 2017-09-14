@@ -518,9 +518,9 @@ public interface ConsultasDAO
 	
 	public int recuperarConteoTbloqueoTramite(String ntramite)throws Exception;
 
-	public List<Map<String,String>> recuperarExclusionTurnados(String cdusuari) throws Exception;
+	public List<Map<String,String>> recuperarExclusionTurnados() throws Exception;
 	
-	public List<Map<String,String>> cargarCotizadoresActivos(String Usuario, String cadena) throws Exception;
+	public List<Map<String,String>> cargarCotizadoresActivos(String cadena) throws Exception;
 	
 	public List<Map<String,String>> obtieneMotivosReexp(String cdramo, String cdtipsit) throws Exception;
 	
@@ -714,13 +714,4 @@ public interface ConsultasDAO
 	
 	public List<Map<String,String>> recuperarNombreDocumentosCotizacion(String ntramite) throws Exception;
 	
-	public Map<String,String> recuperarValoresModelo(
-			String cdsisrol
-			,String cdusuari
-			,String cdunieco
-			)throws Exception;
-
-	public Map<String, String> cargarDatosClonacion(String ntramite) throws Exception;
-
-	public String obtienePermisoEdicionClonacion(String cdsisrol) throws Exception;
 }
