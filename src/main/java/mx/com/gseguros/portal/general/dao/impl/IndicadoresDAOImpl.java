@@ -635,7 +635,7 @@ public class IndicadoresDAOImpl extends AbstractManagerDAO implements Indicadore
 					,"CONTRATANTE"          
 
 
-            };
+};
 			
 			declareParameter(new SqlParameter("pv_start_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_limit_i",      OracleTypes.VARCHAR));
