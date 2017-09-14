@@ -263,7 +263,7 @@
 			</tr>
 	        <tr> 
 			    <td colspan="5" class="textologin">
-                    <br>INFORMACI&Oacute;N DE GENERAL DE SEGUROS.<br><br><br><br>
+                    <br>INFORMACI&Oacute;N DE GENERAL DE SEGUROS. <br><br><br><br>
 			    </td>
 			</tr>
 	    </table>
