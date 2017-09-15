@@ -243,6 +243,7 @@ Ext.onReady(function(){
                                 text     : 'Consolidar',
                                 disabled : true,
                                 hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
+                                //hidden   : true,
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');                                    
                                     consolidarRecibos(obtenerDataSelected(gridRecibos));                                    
@@ -254,6 +255,7 @@ Ext.onReady(function(){
                                 text     : 'Desconsolidar',
                                 disabled : true,
                                 hidden   : arrRolesConso.indexOf(_GLOBAL_CDSISROL) === -1 ? true : false,
+                                //hidden   : true,
                                 handler  : function(){
                                     var gridRecibos   = _fieldById('gridRecibos');
                                     desconsolidarRecibos(obtenerDataSelected(gridRecibos));

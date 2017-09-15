@@ -167,10 +167,6 @@
        <action name="cargarDatosGrupoLinea" class="CotizacionAction" method="cargarDatosGrupoLinea">
            <result type="json" />
        </action>
-
-       <action name="cargarDatosGrupoLineaGpo2" class="CotizacionAction" method="cargarDatosGrupoLineaGpo2">
-           <result type="json" />
-       </action>
        
        <action name="cargarTvalogarsGrupo" class="CotizacionAction" method="cargarTvalogarsGrupo">
            <result type="json" />
@@ -377,16 +373,6 @@
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp-script/proceso/emision/cotizacionAutoFlotilla.jsp</result>
         </action>
-          <!--         vils -->
-         <action name="cotizacionMasivaIndividuales" class="cotizacionAutoAction" method="cotizacionMasivaIndividuales">
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/emision/cotizacionMasivaIndividuales.jsp</result>
-        </action>
-        
-        <action name="cargaMasivaClientes" class="cotizacionAutoAction" method="cargaMasivaClientes">
-            <result name="error">/jsp-script/general/errorPantalla.jsp</result>
-            <result name="success">/jsp-script/proceso/emision/cargaMasivaClientes.jsp</result>
-        </action>
         
         <action name="cotizarAutosFlotilla" class="cotizacionAutoAction" method="cotizarAutosFlotilla">
             <interceptor-ref name="json">
@@ -407,19 +393,6 @@
         <action name="cargarCotizacionAutoFlotilla" class="cotizacionAutoAction" method="cargarCotizacionAutoFlotilla">
             <result name="success" type="json" />
         </action>
-        
-        <action name="procesarCargaMasivaIndividual" class="cotizacionAutoAction" method="procesarCargaMasivaIndividual">
-            <result name="success" type="json" />
-        </action>
-        
-        <action name="procesarCargaMasivaClientes" class="cotizacionAutoAction" method="procesarCargaMasivaClientes">
-            <result name="success" type="json" />
-        </action>
-        
-       <action name="cargarClienteCotizacion" class="CotizacionAction" method="cargarClienteCotizacion">
-           <result type="json" />
-       </action>
-       
         
         <action name="recuperacionSimpleLista" class="recuperacionSimpleAction" method="recuperacionSimpleLista">
             <result name="success" type="json" />
@@ -514,7 +487,7 @@
             <result name="error">/jsp-script/general/errorPantalla.jsp</result>
             <result name="success">/jsp-script/proceso/emision/cotizacionAutoFlotilla.jsp</result>
         </action>
-
+        
         <action name="recuperarDatosEndosoAltaIncisoAuto" class="endososAutoAction" method="recuperarDatosEndosoAltaIncisoAuto">
             <result type="json" />
         </action>
@@ -601,11 +574,8 @@
         <action name="cargarAseguradosFiltroExtraprimas2" class="CotizacionAction" method="cargarAseguradosFiltroExtraprimas2">
             <result name="success" type="json" />
         </action>
-        <action name="obtieneRangoPeriodoGraciaAgente" class="cotizacionAutoAction" method="obtieneRangoPeriodoGraciaAgente">
-            <result name="success" type="json" />
-        </action>       
-      
-       <action name="cargaMasivaFlotillaEmision" class="cotizacionAutoAction" method="cargaMasivaFlotillaEmision">
+        
+        <action name="cargaMasivaFlotillaEmision" class="cotizacionAutoAction" method="cargaMasivaFlotillaEmision">
             <result name="success" type="json" />
         </action>
         
@@ -659,6 +629,7 @@
         <action name="edadMaximaAsegurado" class="cotizacionAutoAction" method="edadMaximaAsegurado">
             <result type="json" />
         </action>
+       
     </package>
     
 </struts>

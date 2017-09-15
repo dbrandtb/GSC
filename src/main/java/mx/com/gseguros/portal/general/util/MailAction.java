@@ -52,7 +52,7 @@ public class MailAction extends PrincipalCoreAction {
 	 * Indica si el content-type del mensaje es HTML 
 	 */
 	private boolean html;
-
+	
 	@Value("${ruta.documentos.temporal}")
     private String rutaDocumentosTemporal;
 	
@@ -228,11 +228,5 @@ public class MailAction extends PrincipalCoreAction {
 	public void setMailService(MailService mailService) {
 		this.mailService = mailService;
 	}
-	
-	public String getRutaDocumentosTemporal() {
-		return rutaDocumentosTemporal;
-	}
-
-
 	
 }
