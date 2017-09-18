@@ -8431,7 +8431,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			} else {
 				paso = "Confirmando endoso";
 				logger.debug(paso);
-				endososDAO.confirmarEndosoB(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "");
+				//endososDAO.confirmarEndosoB(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "");
 				paso = "Actualizando estatus de tr\u00e1mite";
 				logger.debug(paso);
 				String comments = Utils.join("Se confirm\u00f3 el endoso ", nsuplogi);
@@ -8468,6 +8468,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						);
 				String nmsolici    = datosPoliza.get("nmsolici"),
 				       rutaCarpeta = Utils.join(rutaDocumentosPoliza, "/", ntramite);
+				endososDAO.confirmarEndosoB(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "");
 				paso = "Invocando servicios web";
 				logger.debug(paso);
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
