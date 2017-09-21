@@ -103,8 +103,8 @@ var _p21_urlMarcarTramitePendienteVistaPrevia = '<s:url namespace="/mesacontrol"
 var _p21_nombreReporteCotizacion        = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _p21_nombreReporteCotizacionDetalle = '<s:text name='%{"rdf.cotizacion2.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 
-var _p21_urlImprimirCotiza = '<s:property value="rutaServidorReports" />';
-var _p21_reportsServerUser = '<s:property value="passServidorReports" />';
+var _p21_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _p21_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _p21_clasif             = null;
 var _p21_storeGrupos        = null;
