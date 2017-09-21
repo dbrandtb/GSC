@@ -2858,7 +2858,7 @@ function _p21_editarExclusiones(grid,row)
                     ,'smap1.pv_estado'       : _p21_smap1.estado
                     ,'smap1.pv_nmpoliza'     : _p21_smap1.nmpoliza
                     ,'smap1.pv_nmsituac'     : record.get('NMSITUAC')
-                    ,'smap1.pv_nmsuplem'     : '0'
+                    ,'smap1.pv_nmsuplem'     : Ext.isEmpty(_p21_smap1.nmsuplem)?'0':_p21_smap1.nmsuplem
                     ,'smap1.pv_cdperson'     : record.get('CDPERSON')
                     ,'smap1.pv_cdrol'        : record.get('CDROL')
                     ,'smap1.nombreAsegurado' : record.get('NOMBRE')+' '+(record.get('SEGUNDO_NOMBRE')?record.get('SEGUNDO_NOMBRE')+' ':' ')+record.get('APELLIDO_PATERNO')+' '+record.get('APELLIDO_MATERNO')
