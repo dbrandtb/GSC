@@ -131,12 +131,6 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	{
 		return catalogosDAO.obtieneStatusTramite(params);
 	}
-
-	@Override
-	public List<GenericVO> obtieneTiposTramiteClonacion() throws Exception
-	{
-		return catalogosDAO.obtieneTiposTramiteClonacion();
-	}
 	
 	@Override
 	public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango, Validacion validacion) throws Exception {
@@ -1528,7 +1522,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	@Override
-	public List<GenericVO> cargarCotizadoresActivos(String usuario , String cadena) throws Exception
+	public List<GenericVO> cargarCotizadoresActivos(String cadena) throws Exception
 	{
 		logger.debug(Utils.log(
 				 "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -1544,7 +1538,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 		{
 			paso = "Recuperando documentos";
 			logger.debug(Utils.log("\n@@@@@@ ",paso));
-			List<Map<String,String>> documentos = consultasDAO.cargarCotizadoresActivos(usuario, cadena);
+			List<Map<String,String>> documentos = consultasDAO.cargarCotizadoresActivos(cadena);
 			
 			for(Map<String,String>elemento:documentos)
 			{
