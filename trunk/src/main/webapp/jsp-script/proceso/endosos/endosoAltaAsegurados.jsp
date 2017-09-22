@@ -14,6 +14,7 @@ var _p59_urlRecuperarDatosEndoso  = '<s:url namespace = "/endosos"   action = "r
     _p59_urlTarificar             = '<s:url namespace = "/endosos"   action = "tarificarEndosoAltaAsegurados"          />',
     _p59_urlPantallaBeneficiarios = '<s:url namespace = "/catalogos" action = "includes/pantallaBeneficiarios"         />',
     _p59_urlConfirmarEndosoFlujo  = '<s:url namespace = "/endosos"   action = "confirmarEndosoSaludFlujo"              />';
+    _p59_urlEdadMaximaAsegudado   = '<s:url namespace="/emision"     action="edadMaximaAsegurado"                 	   />';
 ////// urls //////
 
 ////// variables //////
@@ -530,6 +531,17 @@ function _p59_formAseguradosGuardarClic(me)
 {
     debug('_p59_formAseguradosGuardarClic args:',arguments);
     
+    var cdtipsit ='';
+    if(_p59_flujo.cdramo =='1'){
+    	cdtipsit='RI';
+    }else if(_p59_flujo.cdramo =='2'){
+    	cdtipsit='SL';
+    }else if(_p59_flujo.cdramo =='4'){
+    	cdtipsit='MS';
+    }else if(_p59_flujo.cdramo =='7'){
+    	cdtipsit='GMI';
+    }
+    
     var mask, ck = 'Guardando datos';
     try
     {
@@ -544,35 +556,74 @@ function _p59_formAseguradosGuardarClic(me)
             values[att] = _p59_params[att];
         }
         
-        values.feendoso = _fieldByName('FEEFECTO').getSubmitValue();
-        values.cdunieco = _p59_flujo.cdunieco;
-        values.cdramo   = _p59_flujo.cdramo;
-        values.estado   = _p59_flujo.estado;
-        values.nmpoliza = _p59_flujo.nmpoliza;
-        
-        mask = _maskLocal(ck);
+        //Obtenemos la edad Maxima para los asegurados
         Ext.Ajax.request({
-            url     : _p59_urlGuardarAsegurado,
-            params  : _formValuesToParams(values),
-            success : function (response) {
-                mask.close();
-                var ck = 'Decodificando respuesta al guardar asegurado';
-                try {
-                    var jsonAsegurado = Ext.decode(response.responseText);
-                    debug('AJAX jsonAsegurado:', jsonAsegurado);
-                    if (jsonAsegurado.success === true) {
-                        form.cerrar();
-                        _p59_storeAseguradosNuevos.cargar();
-                    } else {
-                        mensajeError(jsonAsegurado.message);
-                    }
-                } catch (e) {
-                    manejaException(e, ck);
+            url     : _p59_urlEdadMaximaAsegudado
+            ,params:{
+                'smap1.cdramo'    : _p59_flujo.cdramo
+                ,'smap1.cdtipsit' : cdtipsit
+            }
+            ,success : function (response){
+                var mensaje='El asegurado:<br/>';
+            	var bandContinuarProc = true;
+                _o_edadMaximaAsegurado = Ext.decode(response.responseText).respuesta;
+                
+                var fechaRecord = Ext.Date.add(Ext.Date.parse(values.FENACIMI,'d/m/Y'),Ext.Date.YEAR,0);
+                var fechaHoy    = new Date();
+                var years   = calculaAniosTranscurridos(fechaRecord,fechaHoy);
+                if(parseInt(years) >  _o_edadMaximaAsegurado ){
+                    bandContinuarProc = false;
+                    mensaje = mensaje+"  * El asegurado rebasa la edad permitida.<br/>"
+                }
+                
+                if(bandContinuarProc){
+                    values.feendoso = _fieldByName('FEEFECTO').getSubmitValue();
+                    values.cdunieco = _p59_flujo.cdunieco;
+                    values.cdramo   = _p59_flujo.cdramo;
+                    values.estado   = _p59_flujo.estado;
+                    values.nmpoliza = _p59_flujo.nmpoliza;
+                    
+                    mask = _maskLocal(ck);
+                    Ext.Ajax.request({
+                        url     : _p59_urlGuardarAsegurado,
+                        params  : _formValuesToParams(values),
+                        success : function (response) {
+                            mask.close();
+                            var ck = 'Decodificando respuesta al guardar asegurado';
+                            try {
+                                var jsonAsegurado = Ext.decode(response.responseText);
+                                debug('AJAX jsonAsegurado:', jsonAsegurado);
+                                if (jsonAsegurado.success === true) {
+                                    form.cerrar();
+                                    _p59_storeAseguradosNuevos.cargar();
+                                } else {
+                                    mensajeError(jsonAsegurado.message);
+                                }
+                            } catch (e) {
+                                manejaException(e, ck);
+                            }
+                        },
+                        failure : function () {
+                            mask.close();
+                            errorComunicacion(null, 'Error al guardar asegurado');
+                        }
+                    });
+                }else{
+                    centrarVentanaInterna(Ext.Msg.show({
+                        title: 'Aviso',
+                        msg: mensaje,
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.WARNING
+                    }));
                 }
             },
-            failure : function () {
-                mask.close();
-                errorComunicacion(null, 'Error al guardar asegurado');
+            failure : function (){
+                centrarVentanaInterna(Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                }));
             }
         });
     }
