@@ -316,7 +316,6 @@ public interface EndososDAO
             ,String cdsisrol
             ,String cdusuari
             ,String cdtipsit
-            ,String cancelada
             )throws Exception;
     
     public void guardarTvalositEndoso(
