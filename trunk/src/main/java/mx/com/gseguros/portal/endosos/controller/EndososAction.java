@@ -2766,42 +2766,6 @@ public class EndososAction extends PrincipalCoreAction
 			
 			String paso = null;
 			
-			logger.debug(Utils.log(
-	                 "\n#####################################"
-	                ,"\n###### guardarBeneficiarios #########"
-	                ,"\n###### listaBeneficiarios = " , session.get("listaBeneficiarios")
-	                ));
-			
-			if(smap1.get("confirmar").equalsIgnoreCase("si"))
-            {
-                String usuarioCaptura =  null;
-                paso = "Obteniendo Lista de Pantalla Beneficiarios";
-                if(usuario!=null){
-                    if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
-                        usuarioCaptura = usuario.getClaveUsuarioCaptura();
-                    }else{
-                        usuarioCaptura = usuario.getCodigoPersona();
-                    }
-                    List<Map<String,String>>mpoliperMpersona =(List<Map<String, String>>) session.get("listaBeneficiarios");
-                
-                    paso = "Iterando registros";
-                
-                    String cdunieco   = (String)omap1.get("pv_cdunieco_i")
-                           ,cdramo    = (String)omap1.get("pv_cdramo_i")
-                           ,estado    = (String)omap1.get("pv_estado_i")
-                           ,nmpoliza  = (String)omap1.get("pv_nmpoliza_i");
-                
-                    if(mpoliperMpersona!= null &&  mpoliperMpersona.size()>0) {
-                    personasManager.guardarBeneficiarios(cdunieco, cdramo, estado, nmpoliza, usuarioCaptura, mpoliperMpersona);
-                    session.put("listaBeneficiarios",null);
-                    }
-                }
-            }
-			
-			logger.debug(Utils.log(
-	                "\n###### guardarBeneficiarios ##########"
-	                ,"\n#####################################"
-	                ));
 	        
     			try {
     			    logger.debug(paso);
@@ -2818,8 +2782,45 @@ public class EndososAction extends PrincipalCoreAction
 					logger.debug("ES UNA BAJA DE COBERTURAS.....");
 				}
 				
+				logger.debug(Utils.log(
+		                 "\n#####################################"
+		                ,"\n###### guardarBeneficiarios #########"
+		                ,"\n###### listaBeneficiarios = " , session.get("listaBeneficiarios")
+		                ));
+				
+				if(smap1.get("confirmar").equalsIgnoreCase("si")&&tipoEndoso == TipoEndoso.ALTA_COBERTURAS)
+	            {
+	                String usuarioCaptura =  null;
+	                paso = "Obteniendo Lista de Pantalla Beneficiarios";
+	                if(usuario!=null){
+	                    if(StringUtils.isNotBlank(usuario.getClaveUsuarioCaptura())){
+	                        usuarioCaptura = usuario.getClaveUsuarioCaptura();
+	                    }else{
+	                        usuarioCaptura = usuario.getCodigoPersona();
+	                    }
+	                    List<Map<String,String>>mpoliperMpersona =(List<Map<String, String>>) session.get("listaBeneficiarios");
+	                
+	                    paso = "Iterando registros";
+	                
+	                    String cdunieco   = (String)omap1.get("pv_cdunieco_i")
+	                           ,cdramo    = (String)omap1.get("pv_cdramo_i")
+	                           ,estado    = (String)omap1.get("pv_estado_i")
+	                           ,nmpoliza  = (String)omap1.get("pv_nmpoliza_i");
+	                
+	                    if(mpoliperMpersona!= null &&  mpoliperMpersona.size()>0) {
+	                    personasManager.guardarBeneficiarios(cdunieco, cdramo, estado, nmpoliza, usuarioCaptura, mpoliperMpersona);
+	                    session.put("listaBeneficiarios",null);
+	                    }
+	                }
+	            }
+				
+				logger.debug(Utils.log(
+		                "\n###### guardarBeneficiarios ##########"
+		                ,"\n#####################################"
+		                ));
+				
 				if(tipoEndoso == TipoEndoso.ALTA_COBERTURAS)
-				{
+				{ 
 					paso = "Validando nuevas coberturas";
 					logger.debug(paso);
 					
@@ -3138,7 +3139,8 @@ public class EndososAction extends PrincipalCoreAction
 		                                                        , (String)omap1.get("pv_cdramo_i")
 		                                                        , (String)omap1.get("pv_estado_i")
 		                                                        , (String)omap1.get("pv_nmpoliza_i")
-		                                                        , "0");
+		                                                        , smap2.get("pv_nmsuplem_o"));
+		                        session.put("listaBeneficiarios",null);
 							    
 								}
 						}
