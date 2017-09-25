@@ -462,9 +462,9 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			paso="Recuperando lista de endosos";
 			logger.debug(paso);
 			
-			if("N".equals(cancelada))
-			{
-				resp.setSlist(endososDAO.recuperarEndososClasificados(stamp,cdramo,nivel,multiple,tipoflot,cdsisrol, cdusuari,cdtipsit));
+			//if("N".equals(cancelada))
+			//{
+				resp.setSlist(endososDAO.recuperarEndososClasificados(stamp,cdramo,nivel,multiple,tipoflot,cdsisrol, cdusuari,cdtipsit,cancelada));
 				//parchamos, si el DSTIPSUP2 tiene algun *, lo metemos como DSTIPSUP
 				for(Map<String,String>endoso:resp.getSlist())
 				{
@@ -475,8 +475,8 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 						logger.debug("\nreplace");
 					}
 				}
-			}
-			else if("POLIZA".equals(nivel))
+			//}
+			/*else if("POLIZA".equals(nivel))
 			{
 				List<Map<String,String>> lista = new ArrayList<Map<String,String>>();
 				Map<String,String>       mapa  = new HashMap<String,String>();
@@ -486,7 +486,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 				mapa.put("TIPO_VALIDACION" , "");
 				lista.add(mapa);
 				resp.setSlist(lista);
-			}
+			}*/
 			//VERIFICAMOS SI LA POLIZA ESTA PAGADA
 			try{
 				if(cdramo!=null && cdramo.equals(Ramo.SERVICIO_PUBLICO.getCdramo())){
@@ -8431,7 +8431,7 @@ public class EndososAutoManagerImpl implements EndososAutoManager
 			} else {
 				paso = "Confirmando endoso";
 				logger.debug(paso);
-				//endososDAO.confirmarEndosoB(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "");
+				endososDAO.confirmarEndosoB(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "");
 				paso = "Actualizando estatus de tr\u00e1mite";
 				logger.debug(paso);
 				String comments = Utils.join("Se confirm\u00f3 el endoso ", nsuplogi);
