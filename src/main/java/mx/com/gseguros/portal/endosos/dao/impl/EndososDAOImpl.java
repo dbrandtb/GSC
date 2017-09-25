@@ -2478,6 +2478,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			,String cdsisrol
 			,String cdusuari
 			,String cdtipsit
+			,String cancelada
 			)throws Exception
 	{
 		Map<String,String>params=new LinkedHashMap<String,String>();
@@ -2489,6 +2490,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("cdsisrol" , cdsisrol);
 		params.put("cdusuari" , cdusuari);
 		params.put("cdtipsit" , cdtipsit);
+		params.put("cancelada", cancelada);
 		Map<String,Object>procResult  = ejecutaSP(new RecuperarEndososClasificados(getDataSource()),params);
 		List<Map<String,String>>lista = (List<Map<String,String>>)procResult.get("pv_registro_o");
 		if(lista==null)
@@ -2512,6 +2514,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("cdtipsit" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cancelada" , OracleTypes.VARCHAR));
 			
 			String[] cols=new String[]{
 					"CDTIPSUP"
