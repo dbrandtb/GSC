@@ -50,7 +50,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		params.put("PV_CDRAMO_I"   , cdramo);
 		params.put("PV_CDTIPSIT_I" , cdtipsit);
 		params.put("PV_ESTADO_I"   , estado);
-		params.put("PV_PANTALLA_I" , pantalla);
+		params.put("PV_PANTALLA_I" , Utils.join(pantalla, "_PRE"));// TODO: Eliminar _PRE cuando se de el VoBo. DBB cambio de pantallas a _PRE
 		params.put("PV_CDSISROL_I" , cdsisrol);
 		params.put("PV_CDTIPTRA_I" , cdtiptra);
 		params.put("PV_ORDEN_I"    , orden);
