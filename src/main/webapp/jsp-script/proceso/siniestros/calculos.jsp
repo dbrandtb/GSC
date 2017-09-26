@@ -22,6 +22,7 @@ var _p12_coberturaxcal = <s:property value='datosCoberturaxCalJson' escapeHtml='
 var _CAUSA_ACCIDENTE = '<s:property value="@mx.com.gseguros.portal.general.util.CausaSiniestro@ACCIDENTE.codigo"/>';
 var _TIPO_PAGO_DIRECTO     = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo"/>';
 var _TIPO_PAGO_REEMBOLSO   = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo"/>';
+debug("< ======================  Entra a la visualización de los calculos ====================== > ");
 debug('_p12_coberturaxcal:'    , _p12_coberturaxcal);
 debug('penalizacion:'    , _p12_penalTotal);
 debug('_p12_smap:'    , _p12_smap);
@@ -216,7 +217,9 @@ Ext.onReady(function()
                 
                 if(_p12_slist1[indice].TIPOFORMATOCALCULO =="1"){
                     debug("HOSPITALIZACION");
+                    debug("Alberto ==>",_p12_slist1[indice].siniestroPD[indiceSiniestro]);
                     var causaSiniestro =  _p12_slist1[indice].siniestroPD[indiceSiniestro].CAUSASINIESTRO;
+                    var causaAplicaCop =  _p12_slist1[indice].siniestroPD[indiceSiniestro].TIPODOC;
                     var importe        =  _p12_lhosp[indice].PRECIO*1.0 ;
                     var descuento      =  _p12_lhosp[indice].DESCPRECIO*1.0;
                     var subttDesc      =  importe - descuento;
@@ -236,17 +239,22 @@ Ext.onReady(function()
                                 ||sDeducible.toLowerCase()=='no')
                         )
                         {
-                            deducible = sDeducible.replace(',','')*1.0;
+                        	if(causaAplicaCop =="A"){
+                        		deducible = sDeducible.replace(',','')*1.0;
+                        	}
                         }
                     }
                     var subttDedu = subttDesc - deducible;
                     debug('subttDedu -->' , subttDedu);
                     
                     if(causaSiniestro != _CAUSA_ACCIDENTE){
-                        var copagoPesos       = _p12_slist1[indice].siniestroPD[indiceSiniestro].COPAGOPESOS;
-                        var copagoPorcentajes = _p12_slist1[indice].siniestroPD[indiceSiniestro].COPAGOPORCENTAJES;
-                        
-                        var copagoaplica =  (copagoPesos*1.0) + (subttDedu*(copagoPorcentajes/100.0));
+                    	if(causaAplicaCop =="A"){
+                    		var copagoPesos       = _p12_slist1[indice].siniestroPD[indiceSiniestro].COPAGOPESOS;
+                            var copagoPorcentajes = _p12_slist1[indice].siniestroPD[indiceSiniestro].COPAGOPORCENTAJES;
+                            var copagoaplica =  (copagoPesos*1.0) + (subttDedu*(copagoPorcentajes/100.0));
+                    	}else{
+                    		var copagoaplica = 0.0;
+                    	}
                     }else{
                         var copagoaplica = 0.0;
                     }
@@ -376,7 +384,6 @@ Ext.onReady(function()
                                     {
                                         return Ext.util.Format.usMoney(value);
                                     }
-                            ////		
                                 }
                             ,{
                                 xtype       : 'displayfield'
@@ -415,6 +422,16 @@ Ext.onReady(function()
                     });
                     _p12_paneles.push(panelIterado);
                 }
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 else{
                 	debug('PAGO DIRECTO');
                 	totalglobal = totalglobal + _p12_lpdir[indiceSiniestro].total*1.0;

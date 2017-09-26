@@ -1617,7 +1617,8 @@
 						select:function(e){
 							//Verificamos una tabla de apoyo para saber si se encuentra en la tabla de apoyo
 							var aplicaIVAFact = panelInicialPral.down('[name="parametros.pv_otvalor01"]').getValue();
-							if(aplicaIVAFact =='S'){
+							_11_conceptoSeleccionado.set('APLICIVA',aplicaIVAFact);
+							/*if(aplicaIVAFact =='S'){
 								Ext.Ajax.request( {
 									url	 : _URL_APLICA_IVA_CONCEPTO
 									,params:{
@@ -1638,7 +1639,7 @@
 								});
 							}else{
 								_11_conceptoSeleccionado.set('APLICIVA',aplicaIVAFact);
-							}
+							}*/
 							
 							
 							Ext.Ajax.request( {
@@ -2547,7 +2548,7 @@
 					initComponent: function(){
 						Ext.apply(this, {
 						//width: 850,
-						height: 250,
+						height: 400,
 						plugins  :
 						[
 							Ext.create('Ext.grid.plugin.CellEditing', {
@@ -2590,7 +2591,7 @@
 							{
 								dataIndex : 'NMORDINA'
 								,width : 20
-								//,hidden: true
+								,hidden: true
 							},
 							{
 								header: 'Tipo Concepto', 				dataIndex: 'IDCONCEP',	width : 90		,  allowBlank: false
