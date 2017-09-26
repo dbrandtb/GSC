@@ -260,6 +260,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 						paramsTvalosin.put("pv_otvalor03" , parametros.get("pv_otvalor03"));
 						paramsTvalosin.put("pv_otvalor04" , params.get("ntramite"));
 						paramsTvalosin.put("pv_otvalor05" , params.get("nfactura"));
+						paramsTvalosin.put("pv_otvalor06" , parametros.get("pv_otvalor04"));
 						paramsTvalosin.put("pv_accion_i"  , "I");
 						kernelManager.PMovTvalosin(paramsTvalosin);
 						

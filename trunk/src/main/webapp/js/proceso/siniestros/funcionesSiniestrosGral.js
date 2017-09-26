@@ -2552,6 +2552,7 @@ function _11_llenaFormulario(){
         panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();   // Aplica IVA oculto
         panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();   // Sec. de IVA oculto
         panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();   // Aplica IVA Retenido oculto
+        panelInicialPral.down('[name="parametros.pv_otvalor04"]').hide();   // Copago en Nota de Credito
         panelInicialPral.down('combo[name=params.swAplicaisr]').hide();
         panelInicialPral.down('combo[name=params.swAplicaice]').hide();
         if(_11_params.CDRAMO == _RECUPERA){
@@ -2569,6 +2570,7 @@ function _11_llenaFormulario(){
         panelInicialPral.down('[name="parametros.pv_otvalor01"]').hide();   // Aplica IVA oculto
         panelInicialPral.down('[name="parametros.pv_otvalor02"]').hide();   // Sec. de IVA oculto
         panelInicialPral.down('[name="parametros.pv_otvalor03"]').hide();   // Aplica IVA Retenido oculto
+        panelInicialPral.down('[name="parametros.pv_otvalor04"]').hide();   // Copago en Nota de Credito
         panelInicialPral.down('[name=params.diasdedu]').hide();             // Dias deducible oculto
         panelInicialPral.down('combo[name=params.swAplicaisr]').hide();
         panelInicialPral.down('combo[name=params.swAplicaice]').hide();
@@ -2579,6 +2581,7 @@ function _11_llenaFormulario(){
         panelInicialPral.down('[name="parametros.pv_otvalor01"]').show();   // Aplica IVA
         panelInicialPral.down('[name="parametros.pv_otvalor02"]').show();   // Sec. de IVA
         panelInicialPral.down('[name="parametros.pv_otvalor03"]').show();   // Aplica IVA Retenido
+        panelInicialPral.down('[name="parametros.pv_otvalor04"]').show();   // Copago en Nota de Credito
         panelInicialPral.down('[name=params.diasdedu]').hide();             // Dias deducible oculto
         panelInicialPral.down('combo[name=params.swAplicaisr]').show();
         panelInicialPral.down('combo[name=params.swAplicaice]').show();
@@ -2654,6 +2657,7 @@ function _11_llenaFormulario(){
             if(Ext.decode(response.responseText).datosValidacion != null){
                 var aplicaIVA       = null;
                 var ivaRetenido     = null;
+                var copagoNotCre    = null;
                 var ivaAntesDespues = null;
                 var autAR           = null;
                 var autAM           = null;
@@ -2661,9 +2665,10 @@ function _11_llenaFormulario(){
                 var commAM          = null;
                 var json=Ext.decode(response.responseText).datosValidacion;
                 if(json.length > 0){
-                    aplicaIVA = json[0].OTVALOR01;
+                    aplicaIVA       = json[0].OTVALOR01;
                     ivaAntesDespues = json[0].OTVALOR02;
-                    ivaRetenido = json[0].OTVALOR03;
+                    ivaRetenido     = json[0].OTVALOR03;
+                    copagoNotCre    = json[0].OTVALOR06;
                     
                     for(var i = 0; i < json.length; i++){
                         if(json[i].AREAAUTO =="ME"){
@@ -2697,6 +2702,12 @@ function _11_llenaFormulario(){
                     panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue("N");
                 }else{
                     panelInicialPral.down('[name="parametros.pv_otvalor03"]').setValue(ivaRetenido);
+                }
+                
+                if(copagoNotCre == null){
+                    panelInicialPral.down('[name="parametros.pv_otvalor04"]').setValue("A");
+                }else{
+                    panelInicialPral.down('[name="parametros.pv_otvalor04"]').setValue(copagoNotCre);
                 }
                 
                 if(commAR == null){
