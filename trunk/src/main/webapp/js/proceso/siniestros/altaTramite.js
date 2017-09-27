@@ -1143,7 +1143,13 @@ Ext.onReady(function() {
         displayField : 'nombre',            name:'cmbProveedorReembolso',       valueField   : 'cdpresta',
         forceSelection : true,              matchFieldWidth: false,             queryMode :'remote',
         queryParam: 'params.cdpresta',      minChars  : 2,                      store : storeProveedor,
-        triggerAction: 'all',               hideTrigger:true,                   allowBlank:false
+        triggerAction: 'all',               hideTrigger:true,                   allowBlank:false,
+		// (EGS) agregamos listener para borrar dato importe cuando se seleccione el proveedor. Esto con la finalidad de validar factura repetida.
+        listeners : {
+            'select' : function(combo, record) {
+            	valorIndexSeleccionado.set('importe',null);
+            }	// fin (EGS)
+        }
     });
     
 
@@ -3737,7 +3743,8 @@ Ext.onReady(function() {
             ,params:{
                 'params.nfactura' : nfactura,
                 'params.cdpresta' : cdpresta,
-                'params.ptimport' : totalImporte
+                'params.ptimport' : totalImporte,
+				'params.cdtiptra' : '16'	//(EGS) se agrega parametro
             }
             ,success : function (response) {
                 if(Ext.decode(response.responseText).factPagada !=null){
@@ -3747,6 +3754,10 @@ Ext.onReady(function() {
                         buttons: Ext.Msg.OK,
                         icon: Ext.Msg.WARNING
                     }));
+                    //(EGS) limpiamos el registro para evitar que se guarde factura.
+                    valorIndexSeleccionado.set('noFactura',null);
+                    valorIndexSeleccionado.set('fechaFactura',null);
+                    valorIndexSeleccionado.set('importe',null);	//fin (EGS)
                 }
             },
             failure : function (){

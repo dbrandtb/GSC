@@ -151,6 +151,7 @@
 			var _UrlValidaDatosEstudiosReclamacion = '<s:url namespace="/siniestros"    action="validaDatosEstudiosReclamacion" />';
 			
 			var _UrlValidaDatosEstudiosFacturasTramite = '<s:url namespace="/siniestros"    action="validaDatosEstudiosFacturasTramite" />';
+			var _URL_CONSULTA_FACTURA_PAGADA        = '<s:url namespace="/siniestros"       action="consultaFacturaPagada" />';	//(EGS) para validar factura duplicada
 			
 			var _11_itemsForm	= [
 				<s:property value="imap.itemsForm" />

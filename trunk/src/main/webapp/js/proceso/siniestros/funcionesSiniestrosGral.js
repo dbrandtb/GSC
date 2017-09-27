@@ -3442,30 +3442,96 @@ function _11_clickAplicarCambiosFactura(){
                     _11_rechazarTramiteSiniestro();
                 });
         }else{
-            //Guardamos la información de la factura
-            panelInicialPral.form.submit({
-                waitMsg:'Procesando...',    
-                url: _URL_GUARDA_CAMBIOS_FACTURA,
-                failure: function(form, action) {
-                    centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
-                },
-                success: function(form, action) {
-                    if(_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO){
-                        Ext.create('Ext.form.Panel').submit({
-                            standardSubmit :true
-                            ,params     : {
-                                'params.ntramite' : _11_params.NTRAMITE
-                            }
-                        });
-                        panelInicialPral.getForm().reset();
-                        storeAseguradoFactura.removeAll();
-                        storeConceptos.removeAll();
-                        }
-                }
-            });
+        	//(EGS) verificamos que la factura no esté dada de alta en otro tramite. Solo para tramites automaticos
+        	if (_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO){
+        		validaFactDuplicada();
+        	}
+        	else{
+	        	//Guardamos la información de la factura
+	            panelInicialPral.form.submit({
+	                waitMsg:'Procesando...',    
+	                url: _URL_GUARDA_CAMBIOS_FACTURA,
+	                failure: function(form, action) {
+	                    centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
+	                },
+	                success: function(form, action) {
+	                	debug("Guardado exitoso");
+//	                    if(_11_params.CDTIPTRA == _TIPO_PAGO_AUTOMATICO){	(EGS) se comenta porque el automatico se procesa en el if
+//	                        Ext.create('Ext.form.Panel').submit({
+//	                            standardSubmit :true
+//	                            ,params     : {
+//	                                'params.ntramite' : _11_params.NTRAMITE
+//	                            }
+//	                        });
+//	                        panelInicialPral.getForm().reset();
+//	                        storeAseguradoFactura.removeAll();
+//	                        storeConceptos.removeAll();
+//	                    }
+	                }
+	            });
+        	}
         }
     }
 }
+
+//(EGS) para validar que no se capturen las facturas mas de una vez
+function validaFactDuplicada(){
+	debug("En validaFactDuplicada");
+	var nfactura = panelInicialPral.down('[name=params.nfactura]').getValue();
+	var cdpresta = panelInicialPral.down('combo[name=params.cdpresta]').getValue();
+	var totalImporte = panelInicialPral.down('[name=params.ptimport]').getValue();
+	Ext.Ajax.request({
+		url     : _URL_CONSULTA_FACTURA_PAGADA
+		,params:{
+			'params.nfactura' : nfactura,
+			'params.cdpresta' : cdpresta,
+			'params.ptimport' : totalImporte,
+			'params.cdtiptra' : _11_params.CDTIPTRA
+		}
+		,success : function (response) {
+			if(Ext.decode(response.responseText).factPagada !=null){
+				centrarVentanaInterna(Ext.Msg.show({
+					title: 'Aviso',
+ 		            msg: 'La factura '+ nfactura +' ya se encuentra procesado en el tr&aacute;mite '+Ext.decode(response.responseText).factPagada,
+ 		            buttons: Ext.Msg.OK,
+ 		            icon: Ext.Msg.WARNING
+ 		        }));
+		    }
+		    else{
+	        	//Guardamos la información de la factura
+	            panelInicialPral.form.submit({
+	                waitMsg:'Procesando...',    
+	                url: _URL_GUARDA_CAMBIOS_FACTURA,
+	                failure: function(form, action) {
+	                    centrarVentanaInterna(mensajeError("Verifica los datos requeridos"));
+	                },
+	                success: function(form, action) {
+	                	Ext.create('Ext.form.Panel').submit({
+	                    	standardSubmit :true
+	                        ,params     : {
+	                        	'params.ntramite' : _11_params.NTRAMITE
+	                        }
+	                    });
+	                    panelInicialPral.getForm().reset();
+	                    storeAseguradoFactura.removeAll();
+	                    storeConceptos.removeAll();
+	                }
+	            });
+		    }
+		 
+		},
+		 failure : function (){
+		 	me.up().up().setLoading(false);
+		    centrarVentanaInterna(Ext.Msg.show({
+		    	title:'Error',
+		        msg: 'Error de comunicaci&oacute;n',
+		        buttons: Ext.Msg.OK,
+		        icon: Ext.Msg.ERROR
+		    }));
+		}
+	});		
+}
+
 
 function _11_obtieneDatosOpcionalesValor(cdramo,cdtipsit,cdgarant,cdconval,record,tipo){
     Ext.Ajax.request({

@@ -216,7 +216,7 @@ Ext.onReady(function() {
     ////////////////   DECLARACION DE EDITOR DE INCISOS  ////////////
     ///////////////////////////////////////////////////////////////*/
 
-    //1.- GRID´S PARA EL PAGO DIRECTO
+    //1.- GRIDï¿½S PARA EL PAGO DIRECTO
     Ext.define('EditorFacturaDirecto', {
  		extend: 'Ext.grid.Panel',
 		name:'editorFacturaDirecto',
@@ -786,7 +786,7 @@ Ext.onReady(function() {
  	});
     gridPagoIndemnizatorioRecupera =new EditorPagoIndemnizatorioRecupera();
     
-    /* PANEL PARA LA BUSQUEDA DE LA INFORMACIÓN DEL ASEGURADO PARA LA BUSQUEDA DE LAS POLIZAS */
+    /* PANEL PARA LA BUSQUEDA DE LA INFORMACIï¿½N DEL ASEGURADO PARA LA BUSQUEDA DE LAS POLIZAS */
 	var panelInicialPral= Ext.create('Ext.form.Panel',
     	    {
     	        border      : 0,
@@ -1175,7 +1175,8 @@ Ext.onReady(function() {
 			,params:{
 				'params.nfactura' : nfactura,
 				'params.cdpresta' : cdpresta,
-				'params.ptimport' : totalImporte
+				'params.ptimport' : totalImporte,
+				'params.cdtiptra' : '16'	//(EGS) se agrega parametro
 			}
 			,success : function (response) {
 		    	if(Ext.decode(response.responseText).factPagada !=null){
@@ -1185,6 +1186,10 @@ Ext.onReady(function() {
  		               buttons: Ext.Msg.OK,
  		               icon: Ext.Msg.WARNING
  		           }));
+                    //(EGS) limpiamos el registro para evitar que se guarde factura.
+                    valorIndexSeleccionado.set('noFactura',null);
+                    valorIndexSeleccionado.set('fechaFactura',null);
+                    valorIndexSeleccionado.set('importe',null);	//fin (EGS)
 		    	}
 		    },
 		    failure : function (){
