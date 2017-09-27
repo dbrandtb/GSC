@@ -591,7 +591,7 @@ public interface SiniestrosManager {
 
 	public List<Map<String, String>> obtenerDatosAdicionalesCobertura(String ntramite) throws Exception;
 	
-    public String obtieneTramiteEnProceso(String nfactura, String cdpresta, String ptimport) throws Exception;
+    public String obtieneTramiteEnProceso(String nfactura, String cdpresta, String ptimport, String cdtiptra) throws Exception; //(EGS) agregamos parametro cdtiptra
 
 	public String actualizaValorMC(HashMap<String, Object> modMesaControl) throws Exception;
 

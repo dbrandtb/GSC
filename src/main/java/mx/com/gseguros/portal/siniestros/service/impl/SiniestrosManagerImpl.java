@@ -1814,8 +1814,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager
 
 
 	@Override
-	public String obtieneTramiteEnProceso(String nfactura, String cdpresta, String ptimport) throws Exception {
-		return siniestrosDAO.obtieneTramiteEnProceso(nfactura, cdpresta, ptimport);
+	public String obtieneTramiteEnProceso(String nfactura, String cdpresta, String ptimport, String cdtiptra) throws Exception {	//(EGS) agregamos parametro cdtiptra
+		return siniestrosDAO.obtieneTramiteEnProceso(nfactura, cdpresta, ptimport, cdtiptra);
 	}
 	
 	@Override

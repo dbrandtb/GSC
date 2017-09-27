@@ -454,7 +454,7 @@ public interface SiniestrosDAO {
 
 	public List<Map<String, String>> obtieneDatosAdicionalesCobertura(Map<String, Object> params) throws Exception;
 
-	public String obtieneTramiteEnProceso(String nfactura, String cdpresta, String ptimport) throws Exception;
+	public String obtieneTramiteEnProceso(String nfactura, String cdpresta, String ptimport, String cdtiptra) throws Exception;	//(EGS) agregamos parametro cdtiptra
 	
 	public List<Map<String,String>> obtenerAseguradosTramite(Map<String, String> params) throws Exception;
 

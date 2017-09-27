@@ -4099,11 +4099,12 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 	
  	@Override
-	public String obtieneTramiteEnProceso(String nfactura, String cdpresta, String ptimport) throws Exception {
+	public String obtieneTramiteEnProceso(String nfactura, String cdpresta, String ptimport, String cdtiptra) throws Exception {	//(EGS) agregamos parametro cdtiptra
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdpresta_i"   , cdpresta);
 		params.put("pv_nfactura_i" , nfactura);
 		params.put("pv_ptimport_i" , ptimport);
+		params.put("pv_cdtiptra_i", cdtiptra);	//(EGS) se agrega parametro
 		logger.debug("obtiene ntramite : "+params);
 		Map<String, Object> resultado = ejecutaSP(new ObtieneTramiteEnProceso(getDataSource()), params);
 		return (String) resultado.get("pv_ntramite_o");
@@ -4116,6 +4117,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtiptra_i",OracleTypes.VARCHAR)); 	//(EGS) se agrega parametro
 			declareParameter(new SqlOutParameter("pv_ntramite_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));

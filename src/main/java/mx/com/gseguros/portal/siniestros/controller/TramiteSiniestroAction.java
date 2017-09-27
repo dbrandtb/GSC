@@ -588,7 +588,7 @@ public class TramiteSiniestroAction extends PrincipalCoreAction {
 	public String consultaFacturaPagada(){
 		logger.debug("Entra a consultaFacturaPagada Params: {}", params);
 		try {
-			factPagada = siniestrosManager.obtieneTramiteEnProceso(params.get("nfactura"), params.get("cdpresta"), params.get("ptimport"));
+			factPagada = siniestrosManager.obtieneTramiteEnProceso(params.get("nfactura"), params.get("cdpresta"), params.get("ptimport"),params.get("cdtiptra")); //(EGS) agregamos parametro cdtiptra
 			logger.debug("factPagada: {}", factPagada);
 		}catch( Exception e){
 			logger.error("Error consultaFacturaPagada : {}", e.getMessage(), e);
