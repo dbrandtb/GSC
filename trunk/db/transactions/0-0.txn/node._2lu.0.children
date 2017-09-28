@@ -1,0 +1,29 @@
+END
+K 9
+catalogos
+V 15
+dir _2lv.0.t0-0
+K 9
+consultas
+V 15
+dir _2mq.0.t0-0
+K 7
+general
+V 15
+dir _2n0.0.t0-0
+K 7
+proceso
+V 15
+dir _2ni.0.t0-0
+K 8
+reportes
+V 15
+dir _2wd.0.t0-0
+K 9
+servicios
+V 15
+dir _2wl.0.t0-0
+K 6
+wizard
+V 15
+dir _2wr.0.t0-0

@@ -1,0 +1,49 @@
+END
+K 18
+atributosVariables
+V 15
+dir _2bn.0.t0-0
+K 18
+conceptosCobertura
+V 15
+dir _2bs.0.t0-0
+K 10
+datosFijos
+V 15
+dir _2bw.0.t0-0
+K 10
+definicion
+V 15
+dir _2c0.0.t0-0
+K 7
+incisos
+V 15
+dir _2c4.0.t0-0
+K 6
+planes
+V 15
+dir _2c8.0.t0-0
+K 16
+reglasValidacion
+V 15
+dir _2cc.0.t0-0
+K 3
+rol
+V 15
+dir _2cg.0.t0-0
+K 13
+sumaAsegurada
+V 15
+dir _2ck.0.t0-0
+K 17
+tablaApoyo5Claves
+V 15
+dir _2co.0.t0-0
+K 11
+tipoObjetos
+V 15
+dir _2cs.0.t0-0
+K 27
+variablesTemporalesProducto
+V 15
+dir _2cw.0.t0-0

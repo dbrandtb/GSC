@@ -1,0 +1,33 @@
+END
+K 9
+log4j.xml
+V 16
+file _1ui.0.t0-0
+K 15
+mail.properties
+V 16
+file _1ul.0.t0-0
+K 28
+messages-database.properties
+V 16
+file _1un.0.t0-0
+K 17
+portal.properties
+V 16
+file _1up.0.t0-0
+K 19
+reportes.properties
+V 16
+file _1ur.0.t0-0
+K 6
+spring
+V 15
+dir _1ut.0.t0-0
+K 6
+struts
+V 15
+dir _1xb.0.t0-0
+K 10
+struts.xml
+V 16
+file _1zn.0.t0-0

@@ -1,0 +1,17 @@
+END
+K 10
+controller
+V 14
+dir _q5.0.t0-0
+K 3
+dao
+V 14
+dir _qa.0.t0-0
+K 5
+model
+V 14
+dir _qi.0.t0-0
+K 7
+service
+V 14
+dir _qq.0.t0-0

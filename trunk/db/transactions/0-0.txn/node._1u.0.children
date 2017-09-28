@@ -1,0 +1,33 @@
+END
+K 12
+configurador
+V 14
+dir _1w.0.t0-0
+K 4
+core
+V 14
+dir _2h.0.t0-0
+K 6
+flujos
+V 14
+dir _2n.0.t0-0
+K 6
+kernel
+V 14
+dir _3l.0.t0-0
+K 6
+portal
+V 14
+dir _3v.0.t0-0
+K 7
+portal2
+V 14
+dir _8z.0.t0-0
+K 3
+tmp
+V 14
+dir _95.0.t0-0
+K 5
+utils
+V 14
+dir _9p.0.t0-0

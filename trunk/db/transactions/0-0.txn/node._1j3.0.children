@@ -1,0 +1,29 @@
+END
+K 10
+cotizacion
+V 15
+dir _1j5.0.t0-0
+K 3
+dao
+V 15
+dir _1nr.0.t0-0
+K 7
+emision
+V 15
+dir _1nz.0.t0-0
+K 12
+infovehiculo
+V 15
+dir _1og.0.t0-0
+K 5
+model
+V 15
+dir _1oy.0.t0-0
+K 7
+service
+V 15
+dir _1p2.0.t0-0
+K 14
+tractocamiones
+V 15
+dir _1pc.0.t0-0

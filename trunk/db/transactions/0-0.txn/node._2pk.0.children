@@ -1,0 +1,249 @@
+END
+K 19
+editorPantallas.jsp
+V 16
+file _2pl.0.t0-0
+K 16
+endosoAgente.jsp
+V 16
+file _2po.0.t0-0
+K 30
+endosoAjusteSiniestralidad.jsp
+V 16
+file _2pq.0.t0-0
+K 24
+endosoAltaAsegurados.jsp
+V 16
+file _2ps.0.t0-0
+K 28
+endosoAmpliacionVigencia.jsp
+V 16
+file _2pu.0.t0-0
+K 26
+endosoAseguradoAlterno.jsp
+V 16
+file _2pw.0.t0-0
+K 35
+endosoAtributosSituacionGeneral.jsp
+V 16
+file _2py.0.t0-0
+K 21
+endosoBajaIncisos.jsp
+V 16
+file _2q0.0.t0-0
+K 33
+endosoCambioDomicilioNOSICAPS.jsp
+V 16
+file _2q2.0.t0-0
+K 25
+endosoCancelacionAuto.jsp
+V 16
+file _2q4.0.t0-0
+K 28
+endosoCancelacionPolAuto.jsp
+V 16
+file _2q6.0.t0-0
+K 19
+endosoClaveAuto.jsp
+V 16
+file _2q8.0.t0-0
+K 18
+endosoClientes.jsp
+V 16
+file _2qa.0.t0-0
+K 20
+endosoCoberturas.jsp
+V 16
+file _2qc.0.t0-0
+K 25
+endosoCoberturasFlujo.jsp
+V 16
+file _2qe.0.t0-0
+K 21
+endosoContratante.jsp
+V 16
+file _2qg.0.t0-0
+K 25
+endosoContratanteAuto.jsp
+V 16
+file _2qi.0.t0-0
+K 16
+endosoCopago.jsp
+V 16
+file _2qk.0.t0-0
+K 19
+endosoDeducible.jsp
+V 16
+file _2qm.0.t0-0
+K 17
+endosoDespago.jsp
+V 16
+file _2qo.0.t0-0
+K 26
+endosoDevolucionPrimas.jsp
+V 16
+file _2qq.0.t0-0
+K 19
+endosoDomicilio.jsp
+V 16
+file _2qs.0.t0-0
+K 23
+endosoDomicilioAuto.jsp
+V 16
+file _2qu.0.t0-0
+K 27
+endosoDomicilioAutoFull.jsp
+V 16
+file _2qw.0.t0-0
+K 23
+endosoDomicilioFull.jsp
+V 16
+file _2qy.0.t0-0
+K 14
+endosoEdad.jsp
+V 16
+file _2r0.0.t0-0
+K 20
+endosoExtraprima.jsp
+V 16
+file _2r2.0.t0-0
+K 30
+endosoExtraprimaIndividual.jsp
+V 16
+file _2r4.0.t0-0
+K 17
+endosoFamilia.jsp
+V 16
+file _2r6.0.t0-0
+K 19
+endosoFormaPago.jsp
+V 16
+file _2r8.0.t0-0
+K 23
+endosoNombreCliente.jsp
+V 16
+file _2ra.0.t0-0
+K 17
+endosoNombres.jsp
+V 16
+file _2rc.0.t0-0
+K 30
+endosoParentescoAntiguedad.jsp
+V 16
+file _2re.0.t0-0
+K 17
+endosoPreview.jsp
+V 16
+file _2rg.0.t0-0
+K 22
+endosoReexpedicion.jsp
+V 16
+file _2ri.0.t0-0
+K 28
+endosoRehabilitacionAuto.jsp
+V 16
+file _2rk.0.t0-0
+K 31
+endosoRehabilitacionDespago.jsp
+V 16
+file _2rm.0.t0-0
+K 27
+endosoRehabilitacionEnd.jsp
+V 16
+file _2ro.0.t0-0
+K 31
+endosoRehabilitacionPolAuto.jsp
+V 16
+file _2rq.0.t0-0
+K 20
+endosoRfcCliente.jsp
+V 16
+file _2rs.0.t0-0
+K 14
+endosoSexo.jsp
+V 16
+file _2ru.0.t0-0
+K 20
+endosoTextoLibre.jsp
+V 16
+file _2rw.0.t0-0
+K 26
+endosoTramiteClonacion.jsp
+V 16
+file _2ry.0.t0-0
+K 21
+endosoValositAuto.jsp
+V 16
+file _2s0.0.t0-0
+K 23
+endosoValositBasico.jsp
+V 16
+file _2s2.0.t0-0
+K 26
+endosoValositFormsAuto.jsp
+V 16
+file _2s4.0.t0-0
+K 18
+endosoVidaAuto.jsp
+V 16
+file _2s6.0.t0-0
+K 24
+endosoVigenciaPoliza.jsp
+V 16
+file _2s8.0.t0-0
+K 23
+errorEndosoAnterior.jsp
+V 16
+file _2sa.0.t0-0
+K 16
+marcoEndosos.jsp
+V 16
+file _2sc.0.t0-0
+K 20
+marcoEndososAuto.jsp
+V 16
+file _2se.0.t0-0
+K 23
+pantallaCompiladora.jsp
+V 16
+file _2sg.0.t0-0
+K 35
+pantallaEndosoAltaBajaAsegurado.jsp
+V 16
+file _2si.0.t0-0
+K 27
+pantallaEndosoClausulas.jsp
+V 16
+file _2sk.0.t0-0
+K 23
+pantallaJavaExterno.jsp
+V 16
+file _2sm.0.t0-0
+K 31
+pantallaRecibosSubsecuentes.jsp
+V 16
+file _2so.0.t0-0
+K 33
+scriptMesaAutorizacionEndosos.jsp
+V 16
+file _2sq.0.t0-0
+K 35
+scriptMesaAutorizacionServicios.jsp
+V 16
+file _2ss.0.t0-0
+K 21
+scriptMesaEmision.jsp
+V 16
+file _2su.0.t0-0
+K 23
+scriptMesaProveedor.jsp
+V 16
+file _2sw.0.t0-0
+K 16
+testpantalla.jsp
+V 16
+file _2sy.0.t0-0
+K 18
+visorPantallas.jsp
+V 16
+file _2t0.0.t0-0

@@ -1,0 +1,77 @@
+END
+K 34
+AtributosVariablesManagerImpl.java
+V 16
+file _1e2.0.t0-0
+K 25
+CoberturaManagerImpl.java
+V 16
+file _1e5.0.t0-0
+K 34
+ConceptosCoberturaManagerImpl.java
+V 16
+file _1e7.0.t0-0
+K 26
+DatosFijosManagerImpl.java
+V 16
+file _1e9.0.t0-0
+K 27
+ExpresionesManagerImpl.java
+V 16
+file _1eb.0.t0-0
+K 22
+IncisoManagerImpl.java
+V 16
+file _1ed.0.t0-0
+K 30
+ListaDeValoresManagerImpl.java
+V 16
+file _1ef.0.t0-0
+K 42
+ListaDeValoresManagerJdbcTemplateImpl.java
+V 16
+file _1eh.0.t0-0
+K 24
+ProductoManagerImpl.java
+V 16
+file _1ej.0.t0-0
+K 28
+ReglaNegocioManagerImpl.java
+V 16
+file _1el.0.t0-0
+K 31
+ReglaValidacionManagerImpl.java
+V 16
+file _1en.0.t0-0
+K 19
+RolManagerImpl.java
+V 16
+file _1ep.0.t0-0
+K 29
+SumaAseguradaManagerImpl.java
+V 16
+file _1er.0.t0-0
+K 41
+SumaAseguradaManagerJdbcTemplateImpl.java
+V 16
+file _1et.0.t0-0
+K 26
+TablaApoyoManagerImpl.java
+V 16
+file _1ev.0.t0-0
+K 32
+TablaCincoClavesManagerImpl.java
+V 16
+file _1ex.0.t0-0
+K 44
+TablaCincoClavesManagerJdbcTemplateImpl.java
+V 16
+file _1ez.0.t0-0
+K 26
+TipoObjetoManagerImpl.java
+V 16
+file _1f1.0.t0-0
+K 20
+TreeManagerImpl.java
+V 16
+file _1f3.0.t0-0

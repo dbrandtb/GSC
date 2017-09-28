@@ -1,0 +1,17 @@
+END
+K 10
+controller
+V 14
+dir _gk.0.t0-0
+K 3
+dao
+V 14
+dir _gp.0.t0-0
+K 5
+model
+V 14
+dir _gx.0.t0-0
+K 7
+service
+V 14
+dir _gy.0.t0-0
