@@ -1,0 +1,33 @@
+END
+K 38
+AbstractManagerJdbcTemplateInvoke.java
+V 15
+file _70.0.t0-0
+K 33
+ComboManagerJdbcTemplateImpl.java
+V 15
+file _73.0.t0-0
+K 21
+LoginManagerImpl.java
+V 15
+file _75.0.t0-0
+K 41
+MenuPrincipalManagerJdbcTemplateImpl.java
+V 15
+file _77.0.t0-0
+K 38
+NavigationManagerJdbcTemplateImpl.java
+V 15
+file _79.0.t0-0
+K 31
+PaginaPrincipalManagerImpl.java
+V 15
+file _7b.0.t0-0
+K 23
+UsuarioManagerImpl.java
+V 15
+file _7d.0.t0-0
+K 9
+principal
+V 14
+dir _7f.0.t0-0

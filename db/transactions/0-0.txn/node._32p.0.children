@@ -1,0 +1,17 @@
+END
+K 3
+box
+V 15
+dir _32r.0.t0-0
+K 6
+button
+V 15
+dir _33a.0.t0-0
+K 2
+dd
+V 15
+dir _33g.0.t0-0
+K 6
+editor
+V 15
+dir _33o.0.t0-0

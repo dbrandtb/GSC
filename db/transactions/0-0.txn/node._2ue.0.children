@@ -1,0 +1,113 @@
+END
+K 26
+administracionClientes.jsp
+V 16
+file _2uf.0.t0-0
+K 22
+afiliadosAfectados.jsp
+V 16
+file _2ui.0.t0-0
+K 18
+ajustesMedicos.jsp
+V 16
+file _2uk.0.t0-0
+K 16
+altaFacturas.jsp
+V 16
+file _2um.0.t0-0
+K 15
+altaTramite.jsp
+V 16
+file _2uo.0.t0-0
+K 21
+altaTramitePrevio.jsp
+V 16
+file _2uq.0.t0-0
+K 24
+asignarReclamaciones.jsp
+V 16
+file _2us.0.t0-0
+K 24
+autorizacionEspecial.jsp
+V 16
+file _2uu.0.t0-0
+K 25
+autorizacionServicios.jsp
+V 16
+file _2uw.0.t0-0
+K 28
+autorizacionServiciosGNP.jsp
+V 16
+file _2uy.0.t0-0
+K 12
+calculos.jsp
+V 16
+file _2v0.0.t0-0
+K 34
+configuracionEstudiosCobertura.jsp
+V 16
+file _2v2.0.t0-0
+K 23
+configuracionLayout.jsp
+V 16
+file _2v4.0.t0-0
+K 21
+configuracionProv.jsp
+V 16
+file _2v6.0.t0-0
+K 18
+detalleReclamacion
+V 15
+dir _2v8.0.t0-0
+K 8
+includes
+V 15
+dir _2vo.0.t0-0
+K 22
+pantallaProvedores.jsp
+V 16
+file _2vp.0.t0-0
+K 25
+parametrizacionLayout.jsp
+V 16
+file _2vr.0.t0-0
+K 25
+principalCordinadorAR.jsp
+V 16
+file _2vt.0.t0-0
+K 24
+rechazoReclamaciones.jsp
+V 16
+file _2vv.0.t0-0
+K 25
+reservaSiniestralidad.jsp
+V 16
+file _2vx.0.t0-0
+K 22
+revisionDocumentos.jsp
+V 16
+file _2vz.0.t0-0
+K 19
+scriptMesaSISCO.jsp
+V 16
+file _2w1.0.t0-0
+K 24
+scriptMesaSiniestros.jsp
+V 16
+file _2w3.0.t0-0
+K 22
+seleccionCobertura.jsp
+V 16
+file _2w5.0.t0-0
+K 18
+solicitudesCxp.jsp
+V 16
+file _2w7.0.t0-0
+K 20
+tipoAutorizacion.jsp
+V 16
+file _2w9.0.t0-0
+K 28
+verAutorizacionServicios.jsp
+V 16
+file _2wb.0.t0-0

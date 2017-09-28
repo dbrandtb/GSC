@@ -1,0 +1,93 @@
+END
+K 18
+atributosVariables
+V 15
+dir _186.0.t0-0
+K 10
+coberturas
+V 15
+dir _18j.0.t0-0
+K 18
+conceptosCobertura
+V 15
+dir _18t.0.t0-0
+K 3
+dao
+V 15
+dir _193.0.t0-0
+K 10
+datosFijos
+V 15
+dir _19h.0.t0-0
+K 10
+definicion
+V 15
+dir _19r.0.t0-0
+K 11
+expresiones
+V 15
+dir _1ab.0.t0-0
+K 7
+general
+V 15
+dir _1av.0.t0-0
+K 7
+incisos
+V 15
+dir _1az.0.t0-0
+K 9
+librerias
+V 15
+dir _1b9.0.t0-0
+K 5
+model
+V 15
+dir _1bf.0.t0-0
+K 6
+planes
+V 15
+dir _1bp.0.t0-0
+K 15
+reglaValidacion
+V 15
+dir _1c3.0.t0-0
+K 12
+reglanegocio
+V 15
+dir _1cd.0.t0-0
+K 3
+rol
+V 15
+dir _1cn.0.t0-0
+K 7
+service
+V 15
+dir _1cz.0.t0-0
+K 13
+sumaAsegurada
+V 15
+dir _1f5.0.t0-0
+K 16
+tablaCincoClaves
+V 15
+dir _1fh.0.t0-0
+K 9
+tablapoyo
+V 15
+dir _1fz.0.t0-0
+K 10
+tipoObjeto
+V 15
+dir _1g2.0.t0-0
+K 4
+util
+V 15
+dir _1ge.0.t0-0
+K 27
+variablesTemporalesProducto
+V 15
+dir _1gq.0.t0-0
+K 3
+web
+V 15
+dir _1gw.0.t0-0

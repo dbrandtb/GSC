@@ -1,0 +1,105 @@
+END
+K 19
+AgentePolizaVO.java
+V 15
+file _np.0.t0-0
+K 30
+ConfiguracionCoberturaDTO.java
+V 15
+file _ns.0.t0-0
+K 23
+ConfiguracionGrupo.java
+V 15
+file _nu.0.t0-0
+K 17
+DatosUsuario.java
+V 15
+file _nw.0.t0-0
+K 9
+Item.java
+V 15
+file _ny.0.t0-0
+K 27
+ManagerRespuestaBaseVO.java
+V 15
+file _o0.0.t0-0
+K 31
+ManagerRespuestaImapSmapVO.java
+V 15
+file _o2.0.t0-0
+K 27
+ManagerRespuestaImapVO.java
+V 15
+file _o4.0.t0-0
+K 33
+ManagerRespuestaSlist2SmapVO.java
+V 15
+file _o6.0.t0-0
+K 29
+ManagerRespuestaSlist2VO.java
+V 15
+file _o8.0.t0-0
+K 32
+ManagerRespuestaSlistSmapVO.java
+V 15
+file _oa.0.t0-0
+K 28
+ManagerRespuestaSlistVO.java
+V 15
+file _oc.0.t0-0
+K 27
+ManagerRespuestaSmapVO.java
+V 15
+file _oe.0.t0-0
+K 27
+ManagerRespuestaVoidVO.java
+V 15
+file _og.0.t0-0
+K 26
+ObtieneTatrigarMapper.java
+V 15
+file _oi.0.t0-0
+K 26
+ObtieneTatripolMapper.java
+V 15
+file _ok.0.t0-0
+K 26
+ObtieneTatrisitMapper.java
+V 15
+file _om.0.t0-0
+K 26
+PInsertaTbasvalsitDTO.java
+V 15
+file _oo.0.t0-0
+K 26
+PInsertaTconvalsitDTO.java
+V 15
+file _oq.0.t0-0
+K 20
+PMovMpolisitDTO.java
+V 15
+file _os.0.t0-0
+K 20
+PMovTvalositDTO.java
+V 15
+file _ou.0.t0-0
+K 24
+ParametroCotizacion.java
+V 15
+file _ow.0.t0-0
+K 20
+ParametroEndoso.java
+V 15
+file _oy.0.t0-0
+K 21
+ParametroGeneral.java
+V 15
+file _p0.0.t0-0
+K 28
+PuntajeCoberturasPlanVO.java
+V 15
+file _p2.0.t0-0
+K 16
+SlistSmapVO.java
+V 15
+file _p4.0.t0-0

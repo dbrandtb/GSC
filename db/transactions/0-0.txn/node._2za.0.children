@@ -1,0 +1,45 @@
+END
+K 11
+CHANGES.txt
+V 16
+file _2zb.0.t0-0
+K 17
+INCLUDE_ORDER.txt
+V 16
+file _2ze.0.t0-0
+K 11
+LICENSE.txt
+V 16
+file _2zg.0.t0-0
+K 7
+adapter
+V 15
+dir _2zi.0.t0-0
+K 4
+comp
+V 15
+dir _30i.0.t0-0
+K 16
+ext-all-debug.js
+V 16
+file _30o.0.t0-0
+K 10
+ext-all.js
+V 16
+file _30q.0.t0-0
+K 17
+ext-core-debug.js
+V 16
+file _30s.0.t0-0
+K 11
+ext-core.js
+V 16
+file _30u.0.t0-0
+K 5
+local
+V 15
+dir _30w.0.t0-0
+K 9
+resources
+V 15
+dir _310.0.t0-0

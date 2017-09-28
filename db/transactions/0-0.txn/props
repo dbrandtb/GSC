@@ -1,0 +1,25 @@
+K 10
+svn:author
+V 8
+Biosnet3
+K 15
+svn:check-locks
+V 4
+true
+K 8
+svn:date
+V 27
+2017-09-28T15:01:02.890533Z
+K 7
+svn:log
+V 0
+
+K 29
+svn:txn-client-compat-version
+V 5
+1.9.7
+K 18
+svn:txn-user-agent
+V 66
+SVN/1.9.7 (x64-microsoft-windows) ra_local TortoiseSVN-1.9.7.27907
+END

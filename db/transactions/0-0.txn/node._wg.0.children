@@ -1,0 +1,77 @@
+END
+K 13
+AgenteVO.java
+V 15
+file _wh.0.t0-0
+K 11
+BaseVO.java
+V 15
+file _wk.0.t0-0
+K 15
+ClausulaVO.java
+V 15
+file _wm.0.t0-0
+K 17
+ComponenteVO.java
+V 15
+file _wo.0.t0-0
+K 20
+DetalleReciboVO.java
+V 15
+file _wq.0.t0-0
+K 11
+MailVO.java
+V 15
+file _ws.0.t0-0
+K 15
+Movimiento.java
+V 15
+file _wu.0.t0-0
+K 19
+ParamReporteVO.java
+V 15
+file _ww.0.t0-0
+K 13
+PolizaVO.java
+V 15
+file _wy.0.t0-0
+K 13
+ReciboVO.java
+V 15
+file _x0.0.t0-0
+K 12
+Reporte.java
+V 15
+file _x2.0.t0-0
+K 14
+ReporteVO.java
+V 15
+file _x4.0.t0-0
+K 33
+RespuestaEmisionIndividualVO.java
+V 15
+file _x6.0.t0-0
+K 20
+RespuestaMailVO.java
+V 15
+file _x8.0.t0-0
+K 16
+RespuestaVO.java
+V 15
+file _xa.0.t0-0
+K 10
+RolVO.java
+V 15
+file _xc.0.t0-0
+K 19
+SolicitudCxPVO.java
+V 15
+file _xe.0.t0-0
+K 18
+ThreadCounter.java
+V 15
+file _xg.0.t0-0
+K 14
+UsuarioVO.java
+V 15
+file _xi.0.t0-0

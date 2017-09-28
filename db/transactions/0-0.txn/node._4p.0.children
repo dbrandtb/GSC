@@ -1,0 +1,97 @@
+END
+K 22
+AbstractEntidadVO.java
+V 15
+file _4q.0.t0-0
+K 33
+AtributosVariablesInstPagoVO.java
+V 15
+file _4t.0.t0-0
+K 17
+BaseObjectVO.java
+V 15
+file _4v.0.t0-0
+K 14
+ClienteVO.java
+V 15
+file _4x.0.t0-0
+K 13
+ColumnVO.java
+V 15
+file _4z.0.t0-0
+K 25
+CondicionCoberturaVO.java
+V 15
+file _51.0.t0-0
+K 20
+ConfiguracionVO.java
+V 15
+file _53.0.t0-0
+K 23
+CotizacionMasivaVO.java
+V 15
+file _55.0.t0-0
+K 23
+ElementoComboBoxVO.java
+V 15
+file _57.0.t0-0
+K 14
+EmpresaVO.java
+V 15
+file _59.0.t0-0
+K 20
+FuncionalidadVO.java
+V 15
+file _5b.0.t0-0
+K 10
+IsoVO.java
+V 15
+file _5d.0.t0-0
+K 11
+ItemVO.java
+V 15
+file _5f.0.t0-0
+K 20
+MenuPrincipalVO.java
+V 15
+file _5h.0.t0-0
+K 13
+PerfilVO.java
+V 15
+file _5j.0.t0-0
+K 13
+PortalVO.java
+V 15
+file _5l.0.t0-0
+K 16
+PrincipalVO.java
+V 15
+file _5n.0.t0-0
+K 11
+RamaVO.java
+V 15
+file _5p.0.t0-0
+K 14
+SeccionVO.java
+V 15
+file _5r.0.t0-0
+K 25
+Tabla_EquivalenciaVO.java
+V 15
+file _5t.0.t0-0
+K 11
+UserVO.java
+V 15
+file _5v.0.t0-0
+K 24
+UsuarioRolEmpresaVO.java
+V 15
+file _5x.0.t0-0
+K 11
+menuusuario
+V 14
+dir _5z.0.t0-0
+K 9
+principal
+V 14
+dir _63.0.t0-0

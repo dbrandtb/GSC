@@ -1,0 +1,17 @@
+END
+K 10
+controller
+V 15
+dir _15c.0.t0-0
+K 3
+dao
+V 15
+dir _15r.0.t0-0
+K 5
+model
+V 15
+dir _15z.0.t0-0
+K 7
+service
+V 15
+dir _16x.0.t0-0
